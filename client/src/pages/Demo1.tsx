@@ -1,18 +1,31 @@
 /*
  * Demo 1 — Human Approval Story
  *
- * From user JSON spec:
- *   - Same navy background as landing page
- *   - Top: RIO logo, title, subtitle
- *   - Below subtitle: scenario text
- *   - Left side: Stepper navigation with 4 vertical step buttons
- *   - Right side: Text box that changes based on which step is clicked
- *   - Receipt section after Step 4
- *   - Bottom summary box: "What this means"
- *   - This is a story demo, not a technical dashboard
+ * Changes from user feedback:
+ *   - Receipt is a real JSON object with receipt_id, action, timestamps, decision, signature, hash
+ *   - Scenario text updated: "end of quarter, AI drafts email to your team"
+ *   - Step 2 shows a fake phone notification in the right panel
+ *   - Copy Receipt button centered in middle of page
+ *   - "What this means" text centered, "CANNOT" in bold, "records every approval and denial" in bold
  */
 
 import { useState } from "react";
+
+const RECEIPT_JSON = {
+  receipt_id: "rio-rcpt-20260322-0047a3",
+  action: "send_email",
+  subject: "Q1 Quarterly Report",
+  requested_by: "ai-agent-7b",
+  requested_at: "2026-03-22T14:32:01.000Z",
+  decision: "APPROVED",
+  decided_by: "human-operator",
+  decided_at: "2026-03-22T14:33:18.000Z",
+  executed_at: "2026-03-22T14:33:19.042Z",
+  signature: "a4f8c1d9e2b7...3f6a0e1d",
+  hash: "sha256:9c1b7e4d...f2a8d03b",
+  immutable: true,
+  verifiable: true,
+};
 
 const STEPS = [
   {
@@ -21,7 +34,7 @@ const STEPS = [
   },
   {
     button: "Step 2 — Human Notified",
-    text: "The system sends a notification to the human informing them that an action has been requested. The action cannot proceed without human approval. The system records that the human was notified.",
+    text: null, // Special rendering for phone notification
   },
   {
     button: "Step 3 — Human Decision",
@@ -33,23 +46,72 @@ const STEPS = [
   },
 ];
 
-const SUMMARY_ITEMS = [
-  "AI can recommend, draft, and prepare actions.",
-  "AI cannot execute real-world actions on its own.",
-  "The system requires human approval before any real-world action.",
-  "The system records every approval or denial as a cryptographically signed, immutable receipt.",
-  "In this system, the AI acts as a trusted advisor, not an autonomous actor that can assume or interpret human intent.",
-  "The human remains in control of all real-world actions, and the system enforces that control.",
-];
+function PhoneNotification() {
+  return (
+    <div className="flex flex-col items-center justify-center h-full">
+      <p className="text-sm mb-6" style={{ color: "#9ca3af" }}>
+        The system sends a notification to the human informing them that an action has been requested. The action cannot proceed without human approval. The system records that the human was notified.
+      </p>
+      {/* Fake phone notification */}
+      <div
+        className="w-72 rounded-xl overflow-hidden"
+        style={{
+          backgroundColor: "rgba(255, 255, 255, 0.08)",
+          border: "1px solid rgba(255, 255, 255, 0.15)",
+        }}
+      >
+        {/* Notification header */}
+        <div
+          className="px-4 py-3 flex items-center gap-2"
+          style={{ borderBottom: "1px solid rgba(255, 255, 255, 0.1)" }}
+        >
+          <div
+            className="w-6 h-6 rounded-md flex items-center justify-center text-xs font-bold"
+            style={{ backgroundColor: "#b8963e", color: "#0b1120" }}
+          >
+            R
+          </div>
+          <span className="text-xs font-semibold" style={{ color: "#b8963e" }}>
+            RIO Notification
+          </span>
+          <span className="text-xs ml-auto" style={{ color: "#6b7280" }}>
+            now
+          </span>
+        </div>
+        {/* Notification body */}
+        <div className="px-4 py-3">
+          <p className="text-xs mb-1" style={{ color: "#9ca3af" }}>
+            AI requests approval:
+          </p>
+          <p className="text-sm font-medium mb-3" style={{ color: "#ffffff" }}>
+            Send Quarterly Report Email
+          </p>
+          <div className="flex gap-2">
+            <button
+              className="flex-1 py-1.5 rounded text-xs font-medium"
+              style={{ backgroundColor: "rgba(34, 197, 94, 0.2)", color: "#22c55e", border: "1px solid rgba(34, 197, 94, 0.3)" }}
+            >
+              Approve
+            </button>
+            <button
+              className="flex-1 py-1.5 rounded text-xs font-medium"
+              style={{ backgroundColor: "rgba(239, 68, 68, 0.2)", color: "#ef4444", border: "1px solid rgba(239, 68, 68, 0.3)" }}
+            >
+              Deny
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 export default function Demo1() {
   const [activeStep, setActiveStep] = useState(0);
   const [copied, setCopied] = useState(false);
 
   const handleCopyReceipt = () => {
-    const receiptText =
-      "This receipt is cryptographically signed, timestamped, and recorded as an immutable record. It can be independently verified by another system or AI model.";
-    navigator.clipboard.writeText(receiptText).then(() => {
+    navigator.clipboard.writeText(JSON.stringify(RECEIPT_JSON, null, 2)).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
@@ -78,7 +140,7 @@ export default function Demo1() {
 
       {/* Scenario text */}
       <p className="text-base text-center max-w-2xl mb-10" style={{ color: "#d1d5db" }}>
-        In this scenario, an AI drafts an email and intends to send it.
+        In this scenario, it's the end of quarter and your AI agent drafts an email and intends to send it to your team.
       </p>
 
       {/* Main layout: Left stepper + Right text panel */}
@@ -109,28 +171,40 @@ export default function Demo1() {
             backgroundColor: "rgba(255, 255, 255, 0.03)",
           }}
         >
-          <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
-            {STEPS[activeStep].text}
-          </p>
+          {activeStep === 1 ? (
+            <PhoneNotification />
+          ) : (
+            <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
+              {STEPS[activeStep].text}
+            </p>
+          )}
         </div>
       </div>
 
       {/* Receipt section — shown when Step 4 is active */}
       {activeStep === 3 && (
         <div
-          className="w-full max-w-4xl p-6 rounded border mb-10"
+          className="w-full max-w-4xl p-6 rounded border mb-6"
           style={{
             borderColor: "rgba(184, 150, 62, 0.5)",
             backgroundColor: "rgba(184, 150, 62, 0.08)",
           }}
         >
-          <p className="text-sm leading-relaxed mb-4" style={{ color: "#d1d5db" }}>
-            This receipt is cryptographically signed, timestamped, and recorded as an immutable
-            record. It can be independently verified by another system or AI model.
-          </p>
+          <pre
+            className="text-xs leading-relaxed overflow-x-auto"
+            style={{ color: "#d1d5db", fontFamily: "monospace" }}
+          >
+            {JSON.stringify(RECEIPT_JSON, null, 2)}
+          </pre>
+        </div>
+      )}
+
+      {/* Copy Receipt button — centered, shown when Step 4 is active */}
+      {activeStep === 3 && (
+        <div className="flex justify-center mb-10">
           <button
             onClick={handleCopyReceipt}
-            className="py-2 px-5 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
+            className="py-2 px-8 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
             style={{
               borderColor: "#b8963e",
               color: "#ffffff",
@@ -142,9 +216,9 @@ export default function Demo1() {
         </div>
       )}
 
-      {/* Bottom summary box */}
+      {/* Bottom summary box — centered text */}
       <div
-        className="w-full max-w-4xl p-6 rounded border"
+        className="w-full max-w-4xl p-6 rounded border text-center"
         style={{
           borderColor: "rgba(184, 150, 62, 0.3)",
           backgroundColor: "rgba(255, 255, 255, 0.03)",
@@ -153,13 +227,26 @@ export default function Demo1() {
         <h2 className="text-lg font-semibold mb-4" style={{ color: "#b8963e" }}>
           What this means
         </h2>
-        <ul className="space-y-2">
-          {SUMMARY_ITEMS.map((item, index) => (
-            <li key={index} className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
-              {item}
-            </li>
-          ))}
-        </ul>
+        <div className="space-y-2">
+          <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
+            AI can recommend, draft, and prepare actions.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
+            AI <span className="font-bold text-white">CANNOT</span> execute real-world actions on its own.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
+            The system requires human approval before any real-world action.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
+            The system <span className="font-bold text-white">records every approval and denial</span> as a cryptographically signed, immutable receipt.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
+            In this system, the AI acts as a trusted advisor, not an autonomous actor that can assume or interpret human intent.
+          </p>
+          <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
+            The human remains in control of all real-world actions, and the system enforces that control.
+          </p>
+        </div>
       </div>
 
       {/* Back to landing */}
