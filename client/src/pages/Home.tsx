@@ -42,8 +42,9 @@ export default function Home() {
 
       {/* Three demo buttons — large, centered, stacked vertically */}
       <div className="flex flex-col gap-5 w-full max-w-md">
-        <button
-          className="w-full py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5"
+        <a
+          href="/demo1"
+          className="w-full py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5 text-center block"
           style={{
             backgroundColor: "transparent",
             borderColor: "#b8963e",
@@ -51,7 +52,7 @@ export default function Home() {
           }}
         >
           Demo 1 — Human Approval Required
-        </button>
+        </a>
 
         <button
           className="w-full py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5"
