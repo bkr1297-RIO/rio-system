@@ -54,8 +54,9 @@ export default function Home() {
           Demo 1 — Human Approval Required
         </a>
 
-        <button
-          className="w-full py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5"
+        <a
+          href="/demo2"
+          className="w-full py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5 text-center block"
           style={{
             backgroundColor: "transparent",
             borderColor: "#b8963e",
@@ -63,7 +64,7 @@ export default function Home() {
           }}
         >
           Demo 2 — How RIO Enforces Approval
-        </button>
+        </a>
 
         <button
           className="w-full py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5"
