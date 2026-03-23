@@ -22,3 +22,4 @@
 - [x] Demo 2 — Stage-light pipeline (Yellow→Red→Blue→Green→White) with color transitions
 - [x] Demo 1 — Deny flow on phone notification (denial recorded, execution permanently blocked)
 - [x] Demo 3 — Responsive mobile layout (three-panel stacks vertically on small screens)
+- [x] Landing page two-column layout: left side with The Challenge, Our Approach, With RIO What Changes; right side with demo buttons
