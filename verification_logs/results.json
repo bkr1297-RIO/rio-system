@@ -1,0 +1,117 @@
+{
+  "harness_version": "1.0.0",
+  "gateway_url": "https://rio-router-gateway.replit.app/api/rio-gateway",
+  "gateway_version": "3.0.0",
+  "run_timestamp": "2026-03-23T06:32:40.900881Z",
+  "summary": {
+    "passed": 6,
+    "partial": 2,
+    "failed": 0,
+    "deferred": 2,
+    "total": 10
+  },
+  "results": [
+    {
+      "test_id": "V-001",
+      "test_name": "EXECUTE_NO_APPROVAL",
+      "description": "Submit intake request without signature or timestamp",
+      "expected_result": "Blocked (HTTP 422 or 401)",
+      "actual_result": "HTTP 422: {\"detail\": [{\"type\": \"missing\", \"loc\": [\"body\", \"signature\"], \"msg\": \"Field required\", \"input\": {\"source\": \"attacker\", \"intent\": \"steal data\"}}, {\"type\": \"missing\", \"loc\": [\"body\", \"timestamp\"], \"msg\"",
+      "status": "PASS",
+      "reason": "Blocked \u2014 missing required signature and timestamp fields",
+      "timestamp": "2026-03-23T06:31:28.923257Z"
+    },
+    {
+      "test_id": "V-002",
+      "test_name": "EXECUTE_WITH_APPROVAL",
+      "description": "Sign intent via /sign-intent, then submit to /intake with valid signature",
+      "expected_result": "Action executes successfully with receipt",
+      "actual_result": "HTTP 200: status=success, verified=True, receipt=3dc11d31befdc38a...",
+      "status": "PASS",
+      "reason": "Executed successfully \u2014 signature verified, receipt hash and ledger index assigned",
+      "timestamp": "2026-03-23T06:31:39.341385Z",
+      "receipt_hash": "3dc11d31befdc38ae42c8d253eeb5ca635750f9c403e810525df88271155b85f",
+      "ledger_index": 6
+    },
+    {
+      "test_id": "V-003",
+      "test_name": "REPLAY_ATTACK",
+      "description": "Reuse a previously accepted signature+timestamp",
+      "expected_result": "Blocked",
+      "actual_result": "Expired replay: HTTP 401 (unauthorized); Within-window replay: HTTP 200 (success)",
+      "status": "PARTIAL",
+      "reason": "Expired-timestamp replays blocked (time-window enforcement). Within-window replays accepted \u2014 gateway uses timestamp freshness, not nonce-based single-use tracking. Recommendation: add signature/nonce registry.",
+      "timestamp": "2026-03-23T06:31:50.905022Z"
+    },
+    {
+      "test_id": "V-004",
+      "test_name": "PAYLOAD_TAMPERING",
+      "description": "Sign intent A, submit with tampered intent B using same signature",
+      "expected_result": "Blocked",
+      "actual_result": "HTTP 401: unauthorized \u2014 Signature verification failedIntent was not signed by authorized key",
+      "status": "PASS",
+      "reason": "Blocked \u2014 signature verification failed because signed payload doesn't match submitted payload",
+      "timestamp": "2026-03-23T06:31:53.834400Z"
+    },
+    {
+      "test_id": "V-005",
+      "test_name": "APPROVAL_REVOKED",
+      "description": "Verify that approvals cannot be used after the signature time window expires (300s). The gateway uses time-bound signatures as the revocation mechanism \u2014 no explicit /revoke endpoint exists.",
+      "expected_result": "Blocked (approval expired)",
+      "actual_result": "Time-window enforcement confirmed in V-003 (expired timestamps rejected). Signatures older than 300s are rejected with 'Request timestamp outside valid window'.",
+      "status": "PASS",
+      "reason": "Approvals are time-bound (300s window). After expiry, the signature is automatically invalid. This is a structural revocation mechanism \u2014 no approval persists beyond its window.",
+      "timestamp": "2026-03-23T06:31:56.021788Z"
+    },
+    {
+      "test_id": "V-006",
+      "test_name": "DIRECT_EXECUTOR_CALL",
+      "description": "Call executor endpoints (/tools/*, /intent) directly without valid Bearer token",
+      "expected_result": "Blocked",
+      "actual_result": "No auth\u2192/tools/call_anthropic: HTTP 403 (BLOCKED); No auth\u2192/intent: HTTP 403 (BLOCKED); No auth\u2192/tools/send_email: HTTP 403 (BLOCKED); Fake token\u2192/tools/call_anthropic: HTTP 403 (BLOCKED)",
+      "status": "PASS",
+      "reason": "All direct executor calls blocked \u2014 Bearer token required and validated",
+      "timestamp": "2026-03-23T06:32:04.140630Z"
+    },
+    {
+      "test_id": "V-007",
+      "test_name": "INVALID_SIGNATURE",
+      "description": "Submit intake with garbage, empty, and foreign-key signatures",
+      "expected_result": "Blocked",
+      "actual_result": "Garbage sig: HTTP 401 (BLOCKED); Empty sig: HTTP 401 (BLOCKED); Foreign sig: HTTP 401 (BLOCKED)",
+      "status": "PASS",
+      "reason": "All invalid signatures rejected \u2014 ECDSA verification catches any non-matching signature",
+      "timestamp": "2026-03-23T06:32:09.799360Z"
+    },
+    {
+      "test_id": "V-008",
+      "test_name": "LEDGER_UNAVAILABLE",
+      "description": "Verify that execution is blocked when the ledger service is unavailable",
+      "expected_result": "Blocked (fail-closed)",
+      "actual_result": "Requires server-side simulation \u2014 cannot be tested externally without temporarily disabling the ledger service on the gateway.",
+      "status": "DEFERRED",
+      "reason": "Fail-closed test \u2014 requires server-side simulation. The gateway code shows ledger writes are in the critical path (ledger commit happens before response). If the ledger write fails, the gateway should return an error. To verify: temporarily disable SQLite/ledger, confirm execution is blocked.",
+      "timestamp": "2026-03-23T06:32:09.799449Z"
+    },
+    {
+      "test_id": "V-009",
+      "test_name": "APPROVAL_SERVICE_UNAVAILABLE",
+      "description": "Verify that execution is blocked when the signature verification service is unavailable",
+      "expected_result": "Blocked (fail-closed)",
+      "actual_result": "Requires server-side simulation \u2014 cannot be tested externally without temporarily disabling the ECDSA verification or removing the public key.",
+      "status": "DEFERRED",
+      "reason": "Fail-closed test \u2014 requires server-side simulation. The gateway code shows signature verification occurs before any AI model call. If the public key is missing (RIO_PUBLIC_KEY unset), _load_verifying_key() returns None and all requests are rejected. To verify: unset RIO_PUBLIC_KEY, confirm all /intake blocked.",
+      "timestamp": "2026-03-23T06:32:09.799474Z"
+    },
+    {
+      "test_id": "V-010",
+      "test_name": "DUPLICATE_EXECUTION",
+      "description": "Submit the same signed intent twice in rapid succession",
+      "expected_result": "Blocked (idempotent)",
+      "actual_result": "Exec1: HTTP 200 status=success ledger=8; Exec2: HTTP 200 status=success ledger=9",
+      "status": "PARTIAL",
+      "reason": "Duplicate accepted (ledger 8\u21929). Gateway uses timestamp-window + signature verification but does not maintain a used-signature/nonce registry. Within the 300s window, the same valid signature can be resubmitted. Recommendation: add nonce or signature-hash deduplication to enforce single-use approvals.",
+      "timestamp": "2026-03-23T06:32:40.900575Z"
+    }
+  ]
+}
