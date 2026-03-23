@@ -19,3 +19,6 @@
 - [x] Wire Demo 3 to real backend
 - [x] Vitest tests for RIO backend (6 tests passing)
 - [x] End-to-end browser testing all 3 demos
+- [x] Demo 2 — Stage-light pipeline (Yellow→Red→Blue→Green→White) with color transitions
+- [x] Demo 1 — Deny flow on phone notification (denial recorded, execution permanently blocked)
+- [x] Demo 3 — Responsive mobile layout (three-panel stacks vertically on small screens)

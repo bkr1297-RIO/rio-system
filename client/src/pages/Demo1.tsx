@@ -2,6 +2,7 @@
  * Demo 1 — Human Approval Story (LIVE BACKEND)
  *
  * Every step triggers a real backend call. Receipts are real.
+ * Includes full Deny flow: denial recorded, execution permanently blocked.
  */
 
 import { useState } from "react";
@@ -18,11 +19,14 @@ const STEPS = [
   },
   {
     button: "Step 3 — Human Decision",
-    text: "The human can approve, deny, or request more information. If denied, no action is taken. The system records the denial and creates a cryptographically signed, timestamped, immutable receipt. If approved, the system records the approval and authorizes execution.",
+    textApproved: "The human approved the action. The system records the approval and authorizes execution. A cryptographically signed, timestamped, immutable receipt is created as proof of authorization.",
+    textDenied: "The human denied the action. The system records the denial and permanently blocks execution for this intent. No action is taken. A cryptographically signed, timestamped, immutable receipt is created as proof of the denial.",
+    textDefault: "The human can approve, deny, or request more information. If denied, no action is taken. The system records the denial and creates a cryptographically signed, timestamped, immutable receipt. If approved, the system records the approval and authorizes execution.",
   },
   {
     button: "Step 4 — Action + Receipt",
-    text: "If approved, the agent sends the email. The system records both the approval and the execution and creates a cryptographically signed, timestamped, immutable receipt as proof of authorization and execution.",
+    textApproved: "The agent sends the email. The system records both the approval and the execution and creates a cryptographically signed, timestamped, immutable receipt as proof of authorization and execution.",
+    textDenied: "Execution is permanently blocked. The system has recorded the denial and no further execution is possible for this intent. The denial receipt below serves as proof that the human maintained control.",
   },
 ];
 
@@ -102,6 +106,8 @@ export default function Demo1() {
   const [decided, setDecided] = useState<string | null>(null);
   const [receiptData, setReceiptData] = useState<Record<string, unknown> | null>(null);
   const [ledgerData, setLedgerData] = useState<Record<string, unknown> | null>(null);
+  const [denialData, setDenialData] = useState<Record<string, unknown> | null>(null);
+  const [blockedExecData, setBlockedExecData] = useState<Record<string, unknown> | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -127,6 +133,8 @@ export default function Demo1() {
       setApprovalData(null);
       setReceiptData(null);
       setLedgerData(null);
+      setDenialData(null);
+      setBlockedExecData(null);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to create intent");
     }
@@ -142,6 +150,7 @@ export default function Demo1() {
       const result = await approveMut.mutateAsync({ intentId, decidedBy: "human_user" });
       setApprovalData(result as unknown as Record<string, unknown>);
       setDecided("approved");
+      setActiveStep(2); // Advance to Step 3 to show approval result
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to approve");
     }
@@ -153,8 +162,19 @@ export default function Demo1() {
     setLoading(true);
     setError(null);
     try {
-      await denyMut.mutateAsync({ intentId, decidedBy: "human_user" });
+      const result = await denyMut.mutateAsync({ intentId, decidedBy: "human_user" });
+      setDenialData(result as unknown as Record<string, unknown>);
       setDecided("denied");
+
+      // Attempt execution to prove it's permanently blocked
+      try {
+        const execResult = await executeMut.mutateAsync({ intentId });
+        setBlockedExecData(execResult as unknown as Record<string, unknown>);
+      } catch {
+        setBlockedExecData({ status: "blocked", message: "Execution permanently blocked after denial" } as Record<string, unknown>);
+      }
+
+      setActiveStep(2); // Advance to Step 3 to show denial result
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : "Failed to deny");
     }
@@ -165,6 +185,10 @@ export default function Demo1() {
   const handleStep4 = async () => {
     setActiveStep(3);
     if (!intentId) return;
+
+    // If denied, just show the denial info — don't try to execute
+    if (decided === "denied") return;
+
     setLoading(true);
     setError(null);
     try {
@@ -192,11 +216,25 @@ export default function Demo1() {
   };
 
   const handleCopyReceipt = () => {
-    if (!receiptData) return;
-    navigator.clipboard.writeText(JSON.stringify(receiptData, null, 2)).then(() => {
+    const dataToCopy = decided === "denied" ? denialData : receiptData;
+    if (!dataToCopy) return;
+    navigator.clipboard.writeText(JSON.stringify(dataToCopy, null, 2)).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  };
+
+  // Determine step 3 text
+  const getStep3Text = () => {
+    if (decided === "approved") return STEPS[2].textApproved;
+    if (decided === "denied") return STEPS[2].textDenied;
+    return STEPS[2].textDefault;
+  };
+
+  // Determine step 4 text
+  const getStep4Text = () => {
+    if (decided === "denied") return STEPS[3].textDenied;
+    return STEPS[3].textApproved;
   };
 
   return (
@@ -243,24 +281,50 @@ export default function Demo1() {
       <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl mb-10">
         {/* Left: Stepper navigation */}
         <div className="flex flex-col gap-3 w-full md:w-72 shrink-0">
-          {STEPS.map((step, index) => (
-            <button
-              key={index}
-              onClick={() => handleStepClick(index)}
-              className="w-full py-3 px-4 text-left text-sm font-medium border rounded transition-colors duration-200"
-              style={{
-                backgroundColor: activeStep === index ? "rgba(184, 150, 62, 0.15)" : "transparent",
-                borderColor: activeStep === index ? "#b8963e" : "rgba(184, 150, 62, 0.3)",
-                color: activeStep === index ? "#b8963e" : "#ffffff",
-              }}
-            >
-              {step.button}
-              {/* Status indicators */}
-              {index === 0 && intentId && <span className="ml-2 text-xs" style={{ color: "#22c55e" }}>✓</span>}
-              {index === 1 && decided && <span className="ml-2 text-xs" style={{ color: decided === "approved" ? "#22c55e" : "#ef4444" }}>{decided === "approved" ? "✓" : "✗"}</span>}
-              {index === 3 && receiptData && <span className="ml-2 text-xs" style={{ color: "#22c55e" }}>✓</span>}
-            </button>
-          ))}
+          {STEPS.map((step, index) => {
+            // Determine step status indicator
+            let statusIcon = null;
+            let stepBorderColor = "rgba(184, 150, 62, 0.3)";
+            let stepTextColor = "#ffffff";
+
+            if (index === 0 && intentId) {
+              statusIcon = <span className="ml-2 text-xs" style={{ color: "#22c55e" }}>✓</span>;
+            }
+            if (index === 1 && decided === "approved") {
+              statusIcon = <span className="ml-2 text-xs" style={{ color: "#22c55e" }}>✓ Approved</span>;
+            }
+            if (index === 1 && decided === "denied") {
+              statusIcon = <span className="ml-2 text-xs" style={{ color: "#ef4444" }}>✗ Denied</span>;
+              if (activeStep === index) stepBorderColor = "#ef4444";
+            }
+            if (index === 3 && receiptData) {
+              statusIcon = <span className="ml-2 text-xs" style={{ color: "#22c55e" }}>✓</span>;
+            }
+            if (index === 3 && decided === "denied") {
+              statusIcon = <span className="ml-2 text-xs" style={{ color: "#ef4444" }}>Blocked</span>;
+              if (activeStep === index) stepBorderColor = "#ef4444";
+            }
+
+            if (activeStep === index && decided !== "denied") {
+              stepBorderColor = "#b8963e";
+            }
+
+            return (
+              <button
+                key={index}
+                onClick={() => handleStepClick(index)}
+                className="w-full py-3 px-4 text-left text-sm font-medium border rounded transition-colors duration-200"
+                style={{
+                  backgroundColor: activeStep === index ? (decided === "denied" && (index === 1 || index === 3) ? "rgba(239, 68, 68, 0.1)" : "rgba(184, 150, 62, 0.15)") : "transparent",
+                  borderColor: activeStep === index ? stepBorderColor : "rgba(184, 150, 62, 0.3)",
+                  color: activeStep === index ? (decided === "denied" && (index === 1 || index === 3) ? "#ef4444" : "#b8963e") : stepTextColor,
+                }}
+              >
+                {step.button}
+                {statusIcon}
+              </button>
+            );
+          })}
         </div>
 
         {/* Right: Text panel */}
@@ -282,16 +346,63 @@ export default function Demo1() {
                 {JSON.stringify(intentData, null, 2)}
               </pre>
             </div>
+          ) : activeStep === 2 ? (
+            <div>
+              <p className="text-sm mb-4" style={{ color: "#d1d5db" }}>{getStep3Text()}</p>
+              {decided === "approved" && approvalData && (
+                <>
+                  <p className="text-xs font-semibold mb-2" style={{ color: "#b8963e" }}>Approval Record (live):</p>
+                  <pre className="text-xs leading-relaxed overflow-x-auto" style={{ color: "#9ca3af", fontFamily: "monospace" }}>
+                    {JSON.stringify(approvalData, null, 2)}
+                  </pre>
+                </>
+              )}
+              {decided === "denied" && denialData && (
+                <>
+                  <p className="text-xs font-semibold mb-2" style={{ color: "#ef4444" }}>Denial Record (live):</p>
+                  <pre className="text-xs leading-relaxed overflow-x-auto" style={{ color: "#9ca3af", fontFamily: "monospace" }}>
+                    {JSON.stringify(denialData, null, 2)}
+                  </pre>
+                  {blockedExecData && (
+                    <>
+                      <p className="text-xs font-semibold mt-4 mb-2" style={{ color: "#ef4444" }}>Execution Attempt After Denial:</p>
+                      <pre className="text-xs leading-relaxed overflow-x-auto" style={{ color: "#9ca3af", fontFamily: "monospace" }}>
+                        {JSON.stringify(blockedExecData, null, 2)}
+                      </pre>
+                    </>
+                  )}
+                </>
+              )}
+            </div>
+          ) : activeStep === 3 ? (
+            <div>
+              <p className="text-sm mb-4" style={{ color: decided === "denied" ? "#ef4444" : "#d1d5db" }}>{getStep4Text()}</p>
+              {decided === "denied" && blockedExecData && (
+                <>
+                  <div
+                    className="p-4 rounded border mb-4"
+                    style={{ borderColor: "#ef4444", backgroundColor: "rgba(239, 68, 68, 0.08)" }}
+                  >
+                    <p className="text-xs font-semibold mb-1" style={{ color: "#ef4444" }}>
+                      EXECUTION PERMANENTLY BLOCKED
+                    </p>
+                    <p className="text-xs" style={{ color: "#9ca3af" }}>
+                      Intent status: denied | HTTP 403 | No further execution possible
+                    </p>
+                  </div>
+                </>
+              )}
+            </div>
           ) : (
             <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
-              {STEPS[activeStep].text}
+              {STEPS[activeStep]?.text ?? "Select a step to begin."}
             </p>
           )}
         </div>
       </div>
 
-      {/* Receipt section — shown when Step 4 is active and receipt exists */}
-      {activeStep === 3 && receiptData && (
+      {/* Receipt section — shown when Step 4 is active and receipt exists (approved flow) */}
+      {activeStep === 3 && decided === "approved" && receiptData && (
         <div
           className="w-full max-w-4xl p-6 rounded border mb-6"
           style={{
@@ -309,8 +420,27 @@ export default function Demo1() {
         </div>
       )}
 
-      {/* Ledger entry — shown when Step 4 is active and ledger exists */}
-      {activeStep === 3 && ledgerData && (
+      {/* Denial receipt section — shown when Step 4 is active and denial happened */}
+      {activeStep === 3 && decided === "denied" && denialData && (
+        <div
+          className="w-full max-w-4xl p-6 rounded border mb-6"
+          style={{
+            borderColor: "rgba(239, 68, 68, 0.5)",
+            backgroundColor: "rgba(239, 68, 68, 0.08)",
+          }}
+        >
+          <p className="text-xs font-semibold mb-3" style={{ color: "#ef4444" }}>Denial Receipt (generated by backend):</p>
+          <pre
+            className="text-xs leading-relaxed overflow-x-auto"
+            style={{ color: "#d1d5db", fontFamily: "monospace" }}
+          >
+            {JSON.stringify(denialData, null, 2)}
+          </pre>
+        </div>
+      )}
+
+      {/* Ledger entry — shown when Step 4 is active and ledger exists (approved flow) */}
+      {activeStep === 3 && decided === "approved" && ledgerData && (
         <div
           className="w-full max-w-4xl p-6 rounded border mb-6"
           style={{
@@ -329,18 +459,18 @@ export default function Demo1() {
       )}
 
       {/* Copy Receipt button — centered */}
-      {activeStep === 3 && receiptData && (
+      {activeStep === 3 && (receiptData || denialData) && (
         <div className="flex justify-center mb-10">
           <button
             onClick={handleCopyReceipt}
             className="py-2 px-8 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
             style={{
-              borderColor: "#b8963e",
+              borderColor: decided === "denied" ? "#ef4444" : "#b8963e",
               color: "#ffffff",
               backgroundColor: "transparent",
             }}
           >
-            {copied ? "Copied" : "Copy Receipt"}
+            {copied ? "Copied" : decided === "denied" ? "Copy Denial Receipt" : "Copy Receipt"}
           </button>
         </div>
       )}

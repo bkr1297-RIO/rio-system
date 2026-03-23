@@ -111,7 +111,7 @@ export default function Demo3() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center px-6 py-10"
+      className="min-h-screen flex flex-col items-center px-4 sm:px-6 py-8 sm:py-10"
       style={{ fontFamily: "'Outfit', sans-serif" }}
     >
       {/* Top: Logo, Title, Subtitle */}
@@ -131,7 +131,7 @@ export default function Demo3() {
       </p>
 
       {/* Scenario text */}
-      <p className="text-base text-center max-w-2xl mb-6" style={{ color: "#d1d5db" }}>
+      <p className="text-base text-center max-w-2xl mb-6 px-2" style={{ color: "#d1d5db" }}>
         This page shows the audit trail created by the system. Every request, decision, approval,
         and action is recorded and traceable.
       </p>
@@ -172,7 +172,7 @@ export default function Demo3() {
           <div className="flex flex-col lg:flex-row gap-5 w-full max-w-6xl mb-10">
             {/* Left: Action Summary */}
             <div
-              className="flex-1 p-5 rounded border"
+              className="w-full lg:flex-1 p-5 rounded border"
               style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(255, 255, 255, 0.03)" }}
             >
               <p className="text-xs font-semibold mb-4" style={{ color: "#b8963e" }}>
@@ -190,7 +190,7 @@ export default function Demo3() {
 
             {/* Center: System Audit Log */}
             <div
-              className="flex-1 p-5 rounded border"
+              className="w-full lg:flex-1 p-5 rounded border overflow-x-auto"
               style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(0, 0, 0, 0.25)", fontFamily: "monospace" }}
             >
               <p className="text-xs font-semibold mb-4" style={{ color: "#b8963e", fontFamily: "'Outfit', sans-serif" }}>
@@ -207,7 +207,7 @@ export default function Demo3() {
 
             {/* Right: Receipt & Ledger Record */}
             <div
-              className="flex-1 p-5 rounded border"
+              className="w-full lg:flex-1 p-5 rounded border overflow-x-auto"
               style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(184, 150, 62, 0.08)" }}
             >
               <p className="text-xs font-semibold mb-3" style={{ color: "#b8963e" }}>
@@ -250,7 +250,7 @@ export default function Demo3() {
 
       {/* What this means */}
       <div
-        className="w-full max-w-4xl p-6 rounded border text-center mb-6"
+        className="w-full max-w-4xl p-4 sm:p-6 rounded border text-center mb-6"
         style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(255, 255, 255, 0.03)" }}
       >
         <h2 className="text-lg font-semibold mb-4" style={{ color: "#b8963e" }}>
@@ -267,7 +267,7 @@ export default function Demo3() {
 
       {/* Grounding Statements */}
       <div
-        className="w-full max-w-4xl p-6 rounded border text-center"
+        className="w-full max-w-4xl p-4 sm:p-6 rounded border text-center"
         style={{ borderColor: "rgba(184, 150, 62, 0.2)", backgroundColor: "rgba(255, 255, 255, 0.02)" }}
       >
         <div className="space-y-3">
