@@ -33,3 +33,8 @@
 - [x] Add reset demo button on Demo 2 and pulse animation on stage lights
 - [x] Update Demo 3 — add "under the hood" and "no more black box" text
 - [x] Add reset demo button on Demo 1 and Demo 3
+- [x] Landing page: Add more spacing between the three demo buttons
+- [x] Demo 2: Fix "No log, no go" orphan text — keep on same line as "Structure"
+- [x] Demo 1: Step 1 should NOT be yellow/highlighted on page load
+- [x] Demo 1: Add message on Step 2 telling user to click Approve or Deny on the phone notification
+- [x] Demo 1: Add note near receipt that user can copy and paste into any LLM to verify authenticity

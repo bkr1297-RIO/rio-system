@@ -251,7 +251,7 @@ export default function Demo2() {
       {/* Description text */}
       <p className="text-base text-center max-w-2xl mb-8" style={{ color: "#d1d5db" }}>
         In this scenario, we show what is happening behind the scenes. The agent is structurally
-        unable to execute real-world actions without approval. Not policy. Not guidelines. Structure. No log, no go.
+        unable to execute real-world actions without approval. Not policy. Not guidelines. Structure.&nbsp;No&nbsp;log,&nbsp;no&nbsp;go.
       </p>
 
       {/* ── Stage-Light Pipeline ────────────────────────────────────────────── */}

@@ -105,7 +105,7 @@ export default function Home() {
         />
 
         {/* RIGHT COLUMN — Three demo buttons */}
-        <div className="flex flex-col items-center justify-center gap-5 pl-10">
+        <div className="flex flex-col items-center justify-center gap-14 pl-10">
           <a
             href="/demo1"
             className="w-full max-w-md py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5 text-center block"

@@ -33,9 +33,17 @@ const STEPS = [
 function PhoneNotification({ onApprove, onDeny, decided }: { onApprove: () => void; onDeny: () => void; decided: string | null }) {
   return (
     <div className="flex flex-col items-center justify-center h-full">
-      <p className="text-sm mb-6" style={{ color: "#9ca3af" }}>
+      <p className="text-sm mb-4" style={{ color: "#9ca3af" }}>
         The system sends a notification to the human informing them that an action has been requested. The action cannot proceed without human approval. The system records that the human was notified.
       </p>
+
+      {/* Instruction message telling user to interact */}
+      {!decided && (
+        <p className="text-xs font-medium mb-4 text-center px-4 py-2 rounded" style={{ color: "#eab308", backgroundColor: "rgba(234, 179, 8, 0.1)", border: "1px solid rgba(234, 179, 8, 0.2)" }}>
+          This is a live notification. Click <strong>Approve</strong> or <strong>Deny</strong> below to continue the demo.
+        </p>
+      )}
+
       <div
         className="w-72 rounded-xl overflow-hidden"
         style={{
@@ -96,7 +104,8 @@ function PhoneNotification({ onApprove, onDeny, decided }: { onApprove: () => vo
 }
 
 export default function Demo1() {
-  const [activeStep, setActiveStep] = useState(0);
+  // activeStep starts at -1 so no step is highlighted on page load
+  const [activeStep, setActiveStep] = useState(-1);
   const [copied, setCopied] = useState(false);
 
   // Live state
@@ -285,7 +294,7 @@ export default function Demo1() {
             // Determine step status indicator
             let statusIcon = null;
             let stepBorderColor = "rgba(184, 150, 62, 0.3)";
-            let stepTextColor = "#ffffff";
+            const stepTextColor = "#ffffff";
 
             if (index === 0 && intentId) {
               statusIcon = <span className="ml-2 text-xs" style={{ color: "#22c55e" }}>✓</span>;
@@ -309,15 +318,18 @@ export default function Demo1() {
               stepBorderColor = "#b8963e";
             }
 
+            // isActive: only true when user has clicked this step (activeStep >= 0)
+            const isActive = activeStep >= 0 && activeStep === index;
+
             return (
               <button
                 key={index}
                 onClick={() => handleStepClick(index)}
                 className="w-full py-3 px-4 text-left text-sm font-medium border rounded transition-colors duration-200"
                 style={{
-                  backgroundColor: activeStep === index ? (decided === "denied" && (index === 1 || index === 3) ? "rgba(239, 68, 68, 0.1)" : "rgba(184, 150, 62, 0.15)") : "transparent",
-                  borderColor: activeStep === index ? stepBorderColor : "rgba(184, 150, 62, 0.3)",
-                  color: activeStep === index ? (decided === "denied" && (index === 1 || index === 3) ? "#ef4444" : "#b8963e") : stepTextColor,
+                  backgroundColor: isActive ? (decided === "denied" && (index === 1 || index === 3) ? "rgba(239, 68, 68, 0.1)" : "rgba(184, 150, 62, 0.15)") : "transparent",
+                  borderColor: isActive ? stepBorderColor : "rgba(184, 150, 62, 0.3)",
+                  color: isActive ? (decided === "denied" && (index === 1 || index === 3) ? "#ef4444" : "#b8963e") : stepTextColor,
                 }}
               >
                 {step.button}
@@ -336,7 +348,13 @@ export default function Demo1() {
             minHeight: "200px",
           }}
         >
-          {activeStep === 1 ? (
+          {activeStep === -1 ? (
+            <div className="flex items-center justify-center h-full">
+              <p className="text-sm text-center" style={{ color: "#9ca3af" }}>
+                Click <strong style={{ color: "#b8963e" }}>Step 1</strong> to begin the demo.
+              </p>
+            </div>
+          ) : activeStep === 1 ? (
             <PhoneNotification onApprove={handleApprove} onDeny={handleDeny} decided={decided} />
           ) : activeStep === 0 && intentData ? (
             <div>
@@ -458,12 +476,12 @@ export default function Demo1() {
         </div>
       )}
 
-      {/* Copy Receipt button — centered */}
+      {/* Copy Receipt button — centered, with LLM verification note */}
       {activeStep === 3 && (receiptData || denialData) && (
-        <div className="flex justify-center mb-10">
+        <div className="flex flex-col items-center mb-10">
           <button
             onClick={handleCopyReceipt}
-            className="py-2 px-8 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
+            className="py-2 px-8 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 mb-3"
             style={{
               borderColor: decided === "denied" ? "#ef4444" : "#b8963e",
               color: "#ffffff",
@@ -472,6 +490,9 @@ export default function Demo1() {
           >
             {copied ? "Copied" : decided === "denied" ? "Copy Denial Receipt" : "Copy Receipt"}
           </button>
+          <p className="text-xs text-center max-w-md" style={{ color: "#6b7280" }}>
+            You can copy this receipt and paste it into any LLM or machine to independently verify its authenticity. The cryptographic signature and hash make it tamper-proof.
+          </p>
         </div>
       )}
 
@@ -512,7 +533,7 @@ export default function Demo1() {
       <div className="flex gap-4 mt-10">
         <button
           onClick={() => {
-            setActiveStep(0);
+            setActiveStep(-1);
             setIntentId(null);
             setIntentData(null);
             setApprovalData(null);
