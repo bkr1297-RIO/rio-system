@@ -116,9 +116,9 @@ export default function Demo3() {
     >
       {/* Top: Logo, Title, Subtitle */}
       <img
-        src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-clean-v2-SiU5wPFa54dq7xdKJ7WP9y.webp"
+        src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
         alt="RIO Logo"
-        className="w-24 h-24 mb-4 rounded-full"
+        className="w-24 h-24 mb-4"
       />
       <h1 className="text-4xl font-black tracking-[0.15em] mb-2" style={{ color: "#b8963e" }}>
         RIO
@@ -133,7 +133,7 @@ export default function Demo3() {
       {/* Scenario text */}
       <p className="text-base text-center max-w-2xl mb-6 px-2" style={{ color: "#d1d5db" }}>
         This page shows the audit trail created by the system. Every request, decision, approval,
-        and action is recorded and traceable.
+        and action is recorded and traceable. This also allows the user to understand their AI system better by looking "under the hood." No more black box.
       </p>
 
       {/* Generate Audit button */}
@@ -244,6 +244,13 @@ export default function Demo3() {
             >
               {loading ? "Running..." : "Generate New Audit Trail"}
             </button>
+            <button
+              onClick={() => { setAuditData(null); setError(null); }}
+              className="py-2 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
+              style={{ borderColor: "#b8963e", color: "#b8963e", backgroundColor: "transparent" }}
+            >
+              Reset Demo
+            </button>
           </div>
         </>
       )}
@@ -280,9 +287,11 @@ export default function Demo3() {
       </div>
 
       {/* Back to landing */}
-      <a href="/" className="mt-10 text-sm font-light tracking-wide hover:underline" style={{ color: "#9ca3af" }}>
-        ← Back to Home
-      </a>
+      <div className="flex gap-4 mt-10">
+        <a href="/" className="text-sm font-light tracking-wide hover:underline flex items-center" style={{ color: "#9ca3af" }}>
+          ← Back to Home
+        </a>
+      </div>
     </div>
   );
 }

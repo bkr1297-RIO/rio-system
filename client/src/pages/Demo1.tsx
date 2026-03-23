@@ -244,9 +244,9 @@ export default function Demo1() {
     >
       {/* Top: Logo, Title, Subtitle */}
       <img
-        src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-clean-v2-SiU5wPFa54dq7xdKJ7WP9y.webp"
+        src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
         alt="RIO Logo"
-        className="w-24 h-24 mb-4 rounded-full"
+        className="w-24 h-24 mb-4"
       />
       <h1
         className="text-4xl font-black tracking-[0.15em] mb-2"
@@ -260,7 +260,7 @@ export default function Demo1() {
 
       {/* Scenario text */}
       <p className="text-base text-center max-w-2xl mb-10" style={{ color: "#d1d5db" }}>
-        In this scenario, it's the end of quarter and your AI agent drafts an email and intends to send it to your team.
+        In this scenario, it's the end of quarter and your AI agent drafts an email and intends to send it to your team. Since the human set the rules beforehand that any email sent to team members this close to quarter end is high stakes, the RIO system flags it and sends a notification to the user's cell phone for cryptographic biometric approval. No log, no go.
       </p>
 
       {/* Error display */}
@@ -508,14 +508,35 @@ export default function Demo1() {
         </div>
       </div>
 
-      {/* Back to landing */}
-      <a
-        href="/"
-        className="mt-10 text-sm font-light tracking-wide hover:underline"
-        style={{ color: "#9ca3af" }}
-      >
-        ← Back to Home
-      </a>
+      {/* Reset Demo + Back to landing */}
+      <div className="flex gap-4 mt-10">
+        <button
+          onClick={() => {
+            setActiveStep(0);
+            setIntentId(null);
+            setIntentData(null);
+            setApprovalData(null);
+            setDecided(null);
+            setReceiptData(null);
+            setLedgerData(null);
+            setDenialData(null);
+            setBlockedExecData(null);
+            setError(null);
+            setCopied(false);
+          }}
+          className="text-sm font-medium tracking-wide border rounded py-2 px-6 transition-colors duration-200 hover:bg-white/5"
+          style={{ borderColor: "#b8963e", color: "#b8963e", backgroundColor: "transparent" }}
+        >
+          Reset Demo
+        </button>
+        <a
+          href="/"
+          className="text-sm font-light tracking-wide hover:underline flex items-center"
+          style={{ color: "#9ca3af" }}
+        >
+          ← Back to Home
+        </a>
+      </div>
     </div>
   );
 }

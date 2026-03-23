@@ -2,6 +2,7 @@
  * RIO Demo Site — Landing Page
  * Two-column layout: Left = The Challenge, Our Approach, With RIO What Changes
  * Right = Three demo buttons
+ * Gold divider line between columns on desktop
  */
 
 export default function Home() {
@@ -13,9 +14,9 @@ export default function Home() {
       {/* Top section: Logo + Title + Subtitle centered */}
       <div className="flex flex-col items-center mb-16">
         <img
-          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-clean-v2-SiU5wPFa54dq7xdKJ7WP9y.webp"
+          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
           alt="RIO Logo"
-          className="w-32 h-32 mb-6 rounded-full"
+          className="w-36 h-36 mb-6"
         />
         <h1
           className="text-7xl font-black tracking-[0.15em] mb-4"
@@ -31,11 +32,17 @@ export default function Home() {
         </p>
       </div>
 
-      {/* Two-column layout */}
-      <div className="flex flex-col lg:flex-row gap-12 lg:gap-16 max-w-6xl mx-auto w-full">
-
+      {/* Two-column layout with CSS grid for true side-by-side */}
+      <div
+        className="max-w-6xl mx-auto w-full"
+        style={{
+          display: "grid",
+          gridTemplateColumns: "1fr auto 1fr",
+          gap: "0",
+        }}
+      >
         {/* LEFT COLUMN — The Challenge, Our Approach, With RIO What Changes */}
-        <div className="flex-1 flex flex-col gap-10">
+        <div className="flex flex-col gap-10 pr-10">
 
           {/* The Challenge */}
           <div>
@@ -49,7 +56,7 @@ export default function Home() {
               className="text-base leading-relaxed"
               style={{ color: "#d1d5db" }}
             >
-              AI systems are powerful tools and can be very helpful but "helpful" as interpreted by AI can result in real world harm when it executes like sending untimely emails, moving money, and deleting files. Most AI governance systems rely on prompts, alignment, or policies to guide AI behavior which largely results in the system governing itself. We're essentially asking it to play in the game, coach the game, and referee the game.
+              AI models and agents are powerful and helpful tools, but what happens when we allow it to interpret and assume what helpful means? Irreversible consequences like deleting files, moving money, sending untimely emails, among other things. Most AI governance systems rely on prompts, alignment, or policies to guide AI behavior which largely results in the system governing itself. We're essentially asking it to play in the game, coach the game, and referee the game.
             </p>
           </div>
 
@@ -86,8 +93,19 @@ export default function Home() {
           </div>
         </div>
 
+        {/* GOLD DIVIDER LINE */}
+        <div
+          className="hidden lg:block"
+          style={{
+            width: "1px",
+            backgroundColor: "#b8963e",
+            opacity: 0.4,
+            margin: "0 1.5rem",
+          }}
+        />
+
         {/* RIGHT COLUMN — Three demo buttons */}
-        <div className="flex-1 flex flex-col items-center justify-center gap-5">
+        <div className="flex flex-col items-center justify-center gap-5 pl-10">
           <a
             href="/demo1"
             className="w-full max-w-md py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5 text-center block"
@@ -125,6 +143,23 @@ export default function Home() {
           </a>
         </div>
       </div>
+
+      {/* Mobile: stack columns vertically */}
+      <style>{`
+        @media (max-width: 1023px) {
+          div[style*="grid-template-columns"] {
+            display: flex !important;
+            flex-direction: column !important;
+            gap: 3rem !important;
+          }
+          div[style*="grid-template-columns"] > div:first-child {
+            padding-right: 0 !important;
+          }
+          div[style*="grid-template-columns"] > div:last-child {
+            padding-left: 0 !important;
+          }
+        }
+      `}</style>
     </div>
   );
 }

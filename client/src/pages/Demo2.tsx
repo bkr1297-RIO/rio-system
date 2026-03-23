@@ -237,9 +237,9 @@ export default function Demo2() {
     >
       {/* Top: Logo, Title, Subtitle */}
       <img
-        src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-clean-v2-SiU5wPFa54dq7xdKJ7WP9y.webp"
+        src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
         alt="RIO Logo"
-        className="w-24 h-24 mb-4 rounded-full"
+        className="w-24 h-24 mb-4"
       />
       <h1 className="text-4xl font-black tracking-[0.15em] mb-2" style={{ color: "#b8963e" }}>
         RIO
@@ -251,7 +251,7 @@ export default function Demo2() {
       {/* Description text */}
       <p className="text-base text-center max-w-2xl mb-8" style={{ color: "#d1d5db" }}>
         In this scenario, we show what is happening behind the scenes. The agent is structurally
-        unable to execute real-world actions without approval. Not policy. Not guidelines. Structure.
+        unable to execute real-world actions without approval. Not policy. Not guidelines. Structure. No log, no go.
       </p>
 
       {/* ── Stage-Light Pipeline ────────────────────────────────────────────── */}
@@ -265,7 +265,7 @@ export default function Demo2() {
                 {/* Stage column: light + label */}
                 <div className="flex flex-col items-center gap-2" style={{ minWidth: "80px" }}>
                   <div
-                    className="w-5 h-5 rounded-full transition-all duration-500"
+                    className={`w-5 h-5 rounded-full transition-all duration-500 ${lightColor !== "off" ? "animate-pulse" : ""}`}
                     style={{
                       backgroundColor: colors.bg,
                       boxShadow: colors.glow,
@@ -430,11 +430,11 @@ export default function Demo2() {
           </button>
         )}
 
-        {phase === "executed" && (
+        {phase !== "idle" && (
           <button
             onClick={handleReset}
             className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
-            style={{ borderColor: "#9ca3af", color: "#9ca3af", backgroundColor: "transparent" }}
+            style={{ borderColor: "#b8963e", color: "#b8963e", backgroundColor: "transparent" }}
           >
             Reset Demo
           </button>
@@ -481,9 +481,11 @@ export default function Demo2() {
       </div>
 
       {/* Back to landing */}
-      <a href="/" className="mt-10 text-sm font-light tracking-wide hover:underline" style={{ color: "#9ca3af" }}>
-        ← Back to Home
-      </a>
+      <div className="flex gap-4 mt-10">
+        <a href="/" className="text-sm font-light tracking-wide hover:underline flex items-center" style={{ color: "#9ca3af" }}>
+          ← Back to Home
+        </a>
+      </div>
     </div>
   );
 }

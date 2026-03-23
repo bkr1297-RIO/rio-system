@@ -23,3 +23,13 @@
 - [x] Demo 1 — Deny flow on phone notification (denial recorded, execution permanently blocked)
 - [x] Demo 3 — Responsive mobile layout (three-panel stacks vertically on small screens)
 - [x] Landing page two-column layout: left side with The Challenge, Our Approach, With RIO What Changes; right side with demo buttons
+- [x] Swap logo to new silver/gold triad knot (save old logo)
+- [x] Fix two-column layout on landing page (left text, right buttons, properly side-by-side)
+- [x] Update landing page first sentence per user's new text
+- [x] Add thin gold divider line between columns
+- [x] Update Demo 1 text with RIO system flagging and biometric approval sentence
+- [x] Move Create Intent higher on Demo 1 page
+- [x] Update Demo 2 — add "No log, no go" after Structure
+- [x] Add reset demo button on Demo 2 and pulse animation on stage lights
+- [x] Update Demo 3 — add "under the hood" and "no more black box" text
+- [x] Add reset demo button on Demo 1 and Demo 3
