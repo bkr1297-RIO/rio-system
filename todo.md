@@ -38,3 +38,4 @@
 - [x] Demo 1: Step 1 should NOT be yellow/highlighted on page load
 - [x] Demo 1: Add message on Step 2 telling user to click Approve or Deny on the phone notification
 - [x] Demo 1: Add note near receipt that user can copy and paste into any LLM to verify authenticity
+- [x] Landing page: Add intro text above demo buttons describing the 3 proof-of-concept demos and receipt verification

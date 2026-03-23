@@ -104,8 +104,14 @@ export default function Home() {
           }}
         />
 
-        {/* RIGHT COLUMN — Three demo buttons */}
+        {/* RIGHT COLUMN — Intro text + Three demo buttons */}
         <div className="flex flex-col items-center justify-center gap-14 pl-10">
+          <p
+            className="text-sm leading-relaxed text-center max-w-md"
+            style={{ color: "#d1d5db" }}
+          >
+            Below are 3 really quick "proof of concept" demonstrating what RIO does, how it enforces, and showing the proof of what was done. Don't forget to copy the cryptographic hashed receipt and paste into a readable machine to prove its authenticity.
+          </p>
           <a
             href="/demo1"
             className="w-full max-w-md py-4 px-6 text-base font-medium tracking-wide uppercase text-white border rounded transition-colors duration-200 hover:bg-white/5 text-center block"
