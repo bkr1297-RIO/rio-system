@@ -1,0 +1,21 @@
+# Project TODO
+
+- [x] Landing page with RIO logo, title, subtitle, three demo buttons
+- [x] Deep navy background, soft gold accents, Outfit font
+- [x] Demo 1 — Human Approval Required (stepper, phone notification, receipt)
+- [x] Demo 1 — Real JSON receipt with receipt_id, action, timestamps, signature, hash
+- [x] Demo 1 — Phone notification with Approve/Deny buttons
+- [x] Demo 1 — Centered Copy Receipt button
+- [x] Demo 1 — Bold CANNOT and records every approval and denial
+- [x] Demo 2 — How RIO Enforces Approval (system diagram, live log, receipt, ledger)
+- [x] Demo 2 — Attempt Execution Without Approval button (real 403 blocked)
+- [x] Demo 3 — Audit & Proof (three-panel layout, grounding statements)
+- [x] Upgrade to full-stack (backend server + database)
+- [x] Database schema: intents, approvals, executions, receipts, ledger tables
+- [x] Backend RIO logic: Ed25519 signing, intent creation, approval, execution gating, receipt/ledger
+- [x] tRPC endpoints: createIntent, approve, deny, execute, auditLog
+- [x] Wire Demo 1 to real backend
+- [x] Wire Demo 2 to real backend
+- [x] Wire Demo 3 to real backend
+- [x] Vitest tests for RIO backend (6 tests passing)
+- [x] End-to-end browser testing all 3 demos

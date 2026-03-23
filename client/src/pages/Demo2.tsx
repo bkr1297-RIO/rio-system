@@ -1,18 +1,13 @@
-/*
- * Demo 2 — How RIO Works (Enforcement View)
+/**
+ * Demo 2 — How RIO Enforces Approval (LIVE BACKEND)
  *
- * From user JSON spec:
- *   - Same navy background
- *   - Top: RIO logo, title, subtitle
- *   - Description text about structural prevention
- *   - Left side: System diagram with boxes connected by arrows
- *   - Right side: Live system log that updates step-by-step
- *   - Navigation: "Next Step" button to move through the process
- *   - End of demo: structured JSON receipt + ledger block entry
- *   - Bottom summary box: "What this means"
+ * Shows the system diagram, live log from real backend calls,
+ * "Attempt Execution Without Approval" button that triggers a real 403,
+ * and real receipt/ledger at the end.
  */
 
 import { useState } from "react";
+import { trpc } from "@/lib/trpc";
 
 const DIAGRAM_BOXES = [
   "Agent",
@@ -25,49 +20,6 @@ const DIAGRAM_BOXES = [
   "Ledger / Receipt",
 ];
 
-const LOG_ENTRIES = [
-  "[14:32:10] INTENT_RECEIVED: send_email",
-  "[14:32:10] POLICY_CHECK: approval_required = TRUE",
-  "[14:32:10] EXECUTION_STATUS: BLOCKED",
-  "[14:32:14] HUMAN_DECISION: APPROVED",
-  "[14:32:14] SIGNATURE_CREATED",
-  "[14:32:15] SIGNATURE_VERIFIED: TRUE",
-  "[14:32:15] EXECUTION_STATUS: AUTHORIZED",
-  "[14:32:16] ACTION_EXECUTED: send_email",
-  "[14:32:16] LEDGER_ENTRY_CREATED",
-];
-
-const RECEIPT_JSON = {
-  receipt_id: "rio-rcpt-20260322-00b7f2",
-  action: "send_email",
-  subject: "Q1 Quarterly Report",
-  requested_by: "ai-agent-7b",
-  requested_at: "2026-03-22T14:32:10.000Z",
-  policy_check: "approval_required",
-  decision: "APPROVED",
-  decided_by: "human-operator",
-  decided_at: "2026-03-22T14:32:14.000Z",
-  signature_verified: true,
-  executed_at: "2026-03-22T14:32:16.042Z",
-  signature: "e7c2a1f8d4b6...9a3e0f2c",
-  hash: "sha256:4b8e1c7f...d3a9f06e",
-  immutable: true,
-  verifiable: true,
-};
-
-const LEDGER_ENTRY = {
-  block_index: 47,
-  timestamp: "2026-03-22T14:32:16.042Z",
-  turn_id: "turn-20260322-0047a3",
-  action: "send_email",
-  approval: "APPROVED",
-  approved_by: "human-operator",
-  execution: "COMPLETED",
-  receipt_hash: "sha256:4b8e1c7f...d3a9f06e",
-  previous_block_hash: "sha256:1a2b3c4d...e5f6a7b8",
-  block_hash: "sha256:9f8e7d6c...b5a4c3d2",
-};
-
 const SUMMARY_ITEMS = [
   "The AI agent operates inside a governed system.",
   "The system allows the AI to generate, recommend, and prepare actions.",
@@ -76,38 +28,145 @@ const SUMMARY_ITEMS = [
   "Humans define which actions require approval, and the system enforces those rules.",
 ];
 
-// Map each log entry to which diagram box should be highlighted
-const LOG_TO_BOX_INDEX = [0, 2, 3, 4, 5, 5, 6, 6, 7];
-
-// Color for each log entry
-function getLogColor(index: number): string {
-  if (index === 2) return "#ef4444"; // BLOCKED = red
-  if (index === 6) return "#22c55e"; // AUTHORIZED = green
-  if (index === 7) return "#22c55e"; // EXECUTED = green
-  return "#b8963e"; // gold for others
-}
+type LogEntry = {
+  text: string;
+  color: string;
+  boxIndex: number;
+};
 
 export default function Demo2() {
-  const [currentStep, setCurrentStep] = useState(-1);
-  const demoFinished = currentStep >= LOG_ENTRIES.length - 1;
+  const [logEntries, setLogEntries] = useState<LogEntry[]>([]);
+  const [activeBoxIndex, setActiveBoxIndex] = useState(-1);
+  const [visitedBoxes, setVisitedBoxes] = useState<Set<number>>(new Set());
+  const [intentId, setIntentId] = useState<string | null>(null);
+  const [receiptData, setReceiptData] = useState<Record<string, unknown> | null>(null);
+  const [ledgerData, setLedgerData] = useState<Record<string, unknown> | null>(null);
+  const [blockedMessage, setBlockedMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+  const [phase, setPhase] = useState<"idle" | "intent_created" | "blocked_shown" | "approved" | "executed">("idle");
 
-  const handleNextStep = () => {
-    if (currentStep < LOG_ENTRIES.length - 1) {
-      setCurrentStep((prev) => prev + 1);
+  const createIntentMut = trpc.rio.createIntent.useMutation();
+  const approveMut = trpc.rio.approve.useMutation();
+  const executeMut = trpc.rio.execute.useMutation();
+
+  const addLog = (text: string, color: string, boxIndex: number) => {
+    setLogEntries(prev => [...prev, { text, color, boxIndex }]);
+    setActiveBoxIndex(boxIndex);
+    setVisitedBoxes(prev => { const next = new Set(Array.from(prev)); next.add(boxIndex); return next; });
+  };
+
+  const now = () => new Date().toISOString().slice(11, 19);
+
+  // Step 1: Create Intent
+  const handleCreateIntent = async () => {
+    setLoading(true);
+    setLogEntries([]);
+    setVisitedBoxes(new Set());
+    setActiveBoxIndex(-1);
+    setReceiptData(null);
+    setLedgerData(null);
+    setBlockedMessage(null);
+    setPhase("idle");
+
+    try {
+      const result = await createIntentMut.mutateAsync({
+        action: "send_email",
+        description: "Send Q1 Quarterly Report Email to team",
+        requestedBy: "AI_agent",
+      });
+      setIntentId(result.intentId);
+
+      addLog(`[${now()}] INTENT_RECEIVED: send_email (${result.intentId})`, "#b8963e", 0);
+      setTimeout(() => {
+        addLog(`[${now()}] INTENT_LOGGED — System`, "#b8963e", 1);
+      }, 300);
+      setTimeout(() => {
+        addLog(`[${now()}] POLICY_CHECK: approval_required = TRUE`, "#b8963e", 2);
+      }, 600);
+      setTimeout(() => {
+        addLog(`[${now()}] EXECUTION_STATUS: BLOCKED (awaiting approval)`, "#ef4444", 3);
+        setPhase("intent_created");
+      }, 900);
+    } catch {
+      addLog(`[${now()}] ERROR: Failed to create intent`, "#ef4444", 0);
     }
+    setLoading(false);
+  };
+
+  // Step 2: Attempt Execution Without Approval (real 403)
+  const handleAttemptWithoutApproval = async () => {
+    if (!intentId) return;
+    setLoading(true);
+    setBlockedMessage(null);
+
+    try {
+      const result = await executeMut.mutateAsync({ intentId });
+      if (!result.allowed) {
+        addLog(`[${now()}] EXECUTION_ATTEMPTED: send_email`, "#ef4444", 6);
+        addLog(`[${now()}] EXECUTION_STATUS: BLOCKED — HTTP ${result.httpStatus}`, "#ef4444", 3);
+        setBlockedMessage(result.message ?? "Execution blocked");
+        setPhase("blocked_shown");
+      }
+    } catch {
+      addLog(`[${now()}] EXECUTION_ATTEMPTED: BLOCKED`, "#ef4444", 6);
+      setBlockedMessage("Execution Blocked — Server rejected the request.");
+      setPhase("blocked_shown");
+    }
+    setLoading(false);
+  };
+
+  // Step 3: Approve
+  const handleApprove = async () => {
+    if (!intentId) return;
+    setLoading(true);
+
+    try {
+      const result = await approveMut.mutateAsync({ intentId, decidedBy: "human_user" });
+      addLog(`[${now()}] HUMAN_DECISION: APPROVED`, "#b8963e", 4);
+      addLog(`[${now()}] SIGNATURE_CREATED: ${result.signature}`, "#b8963e", 5);
+      addLog(`[${now()}] SIGNATURE_VERIFIED: TRUE`, "#22c55e", 5);
+      setPhase("approved");
+      setBlockedMessage(null);
+    } catch {
+      addLog(`[${now()}] ERROR: Approval failed`, "#ef4444", 4);
+    }
+    setLoading(false);
+  };
+
+  // Step 4: Execute (should succeed now)
+  const handleExecute = async () => {
+    if (!intentId) return;
+    setLoading(true);
+
+    try {
+      const result = await executeMut.mutateAsync({ intentId });
+      if (result.allowed) {
+        addLog(`[${now()}] EXECUTION_STATUS: AUTHORIZED`, "#22c55e", 6);
+        addLog(`[${now()}] ACTION_EXECUTED: send_email`, "#22c55e", 6);
+        addLog(`[${now()}] RECEIPT_CREATED: ${(result.receipt as Record<string, unknown>)?.receipt_id}`, "#ffffff", 7);
+        addLog(`[${now()}] LEDGER_ENTRY_WRITTEN: ${(result.ledger_entry as Record<string, unknown>)?.block_id}`, "#ffffff", 7);
+        setReceiptData(result.receipt as unknown as Record<string, unknown>);
+        setLedgerData(result.ledger_entry as unknown as Record<string, unknown>);
+        setPhase("executed");
+      } else {
+        addLog(`[${now()}] EXECUTION_STATUS: BLOCKED — ${result.message}`, "#ef4444", 6);
+      }
+    } catch {
+      addLog(`[${now()}] ERROR: Execution failed`, "#ef4444", 6);
+    }
+    setLoading(false);
   };
 
   const handleReset = () => {
-    setCurrentStep(-1);
+    setLogEntries([]);
+    setVisitedBoxes(new Set());
+    setActiveBoxIndex(-1);
+    setIntentId(null);
+    setReceiptData(null);
+    setLedgerData(null);
+    setBlockedMessage(null);
+    setPhase("idle");
   };
-
-  // Determine which diagram boxes are "active" (highlighted) based on current step
-  const activeBoxIndex = currentStep >= 0 ? LOG_TO_BOX_INDEX[currentStep] : -1;
-  // Track all boxes that have been visited
-  const visitedBoxes = new Set<number>();
-  for (let i = 0; i <= currentStep; i++) {
-    if (i >= 0) visitedBoxes.add(LOG_TO_BOX_INDEX[i]);
-  }
 
   return (
     <div
@@ -120,10 +179,7 @@ export default function Demo2() {
         alt="RIO Logo"
         className="w-24 h-24 mb-4 rounded-full"
       />
-      <h1
-        className="text-4xl font-black tracking-[0.15em] mb-2"
-        style={{ color: "#b8963e" }}
-      >
+      <h1 className="text-4xl font-black tracking-[0.15em] mb-2" style={{ color: "#b8963e" }}>
         RIO
       </h1>
       <p className="text-sm font-light tracking-[0.08em] mb-6" style={{ color: "#9ca3af" }}>
@@ -143,18 +199,16 @@ export default function Demo2() {
           {DIAGRAM_BOXES.map((box, index) => {
             const isActive = index === activeBoxIndex;
             const isVisited = visitedBoxes.has(index);
-            // Determine box border/bg color
             let borderColor = "rgba(184, 150, 62, 0.25)";
             let bgColor = "transparent";
             let textColor = "#6b7280";
 
             if (isActive) {
-              // Special colors for BLOCKED (index 3 when step is 2) and EXECUTED (index 6 when step >= 7)
-              if (index === 3 && currentStep === 2) {
+              if (index === 3 && (phase === "intent_created" || phase === "blocked_shown")) {
                 borderColor = "#ef4444";
                 bgColor = "rgba(239, 68, 68, 0.12)";
                 textColor = "#ef4444";
-              } else if (index === 6 && currentStep >= 7) {
+              } else if (index === 6 && phase === "executed") {
                 borderColor = "#22c55e";
                 bgColor = "rgba(34, 197, 94, 0.12)";
                 textColor = "#22c55e";
@@ -170,37 +224,15 @@ export default function Demo2() {
 
             return (
               <div key={index} className="flex flex-col items-center w-full">
-                {/* Arrow connector (except before first box) */}
                 {index > 0 && (
-                  <div
-                    className="w-px h-4"
-                    style={{
-                      backgroundColor: isVisited || isActive
-                        ? "rgba(184, 150, 62, 0.5)"
-                        : "rgba(184, 150, 62, 0.15)",
-                    }}
-                  />
+                  <div className="w-px h-4" style={{ backgroundColor: isVisited || isActive ? "rgba(184, 150, 62, 0.5)" : "rgba(184, 150, 62, 0.15)" }} />
                 )}
                 {index > 0 && (
-                  <div
-                    className="w-0 h-0 mb-1"
-                    style={{
-                      borderLeft: "5px solid transparent",
-                      borderRight: "5px solid transparent",
-                      borderTop: isVisited || isActive
-                        ? "6px solid rgba(184, 150, 62, 0.5)"
-                        : "6px solid rgba(184, 150, 62, 0.15)",
-                    }}
-                  />
+                  <div className="w-0 h-0 mb-1" style={{ borderLeft: "5px solid transparent", borderRight: "5px solid transparent", borderTop: isVisited || isActive ? "6px solid rgba(184, 150, 62, 0.5)" : "6px solid rgba(184, 150, 62, 0.15)" }} />
                 )}
-                {/* Box */}
                 <div
                   className="w-full py-2.5 px-4 text-center text-sm font-medium rounded border transition-all duration-300"
-                  style={{
-                    borderColor,
-                    backgroundColor: bgColor,
-                    color: textColor,
-                  }}
+                  style={{ borderColor, backgroundColor: bgColor, color: textColor }}
                 >
                   {box}
                 </div>
@@ -212,116 +244,120 @@ export default function Demo2() {
         {/* Right: Live system log */}
         <div
           className="flex-1 p-5 rounded border overflow-hidden"
-          style={{
-            borderColor: "rgba(184, 150, 62, 0.3)",
-            backgroundColor: "rgba(0, 0, 0, 0.25)",
-            fontFamily: "monospace",
-          }}
+          style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(0, 0, 0, 0.25)", fontFamily: "monospace" }}
         >
           <p className="text-xs font-semibold mb-3" style={{ color: "#b8963e" }}>
-            SYSTEM LOG
+            LIVE SYSTEM LOG (real backend)
           </p>
           <div className="space-y-1.5 min-h-[200px]">
-            {LOG_ENTRIES.map((entry, index) => {
-              if (index > currentStep) return null;
-              return (
-                <p
-                  key={index}
-                  className="text-xs"
-                  style={{ color: getLogColor(index) }}
-                >
-                  {entry}
-                </p>
-              );
-            })}
-            {currentStep < 0 && (
+            {logEntries.length === 0 && (
               <p className="text-xs" style={{ color: "#4b5563" }}>
                 Waiting for first step...
               </p>
             )}
+            {logEntries.map((entry, index) => (
+              <p key={index} className="text-xs" style={{ color: entry.color }}>
+                {entry.text}
+              </p>
+            ))}
           </div>
         </div>
       </div>
 
-      {/* Next Step / Reset button */}
-      <div className="flex justify-center mb-10">
-        {!demoFinished ? (
+      {/* Blocked message */}
+      {blockedMessage && (
+        <div
+          className="w-full max-w-5xl p-4 rounded border mb-6 text-center"
+          style={{ borderColor: "#ef4444", backgroundColor: "rgba(239, 68, 68, 0.1)" }}
+        >
+          <p className="text-sm font-medium" style={{ color: "#ef4444" }}>
+            {blockedMessage}
+          </p>
+        </div>
+      )}
+
+      {/* Action buttons */}
+      <div className="flex flex-wrap justify-center gap-3 mb-10">
+        {phase === "idle" && (
           <button
-            onClick={handleNextStep}
-            className="py-2.5 px-8 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
-            style={{
-              borderColor: "#b8963e",
-              color: "#ffffff",
-              backgroundColor: "transparent",
-            }}
+            onClick={handleCreateIntent}
+            disabled={loading}
+            className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+            style={{ borderColor: "#b8963e", color: "#ffffff", backgroundColor: "transparent" }}
           >
-            Next Step
+            {loading ? "Creating..." : "Create Intent"}
           </button>
-        ) : (
+        )}
+
+        {(phase === "intent_created" || phase === "blocked_shown") && (
+          <>
+            <button
+              onClick={handleAttemptWithoutApproval}
+              disabled={loading}
+              className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-red-500/10 disabled:opacity-50"
+              style={{ borderColor: "#ef4444", color: "#ef4444", backgroundColor: "transparent" }}
+            >
+              {loading ? "Attempting..." : "Attempt Execution Without Approval"}
+            </button>
+            <button
+              onClick={handleApprove}
+              disabled={loading}
+              className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+              style={{ borderColor: "#22c55e", color: "#22c55e", backgroundColor: "transparent" }}
+            >
+              {loading ? "Approving..." : "Approve"}
+            </button>
+          </>
+        )}
+
+        {phase === "approved" && (
+          <button
+            onClick={handleExecute}
+            disabled={loading}
+            className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+            style={{ borderColor: "#22c55e", color: "#22c55e", backgroundColor: "transparent" }}
+          >
+            {loading ? "Executing..." : "Execute"}
+          </button>
+        )}
+
+        {phase === "executed" && (
           <button
             onClick={handleReset}
-            className="py-2.5 px-8 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
-            style={{
-              borderColor: "#9ca3af",
-              color: "#9ca3af",
-              backgroundColor: "transparent",
-            }}
+            className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
+            style={{ borderColor: "#9ca3af", color: "#9ca3af", backgroundColor: "transparent" }}
           >
             Reset Demo
           </button>
         )}
       </div>
 
-      {/* Receipt + Ledger — shown when demo is finished */}
-      {demoFinished && (
+      {/* Receipt + Ledger — shown when executed */}
+      {phase === "executed" && receiptData && ledgerData && (
         <div className="w-full max-w-5xl flex flex-col md:flex-row gap-6 mb-10">
-          {/* Receipt */}
-          <div
-            className="flex-1 p-5 rounded border"
-            style={{
-              borderColor: "rgba(184, 150, 62, 0.5)",
-              backgroundColor: "rgba(184, 150, 62, 0.08)",
-            }}
-          >
+          <div className="flex-1 p-5 rounded border" style={{ borderColor: "rgba(184, 150, 62, 0.5)", backgroundColor: "rgba(184, 150, 62, 0.08)" }}>
             <p className="text-xs font-semibold mb-3" style={{ color: "#b8963e" }}>
-              RECEIPT
+              LIVE RECEIPT (generated by backend)
             </p>
-            <pre
-              className="text-xs leading-relaxed overflow-x-auto"
-              style={{ color: "#d1d5db", fontFamily: "monospace" }}
-            >
-              {JSON.stringify(RECEIPT_JSON, null, 2)}
+            <pre className="text-xs leading-relaxed overflow-x-auto" style={{ color: "#d1d5db", fontFamily: "monospace" }}>
+              {JSON.stringify(receiptData, null, 2)}
             </pre>
           </div>
-
-          {/* Ledger Entry */}
-          <div
-            className="flex-1 p-5 rounded border"
-            style={{
-              borderColor: "rgba(184, 150, 62, 0.5)",
-              backgroundColor: "rgba(184, 150, 62, 0.08)",
-            }}
-          >
+          <div className="flex-1 p-5 rounded border" style={{ borderColor: "rgba(184, 150, 62, 0.5)", backgroundColor: "rgba(184, 150, 62, 0.08)" }}>
             <p className="text-xs font-semibold mb-3" style={{ color: "#b8963e" }}>
               LEDGER ENTRY
             </p>
-            <pre
-              className="text-xs leading-relaxed overflow-x-auto"
-              style={{ color: "#d1d5db", fontFamily: "monospace" }}
-            >
-              {JSON.stringify(LEDGER_ENTRY, null, 2)}
+            <pre className="text-xs leading-relaxed overflow-x-auto" style={{ color: "#d1d5db", fontFamily: "monospace" }}>
+              {JSON.stringify(ledgerData, null, 2)}
             </pre>
           </div>
         </div>
       )}
 
-      {/* Bottom summary box — centered text */}
+      {/* Bottom summary box */}
       <div
         className="w-full max-w-4xl p-6 rounded border text-center"
-        style={{
-          borderColor: "rgba(184, 150, 62, 0.3)",
-          backgroundColor: "rgba(255, 255, 255, 0.03)",
-        }}
+        style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(255, 255, 255, 0.03)" }}
       >
         <h2 className="text-lg font-semibold mb-4" style={{ color: "#b8963e" }}>
           What this means
@@ -336,11 +372,7 @@ export default function Demo2() {
       </div>
 
       {/* Back to landing */}
-      <a
-        href="/"
-        className="mt-10 text-sm font-light tracking-wide hover:underline"
-        style={{ color: "#9ca3af" }}
-      >
+      <a href="/" className="mt-10 text-sm font-light tracking-wide hover:underline" style={{ color: "#9ca3af" }}>
         ← Back to Home
       </a>
     </div>

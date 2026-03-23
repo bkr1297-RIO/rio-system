@@ -1,62 +1,13 @@
-/*
- * Demo 3 — Audit & Proof (Traceability)
+/**
+ * Demo 3 — Audit & Proof (Traceability) (LIVE BACKEND)
  *
- * From user JSON spec:
- *   - Same navy background
- *   - Top: RIO logo, title, subtitle "Demo 3 — Audit & Proof (Traceability)"
- *   - Scenario text about audit trail
- *   - Three-panel layout:
- *     Left: Action Summary (key-value list)
- *     Center: System Audit Log (timestamped entries)
- *     Right: Receipt JSON + Ledger Block
- *   - "What this means" section
- *   - Grounding Statements section
+ * Runs a full intent→approve→execute cycle on load, then displays
+ * real audit log, receipt, and ledger from the backend.
+ * Includes live backend text above the audit log.
  */
 
-const ACTION_SUMMARY = [
-  { label: "Action", value: "Send Email" },
-  { label: "Requested By", value: "AI Agent" },
-  { label: "Human Decision", value: "Approved" },
-  { label: "Execution", value: "Completed" },
-  { label: "Receipt ID", value: "RIO-88421A" },
-  { label: "Status", value: "Recorded" },
-];
-
-const AUDIT_LOG = [
-  "[14:32:10] INTENT_CREATED — AI Agent",
-  "[14:32:10] INTENT_LOGGED — System",
-  "[14:32:12] HUMAN_NOTIFICATION_SENT — System",
-  "[14:32:18] HUMAN_DECISION_RECEIVED — Approved",
-  "[14:32:18] DECISION_LOGGED — System",
-  "[14:32:19] SIGNATURE_CREATED — System",
-  "[14:32:20] SIGNATURE_VERIFIED — System",
-  "[14:32:21] EXECUTION_AUTHORIZED — System",
-  "[14:32:22] ACTION_EXECUTED — System",
-  "[14:32:22] RECEIPT_CREATED — System",
-  "[14:32:22] LEDGER_ENTRY_WRITTEN — System",
-];
-
-const RECEIPT_JSON = {
-  receipt_id: "RIO-88421A",
-  action: "send_email",
-  requested_by: "AI_agent",
-  approved_by: "human_user",
-  decision: "approved",
-  timestamp_request: "2026-03-22T14:32:10Z",
-  timestamp_approval: "2026-03-22T14:32:18Z",
-  timestamp_execution: "2026-03-22T14:32:22Z",
-  signature: "MEUCIQDf...",
-  hash: "0000a84f9c2b...",
-  previous_hash: "91af02c4...",
-};
-
-const LEDGER_BLOCK = {
-  block_id: "88421A",
-  previous_hash: "91af02c4...",
-  current_hash: "0000a84f9c2b...",
-  timestamp: "2026-03-22T14:32:22Z",
-  recorded_by: "RIO System",
-};
+import { useState } from "react";
+import { trpc } from "@/lib/trpc";
 
 const WHAT_THIS_MEANS = [
   "Every request, decision, and action is recorded with timestamps and signatures.",
@@ -71,7 +22,93 @@ const GROUNDING_STATEMENTS = [
   "This is not inventing a new safety pattern — it applies proven authorization and audit patterns to AI systems.",
 ];
 
+type AuditData = {
+  intentId: string;
+  intent: { action: string; requestedBy: string; status: string; createdAt: string } | null;
+  approvals: { decision: string; decidedBy: string; decidedAt: string }[];
+  executions: { status: string; detail: string; executedAt: string }[];
+  receipts: {
+    receipt_id: string;
+    action: string;
+    requested_by: string;
+    approved_by: string | null;
+    decision: string;
+    timestamp_request: string;
+    timestamp_approval: string;
+    timestamp_execution: string;
+    signature: string | null;
+    hash: string;
+    previous_hash: string | null;
+  }[];
+  ledger_entries: {
+    block_id: string;
+    previous_hash: string | null;
+    current_hash: string;
+    timestamp: string;
+    recorded_by: string;
+  }[];
+  log: string[];
+};
+
 export default function Demo3() {
+  const [loading, setLoading] = useState(false);
+  const [auditData, setAuditData] = useState<AuditData | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const createIntentMut = trpc.rio.createIntent.useMutation();
+  const approveMut = trpc.rio.approve.useMutation();
+  const executeMut = trpc.rio.execute.useMutation();
+  const auditLogQuery = trpc.rio.auditLog;
+
+  // Run a full cycle and then fetch the audit log
+  const handleRunAudit = async () => {
+    setLoading(true);
+    setError(null);
+    setAuditData(null);
+
+    try {
+      // 1. Create intent
+      const intent = await createIntentMut.mutateAsync({
+        action: "send_email",
+        description: "Send Q1 Quarterly Report Email to team",
+        requestedBy: "AI_agent",
+      });
+
+      // 2. Approve
+      await approveMut.mutateAsync({ intentId: intent.intentId, decidedBy: "human_user" });
+
+      // 3. Execute
+      await executeMut.mutateAsync({ intentId: intent.intentId });
+
+      // 4. Fetch full audit log
+      // Use a direct fetch since we need to query after mutations
+      const response = await fetch(`/api/trpc/rio.auditLog?input=${encodeURIComponent(JSON.stringify({ json: { intentId: intent.intentId } }))}`);
+      const json = await response.json();
+      const result = json?.result?.data?.json;
+
+      if (result) {
+        setAuditData(result as AuditData);
+      } else {
+        setError("Failed to fetch audit log");
+      }
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : "Failed to run audit cycle");
+    }
+    setLoading(false);
+  };
+
+  const receipt = auditData?.receipts?.[0];
+  const ledgerEntry = auditData?.ledger_entries?.[0];
+
+  const actionSummary = auditData ? [
+    { label: "Action", value: auditData.intent?.action ?? "—" },
+    { label: "Requested By", value: auditData.intent?.requestedBy ?? "—" },
+    { label: "Human Decision", value: auditData.approvals?.[0]?.decision === "approved" ? "Approved" : "—" },
+    { label: "Execution", value: auditData.executions?.find(e => e.status === "success") ? "Completed" : "—" },
+    { label: "Receipt ID", value: receipt?.receipt_id ?? "—" },
+    { label: "Status", value: "Recorded" },
+  ] : [];
+
   return (
     <div
       className="min-h-screen flex flex-col items-center px-6 py-10"
@@ -83,10 +120,7 @@ export default function Demo3() {
         alt="RIO Logo"
         className="w-24 h-24 mb-4 rounded-full"
       />
-      <h1
-        className="text-4xl font-black tracking-[0.15em] mb-2"
-        style={{ color: "#b8963e" }}
-      >
+      <h1 className="text-4xl font-black tracking-[0.15em] mb-2" style={{ color: "#b8963e" }}>
         RIO
       </h1>
       <p className="text-sm font-light tracking-[0.08em] mb-2" style={{ color: "#9ca3af" }}>
@@ -97,101 +131,127 @@ export default function Demo3() {
       </p>
 
       {/* Scenario text */}
-      <p className="text-base text-center max-w-2xl mb-10" style={{ color: "#d1d5db" }}>
+      <p className="text-base text-center max-w-2xl mb-6" style={{ color: "#d1d5db" }}>
         This page shows the audit trail created by the system. Every request, decision, approval,
         and action is recorded and traceable.
       </p>
 
-      {/* Three-panel layout */}
-      <div className="flex flex-col lg:flex-row gap-5 w-full max-w-6xl mb-10">
-        {/* Left: Action Summary */}
-        <div
-          className="flex-1 p-5 rounded border"
-          style={{
-            borderColor: "rgba(184, 150, 62, 0.3)",
-            backgroundColor: "rgba(255, 255, 255, 0.03)",
-          }}
-        >
-          <p className="text-xs font-semibold mb-4" style={{ color: "#b8963e" }}>
-            ACTION SUMMARY
-          </p>
-          <div className="space-y-2.5">
-            {ACTION_SUMMARY.map((item, index) => (
-              <div key={index} className="flex justify-between text-sm">
-                <span style={{ color: "#9ca3af" }}>{item.label}</span>
-                <span style={{ color: "#ffffff" }}>{item.value}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Center: System Audit Log */}
-        <div
-          className="flex-1 p-5 rounded border"
-          style={{
-            borderColor: "rgba(184, 150, 62, 0.3)",
-            backgroundColor: "rgba(0, 0, 0, 0.25)",
-            fontFamily: "monospace",
-          }}
-        >
-          <p
-            className="text-xs font-semibold mb-4"
-            style={{ color: "#b8963e", fontFamily: "'Outfit', sans-serif" }}
+      {/* Generate Audit button */}
+      {!auditData && (
+        <div className="flex justify-center mb-10">
+          <button
+            onClick={handleRunAudit}
+            disabled={loading}
+            className="py-2.5 px-8 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+            style={{ borderColor: "#b8963e", color: "#ffffff", backgroundColor: "transparent" }}
           >
-            SYSTEM AUDIT LOG
-          </p>
-          <div className="space-y-1.5">
-            {AUDIT_LOG.map((entry, index) => (
-              <p key={index} className="text-xs" style={{ color: "#d1d5db" }}>
-                {entry}
+            {loading ? "Running full cycle..." : "Generate Live Audit Trail"}
+          </button>
+        </div>
+      )}
+
+      {error && (
+        <div className="w-full max-w-4xl mb-4 p-3 rounded border text-sm" style={{ borderColor: "#ef4444", backgroundColor: "rgba(239, 68, 68, 0.1)", color: "#ef4444" }}>
+          {error}
+        </div>
+      )}
+
+      {/* Three-panel layout — shown after audit data is loaded */}
+      {auditData && (
+        <>
+          {/* Live backend text */}
+          <div
+            className="w-full max-w-6xl p-3 rounded border mb-5 text-center"
+            style={{ borderColor: "rgba(34, 197, 94, 0.3)", backgroundColor: "rgba(34, 197, 94, 0.06)" }}
+          >
+            <p className="text-xs font-medium" style={{ color: "#22c55e" }}>
+              All approvals, denials, and executions shown here are generated by the live backend. The blocked state is a real server-side rejection, not a UI animation.
+            </p>
+          </div>
+
+          <div className="flex flex-col lg:flex-row gap-5 w-full max-w-6xl mb-10">
+            {/* Left: Action Summary */}
+            <div
+              className="flex-1 p-5 rounded border"
+              style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(255, 255, 255, 0.03)" }}
+            >
+              <p className="text-xs font-semibold mb-4" style={{ color: "#b8963e" }}>
+                ACTION SUMMARY
               </p>
-            ))}
+              <div className="space-y-2.5">
+                {actionSummary.map((item, index) => (
+                  <div key={index} className="flex justify-between text-sm">
+                    <span style={{ color: "#9ca3af" }}>{item.label}</span>
+                    <span style={{ color: "#ffffff" }}>{item.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Center: System Audit Log */}
+            <div
+              className="flex-1 p-5 rounded border"
+              style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(0, 0, 0, 0.25)", fontFamily: "monospace" }}
+            >
+              <p className="text-xs font-semibold mb-4" style={{ color: "#b8963e", fontFamily: "'Outfit', sans-serif" }}>
+                SYSTEM AUDIT LOG (live)
+              </p>
+              <div className="space-y-1.5">
+                {auditData.log.map((entry, index) => (
+                  <p key={index} className="text-xs" style={{ color: entry.includes("BLOCKED") ? "#ef4444" : entry.includes("EXECUTED") || entry.includes("AUTHORIZED") ? "#22c55e" : "#d1d5db" }}>
+                    {entry}
+                  </p>
+                ))}
+              </div>
+            </div>
+
+            {/* Right: Receipt & Ledger Record */}
+            <div
+              className="flex-1 p-5 rounded border"
+              style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(184, 150, 62, 0.08)" }}
+            >
+              <p className="text-xs font-semibold mb-3" style={{ color: "#b8963e" }}>
+                RECEIPT & LEDGER RECORD
+              </p>
+
+              {receipt && (
+                <>
+                  <p className="text-xs font-medium mb-1.5" style={{ color: "#9ca3af" }}>Receipt</p>
+                  <pre className="text-xs leading-relaxed overflow-x-auto mb-4" style={{ color: "#d1d5db", fontFamily: "monospace" }}>
+                    {JSON.stringify(receipt, null, 2)}
+                  </pre>
+                </>
+              )}
+
+              {ledgerEntry && (
+                <>
+                  <p className="text-xs font-medium mb-1.5" style={{ color: "#9ca3af" }}>Ledger Block</p>
+                  <pre className="text-xs leading-relaxed overflow-x-auto" style={{ color: "#d1d5db", fontFamily: "monospace" }}>
+                    {JSON.stringify(ledgerEntry, null, 2)}
+                  </pre>
+                </>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* Right: Receipt & Ledger Record */}
-        <div
-          className="flex-1 p-5 rounded border"
-          style={{
-            borderColor: "rgba(184, 150, 62, 0.3)",
-            backgroundColor: "rgba(184, 150, 62, 0.08)",
-          }}
-        >
-          <p className="text-xs font-semibold mb-3" style={{ color: "#b8963e" }}>
-            RECEIPT & LEDGER RECORD
-          </p>
-
-          {/* Receipt */}
-          <p className="text-xs font-medium mb-1.5" style={{ color: "#9ca3af" }}>
-            Receipt
-          </p>
-          <pre
-            className="text-xs leading-relaxed overflow-x-auto mb-4"
-            style={{ color: "#d1d5db", fontFamily: "monospace" }}
-          >
-            {JSON.stringify(RECEIPT_JSON, null, 2)}
-          </pre>
-
-          {/* Ledger Block */}
-          <p className="text-xs font-medium mb-1.5" style={{ color: "#9ca3af" }}>
-            Ledger Block
-          </p>
-          <pre
-            className="text-xs leading-relaxed overflow-x-auto"
-            style={{ color: "#d1d5db", fontFamily: "monospace" }}
-          >
-            {JSON.stringify(LEDGER_BLOCK, null, 2)}
-          </pre>
-        </div>
-      </div>
+          {/* Run again button */}
+          <div className="flex justify-center mb-10">
+            <button
+              onClick={handleRunAudit}
+              disabled={loading}
+              className="py-2 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+              style={{ borderColor: "#9ca3af", color: "#9ca3af", backgroundColor: "transparent" }}
+            >
+              {loading ? "Running..." : "Generate New Audit Trail"}
+            </button>
+          </div>
+        </>
+      )}
 
       {/* What this means */}
       <div
         className="w-full max-w-4xl p-6 rounded border text-center mb-6"
-        style={{
-          borderColor: "rgba(184, 150, 62, 0.3)",
-          backgroundColor: "rgba(255, 255, 255, 0.03)",
-        }}
+        style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(255, 255, 255, 0.03)" }}
       >
         <h2 className="text-lg font-semibold mb-4" style={{ color: "#b8963e" }}>
           What this means
@@ -208,18 +268,11 @@ export default function Demo3() {
       {/* Grounding Statements */}
       <div
         className="w-full max-w-4xl p-6 rounded border text-center"
-        style={{
-          borderColor: "rgba(184, 150, 62, 0.2)",
-          backgroundColor: "rgba(255, 255, 255, 0.02)",
-        }}
+        style={{ borderColor: "rgba(184, 150, 62, 0.2)", backgroundColor: "rgba(255, 255, 255, 0.02)" }}
       >
         <div className="space-y-3">
           {GROUNDING_STATEMENTS.map((statement, index) => (
-            <p
-              key={index}
-              className="text-sm leading-relaxed italic"
-              style={{ color: "#9ca3af" }}
-            >
+            <p key={index} className="text-sm leading-relaxed italic" style={{ color: "#9ca3af" }}>
               {statement}
             </p>
           ))}
@@ -227,11 +280,7 @@ export default function Demo3() {
       </div>
 
       {/* Back to landing */}
-      <a
-        href="/"
-        className="mt-10 text-sm font-light tracking-wide hover:underline"
-        style={{ color: "#9ca3af" }}
-      >
+      <a href="/" className="mt-10 text-sm font-light tracking-wide hover:underline" style={{ color: "#9ca3af" }}>
         ← Back to Home
       </a>
     </div>
