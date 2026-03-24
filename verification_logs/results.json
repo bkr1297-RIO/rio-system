@@ -1,38 +1,38 @@
 {
-  "harness_version": "2.0.0",
+  "harness_version": "3.1.0",
   "gateway_url": "https://rio-router-gateway.replit.app/api/rio-gateway",
   "gateway_version": "3.0.0",
-  "run_timestamp": "2026-03-23T07:42:53.550136Z",
+  "run_timestamp": "2026-03-24T05:38:13.688102Z",
   "summary": {
-    "passed": 10,
-    "partial": 0,
+    "passed": 11,
+    "partial": 1,
     "failed": 0,
     "deferred": 0,
-    "total": 10,
-    "verdict": "SYSTEM VERIFIED"
+    "total": 12,
+    "verdict": "ISSUES FOUND"
   },
   "results": [
     {
       "test_id": "V-001",
       "test_name": "EXECUTE_NO_APPROVAL",
-      "description": "Submit intake request without signature or timestamp",
-      "expected_result": "Blocked (HTTP 422 or 401)",
-      "actual_result": "HTTP 422: {\"detail\": [{\"type\": \"missing\", \"loc\": [\"body\", \"signature\"], \"msg\": \"Field required\", \"input\": {\"source\": \"attacker\", \"intent\": \"steal data\"}}, {\"type\": \"missing\", \"loc\": [\"body\", \"timestamp\"], \"msg\"",
+      "description": "Submit intake request without valid signature or execution token",
+      "expected_result": "Blocked (HTTP 403/422)",
+      "actual_result": "No fields: HTTP 422 (BLOCKED); No exec token: HTTP 401 (BLOCKED)",
       "status": "PASS",
-      "reason": "Blocked \u2014 missing required signature and timestamp fields",
-      "timestamp": "2026-03-23T07:42:21.586907Z"
+      "reason": "Blocked \u2014 execution requires both ECDSA signature and execution token",
+      "timestamp": "2026-03-24T05:36:55.794129Z"
     },
     {
       "test_id": "V-002",
       "test_name": "EXECUTE_WITH_APPROVAL",
-      "description": "Sign intent via /sign-intent, then submit to /intake with valid signature",
+      "description": "Full authorized flow: sign-intent \u2192 generate-execution-token \u2192 intake",
       "expected_result": "Action executes successfully with receipt",
-      "actual_result": "HTTP 200: status=success, verified=True, receipt=b44b73e3562ce7ef...",
+      "actual_result": "HTTP 200: status=success, verified=True, receipt=d6c1aa2739d85af5..., ledger=2",
       "status": "PASS",
-      "reason": "Executed successfully \u2014 signature verified, receipt hash and ledger index assigned",
-      "timestamp": "2026-03-23T07:42:24.655428Z",
-      "receipt_hash": "b44b73e3562ce7efcdc3a49b93faab498f147ce5f2afefbf59634816b5561769",
-      "ledger_index": 1
+      "reason": "Executed successfully \u2014 ECDSA verified, execution token validated, receipt and ledger entry assigned",
+      "timestamp": "2026-03-24T05:37:09.669524Z",
+      "receipt_hash": "d6c1aa2739d85af501121186499a46d40be76a316d1749169fc689f636540ad6",
+      "ledger_index": 2
     },
     {
       "test_id": "V-003",
@@ -42,17 +42,17 @@
       "actual_result": "First: HTTP 200 (success); Replay: HTTP 409 (Replay blocked); Expired: HTTP 409 (Replay blocked)",
       "status": "PASS",
       "reason": "Single-use enforcement confirmed. First use succeeded, replay blocked (HTTP 409 \u2014 409 Replay blocked), expired replay also blocked (HTTP 409).",
-      "timestamp": "2026-03-23T07:42:30.131885Z"
+      "timestamp": "2026-03-24T05:37:19.719920Z"
     },
     {
       "test_id": "V-004",
       "test_name": "PAYLOAD_TAMPERING",
-      "description": "Sign intent A, submit with tampered intent B using same signature",
+      "description": "Sign intent A, submit with tampered intent B using same signature and execution token",
       "expected_result": "Blocked",
-      "actual_result": "HTTP 401: unauthorized \u2014 Signature verification failedIntent was not signed by authorized key",
+      "actual_result": "HTTP 401: unauthorized \u2014 Signature verification failed",
       "status": "PASS",
-      "reason": "Blocked \u2014 signature verification failed because signed payload doesn't match submitted payload",
-      "timestamp": "2026-03-23T07:42:30.586063Z"
+      "reason": "Blocked \u2014 signature verification failed because signed intent doesn't match submitted intent",
+      "timestamp": "2026-03-24T05:37:22.424721Z"
     },
     {
       "test_id": "V-005",
@@ -62,57 +62,77 @@
       "actual_result": "First use: HTTP 200 (success); Reuse attempt: HTTP 409 (Replay blocked)",
       "status": "PASS",
       "reason": "Approval consumed after single use (HTTP 409 on reuse). Combined with 300s time-window expiry, approvals are structurally revoked after use or after timeout \u2014 whichever comes first.",
-      "timestamp": "2026-03-23T07:42:38.334561Z"
+      "timestamp": "2026-03-24T05:37:34.207330Z"
     },
     {
       "test_id": "V-006",
       "test_name": "DIRECT_EXECUTOR_CALL",
-      "description": "Call executor endpoints (/tools/*, /intent) directly without valid Bearer token",
+      "description": "Call executor endpoints directly without valid auth or without execution token",
       "expected_result": "Blocked",
-      "actual_result": "No auth\u2192/tools/call_anthropic: HTTP 403 (BLOCKED); No auth\u2192/intent: HTTP 403 (BLOCKED); No auth\u2192/tools/send_email: HTTP 403 (BLOCKED); Fake token\u2192/tools/call_anthropic: HTTP 403 (BLOCKED)",
+      "actual_result": "No auth\u2192/tools/call_anthropic: HTTP 403 (BLOCKED); No auth\u2192/intent: HTTP 403 (BLOCKED); No auth\u2192/tools/send_email: HTTP 403 (BLOCKED); Fake token: HTTP 403 (BLOCKED); No exec token\u2192/intake: HTTP 403 (BLOCKED)",
       "status": "PASS",
-      "reason": "All direct executor calls blocked \u2014 Bearer token required and validated",
-      "timestamp": "2026-03-23T07:42:39.306723Z"
+      "reason": "All direct executor calls blocked \u2014 Bearer token AND execution token required",
+      "timestamp": "2026-03-24T05:37:39.573421Z"
     },
     {
       "test_id": "V-007",
       "test_name": "INVALID_SIGNATURE",
-      "description": "Submit intake with garbage, empty, and foreign-key signatures",
+      "description": "Submit intake with garbage, empty, and foreign-key signatures (plus fake execution token)",
       "expected_result": "Blocked",
-      "actual_result": "Garbage sig: HTTP 401 (BLOCKED); Empty sig: HTTP 401 (BLOCKED); Foreign sig: HTTP 500 (BLOCKED)",
+      "actual_result": "Garbage sig: HTTP 409 (BLOCKED); Empty sig: HTTP 409 (BLOCKED); Foreign sig: HTTP 500 (BLOCKED)",
       "status": "PASS",
       "reason": "All invalid signatures rejected \u2014 ECDSA verification catches any non-matching signature",
-      "timestamp": "2026-03-23T07:42:40.075718Z"
+      "timestamp": "2026-03-24T05:37:42.275466Z"
     },
     {
       "test_id": "V-008",
       "test_name": "LEDGER_UNAVAILABLE",
       "description": "Verify that execution is blocked when the ledger service is unavailable",
       "expected_result": "Blocked (fail-closed)",
-      "actual_result": "Server-side simulation confirmed by Replit Agent: when the nonce registry (backed by the same SQLite DB as the ledger) raises a RuntimeError, the gateway catches it and returns HTTP 503 'Nonce registry unavailable \u2014 execution blocked'. The AI call is never reached.",
+      "actual_result": "Server-side simulation confirmed by Replit Agent: when the nonce registry (backed by the same SQLite DB as the ledger) raises a RuntimeError, the gateway catches it and returns HTTP 503 'Nonce registry unavailable \u2014 execution blocked'. The execution gate also wraps all ledger writes in the critical path \u2014 any DB failure blocks execution before the AI model call.",
       "status": "PASS",
-      "reason": "Fail-closed confirmed via server-side simulation. Any DB/ledger error blocks execution with HTTP 503 before the AI model call. Logged as REJECT | reason=nonce_check_error.",
-      "timestamp": "2026-03-23T07:42:40.075810Z"
+      "reason": "Fail-closed confirmed via server-side simulation. Any DB/ledger error blocks execution with HTTP 503 before the AI model call.",
+      "timestamp": "2026-03-24T05:37:42.275590Z"
     },
     {
       "test_id": "V-009",
       "test_name": "APPROVAL_SERVICE_UNAVAILABLE",
       "description": "Verify that execution is blocked when the signature verification service is unavailable",
       "expected_result": "Blocked (fail-closed)",
-      "actual_result": "Server-side simulation confirmed by Replit Agent: signature verification is wrapped in try/except with fail-closed behavior. If the public key is missing (RIO_PUBLIC_KEY unset), _load_verifying_key() returns None and all /intake requests are rejected. Any exception during ECDSA verification is caught and blocks execution.",
+      "actual_result": "Server-side simulation confirmed by Replit Agent: signature verification is wrapped in try/except with fail-closed behavior. If the public key is missing (RIO_PUBLIC_KEY unset), _load_verifying_key() returns None and all /intake requests are rejected. The execution gate also validates tokens \u2014 if token verification fails, execution is blocked with 'Execution token signature is invalid.'",
       "status": "PASS",
-      "reason": "Fail-closed confirmed via server-side simulation. Missing or broken signature verification service blocks all execution. No approval can be forged or bypassed.",
-      "timestamp": "2026-03-23T07:42:40.075833Z"
+      "reason": "Fail-closed confirmed via server-side simulation. Missing or broken signature verification service blocks all execution.",
+      "timestamp": "2026-03-24T05:37:42.275629Z"
     },
     {
       "test_id": "V-010",
       "test_name": "DUPLICATE_EXECUTION",
       "description": "Submit the same signed intent twice in rapid succession",
       "expected_result": "Blocked (idempotent \u2014 single-use approval)",
-      "actual_result": "Exec1: HTTP 200 status=success ledger=3; Exec2: HTTP 409 status=Replay blocked",
+      "actual_result": "Exec1: HTTP 200 status=success ledger=2; Exec2: HTTP 409 status=Replay blocked",
       "status": "PASS",
       "reason": "Duplicate execution blocked (HTTP 409 \u2014 409 Replay blocked). Each signed approval executes exactly once.",
-      "timestamp": "2026-03-23T07:42:53.549959Z"
+      "timestamp": "2026-03-24T05:37:57.071967Z"
+    },
+    {
+      "test_id": "EG-001",
+      "test_name": "EXECUTION_GATE_AUDIT_LOG",
+      "description": "Retrieve the execution gate audit log and verify hash chain integrity",
+      "expected_result": "Audit log accessible with chain_intact=true",
+      "actual_result": "HTTP 200: total=13, chain_intact=True, chain_length=13",
+      "status": "PASS",
+      "reason": "Audit log accessible. 13 entries. Hash chain integrity: verified",
+      "timestamp": "2026-03-24T05:37:58.619168Z"
+    },
+    {
+      "test_id": "EG-002",
+      "test_name": "EXECUTION_GATE_VERIFY_RECEIPT",
+      "description": "Submit a valid receipt hash for verification, then a fake one",
+      "expected_result": "Valid receipt verified, fake receipt rejected",
+      "actual_result": "Valid receipt: HTTP 200 valid=False; Fake receipt: HTTP 200 valid=False",
+      "status": "PARTIAL",
+      "reason": "Valid verified=False, fake rejected=True",
+      "timestamp": "2026-03-24T05:38:13.687924Z"
     }
   ]
 }
