@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/bkr1297-RIO/rio-system/rio-receipt-protocol/schemas/approval-record.schema.json",
+  "title": "ApprovalRecord",
+  "description": "Represents the human authorization decision for an action request. The approval is cryptographically signed and time-limited. No execution may proceed without a valid, unexpired, unused approval record linked to the exact request_id.",
+  "type": "object",
+  "required": [
+    "approval_id",
+    "request_id",
+    "approver_id",
+    "approver_role",
+    "approval_status",
+    "approved_at",
+    "expires_at",
+    "signature",
+    "auth_method"
+  ],
+  "properties": {
+    "approval_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Unique identifier for this approval record."
+    },
+    "request_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "The request_id of the ActionRequest being approved or denied. Must match exactly."
+    },
+    "approver_id": {
+      "type": "string",
+      "description": "Identifier of the human who issued this approval. Must be a real, authenticated identity."
+    },
+    "approver_role": {
+      "type": "string",
+      "description": "The organizational role or permission level of the approver at the time of approval.",
+      "examples": ["finance_manager", "system_admin", "compliance_officer", "account_owner"]
+    },
+    "approval_status": {
+      "type": "string",
+      "enum": ["approved", "denied", "revoked", "expired"],
+      "description": "The outcome of the human authorization decision."
+    },
+    "approved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp of when the human issued this approval."
+    },
+    "expires_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 UTC timestamp after which this approval is no longer valid. Execution must be rejected if attempted after this time."
+    },
+    "signature": {
+      "type": "string",
+      "description": "Cryptographic signature over the canonical form of this approval record. Produced by the approver's private key or the authorization system's signing key. Used to verify that the approval has not been tampered with."
+    },
+    "auth_method": {
+      "type": "string",
+      "enum": ["password", "mfa_totp", "mfa_hardware_key", "biometric", "oauth2", "api_key_signed"],
+      "description": "The authentication method used to verify the approver's identity at the time of approval."
+    },
+    "notes": {
+      "type": "string",
+      "description": "Optional free-text notes from the approver explaining the approval or denial decision."
+    }
+  },
+  "additionalProperties": false
+}
