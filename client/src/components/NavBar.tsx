@@ -14,9 +14,11 @@ const navLinks = [
       { label: "Demo 1 — Human Approval", href: "/demo1" },
       { label: "Demo 2 — Enforcement", href: "/demo2" },
       { label: "Demo 3 — Audit & Proof", href: "/demo3" },
+      { label: "Demo 4 — Full Pipeline", href: "/demo4" },
     ],
   },
   { label: "Docs", href: "/docs" },
+  { label: "Whitepaper", href: "/whitepaper" },
 ];
 
 export default function NavBar() {

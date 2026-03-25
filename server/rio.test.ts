@@ -122,6 +122,53 @@ describe("RIO Backend — Enforcement Logic", () => {
     expect(result.httpStatus).toBe(403);
   });
 
+  it("creates intents for different action types and returns correct action classification", async () => {
+    // Low risk action
+    const lowRisk = await caller.rio.createIntent({
+      action: "read_data",
+      description: "Read quarterly report",
+      requestedBy: "AI_agent",
+    });
+    expect(lowRisk.action).toBe("read_data");
+    expect(lowRisk.status).toBe("pending");
+    expect(lowRisk.intentId).toMatch(/^INT-/);
+
+    // High risk action
+    const highRisk = await caller.rio.createIntent({
+      action: "transfer_funds",
+      description: "Wire $47,500 to vendor",
+      requestedBy: "AI_agent",
+    });
+    expect(highRisk.action).toBe("transfer_funds");
+    expect(highRisk.status).toBe("pending");
+    expect(highRisk.intentHash).toBeTruthy();
+  });
+
+  it("generates hash-chained ledger entries with linked previous_hash", async () => {
+    // Execute two intents and verify hash chain linkage
+    const intent1 = await caller.rio.createIntent({
+      action: "send_email",
+      description: "Chain test 1",
+      requestedBy: "AI_agent",
+    });
+    await caller.rio.approve({ intentId: intent1.intentId, decidedBy: "human_user" });
+    const exec1 = await caller.rio.execute({ intentId: intent1.intentId });
+
+    const intent2 = await caller.rio.createIntent({
+      action: "send_email",
+      description: "Chain test 2",
+      requestedBy: "AI_agent",
+    });
+    await caller.rio.approve({ intentId: intent2.intentId, decidedBy: "human_user" });
+    const exec2 = await caller.rio.execute({ intentId: intent2.intentId });
+
+    const ledger1 = exec1.ledger_entry as Record<string, unknown>;
+    const ledger2 = exec2.ledger_entry as Record<string, unknown>;
+
+    // Second entry's previous_hash should equal first entry's current_hash
+    expect(ledger2.previous_hash).toBe(ledger1.current_hash);
+  });
+
   it("returns a full audit log for a completed intent", async () => {
     const intent = await caller.rio.createIntent({
       action: "send_email",

@@ -59,3 +59,10 @@
 - [x] Update Home.tsx to include NavBar
 - [x] Update App.tsx routing for new pages
 - [x] Integrate NavBar into all existing demo pages
+- [x] Demo 4 — Interactive Pipeline frontend (scenario selector, 8-stage visualization, risk gauge)
+- [x] Demo 4 — Backend tRPC endpoint (existing rio endpoints already cover all Demo 4 needs)
+- [x] Whitepaper page — embedded content with PDF download
+- [x] Home page — reconfigure hero with "What is RIO?" summary above the fold
+- [x] Home page — remove redundant GitHub links (NavBar handles that now)
+- [x] Update NavBar with Demo 4 and Whitepaper in Demos dropdown
+- [x] Update App.tsx routing for Demo 4 and Whitepaper pages
