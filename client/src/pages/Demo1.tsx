@@ -518,7 +518,7 @@ export default function Demo1() {
             The system requires human approval before any real-world action.
           </p>
           <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
-            The system <span className="font-bold text-white">records every approval and denial</span> as a cryptographically signed, immutable receipt.
+            The system <span className="font-bold text-white">records every approval and denial</span> as a cryptographically signed, immutable receipt (RPR — Rio Protocol Receipt).
           </p>
           <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
             In this system, the AI acts as a trusted advisor, not an autonomous actor that can assume or interpret human intent.

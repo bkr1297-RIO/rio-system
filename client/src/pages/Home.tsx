@@ -72,7 +72,7 @@ export default function Home() {
               className="text-base leading-relaxed"
               style={{ color: "#d1d5db" }}
             >
-              RIO is a runtime control plane that allows AI to propose, analyze, prepare and draft actions, but never execute autonomously when there are real-world consequences without explicit human authorization. This includes sending emails, deleting files, sending money, etc. The system itself, not the AI or agent, enforces this boundary and logs and records every proposal and action in an immutable ledger. Every approval is cryptographically signed, time stamped, and stored. The human decides what actions need explicit approval and what does not based on real life impact. The RIO system simply enforces those decisions.
+              RIO is a runtime control and audit protocol for AI and automated systems that requires explicit human approval for real-world actions and produces verifiable decision receipts recorded in a tamper-evident ledger. This includes sending emails, deleting files, sending money, and more. The system itself, not the AI or agent, enforces this boundary.
             </p>
           </div>
 
@@ -88,7 +88,7 @@ export default function Home() {
               className="text-base leading-relaxed"
               style={{ color: "#d1d5db" }}
             >
-              The human retains authority and every action is traceable, visible, transparent and every action has proof. With RIO, AI goes from being a powerful generating and sometimes unpredictable tool, to a capable, trusted, collaborating partner. It allows the human to be in the loop, understand what is going on in the loop, and control the loop.
+              The human retains authority and every action is traceable, visible, time stamped, and stored. With RIO, AI goes from being a powerful but sometimes unpredictable tool, to a capable, trusted, collaborating partner. It allows the human to be in the loop, understand what is going on in the loop, and control the loop.
             </p>
           </div>
         </div>

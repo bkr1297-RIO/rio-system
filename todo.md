@@ -42,3 +42,6 @@
 - [x] Landing page: Raise right column content to align with top of left column (not vertically centered)
 - [x] Landing page: Update intro text wording to new version
 - [x] Landing page: Rename "The Challenge" to "The Problem" and replace body text with user's new copy
+- [x] Landing page: Update "Our Approach" text with user's new copy
+- [x] Landing page: Update "With RIO, What Changes" text with user's new copy
+- [x] Demo 1: Add "(RPR Rio Protocol Receipt)" after "The system records every approval" sentence
