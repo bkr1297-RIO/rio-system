@@ -45,3 +45,4 @@
 - [x] Landing page: Update "Our Approach" text with user's new copy
 - [x] Landing page: Update "With RIO, What Changes" text with user's new copy
 - [x] Demo 1: Add "(RPR Rio Protocol Receipt)" after "The system records every approval" sentence
+- [x] Landing page: Add top-left GitHub repo link with "RIO - A runtime control and audit protocol for AI and automated systems"
