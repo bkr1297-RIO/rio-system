@@ -41,3 +41,4 @@
 - [x] Landing page: Add intro text above demo buttons describing the 3 proof-of-concept demos and receipt verification
 - [x] Landing page: Raise right column content to align with top of left column (not vertically centered)
 - [x] Landing page: Update intro text wording to new version
+- [x] Landing page: Rename "The Challenge" to "The Problem" and replace body text with user's new copy

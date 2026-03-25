@@ -1,6 +1,6 @@
 /*
  * RIO Demo Site — Landing Page
- * Two-column layout: Left = The Challenge, Our Approach, With RIO What Changes
+ * Two-column layout: Left = The Problem, Our Approach, With RIO What Changes
  * Right = Three demo buttons
  * Gold divider line between columns on desktop
  */
@@ -41,22 +41,22 @@ export default function Home() {
           gap: "0",
         }}
       >
-        {/* LEFT COLUMN — The Challenge, Our Approach, With RIO What Changes */}
+        {/* LEFT COLUMN — The Problem, Our Approach, With RIO What Changes */}
         <div className="flex flex-col gap-10 pr-10">
 
-          {/* The Challenge */}
+          {/* The Problem */}
           <div>
             <h2
               className="text-2xl font-bold mb-4"
               style={{ color: "#b8963e" }}
             >
-              The Challenge
+              The Problem
             </h2>
             <p
               className="text-base leading-relaxed"
               style={{ color: "#d1d5db" }}
             >
-              AI models and agents are powerful and helpful tools, but what happens when we allow it to interpret and assume what helpful means? Irreversible consequences like deleting files, moving money, sending untimely emails, among other things. Most AI governance systems rely on prompts, alignment, or policies to guide AI behavior which largely results in the system governing itself. We're essentially asking it to play in the game, coach the game, and referee the game.
+              AI models and agents are powerful and helpful tools but when we allow them to interpret and assume what "helpful" means, irreversible consequences can occur. Most AI governance systems rely on prompts, alignment, or policies to guide AI behavior which largely results in the system governing itself. We're essentially asking it to play the game, coach the game, and referee the game. It shouldn't be surprising that important files are then deleted, untimely emails are sent, and money is sent without approval.
             </p>
           </div>
 
