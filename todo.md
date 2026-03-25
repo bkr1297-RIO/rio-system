@@ -46,3 +46,8 @@
 - [x] Landing page: Update "With RIO, What Changes" text with user's new copy
 - [x] Demo 1: Add "(RPR Rio Protocol Receipt)" after "The system records every approval" sentence
 - [x] Landing page: Add top-left GitHub repo link with "RIO - A runtime control and audit protocol for AI and automated systems"
+- [x] Landing page: Add link to Dyad structural papers repo alongside GitHub link
+- [x] Landing page: Improve mobile responsiveness (stack columns, adjust text sizes, wrap GitHub link)
+- [x] Demo 1: Improve mobile responsiveness
+- [x] Demo 2: Improve mobile responsiveness
+- [x] Demo 3: Improve mobile responsiveness

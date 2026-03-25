@@ -120,18 +120,18 @@ export default function Demo3() {
         alt="RIO Logo"
         className="w-24 h-24 mb-4"
       />
-      <h1 className="text-4xl font-black tracking-[0.15em] mb-2" style={{ color: "#b8963e" }}>
+      <h1 className="text-3xl sm:text-4xl font-black tracking-[0.15em] mb-2" style={{ color: "#b8963e" }}>
         RIO
       </h1>
       <p className="text-sm font-light tracking-[0.08em] mb-2" style={{ color: "#9ca3af" }}>
         Runtime Intelligence Orchestration
       </p>
-      <p className="text-base font-medium mb-6" style={{ color: "#b8963e" }}>
+      <p className="text-sm sm:text-base font-medium mb-4 sm:mb-6" style={{ color: "#b8963e" }}>
         Demo 3 — Audit & Proof (Traceability)
       </p>
 
       {/* Scenario text */}
-      <p className="text-base text-center max-w-2xl mb-6 px-2" style={{ color: "#d1d5db" }}>
+      <p className="text-sm sm:text-base text-center max-w-2xl mb-4 sm:mb-6 px-2" style={{ color: "#d1d5db" }}>
         This page shows the audit trail created by the system. Every request, decision, approval,
         and action is recorded and traceable. This also allows the user to understand their AI system better by looking "under the hood." No more black box.
       </p>
@@ -239,14 +239,14 @@ export default function Demo3() {
             <button
               onClick={handleRunAudit}
               disabled={loading}
-              className="py-2 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+              className="py-2 px-4 sm:px-6 text-xs sm:text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
               style={{ borderColor: "#9ca3af", color: "#9ca3af", backgroundColor: "transparent" }}
             >
               {loading ? "Running..." : "Generate New Audit Trail"}
             </button>
             <button
               onClick={() => { setAuditData(null); setError(null); }}
-              className="py-2 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
+              className="py-2 px-4 sm:px-6 text-xs sm:text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
               style={{ borderColor: "#b8963e", color: "#b8963e", backgroundColor: "transparent" }}
             >
               Reset Demo
@@ -287,7 +287,7 @@ export default function Demo3() {
       </div>
 
       {/* Back to landing */}
-      <div className="flex gap-4 mt-10">
+      <div className="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-10">
         <a href="/" className="text-sm font-light tracking-wide hover:underline flex items-center" style={{ color: "#9ca3af" }}>
           ← Back to Home
         </a>

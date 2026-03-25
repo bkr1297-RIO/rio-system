@@ -232,7 +232,7 @@ export default function Demo2() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center px-6 py-10"
+      className="min-h-screen flex flex-col items-center px-4 sm:px-6 py-6 sm:py-10"
       style={{ fontFamily: "'Outfit', sans-serif" }}
     >
       {/* Top: Logo, Title, Subtitle */}
@@ -241,7 +241,7 @@ export default function Demo2() {
         alt="RIO Logo"
         className="w-24 h-24 mb-4"
       />
-      <h1 className="text-4xl font-black tracking-[0.15em] mb-2" style={{ color: "#b8963e" }}>
+      <h1 className="text-3xl sm:text-4xl font-black tracking-[0.15em] mb-2" style={{ color: "#b8963e" }}>
         RIO
       </h1>
       <p className="text-sm font-light tracking-[0.08em] mb-6" style={{ color: "#9ca3af" }}>
@@ -249,14 +249,14 @@ export default function Demo2() {
       </p>
 
       {/* Description text */}
-      <p className="text-base text-center max-w-2xl mb-8" style={{ color: "#d1d5db" }}>
+      <p className="text-sm sm:text-base text-center max-w-2xl mb-6 sm:mb-8" style={{ color: "#d1d5db" }}>
         In this scenario, we show what is happening behind the scenes. The agent is structurally
         unable to execute real-world actions without approval. Not policy. Not guidelines. Structure.&nbsp;No&nbsp;log,&nbsp;no&nbsp;go.
       </p>
 
       {/* ── Stage-Light Pipeline ────────────────────────────────────────────── */}
-      <div className="w-full max-w-4xl mb-10">
-        <div className="flex items-center justify-between gap-0">
+      <div className="w-full max-w-4xl mb-6 sm:mb-10 overflow-x-auto">
+        <div className="flex items-center justify-between gap-0 min-w-[500px]">
           {STAGES.map((stage, index) => {
             const lightColor = stageLights[stage.key];
             const colors = LIGHT_COLORS[lightColor];
@@ -298,7 +298,7 @@ export default function Demo2() {
       </div>
 
       {/* Main layout: Left diagram + Right log */}
-      <div className="flex flex-col md:flex-row gap-6 w-full max-w-5xl mb-6">
+      <div className="flex flex-col md:flex-row gap-4 sm:gap-6 w-full max-w-5xl mb-4 sm:mb-6">
         {/* Left: System diagram */}
         <div className="w-full md:w-80 shrink-0 flex flex-col items-center gap-0">
           {DIAGRAM_BOXES.map((box, index) => {
@@ -386,13 +386,14 @@ export default function Demo2() {
       )}
 
       {/* Action buttons */}
-      <div className="flex flex-wrap justify-center gap-3 mb-10">
+      <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-10">
         {phase === "idle" && (
           <button
             onClick={handleCreateIntent}
-            disabled={loading}
-            className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
-            style={{ borderColor: "#b8963e", color: "#ffffff", backgroundColor: "transparent" }}
+            disabled={loading}            className="py-2 sm:py-2.5 px-4 sm:px-6 text-xs sm:text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+            style={{
+              borderColor: "#b8963e",
+              color: "#b8963e", backgroundColor: "transparent" }}
           >
             {loading ? "Creating..." : "Create Intent"}
           </button>
@@ -403,7 +404,7 @@ export default function Demo2() {
             <button
               onClick={handleAttemptWithoutApproval}
               disabled={loading}
-              className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-red-500/10 disabled:opacity-50"
+              className="py-2 sm:py-2.5 px-4 sm:px-6 text-xs sm:text-sm font-medium border rounded transition-colors duration-200 hover:bg-red-500/10 disabled:opacity-50"
               style={{ borderColor: "#ef4444", color: "#ef4444", backgroundColor: "transparent" }}
             >
               {loading ? "Attempting..." : "Attempt Execution Without Approval"}
@@ -411,7 +412,7 @@ export default function Demo2() {
             <button
               onClick={handleApprove}
               disabled={loading}
-              className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+              className="py-2 sm:py-2.5 px-4 sm:px-6 text-xs sm:text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
               style={{ borderColor: "#22c55e", color: "#22c55e", backgroundColor: "transparent" }}
             >
               {loading ? "Approving..." : "Approve"}
@@ -423,7 +424,7 @@ export default function Demo2() {
           <button
             onClick={handleExecute}
             disabled={loading}
-            className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
+            className="py-2 sm:py-2.5 px-4 sm:px-6 text-xs sm:text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5 disabled:opacity-50"
             style={{ borderColor: "#22c55e", color: "#22c55e", backgroundColor: "transparent" }}
           >
             {loading ? "Executing..." : "Execute"}
@@ -433,7 +434,7 @@ export default function Demo2() {
         {phase !== "idle" && (
           <button
             onClick={handleReset}
-            className="py-2.5 px-6 text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
+            className="py-2 sm:py-2.5 px-4 sm:px-6 text-xs sm:text-sm font-medium border rounded transition-colors duration-200 hover:bg-white/5"
             style={{ borderColor: "#b8963e", color: "#b8963e", backgroundColor: "transparent" }}
           >
             Reset Demo
@@ -465,7 +466,7 @@ export default function Demo2() {
 
       {/* Bottom summary box */}
       <div
-        className="w-full max-w-4xl p-6 rounded border text-center"
+        className="w-full max-w-4xl p-4 sm:p-6 rounded border text-center"
         style={{ borderColor: "rgba(184, 150, 62, 0.3)", backgroundColor: "rgba(255, 255, 255, 0.03)" }}
       >
         <h2 className="text-lg font-semibold mb-4" style={{ color: "#b8963e" }}>
@@ -481,7 +482,7 @@ export default function Demo2() {
       </div>
 
       {/* Back to landing */}
-      <div className="flex gap-4 mt-10">
+      <div className="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-10">
         <a href="/" className="text-sm font-light tracking-wide hover:underline flex items-center" style={{ color: "#9ca3af" }}>
           ← Back to Home
         </a>

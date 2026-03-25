@@ -248,17 +248,17 @@ export default function Demo1() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center px-6 py-10"
+      className="min-h-screen flex flex-col items-center px-4 sm:px-6 py-6 sm:py-10"
       style={{ fontFamily: "'Outfit', sans-serif" }}
     >
       {/* Top: Logo, Title, Subtitle */}
       <img
         src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
         alt="RIO Logo"
-        className="w-24 h-24 mb-4"
+        className="w-16 h-16 sm:w-24 sm:h-24 mb-3 sm:mb-4"
       />
       <h1
-        className="text-4xl font-black tracking-[0.15em] mb-2"
+        className="text-3xl sm:text-4xl font-black tracking-[0.15em] mb-2"
         style={{ color: "#b8963e" }}
       >
         RIO
@@ -268,7 +268,7 @@ export default function Demo1() {
       </p>
 
       {/* Scenario text */}
-      <p className="text-base text-center max-w-2xl mb-10" style={{ color: "#d1d5db" }}>
+      <p className="text-sm sm:text-base text-center max-w-2xl mb-6 sm:mb-10" style={{ color: "#d1d5db" }}>
         In this scenario, it's the end of quarter and your AI agent drafts an email and intends to send it to your team. Since the human set the rules beforehand that any email sent to team members this close to quarter end is high stakes, the RIO system flags it and sends a notification to the user's cell phone for cryptographic biometric approval. No log, no go.
       </p>
 
@@ -287,9 +287,9 @@ export default function Demo1() {
       )}
 
       {/* Main layout: Left stepper + Right text panel */}
-      <div className="flex flex-col md:flex-row gap-6 w-full max-w-4xl mb-10">
+      <div className="flex flex-col md:flex-row gap-4 sm:gap-6 w-full max-w-4xl mb-6 sm:mb-10">
         {/* Left: Stepper navigation */}
-        <div className="flex flex-col gap-3 w-full md:w-72 shrink-0">
+        <div className="flex flex-col gap-2 sm:gap-3 w-full md:w-72 shrink-0">
           {STEPS.map((step, index) => {
             // Determine step status indicator
             let statusIcon = null;
@@ -325,7 +325,7 @@ export default function Demo1() {
               <button
                 key={index}
                 onClick={() => handleStepClick(index)}
-                className="w-full py-3 px-4 text-left text-sm font-medium border rounded transition-colors duration-200"
+                className="w-full py-2.5 sm:py-3 px-3 sm:px-4 text-left text-xs sm:text-sm font-medium border rounded transition-colors duration-200"
                 style={{
                   backgroundColor: isActive ? (decided === "denied" && (index === 1 || index === 3) ? "rgba(239, 68, 68, 0.1)" : "rgba(184, 150, 62, 0.15)") : "transparent",
                   borderColor: isActive ? stepBorderColor : "rgba(184, 150, 62, 0.3)",
@@ -341,7 +341,7 @@ export default function Demo1() {
 
         {/* Right: Text panel */}
         <div
-          className="flex-1 p-6 rounded border"
+          className="flex-1 p-4 sm:p-6 rounded border"
           style={{
             borderColor: "rgba(184, 150, 62, 0.3)",
             backgroundColor: "rgba(255, 255, 255, 0.03)",
@@ -422,7 +422,7 @@ export default function Demo1() {
       {/* Receipt section — shown when Step 4 is active and receipt exists (approved flow) */}
       {activeStep === 3 && decided === "approved" && receiptData && (
         <div
-          className="w-full max-w-4xl p-6 rounded border mb-6"
+          className="w-full max-w-4xl p-4 sm:p-6 rounded border mb-4 sm:mb-6"
           style={{
             borderColor: "rgba(184, 150, 62, 0.5)",
             backgroundColor: "rgba(184, 150, 62, 0.08)",
@@ -441,7 +441,7 @@ export default function Demo1() {
       {/* Denial receipt section — shown when Step 4 is active and denial happened */}
       {activeStep === 3 && decided === "denied" && denialData && (
         <div
-          className="w-full max-w-4xl p-6 rounded border mb-6"
+          className="w-full max-w-4xl p-4 sm:p-6 rounded border mb-4 sm:mb-6"
           style={{
             borderColor: "rgba(239, 68, 68, 0.5)",
             backgroundColor: "rgba(239, 68, 68, 0.08)",
@@ -460,7 +460,7 @@ export default function Demo1() {
       {/* Ledger entry — shown when Step 4 is active and ledger exists (approved flow) */}
       {activeStep === 3 && decided === "approved" && ledgerData && (
         <div
-          className="w-full max-w-4xl p-6 rounded border mb-6"
+          className="w-full max-w-4xl p-4 sm:p-6 rounded border mb-4 sm:mb-6"
           style={{
             borderColor: "rgba(255, 255, 255, 0.2)",
             backgroundColor: "rgba(255, 255, 255, 0.03)",
@@ -498,7 +498,7 @@ export default function Demo1() {
 
       {/* Bottom summary box — centered text */}
       <div
-        className="w-full max-w-4xl p-6 rounded border text-center"
+        className="w-full max-w-4xl p-4 sm:p-6 rounded border text-center"
         style={{
           borderColor: "rgba(184, 150, 62, 0.3)",
           backgroundColor: "rgba(255, 255, 255, 0.03)",
@@ -530,7 +530,7 @@ export default function Demo1() {
       </div>
 
       {/* Reset Demo + Back to landing */}
-      <div className="flex gap-4 mt-10">
+      <div className="flex flex-wrap gap-3 sm:gap-4 mt-6 sm:mt-10">
         <button
           onClick={() => {
             setActiveStep(-1);
