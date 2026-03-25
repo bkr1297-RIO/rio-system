@@ -51,3 +51,11 @@
 - [x] Demo 1: Improve mobile responsiveness
 - [x] Demo 2: Improve mobile responsiveness
 - [x] Demo 3: Improve mobile responsiveness
+- [x] Shared NavBar component for site-wide navigation
+- [x] How It Works page — execution pipeline walkthrough
+- [x] Architecture page — system components and layers
+- [x] Use Cases page — enterprise governance scenarios
+- [x] Docs page — links to GitHub docs, specs, whitepaper
+- [x] Update Home.tsx to include NavBar
+- [x] Update App.tsx routing for new pages
+- [x] Integrate NavBar into all existing demo pages

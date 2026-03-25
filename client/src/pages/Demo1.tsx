@@ -7,6 +7,7 @@
 
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
+import NavBar from "@/components/NavBar";
 
 const STEPS = [
   {
@@ -248,9 +249,11 @@ export default function Demo1() {
 
   return (
     <div
-      className="min-h-screen flex flex-col items-center px-4 sm:px-6 py-6 sm:py-10"
+      className="min-h-screen flex flex-col"
       style={{ fontFamily: "'Outfit', sans-serif" }}
     >
+      <NavBar />
+      <div className="flex flex-col items-center flex-1 px-4 sm:px-6 py-6 sm:py-10">
       {/* Top: Logo, Title, Subtitle */}
       <img
         src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
@@ -557,6 +560,7 @@ export default function Demo1() {
         >
           ← Back to Home
         </a>
+      </div>
       </div>
     </div>
   );

@@ -6,6 +6,8 @@
  * Fully responsive: stacks on mobile
  */
 
+import NavBar from "@/components/NavBar";
+
 const GitHubIcon = () => (
   <svg
     className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0"
@@ -24,9 +26,12 @@ const GitHubIcon = () => (
 export default function Home() {
   return (
     <div
-      className="min-h-screen flex flex-col px-4 sm:px-6 py-8 sm:py-12"
+      className="min-h-screen flex flex-col"
       style={{ fontFamily: "'Outfit', sans-serif" }}
     >
+      <NavBar />
+
+      <div className="flex flex-col flex-1 px-4 sm:px-6 py-8 sm:py-12">
       {/* Top-left GitHub links */}
       <div className="mb-6 flex flex-col gap-1.5">
         <a
@@ -199,6 +204,7 @@ export default function Home() {
             Demo 3 — Audit & Runtime Log
           </a>
         </div>
+      </div>
       </div>
     </div>
   );

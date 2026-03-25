@@ -8,11 +8,20 @@ import Home from "./pages/Home";
 import Demo1 from "./pages/Demo1";
 import Demo2 from "./pages/Demo2";
 import Demo3 from "./pages/Demo3";
+import HowItWorks from "./pages/HowItWorks";
+import Architecture from "./pages/Architecture";
+import UseCases from "./pages/UseCases";
+import Docs from "./pages/Docs";
+
 function Router() {
   // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
       <Route path={"/"} component={Home} />
+      <Route path={"/how-it-works"} component={HowItWorks} />
+      <Route path={"/architecture"} component={Architecture} />
+      <Route path={"/use-cases"} component={UseCases} />
+      <Route path={"/docs"} component={Docs} />
       <Route path={"/demo1"} component={Demo1} />
       <Route path={"/demo2"} component={Demo2} />
       <Route path={"/demo3"} component={Demo3} />

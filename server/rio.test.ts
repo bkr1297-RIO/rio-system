@@ -101,6 +101,27 @@ describe("RIO Backend — Enforcement Logic", () => {
     expect(ledgerEntry).toHaveProperty("previous_hash");
   });
 
+  it("denies an intent and blocks subsequent execution", async () => {
+    const intent = await caller.rio.createIntent({
+      action: "delete_data",
+      description: "Denial test",
+      requestedBy: "AI_agent",
+    });
+
+    const denial = await caller.rio.deny({
+      intentId: intent.intentId,
+      decidedBy: "admin_user",
+    });
+
+    expect(denial.decision).toBe("denied");
+    expect(denial.decidedBy).toBe("admin_user");
+
+    // Attempt execution after denial — must be blocked
+    const result = await caller.rio.execute({ intentId: intent.intentId });
+    expect(result.allowed).toBe(false);
+    expect(result.httpStatus).toBe(403);
+  });
+
   it("returns a full audit log for a completed intent", async () => {
     const intent = await caller.rio.createIntent({
       action: "send_email",

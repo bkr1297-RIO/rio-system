@@ -1,0 +1,227 @@
+import { useState } from "react";
+import { Link, useLocation } from "wouter";
+import { Menu, X, ChevronDown } from "lucide-react";
+
+const navLinks = [
+  { label: "Home", href: "/" },
+  { label: "How It Works", href: "/how-it-works" },
+  { label: "Architecture", href: "/architecture" },
+  { label: "Use Cases", href: "/use-cases" },
+  {
+    label: "Demos",
+    href: "#",
+    children: [
+      { label: "Demo 1 — Human Approval", href: "/demo1" },
+      { label: "Demo 2 — Enforcement", href: "/demo2" },
+      { label: "Demo 3 — Audit & Proof", href: "/demo3" },
+    ],
+  },
+  { label: "Docs", href: "/docs" },
+];
+
+export default function NavBar() {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [demosOpen, setDemosOpen] = useState(false);
+  const [location] = useLocation();
+
+  const isActive = (href: string) => location === href;
+
+  return (
+    <nav
+      className="w-full border-b sticky top-0 z-50"
+      style={{
+        backgroundColor: "oklch(0.13 0.03 260)",
+        borderColor: "oklch(0.72 0.1 85 / 20%)",
+        fontFamily: "'Outfit', sans-serif",
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-14">
+          {/* Logo + Brand */}
+          <Link href="/" className="flex items-center gap-2.5 no-underline">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
+              alt="RIO Logo"
+              className="w-8 h-8"
+            />
+            <span
+              className="text-lg font-bold tracking-[0.1em]"
+              style={{ color: "#b8963e" }}
+            >
+              RIO
+            </span>
+          </Link>
+
+          {/* Desktop Nav Links */}
+          <div className="hidden md:flex items-center gap-1">
+            {navLinks.map((link) =>
+              link.children ? (
+                <div key={link.label} className="relative group">
+                  <button
+                    className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded transition-colors duration-150"
+                    style={{
+                      color: link.children.some((c) => isActive(c.href))
+                        ? "#b8963e"
+                        : "#d1d5db",
+                    }}
+                    onMouseEnter={() => setDemosOpen(true)}
+                    onMouseLeave={() => setDemosOpen(false)}
+                  >
+                    {link.label}
+                    <ChevronDown className="w-3.5 h-3.5" />
+                  </button>
+                  <div
+                    className="absolute top-full left-0 pt-1"
+                    onMouseEnter={() => setDemosOpen(true)}
+                    onMouseLeave={() => setDemosOpen(false)}
+                    style={{ display: demosOpen ? "block" : "none" }}
+                  >
+                    <div
+                      className="rounded-md border py-1 min-w-[220px] shadow-lg"
+                      style={{
+                        backgroundColor: "oklch(0.18 0.03 260)",
+                        borderColor: "oklch(0.72 0.1 85 / 20%)",
+                      }}
+                    >
+                      {link.children.map((child) => (
+                        <Link
+                          key={child.href}
+                          href={child.href}
+                          className="block px-4 py-2 text-sm transition-colors duration-150 no-underline"
+                          style={{
+                            color: isActive(child.href) ? "#b8963e" : "#d1d5db",
+                          }}
+                          onClick={() => setDemosOpen(false)}
+                        >
+                          <span className="hover:opacity-80">{child.label}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="px-3 py-2 text-sm font-medium rounded transition-colors duration-150 no-underline"
+                  style={{
+                    color: isActive(link.href) ? "#b8963e" : "#d1d5db",
+                  }}
+                >
+                  <span className="hover:opacity-80">{link.label}</span>
+                </Link>
+              )
+            )}
+
+            {/* GitHub Link */}
+            <a
+              href="https://github.com/bkr1297-RIO/rio-protocol"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="ml-2 px-3 py-1.5 text-xs font-medium rounded border transition-colors duration-200 no-underline hover:bg-white/5"
+              style={{
+                color: "#d1d5db",
+                borderColor: "oklch(0.72 0.1 85 / 30%)",
+              }}
+            >
+              <span className="flex items-center gap-1.5">
+                <svg
+                  className="w-3.5 h-3.5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    fillRule="evenodd"
+                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                    clipRule="evenodd"
+                  />
+                </svg>
+                GitHub
+              </span>
+            </a>
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button
+            className="md:hidden p-2 rounded"
+            onClick={() => setMobileOpen(!mobileOpen)}
+            style={{ color: "#d1d5db" }}
+          >
+            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      {mobileOpen && (
+        <div
+          className="md:hidden border-t px-4 py-3"
+          style={{
+            backgroundColor: "oklch(0.13 0.03 260)",
+            borderColor: "oklch(0.72 0.1 85 / 20%)",
+          }}
+        >
+          {navLinks.map((link) =>
+            link.children ? (
+              <div key={link.label}>
+                <button
+                  className="w-full flex items-center justify-between py-2.5 text-sm font-medium"
+                  style={{
+                    color: link.children.some((c) => isActive(c.href))
+                      ? "#b8963e"
+                      : "#d1d5db",
+                  }}
+                  onClick={() => setDemosOpen(!demosOpen)}
+                >
+                  {link.label}
+                  <ChevronDown
+                    className={`w-4 h-4 transition-transform ${demosOpen ? "rotate-180" : ""}`}
+                  />
+                </button>
+                {demosOpen && (
+                  <div className="pl-4 pb-1">
+                    {link.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="block py-2 text-sm no-underline"
+                        style={{
+                          color: isActive(child.href) ? "#b8963e" : "#9ca3af",
+                        }}
+                        onClick={() => setMobileOpen(false)}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block py-2.5 text-sm font-medium no-underline"
+                style={{
+                  color: isActive(link.href) ? "#b8963e" : "#d1d5db",
+                }}
+                onClick={() => setMobileOpen(false)}
+              >
+                {link.label}
+              </Link>
+            )
+          )}
+          <a
+            href="https://github.com/bkr1297-RIO/rio-protocol"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block py-2.5 text-sm font-medium no-underline"
+            style={{ color: "#9ca3af" }}
+            onClick={() => setMobileOpen(false)}
+          >
+            GitHub →
+          </a>
+        </div>
+      )}
+    </nav>
+  );
+}
