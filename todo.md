@@ -104,3 +104,4 @@
 - [x] How It Works page: Update header description with new RIO definition text
 - [x] Home page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline and update "What is RIO?" with canonical definition
 - [x] How It Works page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
+- [x] How It Works page: Replace header description with new concise version
