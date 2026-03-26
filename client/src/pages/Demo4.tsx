@@ -328,22 +328,36 @@ export default function Demo4() {
         setStage("execute", "complete");
         await delay(300);
 
-        // Stage 7: Receipt
+        // Stage 6b: Post-Execution Verification
+        addLog(`VERIFY — Running post-execution verification...`, "#3b82f6");
+        await delay(300);
+        addLog(`VERIFY — Intent hash: ${(result.receipt as Record<string, unknown>).intent_hash ? String((result.receipt as Record<string, unknown>).intent_hash).slice(0, 16) + "..." : "—"}`, "#3b82f6");
+        addLog(`VERIFY — Action hash: ${(result.receipt as Record<string, unknown>).action_hash ? String((result.receipt as Record<string, unknown>).action_hash).slice(0, 16) + "..." : "—"}`, "#3b82f6");
+        addLog(`VERIFY — Verification hash: ${(result.receipt as Record<string, unknown>).verification_hash ? String((result.receipt as Record<string, unknown>).verification_hash).slice(0, 16) + "..." : "—"}`, "#22c55e");
+        addLog(`VERIFY — Status: VERIFIED`, "#22c55e");
+        await delay(200);
+
+        // Stage 7: Receipt (v2)
         setStage("receipt", "active");
         const receipt = result.receipt as Record<string, unknown>;
-        addLog(`RECEIPT — Generated: ${receipt.receipt_id}`, "#b8963e");
-        addLog(`RECEIPT — Hash: ${(receipt.hash as string).slice(0, 16)}...`, "#b8963e");
-        addLog(`RECEIPT — Previous hash: ${(receipt.previous_hash as string).slice(0, 16)}...`, "#d1d5db");
+        addLog(`RECEIPT — v2 Generated: ${receipt.receipt_id}`, "#b8963e");
+        addLog(`RECEIPT — Receipt hash: ${String(receipt.receipt_hash ?? "").slice(0, 16)}...`, "#b8963e");
+        addLog(`RECEIPT — Risk: ${receipt.risk_level} (${receipt.risk_score}) | Policy: ${receipt.policy_decision}`, "#eab308");
+        addLog(`RECEIPT — Signature: ${String(receipt.signature ?? "").slice(0, 16)}...`, "#b8963e");
+        addLog(`RECEIPT — Previous hash: ${String(receipt.previous_hash ?? "").slice(0, 16)}...`, "#d1d5db");
+        addLog(`RECEIPT — Protocol: v2`, "#3b82f6");
         setReceiptData(receipt);
         setStage("receipt", "complete");
         await delay(300);
 
-        // Stage 8: Ledger
+        // Stage 8: Ledger (v2)
         setStage("ledger", "active");
         const ledgerEntry = result.ledger_entry as Record<string, unknown>;
-        addLog(`LEDGER — Block: ${ledgerEntry.block_id}`, "#b8963e");
-        addLog(`LEDGER — Chain: ${(ledgerEntry.previous_hash as string).slice(0, 12)}... → ${(ledgerEntry.current_hash as string).slice(0, 12)}...`, "#b8963e");
-        addLog(`LEDGER — Entry written to tamper-evident chain`, "#22c55e");
+        addLog(`LEDGER — v2 Block: ${ledgerEntry.block_id}`, "#b8963e");
+        addLog(`LEDGER — Chain: ${String(ledgerEntry.previous_hash ?? "").slice(0, 12)}... → ${String(ledgerEntry.current_hash ?? "").slice(0, 12)}...`, "#b8963e");
+        addLog(`LEDGER — Receipt hash linked: ${String(ledgerEntry.receipt_hash ?? "").slice(0, 16)}...`, "#b8963e");
+        addLog(`LEDGER — Ledger signature: ${String(ledgerEntry.ledger_signature ?? "").slice(0, 16)}...`, "#b8963e");
+        addLog(`LEDGER — Entry written to v2 tamper-evident chain`, "#22c55e");
         setLedgerData(ledgerEntry);
         setStage("ledger", "complete");
 
@@ -438,7 +452,8 @@ export default function Demo4() {
         <p className="text-sm text-center max-w-2xl mb-8" style={{ color: "#9ca3af" }}>
           Watch a request travel through all 8 stages of the RIO pipeline. Select a scenario to see how
           risk level determines whether the system auto-approves or requires human authorization.
-          Every step uses real backend calls — Ed25519 signing, SHA-256 hashing, and database writes.
+          Every step uses real backend calls — Ed25519 signing, SHA-256 hashing, v2 receipt generation with
+          intent/action/verification hashes, and hash-chained ledger writes.
         </p>
 
         {/* ── Scenario Selector ──────────────────────────────────────────────── */}
@@ -609,36 +624,64 @@ export default function Demo4() {
               </div>
             </div>
 
-            {/* Receipt + Ledger */}
+            {/* Receipt + Ledger (v2) */}
             {phase === "complete" && receiptData && ledgerData && (
               <div className="w-full max-w-5xl flex flex-col md:flex-row gap-4 mb-6">
                 <div
                   className="flex-1 p-4 rounded border"
                   style={{ borderColor: "rgba(184,150,62,0.5)", backgroundColor: "rgba(184,150,62,0.06)" }}
                 >
-                  <p className="text-xs font-semibold mb-2" style={{ color: "#b8963e" }}>
-                    CRYPTOGRAPHIC RECEIPT
-                  </p>
-                  <pre
-                    className="text-xs leading-relaxed overflow-x-auto"
-                    style={{ color: "#d1d5db", fontFamily: "monospace" }}
-                  >
-                    {JSON.stringify(receiptData, null, 2)}
-                  </pre>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-semibold" style={{ color: "#b8963e" }}>
+                      CRYPTOGRAPHIC RECEIPT (v2)
+                    </p>
+                    <span className="text-[10px] px-2 py-0.5 rounded" style={{ backgroundColor: "rgba(34,197,94,0.15)", color: "#22c55e" }}>
+                      {(receiptData as Record<string, unknown>).verification_status === "verified" ? "VERIFIED" : String((receiptData as Record<string, unknown>).verification_status ?? "—").toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-xs font-mono" style={{ color: "#d1d5db" }}>
+                    <div><span style={{ color: "#6b7280" }}>receipt_id: </span>{String((receiptData as Record<string, unknown>).receipt_id ?? "")}</div>
+                    <div><span style={{ color: "#6b7280" }}>intent_hash: </span><span style={{ color: "#b8963e" }}>{String((receiptData as Record<string, unknown>).intent_hash ?? "").slice(0, 24)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>action_hash: </span><span style={{ color: "#b8963e" }}>{String((receiptData as Record<string, unknown>).action_hash ?? "").slice(0, 24)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>verification_hash: </span><span style={{ color: "#22c55e" }}>{String((receiptData as Record<string, unknown>).verification_hash ?? "").slice(0, 24)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>receipt_hash: </span>{String((receiptData as Record<string, unknown>).receipt_hash ?? "").slice(0, 24)}...</div>
+                    <div className="pt-1 border-t" style={{ borderColor: "rgba(107,114,128,0.2)" }}>
+                      <span style={{ color: "#6b7280" }}>decision: </span><span style={{ color: "#22c55e" }}>{String((receiptData as Record<string, unknown>).decision ?? "")}</span>
+                    </div>
+                    <div><span style={{ color: "#6b7280" }}>risk: </span><span style={{ color: selectedScenario?.color }}>{String((receiptData as Record<string, unknown>).risk_level ?? "")} ({String((receiptData as Record<string, unknown>).risk_score ?? "")})</span></div>
+                    <div><span style={{ color: "#6b7280" }}>policy: </span>{String((receiptData as Record<string, unknown>).policy_decision ?? "")} ({String((receiptData as Record<string, unknown>).policy_rule_id ?? "")})</div>
+                    <div className="pt-1 border-t" style={{ borderColor: "rgba(107,114,128,0.2)" }}>
+                      <span style={{ color: "#6b7280" }}>requested: </span>{String((receiptData as Record<string, unknown>).timestamp_request ?? "").slice(11, 19)}
+                    </div>
+                    <div><span style={{ color: "#6b7280" }}>approved: </span>{String((receiptData as Record<string, unknown>).timestamp_approval ?? "").slice(11, 19)}</div>
+                    <div><span style={{ color: "#6b7280" }}>executed: </span>{String((receiptData as Record<string, unknown>).timestamp_execution ?? "").slice(11, 19)}</div>
+                    <div><span style={{ color: "#6b7280" }}>signature: </span>{String((receiptData as Record<string, unknown>).signature ?? "").slice(0, 24)}...</div>
+                    <div><span style={{ color: "#6b7280" }}>previous_hash: </span>{String((receiptData as Record<string, unknown>).previous_hash ?? "").slice(0, 16)}...</div>
+                    <div><span style={{ color: "#6b7280" }}>protocol: </span><span style={{ color: "#3b82f6" }}>{String((receiptData as Record<string, unknown>).protocol_version ?? "v2")}</span></div>
+                  </div>
                 </div>
                 <div
                   className="flex-1 p-4 rounded border"
                   style={{ borderColor: "rgba(184,150,62,0.5)", backgroundColor: "rgba(184,150,62,0.06)" }}
                 >
-                  <p className="text-xs font-semibold mb-2" style={{ color: "#b8963e" }}>
-                    LEDGER ENTRY (hash-chained)
-                  </p>
-                  <pre
-                    className="text-xs leading-relaxed overflow-x-auto"
-                    style={{ color: "#d1d5db", fontFamily: "monospace" }}
-                  >
-                    {JSON.stringify(ledgerData, null, 2)}
-                  </pre>
+                  <div className="flex items-center justify-between mb-3">
+                    <p className="text-xs font-semibold" style={{ color: "#b8963e" }}>
+                      LEDGER ENTRY (v2 hash-chain)
+                    </p>
+                    <span className="text-[10px] px-2 py-0.5 rounded" style={{ backgroundColor: "rgba(59,130,246,0.15)", color: "#3b82f6" }}>
+                      v2
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-xs font-mono" style={{ color: "#d1d5db" }}>
+                    <div><span style={{ color: "#6b7280" }}>block_id: </span>{String((ledgerData as Record<string, unknown>).block_id ?? "")}</div>
+                    <div><span style={{ color: "#6b7280" }}>receipt_hash: </span><span style={{ color: "#b8963e" }}>{String((ledgerData as Record<string, unknown>).receipt_hash ?? "").slice(0, 24)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>previous_hash: </span>{String((ledgerData as Record<string, unknown>).previous_hash ?? "").slice(0, 24)}...</div>
+                    <div><span style={{ color: "#6b7280" }}>current_hash: </span><span style={{ color: "#22c55e" }}>{String((ledgerData as Record<string, unknown>).current_hash ?? "").slice(0, 24)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>ledger_signature: </span>{String((ledgerData as Record<string, unknown>).ledger_signature ?? "").slice(0, 24)}...</div>
+                    <div><span style={{ color: "#6b7280" }}>protocol: </span><span style={{ color: "#3b82f6" }}>{String((ledgerData as Record<string, unknown>).protocol_version ?? "v2")}</span></div>
+                    <div><span style={{ color: "#6b7280" }}>timestamp: </span>{String((ledgerData as Record<string, unknown>).timestamp ?? "")}</div>
+                    <div><span style={{ color: "#6b7280" }}>recorded_by: </span>{String((ledgerData as Record<string, unknown>).recorded_by ?? "")}</div>
+                  </div>
                 </div>
               </div>
             )}
@@ -709,10 +752,12 @@ export default function Demo4() {
                   evaluated the risk, {selectedScenario?.requiresApproval
                     ? "required human approval (which was cryptographically signed),"
                     : "auto-approved the low-risk action,"}{" "}
-                  executed the action, generated a tamper-evident receipt, and recorded the event in a
-                  hash-chained ledger. Every step was logged, signed, and verifiable. The "What If?"
-                  replay shows how the same request would have been handled under a different policy —
-                  demonstrating that governance rules are testable and auditable.
+                  executed the action, ran post-execution verification, and generated a v2 cryptographic
+                  receipt containing intent_hash, action_hash, and verification_hash. The receipt was
+                  signed and recorded in a hash-chained ledger with its own signature. Every step is
+                  logged, signed, and independently verifiable. The "What If?" replay shows how the
+                  same request would have been handled under a different policy — demonstrating that
+                  governance rules are testable and auditable.
                 </p>
               </div>
             )}

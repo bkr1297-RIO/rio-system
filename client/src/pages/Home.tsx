@@ -52,20 +52,23 @@ export default function Home() {
               What is RIO?
             </h2>
             <p className="text-sm sm:text-base leading-relaxed mb-3" style={{ color: "#d1d5db" }}>
-              RIO is a governance and execution control system that sits between AI agents, automation, and
-              real-world systems. It works with any AI, any software agent, or any automated script that can
-              take actions such as sending emails, moving money, deploying code, or modifying data.
+              RIO is a <strong style={{ color: "#ffffff" }}>governed AI control plane</strong> that translates
+              goals into structured intents, enforces policy and approvals before execution, controls and verifies
+              actions, generates cryptographic receipts, maintains an immutable ledger, and learns from every
+              decision over time.
             </p>
             <p className="text-sm sm:text-base leading-relaxed mb-3" style={{ color: "#d1d5db" }}>
-              RIO enforces a simple rule: <strong style={{ color: "#ffffff" }}>important actions must be
-              approved, executed through a controlled gate, and permanently recorded</strong>. Organizations
-              define which actions require approval and which can run automatically, and those rules can change
-              over time through policy and risk settings.
+              Built on a <strong style={{ color: "#b8963e" }}>Three-Loop Architecture</strong>, RIO operates
+              through three interconnected loops: the <strong style={{ color: "#60a5fa" }}>Intake/Discovery
+              Loop</strong> translates vague goals into structured intents, the <strong style={{ color: "#b8963e" }}>Execution/Governance
+              Loop</strong> enforces policy, authorization, execution gating, verification, and cryptographic
+              receipt generation, and the <strong style={{ color: "#22d3ee" }}>Learning Loop</strong> feeds
+              outcomes back into policy refinement.
             </p>
             <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#d1d5db" }}>
-              Every approved action produces a cryptographic receipt, and every event is recorded in a
-              tamper-evident ledger. The system itself — not the AI — enforces these rules, ensuring that
-              actions are controlled, visible, and verifiable.
+              The system itself {"\u2014"} not the AI {"\u2014"} enforces these rules. Every action produces a v2
+              cryptographic receipt containing intent, action, and verification hashes. Every receipt is recorded
+              in a signed, tamper-evident ledger. Actions are controlled, visible, and verifiable.
             </p>
             <div className="flex flex-wrap justify-center gap-3 mt-4">
               <a
@@ -129,7 +132,7 @@ export default function Home() {
                 className="text-sm sm:text-base leading-relaxed"
                 style={{ color: "#d1d5db" }}
               >
-                RIO is a runtime control and audit protocol for AI and automated systems that requires explicit human approval for real-world actions and produces verifiable decision receipts recorded in a tamper-evident ledger. This includes sending emails, deleting files, sending money, and more. The system itself, not the AI or agent, enforces this boundary.
+                RIO is a governed AI control plane built on a Three-Loop Architecture. The Intake/Discovery Loop translates vague goals into structured intents. The Execution/Governance Loop enforces policy, authorization, execution gating, post-execution verification, and cryptographic receipt generation. The Learning Loop feeds outcomes back into policy refinement. The system itself, not the AI or agent, enforces this boundary.
               </p>
             </div>
 
@@ -145,7 +148,7 @@ export default function Home() {
                 className="text-sm sm:text-base leading-relaxed"
                 style={{ color: "#d1d5db" }}
               >
-                The human retains authority and every action is traceable, visible, time stamped, and stored. With RIO, AI goes from being a powerful but sometimes unpredictable tool, to a capable, trusted, collaborating partner. It allows the human to be in the loop, understand what is going on in the loop, and control the loop.
+                The human retains authority and every action is traceable, visible, time-stamped, and stored. Every action produces a v2 cryptographic receipt with intent, action, and verification hashes. Every receipt is recorded in a signed, tamper-evident ledger. With RIO, AI goes from being a powerful but sometimes unpredictable tool, to a capable, trusted, collaborating partner. It allows the human to be in the loop, understand what is going on in the loop, and control the loop.
               </p>
             </div>
           </div>

@@ -15,6 +15,13 @@
       "when": 1774224192357,
       "tag": "0001_foamy_captain_midlands",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1774500700206,
+      "tag": "0002_parallel_prodigy",
+      "breakpoints": true
     }
   ]
 }

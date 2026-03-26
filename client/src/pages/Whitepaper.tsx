@@ -6,7 +6,7 @@
  */
 
 import NavBar from "@/components/NavBar";
-import { FileDown, ExternalLink, Shield, Zap, Lock, Eye, BookOpen, Users, Brain, Building2, AlertTriangle, GitBranch } from "lucide-react";
+import { FileDown, ExternalLink, Shield, Zap, Lock, Eye, BookOpen, Users, Brain, Building2, AlertTriangle, GitBranch, Lightbulb } from "lucide-react";
 
 const PDF_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio_whitepaper_v2_8021e404.pdf";
 const REPO_URL = "https://github.com/bkr1297-RIO/rio-protocol";
@@ -29,7 +29,7 @@ const SECTIONS: Section[] = [
     icon: <BookOpen size={18} />,
     content: [
       "Runtime Intelligence Orchestration (RIO) is a fail-closed authorization and audit protocol designed to govern autonomous AI agents. As AI systems transition from passive advisors to active participants in digital environments — capable of moving funds, managing infrastructure, and accessing sensitive data — the risk of unaligned or malicious execution increases.",
-      "RIO addresses this by decoupling the \"intelligence\" of the agent from the \"authority\" to execute. By enforcing a cryptographic control plane between the AI and the execution target, RIO ensures that no high-impact action can occur without explicit, verifiable human approval. The system provides a tamper-evident audit trail through a hash-chained ledger and generates cryptographic receipts for every execution.",
+      "RIO addresses this by decoupling the \"intelligence\" of the agent from the \"authority\" to execute. Built on a Three-Loop Architecture (Intake/Discovery, Execution/Governance, Learning), RIO translates goals into structured intents, enforces policy and approvals before execution, controls and verifies actions, generates v2 cryptographic receipts with intent_hash, action_hash, and verification_hash, and maintains an immutable signed ledger. The Learning Loop feeds outcomes back into policy refinement without bypassing governance.",
     ],
   },
   {
@@ -44,15 +44,16 @@ const SECTIONS: Section[] = [
     ],
   },
   {
-    id: "overview",
+    id: "three-loop",
     num: "3",
-    title: "System Overview",
-    icon: <Eye size={18} />,
+    title: "Three-Loop Architecture",
+    icon: <Lightbulb size={18} />,
     content: [
-      "RIO is built on the principle that AI proposes, but the system executes. It operates across two distinct planes:",
-      "The Control Plane governs the flow of intent. It captures the AI's request, evaluates it against organizational policies, determines the required risk level, and manages the human approval workflow. It is responsible for generating the cryptographic \"Execution Token\" that unlocks the gate.",
-      "The Audit Plane provides the \"memory\" of the system. It records every intent, approval, denial, and execution event in a tamper-evident, hash-chained ledger. It generates \"Cryptographic Receipts\" that allow any party to independently verify that an action was authorized and executed correctly.",
-      "The system is fail-closed by design. If the control plane is unavailable, if a signature is invalid, or if the ledger cannot be written, the execution gate remains locked. This ensures that no action is ever taken in an unrecorded or unauthorized state.",
+      "RIO is built on a Three-Loop Architecture that governs the complete lifecycle of AI-driven actions:",
+      "The Intake / Discovery Loop translates vague goals into structured intents before governance begins. It validates incoming requests, detects missing information, uses AI-assisted refinement to clarify ambiguous goals, and produces a well-defined structured intent. Also known as the Intake Translation Layer, Universal Grammar Layer, or Goal-to-Intent Layer.",
+      "The Execution / Governance Loop controls and authorizes all actions before execution. It enforces policy evaluation, risk scoring, human approval workflows, execution gating, post-execution verification (computing intent_hash, action_hash, and verification_hash), v2 receipt generation, and signed ledger recording. No execution occurs without authorization. All actions produce receipts. All receipts are recorded in the ledger.",
+      "The Learning Loop improves future decisions and governance policies. It analyzes patterns from the audit trail, proposes policy updates, and enables replay/simulation. Learning cannot bypass governance, cannot execute actions directly, and policy updates must go through governance before deployment.",
+      "The system is fail-closed by design. If any component cannot positively verify a required condition, the execution gate remains locked. This ensures that no action is ever taken in an unrecorded or unauthorized state.",
     ],
   },
   {
@@ -61,8 +62,9 @@ const SECTIONS: Section[] = [
     title: "The Governed Execution Pipeline",
     icon: <GitBranch size={18} />,
     content: [
-      "RIO enforces governance through a rigorous 8-stage pipeline. Each stage produces a specific data structure that is passed to the next, ensuring a continuous chain of custody:",
-      "1. Intake — The AI agent submits a raw intent.\n2. Classification — The system identifies the action type and extracts parameters.\n3. Structured Intent — The intent is converted into a machine-readable format with a unique intent_id.\n4. Policy & Risk Evaluation — The Policy Engine checks the intent against active rules. A risk score is calculated.\n5. Authorization — If the risk exceeds the threshold, a human approver is notified. Upon approval, the Signature Service generates an ECDSA signature.\n6. Execution Gate — The gate verifies the signature, timestamp, and nonce.\n7. Receipt Generation — An HMAC-signed receipt is generated, capturing the result.\n8. Ledger Entry — The event is recorded in the hash-chained ledger.",
+      "RIO enforces governance through the pipeline within the Execution/Governance Loop. Each stage produces a specific data structure that is passed to the next, ensuring a continuous chain of custody:",
+      "1. Intake \u2014 The AI agent submits a raw intent (or vague goal, which is refined by the Intake/Discovery Loop).\n2. Discovery & Refinement \u2014 If the request is vague, AI-assisted refinement produces a structured intent.\n3. Classification \u2014 The system identifies the action type and assigns a risk category.\n4. Policy & Risk Evaluation \u2014 The Policy Engine checks the intent against active rules. A risk score is calculated.\n5. Authorization \u2014 If the risk exceeds the threshold, a human approver is notified. Upon approval, an Execution Token is generated.\n6. Execution Gate \u2014 The gate verifies the token signature, timestamp, nonce, and kill switch.\n6b. Post-Execution Verification \u2014 Computes intent_hash, action_hash, and verification_hash (SHA-256) to cryptographically bind intent to action.\n7. v2 Receipt Generation \u2014 A signed receipt is generated containing all hashes, risk data, policy decision, and three ISO 8601 timestamps.\n8. v2 Ledger Entry \u2014 The receipt is recorded in the signed hash-chained ledger with its own ledger_signature.",
+      "Denial receipts are generated for blocked or denied actions, ensuring the audit trail covers every decision \u2014 not just successful executions.",
     ],
   },
   {
@@ -79,12 +81,12 @@ const SECTIONS: Section[] = [
   {
     id: "crypto",
     num: "7",
-    title: "Cryptographic Audit Model",
+    title: "Cryptographic Audit Model (v2)",
     icon: <Lock size={18} />,
     content: [
-      "RIO uses a multi-layered cryptographic model to ensure that the audit trail is both authentic and tamper-evident.",
-      "A RIO receipt is a JSON object containing the full context of the execution, signed using HMAC-SHA256 with a key known only to the RIO Control Plane. The receipt includes the intent_id, action, timestamps, approver identity, agent identity, policy result, parameter hashes, result hashes, and the current ledger hash.",
-      "The ledger is a hash chain where each entry E_n contains a hash H_n calculated as: H_n = SHA256(E_n.data + H_(n-1)). This structure ensures that any modification to entry E_i will invalidate all subsequent hashes, making tampering immediately detectable.",
+      "RIO v2 uses a multi-layered cryptographic model to ensure that the audit trail is both authentic and tamper-evident.",
+      "A v2 receipt is a JSON object containing: receipt_id, intent_id, action, requester, approver, decision, execution_status, risk_score, risk_level, policy_decision, intent_hash (SHA-256 of intent + action + requester + timestamp), action_hash (SHA-256 of action + parameters), verification_hash (SHA-256 of intent_hash + action_hash + execution_status), verification_status, three ISO 8601 timestamps (request, approval, execution), receipt_hash, signature (Ed25519), previous_hash, and protocol_version.",
+      "The v2 ledger is a signed hash chain where each entry E_n contains: block_id, receipt_id, receipt_hash, previous_hash, current_hash (H_n = SHA256(E_n.data + H_(n-1))), and ledger_signature (Ed25519). This structure ensures that any modification to any entry invalidates all subsequent hashes, and the per-entry signature provides independent verification. The Receipt Verifier and Ledger Verifier enable independent audit of individual receipts and the full chain.",
     ],
   },
   {
@@ -110,12 +112,12 @@ const SECTIONS: Section[] = [
   {
     id: "learning",
     num: "11",
-    title: "Learning and Simulation",
+    title: "Learning Loop",
     icon: <Brain size={18} />,
     content: [
-      "RIO includes a \"Governed Corpus\" that records all system interactions, providing a rich dataset for learning and policy refinement.",
+      "The Learning Loop is the third loop in RIO\u2019s Three-Loop Architecture. It records all system interactions in a Governed Corpus, providing a rich dataset for learning and policy refinement.",
       "The Replay Engine can replay historical intents through the pipeline in three modes: Exact Replay (verifies the system produces the same result), Modified Policy (simulates how a new policy would have handled past intents), and Modified Role (tests how different role assignments would change outcomes).",
-      "The Policy Improvement Loop follows four steps: Record (capture intents and outcomes), Analyze (identify patterns of friction or risk), Simulate (test new rules against the corpus), and Deploy (activate refined policies with confidence).",
+      "The Policy Improvement Loop follows four steps: Record (capture intents and outcomes), Analyze (identify patterns of friction or risk), Simulate (test new rules against the corpus), and Deploy (activate refined policies with confidence). Critically, the Learning Loop cannot bypass governance: all policy updates must go through the Execution/Governance Loop before deployment, and the Learning Loop cannot execute actions directly.",
     ],
   },
   {
@@ -136,15 +138,16 @@ const SECTIONS: Section[] = [
 // ── Pipeline Diagram ──────────────────────────────────────────────────────────
 
 const PIPELINE_STEPS = [
-  { label: "AI Agent", color: "#6b7280" },
-  { label: "Intake", color: "#b8963e" },
+  { label: "Goal", color: "#60a5fa" },
+  { label: "Intake", color: "#60a5fa" },
   { label: "Classify", color: "#b8963e" },
-  { label: "Policy & Risk", color: "#eab308" },
-  { label: "Authorization", color: "#3b82f6" },
-  { label: "Execution Gate", color: "#ef4444" },
+  { label: "Policy", color: "#eab308" },
+  { label: "Authorize", color: "#3b82f6" },
   { label: "Execute", color: "#22c55e" },
+  { label: "Verify", color: "#3b82f6" },
   { label: "Receipt", color: "#b8963e" },
   { label: "Ledger", color: "#b8963e" },
+  { label: "Learn", color: "#22d3ee" },
 ];
 
 // ── Component ─────────────────────────────────────────────────────────────────
@@ -288,10 +291,11 @@ export default function Whitepaper() {
             Conclusion
           </h2>
           <p className="text-sm leading-relaxed" style={{ color: "#d1d5db" }}>
-            RIO provides the missing link in AI safety: a structural enforcement layer that operates at the
-            speed of machine intelligence while maintaining the absolute authority of human decision-makers.
-            By decoupling intent from execution and anchoring every action in a cryptographic audit trail,
-            RIO enables organizations to deploy autonomous agents with confidence. Governance does not have
+            RIO provides the missing link in AI safety: a governed AI control plane built on a Three-Loop Architecture
+            that translates goals into structured intents, enforces policy and approvals before execution, controls and
+            verifies actions, generates v2 cryptographic receipts, maintains an immutable signed ledger, and learns from
+            every decision over time. By decoupling intent from execution and anchoring every action in a cryptographic
+            audit trail, RIO enables organizations to deploy autonomous agents with confidence. Governance does not have
             to be a bottleneck — it can be a verifiable, tamper-evident, and automated part of the execution itself.
           </p>
         </div>

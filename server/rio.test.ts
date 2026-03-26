@@ -92,8 +92,13 @@ describe("RIO Backend — Enforcement Logic", () => {
     const receipt = result.receipt as Record<string, unknown>;
     expect(receipt).toHaveProperty("receipt_id");
     expect(receipt.action).toBe("send_email");
-    expect(receipt).toHaveProperty("hash");
+    expect(receipt).toHaveProperty("receipt_hash");
     expect(receipt).toHaveProperty("previous_hash");
+    // v2 receipt fields
+    expect(receipt).toHaveProperty("intent_hash");
+    expect(receipt).toHaveProperty("action_hash");
+    expect(receipt).toHaveProperty("verification_hash");
+    expect(receipt).toHaveProperty("verification_status");
 
     const ledgerEntry = result.ledger_entry as Record<string, unknown>;
     expect(ledgerEntry).toHaveProperty("block_id");

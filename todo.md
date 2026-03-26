@@ -71,3 +71,12 @@
 - [x] Update NavBar and App.tsx routing for FAQ page
 - [x] Get Started page with installation steps, folder overview, and quick start commands
 - [x] Update NavBar and App.tsx routing for Get Started page
+- [x] Demo 4: Update to show v2 receipt fields (intent_hash, action_hash, verification_hash, verification_status, ISO timestamps, signature)
+- [x] Architecture page: Add v2 receipt system, hash-chain ledger, and verification step
+- [x] How It Works page: Add Stage 6b verification step and dual receipt system (v1+v2)
+- [x] Whitepaper page: Update with v2 protocol changes (cryptographic receipts, hash-chain ledger, denial receipts)
+- [x] Three-Loop Architecture: Update How It Works page with Intake/Discovery, Execution/Governance, Learning loops
+- [x] Three-Loop Architecture: Update Architecture page with new model and Intake Translation Layer
+- [x] Three-Loop Architecture: Update Whitepaper with Three-Loop model
+- [x] Three-Loop Architecture: Update Home page with new standard description
+- [x] Three-Loop Architecture: Update GitHub repo (README, specs, diagrams)
