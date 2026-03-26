@@ -34,10 +34,16 @@ export default function Home() {
             RIO
           </h1>
           <p
-            className="text-base sm:text-xl font-bold tracking-[0.08em] mb-6"
+            className="text-base sm:text-xl font-bold tracking-[0.08em] mb-2"
             style={{ color: "#9ca3af" }}
           >
             Runtime Intelligence Orchestration
+          </p>
+          <p
+            className="text-xs sm:text-sm font-medium tracking-[0.12em] uppercase mb-6"
+            style={{ color: "#60a5fa" }}
+          >
+            Runtime Governance and Execution Control Plane for AI Systems
           </p>
 
           {/* What is RIO — above the fold summary */}
@@ -52,23 +58,19 @@ export default function Home() {
               What is RIO?
             </h2>
             <p className="text-sm sm:text-base leading-relaxed mb-3" style={{ color: "#d1d5db" }}>
-              RIO is a <strong style={{ color: "#ffffff" }}>governed AI control plane</strong> that translates
-              goals into structured intents, enforces policy and approvals before execution, controls and verifies
-              actions, generates cryptographic receipts, maintains an immutable ledger, and learns from every
-              decision over time.
-            </p>
-            <p className="text-sm sm:text-base leading-relaxed mb-3" style={{ color: "#d1d5db" }}>
-              Built on a <strong style={{ color: "#b8963e" }}>Three-Loop Architecture</strong>, RIO operates
-              through three interconnected loops: the <strong style={{ color: "#60a5fa" }}>Intake/Discovery
-              Loop</strong> translates vague goals into structured intents, the <strong style={{ color: "#b8963e" }}>Execution/Governance
-              Loop</strong> enforces policy, authorization, execution gating, verification, and cryptographic
-              receipt generation, and the <strong style={{ color: "#22d3ee" }}>Learning Loop</strong> feeds
-              outcomes back into policy refinement.
+              RIO is a <strong style={{ color: "#ffffff" }}>governed execution system</strong> that sits between
+              AI, humans, and real-world actions. It translates goals into structured intent, evaluates risk and
+              policy, requires approval when necessary, controls execution, verifies outcomes, and generates
+              cryptographically signed receipts recorded in a tamper-evident ledger.
+              {" "}<strong style={{ color: "#b8963e" }}>The system enforces the rules, not the AI.</strong>
             </p>
             <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#d1d5db" }}>
-              The system itself {"\u2014"} not the AI {"\u2014"} enforces these rules. Every action produces a v2
-              cryptographic receipt containing intent, action, and verification hashes. Every receipt is recorded
-              in a signed, tamper-evident ledger. Actions are controlled, visible, and verifiable.
+              Built on a three-loop architecture {"\u2014"}{" "}
+              <strong style={{ color: "#60a5fa" }}>Intake</strong> (goal &rarr; intent),{" "}
+              <strong style={{ color: "#b8963e" }}>Governance</strong> (policy &rarr; approval &rarr; execution &rarr; verification), and{" "}
+              <strong style={{ color: "#22d3ee" }}>Learning</strong> (ledger &rarr; policy improvement)
+              {" "}{"\u2014"} RIO creates a closed-loop system where every action is authorized, executed, verified,
+              recorded, and used to improve future decisions.
             </p>
             <div className="flex flex-wrap justify-center gap-3 mt-4">
               <a
@@ -132,7 +134,7 @@ export default function Home() {
                 className="text-sm sm:text-base leading-relaxed"
                 style={{ color: "#d1d5db" }}
               >
-                RIO is a governed AI control plane built on a Three-Loop Architecture. The Intake/Discovery Loop translates vague goals into structured intents. The Execution/Governance Loop enforces policy, authorization, execution gating, post-execution verification, and cryptographic receipt generation. The Learning Loop feeds outcomes back into policy refinement. The system itself, not the AI or agent, enforces this boundary.
+                RIO is a governed execution system that sits between AI, humans, and real-world actions. It translates goals into structured intent, evaluates risk and policy, requires approval when necessary, controls execution, verifies outcomes, and generates cryptographically signed receipts recorded in a tamper-evident ledger. The system enforces the rules, not the AI. Built on a three-loop architecture — Intake (goal → intent), Governance (policy → approval → execution → verification), and Learning (ledger → policy improvement) — RIO creates a closed-loop system where every action is authorized, executed, verified, recorded, and used to improve future decisions.
               </p>
             </div>
 

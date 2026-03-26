@@ -102,3 +102,5 @@
 - [x] Receipt export: Add TXT/JSON download buttons to all demos (via shared ReceiptExport component)
 - [x] Docs page: Add v1 vs v2 receipt comparison table
 - [x] How It Works page: Update header description with new RIO definition text
+- [x] Home page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline and update "What is RIO?" with canonical definition
+- [x] How It Works page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
