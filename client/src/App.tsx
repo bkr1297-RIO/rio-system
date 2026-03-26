@@ -14,6 +14,7 @@ import UseCases from "./pages/UseCases";
 import Docs from "./pages/Docs";
 import Demo4 from "./pages/Demo4";
 import Whitepaper from "./pages/Whitepaper";
+import FAQ from "./pages/FAQ";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -28,6 +29,7 @@ function Router() {
       <Route path={"/demo2"} component={Demo2} />
       <Route path={"/demo3"} component={Demo3} />
       <Route path={"/demo4"} component={Demo4} />
+      <Route path={"/faq"} component={FAQ} />
       <Route path={"/whitepaper"} component={Whitepaper} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />

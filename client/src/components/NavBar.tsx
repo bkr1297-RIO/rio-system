@@ -18,6 +18,7 @@ const navLinks = [
     ],
   },
   { label: "Docs", href: "/docs" },
+  { label: "FAQ", href: "/faq" },
   { label: "Whitepaper", href: "/whitepaper" },
 ];
 

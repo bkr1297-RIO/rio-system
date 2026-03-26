@@ -67,3 +67,5 @@
 - [x] Update NavBar with Demo 4 and Whitepaper in Demos dropdown
 - [x] Update App.tsx routing for Demo 4 and Whitepaper pages
 - [x] Home page: Replace "What is RIO?" text with user's new governance/execution control copy
+- [x] FAQ page with 10 Q&A items
+- [x] Update NavBar and App.tsx routing for FAQ page
