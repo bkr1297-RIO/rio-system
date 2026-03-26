@@ -51,12 +51,21 @@ export default function Home() {
             <h2 className="text-sm font-semibold tracking-[0.15em] uppercase mb-3" style={{ color: "#b8963e" }}>
               What is RIO?
             </h2>
+            <p className="text-sm sm:text-base leading-relaxed mb-3" style={{ color: "#d1d5db" }}>
+              RIO is a governance and execution control system that sits between AI agents, automation, and
+              real-world systems. It works with any AI, any software agent, or any automated script that can
+              take actions such as sending emails, moving money, deploying code, or modifying data.
+            </p>
+            <p className="text-sm sm:text-base leading-relaxed mb-3" style={{ color: "#d1d5db" }}>
+              RIO enforces a simple rule: <strong style={{ color: "#ffffff" }}>important actions must be
+              approved, executed through a controlled gate, and permanently recorded</strong>. Organizations
+              define which actions require approval and which can run automatically, and those rules can change
+              over time through policy and risk settings.
+            </p>
             <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#d1d5db" }}>
-              RIO is a cryptographic protocol that governs AI execution. It sits between an AI agent and the
-              real-world actions it wants to perform — sending emails, moving money, deleting files — and
-              enforces a simple rule: <strong style={{ color: "#ffffff" }}>no action happens without explicit
-              human approval</strong>. Every decision is signed, every execution is receipted, and every event
-              is recorded in a tamper-evident ledger. The system itself, not the AI, enforces this boundary.
+              Every approved action produces a cryptographic receipt, and every event is recorded in a
+              tamper-evident ledger. The system itself — not the AI — enforces these rules, ensuring that
+              actions are controlled, visible, and verifiable.
             </p>
             <div className="flex flex-wrap justify-center gap-3 mt-4">
               <a

@@ -66,3 +66,4 @@
 - [x] Home page — remove redundant GitHub links (NavBar handles that now)
 - [x] Update NavBar with Demo 4 and Whitepaper in Demos dropdown
 - [x] Update App.tsx routing for Demo 4 and Whitepaper pages
+- [x] Home page: Replace "What is RIO?" text with user's new governance/execution control copy
