@@ -17,6 +17,8 @@ const navLinks = [
       { label: "Demo 3 — Audit & Proof", href: "/demo3" },
       { label: "Demo 4 — Full Pipeline", href: "/demo4" },
       { label: "Verify Receipt", href: "/verify" },
+      { label: "Ledger Explorer", href: "/ledger" },
+      { label: "Tamper Demo", href: "/tamper" },
     ],
   },
   { label: "Docs", href: "/docs" },

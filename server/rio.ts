@@ -585,3 +585,44 @@ export async function verifyReceiptById(receiptId: string) {
     },
   };
 }
+
+// ── Ledger Chain Explorer ──────────────────────────────────────────
+
+export async function getLedgerChain(limit: number = 50) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const entries = await db.select().from(ledger).orderBy(desc(ledger.id)).limit(limit);
+
+  // Reverse to chronological order (oldest first)
+  const chain = entries.reverse().map((l) => ({
+    block_id: l.blockId,
+    intent_id: l.intentId,
+    action: l.action,
+    decision: l.decision,
+    receipt_hash: l.receiptHash,
+    previous_hash: l.previousHash,
+    current_hash: l.currentHash,
+    ledger_signature: l.ledgerSignature ? l.ledgerSignature.slice(0, 32) + "..." : null,
+    protocol_version: l.protocolVersion,
+    timestamp: l.timestamp?.toISOString(),
+    recorded_by: l.recordedBy,
+  }));
+
+  // Verify chain integrity
+  let chainValid = true;
+  const chainErrors: string[] = [];
+  for (let i = 1; i < chain.length; i++) {
+    if (chain[i].previous_hash !== chain[i - 1].current_hash) {
+      chainValid = false;
+      chainErrors.push(`Break at block ${i}: expected previous_hash=${chain[i - 1].current_hash?.slice(0, 16)}... got ${chain[i].previous_hash?.slice(0, 16)}...`);
+    }
+  }
+
+  return {
+    entries: chain,
+    total: chain.length,
+    chainValid,
+    chainErrors,
+  };
+}

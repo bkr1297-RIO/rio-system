@@ -17,6 +17,8 @@ import Whitepaper from "./pages/Whitepaper";
 import FAQ from "./pages/FAQ";
 import GetStarted from "./pages/GetStarted";
 import VerifyReceipt from "./pages/VerifyReceipt";
+import LedgerExplorer from "./pages/LedgerExplorer";
+import TamperDemo from "./pages/TamperDemo";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -35,6 +37,8 @@ function Router() {
       <Route path={"/get-started"} component={GetStarted} />
       <Route path={"/whitepaper"} component={Whitepaper} />
       <Route path={"/verify"} component={VerifyReceipt} />
+      <Route path={"/ledger"} component={LedgerExplorer} />
+      <Route path={"/tamper"} component={TamperDemo} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

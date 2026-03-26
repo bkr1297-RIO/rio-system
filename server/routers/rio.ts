@@ -5,7 +5,7 @@
 
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
-import { createIntent, approveIntent, denyIntent, executeIntent, getAuditLog, verifyReceiptById } from "../rio";
+import { createIntent, approveIntent, denyIntent, executeIntent, getAuditLog, verifyReceiptById, getLedgerChain } from "../rio";
 
 export const rioRouter = router({
   // Create a new intent
@@ -55,6 +55,15 @@ export const rioRouter = router({
     }))
     .query(async ({ input }) => {
       return getAuditLog(input.intentId);
+    }),
+
+  // Get ledger chain for explorer
+  ledgerChain: publicProcedure
+    .input(z.object({
+      limit: z.number().min(1).max(200).default(50),
+    }).optional())
+    .query(async ({ input }) => {
+      return getLedgerChain(input?.limit ?? 50);
     }),
 
   // Verify a receipt by ID (server-side signature + hash verification)

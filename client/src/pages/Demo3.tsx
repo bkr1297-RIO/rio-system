@@ -67,6 +67,7 @@ export default function Demo3() {
   const [loading, setLoading] = useState(false);
   const [auditData, setAuditData] = useState<AuditData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const createIntentMut = trpc.rio.createIntent.useMutation();
   const approveMut = trpc.rio.approve.useMutation();
@@ -274,6 +275,27 @@ export default function Demo3() {
               )}
             </div>
           </div>
+
+          {/* Copy Receipt JSON button */}
+          {auditData && auditData.receipts.length > 0 && (
+            <div className="flex flex-col items-center mb-4">
+              <button
+                onClick={() => {
+                  navigator.clipboard.writeText(JSON.stringify(auditData.receipts[0], null, 2)).then(() => {
+                    setCopied(true);
+                    setTimeout(() => setCopied(false), 2000);
+                  });
+                }}
+                className="py-2 px-6 text-xs font-medium border rounded transition-colors duration-200 hover:bg-white/5"
+                style={{ borderColor: "#b8963e", color: "#b8963e", backgroundColor: "transparent" }}
+              >
+                {copied ? "\u2713 Copied to Clipboard" : "Copy Receipt JSON"}
+              </button>
+              <p className="text-[10px] mt-2 text-center" style={{ color: "#6b7280" }}>
+                Paste into the <a href="/verify" className="underline" style={{ color: "#b8963e" }}>Verify Receipt</a> tool or any LLM to independently verify authenticity.
+              </p>
+            </div>
+          )}
 
           {/* Run again button */}
           <div className="flex justify-center mb-10">

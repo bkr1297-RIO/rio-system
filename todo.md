@@ -88,3 +88,9 @@
 - [x] Add interactive Verify Receipt page where users can paste a receipt JSON and verify its signature and hash chain
 - [x] Add Three-Loop Architecture diagram image to GitHub repo README
 - [x] Push Whitepaper PDF to GitHub repo under docs/
+- [x] Add "Copy Receipt JSON" button to Demo 1 receipt display (already existed)
+- [x] Add "Copy Receipt JSON" button to Demo 2 receipt display
+- [x] Add "Copy Receipt JSON" button to Demo 3 receipt display
+- [x] Add "Copy Receipt JSON" button to Demo 4 receipt display
+- [x] Build Ledger Chain Explorer page with visual hash linkage and full chain browsing
+- [x] Build Tamper Demo page that modifies a receipt field and shows verification failing
