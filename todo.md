@@ -108,3 +108,6 @@
 - [x] Architecture page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
 - [x] Whitepaper page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
 - [x] GitHub README: Push latest content updates with tagline and canonical definition
+- [x] Docs page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
+- [x] Use Cases page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
+- [x] Get Started page: Update with guided walkthrough through demos
