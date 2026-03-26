@@ -8,7 +8,7 @@
 import NavBar from "@/components/NavBar";
 import { FileDown, ExternalLink, Shield, Zap, Lock, Eye, BookOpen, Users, Brain, Building2, AlertTriangle, GitBranch, Lightbulb } from "lucide-react";
 
-const PDF_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio_whitepaper_v2_8021e404.pdf";
+const PDF_URL = "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio_whitepaper_v2_d2db5a32.pdf";
 const REPO_URL = "https://github.com/bkr1297-RIO/rio-protocol";
 
 // ── Section Data ──────────────────────────────────────────────────────────────

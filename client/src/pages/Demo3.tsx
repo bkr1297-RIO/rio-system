@@ -38,13 +38,25 @@ type AuditData = {
     timestamp_approval: string;
     timestamp_execution: string;
     signature: string | null;
-    hash: string;
+    receipt_hash: string;
     previous_hash: string | null;
+    intent_hash: string | null;
+    action_hash: string | null;
+    verification_hash: string | null;
+    verification_status: string | null;
+    risk_score: number | null;
+    risk_level: string | null;
+    policy_decision: string | null;
+    policy_rule_id: string | null;
+    protocol_version: string | null;
   }[];
   ledger_entries: {
     block_id: string;
+    receipt_hash: string | null;
     previous_hash: string | null;
     current_hash: string;
+    ledger_signature: string | null;
+    protocol_version: string | null;
     timestamp: string;
     recorded_by: string;
   }[];
@@ -219,19 +231,45 @@ export default function Demo3() {
 
               {receipt && (
                 <>
-                  <p className="text-xs font-medium mb-1.5" style={{ color: "#9ca3af" }}>Receipt</p>
-                  <pre className="text-xs leading-relaxed overflow-x-auto mb-4" style={{ color: "#d1d5db", fontFamily: "monospace" }}>
-                    {JSON.stringify(receipt, null, 2)}
-                  </pre>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-medium" style={{ color: "#b8963e" }}>CRYPTOGRAPHIC RECEIPT (v2)</p>
+                    <span className="text-[10px] px-2 py-0.5 rounded" style={{ backgroundColor: "rgba(34,197,94,0.15)", color: "#22c55e" }}>
+                      {receipt.verification_status === "verified" ? "VERIFIED" : String(receipt.verification_status ?? "—").toUpperCase()}
+                    </span>
+                  </div>
+                  <div className="space-y-1 text-xs font-mono mb-4" style={{ color: "#d1d5db" }}>
+                    <div><span style={{ color: "#6b7280" }}>receipt_id: </span>{receipt.receipt_id}</div>
+                    <div><span style={{ color: "#6b7280" }}>intent_hash: </span><span style={{ color: "#b8963e" }}>{String(receipt.intent_hash ?? "").slice(0, 20)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>action_hash: </span><span style={{ color: "#b8963e" }}>{String(receipt.action_hash ?? "").slice(0, 20)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>verification_hash: </span><span style={{ color: "#22c55e" }}>{String(receipt.verification_hash ?? "").slice(0, 20)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>receipt_hash: </span>{String(receipt.receipt_hash ?? "").slice(0, 20)}...</div>
+                    <div className="pt-1 border-t" style={{ borderColor: "rgba(107,114,128,0.2)" }}>
+                      <span style={{ color: "#6b7280" }}>decision: </span><span style={{ color: "#22c55e" }}>{receipt.decision}</span>
+                    </div>
+                    <div><span style={{ color: "#6b7280" }}>risk: </span><span style={{ color: "#eab308" }}>{receipt.risk_level} ({receipt.risk_score})</span></div>
+                    <div><span style={{ color: "#6b7280" }}>policy: </span>{receipt.policy_decision} ({receipt.policy_rule_id})</div>
+                    <div><span style={{ color: "#6b7280" }}>signature: </span>{String(receipt.signature ?? "").slice(0, 20)}...</div>
+                    <div><span style={{ color: "#6b7280" }}>protocol: </span><span style={{ color: "#3b82f6" }}>{receipt.protocol_version ?? "v2"}</span></div>
+                  </div>
                 </>
               )}
 
               {ledgerEntry && (
                 <>
-                  <p className="text-xs font-medium mb-1.5" style={{ color: "#9ca3af" }}>Ledger Block</p>
-                  <pre className="text-xs leading-relaxed overflow-x-auto" style={{ color: "#d1d5db", fontFamily: "monospace" }}>
-                    {JSON.stringify(ledgerEntry, null, 2)}
-                  </pre>
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs font-medium" style={{ color: "#b8963e" }}>LEDGER ENTRY (v2 hash-chain)</p>
+                    <span className="text-[10px] px-2 py-0.5 rounded" style={{ backgroundColor: "rgba(59,130,246,0.15)", color: "#3b82f6" }}>v2</span>
+                  </div>
+                  <div className="space-y-1 text-xs font-mono" style={{ color: "#d1d5db" }}>
+                    <div><span style={{ color: "#6b7280" }}>block_id: </span>{ledgerEntry.block_id}</div>
+                    <div><span style={{ color: "#6b7280" }}>receipt_hash: </span><span style={{ color: "#b8963e" }}>{String(ledgerEntry.receipt_hash ?? "").slice(0, 20)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>previous_hash: </span>{String(ledgerEntry.previous_hash ?? "").slice(0, 20)}...</div>
+                    <div><span style={{ color: "#6b7280" }}>current_hash: </span><span style={{ color: "#22c55e" }}>{String(ledgerEntry.current_hash ?? "").slice(0, 20)}...</span></div>
+                    <div><span style={{ color: "#6b7280" }}>ledger_signature: </span>{String(ledgerEntry.ledger_signature ?? "").slice(0, 20)}...</div>
+                    <div><span style={{ color: "#6b7280" }}>protocol: </span><span style={{ color: "#3b82f6" }}>{ledgerEntry.protocol_version ?? "v2"}</span></div>
+                    <div><span style={{ color: "#6b7280" }}>timestamp: </span>{ledgerEntry.timestamp}</div>
+                    <div><span style={{ color: "#6b7280" }}>recorded_by: </span>{ledgerEntry.recorded_by}</div>
+                  </div>
                 </>
               )}
             </div>

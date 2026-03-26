@@ -80,3 +80,8 @@
 - [x] Three-Loop Architecture: Update Whitepaper with Three-Loop model
 - [x] Three-Loop Architecture: Update Home page with new standard description
 - [x] Three-Loop Architecture: Update GitHub repo (README, specs, diagrams)
+- [x] Demo 1: Update receipt display to show v2 fields (intent_hash, action_hash, verification_hash, verification_status, risk scoring)
+- [x] Demo 2: Update receipt/ledger display to show v2 fields
+- [x] Demo 3: Update audit panel receipt display to show v2 fields
+- [x] Architecture page: Add visual Three-Loop Architecture diagram (generated image)
+- [x] Whitepaper PDF: Regenerate to match updated website content with Three-Loop Architecture

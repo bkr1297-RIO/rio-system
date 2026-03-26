@@ -206,41 +206,13 @@ export default function Architecture() {
             Three-Loop Architecture
           </h2>
 
-          {/* Canonical Flow Diagram */}
-          <div
-            className="rounded-lg border p-4 sm:p-6 mb-8 overflow-x-auto"
-            style={{
-              backgroundColor: "oklch(0.12 0.03 260)",
-              borderColor: "oklch(0.72 0.1 85 / 20%)",
-            }}
-          >
-            <pre
-              className="text-[10px] sm:text-xs leading-snug mx-auto"
-              style={{
-                color: "#d1d5db",
-                fontFamily: "'JetBrains Mono', 'Fira Code', monospace",
-                maxWidth: "fit-content",
-              }}
-            >
-{`                    ┌──────────────────────────────┐
-                    │     INTAKE / DISCOVERY LOOP   │
-                    │  Goal → Validate → Refine →   │
-                    │       Structured Intent        │
-                    └──────────────┬─────────────────┘
-                                   │
-                    ┌──────────────▼─────────────────┐
-                    │  EXECUTION / GOVERNANCE LOOP   │
-                    │  Intent → Policy → Authorize → │
-                    │  Execute → Verify → Receipt →  │
-                    │          Ledger                 │
-                    └──────────────┬─────────────────┘
-                                   │
-                    ┌──────────────▼─────────────────┐
-                    │        LEARNING LOOP           │
-                    │  Audit → Patterns → Policy     │
-                    │  Updates → Future Decisions     │
-                    └────────────────────────────────┘`}
-            </pre>
+          {/* Three-Loop Architecture Diagram */}
+          <div className="rounded-lg border p-4 sm:p-6 mb-8" style={{ backgroundColor: "oklch(0.12 0.03 260)", borderColor: "oklch(0.72 0.1 85 / 20%)" }}>
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-three-loop-architecture-cXmE4c9PUWSiQwdpeFEirt.webp"
+              alt="RIO Three-Loop Architecture — Intake/Discovery, Execution/Governance, and Learning loops"
+              className="w-full max-w-4xl mx-auto rounded"
+            />
           </div>
 
           {/* Loop Cards */}
