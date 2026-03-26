@@ -85,3 +85,6 @@
 - [x] Demo 3: Update audit panel receipt display to show v2 fields
 - [x] Architecture page: Add visual Three-Loop Architecture diagram (generated image)
 - [x] Whitepaper PDF: Regenerate to match updated website content with Three-Loop Architecture
+- [x] Add interactive Verify Receipt page where users can paste a receipt JSON and verify its signature and hash chain
+- [x] Add Three-Loop Architecture diagram image to GitHub repo README
+- [x] Push Whitepaper PDF to GitHub repo under docs/

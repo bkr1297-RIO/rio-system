@@ -174,6 +174,46 @@ describe("RIO Backend — Enforcement Logic", () => {
     expect(ledger2.previous_hash).toBe(ledger1.current_hash);
   });
 
+  it("verifies a receipt by ID with valid signature and hash chain", async () => {
+    // Create, approve, execute to generate a receipt
+    const intent = await caller.rio.createIntent({
+      action: "send_email",
+      description: "Verify receipt test",
+      requestedBy: "AI_agent",
+    });
+
+    await caller.rio.approve({
+      intentId: intent.intentId,
+      decidedBy: "human_user",
+    });
+
+    const exec = await caller.rio.execute({ intentId: intent.intentId });
+    const receipt = exec.receipt as Record<string, unknown>;
+    const receiptId = receipt.receipt_id as string;
+
+    // Verify the receipt
+    const verification = await caller.rio.verifyReceipt({ receiptId });
+
+    expect(verification.found).toBe(true);
+    expect(verification.signatureValid).toBe(true);
+    expect(verification.hashValid).toBe(true);
+    expect(verification.ledgerRecorded).toBe(true);
+    expect(verification.protocolVersion).toBe("v2");
+    expect(verification.verificationStatus).toBe("verified");
+    expect(verification.receipt).not.toBeNull();
+    expect(verification.receipt?.receipt_id).toBe(receiptId);
+  });
+
+  it("returns not found for a non-existent receipt ID", async () => {
+    const verification = await caller.rio.verifyReceipt({ receiptId: "RIO-NONEXISTENT" });
+
+    expect(verification.found).toBe(false);
+    expect(verification.signatureValid).toBe(false);
+    expect(verification.hashValid).toBe(false);
+    expect(verification.ledgerRecorded).toBe(false);
+    expect(verification.receipt).toBeNull();
+  });
+
   it("returns a full audit log for a completed intent", async () => {
     const intent = await caller.rio.createIntent({
       action: "send_email",

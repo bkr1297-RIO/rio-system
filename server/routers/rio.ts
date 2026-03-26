@@ -5,7 +5,7 @@
 
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
-import { createIntent, approveIntent, denyIntent, executeIntent, getAuditLog } from "../rio";
+import { createIntent, approveIntent, denyIntent, executeIntent, getAuditLog, verifyReceiptById } from "../rio";
 
 export const rioRouter = router({
   // Create a new intent
@@ -55,5 +55,14 @@ export const rioRouter = router({
     }))
     .query(async ({ input }) => {
       return getAuditLog(input.intentId);
+    }),
+
+  // Verify a receipt by ID (server-side signature + hash verification)
+  verifyReceipt: publicProcedure
+    .input(z.object({
+      receiptId: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      return verifyReceiptById(input.receiptId);
     }),
 });

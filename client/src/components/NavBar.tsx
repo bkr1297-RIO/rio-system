@@ -16,6 +16,7 @@ const navLinks = [
       { label: "Demo 2 — Enforcement", href: "/demo2" },
       { label: "Demo 3 — Audit & Proof", href: "/demo3" },
       { label: "Demo 4 — Full Pipeline", href: "/demo4" },
+      { label: "Verify Receipt", href: "/verify" },
     ],
   },
   { label: "Docs", href: "/docs" },
