@@ -101,3 +101,4 @@
 - [x] Receipt export: Add JSON download button to Demo 4 receipt display
 - [x] Receipt export: Add TXT/JSON download buttons to all demos (via shared ReceiptExport component)
 - [x] Docs page: Add v1 vs v2 receipt comparison table
+- [x] How It Works page: Update header description with new RIO definition text
