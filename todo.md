@@ -69,3 +69,5 @@
 - [x] Home page: Replace "What is RIO?" text with user's new governance/execution control copy
 - [x] FAQ page with 10 Q&A items
 - [x] Update NavBar and App.tsx routing for FAQ page
+- [x] Get Started page with installation steps, folder overview, and quick start commands
+- [x] Update NavBar and App.tsx routing for Get Started page
