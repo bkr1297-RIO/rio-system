@@ -188,6 +188,12 @@ export default function Architecture() {
             System Architecture
           </h1>
           <p
+            className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase mb-4"
+            style={{ color: "#60a5fa" }}
+          >
+            Runtime Governance and Execution Control Plane for AI Systems
+          </p>
+          <p
             className="text-base sm:text-lg leading-relaxed max-w-3xl mx-auto"
             style={{ color: "#d1d5db" }}
           >

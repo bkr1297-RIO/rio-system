@@ -166,6 +166,12 @@ export default function Whitepaper() {
           <h1 className="text-3xl sm:text-4xl font-black tracking-wide mb-3" style={{ color: "#ffffff" }}>
             RIO: Runtime Intelligence Orchestration
           </h1>
+          <p
+            className="text-xs sm:text-sm font-semibold tracking-[0.25em] uppercase mb-3"
+            style={{ color: "#60a5fa" }}
+          >
+            Runtime Governance and Execution Control Plane for AI Systems
+          </p>
           <p className="text-base sm:text-lg mb-2" style={{ color: "#9ca3af" }}>
             A Cryptographic Protocol for Governed AI Execution
           </p>
