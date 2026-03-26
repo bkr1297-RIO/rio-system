@@ -176,6 +176,79 @@ export default function Docs() {
           </div>
         </div>
 
+        {/* v1 vs v2 Receipt Comparison */}
+        <div className="mb-12 sm:mb-16">
+          <h2
+            className="text-2xl font-bold mb-4"
+            style={{ color: "#b8963e" }}
+          >
+            v1 vs v2 Receipt Comparison
+          </h2>
+          <p
+            className="text-sm leading-relaxed mb-6"
+            style={{ color: "#d1d5db" }}
+          >
+            The v2 receipt system introduces cryptographic hashing, post-execution verification,
+            risk scoring, and hash-chain ledger entries. Below is a side-by-side comparison of
+            what changed between v1 and v2.
+          </p>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs" style={{ borderCollapse: "collapse" }}>
+              <thead>
+                <tr style={{ borderBottom: "2px solid oklch(0.72 0.1 85 / 25%)" }}>
+                  <th className="text-left py-2.5 px-3 font-bold" style={{ color: "#b8963e" }}>Field / Feature</th>
+                  <th className="text-left py-2.5 px-3 font-bold" style={{ color: "#9ca3af" }}>v1 Receipt</th>
+                  <th className="text-left py-2.5 px-3 font-bold" style={{ color: "#22d3ee" }}>v2 Receipt</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[
+                  ["Protocol Version", "Not specified", "protocol_version: \"v2\""],
+                  ["Receipt ID", "receipt_id (UUID)", "receipt_id (UUID) \u2014 unchanged"],
+                  ["Intent Hash", "Not present", "intent_hash (SHA-256 of intent payload)"],
+                  ["Action Hash", "Not present", "action_hash (SHA-256 of action + params)"],
+                  ["Verification Hash", "Not present", "verification_hash (SHA-256 of verification result)"],
+                  ["Verification Status", "Not present", "verification_status: verified | failed | skipped"],
+                  ["Risk Score", "Not present", "risk_score (0\u2013100 numeric)"],
+                  ["Risk Category", "Not present", "risk_category: LOW | MEDIUM | HIGH"],
+                  ["Timestamps", "requested_at, decided_at, executed_at", "Same fields \u2014 ISO 8601 format enforced"],
+                  ["Signature", "hash (SHA-256 of payload)", "signature (RSA-PSS 2048-bit, base64)"],
+                  ["Hash Field", "hash (receipt integrity)", "receipt_hash (SHA-256 of canonical payload)"],
+                  ["Ledger Entry", "block_index, current_hash, previous_hash", "Same + previous_ledger_hash for chain verification"],
+                  ["Denial Receipts", "Basic denial record", "Full v2 denial receipt with signature + ledger entry"],
+                  ["Tamper Detection", "Hash comparison only", "RSA-PSS signature + hash chain + independent verification"],
+                  ["Test Coverage", "47 tests across 12 suites", "57 tests across 14 suites (10 new v2 tests)"],
+                ].map(([field, v1, v2], i) => (
+                  <tr
+                    key={i}
+                    style={{ borderBottom: "1px solid oklch(0.72 0.1 85 / 8%)" }}
+                  >
+                    <td className="py-2 px-3 font-medium" style={{ color: "#d1d5db" }}>{field}</td>
+                    <td className="py-2 px-3" style={{ color: "#6b7280" }}>{v1}</td>
+                    <td className="py-2 px-3" style={{ color: "#22d3ee" }}>{v2}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div
+            className="mt-4 rounded border p-3"
+            style={{
+              backgroundColor: "oklch(0.18 0.03 260)",
+              borderColor: "oklch(0.72 0.1 85 / 10%)",
+            }}
+          >
+            <p className="text-xs leading-relaxed" style={{ color: "#9ca3af" }}>
+              <span className="font-bold" style={{ color: "#b8963e" }}>Upgrade path:</span>{" "}
+              v2 is backward-compatible. During transition, the pipeline generates both v1 and v2
+              receipts. Existing integrations continue to work with v1 fields while new consumers
+              can use the enhanced v2 fields for stronger verification.
+            </p>
+          </div>
+        </div>
+
         {/* Doc Sections */}
         <div className="space-y-10">
           {docSections.map((section) => {

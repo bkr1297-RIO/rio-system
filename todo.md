@@ -94,3 +94,10 @@
 - [x] Add "Copy Receipt JSON" button to Demo 4 receipt display
 - [x] Build Ledger Chain Explorer page with visual hash linkage and full chain browsing
 - [x] Build Tamper Demo page that modifies a receipt field and shows verification failing
+- [x] Demo 5 — Learning Loop: Build page showing how execution outcomes feed back into policy refinement
+- [x] Receipt export: Add JSON download button to Demo 1 receipt display
+- [x] Receipt export: Add JSON download button to Demo 2 receipt display
+- [x] Receipt export: Add JSON download button to Demo 3 receipt display
+- [x] Receipt export: Add JSON download button to Demo 4 receipt display
+- [x] Receipt export: Add TXT/JSON download buttons to all demos (via shared ReceiptExport component)
+- [x] Docs page: Add v1 vs v2 receipt comparison table

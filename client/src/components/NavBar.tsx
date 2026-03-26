@@ -19,6 +19,7 @@ const navLinks = [
       { label: "Verify Receipt", href: "/verify" },
       { label: "Ledger Explorer", href: "/ledger" },
       { label: "Tamper Demo", href: "/tamper" },
+      { label: "Demo 5 — Learning Loop", href: "/demo5" },
     ],
   },
   { label: "Docs", href: "/docs" },

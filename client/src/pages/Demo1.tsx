@@ -8,6 +8,7 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import NavBar from "@/components/NavBar";
+import ReceiptExport from "@/components/ReceiptExport";
 
 const STEPS = [
   {
@@ -517,9 +518,10 @@ export default function Demo1() {
           >
             {copied ? "Copied" : decided === "denied" ? "Copy Denial Receipt" : "Copy Receipt"}
           </button>
-          <p className="text-xs text-center max-w-md" style={{ color: "#6b7280" }}>
+          <p className="text-xs text-center max-w-md mb-3" style={{ color: "#6b7280" }}>
             You can copy this receipt and paste it into any LLM or machine to independently verify its authenticity. The cryptographic signature and hash make it tamper-proof.
           </p>
+          <ReceiptExport receipt={(receiptData || denialData) as Record<string, any>} label="Receipt" />
         </div>
       )}
 

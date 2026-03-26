@@ -9,6 +9,7 @@
 import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import NavBar from "@/components/NavBar";
+import ReceiptExport from "@/components/ReceiptExport";
 
 const WHAT_THIS_MEANS = [
   "Every request, decision, and action is recorded with timestamps and signatures.",
@@ -291,9 +292,10 @@ export default function Demo3() {
               >
                 {copied ? "\u2713 Copied to Clipboard" : "Copy Receipt JSON"}
               </button>
-              <p className="text-[10px] mt-2 text-center" style={{ color: "#6b7280" }}>
+              <p className="text-[10px] mt-2 mb-2 text-center" style={{ color: "#6b7280" }}>
                 Paste into the <a href="/verify" className="underline" style={{ color: "#b8963e" }}>Verify Receipt</a> tool or any LLM to independently verify authenticity.
               </p>
+              <ReceiptExport receipt={auditData.receipts[0] as Record<string, any>} />
             </div>
           )}
 
