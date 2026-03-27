@@ -3,6 +3,7 @@ import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { rioRouter } from "./routers/rio";
+import { blogRouter } from "./routers/blog";
 
 export const appRouter = router({
   system: systemRouter,
@@ -19,6 +20,9 @@ export const appRouter = router({
 
   // RIO enforcement endpoints
   rio: rioRouter,
+
+  // Blog
+  blog: blogRouter,
 });
 
 export type AppRouter = typeof appRouter;

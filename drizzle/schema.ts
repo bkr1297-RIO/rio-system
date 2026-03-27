@@ -82,6 +82,24 @@ export const receipts = mysqlTable("receipts", {
   createdAt: timestamp("createdAt").defaultNow().notNull(),
 });
 
+// ── Blog Posts ──────────────────────────────────────────────────────────────
+
+export const blogPosts = mysqlTable("blog_posts", {
+  id: int("id").autoincrement().primaryKey(),
+  slug: varchar("slug", { length: 128 }).notNull().unique(),
+  title: varchar("title", { length: 256 }).notNull(),
+  summary: text("summary"),
+  content: text("content").notNull(),
+  category: mysqlEnum("category", ["release", "announcement", "technical", "industry"]).default("announcement").notNull(),
+  published: int("published").default(0).notNull(),
+  publishedAt: timestamp("publishedAt"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BlogPost = typeof blogPosts.$inferSelect;
+export type InsertBlogPost = typeof blogPosts.$inferInsert;
+
 export const ledger = mysqlTable("ledger", {
   id: int("id").autoincrement().primaryKey(),
   blockId: varchar("blockId", { length: 64 }).notNull().unique(),

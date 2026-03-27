@@ -5,7 +5,7 @@
 
 import { z } from "zod";
 import { publicProcedure, router } from "../_core/trpc";
-import { createIntent, approveIntent, denyIntent, executeIntent, getAuditLog, verifyReceiptById, getLedgerChain } from "../rio";
+import { createIntent, approveIntent, denyIntent, executeIntent, getAuditLog, verifyReceiptById, getLedgerChain, getLearningAnalytics } from "../rio";
 
 export const rioRouter = router({
   // Create a new intent
@@ -73,5 +73,11 @@ export const rioRouter = router({
     }))
     .mutation(async ({ input }) => {
       return verifyReceiptById(input.receiptId);
+    }),
+
+  // Learning analytics — decision patterns and policy suggestions
+  learningAnalytics: publicProcedure
+    .query(async () => {
+      return getLearningAnalytics();
     }),
 });

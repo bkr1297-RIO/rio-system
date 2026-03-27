@@ -23,6 +23,12 @@ import Demo5 from "./pages/Demo5";
 import PositionPaper from "./pages/PositionPaper";
 import Contact from "./pages/Contact";
 import Roadmap from "./pages/Roadmap";
+import TryItLive from "./pages/TryItLive";
+import Blog from "./pages/Blog";
+import BlogPost from "./pages/BlogPost";
+import Go from "./pages/Go";
+import Dashboard from "./pages/Dashboard";
+import Learning from "./pages/Learning";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -47,6 +53,12 @@ function Router() {
       <Route path={"/position-paper"} component={PositionPaper} />
       <Route path={"/contact"} component={Contact} />
       <Route path={"/roadmap"} component={Roadmap} />
+      <Route path={"/try-it-live"} component={TryItLive} />
+      <Route path={"/go"} component={Go} />
+      <Route path={"/dashboard"} component={Dashboard} />
+      <Route path={"/learning"} component={Learning} />
+      <Route path={"/blog/:slug"} component={BlogPost} />
+      <Route path={"/blog"} component={Blog} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

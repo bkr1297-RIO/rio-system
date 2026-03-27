@@ -141,3 +141,28 @@
 - [x] Website: Add Architecture page with full content
 - [x] Website: Update Architecture nav link to point to new page
 - [x] Website: Vitest tests for Architecture page
+- [ ] Try It Live: Interactive demo page that submits test intents to the RIO gateway
+- [ ] Try It Live: Show real-time receipt response with formatted JSON
+- [ ] Try It Live: Add health check, test-full-flow, and verify-receipt demo modes
+- [ ] Try It Live: Add to NavBar and register route in App.tsx
+- [ ] Blog: Create blog/updates section for protocol announcements
+- [ ] Blog: Database schema for blog posts (title, content, date, slug)
+- [ ] Blog: tRPC procedures for CRUD operations
+- [ ] Blog: Blog listing page and individual post page
+- [ ] Blog: Add to NavBar/Resources dropdown and register routes
+- [ ] Custom domain: Guide user through domain setup in Settings > Domains
+- [x] /go page: Build the 30-second governance loop — intent card, Approve/Deny, receipt display, verify
+- [x] /go page: Multiple demo scenarios (Send Email, Transfer Funds, Deploy Production, Access Patient Record)
+- [x] /go page: Mobile-first responsive design with large tap targets
+- [x] /go page: Deny flow showing fail-closed gate blocking execution
+- [x] /go page: "What just happened" explainer after completion
+- [x] /go page: Links to Learn More, Try Another Scenario, Run Your Own
+- [x] /dashboard page: Receipt and action history with all past governed actions
+- [x] /dashboard page: Filterable by action type, decision, risk level
+- [x] /learning page: Decision tracking with approval rate, decision time, confidence
+- [x] /learning page: Policy suggestions after ~10 decisions (auto-approve, adjust pause)
+- [x] /learning page: Accept/reject suggested policies
+- [x] Server: Add governance router endpoints for decision history and learning analytics
+- [x] NavBar: Add /go as prominent CTA button, add Dashboard and Learning to nav
+- [x] App.tsx: Register /go, /dashboard, /learning routes
+- [x] Vitest: Tests for /go page, /dashboard page, /learning page, and new server endpoints

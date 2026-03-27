@@ -20,6 +20,15 @@ const navLinks: NavLink[] = [
   { label: "Use Cases", href: "/use-cases" },
   { label: "Get Started", href: "/get-started" },
   {
+    label: "Governance",
+    href: "#",
+    children: [
+      { label: "Try RIO", href: "/go" },
+      { label: "Dashboard", href: "/dashboard" },
+      { label: "Learning Loop", href: "/learning" },
+    ],
+  },
+  {
     label: "Demos",
     href: "#",
     children: [
@@ -31,6 +40,7 @@ const navLinks: NavLink[] = [
       { label: "Ledger Explorer", href: "/ledger" },
       { label: "Tamper Demo", href: "/tamper" },
       { label: "Demo 5 — Learning Loop", href: "/demo5" },
+      { label: "Try It Live", href: "/try-it-live" },
     ],
   },
   {
@@ -41,6 +51,7 @@ const navLinks: NavLink[] = [
       { label: "Whitepaper", href: "/whitepaper" },
       { label: "Position Paper", href: "/position-paper" },
       { label: "FAQ", href: "/faq" },
+      { label: "Updates", href: "/blog" },
       { label: "Roadmap", href: "/roadmap" },
       { label: "Contact", href: "/contact" },
     ],

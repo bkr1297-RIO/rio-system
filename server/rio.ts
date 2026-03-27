@@ -626,3 +626,207 @@ export async function getLedgerChain(limit: number = 50) {
     chainErrors,
   };
 }
+
+
+// ── Learning Analytics ────────────────────────────────────────────────────────
+
+export async function getLearningAnalytics() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Get all approvals with their intents
+  const allApprovals = await db
+    .select({
+      intentId: approvals.intentId,
+      decision: approvals.decision,
+      decidedBy: approvals.decidedBy,
+      decidedAt: approvals.decidedAt,
+    })
+    .from(approvals)
+    .orderBy(desc(approvals.decidedAt));
+
+  // Get all intents for action mapping
+  const allIntents = await db
+    .select({
+      intentId: intents.intentId,
+      action: intents.action,
+      description: intents.description,
+      requestedBy: intents.requestedBy,
+      createdAt: intents.createdAt,
+    })
+    .from(intents);
+
+  const intentMap = new Map(allIntents.map((i) => [i.intentId, i]));
+
+  // Build decision history with timing
+  const decisions = allApprovals.map((a) => {
+    const intent = intentMap.get(a.intentId);
+    const action = intent?.action || "unknown";
+    const requestedAt = intent?.createdAt;
+    const decidedAt = a.decidedAt;
+
+    // Decision time in ms
+    let decisionTimeMs = 0;
+    if (requestedAt && decidedAt) {
+      decisionTimeMs = decidedAt.getTime() - requestedAt.getTime();
+    }
+
+    return {
+      intentId: a.intentId,
+      action,
+      description: intent?.description || "",
+      requester: intent?.requestedBy || "unknown",
+      decision: a.decision,
+      decidedBy: a.decidedBy,
+      decidedAt: decidedAt?.toISOString() || "",
+      decisionTimeMs,
+    };
+  });
+
+  // Per-action analytics
+  const actionStats: Record<string, {
+    total: number;
+    approved: number;
+    denied: number;
+    avgDecisionTimeMs: number;
+    decisionTimes: number[];
+    lastDecision: string;
+    lastDecisionAt: string;
+  }> = {};
+
+  for (const d of decisions) {
+    if (!actionStats[d.action]) {
+      actionStats[d.action] = {
+        total: 0,
+        approved: 0,
+        denied: 0,
+        avgDecisionTimeMs: 0,
+        decisionTimes: [],
+        lastDecision: "",
+        lastDecisionAt: "",
+      };
+    }
+    const s = actionStats[d.action];
+    s.total++;
+    if (d.decision === "approved") s.approved++;
+    if (d.decision === "denied") s.denied++;
+    if (d.decisionTimeMs > 0) s.decisionTimes.push(d.decisionTimeMs);
+    if (!s.lastDecisionAt || d.decidedAt > s.lastDecisionAt) {
+      s.lastDecision = d.decision;
+      s.lastDecisionAt = d.decidedAt;
+    }
+  }
+
+  // Compute averages
+  for (const key of Object.keys(actionStats)) {
+    const s = actionStats[key];
+    if (s.decisionTimes.length > 0) {
+      s.avgDecisionTimeMs = Math.round(
+        s.decisionTimes.reduce((a, b) => a + b, 0) / s.decisionTimes.length
+      );
+    }
+  }
+
+  // Generate policy suggestions
+  const suggestions: Array<{
+    id: string;
+    action: string;
+    type: "auto_approve" | "auto_deny" | "reduce_pause" | "increase_scrutiny";
+    title: string;
+    description: string;
+    confidence: number;
+    basedOn: number;
+    approvalRate: number;
+    avgDecisionTimeSec: number;
+  }> = [];
+
+  for (const [action, stats] of Object.entries(actionStats)) {
+    const approvalRate = stats.total > 0 ? stats.approved / stats.total : 0;
+    const avgTimeSec = stats.avgDecisionTimeMs / 1000;
+
+    // Suggestion: Auto-approve if >90% approval rate and >5 decisions and avg time < 5s
+    if (approvalRate > 0.9 && stats.total >= 5 && avgTimeSec < 5) {
+      suggestions.push({
+        id: `suggest-${action}-auto-approve`,
+        action,
+        type: "auto_approve",
+        title: `Auto-approve ${action.replace(/_/g, " ")}`,
+        description: `You approved ${Math.round(approvalRate * 100)}% of ${action.replace(/_/g, " ")} actions in under ${avgTimeSec.toFixed(1)}s on average. Consider auto-approving this action type.`,
+        confidence: Math.min(0.99, approvalRate * (stats.total / 20)),
+        basedOn: stats.total,
+        approvalRate: Math.round(approvalRate * 100),
+        avgDecisionTimeSec: Math.round(avgTimeSec * 10) / 10,
+      });
+    }
+
+    // Suggestion: Auto-deny if >80% denial rate and >3 decisions
+    if (stats.total >= 3 && (stats.denied / stats.total) > 0.8) {
+      suggestions.push({
+        id: `suggest-${action}-auto-deny`,
+        action,
+        type: "auto_deny",
+        title: `Auto-deny ${action.replace(/_/g, " ")}`,
+        description: `You denied ${Math.round((stats.denied / stats.total) * 100)}% of ${action.replace(/_/g, " ")} actions. Consider blocking this action type by default.`,
+        confidence: Math.min(0.99, (stats.denied / stats.total) * (stats.total / 10)),
+        basedOn: stats.total,
+        approvalRate: Math.round(approvalRate * 100),
+        avgDecisionTimeSec: Math.round(avgTimeSec * 10) / 10,
+      });
+    }
+
+    // Suggestion: Reduce pause time if high approval rate but not enough for auto-approve
+    if (approvalRate > 0.7 && approvalRate <= 0.9 && stats.total >= 5) {
+      suggestions.push({
+        id: `suggest-${action}-reduce-pause`,
+        action,
+        type: "reduce_pause",
+        title: `Reduce pause time for ${action.replace(/_/g, " ")}`,
+        description: `${Math.round(approvalRate * 100)}% approval rate over ${stats.total} decisions. Consider reducing the approval pause window.`,
+        confidence: Math.min(0.8, approvalRate * (stats.total / 15)),
+        basedOn: stats.total,
+        approvalRate: Math.round(approvalRate * 100),
+        avgDecisionTimeSec: Math.round(avgTimeSec * 10) / 10,
+      });
+    }
+
+    // Suggestion: Increase scrutiny if mixed results
+    if (stats.total >= 5 && approvalRate > 0.3 && approvalRate < 0.7) {
+      suggestions.push({
+        id: `suggest-${action}-scrutiny`,
+        action,
+        type: "increase_scrutiny",
+        title: `Increase scrutiny for ${action.replace(/_/g, " ")}`,
+        description: `Mixed decision pattern: ${Math.round(approvalRate * 100)}% approval rate over ${stats.total} decisions. Consider adding additional context or requiring multi-party approval.`,
+        confidence: 0.6,
+        basedOn: stats.total,
+        approvalRate: Math.round(approvalRate * 100),
+        avgDecisionTimeSec: Math.round(avgTimeSec * 10) / 10,
+      });
+    }
+  }
+
+  // Overall stats
+  const totalDecisions = decisions.length;
+  const totalApproved = decisions.filter((d) => d.decision === "approved").length;
+  const totalDenied = decisions.filter((d) => d.decision === "denied").length;
+  const overallApprovalRate = totalDecisions > 0 ? Math.round((totalApproved / totalDecisions) * 100) : 0;
+
+  return {
+    totalDecisions,
+    totalApproved,
+    totalDenied,
+    overallApprovalRate,
+    actionStats: Object.entries(actionStats).map(([action, stats]) => ({
+      action,
+      total: stats.total,
+      approved: stats.approved,
+      denied: stats.denied,
+      approvalRate: stats.total > 0 ? Math.round((stats.approved / stats.total) * 100) : 0,
+      avgDecisionTimeMs: stats.avgDecisionTimeMs,
+      lastDecision: stats.lastDecision,
+      lastDecisionAt: stats.lastDecisionAt,
+    })),
+    suggestions,
+    decisions: decisions.slice(0, 50), // Last 50 decisions
+  };
+}
