@@ -186,3 +186,24 @@
 - [x] Vitest: Tests for policy persistence and governance engine
 - [x] Vitest: Tests for Gmail execution flow
 - [x] Vitest: Tests for notification triggers
+- [x] Connector Architecture: Refactor execution layer into pluggable connector modules
+- [x] Connector Architecture: Create base connector interface (name, execute, verify, capabilities)
+- [x] Connector Architecture: Gmail connector module (sends email via MCP after RIO authorization)
+- [x] Connector Architecture: Calendar connector module (creates event via MCP after RIO authorization)
+- [x] Connector Architecture: Connector registry that maps action types to connectors
+- [x] Gmail Live E2E: Wire MCP gmail tools into sendGmail endpoint for real email delivery
+- [x] Gmail Live E2E: Fail-closed order enforced (receipt → ledger → connector.execute)
+- [x] Gmail Live E2E: Receipt records connector used and execution result
+- [x] Calendar Connector: Add "Create Calendar Event" scenario to /go page
+- [x] Calendar Connector: Wire MCP calendar tools for real event creation in Live mode (simulated until Calendar MCP available)
+- [x] Calendar Connector: Receipt and ledger entry generated for calendar actions
+- [x] Policy Engine: Policies apply by action type regardless of connector
+- [x] Policy Engine: Auto-approved connector actions still generate receipts and ledger entries
+- [x] Mobile PWA: Verify /go, /dashboard, /learning work as mobile control panel
+- [x] Mobile PWA: Approval notifications link to /go page
+- [x] Vitest: Tests for connector architecture (base interface, registry, gmail connector, calendar connector)
+- [x] Vitest: Tests for live Gmail execution flow
+- [x] Vitest: Tests for calendar connector execution flow
+- [x] PWA: Fix service worker cache-first strategy causing stale pages (switched to network-first for navigation)
+- [x] Connector Architecture: Add Google Drive connector module
+- [x] /go page: Add 6 scenarios (email, calendar, drive, transfer, deploy, patient) with connector badges

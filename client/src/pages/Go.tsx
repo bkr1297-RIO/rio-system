@@ -5,10 +5,9 @@
  * AI proposes an action → You approve or deny → Receipt is generated → You verify it.
  * 30 seconds to understand what RIO does.
  *
- * Now with:
- * - Policy engine: auto-approve/deny based on learned rules
- * - Simulated / Live toggle for real Gmail execution
- * - decision_source tracking (human vs policy_auto)
+ * Connector-aware: scenarios route through the connector registry.
+ * Each action maps to a connector (Gmail, Calendar, Drive, etc.).
+ * The connector determines whether execution is live or simulated.
  */
 
 import { useState, useRef, useEffect } from "react";
@@ -24,6 +23,8 @@ interface Scenario {
   label: string;
   action: string;
   target: string;
+  connector: string;
+  connectorName: string;
   description: string;
   parameters: Record<string, string>;
   riskLevel: "Low" | "Medium" | "High" | "Critical";
@@ -38,6 +39,8 @@ const SCENARIOS: Scenario[] = [
     label: "Send Email",
     action: "send_email",
     target: "Gmail",
+    connector: "gmail",
+    connectorName: "Gmail",
     description: "Send an email to john@example.com",
     parameters: {
       to: "john@example.com",
@@ -49,11 +52,51 @@ const SCENARIOS: Scenario[] = [
     requester: "Gemini",
   },
   {
+    id: "calendar",
+    icon: "\uD83D\uDCC5",
+    label: "Create Event",
+    action: "create_event",
+    target: "Google Calendar",
+    connector: "google_calendar",
+    connectorName: "Google Calendar",
+    description: "Create a meeting with the team tomorrow at 2 PM",
+    parameters: {
+      title: "Team Sync — Q2 Planning",
+      date: "2026-03-28",
+      time: "2:00 PM",
+      duration: "60 min",
+      attendees: "team@company.com",
+    },
+    riskLevel: "Low",
+    riskColor: "#22c55e",
+    requester: "Gemini",
+  },
+  {
+    id: "drive",
+    icon: "\uD83D\uDCC1",
+    label: "Write File",
+    action: "write_file",
+    target: "Google Drive",
+    connector: "google_drive",
+    connectorName: "Google Drive",
+    description: "Create quarterly report in shared Drive folder",
+    parameters: {
+      filename: "Q2-2026-Report.docx",
+      destination: "/Shared/Reports/",
+      content: "Auto-generated quarterly summary",
+    },
+    riskLevel: "Medium",
+    riskColor: "#f59e0b",
+    requester: "Claude",
+  },
+  {
     id: "transfer",
     icon: "\uD83D\uDCB3",
     label: "Transfer Funds",
     action: "transfer_funds",
     target: "Banking API",
+    connector: "none",
+    connectorName: "Banking (Future)",
     description: "Transfer $500 to account ending in 4821",
     parameters: {
       amount: "$500.00",
@@ -67,9 +110,11 @@ const SCENARIOS: Scenario[] = [
   {
     id: "deploy",
     icon: "\uD83D\uDE80",
-    label: "Deploy to Production",
+    label: "Deploy",
     action: "deploy_production",
     target: "Kubernetes",
+    connector: "none",
+    connectorName: "DevOps (Future)",
     description: "Deploy build v3.2.1 to production cluster",
     parameters: {
       build: "v3.2.1",
@@ -83,9 +128,11 @@ const SCENARIOS: Scenario[] = [
   {
     id: "patient",
     icon: "\uD83C\uDFE5",
-    label: "Access Patient Record",
+    label: "Patient Record",
     action: "read_data",
     target: "EHR System",
+    connector: "none",
+    connectorName: "Healthcare (Future)",
     description: "Access medical record for patient #7291",
     parameters: {
       patient_id: "#7291",
@@ -133,6 +180,17 @@ interface LedgerEntryData {
   [key: string]: unknown;
 }
 
+interface ConnectorResult {
+  success: boolean;
+  connector: string;
+  action: string;
+  mode: string;
+  executedAt: string;
+  detail: string;
+  externalId?: string;
+  error?: string;
+}
+
 type FlowState =
   | "idle"
   | "checking_policy"
@@ -161,7 +219,7 @@ export default function Go() {
     decision: string;
   } | null>(null);
   const [liveMode, setLiveMode] = useState(false);
-  const [gmailStatus, setGmailStatus] = useState<string>("");
+  const [connectorResult, setConnectorResult] = useState<ConnectorResult | null>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
   const verifyRef = useRef<HTMLDivElement>(null);
 
@@ -172,7 +230,7 @@ export default function Go() {
   const verifyReceipt = trpc.rio.verifyReceipt.useMutation();
   const autoApproveMut = trpc.rio.autoApprove.useMutation();
   const autoDenyMut = trpc.rio.autoDeny.useMutation();
-  const sendGmail = trpc.rio.sendGmail.useMutation();
+  const connectorExecute = trpc.rio.connectorExecute.useMutation();
   const notifyPending = trpc.rio.notifyPendingApproval.useMutation();
 
   // Auto-create intent when scenario changes or on first load
@@ -183,6 +241,30 @@ export default function Go() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scenario]);
 
+  /** Execute the action through the connector layer */
+  const executeViaConnector = async (iId: string, receiptId: string) => {
+    try {
+      const result = await connectorExecute.mutateAsync({
+        intentId: iId,
+        receiptId,
+        action: scenario.action,
+        parameters: scenario.parameters,
+        mode: liveMode ? "live" : "simulated",
+      });
+      setConnectorResult(result as ConnectorResult);
+    } catch {
+      setConnectorResult({
+        success: false,
+        connector: scenario.connector,
+        action: scenario.action,
+        mode: liveMode ? "live" : "simulated",
+        executedAt: new Date().toISOString(),
+        detail: "Connector execution failed",
+        error: "EXECUTION_ERROR",
+      });
+    }
+  };
+
   const startReview = async () => {
     setReceipt(null);
     setLedgerEntry(null);
@@ -190,7 +272,7 @@ export default function Go() {
     setDenialMessage("");
     setProcessing(false);
     setPolicyInfo(null);
-    setGmailStatus("");
+    setConnectorResult(null);
     setFlowState("checking_policy");
 
     try {
@@ -210,7 +292,6 @@ export default function Go() {
       const policyResult = policyJson?.result?.data;
 
       if (policyResult?.policyMatch && policyResult.decision === "auto_approve") {
-        // Auto-approve by policy
         setPolicyInfo({
           policyId: policyResult.policyId,
           policyTitle: policyResult.policyTitle,
@@ -223,30 +304,21 @@ export default function Go() {
         });
         const autoData = autoResult as Record<string, unknown>;
 
+        let receiptId = "";
         if (autoData.receipt) {
           const r = autoData.receipt as ReceiptData;
           r.decision_source = "policy_auto";
           r.execution_mode = liveMode ? "live" : "simulated";
           setReceipt(r);
+          receiptId = r.receipt_id;
         }
         if (autoData.ledger_entry) {
           setLedgerEntry(autoData.ledger_entry as LedgerEntryData);
         }
 
-        // If live mode + email scenario, send the email
-        if (liveMode && scenario.action === "send_email") {
-          try {
-            const gmailResult = await sendGmail.mutateAsync({
-              to: scenario.parameters.to,
-              subject: scenario.parameters.subject,
-              body: scenario.parameters.body,
-              intentId: newIntentId,
-            });
-            const gData = gmailResult as Record<string, unknown>;
-            setGmailStatus(gData.sent ? "sent" : "failed");
-          } catch {
-            setGmailStatus("failed");
-          }
+        // Execute through connector after receipt + ledger
+        if (receiptId) {
+          await executeViaConnector(newIntentId, receiptId);
         }
 
         setFlowState("auto_approved");
@@ -255,7 +327,6 @@ export default function Go() {
       }
 
       if (policyResult?.policyMatch && policyResult.decision === "auto_deny") {
-        // Auto-deny by policy
         setPolicyInfo({
           policyId: policyResult.policyId,
           policyTitle: policyResult.policyTitle,
@@ -276,13 +347,12 @@ export default function Go() {
 
       // No policy match — show approval UI, notify owner
       setFlowState("reviewing");
-      // Fire-and-forget notification to owner
       notifyPending.mutateAsync({
         intentId: newIntentId,
         action: scenario.action,
         requester: scenario.requester,
         description: scenario.description,
-      }).catch(() => {}); // non-blocking
+      }).catch(() => {});
     } catch {
       setFlowState("reviewing");
     }
@@ -293,46 +363,30 @@ export default function Go() {
     setProcessing(true);
 
     try {
-      // Approve
-      await approve.mutateAsync({
-        intentId,
-        decidedBy: "You",
-      });
+      await approve.mutateAsync({ intentId, decidedBy: "You" });
 
-      // Execute (generates receipt + ledger entry)
       const execResult = await execute.mutateAsync({ intentId });
       const execData = execResult as Record<string, unknown>;
 
+      let receiptId = "";
       if (execData.receipt) {
         const r = execData.receipt as ReceiptData;
         r.decision_source = "human";
         r.execution_mode = liveMode ? "live" : "simulated";
         setReceipt(r);
+        receiptId = r.receipt_id;
       }
       if (execData.ledger_entry) {
         setLedgerEntry(execData.ledger_entry as LedgerEntryData);
       }
 
-      // If live mode + email scenario, send the email
-      if (liveMode && scenario.action === "send_email") {
-        try {
-          const gmailResult = await sendGmail.mutateAsync({
-            to: scenario.parameters.to,
-            subject: scenario.parameters.subject,
-            body: scenario.parameters.body,
-            intentId,
-          });
-          const gData = gmailResult as Record<string, unknown>;
-          setGmailStatus(gData.sent ? "sent" : "failed");
-        } catch {
-          setGmailStatus("failed");
-        }
+      // Execute through connector after receipt + ledger
+      if (receiptId) {
+        await executeViaConnector(intentId, receiptId);
       }
 
       setFlowState("approved");
       setProcessing(false);
-
-      // Scroll to receipt
       setTimeout(() => receiptRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
     } catch {
       setProcessing(false);
@@ -344,12 +398,8 @@ export default function Go() {
     setProcessing(true);
 
     try {
-      await deny.mutateAsync({
-        intentId,
-        decidedBy: "You",
-      });
+      await deny.mutateAsync({ intentId, decidedBy: "You" });
 
-      // Try to execute — will be blocked (fail-closed)
       const execResult = await execute.mutateAsync({ intentId });
       const execData = execResult as Record<string, unknown>;
       setDenialMessage(
@@ -384,12 +434,11 @@ export default function Go() {
       setFlowState("verified");
       setTimeout(() => verifyRef.current?.scrollIntoView({ behavior: "smooth", block: "start" }), 200);
     } catch {
-      setFlowState("approved"); // fall back
+      setFlowState("approved");
     }
   };
 
   const handleTryAnother = () => {
-    // Cycle to next scenario
     const currentIndex = SCENARIOS.findIndex((s) => s.id === scenario.id);
     const nextIndex = (currentIndex + 1) % SCENARIOS.length;
     setScenario(SCENARIOS[nextIndex]);
@@ -399,6 +448,9 @@ export default function Go() {
   const isApprovedState = flowState === "approved" || flowState === "auto_approved";
   const isCompletedState = isApprovedState || flowState === "verifying" || flowState === "verified";
   const isDeniedState = flowState === "denied" || flowState === "auto_denied";
+
+  // Determine connector status for this scenario
+  const connectorStatus = scenario.connector === "gmail" ? "connected" : scenario.connector === "none" ? "future" : "simulated";
 
   return (
     <div
@@ -432,11 +484,6 @@ export default function Go() {
           >
             Live
           </button>
-          {liveMode && (
-            <span className="text-xs" style={{ color: "#22c55e" }}>
-              Gmail connected
-            </span>
-          )}
         </div>
 
         {/* Scenario Selector (pill bar) */}
@@ -450,7 +497,7 @@ export default function Go() {
                   setFlowState("idle");
                 }
               }}
-              className="px-4 py-2 rounded-full text-sm font-medium transition-all duration-200"
+              className="px-3 py-2 rounded-full text-xs font-medium transition-all duration-200"
               style={{
                 backgroundColor: scenario.id === sc.id ? "oklch(0.22 0.03 260)" : "transparent",
                 color: scenario.id === sc.id ? "#e5e7eb" : "#6b7280",
@@ -459,7 +506,7 @@ export default function Go() {
                   : "1.5px solid oklch(0.3 0.02 260)",
               }}
             >
-              <span className="mr-1.5">{sc.icon}</span>
+              <span className="mr-1">{sc.icon}</span>
               {sc.label}
             </button>
           ))}
@@ -505,18 +552,43 @@ export default function Go() {
             borderColor: "oklch(0.72 0.1 85 / 20%)",
           }}
         >
-          {/* AI Badge */}
-          <div className="flex items-center gap-2 mb-5">
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
-              style={{ backgroundColor: "oklch(0.25 0.05 260)", color: "#b8963e" }}
-            >
-              AI
+          {/* AI Badge + Connector Badge */}
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <div
+                className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"
+                style={{ backgroundColor: "oklch(0.25 0.05 260)", color: "#b8963e" }}
+              >
+                AI
+              </div>
+              <div>
+                <p className="text-xs font-medium" style={{ color: "#9ca3af" }}>
+                  {scenario.requester} wants to perform an action
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-xs font-medium" style={{ color: "#9ca3af" }}>
-                {scenario.requester} wants to perform an action
-              </p>
+            {/* Connector status badge */}
+            <div
+              className="px-2.5 py-1 rounded-full text-[10px] font-semibold"
+              style={{
+                backgroundColor:
+                  connectorStatus === "connected" ? "#22c55e15" :
+                  connectorStatus === "simulated" ? "#3b82f615" :
+                  "oklch(0.2 0.02 260)",
+                color:
+                  connectorStatus === "connected" ? "#22c55e" :
+                  connectorStatus === "simulated" ? "#3b82f6" :
+                  "#6b7280",
+                border:
+                  connectorStatus === "connected" ? "1px solid #22c55e30" :
+                  connectorStatus === "simulated" ? "1px solid #3b82f630" :
+                  "1px solid oklch(0.3 0.02 260)",
+              }}
+            >
+              {scenario.connectorName}
+              {connectorStatus === "connected" ? " \u2022 Live" :
+               connectorStatus === "simulated" ? " \u2022 Simulated" :
+               " \u2022 Future"}
             </div>
           </div>
 
@@ -528,6 +600,8 @@ export default function Go() {
           {/* Target */}
           <p className="text-sm mb-5" style={{ color: "#9ca3af" }}>
             Target: <span style={{ color: "#d1d5db" }}>{scenario.target}</span>
+            {" \u2192 "}
+            <span style={{ color: "#b8963e" }}>{scenario.connectorName}</span>
           </p>
 
           {/* Parameters */}
@@ -548,7 +622,7 @@ export default function Go() {
             </div>
           </div>
 
-          {/* Risk Badge + Mode Badge */}
+          {/* Risk Badge + Mode Badge + Connector Badge */}
           <div className="flex items-center gap-2 mb-6 flex-wrap">
             <div
               className="px-3 py-1 rounded-full text-xs font-semibold"
@@ -568,7 +642,9 @@ export default function Go() {
                 border: liveMode ? "1px solid #22c55e30" : "1px solid oklch(0.3 0.02 260)",
               }}
             >
-              {liveMode ? "Live Execution" : "Simulated"}
+              {liveMode
+                ? connectorStatus === "connected" ? "Live Execution" : "Simulated (Connector Not Live)"
+                : "Simulated"}
             </div>
           </div>
 
@@ -652,24 +728,43 @@ export default function Go() {
           )}
         </div>
 
-        {/* ── Gmail Execution Status ── */}
-        {gmailStatus && liveMode && (
+        {/* ── Connector Execution Result ── */}
+        {connectorResult && isCompletedState && (
           <div
             className="rounded-xl border p-5 mb-6"
             style={{
-              backgroundColor: gmailStatus === "sent" ? "#22c55e10" : "#ef444410",
-              borderColor: gmailStatus === "sent" ? "#22c55e30" : "#ef444430",
+              backgroundColor: connectorResult.success ? "#22c55e10" : "#ef444410",
+              borderColor: connectorResult.success ? "#22c55e30" : "#ef444430",
             }}
           >
-            <div className="flex items-center gap-2">
-              <span className="text-lg">{gmailStatus === "sent" ? "\u2709\uFE0F" : "\u26A0\uFE0F"}</span>
-              <span className="text-sm font-semibold" style={{ color: gmailStatus === "sent" ? "#22c55e" : "#ef4444" }}>
-                {gmailStatus === "sent"
-                  ? `Email sent to ${scenario.parameters.to}`
-                  : "Gmail execution failed — receipt still recorded"}
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center gap-2">
+                <span className="text-lg">
+                  {connectorResult.success ? "\u2705" : "\u26A0\uFE0F"}
+                </span>
+                <span className="text-sm font-semibold" style={{ color: connectorResult.success ? "#22c55e" : "#ef4444" }}>
+                  {connectorResult.mode === "live" ? "Live Execution" : "Simulated Execution"}
+                </span>
+              </div>
+              <span
+                className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                style={{
+                  backgroundColor: connectorResult.mode === "live" ? "#22c55e15" : "#3b82f615",
+                  color: connectorResult.mode === "live" ? "#22c55e" : "#3b82f6",
+                }}
+              >
+                {connectorResult.connector}
               </span>
             </div>
-            {gmailStatus === "failed" && (
+            <p className="text-xs" style={{ color: "#d1d5db" }}>
+              {connectorResult.detail}
+            </p>
+            {connectorResult.externalId && (
+              <p className="text-xs mt-1 font-mono" style={{ color: "#6b7280" }}>
+                External ID: {connectorResult.externalId}
+              </p>
+            )}
+            {!connectorResult.success && (
               <p className="text-xs mt-2" style={{ color: "#9ca3af" }}>
                 The receipt and ledger entry exist regardless of execution outcome. This is the audit trail.
               </p>
@@ -715,7 +810,8 @@ export default function Go() {
                 <DetailRow label="Receipt ID" value={receipt.receipt_id} />
                 <DetailRow label="Decision" value={receipt.decision} valueColor="#22c55e" />
                 <DetailRow label="Source" value={receipt.decision_source === "policy_auto" ? "Policy (Auto)" : "Human"} valueColor={receipt.decision_source === "policy_auto" ? "#8b5cf6" : "#3b82f6"} />
-                <DetailRow label="Mode" value={receipt.execution_mode === "live" ? "Live" : "Simulated"} valueColor={receipt.execution_mode === "live" ? "#22c55e" : "#6b7280"} />
+                <DetailRow label="Connector" value={scenario.connectorName} valueColor="#b8963e" />
+                <DetailRow label="Mode" value={connectorResult?.mode === "live" ? "Live" : "Simulated"} valueColor={connectorResult?.mode === "live" ? "#22c55e" : "#6b7280"} />
                 <DetailRow label="Risk Score" value={String(receipt.risk_score)} />
                 <DetailRow label="Risk Level" value={receipt.risk_level} />
                 <DetailRow label="Policy" value={receipt.policy_decision} />
@@ -879,8 +975,8 @@ export default function Go() {
                 </p>
                 <p className="text-xs leading-relaxed" style={{ color: "#9ca3af" }}>
                   {policyInfo
-                    ? `${scenario.requester} proposed an action. The governance engine checked learned policies and ${policyInfo.decision === "auto_approve" ? "auto-approved" : "auto-denied"} it. No human intervention was needed — but the proof still exists.`
-                    : `${scenario.requester} proposed an action. RIO intercepted it and paused execution. Nothing moved until you decided. This is fail-closed — no approval, no execution.`}
+                    ? `${scenario.requester} proposed an action via ${scenario.connectorName}. The governance engine checked learned policies and ${policyInfo.decision === "auto_approve" ? "auto-approved" : "auto-denied"} it.`
+                    : `${scenario.requester} proposed an action via ${scenario.connectorName}. RIO intercepted it and paused execution. Nothing moved until you decided.`}
                 </p>
               </div>
               <div>
@@ -895,12 +991,12 @@ export default function Go() {
               </div>
               <div>
                 <p className="text-xs font-semibold mb-1.5" style={{ color: "#e5e7eb" }}>
-                  The Difference
+                  The Connector
                 </p>
                 <p className="text-xs leading-relaxed" style={{ color: "#9ca3af" }}>
-                  {policyInfo
-                    ? "The system learned from your past decisions and applied a rule. But unlike normal AI, the governance trail is preserved. Every auto-decision is still signed, hashed, and recorded."
-                    : "Normal AI just acts. Governed AI must ask, must wait, must prove. Every action is authorized, executed, verified, and recorded. The system enforces the rules — not the AI."}
+                  {connectorResult
+                    ? `The ${scenario.connectorName} connector ${connectorResult.mode === "live" ? "executed the action in real-time" : "simulated the execution"}. RIO governs the action regardless of which system executes it — Gmail, Calendar, Drive, or any future connector.`
+                    : `RIO sits between the AI and ${scenario.connectorName}. The connector only executes after the receipt and ledger entry exist. No receipt, no execution.`}
                 </p>
               </div>
             </div>

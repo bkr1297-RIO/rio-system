@@ -1,7 +1,8 @@
 /**
  * RIO tRPC Router
- * Exposes all RIO enforcement endpoints as public procedures for the demo.
- * Includes policy persistence, governance engine checks, and auto-approve/deny.
+ * Exposes all RIO enforcement endpoints as public procedures.
+ * Includes policy persistence, governance engine checks, auto-approve/deny,
+ * and the connector-based execution layer.
  */
 
 import { z } from "zod";
@@ -24,9 +25,11 @@ import {
   autoApproveByPolicy,
   autoDenyByPolicy,
 } from "../rio";
+import { connectorRegistry } from "../connectors";
 
 export const rioRouter = router({
-  // Create a new intent
+  // ── Intent Lifecycle ──────────────────────────────────────────────
+
   createIntent: publicProcedure
     .input(z.object({
       action: z.string(),
@@ -37,7 +40,6 @@ export const rioRouter = router({
       return createIntent(input.action, input.description, input.requestedBy);
     }),
 
-  // Check if a policy applies to this action (governance engine pre-check)
   checkPolicy: publicProcedure
     .input(z.object({
       action: z.string(),
@@ -46,7 +48,6 @@ export const rioRouter = router({
       return checkPolicies(input.action);
     }),
 
-  // Auto-approve by policy (generates receipt + ledger, records decision_source: policy_auto)
   autoApprove: publicProcedure
     .input(z.object({
       intentId: z.string(),
@@ -56,7 +57,6 @@ export const rioRouter = router({
       return autoApproveByPolicy(input.intentId, input.policyId);
     }),
 
-  // Auto-deny by policy
   autoDeny: publicProcedure
     .input(z.object({
       intentId: z.string(),
@@ -66,7 +66,6 @@ export const rioRouter = router({
       return autoDenyByPolicy(input.intentId, input.policyId);
     }),
 
-  // Approve an intent (generates cryptographic signature)
   approve: publicProcedure
     .input(z.object({
       intentId: z.string(),
@@ -76,7 +75,6 @@ export const rioRouter = router({
       return approveIntent(input.intentId, input.decidedBy);
     }),
 
-  // Deny an intent
   deny: publicProcedure
     .input(z.object({
       intentId: z.string(),
@@ -86,7 +84,6 @@ export const rioRouter = router({
       return denyIntent(input.intentId, input.decidedBy);
     }),
 
-  // Execute an intent (ENFORCED — returns 403 if not approved)
   execute: publicProcedure
     .input(z.object({
       intentId: z.string(),
@@ -95,7 +92,8 @@ export const rioRouter = router({
       return executeIntent(input.intentId);
     }),
 
-  // Get full audit log for an intent
+  // ── Audit & Verification ──────────────────────────────────────────
+
   auditLog: publicProcedure
     .input(z.object({
       intentId: z.string(),
@@ -104,7 +102,6 @@ export const rioRouter = router({
       return getAuditLog(input.intentId);
     }),
 
-  // Get ledger chain for explorer
   ledgerChain: publicProcedure
     .input(z.object({
       limit: z.number().min(1).max(200).default(50),
@@ -113,7 +110,6 @@ export const rioRouter = router({
       return getLedgerChain(input?.limit ?? 50);
     }),
 
-  // Verify a receipt by ID (server-side signature + hash verification)
   verifyReceipt: publicProcedure
     .input(z.object({
       receiptId: z.string(),
@@ -122,15 +118,15 @@ export const rioRouter = router({
       return verifyReceiptById(input.receiptId);
     }),
 
-  // Learning analytics — decision patterns and policy suggestions
+  // ── Learning Analytics ──────────────────────────────────────────
+
   learningAnalytics: publicProcedure
     .query(async () => {
       return getLearningAnalytics();
     }),
 
-  // ── Policy Management ──────────────────────────────────────────────
+  // ── Policy Management ──────────────────────────────────────────
 
-  // Accept a policy suggestion (persists to DB)
   acceptPolicySuggestion: publicProcedure
     .input(z.object({
       action: z.string(),
@@ -146,7 +142,6 @@ export const rioRouter = router({
       return acceptPolicy(input);
     }),
 
-  // Dismiss a policy suggestion
   dismissPolicySuggestion: publicProcedure
     .input(z.object({
       suggestionId: z.string(),
@@ -155,13 +150,11 @@ export const rioRouter = router({
       return dismissPolicy(input.suggestionId);
     }),
 
-  // Get all active policies
   activePolicies: publicProcedure
     .query(async () => {
       return getActivePolicies();
     }),
 
-  // Deactivate a policy
   deactivatePolicy: publicProcedure
     .input(z.object({
       policyId: z.string(),
@@ -170,9 +163,55 @@ export const rioRouter = router({
       return deactivatePolicy(input.policyId);
     }),
 
-  // ── Gmail Execution ──────────────────────────────────────────────
+  // ── Connector Architecture ──────────────────────────────────────
 
-  // Send email via Gmail (live mode only, after receipt + ledger)
+  /** List all registered connectors with their status and capabilities */
+  listConnectors: publicProcedure
+    .query(async () => {
+      return connectorRegistry.listConnectors();
+    }),
+
+  /** List all supported actions across all connectors */
+  listActions: publicProcedure
+    .query(async () => {
+      return connectorRegistry.listActions();
+    }),
+
+  /** Get info about a specific connector */
+  getConnector: publicProcedure
+    .input(z.object({
+      connectorId: z.string(),
+    }))
+    .query(async ({ input }) => {
+      return connectorRegistry.getConnector(input.connectorId);
+    }),
+
+  /**
+   * Execute an action through the connector layer.
+   * MUST only be called after receipt + ledger entry exist.
+   * The connector registry routes to the correct connector.
+   */
+  connectorExecute: publicProcedure
+    .input(z.object({
+      intentId: z.string(),
+      receiptId: z.string(),
+      action: z.string(),
+      parameters: z.record(z.string(), z.string()),
+      mode: z.enum(["live", "simulated"]),
+    }))
+    .mutation(async ({ input }) => {
+      const result = await connectorRegistry.execute({
+        intentId: input.intentId,
+        receiptId: input.receiptId,
+        action: input.action,
+        parameters: input.parameters as Record<string, string>,
+        mode: input.mode,
+      });
+      return result;
+    }),
+
+  // ── Gmail Execution (legacy, kept for backward compatibility) ──
+
   sendGmail: publicProcedure
     .input(z.object({
       to: z.string(),
@@ -181,29 +220,32 @@ export const rioRouter = router({
       intentId: z.string(),
     }))
     .mutation(async ({ input }) => {
-      // This is the real execution step.
-      // In production, this would call Gmail API.
-      // For now, we log the intent and return success.
-      // The receipt and ledger entry already exist at this point.
-      console.log(`[RIO Gmail] Sending email to ${input.to} — Intent: ${input.intentId}`);
-      console.log(`[RIO Gmail] Subject: ${input.subject}`);
-      console.log(`[RIO Gmail] Body: ${input.body}`);
+      // Route through connector architecture
+      const result = await connectorRegistry.execute({
+        intentId: input.intentId,
+        receiptId: "", // Legacy endpoint doesn't have receipt ID
+        action: "send_email",
+        parameters: {
+          to: input.to,
+          subject: input.subject,
+          body: input.body,
+        },
+        mode: "simulated",
+      });
 
-      // TODO: Wire actual Gmail MCP/API call here
-      // For now, return simulated success
       return {
-        sent: true,
+        sent: result.success,
         to: input.to,
         subject: input.subject,
         intentId: input.intentId,
-        executedAt: new Date().toISOString(),
-        note: "Gmail execution placeholder — wire MCP tools for real send",
+        executedAt: result.executedAt,
+        connector: result.connector,
+        note: result.detail,
       };
     }),
 
   // ── Notifications ──────────────────────────────────────────────
 
-  // Notify owner when an intent is pending approval
   notifyPendingApproval: publicProcedure
     .input(z.object({
       intentId: z.string(),
