@@ -862,6 +862,111 @@ export default function PositionPaper() {
             ))}
           </div>
 
+          {/* Get Involved */}
+          <div
+            className="mt-20 rounded-lg border p-8 sm:p-10"
+            style={{
+              backgroundColor: "oklch(0.16 0.03 260)",
+              borderColor: "oklch(0.72 0.1 85 / 25%)",
+            }}
+          >
+            <h2
+              className="text-2xl font-bold mb-4 tracking-wide"
+              style={{ color: "#b8963e" }}
+            >
+              Get Involved
+            </h2>
+            <p className="leading-relaxed mb-6" style={{ color: "#d1d5db" }}>
+              RIO is an open protocol. The specification, conformance tests, and
+              test vectors are publicly available for review, implementation, and
+              contribution. If you are building AI governance infrastructure,
+              working on regulatory compliance tooling, or researching execution
+              control systems, there are several ways to engage.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-4">
+              <a
+                href="https://github.com/bkr1297-RIO/rio-protocol"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-md border px-5 py-4 transition-colors duration-200 no-underline hover:bg-white/5"
+                style={{
+                  borderColor: "oklch(0.72 0.1 85 / 20%)",
+                  color: "#d1d5db",
+                }}
+              >
+                <BookOpen className="w-5 h-5 shrink-0" style={{ color: "#b8963e" }} />
+                <div>
+                  <p className="font-semibold text-sm" style={{ color: "#ffffff" }}>
+                    Read the Protocol
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: "#9ca3af" }}>
+                    Spec, schemas, and conformance vectors
+                  </p>
+                </div>
+              </a>
+              <a
+                href="https://github.com/bkr1297-RIO/rio-protocol/blob/main/CONTRIBUTING.md"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-md border px-5 py-4 transition-colors duration-200 no-underline hover:bg-white/5"
+                style={{
+                  borderColor: "oklch(0.72 0.1 85 / 20%)",
+                  color: "#d1d5db",
+                }}
+              >
+                <ExternalLink className="w-5 h-5 shrink-0" style={{ color: "#b8963e" }} />
+                <div>
+                  <p className="font-semibold text-sm" style={{ color: "#ffffff" }}>
+                    Contribute
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: "#9ca3af" }}>
+                    Contribution guidelines and governance
+                  </p>
+                </div>
+              </a>
+              <a
+                href="https://github.com/bkr1297-RIO/rio-tools"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-md border px-5 py-4 transition-colors duration-200 no-underline hover:bg-white/5"
+                style={{
+                  borderColor: "oklch(0.72 0.1 85 / 20%)",
+                  color: "#d1d5db",
+                }}
+              >
+                <ChevronRight className="w-5 h-5 shrink-0" style={{ color: "#b8963e" }} />
+                <div>
+                  <p className="font-semibold text-sm" style={{ color: "#ffffff" }}>
+                    Developer Tools
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: "#9ca3af" }}>
+                    SDK, simulator, verifier, and compliance checker
+                  </p>
+                </div>
+              </a>
+              <a
+                href="https://github.com/bkr1297-RIO/rio-reference-impl"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 rounded-md border px-5 py-4 transition-colors duration-200 no-underline hover:bg-white/5"
+                style={{
+                  borderColor: "oklch(0.72 0.1 85 / 20%)",
+                  color: "#d1d5db",
+                }}
+              >
+                <ChevronRight className="w-5 h-5 shrink-0" style={{ color: "#b8963e" }} />
+                <div>
+                  <p className="font-semibold text-sm" style={{ color: "#ffffff" }}>
+                    Reference Implementation
+                  </p>
+                  <p className="text-xs mt-0.5" style={{ color: "#9ca3af" }}>
+                    Working gateway with full 8-stage pipeline
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
           {/* Footer */}
           <div
             className="mt-16 pt-8 border-t text-center"

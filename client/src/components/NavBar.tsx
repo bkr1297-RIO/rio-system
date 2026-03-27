@@ -1,8 +1,19 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useLocation } from "wouter";
 import { Menu, X, ChevronDown } from "lucide-react";
 
-const navLinks = [
+interface NavChild {
+  label: string;
+  href: string;
+}
+
+interface NavLink {
+  label: string;
+  href: string;
+  children?: NavChild[];
+}
+
+const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "How It Works", href: "/how-it-works" },
   { label: "Architecture", href: "/architecture" },
@@ -22,18 +33,53 @@ const navLinks = [
       { label: "Demo 5 — Learning Loop", href: "/demo5" },
     ],
   },
-  { label: "Docs", href: "/docs" },
-  { label: "FAQ", href: "/faq" },
-  { label: "Whitepaper", href: "/whitepaper" },
-  { label: "Position Paper", href: "/position-paper" },
+  {
+    label: "Resources",
+    href: "#",
+    children: [
+      { label: "Documentation", href: "/docs" },
+      { label: "Whitepaper", href: "/whitepaper" },
+      { label: "Position Paper", href: "/position-paper" },
+      { label: "FAQ", href: "/faq" },
+    ],
+  },
 ];
 
 export default function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [demosOpen, setDemosOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+  const [mobileDropdowns, setMobileDropdowns] = useState<Record<string, boolean>>({});
   const [location] = useLocation();
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const isActive = (href: string) => location === href;
+
+  // Close dropdowns on route change
+  useEffect(() => {
+    setOpenDropdown(null);
+    setMobileOpen(false);
+  }, [location]);
+
+  const handleMouseEnter = (label: string) => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+    setOpenDropdown(label);
+  };
+
+  const handleMouseLeave = () => {
+    closeTimeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 150);
+  };
+
+  const toggleMobileDropdown = (label: string) => {
+    setMobileDropdowns((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
 
   return (
     <nav
@@ -65,25 +111,34 @@ export default function NavBar() {
           <div className="hidden md:flex items-center gap-1">
             {navLinks.map((link) =>
               link.children ? (
-                <div key={link.label} className="relative group">
+                <div
+                  key={link.label}
+                  className="relative"
+                  onMouseEnter={() => handleMouseEnter(link.label)}
+                  onMouseLeave={handleMouseLeave}
+                >
                   <button
                     className="flex items-center gap-1 px-3 py-2 text-sm font-medium rounded transition-colors duration-150"
                     style={{
-                      color: link.children.some((c) => isActive(c.href))
-                        ? "#b8963e"
-                        : "#d1d5db",
+                      color:
+                        openDropdown === link.label ||
+                        link.children.some((c) => isActive(c.href))
+                          ? "#b8963e"
+                          : "#d1d5db",
                     }}
-                    onMouseEnter={() => setDemosOpen(true)}
-                    onMouseLeave={() => setDemosOpen(false)}
                   >
                     {link.label}
-                    <ChevronDown className="w-3.5 h-3.5" />
+                    <ChevronDown
+                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                        openDropdown === link.label ? "rotate-180" : ""
+                      }`}
+                    />
                   </button>
                   <div
                     className="absolute top-full left-0 pt-1"
-                    onMouseEnter={() => setDemosOpen(true)}
-                    onMouseLeave={() => setDemosOpen(false)}
-                    style={{ display: demosOpen ? "block" : "none" }}
+                    style={{
+                      display: openDropdown === link.label ? "block" : "none",
+                    }}
                   >
                     <div
                       className="rounded-md border py-1 min-w-[220px] shadow-lg"
@@ -100,7 +155,6 @@ export default function NavBar() {
                           style={{
                             color: isActive(child.href) ? "#b8963e" : "#d1d5db",
                           }}
-                          onClick={() => setDemosOpen(false)}
                         >
                           <span className="hover:opacity-80">{child.label}</span>
                         </Link>
@@ -156,7 +210,11 @@ export default function NavBar() {
             onClick={() => setMobileOpen(!mobileOpen)}
             style={{ color: "#d1d5db" }}
           >
-            {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {mobileOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
           </button>
         </div>
       </div>
@@ -180,14 +238,16 @@ export default function NavBar() {
                       ? "#b8963e"
                       : "#d1d5db",
                   }}
-                  onClick={() => setDemosOpen(!demosOpen)}
+                  onClick={() => toggleMobileDropdown(link.label)}
                 >
                   {link.label}
                   <ChevronDown
-                    className={`w-4 h-4 transition-transform ${demosOpen ? "rotate-180" : ""}`}
+                    className={`w-4 h-4 transition-transform ${
+                      mobileDropdowns[link.label] ? "rotate-180" : ""
+                    }`}
                   />
                 </button>
-                {demosOpen && (
+                {mobileDropdowns[link.label] && (
                   <div className="pl-4 pb-1">
                     {link.children.map((child) => (
                       <Link

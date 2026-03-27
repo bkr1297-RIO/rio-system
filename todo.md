@@ -116,3 +116,6 @@
 - [x] Add Position Paper route to App.tsx
 - [x] PDF download link on Position Paper page
 - [x] Vitest test for Position Paper page rendering
+- [x] NavBar: Create Resources dropdown grouping Whitepaper, Position Paper, and Docs
+- [x] Open Graph meta tags for Position Paper page (title, description, image for social sharing)
+- [x] Position Paper: Add "Get Involved" section at bottom with link to CONTRIBUTING.md
