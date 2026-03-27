@@ -119,3 +119,10 @@
 - [x] NavBar: Create Resources dropdown grouping Whitepaper, Position Paper, and Docs
 - [x] Open Graph meta tags for Position Paper page (title, description, image for social sharing)
 - [x] Position Paper: Add "Get Involved" section at bottom with link to CONTRIBUTING.md
+- [x] Generate 1200x630 OG banner image with RIO logo and tagline
+- [x] Update OG meta tags in index.html with new banner image
+- [x] Add Contact page with LinkedIn (bkr-rio) and email (Riomethod5@gmail.com)
+- [x] Add Roadmap page with protocol milestones
+- [x] Add Contact and Roadmap to NavBar/Resources dropdown
+- [x] Register Contact and Roadmap routes in App.tsx
+- [x] Vitest tests for Contact page, Roadmap page, and OG image

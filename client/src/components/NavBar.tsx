@@ -41,6 +41,8 @@ const navLinks: NavLink[] = [
       { label: "Whitepaper", href: "/whitepaper" },
       { label: "Position Paper", href: "/position-paper" },
       { label: "FAQ", href: "/faq" },
+      { label: "Roadmap", href: "/roadmap" },
+      { label: "Contact", href: "/contact" },
     ],
   },
 ];

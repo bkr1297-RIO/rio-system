@@ -21,6 +21,8 @@ import LedgerExplorer from "./pages/LedgerExplorer";
 import TamperDemo from "./pages/TamperDemo";
 import Demo5 from "./pages/Demo5";
 import PositionPaper from "./pages/PositionPaper";
+import Contact from "./pages/Contact";
+import Roadmap from "./pages/Roadmap";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -43,6 +45,8 @@ function Router() {
       <Route path={"/tamper"} component={TamperDemo} />
       <Route path={"/demo5"} component={Demo5} />
       <Route path={"/position-paper"} component={PositionPaper} />
+      <Route path={"/contact"} component={Contact} />
+      <Route path={"/roadmap"} component={Roadmap} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
