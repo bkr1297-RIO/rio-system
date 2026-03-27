@@ -111,3 +111,8 @@
 - [x] Docs page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
 - [x] Use Cases page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
 - [x] Get Started page: Update with guided walkthrough through demos
+- [x] Position Paper page — full 12-section paper with table of contents, scroll navigation, and professional layout
+- [x] Add Position Paper to NavBar navigation
+- [x] Add Position Paper route to App.tsx
+- [x] PDF download link on Position Paper page
+- [x] Vitest test for Position Paper page rendering
