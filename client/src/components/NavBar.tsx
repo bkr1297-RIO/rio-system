@@ -26,6 +26,7 @@ const navLinks: NavLink[] = [
       { label: "Try RIO", href: "/go" },
       { label: "Dashboard", href: "/dashboard" },
       { label: "Learning Loop", href: "/learning" },
+      { label: "Connect Apps", href: "/connect" },
     ],
   },
   {

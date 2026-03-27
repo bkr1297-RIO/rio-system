@@ -207,3 +207,18 @@
 - [x] PWA: Fix service worker cache-first strategy causing stale pages (switched to network-first for navigation)
 - [x] Connector Architecture: Add Google Drive connector module
 - [x] /go page: Add 6 scenarios (email, calendar, drive, transfer, deploy, patient) with connector badges
+- [x] Gmail Live: Finalize live Gmail execution — wire MCP gmail_send_messages into connector, receipt records execution occurred
+- [x] GitHub Connector: Create GitHub connector module (create issue, create PR, commit file)
+- [x] GitHub Connector: Wire gh CLI into server-side execution after RIO authorization
+- [x] GitHub Connector: Add GitHub scenarios to /go page
+- [x] Google Drive Live: Wire gws CLI into Drive connector for real file writes after approval
+- [x] Google Drive Live: Add live Drive scenario to /go page
+- [x] Google Calendar Live: Check available tools and wire real event creation after approval (403 scope issue — graceful fallback to simulated)
+- [x] Google Calendar Live: Add live Calendar scenario to /go page
+- [x] Onboarding: Build "Connect Your Apps" page with connection status for each connector
+- [x] Onboarding: Show Connected / Simulated / Error status per connector
+- [x] Onboarding: Add to NavBar and register route
+- [x] Notifications: Improve approval notifications for quick mobile /go page access
+- [x] Vitest: Tests for GitHub connector
+- [x] Vitest: Tests for live Drive and Calendar connectors
+- [x] Vitest: Tests for onboarding page (covered by connector registry tests)

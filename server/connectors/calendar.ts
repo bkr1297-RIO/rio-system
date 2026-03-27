@@ -1,9 +1,12 @@
 /**
  * Google Calendar Connector
  *
- * Executes calendar actions after RIO authorization.
- * Currently operates in simulated mode (no Calendar MCP/API connected yet).
- * When a Calendar API is connected, the execute() method will call it.
+ * Executes calendar actions through Google Calendar after RIO authorization.
+ * Live mode attempts to call the gws CLI (Google Workspace CLI).
+ * Falls back to simulated if Calendar API scopes are not available.
+ *
+ * Note: Calendar API requires additional OAuth scopes that may not be
+ * granted in all environments. The connector handles this gracefully.
  *
  * The connector NEVER executes without a valid receipt and ledger entry.
  */
@@ -16,6 +19,7 @@ import type {
   ExecutionRequest,
   ExecutionResult,
 } from "./base";
+import { executeGwsCommand } from "./cli-executor";
 
 const CALENDAR_CAPABILITIES: ConnectorCapability[] = [
   {
@@ -43,7 +47,8 @@ export class GoogleCalendarConnector implements RIOConnector {
   name = "Google Calendar";
   platform = "google";
   icon = "calendar";
-  status: ConnectorStatus = "simulated"; // No Calendar API connected yet
+  // Start as "simulated" — will upgrade to "connected" if API scopes are available
+  status: ConnectorStatus = "simulated";
 
   capabilities = CALENDAR_CAPABILITIES;
 
@@ -55,42 +60,236 @@ export class GoogleCalendarConnector implements RIOConnector {
     const base = {
       connector: this.id,
       action: request.action,
-      mode: request.mode as "live" | "simulated",
+      mode: request.mode,
       executedAt: new Date().toISOString(),
     };
 
-    // ── Always simulated for now (no Calendar API connected) ──
-    if (request.mode === "simulated" || this.status === "simulated") {
-      const detail = this.getSimulatedDetail(request);
+    // ── Simulated Mode ──
+    if (request.mode === "simulated") {
+      return {
+        ...base,
+        success: true,
+        detail: this.getSimulatedDetail(request),
+      };
+    }
+
+    // ── Live Mode — Attempt via gws CLI ──
+    try {
+      console.log(`[RIO Calendar Connector] LIVE execution starting`);
+      console.log(`  Intent: ${request.intentId}`);
+      console.log(`  Receipt: ${request.receiptId}`);
+      console.log(`  Action: ${request.action}`);
+
+      switch (request.action) {
+        case "create_event":
+          return await this.createEvent(request, base);
+        case "update_event":
+          return await this.updateEvent(request, base);
+        case "delete_event":
+          return await this.deleteEvent(request, base);
+        default:
+          return {
+            ...base,
+            success: false,
+            detail: `Unknown Calendar action: ${request.action}`,
+            error: "Unsupported action",
+          };
+      }
+    } catch (err) {
+      console.error(`[RIO Calendar Connector] Execution error:`, err);
+      // Gracefully fall back to simulated if API scopes are insufficient
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      if (errorMsg.includes("insufficient") || errorMsg.includes("403")) {
+        return {
+          ...base,
+          mode: "simulated",
+          success: true,
+          detail: `[Scope Unavailable] Calendar API requires additional OAuth scopes. ${this.getSimulatedDetail(request)} Connect Calendar in Settings to enable live execution.`,
+        };
+      }
+      return {
+        ...base,
+        success: false,
+        detail: `Calendar execution failed unexpectedly. Receipt and ledger entry preserved.`,
+        error: errorMsg,
+      };
+    }
+  }
+
+  private async createEvent(
+    request: ExecutionRequest,
+    base: Omit<ExecutionResult, "success" | "detail">
+  ): Promise<ExecutionResult> {
+    const title = request.parameters.title || "Untitled Event";
+    const date = request.parameters.date || new Date().toISOString().split("T")[0];
+    const time = request.parameters.time || "09:00";
+    const duration = request.parameters.duration || "60"; // minutes
+    const attendees = request.parameters.attendees || "";
+
+    // Build ISO datetime
+    const startDateTime = `${date}T${time}:00`;
+    const endMinutes = parseInt(duration, 10) || 60;
+    const startDate = new Date(startDateTime);
+    const endDate = new Date(startDate.getTime() + endMinutes * 60 * 1000);
+
+    const eventBody: Record<string, unknown> = {
+      summary: title,
+      start: {
+        dateTime: startDate.toISOString(),
+        timeZone: "America/Denver",
+      },
+      end: {
+        dateTime: endDate.toISOString(),
+        timeZone: "America/Denver",
+      },
+    };
+
+    if (attendees) {
+      eventBody.attendees = attendees.split(",").map((email: string) => ({
+        email: email.trim(),
+      }));
+    }
+
+    if (request.parameters.description) {
+      eventBody.description = request.parameters.description;
+    }
+
+    const result = await executeGwsCommand(
+      "calendar",
+      "events",
+      "insert",
+      { calendarId: "primary" },
+      eventBody
+    );
+
+    if (result.success) {
+      let eventId = "";
+      try {
+        const parsed = JSON.parse(result.stdout);
+        eventId = parsed.id || "";
+      } catch { /* ignore */ }
+
+      console.log(`[RIO Calendar Connector] Event created: ${title} (${eventId})`);
+      return {
+        ...base,
+        success: true,
+        detail: `Event "${title}" created on ${date} at ${time}. Event ID: ${eventId}. Governed by RIO receipt: ${request.receiptId}`,
+        externalId: eventId,
+      };
+    } else {
+      // Check if it's a scope issue
+      if (result.stderr.includes("insufficient") || result.stderr.includes("403")) {
+        this.status = "simulated";
+        return {
+          ...base,
+          mode: "simulated",
+          success: true,
+          detail: `[Scope Unavailable] Calendar API requires additional OAuth scopes. Event "${title}" on ${date} at ${time} would be created. Connect Calendar in Settings to enable live execution.`,
+        };
+      }
+      return {
+        ...base,
+        success: false,
+        detail: `Failed to create event "${title}".`,
+        error: result.stderr,
+      };
+    }
+  }
+
+  private async updateEvent(
+    request: ExecutionRequest,
+    base: Omit<ExecutionResult, "success" | "detail">
+  ): Promise<ExecutionResult> {
+    const eventId = request.parameters.eventId || request.parameters.event_id || "";
+    const title = request.parameters.title || "";
+
+    if (!eventId) {
+      return {
+        ...base,
+        success: false,
+        detail: `Cannot update event: no event ID provided.`,
+        error: "Missing eventId parameter",
+      };
+    }
+
+    const updateBody: Record<string, unknown> = {};
+    if (title) updateBody.summary = title;
+    if (request.parameters.description) updateBody.description = request.parameters.description;
+
+    const result = await executeGwsCommand(
+      "calendar",
+      "events",
+      "patch",
+      { calendarId: "primary", eventId },
+      updateBody
+    );
+
+    if (result.success) {
+      return {
+        ...base,
+        success: true,
+        detail: `Event ${eventId} updated successfully.`,
+        externalId: eventId,
+      };
+    } else if (result.stderr.includes("insufficient") || result.stderr.includes("403")) {
       return {
         ...base,
         mode: "simulated",
         success: true,
-        detail,
+        detail: `[Scope Unavailable] Event update simulated. Connect Calendar to enable live updates.`,
       };
-    }
-
-    // ── Live Mode (future) ──
-    // When Google Calendar API is connected, this will create real events.
-    try {
-      console.log(`[RIO Calendar Connector] LIVE execution requested`);
-      console.log(`  Intent: ${request.intentId}`);
-      console.log(`  Receipt: ${request.receiptId}`);
-      console.log(`  Action: ${request.action}`);
-      console.log(`  Parameters:`, request.parameters);
-
-      return {
-        ...base,
-        success: true,
-        detail: `Calendar action "${request.action}" authorized by RIO. Awaiting API connection.`,
-        externalId: `cal-${Date.now()}`,
-      };
-    } catch (err) {
+    } else {
       return {
         ...base,
         success: false,
-        detail: `Calendar execution failed`,
-        error: err instanceof Error ? err.message : "Unknown error",
+        detail: `Failed to update event.`,
+        error: result.stderr,
+      };
+    }
+  }
+
+  private async deleteEvent(
+    request: ExecutionRequest,
+    base: Omit<ExecutionResult, "success" | "detail">
+  ): Promise<ExecutionResult> {
+    const eventId = request.parameters.eventId || request.parameters.event_id || "";
+
+    if (!eventId) {
+      return {
+        ...base,
+        success: false,
+        detail: `Cannot delete event: no event ID provided.`,
+        error: "Missing eventId parameter",
+      };
+    }
+
+    const result = await executeGwsCommand(
+      "calendar",
+      "events",
+      "delete",
+      { calendarId: "primary", eventId }
+    );
+
+    if (result.success) {
+      return {
+        ...base,
+        success: true,
+        detail: `Event ${eventId} deleted from Google Calendar.`,
+        externalId: eventId,
+      };
+    } else if (result.stderr.includes("insufficient") || result.stderr.includes("403")) {
+      return {
+        ...base,
+        mode: "simulated",
+        success: true,
+        detail: `[Scope Unavailable] Event deletion simulated. Connect Calendar to enable live deletion.`,
+      };
+    } else {
+      return {
+        ...base,
+        success: false,
+        detail: `Failed to delete event.`,
+        error: result.stderr,
       };
     }
   }
@@ -116,7 +315,8 @@ export class GoogleCalendarConnector implements RIOConnector {
       icon: this.icon,
       status: this.status,
       capabilities: this.capabilities,
-      description: "Create, update, and delete events in Google Calendar. API connection pending.",
+      description:
+        "Create, update, and delete events in Google Calendar. Requires Calendar API scopes — falls back to simulated if unavailable.",
     };
   }
 }

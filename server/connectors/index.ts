@@ -17,3 +17,4 @@ export type {
 export { GmailConnector } from "./gmail";
 export { GoogleCalendarConnector } from "./calendar";
 export { GoogleDriveConnector } from "./drive";
+export { GitHubConnector } from "./github";

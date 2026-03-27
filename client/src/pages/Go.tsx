@@ -90,6 +90,45 @@ const SCENARIOS: Scenario[] = [
     requester: "Claude",
   },
   {
+    id: "github_issue",
+    icon: "\uD83D\uDC1B",
+    label: "Create Issue",
+    action: "create_issue",
+    target: "GitHub",
+    connector: "github",
+    connectorName: "GitHub",
+    description: "Create a bug report on bkr1297-RIO/rio-system",
+    parameters: {
+      repo: "bkr1297-RIO/rio-system",
+      title: "[Bug] Receipt verification timeout on high-latency connections",
+      body: "When verifying receipts over slow connections, the verification step times out before all 7 checks complete. Expected: graceful retry. Actual: silent failure.",
+      labels: "bug,priority:medium",
+    },
+    riskLevel: "Low",
+    riskColor: "#22c55e",
+    requester: "Claude",
+  },
+  {
+    id: "github_pr",
+    icon: "\uD83D\uDD00",
+    label: "Create PR",
+    action: "create_pr",
+    target: "GitHub",
+    connector: "github",
+    connectorName: "GitHub",
+    description: "Open a pull request to merge feature/connector-v2",
+    parameters: {
+      repo: "bkr1297-RIO/rio-system",
+      title: "feat: Add connector v2 architecture",
+      body: "Implements the pluggable connector interface for Gmail, Drive, Calendar, and GitHub. All connectors pass fail-closed verification.",
+      head: "feature/connector-v2",
+      base: "main",
+    },
+    riskLevel: "Medium",
+    riskColor: "#f59e0b",
+    requester: "Gemini",
+  },
+  {
     id: "transfer",
     icon: "\uD83D\uDCB3",
     label: "Transfer Funds",
@@ -1064,3 +1103,4 @@ function DetailRow({
     </div>
   );
 }
+
