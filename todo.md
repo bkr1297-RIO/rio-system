@@ -126,3 +126,18 @@
 - [x] Add Contact and Roadmap to NavBar/Resources dropdown
 - [x] Register Contact and Roadmap routes in App.tsx
 - [x] Vitest tests for Contact page, Roadmap page, and OG image
+- [x] Repo: Add docs/Architecture.md (from Pasted_content_75)
+- [x] Repo: Add docs/Threat_Model.md (extracted from Architecture)
+- [x] Repo: Add docs/Trust_Model.md (extracted from Architecture)
+- [x] Repo: Add docs/EGI_Technical_Assessment.pdf (position paper v2)
+- [x] Repo: Create VERSION file (v1.0.0)
+- [x] Repo: Update README with "What RIO Guarantees" section
+- [x] Repo: Update README with verification instructions
+- [x] Repo: Update README with positioning statement
+- [x] Repo: Verify /spec, /schemas, /examples, /tests, /diagrams exist and are populated
+- [x] Repo: Generate standard 12-step pipeline diagram (PNG)
+- [x] Repo: Add diagram to README, Architecture.md, and website
+- [x] Repo: Tag v1.0.0 and push
+- [x] Website: Add Architecture page with full content
+- [x] Website: Update Architecture nav link to point to new page
+- [x] Website: Vitest tests for Architecture page
