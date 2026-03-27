@@ -1,0 +1,18 @@
+{
+  "name": "RIO — Runtime Intelligence Orchestration",
+  "short_name": "RIO",
+  "description": "Governed execution for AI systems. Approve actions, verify receipts, enforce policy.",
+  "start_url": "/go",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#b8963e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "48x48",
+      "type": "image/x-icon"
+    }
+  ],
+  "categories": ["security", "productivity", "utilities"]
+}

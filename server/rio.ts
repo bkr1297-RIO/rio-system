@@ -10,7 +10,7 @@
 import crypto from "node:crypto";
 import { eq, desc } from "drizzle-orm";
 import { getDb } from "./db";
-import { intents, approvals, executions, receipts, ledger } from "../drizzle/schema";
+import { intents, approvals, executions, receipts, ledger, policies } from "../drizzle/schema";
 
 // ── Ed25519 Key Pair (generated once at server start) ──────────────────────
 
@@ -828,5 +828,353 @@ export async function getLearningAnalytics() {
     })),
     suggestions,
     decisions: decisions.slice(0, 50), // Last 50 decisions
+  };
+}
+
+// ── Policy Persistence ──────────────────────────────────────────────────────
+
+export async function acceptPolicy(suggestion: {
+  action: string;
+  type: "auto_approve" | "auto_deny" | "reduce_pause" | "increase_scrutiny";
+  title: string;
+  description: string;
+  confidence: number;
+  basedOn: number;
+  approvalRate: number;
+  avgDecisionTimeSec: number;
+}) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const policyId = generateId("POL");
+
+  await db.insert(policies).values({
+    policyId,
+    action: suggestion.action,
+    type: suggestion.type,
+    confidence: Math.round(suggestion.confidence * 100),
+    basedOnDecisions: suggestion.basedOn,
+    approvalRate: suggestion.approvalRate,
+    avgDecisionTimeSec: suggestion.avgDecisionTimeSec,
+    title: suggestion.title,
+    description: suggestion.description,
+    status: "active",
+  });
+
+  return {
+    policyId,
+    action: suggestion.action,
+    type: suggestion.type,
+    title: suggestion.title,
+    status: "active",
+    createdAt: new Date().toISOString(),
+  };
+}
+
+export async function dismissPolicy(suggestionId: string) {
+  // Dismissals are tracked client-side for now (suggestions are computed, not stored)
+  // This endpoint is for future use when we want to persist dismissed suggestions
+  return { dismissed: true, suggestionId };
+}
+
+export async function getActivePolicies() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const rows = await db.select().from(policies).where(eq(policies.status, "active"));
+
+  return rows.map((p) => ({
+    policyId: p.policyId,
+    action: p.action,
+    type: p.type,
+    confidence: p.confidence,
+    basedOnDecisions: p.basedOnDecisions,
+    approvalRate: p.approvalRate,
+    avgDecisionTimeSec: p.avgDecisionTimeSec,
+    title: p.title,
+    description: p.description,
+    status: p.status,
+    createdAt: p.createdAt?.toISOString(),
+  }));
+}
+
+export async function deactivatePolicy(policyId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  await db.update(policies).set({ status: "dismissed" }).where(eq(policies.policyId, policyId));
+
+  return { policyId, status: "dismissed" };
+}
+
+// ── Governance Engine: Check Policies Before Approval ────────────────────────
+
+/**
+ * Check if an active policy matches this intent.
+ * Returns the policy decision if found, or null if human approval is required.
+ */
+export async function checkPolicies(action: string): Promise<{
+  policyMatch: boolean;
+  decision: "auto_approve" | "auto_deny" | null;
+  policyId: string | null;
+  policyTitle: string | null;
+}> {
+  const db = await getDb();
+  if (!db) return { policyMatch: false, decision: null, policyId: null, policyTitle: null };
+
+  // Find active policies matching this action
+  const matchingPolicies = await db
+    .select()
+    .from(policies)
+    .where(eq(policies.action, action));
+
+  // Filter to active policies only
+  const activePolicies = matchingPolicies.filter((p) => p.status === "active");
+
+  if (activePolicies.length === 0) {
+    return { policyMatch: false, decision: null, policyId: null, policyTitle: null };
+  }
+
+  // Use the most recent active policy
+  const policy = activePolicies[activePolicies.length - 1];
+
+  if (policy.type === "auto_approve") {
+    return {
+      policyMatch: true,
+      decision: "auto_approve",
+      policyId: policy.policyId,
+      policyTitle: policy.title,
+    };
+  }
+
+  if (policy.type === "auto_deny") {
+    return {
+      policyMatch: true,
+      decision: "auto_deny",
+      policyId: policy.policyId,
+      policyTitle: policy.title,
+    };
+  }
+
+  // reduce_pause and increase_scrutiny don't auto-decide
+  return { policyMatch: false, decision: null, policyId: null, policyTitle: null };
+}
+
+/**
+ * Auto-approve an intent based on policy.
+ * Generates a receipt and ledger entry just like human approval, but records decision_source as "policy_auto".
+ */
+export async function autoApproveByPolicy(intentId: string, policyId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  // Fetch intent
+  const rows = await db.select().from(intents).where(eq(intents.intentId, intentId)).limit(1);
+  if (rows.length === 0) throw new Error("Intent not found");
+  const intent = rows[0];
+
+  if (intent.status !== "pending") {
+    throw new Error(`Intent is already ${intent.status}`);
+  }
+
+  // Write approval record with policy as the decider
+  const approvalData = JSON.stringify({ intentId, intentHash: intent.intentHash, decision: "approved", decidedBy: `policy:${policyId}` });
+  const sig = sign(approvalData);
+  const pubKeyHex = getPublicKeyHex();
+
+  await db.insert(approvals).values({
+    intentId,
+    decision: "approved",
+    decidedBy: `policy:${policyId}`,
+    signature: sig,
+    publicKey: pubKeyHex,
+  });
+
+  // Update intent status
+  await db.update(intents).set({ status: "approved" }).where(eq(intents.intentId, intentId));
+
+  // Execute immediately
+  const executedAt = new Date();
+  const requestTs = intent.createdAt?.toISOString() ?? executedAt.toISOString();
+  const approvalTs = executedAt.toISOString();
+  const executionTs = executedAt.toISOString();
+
+  await db.insert(executions).values({
+    intentId,
+    status: "success",
+    detail: `Action '${intent.action}' auto-approved by policy ${policyId} and executed.`,
+  });
+
+  await db.update(intents).set({ status: "executed" }).where(eq(intents.intentId, intentId));
+
+  // Generate v2 receipt
+  const receiptId = generateId("RIO");
+  const intentHashV2 = computeIntentHash(intentId, intent.action, intent.requestedBy, requestTs);
+  const actionHashV2 = computeActionHash(intent.action, intent.description ?? "");
+  const verificationHashV2 = computeVerificationHash(intentHashV2, actionHashV2, "EXECUTED");
+  const risk = computeRiskScore(intent.action);
+
+  const prevReceipts = await db.select().from(receipts).orderBy(desc(receipts.id)).limit(1);
+  const previousHash = prevReceipts.length > 0 ? prevReceipts[0].receiptHash : "0000000000000000";
+
+  const receiptPayload = JSON.stringify({
+    receiptId,
+    intentId,
+    intentHash: intentHashV2,
+    action: intent.action,
+    actionHash: actionHashV2,
+    requestedBy: intent.requestedBy,
+    approvedBy: `policy:${policyId}`,
+    decision: "approved",
+    decisionSource: "policy_auto",
+    timestampRequest: requestTs,
+    timestampApproval: approvalTs,
+    timestampExecution: executionTs,
+    verificationStatus: "verified",
+    verificationHash: verificationHashV2,
+    previousHash,
+    protocolVersion: "v2",
+  });
+  const receiptHash = sha256(receiptPayload);
+  const receiptSignature = sign(receiptHash);
+
+  await db.insert(receipts).values({
+    receiptId,
+    intentId,
+    intentHash: intentHashV2,
+    action: intent.action,
+    actionHash: actionHashV2,
+    requestedBy: intent.requestedBy,
+    approvedBy: `policy:${policyId}`,
+    decision: "approved",
+    timestampRequest: intent.createdAt!,
+    timestampApproval: executedAt,
+    timestampExecution: executedAt,
+    signature: receiptSignature,
+    verificationStatus: "verified",
+    verificationHash: verificationHashV2,
+    riskScore: risk.score,
+    riskLevel: risk.level,
+    policyRuleId: policyId,
+    policyDecision: "POLICY_AUTO_APPROVED",
+    receiptHash,
+    previousHash,
+    protocolVersion: "v2",
+  });
+
+  // Ledger entry
+  const blockId = generateId("BLK");
+  const prevLedger = await db.select().from(ledger).orderBy(desc(ledger.id)).limit(1);
+  const prevLedgerHash = prevLedger.length > 0 ? prevLedger[0].currentHash : "0000000000000000";
+
+  const ledgerPayload = JSON.stringify({
+    blockId,
+    intentId,
+    action: intent.action,
+    decision: "approved",
+    decisionSource: "policy_auto",
+    receiptHash,
+    previousHash: prevLedgerHash,
+    timestamp: executionTs,
+    protocolVersion: "v2",
+  });
+  const currentHash = sha256(ledgerPayload);
+  const ledgerSig = sign(currentHash);
+
+  await db.insert(ledger).values({
+    blockId,
+    intentId,
+    action: intent.action,
+    decision: "approved",
+    receiptHash,
+    previousHash: prevLedgerHash,
+    currentHash,
+    ledgerSignature: ledgerSig,
+    protocolVersion: "v2",
+  });
+
+  return {
+    autoApproved: true,
+    policyId,
+    intentId,
+    receipt: {
+      receipt_id: receiptId,
+      intent_id: intentId,
+      intent_hash: intentHashV2,
+      action: intent.action,
+      action_hash: actionHashV2,
+      requested_by: intent.requestedBy,
+      approved_by: `policy:${policyId}`,
+      decision: "approved",
+      decision_source: "policy_auto",
+      timestamp_request: requestTs,
+      timestamp_approval: approvalTs,
+      timestamp_execution: executionTs,
+      verification_status: "verified",
+      verification_hash: verificationHashV2,
+      risk_score: risk.score,
+      risk_level: risk.level,
+      policy_rule_id: policyId,
+      policy_decision: "POLICY_AUTO_APPROVED",
+      receipt_hash: receiptHash,
+      previous_hash: previousHash,
+      signature: receiptSignature.slice(0, 32) + "...",
+      protocol_version: "v2",
+    },
+    ledger_entry: {
+      block_id: blockId,
+      receipt_hash: receiptHash,
+      previous_hash: prevLedgerHash,
+      current_hash: currentHash,
+      ledger_signature: ledgerSig.slice(0, 32) + "...",
+      protocol_version: "v2",
+      timestamp: executionTs,
+      recorded_by: "RIO System",
+    },
+  };
+}
+
+/**
+ * Auto-deny an intent based on policy.
+ * Generates a denial receipt and ledger entry, records decision_source as "policy_auto".
+ */
+export async function autoDenyByPolicy(intentId: string, policyId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+
+  const rows = await db.select().from(intents).where(eq(intents.intentId, intentId)).limit(1);
+  if (rows.length === 0) throw new Error("Intent not found");
+  const intent = rows[0];
+
+  if (intent.status !== "pending") {
+    throw new Error(`Intent is already ${intent.status}`);
+  }
+
+  const approvalData = JSON.stringify({ intentId, intentHash: intent.intentHash, decision: "denied", decidedBy: `policy:${policyId}` });
+  const sig = sign(approvalData);
+  const pubKeyHex = getPublicKeyHex();
+
+  await db.insert(approvals).values({
+    intentId,
+    decision: "denied",
+    decidedBy: `policy:${policyId}`,
+    signature: sig,
+    publicKey: pubKeyHex,
+  });
+
+  await db.update(intents).set({ status: "denied" }).where(eq(intents.intentId, intentId));
+
+  await db.insert(executions).values({
+    intentId,
+    status: "blocked",
+    detail: `Action '${intent.action}' auto-denied by policy ${policyId}.`,
+  });
+
+  return {
+    autoDenied: true,
+    policyId,
+    intentId,
+    decision: "denied",
+    decision_source: "policy_auto",
   };
 }

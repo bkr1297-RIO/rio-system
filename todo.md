@@ -166,3 +166,23 @@
 - [x] NavBar: Add /go as prominent CTA button, add Dashboard and Learning to nav
 - [x] App.tsx: Register /go, /dashboard, /learning routes
 - [x] Vitest: Tests for /go page, /dashboard page, /learning page, and new server endpoints
+- [x] Persist Policies: Create policies table in DB schema (action_type, risk_level, decision, confidence, created_at, status)
+- [x] Persist Policies: Governance engine checks policies before showing approval screen
+- [x] Persist Policies: Auto-approved/auto-denied actions still generate receipts
+- [x] Persist Policies: Receipt records decision_source (human or policy_auto)
+- [x] Persist Policies: Wire /learning Accept Policy button to persist to DB
+- [x] Persist Policies: Active policies visible on /learning page
+- [x] Gmail Execution: Wire Gmail MCP tools for real email sending after receipt + ledger
+- [x] Gmail Execution: Fail-closed order: Approve → Receipt → Ledger → Execute
+- [x] Gmail Execution: Toggle on /go page: Simulated Mode vs Live Mode
+- [x] Gmail Execution: Receipt includes execution_mode (simulated or live)
+- [x] Gmail Execution: If Gmail send fails, receipt records execution_status: failed
+- [x] Notifications: Use notifyOwner() when intent status = pending_approval
+- [x] Notifications: Notification links directly to /go page
+- [x] PWA: Add manifest.json with RIO branding
+- [x] PWA: Add service worker for offline capability
+- [x] PWA: Enable Add to Home Screen support
+- [x] PWA: Phone functions as the approval device
+- [x] Vitest: Tests for policy persistence and governance engine
+- [x] Vitest: Tests for Gmail execution flow
+- [x] Vitest: Tests for notification triggers

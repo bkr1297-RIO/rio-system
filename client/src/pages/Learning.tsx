@@ -76,18 +76,58 @@ interface Decision {
 export default function Learning() {
   const [acceptedPolicies, setAcceptedPolicies] = useState<Set<string>>(new Set());
   const [rejectedPolicies, setRejectedPolicies] = useState<Set<string>>(new Set());
+  const [processingPolicy, setProcessingPolicy] = useState<string | null>(null);
 
   const { data, isLoading, refetch } = trpc.rio.learningAnalytics.useQuery();
+  const { data: activePoliciesData, refetch: refetchPolicies } = trpc.rio.activePolicies.useQuery();
+  const acceptPolicyMut = trpc.rio.acceptPolicySuggestion.useMutation();
+  const dismissPolicyMut = trpc.rio.dismissPolicySuggestion.useMutation();
+  const deactivatePolicyMut = trpc.rio.deactivatePolicy.useMutation();
 
-  const handleAcceptPolicy = (id: string) => {
-    setAcceptedPolicies((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
-    setRejectedPolicies((prev) => { const next = new Set(Array.from(prev)); next.delete(id); return next; });
+  const handleAcceptPolicy = async (suggestion: Suggestion) => {
+    setProcessingPolicy(suggestion.id);
+    try {
+      await acceptPolicyMut.mutateAsync({
+        action: suggestion.action,
+        type: suggestion.type,
+        title: suggestion.title,
+        description: suggestion.description,
+        confidence: suggestion.confidence,
+        basedOn: suggestion.basedOn,
+        approvalRate: suggestion.approvalRate,
+        avgDecisionTimeSec: suggestion.avgDecisionTimeSec,
+      });
+      setAcceptedPolicies((prev) => { const next = new Set(Array.from(prev)); next.add(suggestion.id); return next; });
+      setRejectedPolicies((prev) => { const next = new Set(Array.from(prev)); next.delete(suggestion.id); return next; });
+      refetchPolicies();
+    } catch (e) {
+      console.error("Failed to accept policy:", e);
+    }
+    setProcessingPolicy(null);
   };
 
-  const handleRejectPolicy = (id: string) => {
-    setRejectedPolicies((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
-    setAcceptedPolicies((prev) => { const next = new Set(Array.from(prev)); next.delete(id); return next; });
+  const handleRejectPolicy = async (id: string) => {
+    setProcessingPolicy(id);
+    try {
+      await dismissPolicyMut.mutateAsync({ suggestionId: id });
+      setRejectedPolicies((prev) => { const next = new Set(Array.from(prev)); next.add(id); return next; });
+      setAcceptedPolicies((prev) => { const next = new Set(Array.from(prev)); next.delete(id); return next; });
+    } catch (e) {
+      console.error("Failed to dismiss policy:", e);
+    }
+    setProcessingPolicy(null);
   };
+
+  const handleDeactivatePolicy = async (policyId: string) => {
+    try {
+      await deactivatePolicyMut.mutateAsync({ policyId });
+      refetchPolicies();
+    } catch (e) {
+      console.error("Failed to deactivate policy:", e);
+    }
+  };
+
+  const activePolicies = activePoliciesData || [];
 
   const actionStats = (data?.actionStats || []) as ActionStat[];
   const suggestions = (data?.suggestions || []) as Suggestion[];
@@ -207,14 +247,16 @@ export default function Learning() {
                             {!isAccepted && !isRejected && (
                               <div className="flex gap-2">
                                 <button
-                                  onClick={() => handleAcceptPolicy(s.id)}
+                                  onClick={() => handleAcceptPolicy(s)}
+                                  disabled={processingPolicy === s.id}
                                   className="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all"
-                                  style={{ backgroundColor: "#22c55e", color: "#fff" }}
+                                  style={{ backgroundColor: "#22c55e", color: "#fff", opacity: processingPolicy === s.id ? 0.6 : 1 }}
                                 >
-                                  Accept Policy
+                                  {processingPolicy === s.id ? "Saving..." : "Accept Policy"}
                                 </button>
                                 <button
                                   onClick={() => handleRejectPolicy(s.id)}
+                                  disabled={processingPolicy === s.id}
                                   className="px-4 py-1.5 rounded-lg text-xs font-semibold transition-all"
                                   style={{
                                     backgroundColor: "transparent",
@@ -237,6 +279,68 @@ export default function Learning() {
                               </p>
                             )}
                           </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* Active Policies */}
+            {activePolicies.length > 0 && (
+              <div className="mb-10">
+                <h2 className="text-lg font-bold mb-4" style={{ color: "#e5e7eb" }}>
+                  Active Policies
+                </h2>
+                <p className="text-xs mb-4" style={{ color: "#6b7280" }}>
+                  These policies are actively governing actions. The governance engine checks them before showing the approval screen.
+                </p>
+                <div className="space-y-3">
+                  {activePolicies.map((p: { policyId: string; action: string; type: string; title: string; description: string | null; confidence: number; basedOnDecisions: number; approvalRate: number; createdAt: string | undefined }) => {
+                    const icon = SUGGESTION_ICONS[p.type] || "\u26A1";
+                    const color = SUGGESTION_COLORS[p.type] || "#b8963e";
+                    return (
+                      <div
+                        key={p.policyId}
+                        className="rounded-lg border p-4 flex items-start gap-3"
+                        style={{
+                          backgroundColor: "oklch(0.16 0.03 260)",
+                          borderColor: color + "30",
+                        }}
+                      >
+                        <span className="text-lg flex-shrink-0">{icon}</span>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <h3 className="text-sm font-bold" style={{ color: "#e5e7eb" }}>
+                              {p.title}
+                            </h3>
+                            <span
+                              className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
+                              style={{ backgroundColor: "#22c55e20", color: "#22c55e" }}
+                            >
+                              ACTIVE
+                            </span>
+                          </div>
+                          <p className="text-xs mb-2" style={{ color: "#9ca3af" }}>
+                            {p.description}
+                          </p>
+                          <div className="flex flex-wrap gap-4 mb-2">
+                            <MiniStat label="Based on" value={`${p.basedOnDecisions} decisions`} />
+                            <MiniStat label="Confidence" value={`${p.confidence}%`} />
+                            <MiniStat label="Created" value={p.createdAt ? new Date(p.createdAt).toLocaleDateString() : "—"} />
+                          </div>
+                          <button
+                            onClick={() => handleDeactivatePolicy(p.policyId)}
+                            className="px-3 py-1 rounded-lg text-[10px] font-semibold transition-all"
+                            style={{
+                              backgroundColor: "transparent",
+                              color: "#ef4444",
+                              border: "1px solid #ef444430",
+                            }}
+                          >
+                            Deactivate
+                          </button>
                         </div>
                       </div>
                     );

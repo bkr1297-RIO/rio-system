@@ -100,6 +100,28 @@ export const blogPosts = mysqlTable("blog_posts", {
 export type BlogPost = typeof blogPosts.$inferSelect;
 export type InsertBlogPost = typeof blogPosts.$inferInsert;
 
+// ── Governance Policies ────────────────────────────────────────────────────
+
+export const policies = mysqlTable("policies", {
+  id: int("id").autoincrement().primaryKey(),
+  policyId: varchar("policyId", { length: 64 }).notNull().unique(),
+  action: varchar("action", { length: 128 }).notNull(),
+  type: mysqlEnum("type", ["auto_approve", "auto_deny", "reduce_pause", "increase_scrutiny"]).notNull(),
+  riskLevel: varchar("risk_level", { length: 32 }),
+  confidence: int("confidence").default(0).notNull(),
+  basedOnDecisions: int("based_on_decisions").default(0).notNull(),
+  approvalRate: int("approval_rate").default(0).notNull(),
+  avgDecisionTimeSec: int("avg_decision_time_sec").default(0).notNull(),
+  title: varchar("title", { length: 256 }).notNull(),
+  description: text("description"),
+  status: mysqlEnum("status", ["active", "dismissed", "expired"]).default("active").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type Policy = typeof policies.$inferSelect;
+export type InsertPolicy = typeof policies.$inferInsert;
+
 export const ledger = mysqlTable("ledger", {
   id: int("id").autoincrement().primaryKey(),
   blockId: varchar("blockId", { length: 64 }).notNull().unique(),
