@@ -168,7 +168,7 @@ export default function Connect() {
   });
 
   const handleConnectGoogle = () => {
-    window.location.href = "/api/oauth/google/start";
+    window.location.href = `/api/oauth/google/start?origin=${encodeURIComponent(window.location.origin)}`;
   };
 
   const handleDisconnectGoogle = async () => {
@@ -194,7 +194,7 @@ export default function Connect() {
   };
 
   const handleConnectGithub = () => {
-    window.location.href = "/api/oauth/github/start";
+    window.location.href = `/api/oauth/github/start?origin=${encodeURIComponent(window.location.origin)}`;
   };
 
   const handleDisconnectGithub = async () => {

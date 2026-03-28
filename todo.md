@@ -307,3 +307,4 @@
 - [x] Bug Fix: /app login loop — after signing in, user sees sign-in screen again instead of authenticated workspace (stale Vite dep cache causing duplicate React instance crash in TRPCProvider)
 - [x] Bug Fix: /app throws "Google account not connected" error on load — gate Google data queries on connection status
 - [x] Bug Fix: /app login loop persists — fixed 3 root causes: (1) service worker stripping credentials from API fetch, (2) OAuth callback redirecting to relative path instead of full origin, (3) SDK decodeState not parsing JSON state format
+- [x] Bug Fix: Google OAuth redirect_uri_mismatch — frontend now passes window.location.origin to /start endpoint; server uses it to build callback URL matching the user's domain

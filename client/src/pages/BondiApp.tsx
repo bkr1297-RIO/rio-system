@@ -126,7 +126,7 @@ function ConnectPrompt({ service }: { service: string }) {
       <Button
         variant="outline"
         onClick={() => {
-          window.location.href = `/api/oauth/google/start?returnTo=/app`;
+          window.location.href = `/api/oauth/google/start?returnTo=/app&origin=${encodeURIComponent(window.location.origin)}`;
         }}
       >
         Connect Google Apps
@@ -1071,7 +1071,7 @@ export default function BondiApp() {
                 size="sm"
                 className="w-full text-xs"
                 onClick={() =>
-                  (window.location.href = `/api/oauth/google/start?returnTo=/app`)
+                  (window.location.href = `/api/oauth/google/start?returnTo=/app&origin=${encodeURIComponent(window.location.origin)}`)
                 }
               >
                 <Link2 className="w-3 h-3 mr-1" />

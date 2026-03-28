@@ -72,10 +72,24 @@ async function getAuthenticatedUser(req: Request): Promise<{ openId: string; id:
 }
 
 /**
- * Build the Google OAuth callback URL from the request origin.
+ * Build the Google OAuth callback URL from the request.
+ * Prefers the explicit `origin` query parameter passed by the frontend,
+ * which ensures the callback URL matches the domain the user sees.
+ * Falls back to request headers for backwards compatibility.
  */
 function getCallbackUrl(req: Request): string {
-  // Use the origin header or construct from protocol + host
+  // Prefer explicit origin from frontend (most reliable in deployed environments)
+  const originParam = typeof req.query.origin === "string" ? req.query.origin : null;
+  if (originParam) {
+    try {
+      const url = new URL(originParam);
+      return `${url.origin}/api/oauth/google/callback`;
+    } catch {
+      // Invalid URL, fall through to header-based detection
+    }
+  }
+
+  // Fallback: construct from request headers
   const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
   const host = req.headers["x-forwarded-host"] || req.headers.host || "localhost:3000";
   return `${protocol}://${host}/api/oauth/google/callback`;

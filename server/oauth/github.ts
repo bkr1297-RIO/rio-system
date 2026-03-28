@@ -59,9 +59,19 @@ async function getAuthenticatedUser(req: Request): Promise<{ openId: string; id:
 }
 
 /**
- * Build the GitHub OAuth callback URL from the request origin.
+ * Build the GitHub OAuth callback URL from the request.
+ * Prefers the explicit `origin` query parameter passed by the frontend.
  */
 function getCallbackUrl(req: Request): string {
+  const originParam = typeof req.query.origin === "string" ? req.query.origin : null;
+  if (originParam) {
+    try {
+      const url = new URL(originParam);
+      return `${url.origin}/api/oauth/github/callback`;
+    } catch {
+      // fall through
+    }
+  }
   const protocol = req.headers["x-forwarded-proto"] || req.protocol || "https";
   const host = req.headers["x-forwarded-host"] || req.headers.host || "localhost:3000";
   return `${protocol}://${host}/api/oauth/github/callback`;
