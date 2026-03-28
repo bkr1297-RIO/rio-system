@@ -17,7 +17,6 @@ import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -748,7 +747,7 @@ function ActionsView({
             Pick an action below. RIO will intercept it, require your approval, then execute it.
           </p>
         </div>
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto min-h-0">
           <div className="p-6 space-y-4">
             {/* Google actions */}
             <div>
@@ -830,7 +829,7 @@ function ActionsView({
               Every action goes through RIO governance — intent, approval, execution, receipt, ledger.
             </p>
           </div>
-        </ScrollArea>
+        </div>
       </div>
     );
   }
@@ -848,7 +847,7 @@ function ActionsView({
         </div>
       </div>
 
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto min-h-0">
         <div className="p-6 space-y-4">
           {/* Intent Card */}
           <div className="rounded-xl border p-5">
@@ -1062,7 +1061,7 @@ function ActionsView({
             </div>
           )}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
@@ -1199,7 +1198,7 @@ function HistoryView() {
           <p className="text-sm text-muted-foreground">No governed actions yet</p>
         </div>
       ) : (
-        <ScrollArea className="flex-1">
+        <div className="flex-1 overflow-y-auto min-h-0">
           <div className="p-4 space-y-2">
             {entries.map((entry) => {
               const isExpanded = expandedId === entry.block_id;
@@ -1307,7 +1306,7 @@ function HistoryView() {
               );
             })}
           </div>
-        </ScrollArea>
+        </div>
       )}
     </div>
   );
@@ -1372,7 +1371,7 @@ function InboxView({
           <RefreshCw className="w-4 h-4" />
         </Button>
       </div>
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto min-h-0">
         <div className="divide-y">
           {emails.map((email: any) => (
             <button
@@ -1407,7 +1406,7 @@ function InboxView({
             </button>
           ))}
         </div>
-      </ScrollArea>
+      </div>
     </div>
   );
 }
@@ -1504,7 +1503,7 @@ function EmailDetailView({
       </div>
 
       {/* Body */}
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto min-h-0">
         <div className="p-4">
           <div
             className="prose prose-sm dark:prose-invert max-w-none"
@@ -1516,7 +1515,7 @@ function EmailDetailView({
             }}
           />
         </div>
-      </ScrollArea>
+      </div>
 
       {/* Actions */}
       <div className="border-t px-4 py-3">
@@ -1629,7 +1628,7 @@ function CalendarView({ googleConnected }: { googleConnected: boolean }) {
           <RefreshCw className="w-4 h-4" />
         </Button>
       </div>
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {events.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 gap-4">
             <Calendar className="w-12 h-12 text-muted-foreground/30" />
@@ -1662,7 +1661,7 @@ function CalendarView({ googleConnected }: { googleConnected: boolean }) {
             ))}
           </div>
         )}
-      </ScrollArea>
+      </div>
     </div>
   );
 }
@@ -1709,7 +1708,7 @@ function DriveView({ googleConnected }: { googleConnected: boolean }) {
           <RefreshCw className="w-4 h-4" />
         </Button>
       </div>
-      <ScrollArea className="flex-1">
+      <div className="flex-1 overflow-y-auto min-h-0">
         {files.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 gap-4">
             <FolderOpen className="w-12 h-12 text-muted-foreground/30" />
@@ -1738,7 +1737,7 @@ function DriveView({ googleConnected }: { googleConnected: boolean }) {
             ))}
           </div>
         )}
-      </ScrollArea>
+      </div>
     </div>
   );
 }
@@ -1842,7 +1841,7 @@ function AskView({ initialContext }: { initialContext?: string }) {
             </div>
           </div>
         ) : (
-          <ScrollArea className="h-full">
+          <div className="h-full overflow-y-auto">
             <div className="flex flex-col space-y-4 p-4">
               {displayMessages.map((msg, i) => (
                 <div
@@ -1887,7 +1886,7 @@ function AskView({ initialContext }: { initialContext?: string }) {
                 </div>
               )}
             </div>
-          </ScrollArea>
+          </div>
         )}
       </div>
 

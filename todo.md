@@ -355,3 +355,4 @@
 - [x] MVP: Browser end-to-end verification of full MVP flow
 - [x] Bug: Dashboard page not scrolling — fixed overflow chain with min-h-0 and native overflow-y-auto
 - [x] Bug: History verification showing all red ❌ — fixed receipt_hash fallback lookup + deterministic Ed25519 key from JWT_SECRET
+- [x] Bug: Run Action / governance step screen not scrolling — fixed by replacing ScrollArea with native overflow-y-auto throughout BondiApp.tsx
