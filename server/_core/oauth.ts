@@ -9,6 +9,34 @@ function getQueryParam(req: Request, key: string): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
+/**
+ * Parse the state parameter to extract the redirect URI and optional return path.
+ * Supports two formats:
+ *   1. JSON: { redirectUri, returnPath } (new format with return path)
+ *   2. Plain base64-encoded redirect URI (legacy format)
+ */
+function parseState(state: string): { redirectUri: string; returnPath: string } {
+  try {
+    const decoded = atob(state);
+    // Try JSON first
+    const parsed = JSON.parse(decoded);
+    if (parsed && typeof parsed.redirectUri === "string") {
+      return {
+        redirectUri: parsed.redirectUri,
+        returnPath: typeof parsed.returnPath === "string" ? parsed.returnPath : "/",
+      };
+    }
+  } catch {
+    // Not JSON — treat as plain redirect URI (legacy)
+  }
+
+  try {
+    return { redirectUri: atob(state), returnPath: "/" };
+  } catch {
+    return { redirectUri: "", returnPath: "/" };
+  }
+}
+
 export function registerOAuthRoutes(app: Express) {
   app.get("/api/oauth/callback", async (req: Request, res: Response) => {
     const code = getQueryParam(req, "code");
@@ -44,7 +72,11 @@ export function registerOAuthRoutes(app: Express) {
       const cookieOptions = getSessionCookieOptions(req);
       res.cookie(COOKIE_NAME, sessionToken, { ...cookieOptions, maxAge: ONE_YEAR_MS });
 
-      res.redirect(302, "/");
+      // Redirect to the return path encoded in state (defaults to "/")
+      const { returnPath } = parseState(state);
+      // Sanitize: only allow relative paths starting with "/"
+      const safePath = returnPath.startsWith("/") ? returnPath : "/";
+      res.redirect(302, safePath);
     } catch (error) {
       console.error("[OAuth] Callback failed", error);
       res.status(500).json({ error: "OAuth callback failed" });

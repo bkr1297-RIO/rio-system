@@ -303,3 +303,4 @@
 - [x] Bondi Workspace: MVP 30-Second Trust Loop (inbox → email → reply with AI → approve → send → receipt)
 - [x] Bondi Workspace: Add Launch Bondi button to RIO NavBar
 - [x] Bondi Workspace: Vitest tests for all new tRPC procedures
+- [x] Bug Fix: Login from /app should redirect back to /app after authentication (not /)

@@ -96,7 +96,7 @@ function BondiLogin() {
         size="lg"
         className="w-full max-w-xs"
         onClick={() => {
-          window.location.href = getLoginUrl();
+          window.location.href = getLoginUrl("/app");
         }}
       >
         Sign in to continue
