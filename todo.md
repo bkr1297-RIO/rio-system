@@ -381,3 +381,4 @@
 - [x] Alert Step: Add animated phone notification mockup sliding in to reinforce "you get an alert on your phone"
 - [x] Demo Tracking: Add DB schema, backend procedure, and frontend counter to track demo completion and drop-off per step
 - [x] Demo Intro: Add paragraph after nutshell definition about email being just one example — cancel subscriptions, schedule meetings, submit requests, follow up — always asks before acting, always keeps a record, "what would you want it to do for you?"
+- [x] Bug: Demo intro — nutshell definition and 'email is just one example' paragraph must be the very first visible content on mobile without scrolling; removed large robot emoji card, restructured as compact text-first layout

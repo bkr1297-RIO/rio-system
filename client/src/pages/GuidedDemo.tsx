@@ -52,70 +52,62 @@ const VERIFICATION_CHECKS = [
 
 function StepIntro({ onNext }: { onNext: () => void }) {
   return (
-    <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-      {/* Nutshell definition — the first thing they see */}
+    <div className="flex flex-col items-center max-w-2xl mx-auto">
+      {/* Nutshell definition — THE VERY FIRST THING THEY SEE */}
+      <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-center" style={{ color: "#ffffff" }}>
+        What Is RIO?
+      </h2>
+      <p className="text-lg sm:text-xl leading-relaxed text-center mb-6" style={{ color: "#e5e7eb" }}>
+        A governed assistant that can take <strong style={{ color: "#b8963e" }}>real-world actions</strong> for you
+        — but <strong style={{ color: "#ffffff" }}>only with your approval</strong>. It keeps a{" "}
+        <strong style={{ color: "#ffffff" }}>permanent record</strong> of what it did, and it can{" "}
+        <strong style={{ color: "#22d3ee" }}>learn over time</strong>.
+      </p>
+
+      {/* What it can do — email is just one example — IMMEDIATELY VISIBLE */}
       <div
-        className="mb-10 p-6 sm:p-8 rounded-xl border"
+        className="w-full p-4 sm:p-6 rounded-xl border mb-6"
         style={{
           backgroundColor: "rgba(184,150,62,0.06)",
-          borderColor: "rgba(184,150,62,0.3)",
-          boxShadow: "0 0 30px rgba(184,150,62,0.08)",
+          borderColor: "rgba(184,150,62,0.25)",
         }}
       >
-        <div
-          className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
-          style={{ backgroundColor: "rgba(184,150,62,0.15)", border: "2px solid rgba(184,150,62,0.3)" }}
-        >
-          <span className="text-4xl">🤖</span>
-        </div>
-        <h2 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: "#ffffff" }}>
-          What Is RIO?
-        </h2>
-        <p className="text-lg sm:text-xl leading-relaxed" style={{ color: "#e5e7eb" }}>
-          A governed assistant that can take <strong style={{ color: "#b8963e" }}>real-world actions</strong> for you
-          — but <strong style={{ color: "#ffffff" }}>only with your approval</strong>. It keeps a{" "}
-          <strong style={{ color: "#ffffff" }}>permanent record</strong> of what it did, and it can{" "}
-          <strong style={{ color: "#22d3ee" }}>learn over time</strong>.
+        <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
+          In this demo, you'll see an example using email — but email is just one way the system
+          can act for you. It can also cancel services like unused or unwanted subscriptions, schedule
+          meetings, submit requests, and follow up on important things. The key is that it{" "}
+          <strong style={{ color: "#ffffff" }}>always asks before acting</strong> and{" "}
+          <strong style={{ color: "#ffffff" }}>always keeps a record</strong>.
+        </p>
+        <p className="text-base sm:text-lg leading-relaxed mt-3 italic" style={{ color: "#b8963e" }}>
+          If you had an assistant that worked this way, what would you want it to do for you?
         </p>
       </div>
 
-      {/* What it can do — email is just one example */}
-      <p className="text-base sm:text-lg leading-relaxed text-left w-full mb-6" style={{ color: "#d1d5db" }}>
-        In this demo, you'll see an example using email — but email is just one way the system
-        can act for you. It can also cancel services like unused or unwanted subscriptions, schedule
-        meetings, submit requests, and follow up on important things. The key is that it{" "}
-        <strong style={{ color: "#ffffff" }}>always asks before acting</strong> and{" "}
-        <strong style={{ color: "#ffffff" }}>always keeps a record</strong>.{" "}
-        <em style={{ color: "#b8963e" }}>If you had an assistant that worked this way, what would you want it to do for you?</em>
-      </p>
-
-      {/* Expanded context */}
-      <div className="space-y-5 text-left w-full">
-        <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
+      {/* Expanded context — below the fold is fine */}
+      <div className="space-y-4 text-left w-full">
+        <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#9ca3af" }}>
           Imagine you have an AI assistant that manages your email, calendar, and files.
-          It's smart. It's fast. It can draft emails, schedule meetings, organize documents.
-        </p>
-        <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
-          But should it be able to <strong style={{ color: "#ffffff" }}>send emails on your behalf without asking?</strong>{" "}
+          It's smart. It's fast. But should it be able to{" "}
+          <strong style={{ color: "#d1d5db" }}>send emails on your behalf without asking?</strong>{" "}
           Should it delete files or move money without your knowledge?
+        </p>
+        <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#9ca3af" }}>
           Not every action carries the same risk — a routine calendar reminder is different from
           an email to a client or a financial transaction. As you and your assistant work together,
           you get to decide which actions need your explicit approval and which can proceed on their own.
-          That relationship <strong style={{ color: "#ffffff" }}>evolves over time as trust builds</strong>.
+          That relationship <strong style={{ color: "#d1d5db" }}>evolves over time as trust builds</strong>.
         </p>
-        <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
+        <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#9ca3af" }}>
           RIO sits between your AI assistant and the real world. It makes sure the AI cannot take
           any real-world action without your explicit approval. And every decision — yours and the AI's
           — is permanently recorded with cryptographic proof.
-        </p>
-        <p className="text-base sm:text-lg leading-relaxed font-medium" style={{ color: "#e5e7eb" }}>
-          Let's walk through exactly how this works.
         </p>
       </div>
 
       <button
         onClick={onNext}
-        className="mt-10 py-4 px-10 text-lg font-semibold rounded-lg transition-all duration-200 hover:scale-[1.02]"
+        className="mt-8 py-4 px-10 text-lg font-semibold rounded-lg transition-all duration-200 hover:scale-[1.02]"
         style={{
           backgroundColor: "#b8963e",
           color: "#0a0e1a",
