@@ -353,3 +353,5 @@
 - [x] MVP: Wire routing in App.tsx and navigation flow
 - [x] MVP: Vitest tests for new MVP components
 - [x] MVP: Browser end-to-end verification of full MVP flow
+- [x] Bug: Dashboard page not scrolling — fixed overflow chain with min-h-0 and native overflow-y-auto
+- [x] Bug: History verification showing all red ❌ — fixed receipt_hash fallback lookup + deterministic Ed25519 key from JWT_SECRET

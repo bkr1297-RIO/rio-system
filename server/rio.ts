@@ -12,9 +12,27 @@ import { eq, desc } from "drizzle-orm";
 import { getDb } from "./db";
 import { intents, approvals, executions, receipts, ledger, policies } from "../drizzle/schema";
 
-// ── Ed25519 Key Pair (generated once at server start) ──────────────────────
+// ── Ed25519 Key Pair (deterministic from JWT_SECRET for persistence) ────────
 
-const { publicKey, privateKey } = crypto.generateKeyPairSync("ed25519");
+function deriveEd25519KeyPair() {
+  const secret = process.env.JWT_SECRET || "rio-default-dev-secret";
+  // Derive a 32-byte seed from JWT_SECRET using SHA-256
+  const seed = crypto.createHash("sha256").update(secret).digest();
+  // Ed25519 private key is 32 bytes; generate key pair from seed
+  const privateKey = crypto.createPrivateKey({
+    key: Buffer.concat([
+      // PKCS8 DER prefix for Ed25519 (16 bytes) + 2-byte OCTET STRING wrapper + 32-byte seed
+      Buffer.from("302e020100300506032b657004220420", "hex"),
+      seed,
+    ]),
+    format: "der",
+    type: "pkcs8",
+  });
+  const publicKey = crypto.createPublicKey(privateKey);
+  return { publicKey, privateKey };
+}
+
+const { publicKey, privateKey } = deriveEd25519KeyPair();
 
 function getPublicKeyHex(): string {
   const raw = publicKey.export({ type: "spki", format: "der" });
@@ -520,7 +538,13 @@ export async function verifyReceiptById(receiptId: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
 
-  const receiptRows = await db.select().from(receipts).where(eq(receipts.receiptId, receiptId)).limit(1);
+  // Look up by receiptId first, then fall back to receiptHash
+  // (History view passes receipt_hash from ledger entries, not receipt_id)
+  let receiptRows = await db.select().from(receipts).where(eq(receipts.receiptId, receiptId)).limit(1);
+  if (receiptRows.length === 0) {
+    // Fallback: try matching by receiptHash
+    receiptRows = await db.select().from(receipts).where(eq(receipts.receiptHash, receiptId)).limit(1);
+  }
   if (receiptRows.length === 0) {
     return {
       found: false,
