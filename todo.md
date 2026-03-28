@@ -222,3 +222,28 @@
 - [x] Vitest: Tests for GitHub connector
 - [x] Vitest: Tests for live Drive and Calendar connectors
 - [x] Vitest: Tests for onboarding page (covered by connector registry tests)
+- [ ] Branding: Update LinkedIn link to Brian/RIO LinkedIn (not Manus)
+- [ ] Branding: Update GitHub link to RIO GitHub repository
+- [ ] Branding: Remove or update any Twitter/X links to RIO account
+- [ ] Branding: Update footer copyright to RIO
+- [ ] Branding: Update contact email to RIO contact email (Riomethod5@gmail.com)
+- [ ] Branding: Ensure all branding shows RIO as the product, not Manus
+- [x] Live Gmail: Test end-to-end live Gmail send (approve → receipt → ledger → send) — Message ID: 19d31cd0e6e52e58
+- [x] GitHub Push: Sync connector architecture to rio-system repo — commit 76d0bca pushed to main
+- [x] OAuth: Create user_connections DB table (user_id, provider, access_token, refresh_token, email, connected_at)
+- [x] OAuth: Store Google OAuth credentials (Client ID + Secret)
+- [x] OAuth: Build server-side Google OAuth start endpoint
+- [x] OAuth: Build server-side Google OAuth callback with token storage
+- [x] OAuth: Build token refresh logic for expired Google tokens
+- [x] OAuth: Build disconnect/revoke endpoint
+- [x] OAuth: Create tRPC procedures for connection management
+- [x] OAuth: Update /connect page with real OAuth connect/disconnect buttons
+- [x] OAuth: Write vitest tests for OAuth flow
+- [x] OAuth: Implement Google OAuth flow for Gmail/Drive/Calendar
+- [ ] OAuth: Implement GitHub OAuth flow
+- [x] OAuth: Store tokens per user in database
+- [ ] OAuth: Connector registry uses user tokens, not global tokens
+- [x] OAuth: /connect page shows "Connected as [user email/username]"
+- [ ] Slack: Add Slack webhook connector (HTTP POST, no OAuth needed)
+- [ ] Slack: Add Slack scenario to /go page
+- [ ] Onboarding: Build onboarding flow (Connect apps → Install app → Start using)

@@ -4,6 +4,7 @@ import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, router } from "./_core/trpc";
 import { rioRouter } from "./routers/rio";
 import { blogRouter } from "./routers/blog";
+import { connectionsRouter } from "./routers/connections";
 
 export const appRouter = router({
   system: systemRouter,
@@ -23,6 +24,9 @@ export const appRouter = router({
 
   // Blog
   blog: blogRouter,
+
+  // User OAuth connections
+  connections: connectionsRouter,
 });
 
 export type AppRouter = typeof appRouter;

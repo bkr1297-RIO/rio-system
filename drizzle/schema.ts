@@ -122,6 +122,26 @@ export const policies = mysqlTable("policies", {
 export type Policy = typeof policies.$inferSelect;
 export type InsertPolicy = typeof policies.$inferInsert;
 
+// ── User Connections (OAuth tokens per user per provider) ─────────────────
+
+export const userConnections = mysqlTable("user_connections", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull(),
+  provider: varchar("provider", { length: 64 }).notNull(), // gmail, google_calendar, google_drive, github, slack, outlook
+  providerAccountId: varchar("provider_account_id", { length: 256 }), // email or username on the provider
+  providerAccountName: varchar("provider_account_name", { length: 256 }), // display name
+  accessToken: text("access_token"),
+  refreshToken: text("refresh_token"),
+  tokenExpiresAt: timestamp("token_expires_at"),
+  scopes: text("scopes"), // comma-separated list of granted scopes
+  status: mysqlEnum("status", ["connected", "expired", "revoked", "error"]).default("connected").notNull(),
+  connectedAt: timestamp("connected_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().onUpdateNow().notNull(),
+});
+
+export type UserConnection = typeof userConnections.$inferSelect;
+export type InsertUserConnection = typeof userConnections.$inferInsert;
+
 export const ledger = mysqlTable("ledger", {
   id: int("id").autoincrement().primaryKey(),
   blockId: varchar("blockId", { length: 64 }).notNull().unique(),
