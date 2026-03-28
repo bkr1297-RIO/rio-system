@@ -4,7 +4,7 @@
  * Network-first for all requests in dev; cache static assets only in production.
  */
 
-const CACHE_NAME = "bondi-v3";
+const CACHE_NAME = "bondi-v4";
 
 // Pre-cache the app shell on install
 const APP_SHELL = [
@@ -33,9 +33,11 @@ self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // API calls: always go to network
+  // API calls: DO NOT intercept — let the browser handle them directly.
+  // Using event.respondWith(fetch(request)) strips credentials (cookies).
+  // By simply returning without calling event.respondWith(), the browser
+  // handles the request natively, preserving credentials: "include".
   if (url.pathname.startsWith("/api/")) {
-    event.respondWith(fetch(request));
     return;
   }
 
@@ -48,7 +50,6 @@ self.addEventListener("fetch", (event) => {
     url.searchParams.has("v") ||
     url.searchParams.has("t")
   ) {
-    event.respondWith(fetch(request));
     return;
   }
 
