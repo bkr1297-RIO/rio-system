@@ -260,6 +260,21 @@ describe("Guided Demo — Nutshell definition of RIO", () => {
     expect(content).toContain("permanent record");
     expect(content).toContain("learn over time");
   });
+
+  it("StepIntro includes the 'email is just one example' paragraph", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("email is just one way the system");
+    expect(content).toContain("cancel services like unused or unwanted subscriptions");
+    expect(content).toContain("meetings, submit requests, and follow up on important things");
+    expect(content).toContain("always asks before acting");
+    expect(content).toContain("always keeps a record");
+    expect(content).toContain("what would you want it to do for you");
+  });
 });
 
 describe("Guided Demo — Phone notification mockup", () => {

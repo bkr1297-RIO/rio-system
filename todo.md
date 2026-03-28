@@ -380,3 +380,4 @@
 - [x] Nav Style: Give the "See What RIO Makes Possible for You" nav link a subtle gold highlight to stand out
 - [x] Alert Step: Add animated phone notification mockup sliding in to reinforce "you get an alert on your phone"
 - [x] Demo Tracking: Add DB schema, backend procedure, and frontend counter to track demo completion and drop-off per step
+- [x] Demo Intro: Add paragraph after nutshell definition about email being just one example — cancel subscriptions, schedule meetings, submit requests, follow up — always asks before acting, always keeps a record, "what would you want it to do for you?"

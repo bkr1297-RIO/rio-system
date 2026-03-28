@@ -79,6 +79,16 @@ function StepIntro({ onNext }: { onNext: () => void }) {
         </p>
       </div>
 
+      {/* What it can do — email is just one example */}
+      <p className="text-base sm:text-lg leading-relaxed text-left w-full mb-6" style={{ color: "#d1d5db" }}>
+        In this demo, you'll see an example using email — but email is just one way the system
+        can act for you. It can also cancel services like unused or unwanted subscriptions, schedule
+        meetings, submit requests, and follow up on important things. The key is that it{" "}
+        <strong style={{ color: "#ffffff" }}>always asks before acting</strong> and{" "}
+        <strong style={{ color: "#ffffff" }}>always keeps a record</strong>.{" "}
+        <em style={{ color: "#b8963e" }}>If you had an assistant that worked this way, what would you want it to do for you?</em>
+      </p>
+
       {/* Expanded context */}
       <div className="space-y-5 text-left w-full">
         <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
