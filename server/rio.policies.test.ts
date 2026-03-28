@@ -1,6 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
+
+// Mock notifyOwner to prevent sending real emails during tests
+vi.mock("./_core/notification", () => ({
+  notifyOwner: vi.fn().mockResolvedValue(true),
+}));
 
 /**
  * Tests for RIO Priority features:

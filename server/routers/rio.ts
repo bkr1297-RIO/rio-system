@@ -255,11 +255,21 @@ export const rioRouter = router({
       action: z.string(),
       requester: z.string(),
       description: z.string(),
+      origin: z.string().optional(),
     }))
     .mutation(async ({ input }) => {
+      // Build a proper approval link — use /app (Bondi workspace) Approvals tab
+      const baseUrl = input.origin || "";
+      const approvalLink = `${baseUrl}/app`;
+
       const success = await notifyOwner({
         title: `RIO: Approval Required — ${input.action.replace(/_/g, " ")}`,
-        content: `${input.requester} wants to ${input.description}. Intent ID: ${input.intentId}. Go to /go to approve or deny.`,
+        content: [
+          `${input.requester} wants to ${input.description}.`,
+          `Intent ID: ${input.intentId}`,
+          ``,
+          `Open Bondi to review and approve or deny: ${approvalLink}`,
+        ].join("\n"),
       });
       return { notified: success, intentId: input.intentId };
     }),

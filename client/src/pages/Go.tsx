@@ -391,6 +391,7 @@ export default function Go() {
         action: scenario.action,
         requester: scenario.requester,
         description: scenario.description,
+        origin: window.location.origin,
       }).catch(() => {});
     } catch {
       setFlowState("reviewing");
