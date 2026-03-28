@@ -386,3 +386,5 @@
 - [x] Progress Bar: Tighten step progress bar on mobile/phone screens — smaller circles, horizontal-only, less vertical space
 - [x] Home page: Center hero text on mobile (Runtime Intelligence Orchestration and tagline are left-aligned on phone, should be centered)
 - [x] Demo: Rename "your AI assistant" to "Bondi — Your Digital Chief of Staff" throughout the guided demo
+- [x] License: Change package.json license from MIT to UNLICENSED (proprietary)
+- [x] Bug: Fix JSX syntax error in GuidedDemo.tsx line 91 (transient esbuild error, resolved on HMR refresh)
