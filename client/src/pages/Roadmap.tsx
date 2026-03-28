@@ -238,7 +238,7 @@ export default function Roadmap() {
         }}
       >
         <p className="text-xs" style={{ color: "#6b7280" }}>
-          &copy; 2025–2026 RIO Protocol Authors. All rights reserved.
+          &copy; 2025–2026 RIO Protocol. All rights reserved.
         </p>
       </footer>
     </div>

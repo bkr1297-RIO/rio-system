@@ -6,7 +6,7 @@
  */
 
 import { z } from "zod";
-import { publicProcedure, router } from "../_core/trpc";
+import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { notifyOwner } from "../_core/notification";
 import {
   createIntent,
@@ -199,13 +199,16 @@ export const rioRouter = router({
       parameters: z.record(z.string(), z.string()),
       mode: z.enum(["live", "simulated"]),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
+      // Pass the authenticated user's ID so connectors can use per-user OAuth tokens
+      const userId = (ctx as any).user?.id as number | undefined;
       const result = await connectorRegistry.execute({
         intentId: input.intentId,
         receiptId: input.receiptId,
         action: input.action,
         parameters: input.parameters as Record<string, string>,
         mode: input.mode,
+        userId,
       });
       return result;
     }),

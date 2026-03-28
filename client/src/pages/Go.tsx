@@ -499,6 +499,17 @@ export default function Go() {
       <NavBar />
 
       <div className="max-w-2xl mx-auto px-4 pt-12 pb-24">
+        {/* ── Bondi Header ── */}
+        <div className="flex flex-col items-center mb-8">
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/bondi-logo_858ccd3b.png"
+            alt="Bondi"
+            className="w-16 h-16 mb-3"
+          />
+          <h1 className="text-2xl font-bold tracking-wide" style={{ color: "#e5e7eb" }}>Bondi</h1>
+          <p className="text-xs tracking-widest uppercase mt-1" style={{ color: "#6b7280" }}>Your Digital Chief of Staff — Secured by RIO</p>
+        </div>
+
         {/* ── Mode Toggle ── */}
         <div className="flex items-center justify-center gap-3 mb-6">
           <button
@@ -1052,7 +1063,7 @@ export default function Go() {
           color: "#6b7280",
         }}
       >
-        RIO Protocol — Runtime Intelligence Orchestration — Brian K. Rasmussen
+        © 2025–2026 RIO Protocol. All rights reserved.
       </footer>
     </div>
   );

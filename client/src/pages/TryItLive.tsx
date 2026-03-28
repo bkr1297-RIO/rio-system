@@ -537,7 +537,7 @@ export default function TryItLive() {
           color: "#6b7280",
         }}
       >
-        RIO Protocol — Runtime Intelligence Orchestration
+        © 2025–2026 RIO Protocol. All rights reserved.
       </footer>
     </div>
   );

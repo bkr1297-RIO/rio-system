@@ -2,8 +2,11 @@
  * Gmail Connector
  *
  * Executes email actions through Gmail after RIO authorization.
- * Live mode calls the Gmail MCP tool (gmail_send_messages) via CLI.
- * Simulated mode returns a simulated success.
+ *
+ * Execution priority:
+ *   1. Per-user OAuth token → calls Gmail REST API directly
+ *   2. Sandbox MCP CLI fallback → calls gmail MCP tool (developer credentials)
+ *   3. Simulated mode → returns a simulated success
  *
  * The connector NEVER executes without a valid receipt and ledger entry.
  */
@@ -17,6 +20,8 @@ import type {
   ExecutionResult,
 } from "./base";
 import { executeMcpTool } from "./cli-executor";
+import { getValidGoogleToken } from "../oauth/google";
+import { gmailSendMessage, gmailSearchMessages } from "./google-api";
 
 const GMAIL_CAPABILITIES: ConnectorCapability[] = [
   {
@@ -69,9 +74,111 @@ export class GmailConnector implements RIOConnector {
       };
     }
 
-    // ── Live Mode — Real Gmail Execution via MCP ──
+    // ── Live Mode ──
+    // Try per-user OAuth token first, then fall back to MCP CLI
+    const userToken = request.userId
+      ? await getValidGoogleToken(request.userId, "gmail")
+      : null;
+
+    if (userToken) {
+      return this.executeWithUserToken(request, base, userToken);
+    }
+
+    // Fallback to MCP CLI (developer credentials)
+    console.log(`[RIO Gmail Connector] No user token — falling back to MCP CLI`);
+    return this.executeWithMcpCli(request, base);
+  }
+
+  // ── Per-User OAuth Token Execution ──────────────────────────────────────
+
+  private async executeWithUserToken(
+    request: ExecutionRequest,
+    base: Omit<ExecutionResult, "success" | "detail">,
+    accessToken: string
+  ): Promise<ExecutionResult> {
     try {
-      console.log(`[RIO Gmail Connector] LIVE execution starting`);
+      console.log(`[RIO Gmail Connector] LIVE execution with user OAuth token`);
+      console.log(`  Intent: ${request.intentId}`);
+      console.log(`  Receipt: ${request.receiptId}`);
+      console.log(`  User: ${request.userId}`);
+
+      if (request.action === "send_email") {
+        const result = await gmailSendMessage(
+          accessToken,
+          request.parameters.to,
+          request.parameters.subject,
+          request.parameters.body || request.parameters.content || ""
+        );
+
+        if (result.success) {
+          const messageId = (result.data as any)?.id || "";
+          console.log(`[RIO Gmail Connector] Email sent via user token. Message ID: ${messageId}`);
+          return {
+            ...base,
+            success: true,
+            detail: `Email sent to ${request.parameters.to} — Subject: "${request.parameters.subject}". Delivered via your connected Gmail account. Receipt: ${request.receiptId}`,
+            externalId: messageId,
+          };
+        } else {
+          console.error(`[RIO Gmail Connector] User token API call failed:`, result.error);
+          return {
+            ...base,
+            success: false,
+            detail: `Gmail execution attempted with your account but failed. The receipt and ledger entry still exist as proof of authorization.`,
+            error: result.error || "Gmail API call failed",
+          };
+        }
+      }
+
+      if (request.action === "search_email") {
+        const result = await gmailSearchMessages(
+          accessToken,
+          request.parameters.query || request.parameters.q || "",
+          10
+        );
+
+        return {
+          ...base,
+          success: result.success,
+          detail: result.success
+            ? `Search completed for "${request.parameters.query || request.parameters.q}". Results returned from your Gmail account.`
+            : `Search failed.`,
+          error: result.success ? undefined : result.error,
+        };
+      }
+
+      // draft_email — use send with draft flag (or fall back to MCP)
+      if (request.action === "draft_email") {
+        // Gmail API draft creation requires a different endpoint
+        // Fall back to MCP for drafts
+        return this.executeWithMcpCli(request, base);
+      }
+
+      return {
+        ...base,
+        success: false,
+        detail: `Unknown Gmail action: ${request.action}`,
+        error: "Unsupported action",
+      };
+    } catch (err) {
+      console.error(`[RIO Gmail Connector] User token execution error:`, err);
+      return {
+        ...base,
+        success: false,
+        detail: `Gmail execution failed unexpectedly. Receipt and ledger entry preserved.`,
+        error: err instanceof Error ? err.message : "Unknown error",
+      };
+    }
+  }
+
+  // ── MCP CLI Fallback Execution ──────────────────────────────────────────
+
+  private async executeWithMcpCli(
+    request: ExecutionRequest,
+    base: Omit<ExecutionResult, "success" | "detail">
+  ): Promise<ExecutionResult> {
+    try {
+      console.log(`[RIO Gmail Connector] LIVE execution via MCP CLI`);
       console.log(`  Intent: ${request.intentId}`);
       console.log(`  Receipt: ${request.receiptId}`);
       console.log(`  To: ${request.parameters.to}`);
@@ -89,11 +196,11 @@ export class GmailConnector implements RIOConnector {
         });
 
         if (result.success) {
-          console.log(`[RIO Gmail Connector] Email sent successfully`);
+          console.log(`[RIO Gmail Connector] Email sent successfully via MCP`);
           return {
             ...base,
             success: true,
-            detail: `Email sent to ${request.parameters.to} — Subject: "${request.parameters.subject}". Delivered via Gmail. Receipt: ${request.receiptId}`,
+            detail: `Email sent to ${request.parameters.to} — Subject: "${request.parameters.subject}". Delivered via Gmail (MCP). Receipt: ${request.receiptId}`,
             externalId: `gmail-${Date.now()}`,
           };
         } else {
@@ -108,7 +215,6 @@ export class GmailConnector implements RIOConnector {
       }
 
       if (request.action === "draft_email") {
-        // Draft also uses gmail_send_messages — the MCP UI gives option to save as draft
         const result = await executeMcpTool("gmail", "gmail_send_messages", {
           messages: [
             {
@@ -153,7 +259,7 @@ export class GmailConnector implements RIOConnector {
         error: "Unsupported action",
       };
     } catch (err) {
-      console.error(`[RIO Gmail Connector] Execution error:`, err);
+      console.error(`[RIO Gmail Connector] MCP execution error:`, err);
       return {
         ...base,
         success: false,
@@ -172,7 +278,7 @@ export class GmailConnector implements RIOConnector {
       status: this.status,
       capabilities: this.capabilities,
       description:
-        "Send, draft, and search emails through Gmail. Connected via MCP tools with user confirmation.",
+        "Send, draft, and search emails through Gmail. Uses your connected Google account when available, with MCP fallback.",
     };
   }
 }

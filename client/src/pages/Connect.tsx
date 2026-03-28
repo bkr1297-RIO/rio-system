@@ -4,10 +4,9 @@
  * Shows all available connectors, their connection status,
  * capabilities, and how to connect them.
  *
- * Now uses real OAuth flow:
- *   - "Connect Google Apps" button redirects to Google consent screen
- *   - Shows "Connected as [email]" when user has active OAuth tokens
- *   - Disconnect button revokes tokens and removes connections
+ * Supports real OAuth flow for:
+ *   - Google (Gmail, Drive, Calendar)
+ *   - GitHub (Issues, PRs, Commits)
  */
 
 import { useState, useEffect } from "react";
@@ -106,7 +105,8 @@ function RiskBadge({ level }: { level: string }) {
 
 export default function Connect() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
-  const [disconnecting, setDisconnecting] = useState(false);
+  const [disconnectingGoogle, setDisconnectingGoogle] = useState(false);
+  const [disconnectingGithub, setDisconnectingGithub] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -115,19 +115,33 @@ export default function Connect() {
     const params = new URLSearchParams(window.location.search);
     if (params.get("success") === "google") {
       setSuccessMessage("Google apps connected successfully! Gmail, Drive, and Calendar are now live.");
-      // Clean URL
+      window.history.replaceState({}, "", "/connect");
+    }
+    if (params.get("success") === "github") {
+      setSuccessMessage("GitHub connected successfully! Issues, PRs, and commits are now live.");
       window.history.replaceState({}, "", "/connect");
     }
     if (params.get("error")) {
+      const errorCode = params.get("error")!;
       const errorMap: Record<string, string> = {
-        denied: "You denied the Google authorization request.",
-        missing_params: "Missing parameters from Google callback.",
+        denied: "You denied the authorization request.",
+        google_denied: "You denied the Google authorization request.",
+        github_denied: "You denied the GitHub authorization request.",
+        missing_params: "Missing parameters from callback.",
+        google_missing_params: "Missing parameters from Google callback.",
+        github_missing_params: "Missing parameters from GitHub callback.",
         invalid_state: "Invalid state parameter. Please try again.",
+        google_invalid_state: "Invalid state from Google. Please try again.",
+        github_invalid_state: "Invalid state from GitHub. Please try again.",
         expired_state: "Authorization request expired. Please try again.",
-        callback_failed: "Google OAuth callback failed. Please try again.",
+        google_expired_state: "Google authorization expired. Please try again.",
+        github_expired_state: "GitHub authorization expired. Please try again.",
+        callback_failed: "OAuth callback failed. Please try again.",
+        google_callback_failed: "Google OAuth callback failed. Please try again.",
+        github_callback_failed: "GitHub OAuth callback failed. Please try again.",
         db_unavailable: "Database unavailable. Please try again later.",
       };
-      setErrorMessage(errorMap[params.get("error")!] || "An error occurred during connection.");
+      setErrorMessage(errorMap[errorCode] || "An error occurred during connection.");
       window.history.replaceState({}, "", "/connect");
     }
   }, []);
@@ -147,13 +161,18 @@ export default function Connect() {
     refetchOnWindowFocus: false,
   });
 
+  // GitHub connection status
+  const { data: githubStatus, refetch: refetchGithubStatus } = trpc.connections.githubStatus.useQuery(undefined, {
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: false,
+  });
+
   const handleConnectGoogle = () => {
-    // Redirect to the Google OAuth start endpoint
     window.location.href = "/api/oauth/google/start";
   };
 
   const handleDisconnectGoogle = async () => {
-    setDisconnecting(true);
+    setDisconnectingGoogle(true);
     try {
       const response = await fetch("/api/oauth/google/disconnect", {
         method: "POST",
@@ -170,13 +189,40 @@ export default function Connect() {
     } catch {
       setErrorMessage("Failed to disconnect Google apps.");
     } finally {
-      setDisconnecting(false);
+      setDisconnectingGoogle(false);
+    }
+  };
+
+  const handleConnectGithub = () => {
+    window.location.href = "/api/oauth/github/start";
+  };
+
+  const handleDisconnectGithub = async () => {
+    setDisconnectingGithub(true);
+    try {
+      const response = await fetch("/api/oauth/github/disconnect", {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSuccessMessage("GitHub disconnected.");
+        refetch();
+        refetchGithubStatus();
+      } else {
+        setErrorMessage("Failed to disconnect GitHub.");
+      }
+    } catch {
+      setErrorMessage("Failed to disconnect GitHub.");
+    } finally {
+      setDisconnectingGithub(false);
     }
   };
 
   const handleRefresh = () => {
     refetch();
     refetchGoogleStatus();
+    refetchGithubStatus();
   };
 
   const connectedCount = connectors?.filter((c) => c.userConnected).length ?? 0;
@@ -184,6 +230,7 @@ export default function Connect() {
   const totalActions = actions?.length ?? 0;
 
   const isGoogleConnected = googleStatus?.connected ?? false;
+  const isGithubConnected = githubStatus?.connected ?? false;
 
   return (
     <div
@@ -196,22 +243,21 @@ export default function Connect() {
       <div className="max-w-4xl mx-auto">
         {/* ── Header ── */}
         <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 mb-4">
-            <Shield className="w-5 h-5" style={{ color: "#b8963e" }} />
-            <span
-              className="text-sm font-medium tracking-wider uppercase"
-              style={{ color: "#b8963e" }}
-            >
-              RIO Connectors
-            </span>
-          </div>
-          <h1 className="text-4xl font-bold text-white mb-3">
+          <img
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/bondi-logo_858ccd3b.png"
+            alt="Bondi"
+            className="w-20 h-20 mx-auto mb-4"
+          />
+          <h1 className="text-4xl font-bold text-white mb-2">
             Connect Your Apps
           </h1>
+          <p className="text-xs tracking-widest uppercase mb-3" style={{ color: "#6b7280" }}>
+            Bondi — Your Digital Chief of Staff — Secured by RIO
+          </p>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            RIO sits between AI and your systems. Every action — email, file,
-            event, commit — goes through governance. Connect your apps to enable
-            live execution with cryptographic receipts.
+            Bondi uses your apps on your behalf — Gmail, Drive, Calendar, GitHub.
+            Every action goes through RIO governance with cryptographic receipts.
+            Connect your accounts to enable live execution.
           </p>
         </div>
 
@@ -262,9 +308,10 @@ export default function Connect() {
           </div>
         )}
 
-        {/* ── Google Connection Card ── */}
+        {/* ── OAuth Connection Cards ── */}
         {isAuthenticated && (
-          <div className="mb-10">
+          <div className="mb-10 space-y-4">
+            {/* Google Connection Card */}
             <Card className="border-blue-500/30 border" style={{ backgroundColor: "rgba(255,255,255,0.03)" }}>
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
@@ -299,10 +346,10 @@ export default function Connect() {
                         variant="outline"
                         className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300"
                         onClick={handleDisconnectGoogle}
-                        disabled={disconnecting}
+                        disabled={disconnectingGoogle}
                       >
                         <Unlink className="w-4 h-4 mr-2" />
-                        {disconnecting ? "Disconnecting..." : "Disconnect"}
+                        {disconnectingGoogle ? "Disconnecting..." : "Disconnect"}
                       </Button>
                     ) : (
                       <Button
@@ -334,6 +381,76 @@ export default function Connect() {
                           </span>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* GitHub Connection Card */}
+            <Card className="border-purple-500/30 border" style={{ backgroundColor: "rgba(255,255,255,0.03)" }}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center">
+                      <Github className="w-7 h-7 text-purple-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white text-lg font-semibold">GitHub</h3>
+                      {isGithubConnected ? (
+                        <div className="flex items-center gap-2 mt-1">
+                          <User className="w-3 h-3 text-emerald-400" />
+                          <span className="text-emerald-400 text-sm">
+                            Connected as {githubStatus?.username || githubStatus?.email}
+                          </span>
+                        </div>
+                      ) : (
+                        <p className="text-gray-400 text-sm mt-1">
+                          Connect your GitHub account for issues, PRs, and commits
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    {isGithubConnected ? (
+                      <Button
+                        variant="outline"
+                        className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                        onClick={handleDisconnectGithub}
+                        disabled={disconnectingGithub}
+                      >
+                        <Unlink className="w-4 h-4 mr-2" />
+                        {disconnectingGithub ? "Disconnecting..." : "Disconnect"}
+                      </Button>
+                    ) : (
+                      <Button
+                        className="text-white font-medium"
+                        style={{ backgroundColor: "#6e40c9" }}
+                        onClick={handleConnectGithub}
+                      >
+                        <Github className="w-4 h-4 mr-2" />
+                        Connect GitHub
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Show GitHub connection details */}
+                {isGithubConnected && (
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <div className="flex gap-3 flex-wrap">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span className="text-sm text-emerald-300">Issues</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span className="text-sm text-emerald-300">Pull Requests</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span className="text-sm text-emerald-300">Commits</span>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -379,8 +496,17 @@ export default function Connect() {
               ) ?? [];
 
               const isGoogleProvider = GOOGLE_PROVIDERS.includes(connector.id);
-              const effectiveConnected = isGoogleProvider ? isGoogleConnected : connector.userConnected;
-              const effectiveEmail = isGoogleProvider ? googleStatus?.email : connector.userEmail;
+              const isGithubProvider = connector.id === "github";
+              const effectiveConnected = isGoogleProvider
+                ? isGoogleConnected
+                : isGithubProvider
+                  ? isGithubConnected
+                  : connector.userConnected;
+              const effectiveEmail = isGoogleProvider
+                ? googleStatus?.email
+                : isGithubProvider
+                  ? (githubStatus?.username || githubStatus?.email)
+                  : connector.userEmail;
 
               return (
                 <Card
@@ -449,7 +575,7 @@ export default function Connect() {
                         Running in simulated mode. Connect your account above to enable live execution.
                       </div>
                     )}
-                    {!effectiveConnected && connector.status === "connected" && !isGoogleProvider && (
+                    {!effectiveConnected && connector.status === "connected" && !isGoogleProvider && !isGithubProvider && (
                       <div className="flex items-center gap-2 text-xs text-blue-400/70">
                         <Link2 className="w-3 h-3" />
                         Connected via developer credentials. Connect your own account for production use.
@@ -469,7 +595,6 @@ export default function Connect() {
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { name: "GitHub OAuth", icon: "🔑", platform: "GitHub" },
               { name: "Outlook", icon: "📧", platform: "Microsoft" },
               { name: "Slack", icon: "💬", platform: "Slack" },
               { name: "OneDrive", icon: "☁️", platform: "Microsoft" },

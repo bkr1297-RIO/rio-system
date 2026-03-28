@@ -30,6 +30,8 @@ export interface ExecutionRequest {
   action: string;
   parameters: Record<string, string>;
   mode: ExecutionMode;
+  /** The authenticated user's numeric ID — used to look up per-user OAuth tokens */
+  userId?: number;
 }
 
 export interface ExecutionResult {

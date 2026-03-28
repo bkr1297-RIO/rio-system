@@ -222,12 +222,12 @@
 - [x] Vitest: Tests for GitHub connector
 - [x] Vitest: Tests for live Drive and Calendar connectors
 - [x] Vitest: Tests for onboarding page (covered by connector registry tests)
-- [ ] Branding: Update LinkedIn link to Brian/RIO LinkedIn (not Manus)
-- [ ] Branding: Update GitHub link to RIO GitHub repository
-- [ ] Branding: Remove or update any Twitter/X links to RIO account
-- [ ] Branding: Update footer copyright to RIO
-- [ ] Branding: Update contact email to RIO contact email (Riomethod5@gmail.com)
-- [ ] Branding: Ensure all branding shows RIO as the product, not Manus
+- [x] Branding: Update LinkedIn link to Brian/RIO LinkedIn (linkedin.com/in/bkr-rio)
+- [x] Branding: Update GitHub link to RIO GitHub repository (bkr1297-RIO/rio-protocol)
+- [x] Branding: Remove or update any Twitter/X links to RIO account (none existed)
+- [x] Branding: Update footer copyright to RIO
+- [x] Branding: Update contact email to RIO contact email (Riomethod5@gmail.com)
+- [x] Branding: Ensure all branding shows RIO as the product, not Manus
 - [x] Live Gmail: Test end-to-end live Gmail send (approve → receipt → ledger → send) — Message ID: 19d31cd0e6e52e58
 - [x] GitHub Push: Sync connector architecture to rio-system repo — commit 76d0bca pushed to main
 - [x] OAuth: Create user_connections DB table (user_id, provider, access_token, refresh_token, email, connected_at)
@@ -240,10 +240,36 @@
 - [x] OAuth: Update /connect page with real OAuth connect/disconnect buttons
 - [x] OAuth: Write vitest tests for OAuth flow
 - [x] OAuth: Implement Google OAuth flow for Gmail/Drive/Calendar
-- [ ] OAuth: Implement GitHub OAuth flow
+- [x] OAuth: Implement GitHub OAuth flow
 - [x] OAuth: Store tokens per user in database
-- [ ] OAuth: Connector registry uses user tokens, not global tokens
+- [x] OAuth: Connector registry uses user tokens, not global tokens
 - [x] OAuth: /connect page shows "Connected as [user email/username]"
 - [ ] Slack: Add Slack webhook connector (HTTP POST, no OAuth needed)
 - [ ] Slack: Add Slack scenario to /go page
 - [ ] Onboarding: Build onboarding flow (Connect apps → Install app → Start using)
+- [x] Per-User Tokens: Wire Gmail connector to use per-user OAuth tokens from getValidGoogleToken()
+- [x] Per-User Tokens: Wire Google Drive connector to use per-user OAuth tokens
+- [x] Per-User Tokens: Wire Google Calendar connector to use per-user OAuth tokens
+- [x] Per-User Tokens: Fallback to simulated mode if user has no connected account (falls back to CLI, not simulated)
+- [x] GitHub OAuth: Build server-side GitHub OAuth start endpoint
+- [x] GitHub OAuth: Build server-side GitHub OAuth callback with token storage
+- [x] GitHub OAuth: Build disconnect/revoke endpoint
+- [x] GitHub OAuth: Wire GitHub connector to use per-user OAuth tokens
+- [x] GitHub OAuth: Update /connect page with GitHub connect/disconnect button
+- [x] Branding: Update LinkedIn link to Bondi/RIO owner (already linkedin.com/in/bkr-rio)
+- [x] Branding: Update GitHub link to RIO repository (bkr1297-RIO/rio-protocol)
+- [x] Branding: Update footer copyright to © 2025–2026 RIO Protocol
+- [x] Branding: Update contact email to Riomethod5@gmail.com
+- [x] Branding: Remove developer placeholder links (none found)
+- [x] Vitest: Tests for per-user token connector wiring
+- [x] Vitest: Tests for GitHub OAuth flow
+- [ ] E2E: Verify full flow — connect Google → approve → execute with user tokens → receipt → ledger → verify
+- [x] Branding: Upload Bondi triangle/orbital logo (bottom-left) as CDN asset
+- [x] Branding: Add Bondi logo to /go page header
+- [x] Branding: Add Bondi logo to /connect page header
+- [x] Branding: Keep gold knot as RIO site logo in NavBar and Home hero
+- [x] Branding: Standardize all footers to "© 2025–2026 RIO Protocol. All rights reserved."
+- [x] Branding: Verify all GitHub links point to bkr1297-RIO/rio-protocol
+- [x] Branding: Verify LinkedIn link is linkedin.com/in/bkr-rio
+- [x] Branding: Verify contact email is Riomethod5@gmail.com
+- [x] Branding: Remove any placeholder/developer links

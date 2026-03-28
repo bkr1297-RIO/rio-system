@@ -117,6 +117,41 @@ export const connectionsRouter = router({
     }),
 
   /**
+   * Get GitHub connection status for the current user.
+   */
+  githubStatus: protectedProcedure
+    .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) return { connected: false, username: null, email: null };
+
+      const connections = await db.select({
+        status: userConnections.status,
+        providerAccountId: userConnections.providerAccountId,
+        providerAccountName: userConnections.providerAccountName,
+        connectedAt: userConnections.connectedAt,
+      })
+        .from(userConnections)
+        .where(and(
+          eq(userConnections.userId, ctx.user.id),
+          eq(userConnections.provider, "github"),
+        ))
+        .limit(1);
+
+      if (connections.length === 0) {
+        return { connected: false, username: null, email: null };
+      }
+
+      const conn = connections[0];
+      return {
+        connected: conn.status === "connected",
+        username: conn.providerAccountName,
+        email: conn.providerAccountId,
+        status: conn.status,
+        connectedAt: conn.connectedAt,
+      };
+    }),
+
+  /**
    * Public endpoint: Get connector status enriched with user connection data.
    * Used by the /connect page to show real connection status.
    * If user is not authenticated, returns base connector info without user-specific data.

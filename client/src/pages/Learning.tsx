@@ -555,7 +555,7 @@ export default function Learning() {
           color: "#6b7280",
         }}
       >
-        RIO Protocol — Runtime Intelligence Orchestration — Brian K. Rasmussen
+        © 2025–2026 RIO Protocol. All rights reserved.
       </footer>
     </div>
   );
