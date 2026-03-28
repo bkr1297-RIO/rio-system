@@ -6,6 +6,7 @@ import { rioRouter } from "./routers/rio";
 import { blogRouter } from "./routers/blog";
 import { connectionsRouter } from "./routers/connections";
 import { workspaceRouter } from "./routers/workspace";
+import { demoRouter } from "./routers/demo";
 
 export const appRouter = router({
   system: systemRouter,
@@ -31,6 +32,9 @@ export const appRouter = router({
 
   // Bondi workspace (inbox, calendar, drive, AI chat)
   workspace: workspaceRouter,
+
+  // Demo tracking
+  demo: demoRouter,
 });
 
 export type AppRouter = typeof appRouter;

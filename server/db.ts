@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blogPosts, InsertBlogPost } from "../drizzle/schema";
+import { InsertUser, users, blogPosts, InsertBlogPost, demoEvents, InsertDemoEvent } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -128,4 +128,42 @@ export async function deletePost(slug: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   await db.delete(blogPosts).where(eq(blogPosts.slug, slug));
+}
+
+// ── Demo Tracking ──────────────────────────────────────────────────────────────
+
+export async function recordDemoEvent(event: InsertDemoEvent) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(demoEvents).values(event);
+}
+
+export async function getDemoStats() {
+  const db = await getDb();
+  if (!db) return { totalSessions: 0, completions: 0, stepCounts: [] };
+
+  const allEvents = await db.select().from(demoEvents).orderBy(desc(demoEvents.createdAt));
+
+  const sessions = new Set(allEvents.map(e => e.sessionId));
+  const completions = allEvents.filter(e => e.action === "complete");
+  const completedSessions = new Set(completions.map(e => e.sessionId));
+
+  // Count unique sessions per step
+  const stepMap = new Map<number, Set<string>>();
+  for (const e of allEvents) {
+    if (e.action === "view") {
+      if (!stepMap.has(e.step)) stepMap.set(e.step, new Set());
+      stepMap.get(e.step)!.add(e.sessionId);
+    }
+  }
+
+  const stepCounts = Array.from(stepMap.entries())
+    .map(([step, s]) => ({ step, count: s.size }))
+    .sort((a, b) => a.step - b.step);
+
+  return {
+    totalSessions: sessions.size,
+    completions: completedSessions.size,
+    stepCounts,
+  };
 }

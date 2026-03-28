@@ -142,6 +142,20 @@ export const userConnections = mysqlTable("user_connections", {
 export type UserConnection = typeof userConnections.$inferSelect;
 export type InsertUserConnection = typeof userConnections.$inferInsert;
 
+// ── Demo Tracking ────────────────────────────────────────────────────────────────────
+
+export const demoEvents = mysqlTable("demo_events", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: varchar("session_id", { length: 64 }).notNull(),
+  step: int("step").notNull(), // 0-7 (Intro through Bridge)
+  stepLabel: varchar("step_label", { length: 32 }).notNull(),
+  action: varchar("action", { length: 32 }).notNull(), // "view", "approve", "deny", "complete"
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DemoEvent = typeof demoEvents.$inferSelect;
+export type InsertDemoEvent = typeof demoEvents.$inferInsert;
+
 export const ledger = mysqlTable("ledger", {
   id: int("id").autoincrement().primaryKey(),
   blockId: varchar("blockId", { length: 64 }).notNull().unique(),

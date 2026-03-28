@@ -43,6 +43,13 @@
       "when": 1774657181864,
       "tag": "0005_bright_mephistopheles",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1774727263306,
+      "tag": "0006_wandering_lester",
+      "breakpoints": true
     }
   ]
 }

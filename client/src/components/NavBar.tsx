@@ -11,6 +11,7 @@ interface NavLink {
   label: string;
   href: string;
   children?: NavChild[];
+  highlight?: boolean;
 }
 
 const navLinks: NavLink[] = [
@@ -29,7 +30,7 @@ const navLinks: NavLink[] = [
       { label: "Connect Apps", href: "/connect" },
     ],
   },
-  { label: "See How It Works", href: "/demo" },
+  { label: "See What RIO Makes Possible for You", href: "/demo", highlight: true },
   {
     label: "Demos",
     href: "#",
@@ -177,6 +178,20 @@ export default function NavBar() {
                     </div>
                   </div>
                 </div>
+              ) : link.highlight ? (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="px-3 py-1.5 text-sm font-semibold rounded transition-all duration-200 no-underline"
+                  style={{
+                    color: "#b8963e",
+                    border: "1px solid rgba(184, 150, 62, 0.4)",
+                    background: "rgba(184, 150, 62, 0.08)",
+                    textShadow: "0 0 8px rgba(184, 150, 62, 0.3)",
+                  }}
+                >
+                  <span className="hover:opacity-90">{link.label}</span>
+                </Link>
               ) : (
                 <Link
                   key={link.href}
@@ -295,6 +310,19 @@ export default function NavBar() {
                   </div>
                 )}
               </div>
+            ) : link.highlight ? (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="block py-2.5 text-sm font-semibold no-underline"
+                style={{
+                  color: "#b8963e",
+                  textShadow: "0 0 8px rgba(184, 150, 62, 0.3)",
+                }}
+                onClick={() => setMobileOpen(false)}
+              >
+                ✦ {link.label}
+              </Link>
             ) : (
               <Link
                 key={link.href}

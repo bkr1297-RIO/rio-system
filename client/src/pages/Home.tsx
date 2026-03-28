@@ -72,7 +72,7 @@ export default function Home() {
               {" "}{"\u2014"} RIO creates a closed-loop system where every action is authorized, executed, verified,
               recorded, and used to improve future decisions.
             </p>
-            {/* Primary CTA — See How It Works */}
+            {/* Primary CTA — See What RIO Makes Possible for You */}
             <div className="flex flex-col items-center gap-4 mt-6">
               <a
                 href="/demo"
@@ -83,7 +83,7 @@ export default function Home() {
                   boxShadow: "0 4px 20px rgba(184,150,62,0.3)",
                 }}
               >
-                See How It Works
+                See What RIO Makes Possible for You
               </a>
               <div className="flex flex-wrap justify-center gap-3">
                 <a

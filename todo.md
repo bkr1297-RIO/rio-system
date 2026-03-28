@@ -375,3 +375,8 @@
 - [x] Guided Demo: Add trust-building messaging to Intro step — governance evolves as trust builds between you and your assistant
 - [x] Guided Demo: Add trust-building messaging to Result step — not all actions carry the same risk, you decide which need approval based on context, recipients, trust
 - [x] Navigation: Add Demo link to main nav bar so it's accessible from every page
+- [x] Rename: Change "See How It Works" to "See What RIO Makes Possible for You" in NavBar, landing page, and demo header
+- [x] Demo Intro: Lead with nutshell definition — "A governed assistant that can take real-world actions for you, but only with your approval, and it keeps a permanent record of what it did and can learn over time"
+- [x] Nav Style: Give the "See What RIO Makes Possible for You" nav link a subtle gold highlight to stand out
+- [x] Alert Step: Add animated phone notification mockup sliding in to reinforce "you get an alert on your phone"
+- [x] Demo Tracking: Add DB schema, backend procedure, and frontend counter to track demo completion and drop-off per step

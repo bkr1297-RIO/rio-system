@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { trpc } from "@/lib/trpc";
 
 /*
  * GuidedDemo — /demo
@@ -52,18 +53,33 @@ const VERIFICATION_CHECKS = [
 function StepIntro({ onNext }: { onNext: () => void }) {
   return (
     <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
-      <div className="mb-8">
+      {/* Nutshell definition — the first thing they see */}
+      <div
+        className="mb-10 p-6 sm:p-8 rounded-xl border"
+        style={{
+          backgroundColor: "rgba(184,150,62,0.06)",
+          borderColor: "rgba(184,150,62,0.3)",
+          boxShadow: "0 0 30px rgba(184,150,62,0.08)",
+        }}
+      >
         <div
           className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
           style={{ backgroundColor: "rgba(184,150,62,0.15)", border: "2px solid rgba(184,150,62,0.3)" }}
         >
           <span className="text-4xl">🤖</span>
         </div>
-        <h2 className="text-2xl sm:text-3xl font-bold mb-6" style={{ color: "#ffffff" }}>
-          Your AI Assistant Wants to Take an Action
+        <h2 className="text-2xl sm:text-3xl font-bold mb-4" style={{ color: "#ffffff" }}>
+          What Is RIO?
         </h2>
+        <p className="text-lg sm:text-xl leading-relaxed" style={{ color: "#e5e7eb" }}>
+          A governed assistant that can take <strong style={{ color: "#b8963e" }}>real-world actions</strong> for you
+          — but <strong style={{ color: "#ffffff" }}>only with your approval</strong>. It keeps a{" "}
+          <strong style={{ color: "#ffffff" }}>permanent record</strong> of what it did, and it can{" "}
+          <strong style={{ color: "#22d3ee" }}>learn over time</strong>.
+        </p>
       </div>
 
+      {/* Expanded context */}
       <div className="space-y-5 text-left w-full">
         <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
           Imagine you have an AI assistant that manages your email, calendar, and files.
@@ -77,18 +93,12 @@ function StepIntro({ onNext }: { onNext: () => void }) {
           you get to decide which actions need your explicit approval and which can proceed on their own.
           That relationship <strong style={{ color: "#ffffff" }}>evolves over time as trust builds</strong>.
         </p>
-        <div
-          className="p-5 rounded-lg border-l-4"
-          style={{ backgroundColor: "rgba(184,150,62,0.08)", borderColor: "#b8963e" }}
-        >
-          <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#e5e7eb" }}>
-            <strong style={{ color: "#b8963e" }}>RIO</strong> is a governance system that sits between your AI assistant
-            and the real world. It makes sure the AI <strong style={{ color: "#ffffff" }}>cannot take any real-world action
-            without your explicit approval</strong>. And every decision — yours and the AI's — is permanently recorded
-            with cryptographic proof.
-          </p>
-        </div>
         <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
+          RIO sits between your AI assistant and the real world. It makes sure the AI cannot take
+          any real-world action without your explicit approval. And every decision — yours and the AI's
+          — is permanently recorded with cryptographic proof.
+        </p>
+        <p className="text-base sm:text-lg leading-relaxed font-medium" style={{ color: "#e5e7eb" }}>
           Let's walk through exactly how this works.
         </p>
       </div>
@@ -108,11 +118,13 @@ function StepIntro({ onNext }: { onNext: () => void }) {
 }
 
 function StepApprovalRequest({ onNext }: { onNext: () => void }) {
+  const [showPhone, setShowPhone] = useState(false);
   const [showCard, setShowCard] = useState(false);
 
   useEffect(() => {
-    const t = setTimeout(() => setShowCard(true), 600);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => setShowPhone(true), 400);
+    const t2 = setTimeout(() => setShowCard(true), 1800);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   return (
@@ -137,7 +149,90 @@ function StepApprovalRequest({ onNext }: { onNext: () => void }) {
         </p>
       </div>
 
-      {/* Simulated approval card */}
+      {/* Phone notification mockup */}
+      <div
+        className={`w-full max-w-xs mx-auto mb-8 transition-all duration-700 ${
+          showPhone ? "opacity-100 translate-y-0" : "opacity-0 translate-y-12"
+        }`}
+      >
+        <div
+          className="rounded-[2rem] p-3 relative"
+          style={{
+            backgroundColor: "#1a1a2e",
+            border: "3px solid #2a2a4a",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05)",
+          }}
+        >
+          {/* Phone notch */}
+          <div
+            className="w-24 h-5 rounded-full mx-auto mb-3"
+            style={{ backgroundColor: "#0a0a1a" }}
+          />
+          {/* Phone screen */}
+          <div className="rounded-xl p-4" style={{ backgroundColor: "#0f0f23" }}>
+            {/* Status bar */}
+            <div className="flex justify-between items-center mb-4 px-1">
+              <span className="text-[10px] font-medium" style={{ color: "#6b7280" }}>
+                {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+              </span>
+              <div className="flex gap-1">
+                <div className="w-3 h-1.5 rounded-sm" style={{ backgroundColor: "#4ade80" }} />
+                <div className="w-3 h-1.5 rounded-sm" style={{ backgroundColor: "#6b7280" }} />
+              </div>
+            </div>
+            {/* Notification banner */}
+            <div
+              className={`rounded-xl p-3.5 transition-all duration-500 ${
+                showPhone ? "opacity-100 scale-100" : "opacity-0 scale-95"
+              }`}
+              style={{
+                backgroundColor: "rgba(184,150,62,0.12)",
+                border: "1px solid rgba(184,150,62,0.3)",
+                boxShadow: "0 4px 16px rgba(184,150,62,0.1)",
+              }}
+            >
+              <div className="flex items-center gap-2 mb-2">
+                <span className="text-sm">🤖</span>
+                <span className="text-[11px] font-bold" style={{ color: "#b8963e" }}>BONDI</span>
+                <span className="text-[10px] ml-auto" style={{ color: "#6b7280" }}>now</span>
+              </div>
+              <p className="text-xs font-semibold mb-1" style={{ color: "#ffffff" }}>
+                Approval Needed: Send Email
+              </p>
+              <p className="text-[11px] leading-snug" style={{ color: "#9ca3af" }}>
+                To jane@company.com — "Weekly Report Summary"
+              </p>
+              <div className="flex gap-2 mt-3">
+                <div
+                  className="flex-1 py-1.5 rounded-lg text-center text-[11px] font-semibold"
+                  style={{ backgroundColor: "rgba(34,197,94,0.15)", color: "#4ade80" }}
+                >
+                  Approve
+                </div>
+                <div
+                  className="flex-1 py-1.5 rounded-lg text-center text-[11px] font-semibold"
+                  style={{ backgroundColor: "rgba(239,68,68,0.15)", color: "#f87171" }}
+                >
+                  Deny
+                </div>
+              </div>
+            </div>
+            {/* Placeholder content below notification */}
+            <div className="mt-3 space-y-2 opacity-30">
+              <div className="h-2 rounded-full w-3/4" style={{ backgroundColor: "#2a2a4a" }} />
+              <div className="h-2 rounded-full w-1/2" style={{ backgroundColor: "#2a2a4a" }} />
+              <div className="h-2 rounded-full w-2/3" style={{ backgroundColor: "#2a2a4a" }} />
+            </div>
+          </div>
+          {/* Phone home indicator */}
+          <div
+            className="w-28 h-1 rounded-full mx-auto mt-3"
+            style={{ backgroundColor: "#3a3a5a" }}
+          />
+        </div>
+      </div>
+
+      {/* Full approval card (desktop view) */}
       <div
         className={`w-full transition-all duration-700 ${showCard ? "opacity-100 translate-y-0" : "opacity-0 translate-y-8"}`}
       >
@@ -934,7 +1029,37 @@ export default function GuidedDemo() {
   const [step, setStep] = useState(0);
   const [decision, setDecision] = useState<"approved" | "denied">("approved");
 
+  // Stable session ID for tracking
+  const [sessionId] = useState(() => {
+    const stored = sessionStorage.getItem("rio_demo_session");
+    if (stored) return stored;
+    const id = `demo_${Date.now()}_${Math.random().toString(36).slice(2, 10)}`;
+    sessionStorage.setItem("rio_demo_session", id);
+    return id;
+  });
+
+  // Track step views
+  const trackStep = trpc.demo.trackStep.useMutation();
+
+  useEffect(() => {
+    const label = STEP_LABELS[step] ?? "unknown";
+    trackStep.mutate({
+      sessionId,
+      step,
+      stepLabel: label.toLowerCase(),
+      action: step === 7 ? "complete" : "view",
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, sessionId]);
+
   const handleDecide = (d: "approved" | "denied") => {
+    // Track the decision action
+    trackStep.mutate({
+      sessionId,
+      step: 2,
+      stepLabel: "decide",
+      action: d === "approved" ? "approve" : "deny",
+    });
     setDecision(d);
     setStep(3);
   };
@@ -965,7 +1090,7 @@ export default function GuidedDemo() {
           />
           <span className="text-lg font-bold" style={{ color: "#b8963e" }}>RIO</span>
           <span className="text-xs font-medium hidden sm:inline" style={{ color: "#6b7280" }}>
-            Guided Demo
+            See What RIO Makes Possible
           </span>
         </a>
         <a
