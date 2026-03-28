@@ -249,11 +249,16 @@ export function registerGoogleOAuthRoutes(app: Express) {
 
     const callbackUrl = getCallbackUrl(req);
 
-    // Encode user info in state for the callback
+    // Encode user info AND the callback URL in state for the callback.
+    // This is critical because when Google redirects back, the request
+    // headers will contain the internal Cloud Run host, not the custom domain.
+    // By storing the callback URL in state, we can reconstruct the exact same
+    // redirect_uri during token exchange.
     const state = Buffer.from(JSON.stringify({
       userId: user.id,
       openId: user.openId,
       ts: Date.now(),
+      callbackUrl,
     })).toString("base64url");
 
     const params = new URLSearchParams({
@@ -282,10 +287,23 @@ export function registerGoogleOAuthRoutes(app: Express) {
     const state = req.query.state as string | undefined;
     const error = req.query.error as string | undefined;
 
+    // Helper to build redirect URL using origin from state
+    const buildRedirect = (path: string, stateStr?: string) => {
+      if (stateStr) {
+        try {
+          const parsed = JSON.parse(Buffer.from(stateStr, "base64url").toString());
+          if (parsed.callbackUrl) {
+            return `${new URL(parsed.callbackUrl).origin}${path}`;
+          }
+        } catch { /* fall through */ }
+      }
+      return path;
+    };
+
     // User denied consent
     if (error) {
       console.log(`[OAuth Google] User denied consent: ${error}`);
-      res.redirect(302, "/connect?error=denied");
+      res.redirect(302, buildRedirect("/connect?error=denied", state));
       return;
     }
 
@@ -295,7 +313,7 @@ export function registerGoogleOAuthRoutes(app: Express) {
     }
 
     // Decode state
-    let stateData: { userId: number; openId: string; ts: number };
+    let stateData: { userId: number; openId: string; ts: number; callbackUrl?: string };
     try {
       stateData = JSON.parse(Buffer.from(state, "base64url").toString());
     } catch {
@@ -310,7 +328,11 @@ export function registerGoogleOAuthRoutes(app: Express) {
     }
 
     try {
-      const callbackUrl = getCallbackUrl(req);
+      // Use the callback URL from state (stored during /start) to ensure
+      // the redirect_uri matches exactly what was sent to Google originally.
+      // This prevents mismatches when deployed behind proxies/load balancers.
+      const callbackUrl = stateData.callbackUrl || getCallbackUrl(req);
+      console.log(`[OAuth Google] Token exchange using callback URL: ${callbackUrl}`);
       const tokens = await exchangeCodeForTokens(code, callbackUrl);
       const googleUser = await getGoogleUserInfo(tokens.access_token);
 
@@ -368,10 +390,13 @@ export function registerGoogleOAuthRoutes(app: Express) {
       }
 
       console.log(`[OAuth Google] All 3 Google providers connected for user ${stateData.userId}`);
-      res.redirect(302, "/connect?success=google");
+      // Redirect using the origin from the callback URL to stay on the user's domain
+      const redirectOrigin = stateData.callbackUrl ? new URL(stateData.callbackUrl).origin : "";
+      res.redirect(302, `${redirectOrigin}/connect?success=google`);
     } catch (err) {
       console.error("[OAuth Google] Callback failed:", err);
-      res.redirect(302, "/connect?error=callback_failed");
+      const errorRedirectOrigin = stateData.callbackUrl ? new URL(stateData.callbackUrl).origin : "";
+      res.redirect(302, `${errorRedirectOrigin}/connect?error=callback_failed`);
     }
   });
 

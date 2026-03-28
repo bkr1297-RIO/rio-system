@@ -310,3 +310,4 @@
 - [x] Bug Fix: Google OAuth redirect_uri_mismatch — frontend now passes window.location.origin to /start endpoint; server uses it to build callback URL matching the user's domain
 - [x] Bug Fix: Vitest sends real notification emails to owner — mocked notifyOwner in rio.policies.test.ts
 - [x] Bug Fix: RIO approval notifications say "Go to /go" with no real link — now includes proper link to /app (Bondi workspace)
+- [x] Bug Fix: Google OAuth callback fails after user authorizes — stored callbackUrl in state during /start so token exchange uses the correct redirect_uri (same fix applied to GitHub OAuth)

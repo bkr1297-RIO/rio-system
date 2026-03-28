@@ -200,11 +200,14 @@ export function registerGitHubOAuthRoutes(app: Express) {
 
     const callbackUrl = getCallbackUrl(req);
 
-    // Encode user info in state for the callback
+    // Encode user info AND the callback URL in state for the callback.
+    // This ensures the redirect_uri matches during token exchange even
+    // when deployed behind proxies that change the host header.
     const state = Buffer.from(JSON.stringify({
       userId: user.id,
       openId: user.openId,
       ts: Date.now(),
+      callbackUrl,
     })).toString("base64url");
 
     const params = new URLSearchParams({
@@ -243,7 +246,7 @@ export function registerGitHubOAuthRoutes(app: Express) {
     }
 
     // Decode state
-    let stateData: { userId: number; openId: string; ts: number };
+    let stateData: { userId: number; openId: string; ts: number; callbackUrl?: string };
     try {
       stateData = JSON.parse(Buffer.from(state, "base64url").toString());
     } catch {
@@ -258,7 +261,10 @@ export function registerGitHubOAuthRoutes(app: Express) {
     }
 
     try {
-      const callbackUrl = getCallbackUrl(req);
+      // Use the callback URL from state (stored during /start) to ensure
+      // the redirect_uri matches exactly what was sent to GitHub originally.
+      const callbackUrl = stateData.callbackUrl || getCallbackUrl(req);
+      console.log(`[OAuth GitHub] Token exchange using callback URL: ${callbackUrl}`);
       const tokens = await exchangeCodeForToken(code, callbackUrl);
       const githubUser = await getGitHubUser(tokens.access_token);
 
@@ -314,10 +320,12 @@ export function registerGitHubOAuthRoutes(app: Express) {
       }
 
       console.log(`[OAuth GitHub] GitHub connected for user ${stateData.userId}`);
-      res.redirect(302, "/connect?success=github");
+      const redirectOrigin = stateData.callbackUrl ? new URL(stateData.callbackUrl).origin : "";
+      res.redirect(302, `${redirectOrigin}/connect?success=github`);
     } catch (err) {
       console.error("[OAuth GitHub] Callback failed:", err);
-      res.redirect(302, "/connect?error=github_callback_failed");
+      const errorRedirectOrigin = stateData.callbackUrl ? new URL(stateData.callbackUrl).origin : "";
+      res.redirect(302, `${errorRedirectOrigin}/connect?error=github_callback_failed`);
     }
   });
 
