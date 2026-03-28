@@ -33,7 +33,11 @@ import {
   Unlink,
   AlertCircle,
   User,
+  MessageSquare,
+  Send,
+  Loader2,
 } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 // ── Icon mapping ──
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -41,6 +45,7 @@ const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   calendar: Calendar,
   "hard-drive": HardDrive,
   github: Github,
+  "message-square": MessageSquare,
 };
 
 // ── Platform colors ──
@@ -49,6 +54,7 @@ const PLATFORM_COLORS: Record<string, { bg: string; border: string; text: string
   github: { bg: "bg-purple-500/10", border: "border-purple-500/30", text: "text-purple-400" },
   microsoft: { bg: "bg-cyan-500/10", border: "border-cyan-500/30", text: "text-cyan-400" },
   apple: { bg: "bg-gray-500/10", border: "border-gray-500/30", text: "text-gray-400" },
+  slack: { bg: "bg-emerald-500/10", border: "border-emerald-500/30", text: "text-emerald-400" },
 };
 
 // ── Google provider IDs ──
@@ -107,6 +113,11 @@ export default function Connect() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [disconnectingGoogle, setDisconnectingGoogle] = useState(false);
   const [disconnectingGithub, setDisconnectingGithub] = useState(false);
+  const [disconnectingSlack, setDisconnectingSlack] = useState(false);
+  const [slackWebhookUrl, setSlackWebhookUrl] = useState("");
+  const [slackChannelName, setSlackChannelName] = useState("");
+  const [connectingSlack, setConnectingSlack] = useState(false);
+  const [testingSlack, setTestingSlack] = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
@@ -167,6 +178,56 @@ export default function Connect() {
     refetchOnWindowFocus: false,
   });
 
+  // Slack connection status
+  const { data: slackStatus, refetch: refetchSlackStatus } = trpc.connections.slackStatus.useQuery(undefined, {
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: false,
+  });
+
+  // Slack mutations
+  const connectSlackMutation = trpc.connections.connectSlack.useMutation({
+    onSuccess: () => {
+      setSuccessMessage("Slack webhook connected! Messages and alerts will be sent to your channel.");
+      setSlackWebhookUrl("");
+      setSlackChannelName("");
+      setConnectingSlack(false);
+      refetch();
+      refetchSlackStatus();
+    },
+    onError: (err) => {
+      setErrorMessage(err.message || "Failed to connect Slack.");
+      setConnectingSlack(false);
+    },
+  });
+
+  const disconnectSlackMutation = trpc.connections.disconnectSlack.useMutation({
+    onSuccess: () => {
+      setSuccessMessage("Slack disconnected.");
+      refetch();
+      refetchSlackStatus();
+      setDisconnectingSlack(false);
+    },
+    onError: () => {
+      setErrorMessage("Failed to disconnect Slack.");
+      setDisconnectingSlack(false);
+    },
+  });
+
+  const testSlackMutation = trpc.connections.testSlack.useMutation({
+    onSuccess: (data) => {
+      if (data.success) {
+        setSuccessMessage("Test message sent to Slack! Check your channel.");
+      } else {
+        setErrorMessage(data.error || "Slack test failed.");
+      }
+      setTestingSlack(false);
+    },
+    onError: (err) => {
+      setErrorMessage(err.message || "Slack test failed.");
+      setTestingSlack(false);
+    },
+  });
+
   const handleConnectGoogle = () => {
     window.location.href = `/api/oauth/google/start?origin=${encodeURIComponent(window.location.origin)}`;
   };
@@ -219,10 +280,33 @@ export default function Connect() {
     }
   };
 
+  const handleConnectSlack = () => {
+    if (!slackWebhookUrl.startsWith("https://hooks.slack.com/")) {
+      setErrorMessage("Webhook URL must start with https://hooks.slack.com/");
+      return;
+    }
+    setConnectingSlack(true);
+    connectSlackMutation.mutate({
+      webhookUrl: slackWebhookUrl,
+      channelName: slackChannelName || undefined,
+    });
+  };
+
+  const handleDisconnectSlack = () => {
+    setDisconnectingSlack(true);
+    disconnectSlackMutation.mutate();
+  };
+
+  const handleTestSlack = () => {
+    setTestingSlack(true);
+    testSlackMutation.mutate();
+  };
+
   const handleRefresh = () => {
     refetch();
     refetchGoogleStatus();
     refetchGithubStatus();
+    refetchSlackStatus();
   };
 
   const connectedCount = connectors?.filter((c) => c.userConnected).length ?? 0;
@@ -231,6 +315,7 @@ export default function Connect() {
 
   const isGoogleConnected = googleStatus?.connected ?? false;
   const isGithubConnected = githubStatus?.connected ?? false;
+  const isSlackConnected = slackStatus?.connected ?? false;
 
   return (
     <div
@@ -387,6 +472,126 @@ export default function Connect() {
               </CardContent>
             </Card>
 
+            {/* Slack Connection Card */}
+            <Card className="border-emerald-500/30 border" style={{ backgroundColor: "rgba(255,255,255,0.03)" }}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                      <MessageSquare className="w-7 h-7 text-emerald-400" />
+                    </div>
+                    <div>
+                      <h3 className="text-white text-lg font-semibold">Slack</h3>
+                      {isSlackConnected ? (
+                        <div className="flex items-center gap-2 mt-1">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                          <span className="text-emerald-400 text-sm">
+                            Connected — {slackStatus?.channelName || "Webhook"}
+                          </span>
+                        </div>
+                      ) : (
+                        <p className="text-gray-400 text-sm mt-1">
+                          Send messages and alerts via Incoming Webhooks
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {isSlackConnected && (
+                      <>
+                        <Button
+                          variant="outline"
+                          className="border-emerald-500/30 text-emerald-400 hover:bg-emerald-500/10"
+                          onClick={handleTestSlack}
+                          disabled={testingSlack}
+                        >
+                          {testingSlack ? (
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                          ) : (
+                            <Send className="w-4 h-4 mr-2" />
+                          )}
+                          {testingSlack ? "Sending..." : "Test"}
+                        </Button>
+                        <Button
+                          variant="outline"
+                          className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                          onClick={handleDisconnectSlack}
+                          disabled={disconnectingSlack}
+                        >
+                          <Unlink className="w-4 h-4 mr-2" />
+                          {disconnectingSlack ? "Disconnecting..." : "Disconnect"}
+                        </Button>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Webhook URL input — only when not connected */}
+                {!isSlackConnected && (
+                  <div className="mt-4 pt-4 border-t border-white/10 space-y-3">
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">Slack Incoming Webhook URL</label>
+                      <Input
+                        placeholder="https://hooks.slack.com/services/T.../B.../..."
+                        value={slackWebhookUrl}
+                        onChange={(e) => setSlackWebhookUrl(e.target.value)}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-gray-400 mb-1 block">Channel Name (optional)</label>
+                      <Input
+                        placeholder="#general"
+                        value={slackChannelName}
+                        onChange={(e) => setSlackChannelName(e.target.value)}
+                        className="bg-white/5 border-white/10 text-white placeholder:text-gray-500"
+                      />
+                    </div>
+                    <Button
+                      className="text-white font-medium w-full"
+                      style={{ backgroundColor: "#4A154B" }}
+                      onClick={handleConnectSlack}
+                      disabled={connectingSlack || !slackWebhookUrl}
+                    >
+                      {connectingSlack ? (
+                        <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      ) : (
+                        <Link2 className="w-4 h-4 mr-2" />
+                      )}
+                      {connectingSlack ? "Connecting..." : "Connect Slack"}
+                    </Button>
+                    <p className="text-xs text-gray-500">
+                      Create an Incoming Webhook in your Slack workspace settings at{" "}
+                      <a
+                        href="https://api.slack.com/messaging/webhooks"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-emerald-400 hover:underline"
+                      >
+                        api.slack.com/messaging/webhooks
+                      </a>
+                    </p>
+                  </div>
+                )}
+
+                {/* Connected details */}
+                {isSlackConnected && (
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <div className="flex gap-3 flex-wrap">
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span className="text-sm text-emerald-300">Send Messages</span>
+                      </div>
+                      <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                        <span className="text-sm text-emerald-300">Send Alerts</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
             {/* GitHub Connection Card */}
             <Card className="border-purple-500/30 border" style={{ backgroundColor: "rgba(255,255,255,0.03)" }}>
               <CardContent className="p-6">
@@ -497,16 +702,21 @@ export default function Connect() {
 
               const isGoogleProvider = GOOGLE_PROVIDERS.includes(connector.id);
               const isGithubProvider = connector.id === "github";
+              const isSlackProvider = connector.id === "slack";
               const effectiveConnected = isGoogleProvider
                 ? isGoogleConnected
                 : isGithubProvider
                   ? isGithubConnected
-                  : connector.userConnected;
+                  : isSlackProvider
+                    ? isSlackConnected
+                    : connector.userConnected;
               const effectiveEmail = isGoogleProvider
                 ? googleStatus?.email
                 : isGithubProvider
                   ? (githubStatus?.username || githubStatus?.email)
-                  : connector.userEmail;
+                  : isSlackProvider
+                    ? slackStatus?.channelName
+                    : connector.userEmail;
 
               return (
                 <Card
@@ -596,7 +806,7 @@ export default function Connect() {
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
               { name: "Outlook", icon: "📧", platform: "Microsoft" },
-              { name: "Slack", icon: "💬", platform: "Slack" },
+
               { name: "OneDrive", icon: "☁️", platform: "Microsoft" },
               { name: "iCloud", icon: "🍎", platform: "Apple" },
               { name: "Notion", icon: "📝", platform: "Notion" },

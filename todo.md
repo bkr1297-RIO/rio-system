@@ -244,7 +244,7 @@
 - [x] OAuth: Store tokens per user in database
 - [x] OAuth: Connector registry uses user tokens, not global tokens
 - [x] OAuth: /connect page shows "Connected as [user email/username]"
-- [ ] Slack: Add Slack webhook connector (HTTP POST, no OAuth needed)
+- [x] Slack: Add Slack webhook connector (HTTP POST, no OAuth needed)
 - [ ] Slack: Add Slack scenario to /go page
 - [ ] Onboarding: Build onboarding flow (Connect apps → Install app → Start using)
 - [x] Per-User Tokens: Wire Gmail connector to use per-user OAuth tokens from getValidGoogleToken()
@@ -311,3 +311,9 @@
 - [x] Bug Fix: Vitest sends real notification emails to owner — mocked notifyOwner in rio.policies.test.ts
 - [x] Bug Fix: RIO approval notifications say "Go to /go" with no real link — now includes proper link to /app (Bondi workspace)
 - [x] Bug Fix: Google OAuth callback fails after user authorizes — stored callbackUrl in state during /start so token exchange uses the correct redirect_uri (same fix applied to GitHub OAuth)
+- [x] Slack Connector: Create Slack webhook connector module (HTTP POST to webhook URL)
+- [x] Slack Connector: Register Slack connector in connector registry
+- [ ] Slack Connector: Add Slack scenario to /go page
+- [x] Slack Connector: Add Slack section to /connect page (webhook URL configuration)
+- [x] Slack Connector: Store webhook URL per user in user_connections table
+- [x] Slack Connector: Vitest tests for Slack connector

@@ -19,6 +19,7 @@ import { GmailConnector } from "./gmail";
 import { GoogleCalendarConnector } from "./calendar";
 import { GoogleDriveConnector } from "./drive";
 import { GitHubConnector } from "./github";
+import { SlackConnector } from "./slack";
 
 class ConnectorRegistry {
   private connectors: Map<string, RIOConnector> = new Map();
@@ -29,6 +30,7 @@ class ConnectorRegistry {
     this.register(new GoogleCalendarConnector());
     this.register(new GoogleDriveConnector());
     this.register(new GitHubConnector());
+    this.register(new SlackConnector());
   }
 
   /**

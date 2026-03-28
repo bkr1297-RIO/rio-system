@@ -897,6 +897,12 @@ export default function BondiApp() {
     retry: false,
   });
 
+  // Check Slack connection status
+  const slackStatus = trpc.connections.slackStatus.useQuery(undefined, {
+    enabled: !!user,
+    retry: false,
+  });
+
   // Group nav items by section (must be before early returns to respect hooks rules)
   const sections = useMemo(() => {
     const map = new Map<string, typeof NAV_ITEMS>();
@@ -997,6 +1003,15 @@ export default function BondiApp() {
               Google Connected
             </Badge>
           )}
+          {slackStatus.data?.connected && (
+            <Badge
+              variant="outline"
+              className="text-[10px] text-emerald-400 border-emerald-400/30"
+            >
+              <CheckCircle2 className="w-3 h-3 mr-1" />
+              Slack
+            </Badge>
+          )}
           <Button
             variant="ghost"
             size="sm"
@@ -1059,7 +1074,7 @@ export default function BondiApp() {
           </nav>
 
           {/* Connection status */}
-          <div className="border-t p-3">
+          <div className="border-t p-3 space-y-2">
             {googleStatus.data?.connected ? (
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <CheckCircle2 className="w-3 h-3 text-green-500" />
@@ -1077,6 +1092,12 @@ export default function BondiApp() {
                 <Link2 className="w-3 h-3 mr-1" />
                 Connect Google
               </Button>
+            )}
+            {slackStatus.data?.connected && (
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                <span className="truncate">Slack — {slackStatus.data.channelName}</span>
+              </div>
             )}
           </div>
         </aside>
