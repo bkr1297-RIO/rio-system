@@ -187,6 +187,56 @@ describe("Guided Demo — Verification checks", () => {
   });
 });
 
+describe("Guided Demo — Trust-building and evolving governance messaging", () => {
+  it("StepIntro includes trust-building messaging about evolving governance", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("evolves over time as trust builds");
+    expect(content).toContain("which actions need your explicit approval");
+  });
+
+  it("StepResult approved path includes trust-building messaging", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("This governance adapts to you");
+    expect(content).toContain("recipient, the context, the content, and the stakes");
+  });
+
+  it("StepResult denied path includes detailed deny narration", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("cannot override you");
+    expect(content).toContain("your denial is permanently recorded");
+    expect(content).toContain("adapts to your comfort level");
+    expect(content).toContain("safety net is always there");
+  });
+});
+
+describe("Navigation Bar — Demo link accessible from every page", () => {
+  it("NavBar.tsx includes a 'See How It Works' link to /demo", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/components/NavBar.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain('"See How It Works"');
+    expect(content).toContain('"/demo"');
+  });
+});
+
 describe("Guided Demo — Receipt structure", () => {
   it("GuidedDemo.tsx receipt shows all three hash types", async () => {
     const fs = await import("fs");

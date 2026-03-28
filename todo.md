@@ -371,3 +371,7 @@
 - [x] Landing Page: Keep existing "Launch Bondi" button
 - [x] App.tsx: Register /demo route (public, no auth required)
 - [x] Vitest: Tests for guided demo page
+- [x] Guided Demo: Add deny path narration — when user clicks Deny, show detailed story about action being blocked with its own receipt
+- [x] Guided Demo: Add trust-building messaging to Intro step — governance evolves as trust builds between you and your assistant
+- [x] Guided Demo: Add trust-building messaging to Result step — not all actions carry the same risk, you decide which need approval based on context, recipients, trust
+- [x] Navigation: Add Demo link to main nav bar so it's accessible from every page

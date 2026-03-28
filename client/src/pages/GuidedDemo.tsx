@@ -72,6 +72,10 @@ function StepIntro({ onNext }: { onNext: () => void }) {
         <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
           But should it be able to <strong style={{ color: "#ffffff" }}>send emails on your behalf without asking?</strong>{" "}
           Should it delete files or move money without your knowledge?
+          Not every action carries the same risk — a routine calendar reminder is different from
+          an email to a client or a financial transaction. As you and your assistant work together,
+          you get to decide which actions need your explicit approval and which can proceed on their own.
+          That relationship <strong style={{ color: "#ffffff" }}>evolves over time as trust builds</strong>.
         </p>
         <div
           className="p-5 rounded-lg border-l-4"
@@ -356,6 +360,14 @@ function StepResult({ decision, onNext }: { decision: "approved" | "denied"; onN
                 Your AI assistant executed the action only after receiving your explicit approval.
               </p>
               <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
+                Not all emails carry the same risk. As you and your assistant build trust, you get to decide
+                which actions require your explicit approval and which can proceed automatically — based on
+                the recipient, the context, the content, and the stakes involved. A weekly team update might
+                not need your sign-off, but an email to a new client or a message containing sensitive
+                information always will. <strong style={{ color: "#ffffff" }}>This governance adapts to you</strong>,
+                growing more nuanced as the working relationship deepens.
+              </p>
+              <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
                 But here's what makes RIO different: the story doesn't end here.{" "}
                 <strong style={{ color: "#b8963e" }}>A permanent, cryptographic receipt was created</strong> —
                 proof of what was requested, when you approved it, and when it was executed.
@@ -386,11 +398,24 @@ function StepResult({ decision, onNext }: { decision: "approved" | "denied"; onN
               <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
                 The email was <strong style={{ color: "#ef4444" }}>not sent</strong>. Your AI assistant was blocked.
                 RIO enforced your decision — <strong style={{ color: "#ffffff" }}>no approval means no action, ever</strong>.
+                The recipient will never receive that email. Your assistant cannot override you, retry behind
+                your back, or find a workaround. The system enforces the rules, not the AI.
               </p>
               <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
                 This is called <strong style={{ color: "#b8963e" }}>fail-closed</strong> design. The system defaults to
-                blocking the action. Even your denial is recorded with a cryptographic receipt — proof that the action
-                was requested and that you chose to block it.
+                blocking the action. If you don't explicitly say yes, the answer is no.
+              </p>
+              <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
+                And just like an approval, <strong style={{ color: "#ffffff" }}>your denial is permanently recorded</strong> with
+                a cryptographic receipt — proof that the action was requested, that you reviewed it, and that
+                you chose to block it. This matters for accountability: there is a clear record of what was
+                asked and what you decided, whether the answer was yes or no.
+              </p>
+              <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
+                Over time, as you and your assistant build trust, you can adjust which actions need your
+                explicit approval. Maybe routine internal emails can go through automatically, while emails
+                to new contacts or messages with attachments always require your sign-off. The governance
+                <strong style={{ color: "#ffffff" }}> adapts to your comfort level</strong> — but the safety net is always there.
               </p>
             </div>
           </>

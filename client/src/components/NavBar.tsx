@@ -29,6 +29,7 @@ const navLinks: NavLink[] = [
       { label: "Connect Apps", href: "/connect" },
     ],
   },
+  { label: "See How It Works", href: "/demo" },
   {
     label: "Demos",
     href: "#",
