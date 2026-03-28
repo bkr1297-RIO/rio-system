@@ -129,6 +129,41 @@ const SCENARIOS: Scenario[] = [
     requester: "Gemini",
   },
   {
+    id: "slack_message",
+    icon: "\uD83D\uDCAC",
+    label: "Slack Message",
+    action: "send_slack_message",
+    target: "Slack",
+    connector: "slack",
+    connectorName: "Slack",
+    description: "Send a message to #general in Slack",
+    parameters: {
+      message: "RIO governance loop test — this message was approved before delivery.",
+      channel: "#general",
+    },
+    riskLevel: "Medium",
+    riskColor: "#f59e0b",
+    requester: "Bondi",
+  },
+  {
+    id: "slack_alert",
+    icon: "\uD83D\uDD14",
+    label: "Slack Alert",
+    action: "send_slack_alert",
+    target: "Slack",
+    connector: "slack",
+    connectorName: "Slack",
+    description: "Send a governance alert to Slack with Block Kit formatting",
+    parameters: {
+      title: "RIO Governance Alert",
+      message: "A high-risk action was approved and executed. Receipt recorded to ledger.",
+      channel: "#alerts",
+    },
+    riskLevel: "Medium",
+    riskColor: "#f59e0b",
+    requester: "Bondi",
+  },
+  {
     id: "transfer",
     icon: "\uD83D\uDCB3",
     label: "Transfer Funds",
@@ -490,7 +525,11 @@ export default function Go() {
   const isDeniedState = flowState === "denied" || flowState === "auto_denied";
 
   // Determine connector status for this scenario
-  const connectorStatus = scenario.connector === "gmail" ? "connected" : scenario.connector === "none" ? "future" : "simulated";
+  const connectorStatus = (scenario.connector === "gmail" || scenario.connector === "slack" || scenario.connector === "github")
+    ? "connected"
+    : scenario.connector === "none"
+      ? "future"
+      : "simulated";
 
   return (
     <div

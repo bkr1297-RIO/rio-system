@@ -245,7 +245,7 @@
 - [x] OAuth: Connector registry uses user tokens, not global tokens
 - [x] OAuth: /connect page shows "Connected as [user email/username]"
 - [x] Slack: Add Slack webhook connector (HTTP POST, no OAuth needed)
-- [ ] Slack: Add Slack scenario to /go page
+- [x] Slack: Add Slack scenario to /go page
 - [ ] Onboarding: Build onboarding flow (Connect apps → Install app → Start using)
 - [x] Per-User Tokens: Wire Gmail connector to use per-user OAuth tokens from getValidGoogleToken()
 - [x] Per-User Tokens: Wire Google Drive connector to use per-user OAuth tokens
@@ -313,7 +313,16 @@
 - [x] Bug Fix: Google OAuth callback fails after user authorizes — stored callbackUrl in state during /start so token exchange uses the correct redirect_uri (same fix applied to GitHub OAuth)
 - [x] Slack Connector: Create Slack webhook connector module (HTTP POST to webhook URL)
 - [x] Slack Connector: Register Slack connector in connector registry
-- [ ] Slack Connector: Add Slack scenario to /go page
+- [x] Slack Connector: Add Slack scenario to /go page
 - [x] Slack Connector: Add Slack section to /connect page (webhook URL configuration)
 - [x] Slack Connector: Store webhook URL per user in user_connections table
 - [x] Slack Connector: Vitest tests for Slack connector
+- [x] Slack RIO Loop: Add "Send Slack Message" scenario to /go page
+- [x] Slack RIO Loop: Scenario creates real RIO intent requiring approval
+- [x] Slack RIO Loop: After approval, system POSTs to Slack webhook via connector
+- [x] Slack RIO Loop: Receipt generated with intent_hash, action_hash, verification_hash
+- [x] Slack RIO Loop: Ledger entry written with hash chain
+- [x] Slack RIO Loop: Verification page validates receipt and ledger
+- [x] Slack RIO Loop: Approval notification sent to Slack channel with approve/deny link
+- [x] Slack RIO Loop: Vitest tests for full Slack governance loop
+- [x] Slack RIO Loop: End-to-end browser test of full loop

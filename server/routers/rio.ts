@@ -26,6 +26,7 @@ import {
   autoDenyByPolicy,
 } from "../rio";
 import { connectorRegistry } from "../connectors";
+import { getSlackWebhookUrl } from "../connectors/slack-helpers";
 
 export const rioRouter = router({
   // ── Intent Lifecycle ──────────────────────────────────────────────
@@ -257,12 +258,14 @@ export const rioRouter = router({
       description: z.string(),
       origin: z.string().optional(),
     }))
-    .mutation(async ({ input }) => {
+    .mutation(async ({ input, ctx }) => {
       // Build a proper approval link — use /app (Bondi workspace) Approvals tab
       const baseUrl = input.origin || "";
       const approvalLink = `${baseUrl}/app`;
+      const goLink = `${baseUrl}/go`;
 
-      const success = await notifyOwner({
+      // 1. Notify owner via built-in notification channel
+      const ownerNotified = await notifyOwner({
         title: `RIO: Approval Required — ${input.action.replace(/_/g, " ")}`,
         content: [
           `${input.requester} wants to ${input.description}.`,
@@ -271,6 +274,104 @@ export const rioRouter = router({
           `Open Bondi to review and approve or deny: ${approvalLink}`,
         ].join("\n"),
       });
-      return { notified: success, intentId: input.intentId };
+
+      // 2. Also notify via Slack if the user has a connected webhook
+      let slackNotified = false;
+      const userId = (ctx as any).user?.id as number | undefined;
+      if (userId) {
+        try {
+          const webhookUrl = await getSlackWebhookUrl(userId);
+          if (webhookUrl) {
+            const slackPayload = {
+              blocks: [
+                {
+                  type: "header",
+                  text: {
+                    type: "plain_text",
+                    text: `\u26A0\uFE0F RIO Approval Required`,
+                    emoji: true,
+                  },
+                },
+                {
+                  type: "section",
+                  fields: [
+                    {
+                      type: "mrkdwn",
+                      text: `*Action:*\n${input.action.replace(/_/g, " ")}`,
+                    },
+                    {
+                      type: "mrkdwn",
+                      text: `*Requester:*\n${input.requester}`,
+                    },
+                  ],
+                },
+                {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: `*Description:*\n${input.description}`,
+                  },
+                },
+                {
+                  type: "section",
+                  text: {
+                    type: "mrkdwn",
+                    text: `*Intent ID:*\n\`${input.intentId}\``,
+                  },
+                },
+                {
+                  type: "actions",
+                  elements: [
+                    {
+                      type: "button",
+                      text: {
+                        type: "plain_text",
+                        text: "\u2705 Open Bondi to Approve",
+                        emoji: true,
+                      },
+                      url: approvalLink,
+                      style: "primary",
+                    },
+                    {
+                      type: "button",
+                      text: {
+                        type: "plain_text",
+                        text: "\uD83D\uDCCB Open /go Page",
+                        emoji: true,
+                      },
+                      url: goLink,
+                    },
+                  ],
+                },
+                {
+                  type: "context",
+                  elements: [
+                    {
+                      type: "mrkdwn",
+                      text: `RIO Governance Engine \u2022 ${new Date().toISOString()}`,
+                    },
+                  ],
+                },
+              ],
+            };
+
+            const resp = await fetch(webhookUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(slackPayload),
+            });
+            slackNotified = resp.ok;
+            if (!resp.ok) {
+              console.error(`[RIO Slack Notify] Webhook POST failed: ${resp.status} ${resp.statusText}`);
+            } else {
+              console.log(`[RIO Slack Notify] Approval alert sent to Slack for intent ${input.intentId}`);
+            }
+          }
+        } catch (err) {
+          console.error("[RIO Slack Notify] Error sending Slack approval alert:", err);
+        }
+      }
+
+      return { notified: ownerNotified, slackNotified, intentId: input.intentId };
     }),
 });
