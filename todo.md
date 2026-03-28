@@ -384,3 +384,5 @@
 - [x] Bug: Demo intro — nutshell definition and 'email is just one example' paragraph must be the very first visible content on mobile without scrolling; removed large robot emoji card, restructured as compact text-first layout
 - [x] Bridge Screen: Add text input asking "If you had an assistant that worked this way, what would you want it to do for you?" — store responses in DB
 - [x] Progress Bar: Tighten step progress bar on mobile/phone screens — smaller circles, horizontal-only, less vertical space
+- [x] Home page: Center hero text on mobile (Runtime Intelligence Orchestration and tagline are left-aligned on phone, should be centered)
+- [x] Demo: Rename "your AI assistant" to "Bondi — Your Digital Chief of Staff" throughout the guided demo

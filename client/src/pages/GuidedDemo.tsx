@@ -87,19 +87,19 @@ function StepIntro({ onNext }: { onNext: () => void }) {
       {/* Expanded context — below the fold is fine */}
       <div className="space-y-4 text-left w-full">
         <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#9ca3af" }}>
-          Imagine you have an AI assistant that manages your email, calendar, and files.
-          It's smart. It's fast. But should it be able to{" "}
+          Imagine you have an AI assistant — <strong style={{ color: "#b8963e" }}>Bondi, your Digital Chief of Staff</strong> — that manages your email, calendar, and files.
+           It's smart. It's fast. But should it be able to{" "}
           <strong style={{ color: "#d1d5db" }}>send emails on your behalf without asking?</strong>{" "}
           Should it delete files or move money without your knowledge?
         </p>
         <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#9ca3af" }}>
           Not every action carries the same risk — a routine calendar reminder is different from
-          an email to a client or a financial transaction. As you and your assistant work together,
-          you get to decide which actions need your explicit approval and which can proceed on their own.
+          an email to a client or a financial transaction.As you and Bondi work together,
+           you get to decide which actions need your explicit approval and which can proceed on their own.
           That relationship <strong style={{ color: "#d1d5db" }}>evolves over time as trust builds</strong>.
         </p>
         <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#9ca3af" }}>
-          RIO sits between your AI assistant and the real world. It makes sure the AI cannot take
+          RIO sits between Bondi and the real world. It makes sure your assistant cannot take
           any real-world action without your explicit approval. And every decision — yours and the AI's
           — is permanently recorded with cryptographic proof.
         </p>
@@ -144,7 +144,7 @@ function StepApprovalRequest({ onNext }: { onNext: () => void }) {
           </h2>
         </div>
         <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
-          Your AI assistant has analyzed your tasks and wants to send an email on your behalf.
+          Bondi has analyzed your tasks and wants to send an email on your behalf.
           But before it can do anything, <strong style={{ color: "#ffffff" }}>you get a notification</strong> —
           on your phone, on your computer, wherever you are. It tells you exactly what the AI wants to do,
           to whom, and why.
@@ -249,7 +249,7 @@ function StepApprovalRequest({ onNext }: { onNext: () => void }) {
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-2">
               <span className="text-2xl">🤖</span>
-              <span className="font-semibold text-sm" style={{ color: "#b8963e" }}>BONDI AI ASSISTANT</span>
+              <span className="font-semibold text-sm" style={{ color: "#b8963e" }}>BONDI — Digital Chief of Staff</span>
             </div>
             <span
               className="text-xs font-bold px-3 py-1 rounded-full"
@@ -339,8 +339,8 @@ function StepDecision({ onDecide }: { onDecide: (decision: "approved" | "denied"
         </div>
         <p className="text-base sm:text-lg leading-relaxed mb-4" style={{ color: "#d1d5db" }}>
           You are the human in the loop. <strong style={{ color: "#ffffff" }}>Only you can authorize this action.</strong>{" "}
-          Your AI assistant is capable, but it cannot act without your permission. This is the moment where
-          you decide: should this email be sent?
+Bondi is capable, but it cannot act without your permission. This is the moment where
+           you decide: should this email be sent?
         </p>
         <div
           className="p-4 rounded-lg border-l-4 mb-6"
@@ -454,11 +454,11 @@ function StepResult({ decision, onNext }: { decision: "approved" | "denied"; onN
             <div className="space-y-4 text-left">
               <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
                 The email was sent because <strong style={{ color: "#ffffff" }}>you authorized it</strong>.
-                Your AI assistant executed the action only after receiving your explicit approval.
+                Bondi executed the action only after receiving your explicit approval.
               </p>
               <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
-                Not all emails carry the same risk. As you and your assistant build trust, you get to decide
-                which actions require your explicit approval and which can proceed automatically — based on
+                Not all emails carry the same risk. As you and Bondi build trust, you get to decide
+                 which actions require your explicit approval and which can proceed automatically— based on
                 the recipient, the context, the content, and the stakes involved. A weekly team update might
                 not need your sign-off, but an email to a new client or a message containing sensitive
                 information always will. <strong style={{ color: "#ffffff" }}>This governance adapts to you</strong>,
@@ -493,10 +493,10 @@ function StepResult({ decision, onNext }: { decision: "approved" | "denied"; onN
             </div>
             <div className="space-y-4 text-left">
               <p className="text-base sm:text-lg leading-relaxed" style={{ color: "#d1d5db" }}>
-                The email was <strong style={{ color: "#ef4444" }}>not sent</strong>. Your AI assistant was blocked.
+                The email was <strong style={{ color: "#ef4444" }}>not sent</strong>. Bondi was blocked.
                 RIO enforced your decision — <strong style={{ color: "#ffffff" }}>no approval means no action, ever</strong>.
-                The recipient will never receive that email. Your assistant cannot override you, retry behind
-                your back, or find a workaround. The system enforces the rules, not the AI.
+                The recipient will never receive that email. Bondi cannot override you, retry behind
+               your back, or find a workaround.. The system enforces the rules, not the AI.
               </p>
               <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
                 This is called <strong style={{ color: "#b8963e" }}>fail-closed</strong> design. The system defaults to
@@ -509,7 +509,7 @@ function StepResult({ decision, onNext }: { decision: "approved" | "denied"; onN
                 asked and what you decided, whether the answer was yes or no.
               </p>
               <p className="text-base leading-relaxed" style={{ color: "#d1d5db" }}>
-                Over time, as you and your assistant build trust, you can adjust which actions need your
+                Over time, as you and Bondi build trust, you can adjust which actions need your
                 explicit approval. Maybe routine internal emails can go through automatically, while emails
                 to new contacts or messages with attachments always require your sign-off. The governance
                 <strong style={{ color: "#ffffff" }}> adapts to your comfort level</strong> — but the safety net is always there.
@@ -745,8 +745,8 @@ function StepLedger({ onNext }: { onNext: () => void }) {
             <p className="text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
               <strong style={{ color: "#22d3ee" }}>Your Google Drive keeps a copy.</strong>{" "}
               There is a file on your Google Drive where all your receipts are logged and filed for you.
-              You can go back to it anytime — it's your permanent record of every action your AI assistant
-              has taken, when it was approved, and by whom.
+              You can go back to it anytime —it's your permanent record of every action Bondi
+               has taken, when it was approved, and by whom.
             </p>
           </div>
         </div>

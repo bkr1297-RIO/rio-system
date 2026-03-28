@@ -34,13 +34,13 @@ export default function Home() {
             RIO
           </h1>
           <p
-            className="text-base sm:text-xl font-bold tracking-[0.08em] mb-2"
+            className="text-base sm:text-xl font-bold tracking-[0.08em] mb-2 text-center"
             style={{ color: "#9ca3af" }}
           >
             Runtime Intelligence Orchestration
           </p>
           <p
-            className="text-xs sm:text-sm font-medium tracking-[0.12em] uppercase mb-6"
+            className="text-xs sm:text-sm font-medium tracking-[0.12em] uppercase mb-6 text-center"
             style={{ color: "#60a5fa" }}
           >
             Runtime Governance and Execution Control Plane for AI Systems
