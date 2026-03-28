@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { publicProcedure, adminProcedure, router } from "../_core/trpc";
-import { recordDemoEvent, getDemoStats } from "../db";
+import { recordDemoEvent, getDemoStats, saveDemoWish } from "../db";
 
 export const demoRouter = router({
   // Public: record a demo step event (no auth required — demo is public)
@@ -20,6 +20,19 @@ export const demoRouter = router({
         stepLabel: input.stepLabel,
         action: input.action,
       });
+      return { success: true };
+    }),
+
+  // Public: submit a wish/idea from the demo bridge screen
+  submitWish: publicProcedure
+    .input(
+      z.object({
+        sessionId: z.string().min(1).max(64),
+        text: z.string().min(1).max(2000),
+      })
+    )
+    .mutation(async ({ input }) => {
+      await saveDemoWish({ sessionId: input.sessionId, text: input.text });
       return { success: true };
     }),
 

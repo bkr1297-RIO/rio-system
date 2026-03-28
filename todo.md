@@ -382,3 +382,5 @@
 - [x] Demo Tracking: Add DB schema, backend procedure, and frontend counter to track demo completion and drop-off per step
 - [x] Demo Intro: Add paragraph after nutshell definition about email being just one example — cancel subscriptions, schedule meetings, submit requests, follow up — always asks before acting, always keeps a record, "what would you want it to do for you?"
 - [x] Bug: Demo intro — nutshell definition and 'email is just one example' paragraph must be the very first visible content on mobile without scrolling; removed large robot emoji card, restructured as compact text-first layout
+- [x] Bridge Screen: Add text input asking "If you had an assistant that worked this way, what would you want it to do for you?" — store responses in DB
+- [x] Progress Bar: Tighten step progress bar on mobile/phone screens — smaller circles, horizontal-only, less vertical space

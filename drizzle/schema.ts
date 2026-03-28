@@ -170,3 +170,14 @@ export const ledger = mysqlTable("ledger", {
   timestamp: timestamp("timestamp").defaultNow().notNull(),
   recordedBy: varchar("recordedBy", { length: 128 }).default("RIO System").notNull(),
 });
+// ── Demo Wishes ──────────────────────────────────────────────────────────────
+
+export const demoWishes = mysqlTable("demo_wishes", {
+  id: int("id").autoincrement().primaryKey(),
+  sessionId: varchar("session_id", { length: 64 }).notNull(),
+  text: text("text").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type DemoWish = typeof demoWishes.$inferSelect;
+export type InsertDemoWish = typeof demoWishes.$inferInsert;

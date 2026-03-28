@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE `demo_wishes` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`session_id` varchar(64) NOT NULL,\n\t`text` text NOT NULL,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `demo_wishes_id` PRIMARY KEY(`id`)\n);",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway04.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3JdLPf5VoRkGWQJ.root --database UX2SXDqogojKE7g6Yj8W26 --execute CREATE TABLE `demo_wishes` (\n\t`id` int AUTO_INCREMENT NOT NULL,\n\t`session_id` varchar(64) NOT NULL,\n\t`text` text NOT NULL,\n\t`createdAt` timestamp NOT NULL DEFAULT (now()),\n\tCONSTRAINT `demo_wishes_id` PRIMARY KEY(`id`)\n);",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 158
+}

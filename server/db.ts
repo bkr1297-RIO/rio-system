@@ -1,6 +1,6 @@
 import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, blogPosts, InsertBlogPost, demoEvents, InsertDemoEvent } from "../drizzle/schema";
+import { InsertUser, users, blogPosts, InsertBlogPost, demoEvents, InsertDemoEvent, demoWishes, InsertDemoWish } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -136,6 +136,15 @@ export async function recordDemoEvent(event: InsertDemoEvent) {
   const db = await getDb();
   if (!db) return;
   await db.insert(demoEvents).values(event);
+}
+
+export async function saveDemoWish(wish: { sessionId: string; text: string }) {
+  const db = await getDb();
+  if (!db) return;
+  await db.insert(demoWishes).values({
+    sessionId: wish.sessionId,
+    text: wish.text,
+  });
 }
 
 export async function getDemoStats() {

@@ -871,7 +871,13 @@ function StepVerification({ onNext }: { onNext: () => void }) {
   );
 }
 
-function StepBridge({ decision }: { decision: "approved" | "denied" }) {
+function StepBridge({ decision, sessionId }: { decision: "approved" | "denied"; sessionId: string }) {
+  const [wishText, setWishText] = useState("");
+  const [submitted, setSubmitted] = useState(false);
+  const submitWish = trpc.demo.submitWish.useMutation({
+    onSuccess: () => setSubmitted(true),
+  });
+
   return (
     <div className="flex flex-col items-center text-center max-w-2xl mx-auto">
       <div className="mb-8">
@@ -931,6 +937,60 @@ function StepBridge({ decision }: { decision: "approved" | "denied" }) {
         </p>
       </div>
 
+      {/* What would you want it to do? */}
+      <div
+        className="w-full p-5 rounded-xl border mb-8"
+        style={{
+          backgroundColor: "rgba(255,255,255,0.02)",
+          borderColor: "rgba(184,150,62,0.2)",
+        }}
+      >
+        <p className="text-base font-medium mb-1" style={{ color: "#e5e7eb" }}>
+          Now that you've seen how it works...
+        </p>
+        <p className="text-lg font-semibold mb-4 italic" style={{ color: "#b8963e" }}>
+          If you had an assistant that worked this way, what would you want it to do for you?
+        </p>
+        {submitted ? (
+          <div className="py-3 px-4 rounded-lg" style={{ backgroundColor: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.3)" }}>
+            <p className="text-sm font-medium" style={{ color: "#22c55e" }}>
+              Thanks for sharing! We'd love to build that for you.
+            </p>
+          </div>
+        ) : (
+          <div className="flex flex-col gap-3">
+            <textarea
+              value={wishText}
+              onChange={(e) => setWishText(e.target.value)}
+              placeholder="e.g., Cancel unused subscriptions, follow up on unanswered emails, schedule meetings based on my priorities..."
+              className="w-full p-3 rounded-lg text-sm leading-relaxed resize-none focus:outline-none focus:ring-2"
+              style={{
+                backgroundColor: "rgba(255,255,255,0.05)",
+                border: "1px solid rgba(255,255,255,0.1)",
+                color: "#e5e7eb",
+                minHeight: "80px",
+              }}
+              rows={3}
+            />
+            <button
+              onClick={() => {
+                if (wishText.trim()) {
+                  submitWish.mutate({ sessionId, text: wishText.trim() });
+                }
+              }}
+              disabled={!wishText.trim() || submitWish.isPending}
+              className="self-end py-2 px-6 rounded-lg text-sm font-semibold transition-all duration-200 disabled:opacity-40 cursor-pointer disabled:cursor-not-allowed"
+              style={{
+                backgroundColor: "#b8963e",
+                color: "#0a0e1a",
+              }}
+            >
+              {submitWish.isPending ? "Sending..." : "Share"}
+            </button>
+          </div>
+        )}
+      </div>
+
       {/* Action buttons */}
       <div className="w-full flex flex-col gap-3">
         <a
@@ -980,15 +1040,15 @@ const STEP_LABELS = [
 
 function ProgressBar({ step }: { step: number }) {
   return (
-    <div className="flex items-center justify-center gap-1 sm:gap-2 mb-10">
+    <div className="flex items-center justify-center gap-0.5 sm:gap-2 mb-6 sm:mb-10 px-2">
       {STEP_LABELS.map((label, i) => {
         const isActive = i === step;
         const isComplete = i < step;
         return (
-          <div key={label} className="flex items-center gap-1 sm:gap-2">
-            <div className="flex flex-col items-center gap-1">
+          <div key={label} className="flex items-center gap-0.5 sm:gap-2">
+            <div className="flex flex-col items-center gap-0.5">
               <div
-                className="w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300"
+                className="w-5 h-5 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-[10px] sm:text-xs font-bold transition-all duration-300"
                 style={{
                   backgroundColor: isComplete
                     ? "rgba(34,197,94,0.2)"
@@ -1012,7 +1072,7 @@ function ProgressBar({ step }: { step: number }) {
             </div>
             {i < STEP_LABELS.length - 1 && (
               <div
-                className="w-4 sm:w-8 h-0.5 rounded"
+                className="w-2 sm:w-8 h-0.5 rounded"
                 style={{
                   backgroundColor: isComplete ? "rgba(34,197,94,0.4)" : "rgba(255,255,255,0.08)",
                 }}
@@ -1116,7 +1176,7 @@ export default function GuidedDemo() {
           {step === 4 && <StepReceipt decision={decision} onNext={() => setStep(5)} />}
           {step === 5 && <StepLedger onNext={() => setStep(6)} />}
           {step === 6 && <StepVerification onNext={() => setStep(7)} />}
-          {step === 7 && <StepBridge decision={decision} />}
+          {step === 7 && <StepBridge decision={decision} sessionId={sessionId} />}
         </div>
       </div>
 

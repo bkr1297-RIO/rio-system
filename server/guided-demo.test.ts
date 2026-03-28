@@ -381,3 +381,95 @@ describe("Guided Demo — Demo tracking", () => {
     expect(content).toContain("step_label");
   });
 });
+
+describe("Guided Demo — Wish text input on bridge screen", () => {
+  it("StepBridge includes a text input asking what they'd want the assistant to do", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("what would you want it to do for you");
+    expect(content).toContain("submitWish");
+    expect(content).toContain("textarea");
+    expect(content).toContain("Thanks for sharing");
+  });
+
+  it("StepBridge receives sessionId prop", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("sessionId: string");
+    expect(content).toContain("sessionId={sessionId}");
+  });
+
+  it("Demo router has submitWish procedure", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "./routers/demo.ts"),
+      "utf-8"
+    );
+    expect(content).toContain("submitWish");
+    expect(content).toContain("saveDemoWish");
+    expect(content).toContain("publicProcedure");
+  });
+
+  it("Database schema includes demo_wishes table", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../drizzle/schema.ts"),
+      "utf-8"
+    );
+    expect(content).toContain("demoWishes");
+    expect(content).toContain("demo_wishes");
+  });
+
+  it("db.ts includes saveDemoWish helper", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "./db.ts"),
+      "utf-8"
+    );
+    expect(content).toContain("saveDemoWish");
+    expect(content).toContain("demoWishes");
+  });
+});
+
+describe("Guided Demo — Progress bar mobile optimization", () => {
+  it("ProgressBar uses smaller circles on mobile (w-5 h-5)", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("w-5 h-5 sm:w-8 sm:h-8");
+  });
+
+  it("ProgressBar uses tighter gaps on mobile", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("gap-0.5 sm:gap-2");
+  });
+
+  it("ProgressBar connector lines are shorter on mobile (w-2)", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const content = fs.readFileSync(
+      path.resolve(import.meta.dirname, "../client/src/pages/GuidedDemo.tsx"),
+      "utf-8"
+    );
+    expect(content).toContain("w-2 sm:w-8");
+  });
+});
