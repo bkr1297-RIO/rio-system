@@ -273,3 +273,33 @@
 - [x] Branding: Verify LinkedIn link is linkedin.com/in/bkr-rio
 - [x] Branding: Verify contact email is Riomethod5@gmail.com
 - [x] Branding: Remove any placeholder/developer links
+- [x] Bondi App: Create PWA manifest with Bondi triangle/orbital icon
+- [x] Bondi App: Generate apple-touch-icon and favicon from Bondi logo
+- [x] Bondi App: Build /app as real Bondi app with embedded views (not links to pages)
+- [x] Bondi App: Login screen when not authenticated (Bondi branding, not RIO)
+- [x] Bondi App: Sidebar navigation (Inbox, Calendar, Drive, GitHub, Chat, Chief of Staff, Approvals, Ledger)
+- [x] Bondi App: Inbox view with email list, detail, reply with AI
+- [x] Bondi App: Calendar view with events list
+- [x] Bondi App: Drive view with files list
+- [x] Bondi App: AI Chat (Ask mode) with suggested prompts and Chief of Staff (Do mode)
+- [x] Bondi App: Add "Launch Bondi" button to RIO site NavBar
+- [x] Bondi App: Register /app route in App.tsx
+- [x] Bondi App: Service worker for offline support and caching
+- [x] Bondi App: PWA manifest + meta tags for standalone display mode
+- [ ] Bondi App: Pull-to-refresh on mobile
+- [x] Bondi Workspace: Finalize PWA manifest, service worker, index.html meta tags
+- [x] Bondi Workspace: tRPC procedure — gmail.listInbox (list emails via Gmail API)
+- [x] Bondi Workspace: tRPC procedure — gmail.readEmail (read single email)
+- [x] Bondi Workspace: tRPC procedure — gmail.sendEmail (send via RIO governance)
+- [x] Bondi Workspace: tRPC procedure — calendar.listEvents (list calendar events)
+- [x] Bondi Workspace: tRPC procedure — drive.listFiles (list Drive files)
+- [x] Bondi Workspace: Build /app workspace layout (sidebar, main window, AI panel, top bar)
+- [x] Bondi Workspace: Inbox view — list emails, read email, Reply with AI
+- [x] Bondi Workspace: Calendar view — read-only event list
+- [x] Bondi Workspace: Drive view — read-only file list
+- [x] Bondi Workspace: Ask mode — AI chat panel routing to LLM APIs (ai.chat + ai.draftReply procedures)
+- [x] Bondi Workspace: Do mode — Chief of Staff action requests through RIO
+- [x] Bondi Workspace: Approval notifications in top bar
+- [x] Bondi Workspace: MVP 30-Second Trust Loop (inbox → email → reply with AI → approve → send → receipt)
+- [x] Bondi Workspace: Add Launch Bondi button to RIO NavBar
+- [x] Bondi Workspace: Vitest tests for all new tRPC procedures

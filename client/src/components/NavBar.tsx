@@ -190,12 +190,27 @@ export default function NavBar() {
               )
             )}
 
+            {/* Launch Bondi Button */}
+            <Link
+              href="/app"
+              className="ml-2 px-4 py-1.5 text-xs font-semibold rounded transition-all duration-200 no-underline"
+              style={{
+                background: "linear-gradient(135deg, oklch(0.55 0.15 260), oklch(0.45 0.2 280))",
+                color: "#ffffff",
+                boxShadow: "0 0 12px oklch(0.55 0.15 260 / 30%)",
+              }}
+            >
+              <span className="flex items-center gap-1.5">
+                Launch Bondi
+              </span>
+            </Link>
+
             {/* GitHub Link */}
             <a
               href="https://github.com/bkr1297-RIO/rio-protocol"
               target="_blank"
               rel="noopener noreferrer"
-              className="ml-2 px-3 py-1.5 text-xs font-medium rounded border transition-colors duration-200 no-underline hover:bg-white/5"
+              className="ml-1 px-3 py-1.5 text-xs font-medium rounded border transition-colors duration-200 no-underline hover:bg-white/5"
               style={{
                 color: "#d1d5db",
                 borderColor: "oklch(0.72 0.1 85 / 30%)",
@@ -293,6 +308,14 @@ export default function NavBar() {
               </Link>
             )
           )}
+          <Link
+            href="/app"
+            className="block py-2.5 text-sm font-semibold no-underline"
+            style={{ color: "#7c9aff" }}
+            onClick={() => setMobileOpen(false)}
+          >
+            Launch Bondi →
+          </Link>
           <a
             href="https://github.com/bkr1297-RIO/rio-protocol"
             target="_blank"

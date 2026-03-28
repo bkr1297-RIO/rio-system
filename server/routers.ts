@@ -5,6 +5,7 @@ import { publicProcedure, router } from "./_core/trpc";
 import { rioRouter } from "./routers/rio";
 import { blogRouter } from "./routers/blog";
 import { connectionsRouter } from "./routers/connections";
+import { workspaceRouter } from "./routers/workspace";
 
 export const appRouter = router({
   system: systemRouter,
@@ -27,6 +28,9 @@ export const appRouter = router({
 
   // User OAuth connections
   connections: connectionsRouter,
+
+  // Bondi workspace (inbox, calendar, drive, AI chat)
+  workspace: workspaceRouter,
 });
 
 export type AppRouter = typeof appRouter;

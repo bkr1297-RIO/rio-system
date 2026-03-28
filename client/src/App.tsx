@@ -30,6 +30,7 @@ import Go from "./pages/Go";
 import Dashboard from "./pages/Dashboard";
 import Learning from "./pages/Learning";
 import Connect from "./pages/Connect";
+import BondiApp from "./pages/BondiApp";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -59,6 +60,7 @@ function Router() {
       <Route path={"/dashboard"} component={Dashboard} />
       <Route path={"/learning"} component={Learning} />
       <Route path={"/connect"} component={Connect} />
+      <Route path={"/app"} component={BondiApp} />
       <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/404"} component={NotFound} />

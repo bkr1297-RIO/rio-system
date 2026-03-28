@@ -1,13 +1,21 @@
 /**
- * RIO Service Worker
- * Provides offline caching for the governance approval page.
+ * Bondi Service Worker
+ * Provides offline caching for the Bondi AI Chief of Staff PWA.
  * Network-first for navigation/HTML, cache-first for static assets, network-only for API.
  */
 
-const CACHE_NAME = "rio-v2";
+const CACHE_NAME = "bondi-v1";
 
-// Install: skip waiting to activate immediately
+// Pre-cache the app shell on install
+const APP_SHELL = [
+  "/app",
+  "/manifest.json",
+];
+
 self.addEventListener("install", (event) => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL))
+  );
   self.skipWaiting();
 });
 
@@ -42,12 +50,12 @@ self.addEventListener("fetch", (event) => {
           }
           return response;
         })
-        .catch(() => caches.match(request).then((cached) => cached || caches.match("/")))
+        .catch(() => caches.match(request).then((cached) => cached || caches.match("/app")))
     );
     return;
   }
 
-  // Static assets (JS, CSS, images): cache-first with network fallback
+  // Static assets (JS, CSS, images, fonts): cache-first with network fallback
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
