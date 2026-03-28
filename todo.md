@@ -356,3 +356,18 @@
 - [x] Bug: Dashboard page not scrolling — fixed overflow chain with min-h-0 and native overflow-y-auto
 - [x] Bug: History verification showing all red ❌ — fixed receipt_hash fallback lookup + deterministic Ed25519 key from JWT_SECRET
 - [x] Bug: Run Action / governance step screen not scrolling — fixed by replacing ScrollArea with native overflow-y-auto throughout BondiApp.tsx
+- [x] Guided Demo: Build /demo page — public, no login required, narrated step-by-step RIO governance story
+- [x] Guided Demo: Step 1 — Intro/Setup explaining AI assistant needs human approval
+- [x] Guided Demo: Step 2 — Simulated approval request card (AI wants to send email to jane@company.com)
+- [x] Guided Demo: Step 3 — Human decision (Approve/Deny buttons with narration)
+- [x] Guided Demo: Step 4 — Execution result (approved = sent, denied = blocked)
+- [x] Guided Demo: Step 5 — Receipt display with narration explaining cryptographic proof
+- [x] Guided Demo: Step 6 — Ledger record with narration (receipts logged in Google Drive file)
+- [x] Guided Demo: Step 7 — Verification with 5 checks and narration
+- [x] Guided Demo: Bridge screen after demo — Connect Google / Enter App / Watch Again
+- [x] Guided Demo: Clean focused layout — no sidebar, no dashboard, storytelling page
+- [x] Guided Demo: Mobile-friendly design
+- [x] Landing Page: Add prominent "See How It Works" button visible without scrolling
+- [x] Landing Page: Keep existing "Launch Bondi" button
+- [x] App.tsx: Register /demo route (public, no auth required)
+- [x] Vitest: Tests for guided demo page

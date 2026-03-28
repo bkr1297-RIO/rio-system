@@ -72,30 +72,44 @@ export default function Home() {
               {" "}{"\u2014"} RIO creates a closed-loop system where every action is authorized, executed, verified,
               recorded, and used to improve future decisions.
             </p>
-            <div className="flex flex-wrap justify-center gap-3 mt-4">
+            {/* Primary CTA — See How It Works */}
+            <div className="flex flex-col items-center gap-4 mt-6">
               <a
-                href="/how-it-works"
-                className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
-                style={{ borderColor: "#b8963e", color: "#b8963e" }}
+                href="/demo"
+                className="inline-block py-3.5 px-10 text-base sm:text-lg font-bold rounded-lg transition-all duration-200 hover:scale-[1.02]"
+                style={{
+                  backgroundColor: "#b8963e",
+                  color: "#0a0e1a",
+                  boxShadow: "0 4px 20px rgba(184,150,62,0.3)",
+                }}
               >
-                How It Works
+                See How It Works
               </a>
-              <a
-                href="/whitepaper"
-                className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
-                style={{ borderColor: "#374151", color: "#9ca3af" }}
-              >
-                Read the Whitepaper
-              </a>
-              <a
-                href="https://github.com/bkr1297-RIO/rio-protocol"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
-                style={{ borderColor: "#374151", color: "#9ca3af" }}
-              >
-                View on GitHub
-              </a>
+              <div className="flex flex-wrap justify-center gap-3">
+                <a
+                  href="/app"
+                  className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
+                  style={{ borderColor: "#b8963e", color: "#b8963e" }}
+                >
+                  Launch Bondi App
+                </a>
+                <a
+                  href="/whitepaper"
+                  className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
+                  style={{ borderColor: "#374151", color: "#9ca3af" }}
+                >
+                  Read the Whitepaper
+                </a>
+                <a
+                  href="https://github.com/bkr1297-RIO/rio-protocol"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
+                  style={{ borderColor: "#374151", color: "#9ca3af" }}
+                >
+                  View on GitHub
+                </a>
+              </div>
             </div>
           </div>
         </div>
