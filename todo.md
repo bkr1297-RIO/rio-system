@@ -344,3 +344,12 @@
 - [x] Slack Interactive Approval: Vitest — replay attack rejected
 - [x] Slack Interactive Approval: Vitest — approval without matching intent rejected
 - [x] Slack Interactive Approval: Vitest — ledger chain integrity after Slack approvals
+- [x] MVP: Onboarding screen — shown after first login when no apps conne- [x] MVP: Connect page refactor — Google-first with prominent cardack/others below
+- [x] MVP: Try a Governed Action page — simple, focused, Google actions prominent
+- [x] MVP: Approval screen — pending approvals with Approve/Deny buttonsi workspace
+- [x] MVP: Receipt viewer page — clean display of receipt, hashes, verify button
+- [x] MVP: History/Ledger page — table of past governed actions with receipt links
+- [x] MVP: Dashboard home — connected apps, recent actions, pending count, run new action
+- [x] MVP: Wire routing in App.tsx and navigation flow
+- [x] MVP: Vitest tests for new MVP components
+- [x] MVP: Browser end-to-end verification of full MVP flow
