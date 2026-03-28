@@ -140,15 +140,21 @@ function ConnectPrompt({ service }: { service: string }) {
 function InboxView({
   onSelectEmail,
   onAskAbout,
+  googleConnected,
 }: {
   onSelectEmail: (email: any) => void;
   onAskAbout: (context: string) => void;
+  googleConnected: boolean;
 }) {
   const { data, isLoading, error, refetch } =
     trpc.workspace.gmail.listInbox.useQuery(
       { maxResults: 20 },
-      { retry: false }
+      { retry: false, enabled: googleConnected }
     );
+
+  if (!googleConnected) {
+    return <ConnectPrompt service="Google" />;
+  }
 
   if (error?.message?.includes("not connected")) {
     return <ConnectPrompt service="Google" />;
@@ -423,12 +429,16 @@ function EmailDetailView({
 
 // ── Calendar View ────────────────────────────────────────────────────────
 
-function CalendarView() {
+function CalendarView({ googleConnected }: { googleConnected: boolean }) {
   const { data, isLoading, error, refetch } =
     trpc.workspace.calendar.listEvents.useQuery(
       { maxResults: 20 },
-      { retry: false }
+      { retry: false, enabled: googleConnected }
     );
+
+  if (!googleConnected) {
+    return <ConnectPrompt service="Google" />;
+  }
 
   if (error?.message?.includes("not connected")) {
     return <ConnectPrompt service="Google" />;
@@ -507,12 +517,16 @@ function CalendarView() {
 
 // ── Drive View ───────────────────────────────────────────────────────────
 
-function DriveView() {
+function DriveView({ googleConnected }: { googleConnected: boolean }) {
   const { data, isLoading, error, refetch } =
     trpc.workspace.drive.listFiles.useQuery(
       { pageSize: 20 },
-      { retry: false }
+      { retry: false, enabled: googleConnected }
     );
+
+  if (!googleConnected) {
+    return <ConnectPrompt service="Google" />;
+  }
 
   if (error?.message?.includes("not connected")) {
     return <ConnectPrompt service="Google" />;
@@ -933,12 +947,13 @@ export default function BondiApp() {
           <InboxView
             onSelectEmail={handleSelectEmail}
             onAskAbout={handleAskAbout}
+            googleConnected={!!googleStatus.data?.connected}
           />
         );
       case "calendar":
-        return <CalendarView />;
+        return <CalendarView googleConnected={!!googleStatus.data?.connected} />;
       case "drive":
-        return <DriveView />;
+        return <DriveView googleConnected={!!googleStatus.data?.connected} />;
       case "github":
         return <GitHubView />;
       case "ask":
