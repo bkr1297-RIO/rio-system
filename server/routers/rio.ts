@@ -321,25 +321,39 @@ export const rioRouter = router({
                 },
                 {
                   type: "actions",
+                  block_id: `rio_approval_${input.intentId}`,
                   elements: [
                     {
                       type: "button",
+                      action_id: "rio_approve",
                       text: {
                         type: "plain_text",
-                        text: "\u2705 Open Bondi to Approve",
+                        text: "\u2705 Approve",
                         emoji: true,
                       },
-                      url: approvalLink,
+                      value: `approve:${input.intentId}`,
                       style: "primary",
                     },
                     {
                       type: "button",
+                      action_id: "rio_deny",
                       text: {
                         type: "plain_text",
-                        text: "\uD83D\uDCCB Open /go Page",
+                        text: "\u274C Deny",
                         emoji: true,
                       },
-                      url: goLink,
+                      value: `deny:${input.intentId}`,
+                      style: "danger",
+                    },
+                    {
+                      type: "button",
+                      action_id: "rio_open_bondi",
+                      text: {
+                        type: "plain_text",
+                        text: "\uD83D\uDCCB Open Bondi",
+                        emoji: true,
+                      },
+                      url: approvalLink,
                     },
                   ],
                 },

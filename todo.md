@@ -326,3 +326,21 @@
 - [x] Slack RIO Loop: Approval notification sent to Slack channel with approve/deny link
 - [x] Slack RIO Loop: Vitest tests for full Slack governance loop
 - [x] Slack RIO Loop: End-to-end browser test of full loop
+- [x] Slack Interactive Approval: Add SLACK_SIGNING_SECRET env var
+- [x] Slack Interactive Approval: Build POST /api/slack/interactions endpoint
+- [x] Slack Interactive Approval: Verify Slack request signature (HMAC-SHA256)
+- [x] Slack Interactive Approval: Extract intent_id, decision, approver from Slack payload
+- [x] Slack Interactive Approval: Record approval/denial in RIO authorization system
+- [x] Slack Interactive Approval: Generate authorization receipt after approval
+- [x] Slack Interactive Approval: Execute intent after approval → execution receipt + ledger entry
+- [x] Slack Interactive Approval: Fail-closed if signature verification fails
+- [x] Slack Interactive Approval: Reject replay attacks (timestamp check)
+- [x] Slack Interactive Approval: Reject approval for non-existent intents
+- [x] Slack Interactive Approval: Update notification payload to use interactive Block Kit buttons
+- [x] Slack Interactive Approval: Ledger entries include intent_hash, authorization_hash, execution_hash, prev_hash, ledger_hash, timestamp, decision, approver_id
+- [x] Slack Interactive Approval: Vitest — approval success flow
+- [x] Slack Interactive Approval: Vitest — denial flow
+- [x] Slack Interactive Approval: Vitest — invalid signature rejected
+- [x] Slack Interactive Approval: Vitest — replay attack rejected
+- [x] Slack Interactive Approval: Vitest — approval without matching intent rejected
+- [x] Slack Interactive Approval: Vitest — ledger chain integrity after Slack approvals

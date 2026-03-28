@@ -11,4 +11,5 @@ export const ENV = {
   googleOAuthClientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET ?? "",
   githubOAuthClientId: process.env.GITHUB_OAUTH_CLIENT_ID ?? "",
   githubOAuthClientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET ?? "",
+  slackSigningSecret: process.env.SLACK_SIGNING_SECRET ?? "",
 };

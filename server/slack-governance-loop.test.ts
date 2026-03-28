@@ -328,12 +328,21 @@ describe("Slack RIO Governance Loop — Approval Notification to Slack", () => {
     expect(body.blocks[3].type).toBe("section");
     expect(body.blocks[3].text.text).toContain("INT-notify-001");
 
-    // Action buttons with approve/go links
+    // Interactive action buttons (approve, deny, open bondi)
     expect(body.blocks[4].type).toBe("actions");
     const buttons = body.blocks[4].elements;
-    expect(buttons.length).toBe(2);
-    expect(buttons[0].url).toBe("https://riodemo.manus.space/app");
-    expect(buttons[1].url).toBe("https://riodemo.manus.space/go");
+    expect(buttons.length).toBe(3);
+    // Approve button (interactive)
+    expect(buttons[0].action_id).toBe("rio_approve");
+    expect(buttons[0].value).toContain("approve:");
+    expect(buttons[0].style).toBe("primary");
+    // Deny button (interactive)
+    expect(buttons[1].action_id).toBe("rio_deny");
+    expect(buttons[1].value).toContain("deny:");
+    expect(buttons[1].style).toBe("danger");
+    // Open Bondi link button
+    expect(buttons[2].action_id).toBe("rio_open_bondi");
+    expect(buttons[2].url).toBe("https://riodemo.manus.space/app");
   });
 
   it("Does not send Slack alert when user has no webhook", async () => {
