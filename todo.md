@@ -304,3 +304,4 @@
 - [x] Bondi Workspace: Add Launch Bondi button to RIO NavBar
 - [x] Bondi Workspace: Vitest tests for all new tRPC procedures
 - [x] Bug Fix: Login from /app should redirect back to /app after authentication (not /)
+- [x] Bug Fix: /app login loop — after signing in, user sees sign-in screen again instead of authenticated workspace (stale Vite dep cache causing duplicate React instance crash in TRPCProvider)

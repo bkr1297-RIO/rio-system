@@ -1,10 +1,10 @@
 /**
  * Bondi Service Worker
  * Provides offline caching for the Bondi AI Chief of Staff PWA.
- * Network-first for navigation/HTML, cache-first for static assets, network-only for API.
+ * Network-first for all requests in dev; cache static assets only in production.
  */
 
-const CACHE_NAME = "bondi-v1";
+const CACHE_NAME = "bondi-v3";
 
 // Pre-cache the app shell on install
 const APP_SHELL = [
@@ -19,7 +19,7 @@ self.addEventListener("install", (event) => {
   self.skipWaiting();
 });
 
-// Activate: clean old caches and claim clients
+// Activate: clean ALL old caches and claim clients immediately
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     caches.keys().then((keys) =>
@@ -35,6 +35,19 @@ self.addEventListener("fetch", (event) => {
 
   // API calls: always go to network
   if (url.pathname.startsWith("/api/")) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
+  // NEVER cache Vite dev server assets (HMR, @fs, @vite, node_modules, etc.)
+  if (
+    url.pathname.startsWith("/@") ||
+    url.pathname.startsWith("/node_modules/") ||
+    url.pathname.includes("__vite") ||
+    url.pathname.includes(".vite/") ||
+    url.searchParams.has("v") ||
+    url.searchParams.has("t")
+  ) {
     event.respondWith(fetch(request));
     return;
   }
@@ -55,17 +68,16 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Static assets (JS, CSS, images, fonts): cache-first with network fallback
+  // Static assets: network-first (not cache-first) to avoid stale bundles
   event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-      return fetch(request).then((response) => {
+    fetch(request)
+      .then((response) => {
         if (response.ok && request.method === "GET") {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
         }
         return response;
-      });
-    })
+      })
+      .catch(() => caches.match(request))
   );
 });
