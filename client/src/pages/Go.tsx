@@ -438,7 +438,7 @@ export default function Go() {
     setProcessing(true);
 
     try {
-      await approve.mutateAsync({ intentId, decidedBy: "You" });
+      await approve.mutateAsync({ intentId });
 
       const execResult = await execute.mutateAsync({ intentId });
       const execData = execResult as Record<string, unknown>;
@@ -473,7 +473,7 @@ export default function Go() {
     setProcessing(true);
 
     try {
-      await deny.mutateAsync({ intentId, decidedBy: "You" });
+      await deny.mutateAsync({ intentId });
 
       const execResult = await execute.mutateAsync({ intentId });
       const execData = execResult as Record<string, unknown>;

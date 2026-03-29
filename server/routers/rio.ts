@@ -1,6 +1,7 @@
 /**
  * RIO tRPC Router
- * Exposes all RIO enforcement endpoints as public procedures.
+ * Exposes RIO enforcement endpoints. approve/deny use protectedProcedure
+ * to bind approver identity from the authenticated session.
  * Includes policy persistence, governance engine checks, auto-approve/deny,
  * and the connector-based execution layer.
  */
@@ -67,22 +68,24 @@ export const rioRouter = router({
       return autoDenyByPolicy(input.intentId, input.policyId);
     }),
 
-  approve: publicProcedure
+  approve: protectedProcedure
     .input(z.object({
       intentId: z.string(),
-      decidedBy: z.string(),
     }))
-    .mutation(async ({ input }) => {
-      return approveIntent(input.intentId, input.decidedBy);
+    .mutation(async ({ input, ctx }) => {
+      // Identity is bound from the authenticated session — not client-supplied
+      const decidedBy = ctx.user.name || ctx.user.email || `user:${ctx.user.id}`;
+      return approveIntent(input.intentId, decidedBy);
     }),
 
-  deny: publicProcedure
+  deny: protectedProcedure
     .input(z.object({
       intentId: z.string(),
-      decidedBy: z.string(),
     }))
-    .mutation(async ({ input }) => {
-      return denyIntent(input.intentId, input.decidedBy);
+    .mutation(async ({ input, ctx }) => {
+      // Identity is bound from the authenticated session — not client-supplied
+      const decidedBy = ctx.user.name || ctx.user.email || `user:${ctx.user.id}`;
+      return denyIntent(input.intentId, decidedBy);
     }),
 
   execute: publicProcedure

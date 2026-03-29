@@ -36,6 +36,33 @@ vi.mock("./_core/notification", () => ({
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 
+type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
+
+function createAuthContext(name = "Human Approver"): TrpcContext {
+  const user: AuthenticatedUser = {
+    id: 1,
+    openId: "slack-test-user",
+    email: "slack@rio.test",
+    name,
+    loginMethod: "manus",
+    role: "user",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+  };
+
+  return {
+    user,
+    req: {
+      protocol: "https",
+      headers: {},
+    } as TrpcContext["req"],
+    res: {
+      clearCookie: () => {},
+    } as TrpcContext["res"],
+  };
+}
+
 function createPublicContext(): TrpcContext {
   return {
     user: null,
@@ -58,7 +85,11 @@ function createAuthenticatedContext(userId: number): TrpcContext {
       email: "test@example.com",
       avatar: null,
       role: "user",
-    },
+      loginMethod: "manus",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastSignedIn: new Date(),
+    } as AuthenticatedUser,
     req: {
       protocol: "https",
       headers: {},
@@ -72,8 +103,7 @@ function createAuthenticatedContext(userId: number): TrpcContext {
 // ── Full Governance Loop: send_slack_message ────────────────────────────
 
 describe("Slack RIO Governance Loop — Full Approval Flow", () => {
-  const ctx = createPublicContext();
-  const caller = appRouter.createCaller(ctx);
+  const caller = appRouter.createCaller(createAuthContext());
   let intentId: string;
   let receiptId: string;
 
@@ -97,14 +127,14 @@ describe("Slack RIO Governance Loop — Full Approval Flow", () => {
     intentId = result.intentId;
   });
 
-  it("Step 2: Approves the intent → approved with cryptographic signature", async () => {
+  it("Step 2: Approves the intent → approved with identity from session", async () => {
     const result = await caller.rio.approve({
       intentId,
-      decidedBy: "Human Approver",
     });
 
     expect(result).toBeDefined();
     expect(result.decision).toBe("approved");
+    // decidedBy comes from ctx.user.name, not client input
     expect(result.decidedBy).toBe("Human Approver");
     expect(result.signature).toBeTruthy();
   });
@@ -174,8 +204,7 @@ describe("Slack RIO Governance Loop — Full Approval Flow", () => {
 // ── Full Governance Loop: send_slack_alert ──────────────────────────────
 
 describe("Slack RIO Governance Loop — Alert Variant", () => {
-  const ctx = createPublicContext();
-  const caller = appRouter.createCaller(ctx);
+  const caller = appRouter.createCaller(createAuthContext());
   let intentId: string;
   let receiptId: string;
 
@@ -193,10 +222,9 @@ describe("Slack RIO Governance Loop — Alert Variant", () => {
     expect(intent.status).toBe("pending");
     intentId = intent.intentId;
 
-    // Approve
+    // Approve — identity from session
     const approval = await caller.rio.approve({
       intentId,
-      decidedBy: "Human Approver",
     });
     expect(approval.decision).toBe("approved");
 
@@ -236,8 +264,7 @@ describe("Slack RIO Governance Loop — Alert Variant", () => {
 // ── Deny Flow: Slack action blocked ─────────────────────────────────────
 
 describe("Slack RIO Governance Loop — Deny Flow (Fail-Closed)", () => {
-  const ctx = createPublicContext();
-  const caller = appRouter.createCaller(ctx);
+  const caller = appRouter.createCaller(createAuthContext("Human Reviewer"));
   let intentId: string;
 
   it("Denies a Slack intent → execution blocked (fail-closed)", async () => {
@@ -250,10 +277,9 @@ describe("Slack RIO Governance Loop — Deny Flow (Fail-Closed)", () => {
     expect(intent.status).toBe("pending");
     intentId = intent.intentId;
 
-    // Deny
+    // Deny — identity from session
     const denial = await caller.rio.deny({
       intentId,
-      decidedBy: "Human Reviewer",
     });
     expect(denial.decision).toBe("denied");
 
@@ -409,8 +435,7 @@ describe("Slack RIO Governance Loop — Approval Notification to Slack", () => {
 // ── Ledger Chain Integrity After Slack Actions ──────────────────────────
 
 describe("Slack RIO Governance Loop — Ledger Chain Integrity", () => {
-  const ctx = createPublicContext();
-  const caller = appRouter.createCaller(ctx);
+  const caller = appRouter.createCaller(createAuthContext());
 
   it("Ledger chain contains Slack action entries and chain is valid", async () => {
     const chain = await caller.rio.ledgerChain({ limit: 50 });
@@ -442,8 +467,7 @@ describe("Slack RIO Governance Loop — Ledger Chain Integrity", () => {
 // ── Audit Log for Slack Actions ─────────────────────────────────────────
 
 describe("Slack RIO Governance Loop — Audit Trail", () => {
-  const ctx = createPublicContext();
-  const caller = appRouter.createCaller(ctx);
+  const caller = appRouter.createCaller(createAuthContext("vitest_auditor"));
 
   it("Returns full audit trail for a governed Slack intent", async () => {
     // Create, approve, execute a fresh Slack intent
@@ -455,7 +479,6 @@ describe("Slack RIO Governance Loop — Audit Trail", () => {
 
     await caller.rio.approve({
       intentId: intent.intentId,
-      decidedBy: "vitest_auditor",
     });
 
     await caller.rio.execute({ intentId: intent.intentId });

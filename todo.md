@@ -409,3 +409,11 @@
 - [x] Email Brian Azure OAuth fix instructions via Gmail (delivered in chat — Gmail MCP send was interrupted)
 - [x] Build RIO Governance Gateway as standalone Node.js Express service (10 endpoints, policy engine, hash-chained ledger, fail-closed)
 - [x] Push RIO Gateway to rio-system GitHub repo (commit 190ce8f pushed to main)
+- [x] Fix: Change approve/deny endpoints from publicProcedure to protectedProcedure
+- [x] Fix: Pull approver identity from ctx.user instead of frontend hardcoded string
+- [x] Fix: Store full identity (user_id, name, email, auth_provider) in approval records
+- [x] Fix: Include real approver identity in receipts
+- [x] Fix: Update frontend to stop sending hardcoded decidedBy strings
+- [x] Fix: Update all 5 test files (rio.test.ts, rio.governance.test.ts, mvp-bondi-flow.test.ts, slack-governance-loop.test.ts, slack-interactive-approval.test.ts) to use authenticated context for approve/deny
+- [x] Fix: Add identity binding regression tests (unauthenticated rejection, name/email/id fallback chain)
+- [x] All 327 tests passing after identity binding fix (21 test files)

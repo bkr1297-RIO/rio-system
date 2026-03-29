@@ -151,7 +151,6 @@ export default function TryItLive() {
       await delay(300);
       const approvalResult = await approve.mutateAsync({
         intentId,
-        decidedBy: sc.approver,
       });
       const sig = (approvalResult as Record<string, unknown>).signature as string;
       addLog("APPROVAL", "Approved — Ed25519 signature generated", "success");

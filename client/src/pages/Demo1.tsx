@@ -158,7 +158,7 @@ export default function Demo1() {
     setLoading(true);
     setError(null);
     try {
-      const result = await approveMut.mutateAsync({ intentId, decidedBy: "human_user" });
+      const result = await approveMut.mutateAsync({ intentId });
       setApprovalData(result as unknown as Record<string, unknown>);
       setDecided("approved");
       setActiveStep(2); // Advance to Step 3 to show approval result
@@ -173,7 +173,7 @@ export default function Demo1() {
     setLoading(true);
     setError(null);
     try {
-      const result = await denyMut.mutateAsync({ intentId, decidedBy: "human_user" });
+      const result = await denyMut.mutateAsync({ intentId });
       setDenialData(result as unknown as Record<string, unknown>);
       setDecided("denied");
 

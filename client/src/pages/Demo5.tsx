@@ -181,11 +181,11 @@ export default function Demo5() {
         // Approve or deny
         let decision: "approved" | "denied";
         if (s.shouldApprove) {
-          await approveMut.mutateAsync({ intentId: intent.intentId, decidedBy: "human-reviewer" });
+          await approveMut.mutateAsync({ intentId: intent.intentId });
           decision = "approved";
           addLog(`  ✓ Approved by human-reviewer`);
         } else {
-          await denyMut.mutateAsync({ intentId: intent.intentId, decidedBy: "human-reviewer" });
+          await denyMut.mutateAsync({ intentId: intent.intentId });
           decision = "denied";
           addLog(`  ✗ Denied by human-reviewer`);
         }

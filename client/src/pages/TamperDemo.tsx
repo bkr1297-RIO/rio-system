@@ -109,7 +109,6 @@ export default function TamperDemo() {
       addLog(`[${now()}] Approving intent...`, "#3b82f6");
       await approveMut.mutateAsync({
         intentId: intent.intentId,
-        decidedBy: "human_user",
       });
       addLog(`[${now()}] Intent approved with Ed25519 signature`, "#3b82f6");
 

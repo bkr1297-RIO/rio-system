@@ -270,7 +270,7 @@ export default function Demo4() {
     if (!id) return;
 
     try {
-      const approvalResult = await approveMut.mutateAsync({ intentId: id, decidedBy: "system_auto" });
+      const approvalResult = await approveMut.mutateAsync({ intentId: id });
       addLog(`AUTH — Signature: ${approvalResult.signature}`, "#22c55e");
       setStage("auth", "complete");
     } catch {
@@ -289,7 +289,7 @@ export default function Demo4() {
     setLoading(true);
 
     try {
-      const result = await approveMut.mutateAsync({ intentId, decidedBy: "human_approver" });
+      const result = await approveMut.mutateAsync({ intentId });
       addLog(`AUTH — Human decision: APPROVED`, "#3b82f6");
       addLog(`AUTH — ECDSA signature generated: ${result.signature}`, "#3b82f6");
       addLog(`AUTH — Signature verified: TRUE`, "#22c55e");

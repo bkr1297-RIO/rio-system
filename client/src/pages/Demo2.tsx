@@ -176,7 +176,7 @@ export default function Demo2() {
     setLoading(true);
 
     try {
-      const result = await approveMut.mutateAsync({ intentId, decidedBy: "human_user" });
+      const result = await approveMut.mutateAsync({ intentId });
       addLog(`[${now()}] HUMAN_DECISION: APPROVED`, "#3b82f6", 4);
       addLog(`[${now()}] SIGNATURE_CREATED: ${result.signature}`, "#3b82f6", 5);
       addLog(`[${now()}] SIGNATURE_VERIFIED: TRUE`, "#22c55e", 5);

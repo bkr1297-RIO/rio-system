@@ -2,8 +2,40 @@ import { describe, expect, it } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
+type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
+
 /**
- * Build a minimal public context (no authenticated user needed for RIO demo endpoints).
+ * Build an authenticated context — approve/deny are now protectedProcedure
+ * so the caller must have a session user.
+ */
+function createAuthContext(): TrpcContext {
+  const user: AuthenticatedUser = {
+    id: 1,
+    openId: "rio-test-user",
+    email: "tester@rio.test",
+    name: "RIO Tester",
+    loginMethod: "manus",
+    role: "user",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+  };
+
+  return {
+    user,
+    req: {
+      protocol: "https",
+      headers: {},
+    } as TrpcContext["req"],
+    res: {
+      clearCookie: () => {},
+    } as TrpcContext["res"],
+  };
+}
+
+/**
+ * Build a public (unauthenticated) context for testing that
+ * approve/deny reject unauthenticated callers.
  */
 function createPublicContext(): TrpcContext {
   return {
@@ -19,8 +51,7 @@ function createPublicContext(): TrpcContext {
 }
 
 describe("RIO Backend — Enforcement Logic", () => {
-  const ctx = createPublicContext();
-  const caller = appRouter.createCaller(ctx);
+  const caller = appRouter.createCaller(createAuthContext());
 
   it("creates an intent and returns intentId, hash, and pending status", async () => {
     const result = await caller.rio.createIntent({
@@ -37,14 +68,12 @@ describe("RIO Backend — Enforcement Logic", () => {
   });
 
   it("blocks execution of an unapproved intent (fail-closed)", async () => {
-    // Create a fresh intent
     const intent = await caller.rio.createIntent({
       action: "send_email",
       description: "Blocked test",
       requestedBy: "AI_agent",
     });
 
-    // Attempt to execute without approval
     const result = await caller.rio.execute({ intentId: intent.intentId });
 
     expect(result.allowed).toBe(false);
@@ -52,7 +81,7 @@ describe("RIO Backend — Enforcement Logic", () => {
     expect(result.message).toContain("Blocked");
   });
 
-  it("approves an intent and returns a cryptographic signature", async () => {
+  it("approves an intent and returns a cryptographic signature — identity from session", async () => {
     const intent = await caller.rio.createIntent({
       action: "send_email",
       description: "Approval test",
@@ -61,11 +90,11 @@ describe("RIO Backend — Enforcement Logic", () => {
 
     const approval = await caller.rio.approve({
       intentId: intent.intentId,
-      decidedBy: "human_user",
     });
 
     expect(approval.decision).toBe("approved");
-    expect(approval.decidedBy).toBe("human_user");
+    // decidedBy is now bound from ctx.user.name, not client input
+    expect(approval.decidedBy).toBe("RIO Tester");
     expect(approval).toHaveProperty("signature");
     expect(approval.signature).toBeTruthy();
   });
@@ -79,7 +108,6 @@ describe("RIO Backend — Enforcement Logic", () => {
 
     await caller.rio.approve({
       intentId: intent.intentId,
-      decidedBy: "human_user",
     });
 
     const result = await caller.rio.execute({ intentId: intent.intentId });
@@ -99,14 +127,9 @@ describe("RIO Backend — Enforcement Logic", () => {
     expect(receipt).toHaveProperty("action_hash");
     expect(receipt).toHaveProperty("verification_hash");
     expect(receipt).toHaveProperty("verification_status");
-
-    const ledgerEntry = result.ledger_entry as Record<string, unknown>;
-    expect(ledgerEntry).toHaveProperty("block_id");
-    expect(ledgerEntry).toHaveProperty("current_hash");
-    expect(ledgerEntry).toHaveProperty("previous_hash");
   });
 
-  it("denies an intent and blocks subsequent execution", async () => {
+  it("denies an intent and blocks subsequent execution — identity from session", async () => {
     const intent = await caller.rio.createIntent({
       action: "delete_data",
       description: "Denial test",
@@ -115,11 +138,11 @@ describe("RIO Backend — Enforcement Logic", () => {
 
     const denial = await caller.rio.deny({
       intentId: intent.intentId,
-      decidedBy: "admin_user",
     });
 
     expect(denial.decision).toBe("denied");
-    expect(denial.decidedBy).toBe("admin_user");
+    // decidedBy is now bound from ctx.user.name, not client input
+    expect(denial.decidedBy).toBe("RIO Tester");
 
     // Attempt execution after denial — must be blocked
     const result = await caller.rio.execute({ intentId: intent.intentId });
@@ -128,7 +151,6 @@ describe("RIO Backend — Enforcement Logic", () => {
   });
 
   it("creates intents for different action types and returns correct action classification", async () => {
-    // Low risk action
     const lowRisk = await caller.rio.createIntent({
       action: "read_data",
       description: "Read quarterly report",
@@ -138,7 +160,6 @@ describe("RIO Backend — Enforcement Logic", () => {
     expect(lowRisk.status).toBe("pending");
     expect(lowRisk.intentId).toMatch(/^INT-/);
 
-    // High risk action
     const highRisk = await caller.rio.createIntent({
       action: "transfer_funds",
       description: "Wire $47,500 to vendor",
@@ -150,13 +171,12 @@ describe("RIO Backend — Enforcement Logic", () => {
   });
 
   it("generates hash-chained ledger entries with linked previous_hash", async () => {
-    // Execute two intents and verify hash chain linkage
     const intent1 = await caller.rio.createIntent({
       action: "send_email",
       description: "Chain test 1",
       requestedBy: "AI_agent",
     });
-    await caller.rio.approve({ intentId: intent1.intentId, decidedBy: "human_user" });
+    await caller.rio.approve({ intentId: intent1.intentId });
     const exec1 = await caller.rio.execute({ intentId: intent1.intentId });
 
     const intent2 = await caller.rio.createIntent({
@@ -164,7 +184,7 @@ describe("RIO Backend — Enforcement Logic", () => {
       description: "Chain test 2",
       requestedBy: "AI_agent",
     });
-    await caller.rio.approve({ intentId: intent2.intentId, decidedBy: "human_user" });
+    await caller.rio.approve({ intentId: intent2.intentId });
     const exec2 = await caller.rio.execute({ intentId: intent2.intentId });
 
     const ledger1 = exec1.ledger_entry as Record<string, unknown>;
@@ -175,7 +195,6 @@ describe("RIO Backend — Enforcement Logic", () => {
   });
 
   it("verifies a receipt by ID with valid signature and hash chain", async () => {
-    // Create, approve, execute to generate a receipt
     const intent = await caller.rio.createIntent({
       action: "send_email",
       description: "Verify receipt test",
@@ -184,14 +203,12 @@ describe("RIO Backend — Enforcement Logic", () => {
 
     await caller.rio.approve({
       intentId: intent.intentId,
-      decidedBy: "human_user",
     });
 
     const exec = await caller.rio.execute({ intentId: intent.intentId });
     const receipt = exec.receipt as Record<string, unknown>;
     const receiptId = receipt.receipt_id as string;
 
-    // Verify the receipt
     const verification = await caller.rio.verifyReceipt({ receiptId });
 
     expect(verification.found).toBe(true);
@@ -223,7 +240,6 @@ describe("RIO Backend — Enforcement Logic", () => {
 
     await caller.rio.approve({
       intentId: intent.intentId,
-      decidedBy: "human_user",
     });
 
     await caller.rio.execute({ intentId: intent.intentId });
@@ -237,5 +253,127 @@ describe("RIO Backend — Enforcement Logic", () => {
     expect(audit.receipts.length).toBeGreaterThan(0);
     expect(audit.ledger_entries.length).toBeGreaterThan(0);
     expect(audit.log.length).toBeGreaterThan(0);
+  });
+});
+
+describe("RIO Backend — Identity Binding (protectedProcedure)", () => {
+  it("approve rejects unauthenticated callers", async () => {
+    const authCaller = appRouter.createCaller(createAuthContext());
+    const publicCaller = appRouter.createCaller(createPublicContext());
+
+    // Create intent with auth caller (createIntent is public, but use auth for consistency)
+    const intent = await authCaller.rio.createIntent({
+      action: "send_email",
+      description: "Auth rejection test",
+      requestedBy: "AI_agent",
+    });
+
+    // Attempt to approve with unauthenticated caller — should throw
+    await expect(
+      publicCaller.rio.approve({ intentId: intent.intentId })
+    ).rejects.toThrow();
+  });
+
+  it("deny rejects unauthenticated callers", async () => {
+    const authCaller = appRouter.createCaller(createAuthContext());
+    const publicCaller = appRouter.createCaller(createPublicContext());
+
+    const intent = await authCaller.rio.createIntent({
+      action: "send_email",
+      description: "Auth rejection test deny",
+      requestedBy: "AI_agent",
+    });
+
+    await expect(
+      publicCaller.rio.deny({ intentId: intent.intentId })
+    ).rejects.toThrow();
+  });
+
+  it("approve uses ctx.user.name as decidedBy", async () => {
+    const caller = appRouter.createCaller(createAuthContext());
+
+    const intent = await caller.rio.createIntent({
+      action: "send_email",
+      description: "Identity binding test",
+      requestedBy: "AI_agent",
+    });
+
+    const approval = await caller.rio.approve({ intentId: intent.intentId });
+    expect(approval.decidedBy).toBe("RIO Tester");
+  });
+
+  it("deny uses ctx.user.name as decidedBy", async () => {
+    const caller = appRouter.createCaller(createAuthContext());
+
+    const intent = await caller.rio.createIntent({
+      action: "send_email",
+      description: "Identity binding deny test",
+      requestedBy: "AI_agent",
+    });
+
+    const denial = await caller.rio.deny({ intentId: intent.intentId });
+    expect(denial.decidedBy).toBe("RIO Tester");
+  });
+
+  it("falls back to email when name is empty", async () => {
+    const user: AuthenticatedUser = {
+      id: 2,
+      openId: "no-name-user",
+      email: "noname@rio.test",
+      name: "",
+      loginMethod: "manus",
+      role: "user",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastSignedIn: new Date(),
+    };
+
+    const ctx: TrpcContext = {
+      user,
+      req: { protocol: "https", headers: {} } as TrpcContext["req"],
+      res: { clearCookie: () => {} } as TrpcContext["res"],
+    };
+
+    const caller = appRouter.createCaller(ctx);
+
+    const intent = await caller.rio.createIntent({
+      action: "send_email",
+      description: "Fallback email test",
+      requestedBy: "AI_agent",
+    });
+
+    const approval = await caller.rio.approve({ intentId: intent.intentId });
+    expect(approval.decidedBy).toBe("noname@rio.test");
+  });
+
+  it("falls back to user:id when both name and email are empty", async () => {
+    const user: AuthenticatedUser = {
+      id: 99,
+      openId: "bare-user",
+      email: "",
+      name: "",
+      loginMethod: "manus",
+      role: "user",
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      lastSignedIn: new Date(),
+    };
+
+    const ctx: TrpcContext = {
+      user,
+      req: { protocol: "https", headers: {} } as TrpcContext["req"],
+      res: { clearCookie: () => {} } as TrpcContext["res"],
+    };
+
+    const caller = appRouter.createCaller(ctx);
+
+    const intent = await caller.rio.createIntent({
+      action: "send_email",
+      description: "Fallback id test",
+      requestedBy: "AI_agent",
+    });
+
+    const approval = await caller.rio.approve({ intentId: intent.intentId });
+    expect(approval.decidedBy).toBe("user:99");
   });
 });

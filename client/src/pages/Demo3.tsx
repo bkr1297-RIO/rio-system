@@ -90,7 +90,7 @@ export default function Demo3() {
       });
 
       // 2. Approve
-      await approveMut.mutateAsync({ intentId: intent.intentId, decidedBy: "human_user" });
+      await approveMut.mutateAsync({ intentId: intent.intentId });
 
       // 3. Execute
       await executeMut.mutateAsync({ intentId: intent.intentId });

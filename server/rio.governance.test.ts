@@ -2,6 +2,8 @@ import { describe, expect, it } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
 
+type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
+
 /**
  * Tests for the RIO Governance MVP:
  * 1. Full governance loop: create intent → approve → execute → verify receipt
@@ -10,17 +12,24 @@ import type { TrpcContext } from "./_core/context";
  * 4. Ledger chain endpoint returns entries
  * 5. Audit log returns events
  *
- * These tests use the actual return shapes from server/rio.ts:
- * - createIntent returns camelCase: { intentId, intentHash, status, ... }
- * - approve returns: { intentId, decision, signature, ... } (no receipt)
- * - execute returns: { allowed, httpStatus, receipt, ledger_entry } on success
- * - execute returns: { allowed: false, httpStatus: 403, ... } on blocked
- * - verifyReceipt returns: { found, signatureValid, hashValid, ledgerRecorded, ... }
+ * approve/deny are protectedProcedure — identity comes from ctx.user.
  */
 
-function createPublicContext(): TrpcContext {
+function createAuthContext(name = "Governance Tester"): TrpcContext {
+  const user: AuthenticatedUser = {
+    id: 1,
+    openId: "gov-test-user",
+    email: "gov@rio.test",
+    name,
+    loginMethod: "manus",
+    role: "user",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+  };
+
   return {
-    user: null,
+    user,
     req: {
       protocol: "https",
       headers: {},
@@ -32,8 +41,7 @@ function createPublicContext(): TrpcContext {
 }
 
 describe("RIO Governance MVP", () => {
-  const ctx = createPublicContext();
-  const caller = appRouter.createCaller(ctx);
+  const caller = appRouter.createCaller(createAuthContext());
 
   describe("Full approval flow (intent → approve → execute → verify)", () => {
     let intentId: string;
@@ -55,15 +63,14 @@ describe("RIO Governance MVP", () => {
       intentId = result.intentId;
     });
 
-    it("approves the intent with a cryptographic signature", async () => {
+    it("approves the intent — identity from session", async () => {
       const result = await caller.rio.approve({
         intentId,
-        decidedBy: "vitest_approver",
       });
 
       expect(result).toBeDefined();
       expect(result.decision).toBe("approved");
-      expect(result.decidedBy).toBe("vitest_approver");
+      expect(result.decidedBy).toBe("Governance Tester");
       expect(result.signature).toBeTruthy();
     });
 
@@ -122,14 +129,13 @@ describe("RIO Governance MVP", () => {
       intentId = result.intentId;
     });
 
-    it("denies the intent", async () => {
+    it("denies the intent — identity from session", async () => {
       const result = await caller.rio.deny({
         intentId,
-        decidedBy: "vitest_denier",
       });
 
       expect(result.decision).toBe("denied");
-      expect(result.decidedBy).toBe("vitest_denier");
+      expect(result.decidedBy).toBe("Governance Tester");
     });
 
     it("blocks execution of the denied intent (fail-closed)", async () => {
@@ -228,7 +234,6 @@ describe("RIO Governance MVP", () => {
 
   describe("Audit log", () => {
     it("returns full audit trail for a governed intent", async () => {
-      // Create a fresh intent, approve, execute
       const intent = await caller.rio.createIntent({
         action: "send_email",
         description: "Audit trail test",
@@ -237,7 +242,6 @@ describe("RIO Governance MVP", () => {
 
       await caller.rio.approve({
         intentId: intent.intentId,
-        decidedBy: "vitest_auditor",
       });
 
       await caller.rio.execute({ intentId: intent.intentId });

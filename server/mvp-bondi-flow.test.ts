@@ -76,10 +76,11 @@ describe("MVP Bondi Flow — Try a Governed Action (Approve)", () => {
     const caller = createCaller();
     const result = await caller.rio.approve({
       intentId,
-      decidedBy: "MVP Tester",
     });
     const data = result as Record<string, unknown>;
     expect(data.decision).toBe("approved");
+    // Identity should come from ctx.user, not client input
+    expect(data.decidedBy).toBe("MVP Tester");
   });
 
   it("executes the intent and generates receipt + ledger entry", async () => {
@@ -149,10 +150,11 @@ describe("MVP Bondi Flow — Try a Governed Action (Deny)", () => {
     const caller = createCaller();
     const result = await caller.rio.deny({
       intentId,
-      decidedBy: "MVP Tester",
     });
     const data = result as Record<string, unknown>;
     expect(data.decision).toBe("denied");
+    // Identity should come from ctx.user, not client input
+    expect(data.decidedBy).toBe("MVP Tester");
   });
 
   it("execute after denial is blocked — fail-closed", async () => {
@@ -208,7 +210,7 @@ describe("MVP Bondi Flow — Multiple Scenarios", () => {
     const intentId = (intent as Record<string, unknown>).intentId as string;
 
     // Approve
-    await caller.rio.approve({ intentId, decidedBy: "MVP Tester" });
+    await caller.rio.approve({ intentId });
 
     // Execute
     const exec = await caller.rio.execute({ intentId });
@@ -236,7 +238,7 @@ describe("MVP Bondi Flow — Multiple Scenarios", () => {
     });
     const intentId = (intent as Record<string, unknown>).intentId as string;
 
-    await caller.rio.approve({ intentId, decidedBy: "MVP Tester" });
+    await caller.rio.approve({ intentId });
 
     const exec = await caller.rio.execute({ intentId });
     const data = exec as Record<string, unknown>;

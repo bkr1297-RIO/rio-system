@@ -41,9 +41,23 @@ vi.mock("./_core/notification", () => ({
 
 // ── Helpers ─────────────────────────────────────────────────────────────
 
-function createPublicContext(): TrpcContext {
+type AuthenticatedUser = NonNullable<TrpcContext["user"]>;
+
+function createAuthContext(name = "Alice Johnson"): TrpcContext {
+  const user: AuthenticatedUser = {
+    id: 1,
+    openId: "slack-ia-test",
+    email: "alice@rio.test",
+    name,
+    loginMethod: "manus",
+    role: "user",
+    createdAt: new Date(),
+    updatedAt: new Date(),
+    lastSignedIn: new Date(),
+  };
+
   return {
-    user: null,
+    user,
     req: {
       protocol: "https",
       headers: {},
@@ -54,7 +68,7 @@ function createPublicContext(): TrpcContext {
   };
 }
 
-const caller = appRouter.createCaller(createPublicContext());
+const caller = appRouter.createCaller(createAuthContext());
 
 /**
  * Generates a valid Slack signature for testing.
@@ -179,12 +193,12 @@ describe("Slack Interactive Approval", () => {
       expect(intent.status).toBe("pending");
       expect(intent.intentId).toBeTruthy();
 
-      // Step 2: Approve as Slack user (simulating what the interactions endpoint does)
+      // Step 2: Approve — identity comes from ctx.user session
       const approval = await caller.rio.approve({
         intentId: intent.intentId,
-        decidedBy: "Alice Johnson (Slack:U12345678)",
       });
       expect(approval.decision).toBe("approved");
+      expect(approval.decidedBy).toBe("Alice Johnson");
 
       // Step 3: Execute — generates receipt + ledger entry
       const execution = await caller.rio.execute({
@@ -202,7 +216,7 @@ describe("Slack Interactive Approval", () => {
       expect(receipt.action_hash).toBeTruthy();
       expect(receipt.verification_hash).toBeTruthy();
       expect(receipt.decision).toBe("approved");
-      expect(receipt.approved_by).toBe("Alice Johnson (Slack:U12345678)");
+      expect(receipt.approved_by).toBe("Alice Johnson");
       expect(receipt.protocol_version).toBe("v2");
 
       // Step 5: Verify ledger entry exists
@@ -237,12 +251,13 @@ describe("Slack Interactive Approval", () => {
       });
       expect(intent.status).toBe("pending");
 
-      // Step 2: Deny as Slack user
-      const denial = await caller.rio.deny({
+      // Step 2: Deny — identity from session
+      const bobCaller = appRouter.createCaller(createAuthContext("Bob Smith"));
+      const denial = await bobCaller.rio.deny({
         intentId: intent.intentId,
-        decidedBy: "Bob Smith (Slack:U87654321)",
       });
       expect(denial.decision).toBe("denied");
+      expect(denial.decidedBy).toBe("Bob Smith");
 
       // Step 3: Attempt execution — should be blocked (fail-closed)
       const execution = await caller.rio.execute({
@@ -260,7 +275,6 @@ describe("Slack Interactive Approval", () => {
       await expect(
         caller.rio.approve({
           intentId: "INT-NONEXISTENT",
-          decidedBy: "Attacker (Slack:UATTACKER)",
         })
       ).rejects.toThrow("Intent not found");
     });
@@ -269,7 +283,6 @@ describe("Slack Interactive Approval", () => {
       await expect(
         caller.rio.deny({
           intentId: "INT-NONEXISTENT",
-          decidedBy: "Attacker (Slack:UATTACKER)",
         })
       ).rejects.toThrow("Intent not found");
     });
@@ -288,14 +301,12 @@ describe("Slack Interactive Approval", () => {
       // First approval succeeds
       await caller.rio.approve({
         intentId: intent.intentId,
-        decidedBy: "Alice (Slack:U111)",
       });
 
       // Second approval should fail
       await expect(
         caller.rio.approve({
           intentId: intent.intentId,
-          decidedBy: "Bob (Slack:U222)",
         })
       ).rejects.toThrow("already");
     });
@@ -316,9 +327,9 @@ describe("Slack Interactive Approval", () => {
         });
         intentIds.push(intent.intentId);
 
-        await caller.rio.approve({
+        const chainCaller = appRouter.createCaller(createAuthContext(`ChainTester${i}`));
+        await chainCaller.rio.approve({
           intentId: intent.intentId,
-          decidedBy: `ChainTester (Slack:U${i}00)`,
         });
 
         await caller.rio.execute({ intentId: intent.intentId });
@@ -357,9 +368,9 @@ describe("Slack Interactive Approval", () => {
         requestedBy: "field-checker",
       });
 
-      await caller.rio.approve({
+      const fieldCaller = appRouter.createCaller(createAuthContext("FieldChecker"));
+      await fieldCaller.rio.approve({
         intentId: intent.intentId,
-        decidedBy: "FieldChecker (Slack:UFIELDS)",
       });
 
       const execution = await caller.rio.execute({ intentId: intent.intentId });
@@ -375,7 +386,7 @@ describe("Slack Interactive Approval", () => {
       expect(receipt.receipt_hash).toBeTruthy();
       expect(receipt.previous_hash).toBeTruthy();
       expect(receipt.decision).toBe("approved");
-      expect(receipt.approved_by).toContain("Slack:UFIELDS");
+      expect(receipt.approved_by).toBe("FieldChecker");
 
       // Required ledger fields
       expect(ledgerEntry.block_id).toBeTruthy();
