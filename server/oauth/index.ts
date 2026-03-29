@@ -14,6 +14,7 @@
 import type { Express } from "express";
 import { registerGoogleOAuthRoutes } from "./google";
 import { registerGitHubOAuthRoutes } from "./github";
+import { registerMicrosoftOAuthRoutes } from "./microsoft";
 
 export function registerProviderOAuthRoutes(app: Express) {
   registerGoogleOAuthRoutes(app);
@@ -22,6 +23,6 @@ export function registerProviderOAuthRoutes(app: Express) {
   registerGitHubOAuthRoutes(app);
   console.log("[RIO OAuth] GitHub OAuth routes registered");
 
-  // Future providers:
-  // registerMicrosoftOAuthRoutes(app);
+  registerMicrosoftOAuthRoutes(app);
+  console.log("[RIO OAuth] Microsoft OAuth routes registered");
 }

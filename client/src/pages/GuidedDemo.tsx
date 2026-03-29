@@ -88,7 +88,7 @@ function StepIntro({ onNext }: { onNext: () => void }) {
       <div className="space-y-4 text-left w-full">
         <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#9ca3af" }}>
           Imagine you have an AI assistant — <strong style={{ color: "#b8963e" }}>Bondi, your Digital Chief of Staff</strong> — that manages your email, calendar, and files.
-           It's smart. It's fast. But should it be able to{" "}
+           It&apos;s smart. It&apos;s fast. But should it be able to{" "}
           <strong style={{ color: "#d1d5db" }}>send emails on your behalf without asking?</strong>{" "}
           Should it delete files or move money without your knowledge?
         </p>

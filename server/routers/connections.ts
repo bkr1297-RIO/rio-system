@@ -185,6 +185,43 @@ export const connectionsRouter = router({
     }),
 
   /**
+   * Get a summary of Microsoft connection status (all 3 providers at once).
+   * This is the main endpoint the /connect page uses for Microsoft.
+   */
+  microsoftStatus: protectedProcedure
+    .query(async ({ ctx }) => {
+      const db = await getDb();
+      if (!db) return { connected: false, email: null, name: null, providers: [] };
+
+      const connections = await db.select({
+        provider: userConnections.provider,
+        status: userConnections.status,
+        providerAccountId: userConnections.providerAccountId,
+        providerAccountName: userConnections.providerAccountName,
+        connectedAt: userConnections.connectedAt,
+      })
+        .from(userConnections)
+        .where(eq(userConnections.userId, ctx.user.id));
+
+      const microsoftProviders = ["outlook_mail", "outlook_calendar", "onedrive"];
+      const microsoftConnections = connections.filter(c => microsoftProviders.includes(c.provider));
+
+      const anyConnected = microsoftConnections.some(c => c.status === "connected");
+      const firstConn = microsoftConnections[0];
+
+      return {
+        connected: anyConnected,
+        email: firstConn?.providerAccountId || null,
+        name: firstConn?.providerAccountName || null,
+        providers: microsoftConnections.map(c => ({
+          provider: c.provider,
+          status: c.status,
+          connectedAt: c.connectedAt,
+        })),
+      };
+    }),
+
+  /**
    * Connect Slack by saving a webhook URL.
    * No OAuth required — user just provides their Incoming Webhook URL.
    */

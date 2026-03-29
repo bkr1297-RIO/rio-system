@@ -12,4 +12,7 @@ export const ENV = {
   githubOAuthClientId: process.env.GITHUB_OAUTH_CLIENT_ID ?? "",
   githubOAuthClientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET ?? "",
   slackSigningSecret: process.env.SLACK_SIGNING_SECRET ?? "",
+  microsoftOAuthClientId: process.env.MICROSOFT_OAUTH_CLIENT_ID ?? "",
+  microsoftOAuthClientSecret: process.env.MICROSOFT_OAUTH_CLIENT_SECRET ?? "",
+  microsoftOAuthTenantId: process.env.MICROSOFT_OAUTH_TENANT_ID ?? "common",
 };

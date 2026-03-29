@@ -59,6 +59,7 @@ const PLATFORM_COLORS: Record<string, { bg: string; border: string; text: string
 
 // ── Google provider IDs ──
 const GOOGLE_PROVIDERS = ["gmail", "google_drive", "google_calendar"];
+const MICROSOFT_PROVIDERS = ["outlook_mail", "outlook_calendar", "onedrive"];
 
 // ── Status badge ──
 function StatusBadge({ status, userConnected, userEmail }: { status: string; userConnected?: boolean; userEmail?: string | null }) {
@@ -113,6 +114,7 @@ export default function Connect() {
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [disconnectingGoogle, setDisconnectingGoogle] = useState(false);
   const [disconnectingGithub, setDisconnectingGithub] = useState(false);
+  const [disconnectingMicrosoft, setDisconnectingMicrosoft] = useState(false);
   const [disconnectingSlack, setDisconnectingSlack] = useState(false);
   const [slackWebhookUrl, setSlackWebhookUrl] = useState("");
   const [slackChannelName, setSlackChannelName] = useState("");
@@ -130,6 +132,10 @@ export default function Connect() {
     }
     if (params.get("success") === "github") {
       setSuccessMessage("GitHub connected successfully! Issues, PRs, and commits are now live.");
+      window.history.replaceState({}, "", "/connect");
+    }
+    if (params.get("success") === "microsoft") {
+      setSuccessMessage("Microsoft apps connected successfully! Outlook Mail, Calendar, and OneDrive are now live.");
       window.history.replaceState({}, "", "/connect");
     }
     if (params.get("error")) {
@@ -150,6 +156,11 @@ export default function Connect() {
         callback_failed: "OAuth callback failed. Please try again.",
         google_callback_failed: "Google OAuth callback failed. Please try again.",
         github_callback_failed: "GitHub OAuth callback failed. Please try again.",
+        microsoft_denied: "You denied the Microsoft authorization request.",
+        microsoft_missing_params: "Missing parameters from Microsoft callback.",
+        microsoft_invalid_state: "Invalid state from Microsoft. Please try again.",
+        microsoft_expired_state: "Microsoft authorization expired. Please try again.",
+        microsoft_callback_failed: "Microsoft OAuth callback failed. Please try again.",
         db_unavailable: "Database unavailable. Please try again later.",
       };
       setErrorMessage(errorMap[errorCode] || "An error occurred during connection.");
@@ -174,6 +185,12 @@ export default function Connect() {
 
   // GitHub connection status
   const { data: githubStatus, refetch: refetchGithubStatus } = trpc.connections.githubStatus.useQuery(undefined, {
+    enabled: isAuthenticated,
+    refetchOnWindowFocus: false,
+  });
+
+  // Microsoft connection status
+  const { data: microsoftStatus, refetch: refetchMicrosoftStatus } = trpc.connections.microsoftStatus.useQuery(undefined, {
     enabled: isAuthenticated,
     refetchOnWindowFocus: false,
   });
@@ -258,6 +275,32 @@ export default function Connect() {
     window.location.href = `/api/oauth/github/start?origin=${encodeURIComponent(window.location.origin)}`;
   };
 
+  const handleConnectMicrosoft = () => {
+    window.location.href = `/api/oauth/microsoft/start?origin=${encodeURIComponent(window.location.origin)}`;
+  };
+
+  const handleDisconnectMicrosoft = async () => {
+    setDisconnectingMicrosoft(true);
+    try {
+      const response = await fetch("/api/oauth/microsoft/disconnect", {
+        method: "POST",
+        credentials: "include",
+      });
+      const data = await response.json();
+      if (data.success) {
+        setSuccessMessage("Microsoft apps disconnected.");
+        refetch();
+        refetchMicrosoftStatus();
+      } else {
+        setErrorMessage("Failed to disconnect Microsoft apps.");
+      }
+    } catch {
+      setErrorMessage("Failed to disconnect Microsoft apps.");
+    } finally {
+      setDisconnectingMicrosoft(false);
+    }
+  };
+
   const handleDisconnectGithub = async () => {
     setDisconnectingGithub(true);
     try {
@@ -306,6 +349,7 @@ export default function Connect() {
     refetch();
     refetchGoogleStatus();
     refetchGithubStatus();
+    refetchMicrosoftStatus();
     refetchSlackStatus();
   };
 
@@ -315,6 +359,7 @@ export default function Connect() {
 
   const isGoogleConnected = googleStatus?.connected ?? false;
   const isGithubConnected = githubStatus?.connected ?? false;
+  const isMicrosoftConnected = microsoftStatus?.connected ?? false;
   const isSlackConnected = slackStatus?.connected ?? false;
 
   return (
@@ -463,6 +508,82 @@ export default function Connect() {
                             {p.provider === "gmail" ? "Gmail" :
                              p.provider === "google_drive" ? "Google Drive" :
                              p.provider === "google_calendar" ? "Google Calendar" : p.provider}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+
+            {/* Microsoft Connection Card */}
+            <Card className="border-cyan-500/30 border" style={{ backgroundColor: "rgba(255,255,255,0.03)" }}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center">
+                      <svg viewBox="0 0 24 24" className="w-7 h-7" fill="none">
+                        <path d="M11.4 24H0V12.6h11.4V24z" fill="#F25022"/>
+                        <path d="M24 24H12.6V12.6H24V24z" fill="#00A4EF"/>
+                        <path d="M11.4 11.4H0V0h11.4v11.4z" fill="#7FBA00"/>
+                        <path d="M24 11.4H12.6V0H24v11.4z" fill="#FFB900"/>
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 className="text-white text-lg font-semibold">Microsoft 365</h3>
+                      {isMicrosoftConnected ? (
+                        <div className="flex items-center gap-2 mt-1">
+                          <User className="w-3 h-3 text-emerald-400" />
+                          <span className="text-emerald-400 text-sm">
+                            Connected as {microsoftStatus?.email}
+                          </span>
+                        </div>
+                      ) : (
+                        <p className="text-gray-400 text-sm mt-1">
+                          Connect Outlook Mail, Calendar, and OneDrive
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    {isMicrosoftConnected ? (
+                      <Button
+                        variant="outline"
+                        className="border-red-500/30 text-red-400 hover:bg-red-500/10 hover:text-red-300"
+                        onClick={handleDisconnectMicrosoft}
+                        disabled={disconnectingMicrosoft}
+                      >
+                        <Unlink className="w-4 h-4 mr-2" />
+                        {disconnectingMicrosoft ? "Disconnecting..." : "Disconnect"}
+                      </Button>
+                    ) : (
+                      <Button
+                        className="text-white font-medium"
+                        style={{ backgroundColor: "#00A4EF" }}
+                        onClick={handleConnectMicrosoft}
+                      >
+                        <Link2 className="w-4 h-4 mr-2" />
+                        Connect Microsoft 365
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Show which Microsoft services are connected */}
+                {isMicrosoftConnected && microsoftStatus?.providers && (
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <div className="flex gap-3 flex-wrap">
+                      {microsoftStatus.providers.map((p) => (
+                        <div
+                          key={p.provider}
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/20"
+                        >
+                          <CheckCircle2 className="w-3 h-3 text-emerald-400" />
+                          <span className="text-sm text-emerald-300">
+                            {p.provider === "outlook_mail" ? "Outlook Mail" :
+                             p.provider === "outlook_calendar" ? "Outlook Calendar" :
+                             p.provider === "onedrive" ? "OneDrive" : p.provider}
                           </span>
                         </div>
                       ))}
@@ -701,22 +822,27 @@ export default function Connect() {
               ) ?? [];
 
               const isGoogleProvider = GOOGLE_PROVIDERS.includes(connector.id);
+              const isMicrosoftProvider = MICROSOFT_PROVIDERS.includes(connector.id);
               const isGithubProvider = connector.id === "github";
               const isSlackProvider = connector.id === "slack";
               const effectiveConnected = isGoogleProvider
                 ? isGoogleConnected
-                : isGithubProvider
-                  ? isGithubConnected
-                  : isSlackProvider
-                    ? isSlackConnected
-                    : connector.userConnected;
+                : isMicrosoftProvider
+                  ? isMicrosoftConnected
+                  : isGithubProvider
+                    ? isGithubConnected
+                    : isSlackProvider
+                      ? isSlackConnected
+                      : connector.userConnected;
               const effectiveEmail = isGoogleProvider
                 ? googleStatus?.email
-                : isGithubProvider
-                  ? (githubStatus?.username || githubStatus?.email)
-                  : isSlackProvider
-                    ? slackStatus?.channelName
-                    : connector.userEmail;
+                : isMicrosoftProvider
+                  ? microsoftStatus?.email
+                  : isGithubProvider
+                    ? (githubStatus?.username || githubStatus?.email)
+                    : isSlackProvider
+                      ? slackStatus?.channelName
+                      : connector.userEmail;
 
               return (
                 <Card
@@ -785,7 +911,7 @@ export default function Connect() {
                         Running in simulated mode. Connect your account above to enable live execution.
                       </div>
                     )}
-                    {!effectiveConnected && connector.status === "connected" && !isGoogleProvider && !isGithubProvider && (
+                    {!effectiveConnected && connector.status === "connected" && !isGoogleProvider && !isMicrosoftProvider && !isGithubProvider && (
                       <div className="flex items-center gap-2 text-xs text-blue-400/70">
                         <Link2 className="w-3 h-3" />
                         Connected via developer credentials. Connect your own account for production use.
@@ -805,9 +931,6 @@ export default function Connect() {
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             {[
-              { name: "Outlook", icon: "📧", platform: "Microsoft" },
-
-              { name: "OneDrive", icon: "☁️", platform: "Microsoft" },
               { name: "iCloud", icon: "🍎", platform: "Apple" },
               { name: "Notion", icon: "📝", platform: "Notion" },
               { name: "Jira", icon: "📋", platform: "Atlassian" },

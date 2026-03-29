@@ -388,3 +388,15 @@
 - [x] Demo: Rename "your AI assistant" to "Bondi — Your Digital Chief of Staff" throughout the guided demo
 - [x] License: Change package.json license from MIT to UNLICENSED (proprietary)
 - [x] Bug: Fix JSX syntax error in GuidedDemo.tsx line 91 (transient esbuild error, resolved on HMR refresh)
+- [x] Microsoft OAuth: Register Azure AD app credentials (Client ID, Client Secret, Tenant ID)
+- [x] Microsoft OAuth: Build server/oauth/microsoft.ts — OAuth start, callback, token exchange, token refresh
+- [x] Microsoft OAuth: Store access + refresh tokens in user_connections (provider = microsoft)
+- [x] Microsoft Connector: OutlookMailConnector — send email, list inbox via Graph API
+- [x] Microsoft Connector: OutlookCalendarConnector — create event, list events via Graph API
+- [x] Microsoft Connector: OneDriveConnector — list files, upload file via Graph API
+- [x] Microsoft Connector: Register all connectors in connector registry
+- [x] Microsoft UI: Add "Connect Microsoft" button to /connect page with status display
+- [x] Microsoft UI: Add Outlook email, calendar, OneDrive scenarios to /go page
+- [x] Microsoft: All actions generate RIO receipts and ledger entries (connectors use same RIO governance loop as Google)
+- [x] Microsoft: Vitest tests for OAuth flow and all 3 connectors (27 tests in microsoft-integration.test.ts + 5 in microsoft-oauth.test.ts)
+- [ ] Microsoft: Browser end-to-end test of full governed flow (requires user to connect Microsoft account)

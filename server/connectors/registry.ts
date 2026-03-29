@@ -20,6 +20,9 @@ import { GoogleCalendarConnector } from "./calendar";
 import { GoogleDriveConnector } from "./drive";
 import { GitHubConnector } from "./github";
 import { SlackConnector } from "./slack";
+import { OutlookMailConnector } from "./outlook-mail";
+import { OutlookCalendarConnector } from "./outlook-calendar";
+import { OneDriveConnector } from "./onedrive";
 
 class ConnectorRegistry {
   private connectors: Map<string, RIOConnector> = new Map();
@@ -31,6 +34,9 @@ class ConnectorRegistry {
     this.register(new GoogleDriveConnector());
     this.register(new GitHubConnector());
     this.register(new SlackConnector());
+    this.register(new OutlookMailConnector());
+    this.register(new OutlookCalendarConnector());
+    this.register(new OneDriveConnector());
   }
 
   /**

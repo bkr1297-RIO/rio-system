@@ -182,7 +182,7 @@ interface Scenario {
   riskLevel: string;
   riskColor: string;
   requester: string;
-  category: "google" | "slack" | "other";
+  category: "google" | "microsoft" | "slack" | "other";
 }
 
 const SCENARIOS: Scenario[] = [
@@ -215,6 +215,51 @@ const SCENARIOS: Scenario[] = [
     riskColor: "#22c55e",
     requester: "Bondi AI",
     category: "google",
+  },
+  {
+    id: "outlook_send",
+    label: "Send Outlook Email",
+    icon: "\u2709\uFE0F",
+    connector: "outlook_mail",
+    connectorName: "Outlook Mail",
+    action: "send_email",
+    description: "Send a test email via Outlook",
+    target: "test@example.com",
+    parameters: { to: "test@example.com", subject: "Test from Bondi", body: "This email was sent through RIO governance via Outlook." },
+    riskLevel: "HIGH",
+    riskColor: "#f97316",
+    requester: "Bondi AI",
+    category: "microsoft",
+  },
+  {
+    id: "outlook_calendar_event",
+    label: "Outlook Calendar Event",
+    icon: "\uD83D\uDCC5",
+    connector: "outlook_calendar",
+    connectorName: "Outlook Calendar",
+    action: "create_event",
+    description: "Create a calendar event in Outlook",
+    target: "Your Outlook Calendar",
+    parameters: { title: "Team Standup", date: "Tomorrow 10:00 AM", duration: "30 minutes" },
+    riskLevel: "LOW",
+    riskColor: "#22c55e",
+    requester: "Bondi AI",
+    category: "microsoft",
+  },
+  {
+    id: "onedrive_upload",
+    label: "Upload to OneDrive",
+    icon: "\u2601\uFE0F",
+    connector: "onedrive",
+    connectorName: "OneDrive",
+    action: "upload_file",
+    description: "Upload a file to OneDrive",
+    target: "Your OneDrive",
+    parameters: { filename: "bondi-report.pdf", folder: "Documents", size: "2.4 MB" },
+    riskLevel: "MEDIUM",
+    riskColor: "#f59e0b",
+    requester: "Bondi AI",
+    category: "microsoft",
   },
   {
     id: "slack_message",
@@ -600,6 +645,7 @@ function ActionsView({
   const availableScenarios = useMemo(() => {
     return SCENARIOS.filter((s) => {
       if (s.category === "google") return true; // always show, will simulate if not connected
+      if (s.category === "microsoft") return true; // always show, will simulate if not connected
       if (s.category === "slack") return true;
       return true;
     });
