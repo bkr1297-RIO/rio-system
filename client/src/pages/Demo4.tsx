@@ -444,7 +444,7 @@ export default function Demo4() {
       <div className="flex flex-col items-center flex-1 px-4 sm:px-6 py-6 sm:py-10">
         {/* Header */}
         <img
-          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
+          src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-rings-logo_d8ae3f78.png"
           alt="RIO Logo"
           className="w-20 h-20 mb-3"
         />

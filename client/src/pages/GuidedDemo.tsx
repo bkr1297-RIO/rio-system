@@ -1146,7 +1146,7 @@ export default function GuidedDemo() {
       >
         <a href="/" className="flex items-center gap-3 hover:opacity-80 transition-opacity">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-rings-logo_d8ae3f78.png"
             alt="RIO"
             className="w-8 h-8"
           />

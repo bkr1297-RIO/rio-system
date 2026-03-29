@@ -93,9 +93,10 @@ describe("NavBar includes Contact and Roadmap", () => {
     "utf-8"
   );
 
-  it("has Contact in Resources dropdown", () => {
-    expect(navSrc).toContain('"Contact"');
-    expect(navSrc).toContain('"/contact"');
+  it("has Contact as standalone nav button (not in Resources dropdown)", () => {
+    // Contact was moved from Resources dropdown to a standalone button next to the RIO logo
+    expect(navSrc).toContain("Contact");
+    expect(navSrc).toContain("/contact");
   });
 
   it("has Roadmap in Resources dropdown", () => {

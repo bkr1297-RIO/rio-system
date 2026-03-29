@@ -400,3 +400,6 @@
 - [x] Microsoft: All actions generate RIO receipts and ledger entries (connectors use same RIO governance loop as Google)
 - [x] Microsoft: Vitest tests for OAuth flow and all 3 connectors (27 tests in microsoft-integration.test.ts + 5 in microsoft-oauth.test.ts)
 - [ ] Microsoft: Browser end-to-end test of full governed flow (requires user to connect Microsoft account)
+- [x] Nav: Move "Contact" as a standalone button next to the RIO logo (left side of nav bar)
+- [x] Logo: Switch site logo to the gold rings logo from the OG social preview banner (the one users see when sharing the link)
+- [x] Font: Match the "RIO" title font to the OG banner style (Outfit 900 weight, tracking 0.2em)

@@ -23,12 +23,12 @@ export default function Home() {
         {/* ── Hero: Logo + Title + What is RIO ──────────────────────────────── */}
         <div className="flex flex-col items-center mb-10 sm:mb-14">
           <img
-            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
+            src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-rings-logo_d8ae3f78.png"
             alt="RIO Logo"
             className="w-24 h-24 sm:w-32 sm:h-32 mb-4 sm:mb-5"
           />
           <h1
-            className="text-5xl sm:text-7xl font-black tracking-[0.15em] mb-3"
+            className="text-5xl sm:text-7xl font-black tracking-[0.2em] mb-3"
             style={{ color: "#b8963e" }}
           >
             RIO

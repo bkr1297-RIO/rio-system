@@ -14,6 +14,9 @@ interface NavLink {
   highlight?: boolean;
 }
 
+const RIO_LOGO_URL =
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-rings-logo_d8ae3f78.png";
+
 const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "How It Works", href: "/how-it-works" },
@@ -56,7 +59,6 @@ const navLinks: NavLink[] = [
       { label: "FAQ", href: "/faq" },
       { label: "Updates", href: "/blog" },
       { label: "Roadmap", href: "/roadmap" },
-      { label: "Contact", href: "/contact" },
     ],
   },
 ];
@@ -108,20 +110,39 @@ export default function NavBar() {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-14">
-          {/* Logo + Brand */}
-          <Link href="/" className="flex items-center gap-2.5 no-underline">
-            <img
-              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
-              alt="RIO Logo"
-              className="w-8 h-8"
-            />
-            <span
-              className="text-lg font-bold tracking-[0.1em]"
-              style={{ color: "#b8963e" }}
+          {/* Left side: Logo + Brand + Contact button */}
+          <div className="flex items-center gap-2.5">
+            <Link href="/" className="flex items-center gap-2.5 no-underline">
+              <img
+                src={RIO_LOGO_URL}
+                alt="RIO Logo"
+                className="w-8 h-8 rounded-sm"
+              />
+              <span
+                className="text-lg font-black tracking-[0.2em]"
+                style={{ color: "#b8963e" }}
+              >
+                RIO
+              </span>
+            </Link>
+
+            {/* Contact button — standalone, right of logo */}
+            <Link
+              href="/contact"
+              className="ml-3 px-3 py-1 text-xs font-medium rounded border transition-colors duration-200 no-underline hover:bg-white/5"
+              style={{
+                color: isActive("/contact") ? "#b8963e" : "#d1d5db",
+                borderColor: isActive("/contact")
+                  ? "rgba(184, 150, 62, 0.5)"
+                  : "rgba(184, 150, 62, 0.3)",
+                backgroundColor: isActive("/contact")
+                  ? "rgba(184, 150, 62, 0.08)"
+                  : "transparent",
+              }}
             >
-              RIO
-            </span>
-          </Link>
+              Contact
+            </Link>
+          </div>
 
           {/* Desktop Nav Links */}
           <div className="hidden md:flex items-center gap-1">
@@ -321,7 +342,7 @@ export default function NavBar() {
                 }}
                 onClick={() => setMobileOpen(false)}
               >
-                ✦ {link.label}
+                {link.label}
               </Link>
             ) : (
               <Link
@@ -337,13 +358,24 @@ export default function NavBar() {
               </Link>
             )
           )}
+          {/* Mobile Contact link */}
+          <Link
+            href="/contact"
+            className="block py-2.5 text-sm font-medium no-underline"
+            style={{
+              color: isActive("/contact") ? "#b8963e" : "#d1d5db",
+            }}
+            onClick={() => setMobileOpen(false)}
+          >
+            Contact
+          </Link>
           <Link
             href="/app"
             className="block py-2.5 text-sm font-semibold no-underline"
             style={{ color: "#7c9aff" }}
             onClick={() => setMobileOpen(false)}
           >
-            Launch Bondi →
+            Launch Bondi
           </Link>
           <a
             href="https://github.com/bkr1297-RIO/rio-protocol"
@@ -353,7 +385,7 @@ export default function NavBar() {
             style={{ color: "#9ca3af" }}
             onClick={() => setMobileOpen(false)}
           >
-            GitHub →
+            GitHub
           </a>
         </div>
       )}

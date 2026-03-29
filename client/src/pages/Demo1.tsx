@@ -257,7 +257,7 @@ export default function Demo1() {
       <div className="flex flex-col items-center flex-1 px-4 sm:px-6 py-6 sm:py-10">
       {/* Top: Logo, Title, Subtitle */}
       <img
-        src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-logo-new_8049c497.png"
+        src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-rings-logo_d8ae3f78.png"
         alt="RIO Logo"
         className="w-16 h-16 sm:w-24 sm:h-24 mb-3 sm:mb-4"
       />
