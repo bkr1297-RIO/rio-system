@@ -405,3 +405,7 @@
 - [x] Font: Match the "RIO" title font to the OG banner style (Outfit 900 weight, tracking 0.2em)
 - [x] Fix: Nav bar logo too small — increased to w-10 h-10 with transparent background
 - [x] Fix: Hero logo has dark rectangular background crop artifact — re-cropped with transparent background, increased to w-32/w-40
+- [ ] Bug: Microsoft OAuth callback fails after user consents — "OAuth callback failed. Please try again." error
+- [x] Email Brian Azure OAuth fix instructions via Gmail (delivered in chat — Gmail MCP send was interrupted)
+- [x] Build RIO Governance Gateway as standalone Node.js Express service (10 endpoints, policy engine, hash-chained ledger, fail-closed)
+- [x] Push RIO Gateway to rio-system GitHub repo (commit 190ce8f pushed to main)

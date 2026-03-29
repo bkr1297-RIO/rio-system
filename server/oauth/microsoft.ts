@@ -382,7 +382,8 @@ export function registerMicrosoftOAuthRoutes(app: Express) {
       const redirectOrigin = stateData.callbackUrl ? new URL(stateData.callbackUrl).origin : "";
       res.redirect(302, `${redirectOrigin}/connect?success=microsoft`);
     } catch (err) {
-      console.error("[OAuth Microsoft] Callback failed:", err);
+      console.error("[OAuth Microsoft] Callback failed:", err instanceof Error ? err.message : err);
+      console.error("[OAuth Microsoft] Full error:", JSON.stringify(err, Object.getOwnPropertyNames(err || {})));
       const errorRedirectOrigin = stateData.callbackUrl ? new URL(stateData.callbackUrl).origin : "";
       res.redirect(302, `${errorRedirectOrigin}/connect?error=callback_failed`);
     }
