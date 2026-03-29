@@ -403,3 +403,5 @@
 - [x] Nav: Move "Contact" as a standalone button next to the RIO logo (left side of nav bar)
 - [x] Logo: Switch site logo to the gold rings logo from the OG social preview banner (the one users see when sharing the link)
 - [x] Font: Match the "RIO" title font to the OG banner style (Outfit 900 weight, tracking 0.2em)
+- [x] Fix: Nav bar logo too small — increased to w-10 h-10 with transparent background
+- [x] Fix: Hero logo has dark rectangular background crop artifact — re-cropped with transparent background, increased to w-32/w-40

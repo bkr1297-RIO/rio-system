@@ -15,7 +15,7 @@ interface NavLink {
 }
 
 const RIO_LOGO_URL =
-  "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-rings-logo_d8ae3f78.png";
+  "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-rings-clean_ac8891e1.png";
 
 const navLinks: NavLink[] = [
   { label: "Home", href: "/" },
@@ -116,7 +116,7 @@ export default function NavBar() {
               <img
                 src={RIO_LOGO_URL}
                 alt="RIO Logo"
-                className="w-8 h-8 rounded-sm"
+                className="w-10 h-10"
               />
               <span
                 className="text-lg font-black tracking-[0.2em]"
