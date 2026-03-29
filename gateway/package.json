@@ -1,0 +1,18 @@
+{
+  "name": "rio-governance-gateway",
+  "version": "1.0.0",
+  "description": "RIO Governance Gateway — Governed AI Execution Runtime",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs",
+    "dev": "node --watch server.mjs",
+    "test": "node --test tests/gateway.test.mjs"
+  },
+  "dependencies": {
+    "express": "^4.21.0",
+    "cors": "^2.8.5",
+    "uuid": "^10.0.0"
+  }
+}
