@@ -303,6 +303,67 @@ export default function Status() {
           </Card>
         </div>
 
+        {/* Canonical Ledger Policy */}
+        <div className="w-full max-w-4xl mt-8">
+          <Card title="Canonical Ledger Policy" accent="#ef4444">
+            <div
+              className="rounded-lg p-4 mb-4"
+              style={{
+                backgroundColor: "rgba(239,68,68,0.06)",
+                border: "1px solid rgba(239,68,68,0.2)",
+              }}
+            >
+              <p className="text-sm font-medium mb-1" style={{ color: "#fca5a5" }}>
+                Governing Rule
+              </p>
+              <p className="text-sm italic" style={{ color: "#e5e7eb" }}>
+                "A receipt is only official if it exists in the gateway PostgreSQL ledger and passes hash verification."
+              </p>
+            </div>
+            <div className="space-y-1">
+              <StatRow label="Policy ID" value="canonical-ledger-001" mono />
+              <StatRow label="Canonical Ledger" value="Gateway PostgreSQL" />
+              <StatRow label="Write Access" value="Gateway Only" />
+              <StatRow
+                label="Read Access"
+                value="Demo Site, Mobile App, Verify Endpoint, GitHub, Email Receipts"
+              />
+              <StatRow label="Declared By" value="Brian Kent Rasmussen (System Owner)" />
+              <StatRow label="Status" value="Active" />
+            </div>
+            <div className="mt-4 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <p className="text-xs font-semibold tracking-wide uppercase mb-2" style={{ color: "#6b7280" }}>
+                Enforcement
+              </p>
+              <div className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs" style={{ color: "#ef4444" }}>{"\u25A0"}</span>
+                  <span className="text-xs" style={{ color: "#e5e7eb" }}>
+                    Write ops without gateway: <span className="font-semibold" style={{ color: "#ef4444" }}>BLOCKED</span> (fail-closed)
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs" style={{ color: "#eab308" }}>{"\u25A0"}</span>
+                  <span className="text-xs" style={{ color: "#e5e7eb" }}>
+                    Read ops without gateway: <span className="font-semibold" style={{ color: "#eab308" }}>FALLBACK</span> to internal engine
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-xs" style={{ color: "#ef4444" }}>{"\u25A0"}</span>
+                  <span className="text-xs" style={{ color: "#e5e7eb" }}>
+                    Receipt without gateway entry: <span className="font-semibold" style={{ color: "#ef4444" }}>NOT OFFICIAL</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 pt-3" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+              <p className="text-xs" style={{ color: "#6b7280" }}>
+                Recorded in GitHub: <span className="font-mono" style={{ color: "#9ca3af" }}>docs/CANONICAL_LEDGER_POLICY.json</span> (commit c42d89c)
+              </p>
+            </div>
+          </Card>
+        </div>
+
         {/* Footer */}
         <p className="text-xs mt-8" style={{ color: "#4b5563" }}>
           Auto-refreshes every 15 seconds. Last checked: {new Date().toLocaleTimeString()}

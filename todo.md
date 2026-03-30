@@ -482,3 +482,8 @@
 - [x] Build /status page showing governance health, routing mode, ledger stats
 - [x] Run full test suite and verify no regressions (399 tests, 25 files)
 - [x] Push to GitHub repo (commit 021749c)
+
+## Canonical Ledger Policy Declaration (2026-03-30)
+- [x] Commit CANONICAL_LEDGER_POLICY.json to rio-system repo docs/ (commit c42d89c)
+- [x] Surface canonical ledger policy on /status page
+- [x] Run full test suite (399 tests, 25 files)
