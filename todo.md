@@ -539,3 +539,27 @@
 ## BUG: Approve/Deny buttons not appearing on /go (2026-03-30)
 - [x] Diagnose: SUBMIT button condition was editableParams["to"] === "" (hid button once user typed); checkPolicy used wrong tRPC input format
 - [x] Fixed both bugs — SUBMIT stays visible, checkPolicy uses batch format, approve/deny buttons appear correctly
+
+## Manus-Claude Coordination Infrastructure (2026-03-30)
+- [ ] Create Gmail label RIO-Claude-Tasks
+- [ ] Create Google Drive coordination file at ONE/root/manus-sync/coordination.json
+- [ ] Send first test task email to Claude via Gmail
+
+## INTEGRATION_MAP.md — Manny Assignment (2026-03-30)
+- [x] Read Romney's gateway routes from GitHub (rio-system/gateway/routes/index.mjs)
+- [x] Catalog all 10 simulated connectors in demo site with endpoints and data shapes
+- [x] Write INTEGRATION_MAP.md with full mapping, gaps, and migration plan
+- [x] Push INTEGRATION_MAP.md to rio-system GitHub repo (commit b166bea)
+- [x] Download, update, and re-upload manus-sync.json on Google Drive (v1.4 → v1.5)
+- [x] Verify sync file changes landed (confirmed: TASK-011 COMPLETE, MSG-010 STATUS_UPDATE, Jordan ACTIVE)
+
+## Gateway Client Adapter & /verify Page (2026-03-30)
+- [x] Build gateway-client.ts adapter — ALREADY EXISTS with full 6-step pipeline, Ed25519, fail-closed
+- [x] Handle /govern step, two-step execution, and Ed25519 — all implemented in gateway-client.ts
+- [x] Wire governance-router.ts — ALREADY WIRED with dual-mode dispatch (internal/gateway)
+- [x] Build /verify page — ALREADY EXISTS at VerifyReceipt.tsx with 3 modes (receipt, ledger, lookup)
+- [x] Add /verify route — ALREADY IN App.tsx and NavBar under Demos dropdown
+- [x] Tests — ALREADY EXIST: gateway-client.test.ts (18KB) and governance-router.test.ts (17KB)
+- [x] Run full test suite (408 tests passing, 26 files)
+- [ ] Push to GitHub and save checkpoint
+- [ ] Update manus-sync.json on Google Drive
