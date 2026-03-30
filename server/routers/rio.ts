@@ -9,15 +9,22 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { notifyOwner } from "../_core/notification";
+// Phase B: Core governance operations routed through the governance router
+// (dispatches to gateway or internal engine based on GATEWAY_URL)
 import {
   createIntent,
   approveIntent,
   denyIntent,
   executeIntent,
   getAuditLog,
-  verifyReceiptById,
+  verifyReceipt as verifyReceiptById,
   getLedgerChain,
   getLearningAnalytics,
+  getGovernanceHealth,
+  getRoutingMode,
+} from "../governance-router";
+// Policy functions remain internal-only (not routed through gateway)
+import {
   acceptPolicy,
   dismissPolicy,
   getActivePolicies,
@@ -405,5 +412,19 @@ export const rioRouter = router({
       }
 
       return { notified: ownerNotified, slackNotified, intentId: input.intentId };
+    }),
+
+  // ── Governance Infrastructure Status ──────────────────────────────
+
+  /** Get the current governance routing mode and health of all backends */
+  governanceHealth: publicProcedure
+    .query(async () => {
+      return getGovernanceHealth();
+    }),
+
+  /** Get the current routing mode (gateway | internal | uninitialized) */
+  routingMode: publicProcedure
+    .query(async () => {
+      return { mode: getRoutingMode() };
     }),
 });

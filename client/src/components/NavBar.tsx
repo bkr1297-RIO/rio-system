@@ -31,6 +31,7 @@ const navLinks: NavLink[] = [
       { label: "Dashboard", href: "/dashboard" },
       { label: "Learning Loop", href: "/learning" },
       { label: "Connect Apps", href: "/connect" },
+      { label: "System Status", href: "/status" },
     ],
   },
   { label: "See What RIO Makes Possible for You", href: "/demo", highlight: true },

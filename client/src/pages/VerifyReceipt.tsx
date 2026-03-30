@@ -414,7 +414,7 @@ export default function VerifyReceipt() {
         });
 
         // Also populate the input with the receipt JSON for inspection
-        if (data.receipt) {
+        if ('receipt' in data && data.receipt) {
           setInput(JSON.stringify(data.receipt, null, 2));
         }
       }

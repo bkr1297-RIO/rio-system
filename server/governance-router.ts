@@ -94,6 +94,7 @@ export async function createIntent(
     // Map gateway response to internal format for UI compatibility
     return {
       id: result.intent_id,
+      intentId: result.intent_id, // Alias for frontend compatibility
       action: result.action,
       description,
       requestedBy,
@@ -187,6 +188,7 @@ export async function approveIntent(
       decidedBy: result.authorized_by || decidedBy,
       authorizationHash: result.authorization_hash,
       ed25519Signed: result.ed25519_signed,
+      signature: result.authorization_hash ? result.authorization_hash.slice(0, 32) + "..." : "gateway-signed",
       timestamp: result.timestamp,
       source: "gateway" as const,
     };
@@ -236,14 +238,20 @@ export async function denyIntent(
  */
 export async function executeIntent(intentId: string) {
   if (gatewayClient) {
-    // Step 4: Get execution token
+    // Step 4: Get execution token from gateway
     const execResult = await gatewayClient.execute(intentId);
+    // Normalize to match internal format so frontend always sees the same shape
     return {
+      allowed: execResult.status === "execution_authorized",
+      httpStatus: execResult.status === "execution_authorized" ? 200 : 403,
       intentId: execResult.intent_id,
       status: execResult.status,
+      receipt: null as Record<string, unknown> | null, // Receipt comes from generateReceipt() in gateway mode
+      ledger_entry: null as Record<string, unknown> | null, // Ledger entry comes from gateway receipt flow
       executionToken: execResult.execution_token,
       instruction: execResult.instruction,
       timestamp: execResult.timestamp,
+      message: execResult.instruction || "Gateway execution authorized",
       source: "gateway" as const,
     };
   }
@@ -314,8 +322,17 @@ export async function verifyReceipt(receiptId: string) {
   if (gatewayClient) {
     try {
       const result = await gatewayClient.verify(receiptId);
+      // Normalize gateway response to match internal format
+      // so the frontend always gets the same shape
+      const rv = result.receipt_verification;
       return {
-        ...result,
+        found: !!rv,
+        signatureValid: rv?.checks?.signature ?? false,
+        hashValid: rv?.checks?.hash_chain ?? false,
+        ledgerRecorded: result.ledger_chain_verification?.valid ?? false,
+        protocolVersion: "v2" as const,
+        verificationStatus: rv?.valid ? "verified" : "failed",
+        receipt: rv ? { receipt_id: rv.receipt_id } : null,
         source: "gateway" as const,
       };
     } catch (err) {
@@ -369,10 +386,17 @@ export async function getLedgerChain(limit: number = 50) {
 
   // Always include internal ledger
   const internalLedger = await internalGetLedgerChain(limit);
+  const internalEntries = Array.isArray(internalLedger)
+    ? internalLedger
+    : (internalLedger as any)?.entries ?? [];
   results.push({
-    entries: Array.isArray(internalLedger) ? internalLedger.map((e: any) => ({ ...e, source: "internal" })) : [],
+    entries: internalEntries.map((e: any) => ({ ...e, source: "internal" })),
     source: "internal",
   });
+
+  // Carry forward chain validation from internal ledger if available
+  const internalChainValid = !Array.isArray(internalLedger) ? (internalLedger as any)?.chainValid ?? true : true;
+  const internalChainErrors = !Array.isArray(internalLedger) ? (internalLedger as any)?.chainErrors ?? [] : [];
 
   // Merge and deduplicate by intent_id, preferring gateway entries
   const seen = new Set<string>();
@@ -391,6 +415,8 @@ export async function getLedgerChain(limit: number = 50) {
     entries: merged.slice(0, limit),
     total: merged.length,
     sources: results.map(r => r.source),
+    chainValid: internalChainValid,
+    chainErrors: internalChainErrors,
   };
 }
 

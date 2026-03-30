@@ -40,7 +40,7 @@ export default function LedgerExplorer() {
     });
   };
 
-  const entries: LedgerEntry[] = data?.entries ?? [];
+  const entries: LedgerEntry[] = (data?.entries ?? []) as LedgerEntry[];
   const chainValid = data?.chainValid ?? true;
   const chainErrors = data?.chainErrors ?? [];
 
@@ -136,7 +136,7 @@ export default function LedgerExplorer() {
             <p className="text-xs font-semibold mb-1" style={{ color: "#ef4444" }}>
               Chain Errors Detected:
             </p>
-            {chainErrors.map((err, i) => (
+            {chainErrors.map((err: string, i: number) => (
               <p key={i} className="text-xs font-mono" style={{ color: "#fca5a5" }}>
                 {err}
               </p>

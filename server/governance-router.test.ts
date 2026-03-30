@@ -406,7 +406,10 @@ describe("Governance Router — Gateway Mode (Phase B)", () => {
 
     const result = await verifyReceipt("rcpt-gw-001");
     expect(result.source).toBe("gateway");
-    expect(result.receipt_verification?.valid).toBe(true);
+    expect(result.found).toBe(true);
+    expect(result.signatureValid).toBe(true);
+    expect(result.hashValid).toBe(true);
+    expect(result.verificationStatus).toBe("verified");
     expect(mockInternalVerifyReceiptById).not.toHaveBeenCalled();
   });
 

@@ -10,6 +10,7 @@ import { serveStatic, setupVite } from "./vite";
 import { registerProviderOAuthRoutes } from "../oauth";
 import { registerSlackInteractionsRoute } from "../slack";
 import { registerVerifyRoutes } from "../verify-api";
+import { initGovernanceRouter } from "../governance-router";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -45,6 +46,8 @@ async function startServer() {
   registerOAuthRoutes(app);
   // Provider OAuth routes (Google, GitHub, etc.) under /api/oauth/<provider>/*
   registerProviderOAuthRoutes(app);
+  // Initialize the governance router (reads GATEWAY_URL env var)
+  initGovernanceRouter();
   // Public verification API (no auth required, CORS enabled)
   registerVerifyRoutes(app);
   // tRPC API

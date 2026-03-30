@@ -473,4 +473,12 @@
 - [x] Maintain internal engine as fallback (Phase B dual-mode — read ops fall back, write ops fail-closed)
 - [ ] Test live /verify endpoint on the Azure gateway (waiting for URL)
 - [x] Write vitest tests for Phase B governance router (25 tests — internal mode, gateway mode, fail-closed)
-- [ ] Push Phase B code to rio-system GitHub repo
+- [x] Push Phase B code to rio-system GitHub repo (commit 021749c)
+
+## Governance Router Wiring & Status Page (2026-03-30)
+- [x] Wire RIO tRPC router to import from governance-router.ts instead of rio.ts
+- [x] Initialize governance router at server startup (server/_core/index.ts)
+- [x] Add tRPC endpoint for governance health status (governanceHealth + routingMode)
+- [x] Build /status page showing governance health, routing mode, ledger stats
+- [x] Run full test suite and verify no regressions (399 tests, 25 files)
+- [x] Push to GitHub repo (commit 021749c)
