@@ -441,4 +441,10 @@
 - [x] Step 5: Seed ledger with real 4:44 PM genesis receipt (e76156e6-34cc-43f0-83b0-69a85c86762a)
 - [x] Step 5: Include all 5 original hash values in genesis entry
 - [x] Write tests for persistent ledger, Ed25519, /verify endpoint, and GitHub connector
-- [ ] Write integration instructions for protocol site owner to connect /verify
+- [x] Write integration instructions for protocol site owner to connect /verify
+
+## Post-Sprint Coordination (2026-03-29)
+- [x] Check GitHub repo for parallel agent's recent commits and avoid conflicts
+- [x] Write /api/verify integration instructions for protocol site owner
+- [x] Push latest demo site infrastructure code to rio-system GitHub repo
+- [x] Coordinate with parallel agent via AGENT_STATUS_UPDATE_20260329.md
