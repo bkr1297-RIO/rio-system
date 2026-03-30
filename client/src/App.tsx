@@ -34,6 +34,7 @@ import BondiApp from "./pages/BondiApp";
 import GuidedDemo from "./pages/GuidedDemo";
 import Status from "./pages/Status";
 import Chain from "./pages/Chain";
+import MobileApp from "./pages/MobileApp";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -69,6 +70,11 @@ function Router() {
       <Route path={"/blog"} component={Blog} />
       <Route path={"/status"} component={Status} />
       <Route path={"/chain"} component={Chain} />
+      <Route path={"/m/approvals"}>{() => <MobileApp initialTab="approvals" />}</Route>
+      <Route path={"/m/receipts"}>{() => <MobileApp initialTab="receipts" />}</Route>
+      <Route path={"/m/ledger"}>{() => <MobileApp initialTab="ledger" />}</Route>
+      <Route path={"/m/settings"}>{() => <MobileApp initialTab="settings" />}</Route>
+      <Route path={"/m"}>{() => <MobileApp />}</Route>
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

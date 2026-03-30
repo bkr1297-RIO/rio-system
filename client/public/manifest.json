@@ -1,14 +1,44 @@
 {
-  "name": "Bondi — Your Digital Chief of Staff",
-  "short_name": "Bondi",
-  "description": "Your Digital Chief of Staff — Secured by RIO. Govern every AI action with approval, receipts, and audit trails.",
-  "start_url": "/app",
+  "name": "RIO — Governed Intelligence",
+  "short_name": "RIO",
+  "description": "Control AI actions from your phone. Approve, deny, and audit every governed action with cryptographic receipts and a tamper-evident ledger.",
+  "start_url": "/m/approvals",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
   "background_color": "#0a0e1a",
   "theme_color": "#0a0e1a",
   "categories": ["productivity", "security", "utilities"],
+  "shortcuts": [
+    {
+      "name": "Approvals",
+      "short_name": "Approvals",
+      "description": "View and act on pending approvals",
+      "url": "/m/approvals",
+      "icons": [{ "src": "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/icon-96x96_0fbc2ebd.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Receipts",
+      "short_name": "Receipts",
+      "description": "View and verify governance receipts",
+      "url": "/m/receipts",
+      "icons": [{ "src": "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/icon-96x96_0fbc2ebd.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Ledger",
+      "short_name": "Ledger",
+      "description": "Browse the tamper-evident action ledger",
+      "url": "/m/ledger",
+      "icons": [{ "src": "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/icon-96x96_0fbc2ebd.png", "sizes": "96x96" }]
+    },
+    {
+      "name": "Settings",
+      "short_name": "Settings",
+      "description": "Manage connected apps and preferences",
+      "url": "/m/settings",
+      "icons": [{ "src": "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/icon-96x96_0fbc2ebd.png", "sizes": "96x96" }]
+    }
+  ],
   "icons": [
     {
       "src": "https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/icon-72x72_65c83bf7.png",

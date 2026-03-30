@@ -578,3 +578,19 @@
   - [x] /app — already had mobile support (w-full sm:w-80 panel, mobile menu)
   - [x] /dashboard — already had mobile support (useIsMobile hook, sticky header)
 - [ ] TASK-016: Connect frontend to production URL (PENDING — activates when Damon marks TASK-015 COMPLETE)
+
+## TASK-026: PWA Mobile App Wrapper (2026-03-30)
+- [x] PWA: Upgrade manifest.json with RIO branding, shortcuts, and screenshots
+- [x] PWA: Upgrade service worker with proper caching strategy and offline fallback page
+- [x] PWA: Build "Install to Home Screen" prompt component (iOS + Android)
+- [x] PWA: Build standalone /m/approvals screen (mobile-optimized pending approvals)
+- [x] PWA: Build standalone /m/receipts screen (mobile-optimized receipt viewer)
+- [x] PWA: Build standalone /m/ledger screen (mobile-optimized ledger explorer)
+- [x] PWA: Build standalone /m/settings screen (connected apps, preferences, about)
+- [x] PWA: Build mobile app shell with bottom tab navigation (/m routes)
+- [x] PWA: Push notification registration hook (usePushNotifications)
+- [x] PWA: Push notification permission prompt UI
+- [x] PWA: Server endpoint to store push subscriptions
+- [x] PWA: Service worker push event handler (scaffolding)
+- [x] PWA: Vitest tests for PWA components and hooks
+- [x] PWA: Update sync file after completion
