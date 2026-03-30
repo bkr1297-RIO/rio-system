@@ -206,7 +206,7 @@ export async function onedriveUploadFile(
           Authorization: `Bearer ${accessToken}`,
           "Content-Type": contentType,
         },
-        body: content,
+        body: (typeof content === 'string' ? content : new Uint8Array(content)) as BodyInit,
       }
     );
 

@@ -504,3 +504,8 @@
 - [x] Create ONE/root/index.json — master index of all corpus contents (with Drive IDs, types, statuses)
 - [x] Create email protocol spec (EMAIL_PROTOCOL.md — RIO-ENVELOPE format) in ONE/root/
 - [x] Move existing artifacts into correct subfolders (specs→root, white paper→archive, diagrams→root)
+
+## First Invariant (2026-03-30)
+- [x] Write INVARIANT-001: No Action Without a Receipt
+- [x] Upload to ONE/root/invariants/ in Google Drive (drive_id: 1d-MvLfIv1Z48zmwbr2o1N2j7iNeu4Hri)
+- [x] Update index.json with invariant and journal entries
