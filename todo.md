@@ -530,3 +530,8 @@
 - [x] Show auth gate UI when user is not authenticated
 - [x] Bind approver identity to authenticated user session
 - [x] Run tests and save checkpoint (408 tests passing)
+
+## /go Page UX Fixes (2026-03-30)
+- [x] Fix notification email URL — now includes both /go and /app links
+- [x] Investigate and fix grayed-out approve/deny buttons — root cause: approve/deny are protectedProcedure, auth gate now prevents unauthenticated access
+- [x] Improve /go page UX — added identity badge, decision-required banner above buttons

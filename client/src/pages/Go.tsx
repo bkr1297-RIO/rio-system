@@ -640,6 +640,20 @@ export default function Go() {
           />
           <h1 className="text-2xl font-bold tracking-wide" style={{ color: "#e5e7eb" }}>Bondi</h1>
           <p className="text-xs tracking-widest uppercase mt-1" style={{ color: "#6b7280" }}>Your Digital Chief of Staff — Secured by RIO</p>
+          {/* Authenticated identity badge */}
+          <div
+            className="mt-3 px-4 py-1.5 rounded-full flex items-center gap-2"
+            style={{ backgroundColor: "oklch(0.18 0.02 260)", border: "1px solid oklch(0.25 0.02 260)" }}
+          >
+            <div
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: "#22c55e" }}
+            />
+            <span className="text-xs" style={{ color: "#9ca3af" }}>
+              Signed in as{" "}
+              <span style={{ color: "#d1d5db" }}>{user?.name || user?.email || "User"}</span>
+            </span>
+          </div>
         </div>
 
         {/* ── Mode Toggle ── */}
@@ -876,6 +890,17 @@ export default function Go() {
 
           {/* ── Approve / Deny Buttons ── */}
           {flowState === "reviewing" && (
+            <div>
+              <div
+                className="rounded-lg p-3 mb-4 flex items-center gap-2"
+                style={{ backgroundColor: "#b8963e15", border: "1px solid #b8963e30" }}
+              >
+                <span className="text-sm" style={{ color: "#b8963e" }}>{"\u2192"}</span>
+                <p className="text-sm" style={{ color: "#d1d5db" }}>
+                  <strong style={{ color: "#b8963e" }}>Your decision is required.</strong>{" "}
+                  Review the action above, then approve or deny.
+                </p>
+              </div>
             <div className="flex gap-3">
               <button
                 onClick={handleApprove}
@@ -903,6 +928,7 @@ export default function Go() {
               >
                 {processing ? "Processing..." : "DENY"}
               </button>
+            </div>
             </div>
           )}
 

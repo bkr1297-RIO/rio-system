@@ -296,7 +296,9 @@ export const rioRouter = router({
           `${input.requester} wants to ${input.description}.`,
           `Intent ID: ${input.intentId}`,
           ``,
-          `Open Bondi to review and approve or deny: ${approvalLink}`,
+          `Approve or deny this action:`,
+          `  → Quick: ${goLink}`,
+          `  → Full workspace: ${approvalLink}`,
         ].join("\n"),
       });
 
