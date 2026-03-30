@@ -33,6 +33,7 @@ import Connect from "./pages/Connect";
 import BondiApp from "./pages/BondiApp";
 import GuidedDemo from "./pages/GuidedDemo";
 import Status from "./pages/Status";
+import Chain from "./pages/Chain";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -67,6 +68,7 @@ function Router() {
       <Route path={"/blog/:slug"} component={BlogPost} />
       <Route path={"/blog"} component={Blog} />
       <Route path={"/status"} component={Status} />
+      <Route path={"/chain"} component={Chain} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

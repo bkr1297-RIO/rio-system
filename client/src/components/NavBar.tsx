@@ -45,6 +45,7 @@ const navLinks: NavLink[] = [
       { label: "Demo 4 — Full Pipeline", href: "/demo4" },
       { label: "Verify Receipt", href: "/verify" },
       { label: "Ledger Explorer", href: "/ledger" },
+      { label: "Receipt Chain", href: "/chain" },
       { label: "Tamper Demo", href: "/tamper" },
       { label: "Demo 5 — Learning Loop", href: "/demo5" },
       { label: "Try It Live", href: "/try-it-live" },
