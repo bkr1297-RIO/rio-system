@@ -524,3 +524,9 @@
 - [x] Add /chain route to App.tsx and NavBar
 - [x] Run full test suite (408 tests passing, 26 files)
 - [x] Push to GitHub repo (commit c95d325, force-pushed to sync)
+
+## Auth Gate for /go Page (2026-03-30)
+- [x] Add sign-in requirement to /go page
+- [x] Show auth gate UI when user is not authenticated
+- [x] Bind approver identity to authenticated user session
+- [x] Run tests and save checkpoint (408 tests passing)

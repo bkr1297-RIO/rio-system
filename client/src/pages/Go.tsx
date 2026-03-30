@@ -14,6 +14,8 @@ import { useState, useRef, useEffect } from "react";
 import NavBar from "@/components/NavBar";
 import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { getLoginUrl } from "@/const";
 
 // ── Scenarios ────────────────────────────────────────────────────────────────
 
@@ -279,6 +281,7 @@ type FlowState =
 // ── Component ────────────────────────────────────────────────────────────────
 
 export default function Go() {
+  const { user, loading: authLoading, isAuthenticated } = useAuth();
   const [scenario, setScenario] = useState<Scenario>(SCENARIOS[0]);
   const [editableParams, setEditableParams] = useState<Record<string, string>>({ ...SCENARIOS[0].parameters });
   const [flowState, setFlowState] = useState<FlowState>("idle");
@@ -535,6 +538,90 @@ export default function Go() {
     : scenario.connector === "none"
       ? "future"
       : "simulated";
+
+  // ── Auth Loading ──
+  if (authLoading) {
+    return (
+      <div
+        className="min-h-screen flex flex-col"
+        style={{ backgroundColor: "oklch(0.13 0.03 260)", fontFamily: "'Outfit', sans-serif" }}
+      >
+        <NavBar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <div
+              className="w-5 h-5 rounded-full animate-pulse"
+              style={{ backgroundColor: "#b8963e" }}
+            />
+            <span className="text-sm" style={{ color: "#9ca3af" }}>
+              Checking authentication...
+            </span>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ── Auth Gate ──
+  if (!isAuthenticated || !user) {
+    return (
+      <div
+        className="min-h-screen flex flex-col"
+        style={{ backgroundColor: "oklch(0.13 0.03 260)", fontFamily: "'Outfit', sans-serif" }}
+      >
+        <NavBar />
+        <div className="flex-1 flex items-center justify-center px-6">
+          <div className="flex flex-col items-center max-w-md text-center">
+            <img
+              src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/bondi-logo_858ccd3b.png"
+              alt="Bondi"
+              className="w-20 h-20 mb-6"
+            />
+            <h1
+              className="text-3xl font-bold tracking-wide mb-2"
+              style={{ color: "#e5e7eb" }}
+            >
+              Sign In Required
+            </h1>
+            <p
+              className="text-sm mb-2"
+              style={{ color: "#9ca3af" }}
+            >
+              RIO governance requires authenticated identity.
+            </p>
+            <p
+              className="text-xs mb-8"
+              style={{ color: "#6b7280" }}
+            >
+              Your approver identity will be cryptographically bound to every
+              governance receipt you sign.
+            </p>
+            <button
+              onClick={() => {
+                window.location.href = getLoginUrl("/go");
+              }}
+              className="w-full max-w-xs py-3 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200 hover:opacity-90"
+              style={{
+                backgroundColor: "#b8963e",
+                color: "#ffffff",
+              }}
+            >
+              Sign In to Continue
+            </button>
+            <p
+              className="text-xs mt-6"
+              style={{ color: "#6b7280" }}
+            >
+              All actions governed by{" "}
+              <a href="/" style={{ color: "#b8963e" }} className="hover:underline">
+                RIO Protocol
+              </a>
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
