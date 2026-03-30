@@ -464,3 +464,13 @@
 - [x] Upload white paper PDF to Google Drive /One/ (already present — uploaded by parallel agent)
 - [x] Upload architecture diagram to Google Drive /One/ (already present — uploaded by parallel agent)
 - [x] Upload receipt specification to Google Drive /One/ (already present — uploaded by parallel agent)
+
+## Phase B Wiring — Azure Gateway Live (2026-03-30)
+- [x] Verify gateway health at https://rio-protocol-gateway.azurewebsites.net/health (DNS not resolving yet — deployment pending)
+- [x] Pull and review gateway/ARCHITECTURE.md from rio-system repo (infra/HANDOFF.md not yet pushed)
+- [ ] Set GATEWAY_URL env var (waiting for permanent URL from parallel agent)
+- [x] Wire Phase B routing: governance-router.ts dispatches to gateway or internal engine
+- [x] Maintain internal engine as fallback (Phase B dual-mode — read ops fall back, write ops fail-closed)
+- [ ] Test live /verify endpoint on the Azure gateway (waiting for URL)
+- [x] Write vitest tests for Phase B governance router (25 tests — internal mode, gateway mode, fail-closed)
+- [ ] Push Phase B code to rio-system GitHub repo
