@@ -448,3 +448,19 @@
 - [x] Write /api/verify integration instructions for protocol site owner
 - [x] Push latest demo site infrastructure code to rio-system GitHub repo
 - [x] Coordinate with parallel agent via AGENT_STATUS_UPDATE_20260329.md
+
+## Phase B Preparation (2026-03-29)
+- [x] Build gateway client module (server/gateway-client.ts) — REST client for all gateway endpoints
+- [x] Gateway client: POST /intent (submit intent)
+- [x] Gateway client: POST /authorize (record approval/denial)
+- [x] Gateway client: POST /execute (execute approved action)
+- [x] Gateway client: GET /verify/:id (verify receipt)
+- [x] Gateway client: GET /ledger (get ledger chain)
+- [x] Gateway client: GET /health (health check)
+- [x] Gateway client: Auth token forwarding (JWT from demo site user)
+- [x] Gateway client: Configurable base URL via env var (GATEWAY_URL)
+- [x] Gateway client: Fail-closed — if gateway unreachable, block action (don't fall back silently)
+- [x] Gateway client: Vitest tests with mocked HTTP responses (23 tests passing)
+- [x] Upload white paper PDF to Google Drive /One/ (already present — uploaded by parallel agent)
+- [x] Upload architecture diagram to Google Drive /One/ (already present — uploaded by parallel agent)
+- [x] Upload receipt specification to Google Drive /One/ (already present — uploaded by parallel agent)
