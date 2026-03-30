@@ -417,3 +417,28 @@
 - [x] Fix: Update all 5 test files (rio.test.ts, rio.governance.test.ts, mvp-bondi-flow.test.ts, slack-governance-loop.test.ts, slack-interactive-approval.test.ts) to use authenticated context for approve/deny
 - [x] Fix: Add identity binding regression tests (unauthenticated rejection, name/email/id fallback chain)
 - [x] All 327 tests passing after identity binding fix (21 test files)
+- [x] Write RIO Technical White Paper v2 (formal, grounded in code and specs)
+- [x] Create system architecture diagram (PNG)
+- [x] Include receipt specification JSON
+- [x] Generate final PDF output
+- [ ] Upload all artifacts to Google Drive /One/
+- [x] Commit genesis receipt (4:44 PM action) to rio-system repo docs/ (already committed by other agent as receipts/first-real-governed-action.json)
+- [x] Commit white paper v2 to rio-system repo docs/ (commit 2ee4e5d)
+- [x] Commit receipt specification v2 to rio-system repo docs/ (commit 2ee4e5d)
+- [x] Commit architecture diagram to rio-system repo docs/ (commit 2ee4e5d)
+- [x] Write and commit cross-agent handoff document to rio-system repo docs/ (commit 2ee4e5d)
+
+## Infrastructure Upgrade Sprint (2026-03-29)
+- [x] Step 1: Build persistent append-only ledger table (hash-chained, no UPDATE/DELETE)
+- [x] Step 1: Migrate in-memory ledger operations to use persistent DB
+- [x] Step 1: Ensure hash chain integrity on every insert
+- [x] Step 2: Add Ed25519 signing to receipt generation
+- [x] Step 2: Store public key for verification
+- [x] Step 3: Build public /api/verify endpoint (receipt hash lookup + chain validation)
+- [x] Step 3: Add CORS support for cross-origin verification from protocol site
+- [x] Step 4: Add GitHub connector as second governed action type (propose PR → approval → execution → receipt)
+- [x] Step 4: Wire GitHub connector into governance pipeline with full receipt + ledger
+- [x] Step 5: Seed ledger with real 4:44 PM genesis receipt (e76156e6-34cc-43f0-83b0-69a85c86762a)
+- [x] Step 5: Include all 5 original hash values in genesis entry
+- [x] Write tests for persistent ledger, Ed25519, /verify endpoint, and GitHub connector
+- [ ] Write integration instructions for protocol site owner to connect /verify

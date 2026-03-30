@@ -182,7 +182,7 @@ interface Scenario {
   riskLevel: string;
   riskColor: string;
   requester: string;
-  category: "google" | "microsoft" | "slack" | "other";
+  category: "google" | "microsoft" | "slack" | "github" | "other";
 }
 
 const SCENARIOS: Scenario[] = [
@@ -275,6 +275,37 @@ const SCENARIOS: Scenario[] = [
     riskColor: "#f59e0b",
     requester: "Bondi AI",
     category: "slack",
+  },
+  // ── GitHub Actions ──
+  {
+    id: "github_issue",
+    label: "Create Issue",
+    icon: "\uD83D\uDCDD",
+    connector: "github",
+    connectorName: "GitHub",
+    action: "create_issue",
+    description: "Create a governed issue in the RIO repository",
+    target: "bkr1297-RIO/rio-system",
+    parameters: { repo: "bkr1297-RIO/rio-system", title: "RIO Governed Issue", body: "This issue was created through the RIO governance pipeline. Every action requires human approval.", labels: "rio-governed" },
+    riskLevel: "LOW",
+    riskColor: "#22c55e",
+    requester: "Bondi AI",
+    category: "github",
+  },
+  {
+    id: "github_commit",
+    label: "Commit File",
+    icon: "\uD83D\uDCE6",
+    connector: "github",
+    connectorName: "GitHub",
+    action: "commit_file",
+    description: "Commit a governed file to the RIO repository",
+    target: "bkr1297-RIO/rio-system",
+    parameters: { repo: "bkr1297-RIO/rio-system", path: "governed-actions/latest.json", content: "{\"source\": \"bondi\", \"governed\": true, \"timestamp\": \"" + new Date().toISOString() + "\"}", message: "RIO governed commit via Bondi" },
+    riskLevel: "HIGH",
+    riskColor: "#f97316",
+    requester: "Bondi AI",
+    category: "github",
   },
 ];
 
@@ -616,10 +647,12 @@ function DashboardHome({
 function ActionsView({
   googleConnected,
   slackConnected,
+  githubConnected,
   onNavigate,
 }: {
   googleConnected: boolean;
   slackConnected: boolean;
+  githubConnected: boolean;
   onNavigate: (tab: Tab) => void;
 }) {
   const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null);
@@ -691,7 +724,7 @@ function ActionsView({
         receiptId,
         action: scenario.action,
         parameters: scenario.parameters,
-        mode: (scenario.category === "google" && googleConnected) || (scenario.category === "slack" && slackConnected)
+        mode: (scenario.category === "google" && googleConnected) || (scenario.category === "slack" && slackConnected) || (scenario.category === "github" && githubConnected)
           ? "live" : "simulated",
       });
       setConnectorResult(result as ConnectorResult);
@@ -844,6 +877,44 @@ function ActionsView({
               </h3>
               <div className="space-y-2">
                 {availableScenarios.filter((s) => s.category === "slack").map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => handleSelectScenario(s)}
+                    className="w-full rounded-xl border p-4 text-left hover:bg-accent/30 transition-colors group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{s.icon}</span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium group-hover:text-primary transition-colors">
+                          {s.label}
+                        </p>
+                        <p className="text-xs text-muted-foreground">{s.description}</p>
+                      </div>
+                      <Badge
+                        variant="outline"
+                        className="text-[10px] shrink-0"
+                        style={{ color: s.riskColor, borderColor: s.riskColor + "40" }}
+                      >
+                        {s.riskLevel}
+                      </Badge>
+                      <ChevronRight className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* GitHub actions */}
+            <div>
+              <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-3 flex items-center gap-2">
+                <Github className="w-3.5 h-3.5" />
+                GitHub Actions
+                {!githubConnected && (
+                  <Badge variant="outline" className="text-[10px] ml-1">CLI Fallback</Badge>
+                )}
+              </h3>
+              <div className="space-y-2">
+                {availableScenarios.filter((s) => s.category === "github").map((s) => (
                   <button
                     key={s.id}
                     onClick={() => handleSelectScenario(s)}
@@ -1982,6 +2053,12 @@ export default function BondiApp() {
     retry: false,
   });
 
+  // Check GitHub connection status
+  const githubStatus = trpc.connections.githubStatus.useQuery(undefined, {
+    enabled: !!user,
+    retry: false,
+  });
+
   // Group nav items by section
   const sections = useMemo(() => {
     const map = new Map<string, typeof NAV_ITEMS>();
@@ -2081,6 +2158,7 @@ export default function BondiApp() {
           <ActionsView
             googleConnected={!!googleStatus.data?.connected}
             slackConnected={!!slackStatus.data?.connected}
+            githubConnected={!!githubStatus.data?.connected}
             onNavigate={handleNavigate}
           />
         );

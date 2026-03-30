@@ -9,6 +9,7 @@ import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
 import { registerProviderOAuthRoutes } from "../oauth";
 import { registerSlackInteractionsRoute } from "../slack";
+import { registerVerifyRoutes } from "../verify-api";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -44,6 +45,8 @@ async function startServer() {
   registerOAuthRoutes(app);
   // Provider OAuth routes (Google, GitHub, etc.) under /api/oauth/<provider>/*
   registerProviderOAuthRoutes(app);
+  // Public verification API (no auth required, CORS enabled)
+  registerVerifyRoutes(app);
   // tRPC API
   app.use(
     "/api/trpc",

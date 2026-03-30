@@ -26,6 +26,7 @@ import {
   autoApproveByPolicy,
   autoDenyByPolicy,
 } from "../rio";
+import { seedGenesisReceipt, verifyLedgerIntegrity } from "../ledger-guard";
 import { connectorRegistry } from "../connectors";
 import { getSlackWebhookUrl } from "../connectors/slack-helpers";
 
@@ -249,6 +250,20 @@ export const rioRouter = router({
         connector: result.connector,
         note: result.detail,
       };
+    }),
+
+  // ── Ledger Infrastructure ──────────────────────────────────────
+
+  /** Seed the real 4:44 PM genesis receipt into the persistent ledger */
+  seedGenesis: protectedProcedure
+    .mutation(async () => {
+      return seedGenesisReceipt();
+    }),
+
+  /** Verify the integrity of the entire ledger hash chain and signatures */
+  ledgerIntegrity: publicProcedure
+    .query(async () => {
+      return verifyLedgerIntegrity();
     }),
 
   // ── Notifications ──────────────────────────────────────────────
