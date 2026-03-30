@@ -41,11 +41,11 @@ const SCENARIOS: Scenario[] = [
     target: "Gmail",
     connector: "gmail",
     connectorName: "Gmail",
-    description: "Send an email to john@example.com",
+    description: "Send an email via Gmail",
     parameters: {
-      to: "john@example.com",
+      to: "",
       subject: "Lunch tomorrow",
-      body: "Hey John, confirming our lunch at 12:30 PM tomorrow.",
+      body: "Hey, confirming our lunch at 12:30 PM tomorrow.",
     },
     riskLevel: "Medium",
     riskColor: "#f59e0b",
@@ -280,6 +280,7 @@ type FlowState =
 
 export default function Go() {
   const [scenario, setScenario] = useState<Scenario>(SCENARIOS[0]);
+  const [editableParams, setEditableParams] = useState<Record<string, string>>({ ...SCENARIOS[0].parameters });
   const [flowState, setFlowState] = useState<FlowState>("idle");
   const [receipt, setReceipt] = useState<ReceiptData | null>(null);
   const [ledgerEntry, setLedgerEntry] = useState<LedgerEntryData | null>(null);
@@ -308,9 +309,13 @@ export default function Go() {
   const notifyPending = trpc.rio.notifyPendingApproval.useMutation();
 
   // Auto-create intent when scenario changes or on first load
+  // Don't auto-start if email 'to' field is empty (needs user input)
   useEffect(() => {
     if (flowState === "idle") {
-      startReview();
+      const needsEmail = ("to" in editableParams) && editableParams["to"] === "";
+      if (!needsEmail) {
+        startReview();
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [scenario]);
@@ -322,7 +327,7 @@ export default function Go() {
         intentId: iId,
         receiptId,
         action: scenario.action,
-        parameters: scenario.parameters,
+        parameters: editableParams,
         mode: liveMode ? "live" : "simulated",
       });
       setConnectorResult(result as ConnectorResult);
@@ -353,7 +358,7 @@ export default function Go() {
       // 1. Create the intent
       const result = await createIntent.mutateAsync({
         action: scenario.action,
-        description: scenario.description,
+        description: scenario.description + (editableParams["to"] ? ` to ${editableParams["to"]}` : ""),
         requestedBy: scenario.requester,
       });
       const data = result as Record<string, unknown>;
@@ -584,6 +589,7 @@ export default function Go() {
               onClick={() => {
                 if (flowState !== "reviewing" || !processing) {
                   setScenario(sc);
+                  setEditableParams({ ...sc.parameters });
                   setFlowState("idle");
                 }
               }}
@@ -694,7 +700,7 @@ export default function Go() {
             <span style={{ color: "#b8963e" }}>{scenario.connectorName}</span>
           </p>
 
-          {/* Parameters */}
+          {/* Parameters (editable for email fields) */}
           <div
             className="rounded-lg p-4 mb-5"
             style={{ backgroundColor: "oklch(0.12 0.02 260)" }}
@@ -703,10 +709,21 @@ export default function Go() {
               PARAMETERS
             </p>
             <div className="space-y-1.5">
-              {Object.entries(scenario.parameters).map(([key, val]) => (
-                <div key={key} className="flex gap-2 text-sm font-mono">
-                  <span style={{ color: "#6b7280" }}>{key}:</span>
-                  <span style={{ color: "#d1d5db" }}>{val}</span>
+              {Object.entries(editableParams).map(([key, val]) => (
+                <div key={key} className="flex gap-2 text-sm font-mono items-center">
+                  <span style={{ color: "#6b7280" }} className="shrink-0">{key}:</span>
+                  {(key === "to" || key === "subject" || key === "body" || key === "message") ? (
+                    <input
+                      type="text"
+                      value={val}
+                      onChange={(e) => setEditableParams((prev) => ({ ...prev, [key]: e.target.value }))}
+                      className="flex-1 bg-transparent border-b text-sm font-mono px-1 py-0.5 focus:outline-none focus:border-amber-500"
+                      style={{ color: "#d1d5db", borderColor: "oklch(0.3 0.02 260)" }}
+                      placeholder={key === "to" ? "Enter recipient email..." : ""}
+                    />
+                  ) : (
+                    <span style={{ color: "#d1d5db" }}>{val}</span>
+                  )}
                 </div>
               ))}
             </div>
@@ -737,6 +754,30 @@ export default function Go() {
                 : "Simulated"}
             </div>
           </div>
+
+          {/* ── Start Button (shown when email 'to' is required) ── */}
+          {flowState === "idle" && ("to" in editableParams) && editableParams["to"] === "" && (
+            <div className="text-center py-4">
+              <p className="text-xs mb-3" style={{ color: "#f59e0b" }}>Enter a recipient email address above, then submit.</p>
+              <button
+                onClick={() => {
+                  const toVal = editableParams["to"] || "";
+                  if (toVal.includes("@")) {
+                    startReview();
+                  }
+                }}
+                disabled={!(editableParams["to"] || "").includes("@")}
+                className="px-8 py-3 rounded-lg text-sm font-semibold tracking-wide transition-all duration-200"
+                style={{
+                  backgroundColor: (editableParams["to"] || "").includes("@") ? "#b8963e" : "oklch(0.25 0.03 260)",
+                  color: (editableParams["to"] || "").includes("@") ? "#fff" : "#6b7280",
+                  cursor: (editableParams["to"] || "").includes("@") ? "pointer" : "not-allowed",
+                }}
+              >
+                SUBMIT FOR GOVERNANCE
+              </button>
+            </div>
+          )}
 
           {/* ── Checking Policy Spinner ── */}
           {flowState === "checking_policy" && (

@@ -487,3 +487,7 @@
 - [x] Commit CANONICAL_LEDGER_POLICY.json to rio-system repo docs/ (commit c42d89c)
 - [x] Surface canonical ledger policy on /status page
 - [x] Run full test suite (399 tests, 25 files)
+
+## Bug Fix: Fake Email Recipient (2026-03-30)
+- [x] Fix placeholder/fake email recipient in demo and Go flows
+- [x] Allow user to specify real recipient when submitting governed email actions (Go.tsx + BondiApp.tsx)

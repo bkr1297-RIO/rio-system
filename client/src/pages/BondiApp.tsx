@@ -194,8 +194,8 @@ const SCENARIOS: Scenario[] = [
     connectorName: "Gmail",
     action: "send_email",
     description: "Send a test email via Gmail",
-    target: "test@example.com",
-    parameters: { to: "test@example.com", subject: "Test from Bondi", body: "This email was sent through RIO governance." },
+    target: "Gmail",
+    parameters: { to: "", subject: "Test from Bondi", body: "This email was sent through RIO governance." },
     riskLevel: "HIGH",
     riskColor: "#f97316",
     requester: "Bondi AI",
@@ -224,8 +224,8 @@ const SCENARIOS: Scenario[] = [
     connectorName: "Outlook Mail",
     action: "send_email",
     description: "Send a test email via Outlook",
-    target: "test@example.com",
-    parameters: { to: "test@example.com", subject: "Test from Bondi", body: "This email was sent through RIO governance via Outlook." },
+    target: "Outlook Mail",
+    parameters: { to: "", subject: "Test from Bondi", body: "This email was sent through RIO governance via Outlook." },
     riskLevel: "HIGH",
     riskColor: "#f97316",
     requester: "Bondi AI",
@@ -656,6 +656,7 @@ function ActionsView({
   onNavigate: (tab: Tab) => void;
 }) {
   const [selectedScenario, setSelectedScenario] = useState<Scenario | null>(null);
+  const [editableParams, setEditableParams] = useState<Record<string, string>>({});
   const [flowState, setFlowState] = useState<
     "idle" | "checking" | "reviewing" | "approved" | "denied" | "verified"
   >("idle");
@@ -686,6 +687,14 @@ function ActionsView({
 
   const handleSelectScenario = async (scenario: Scenario) => {
     setSelectedScenario(scenario);
+    setEditableParams({ ...scenario.parameters });
+
+    // If email 'to' field is empty, wait for user input instead of auto-starting
+    if (("to" in scenario.parameters) && scenario.parameters["to"] === "") {
+      setFlowState("idle");
+      return;
+    }
+
     setFlowState("checking");
     setReceipt(null);
     setLedgerEntry(null);
@@ -723,7 +732,7 @@ function ActionsView({
         intentId: iId,
         receiptId,
         action: scenario.action,
-        parameters: scenario.parameters,
+        parameters: editableParams,
         mode: (scenario.category === "google" && googleConnected) || (scenario.category === "slack" && slackConnected) || (scenario.category === "github" && githubConnected)
           ? "live" : "simulated",
       });
@@ -978,18 +987,65 @@ function ActionsView({
               </div>
             </div>
 
-            {/* Parameters */}
+            {/* Parameters (editable for email fields) */}
             <div className="rounded-lg bg-muted/50 p-3 mb-4">
               <p className="text-xs font-medium text-muted-foreground mb-2">PARAMETERS</p>
               <div className="space-y-1">
-                {Object.entries(selectedScenario.parameters).map(([key, val]) => (
-                  <div key={key} className="flex gap-2 text-xs font-mono">
-                    <span className="text-muted-foreground">{key}:</span>
-                    <span className="text-foreground">{val}</span>
+                {Object.entries(editableParams).map(([key, val]) => (
+                  <div key={key} className="flex gap-2 text-xs font-mono items-center">
+                    <span className="text-muted-foreground shrink-0">{key}:</span>
+                    {(key === "to" || key === "subject" || key === "body" || key === "message") ? (
+                      <input
+                        type="text"
+                        value={val}
+                        onChange={(e) => setEditableParams((prev) => ({ ...prev, [key]: e.target.value }))}
+                        className="flex-1 bg-transparent border-b text-xs font-mono px-1 py-0.5 focus:outline-none focus:border-primary text-foreground"
+                        style={{ borderColor: "hsl(var(--border))" }}
+                        placeholder={key === "to" ? "Enter recipient email..." : ""}
+                      />
+                    ) : (
+                      <span className="text-foreground">{val}</span>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
+
+            {/* Submit button for email scenarios that need a recipient */}
+            {flowState === "idle" && ("to" in editableParams) && editableParams["to"] === "" && (
+              <div className="text-center py-2">
+                <p className="text-xs text-amber-500 mb-2">Enter a recipient email address above, then submit.</p>
+                <Button
+                  size="sm"
+                  onClick={() => {
+                    if ((editableParams["to"] || "").includes("@")) {
+                      setFlowState("checking");
+                      // Trigger the intent creation
+                      createIntent.mutateAsync({
+                        action: selectedScenario.action,
+                        description: selectedScenario.description + ` to ${editableParams["to"]}`,
+                        requestedBy: selectedScenario.requester,
+                      }).then((result) => {
+                        const data = result as Record<string, unknown>;
+                        const newIntentId = data.intentId as string;
+                        setIntentId(newIntentId);
+                        setFlowState("reviewing");
+                        notifyPending.mutateAsync({
+                          intentId: newIntentId,
+                          action: selectedScenario.action,
+                          requester: selectedScenario.requester,
+                          description: selectedScenario.description,
+                          origin: window.location.origin,
+                        }).catch(() => {});
+                      }).catch(() => setFlowState("reviewing"));
+                    }
+                  }}
+                  disabled={!(editableParams["to"] || "").includes("@")}
+                >
+                  Submit for Governance
+                </Button>
+              </div>
+            )}
 
             <div className="flex items-center gap-2">
               <Badge
