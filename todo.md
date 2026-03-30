@@ -491,3 +491,16 @@
 ## Bug Fix: Fake Email Recipient (2026-03-30)
 - [x] Fix placeholder/fake email recipient in demo and Go flows
 - [x] Allow user to specify real recipient when submitting governed email actions (Go.tsx + BondiApp.tsx)
+
+## Governed Corpus — Google Drive ONE/ Structure (2026-03-30)
+- [x] Check existing /One/ folder in Drive and inventory current contents
+- [x] Create ONE/root/ subfolder (already existed)
+- [x] Create ONE/root/policies/ subfolder (already existed)
+- [x] Create ONE/root/invariants/ subfolder
+- [x] Create ONE/root/receipts/ subfolder (already existed)
+- [x] Create ONE/root/journals/ subfolder (first entry: 2026-03-30-corpus-setup.md)
+- [x] Create ONE/inbox/ subfolder (new items from Brian + Perplexity land here)
+- [x] Create ONE/archive/ subfolder (old versions, deprecated policies)
+- [x] Create ONE/root/index.json — master index of all corpus contents (with Drive IDs, types, statuses)
+- [x] Create email protocol spec (EMAIL_PROTOCOL.md — RIO-ENVELOPE format) in ONE/root/
+- [x] Move existing artifacts into correct subfolders (specs→root, white paper→archive, diagrams→root)
