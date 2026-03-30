@@ -369,20 +369,29 @@ export default function Go() {
       setIntentId(newIntentId);
 
       // 2. Check if a policy applies
-      const policyCheck = await fetch(`/api/trpc/rio.checkPolicy?input=${encodeURIComponent(JSON.stringify({ action: scenario.action }))}`);
-      const policyJson = await policyCheck.json();
-      const policyResult = policyJson?.result?.data;
+      let policyResult: Record<string, unknown> | undefined;
+      try {
+        const policyInput = encodeURIComponent(JSON.stringify({ "0": { json: { action: scenario.action } } }));
+        const policyCheck = await fetch(`/api/trpc/rio.checkPolicy?batch=1&input=${policyInput}`);
+        const policyJson = await policyCheck.json();
+        // tRPC batch response is an array
+        const batchResult = Array.isArray(policyJson) ? policyJson[0] : policyJson;
+        policyResult = batchResult?.result?.data?.json ?? batchResult?.result?.data;
+      } catch {
+        // Policy check failed — fall through to manual review
+        policyResult = undefined;
+      }
 
       if (policyResult?.policyMatch && policyResult.decision === "auto_approve") {
         setPolicyInfo({
-          policyId: policyResult.policyId,
-          policyTitle: policyResult.policyTitle,
+          policyId: policyResult.policyId as string,
+          policyTitle: policyResult.policyTitle as string,
           decision: "auto_approve",
         });
 
         const autoResult = await autoApproveMut.mutateAsync({
           intentId: newIntentId,
-          policyId: policyResult.policyId,
+          policyId: policyResult.policyId as string,
         });
         const autoData = autoResult as Record<string, unknown>;
 
@@ -410,14 +419,14 @@ export default function Go() {
 
       if (policyResult?.policyMatch && policyResult.decision === "auto_deny") {
         setPolicyInfo({
-          policyId: policyResult.policyId,
-          policyTitle: policyResult.policyTitle,
+          policyId: policyResult.policyId as string,
+          policyTitle: policyResult.policyTitle as string,
           decision: "auto_deny",
         });
 
         await autoDenyMut.mutateAsync({
           intentId: newIntentId,
-          policyId: policyResult.policyId,
+          policyId: policyResult.policyId as string,
         });
 
         setDenialMessage(
@@ -857,9 +866,11 @@ export default function Go() {
           </div>
 
           {/* ── Start Button (shown when email 'to' is required) ── */}
-          {flowState === "idle" && ("to" in editableParams) && editableParams["to"] === "" && (
+          {flowState === "idle" && ("to" in editableParams) && (
             <div className="text-center py-4">
-              <p className="text-xs mb-3" style={{ color: "#f59e0b" }}>Enter a recipient email address above, then submit.</p>
+              {!editableParams["to"]?.includes("@") && (
+                <p className="text-xs mb-3" style={{ color: "#f59e0b" }}>Enter a recipient email address above, then submit.</p>
+              )}
               <button
                 onClick={() => {
                   const toVal = editableParams["to"] || "";

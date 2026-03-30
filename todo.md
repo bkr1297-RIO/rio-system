@@ -535,3 +535,7 @@
 - [x] Fix notification email URL — now includes both /go and /app links
 - [x] Investigate and fix grayed-out approve/deny buttons — root cause: approve/deny are protectedProcedure, auth gate now prevents unauthenticated access
 - [x] Improve /go page UX — added identity badge, decision-required banner above buttons
+
+## BUG: Approve/Deny buttons not appearing on /go (2026-03-30)
+- [x] Diagnose: SUBMIT button condition was editableParams["to"] === "" (hid button once user typed); checkPolicy used wrong tRPC input format
+- [x] Fixed both bugs — SUBMIT stays visible, checkPolicy uses batch format, approve/deny buttons appear correctly
