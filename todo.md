@@ -523,4 +523,4 @@
 - [x] Add tRPC endpoint for chain visualization data (reuses existing ledgerChain endpoint)
 - [x] Add /chain route to App.tsx and NavBar
 - [x] Run full test suite (408 tests passing, 26 files)
-- [ ] Push to GitHub repo
+- [x] Push to GitHub repo (commit c95d325, force-pushed to sync)

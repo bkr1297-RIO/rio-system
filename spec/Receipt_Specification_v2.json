@@ -1,0 +1,305 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "RIO Receipt Protocol Specification",
+  "version": "2.0.0",
+  "description": "Defines the five data structures that form the complete chain of custody for a governed AI action under the RIO protocol.",
+  "author": "Brian Kent Rasmussen",
+  "repository": "https://github.com/bkr1297-RIO/rio-system",
+  "definitions": {
+    "ActionRequest": {
+      "description": "An immutable record of a proposed action submitted by an AI agent or upstream system. Once created, the request cannot be modified.",
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for this action request."
+        },
+        "action_type": {
+          "type": "string",
+          "description": "The type of action being requested.",
+          "examples": ["send_email", "create_pr", "transfer_funds", "create_event", "write_file"]
+        },
+        "requested_by": {
+          "type": "string",
+          "description": "Identifier of the AI agent or system that submitted this request."
+        },
+        "target": {
+          "type": "string",
+          "description": "The target system or resource the action will affect.",
+          "examples": ["gmail", "github", "google_drive", "slack", "outlook", "payment_processor"]
+        },
+        "parameters": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "Action-specific parameters. Structure varies by action_type."
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": ["low", "medium", "high", "critical"],
+          "description": "Assessed risk level of the proposed action."
+        },
+        "context": {
+          "type": "string",
+          "description": "Optional free-text context explaining why this action is being requested."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp of when this request was created."
+        }
+      },
+      "required": ["request_id", "action_type", "requested_by", "target", "parameters", "risk_level", "created_at"]
+    },
+    "AIRecommendation": {
+      "description": "The AI system's evaluation of an ActionRequest against the active policy context.",
+      "type": "object",
+      "properties": {
+        "recommendation_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for this recommendation."
+        },
+        "request_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The request_id of the ActionRequest being evaluated."
+        },
+        "recommended_action": {
+          "type": "string",
+          "enum": ["proceed", "block", "escalate"],
+          "description": "The AI's recommendation for how to handle this request."
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0.0,
+          "maximum": 1.0,
+          "description": "Confidence score for the recommendation (0.0 = no confidence, 1.0 = full confidence)."
+        },
+        "reasoning": {
+          "type": "string",
+          "description": "Explanation of the factors considered in making this recommendation."
+        },
+        "unknowns": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Explicit declaration of assumptions or unknowns that affect confidence."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp of when this recommendation was generated."
+        }
+      },
+      "required": ["recommendation_id", "request_id", "recommended_action", "confidence", "reasoning", "created_at"]
+    },
+    "ApprovalRecord": {
+      "description": "A cryptographically signed, time-limited authorization from a human authority. Each approval is bound to a specific request_id and can only be used once.",
+      "type": "object",
+      "properties": {
+        "approval_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for this approval record."
+        },
+        "request_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The request_id of the ActionRequest being authorized."
+        },
+        "approver_id": {
+          "type": "string",
+          "description": "Identifier of the human who issued this approval. Derived from authenticated session, not client-supplied."
+        },
+        "approver_role": {
+          "type": "string",
+          "description": "The organizational role of the approver at the time of approval.",
+          "examples": ["account_owner", "system_admin", "compliance_officer"]
+        },
+        "approval_status": {
+          "type": "string",
+          "enum": ["approved", "denied", "revoked", "expired"],
+          "description": "The outcome of the human authorization decision."
+        },
+        "approved_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp of when the human issued this approval."
+        },
+        "expires_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp of when this approval expires. Default TTL: 300 seconds."
+        },
+        "auth_method": {
+          "type": "string",
+          "enum": ["password", "mfa_totp", "mfa_hardware_key", "biometric", "oauth2", "api_key_signed"],
+          "description": "The authentication method used to verify the approver's identity."
+        },
+        "conditions": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Optional conditions or constraints attached to the approval."
+        },
+        "signature": {
+          "type": "string",
+          "description": "Cryptographic signature over the canonical approval payload."
+        },
+        "signature_algorithm": {
+          "type": "string",
+          "enum": ["hmac_sha256", "ecdsa_secp256k1", "rsa_pss_sha256", "ed25519"],
+          "description": "The algorithm used to generate the signature."
+        }
+      },
+      "required": ["approval_id", "request_id", "approver_id", "approval_status", "approved_at", "auth_method", "signature", "signature_algorithm"]
+    },
+    "ExecutionRecord": {
+      "description": "The record of what was actually executed against the target system.",
+      "type": "object",
+      "properties": {
+        "execution_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for this execution record."
+        },
+        "request_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The request_id of the original ActionRequest."
+        },
+        "approval_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The approval_id of the ApprovalRecord that authorized this execution."
+        },
+        "executed_by": {
+          "type": "string",
+          "description": "Identifier of the system or service that performed the execution."
+        },
+        "executed_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp of when the execution occurred."
+        },
+        "execution_status": {
+          "type": "string",
+          "enum": ["success", "failed", "partial", "rolled_back", "blocked"],
+          "description": "The outcome of the execution attempt."
+        },
+        "execution_token_id": {
+          "type": "string",
+          "description": "One-time token consumed during execution, proving authorization and preventing replay."
+        },
+        "result": {
+          "type": "object",
+          "additionalProperties": true,
+          "description": "The result returned by the target system."
+        },
+        "connector": {
+          "type": "string",
+          "description": "The connector used to dispatch the action.",
+          "examples": ["gmail", "github", "google_drive", "slack", "outlook"]
+        }
+      },
+      "required": ["execution_id", "request_id", "approval_id", "executed_by", "executed_at", "execution_status", "execution_token_id"]
+    },
+    "Receipt": {
+      "description": "The final, immutable record binding all four preceding artifacts into a single signed document. Receipts form a hash-chained ledger.",
+      "type": "object",
+      "properties": {
+        "receipt_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "Unique identifier for this receipt."
+        },
+        "request_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The request_id of the original ActionRequest."
+        },
+        "recommendation_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The recommendation_id of the AIRecommendation."
+        },
+        "approval_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The approval_id of the ApprovalRecord."
+        },
+        "execution_id": {
+          "type": "string",
+          "format": "uuid",
+          "description": "The execution_id of the ExecutionRecord."
+        },
+        "action_type": {
+          "type": "string",
+          "description": "The action type from the original request."
+        },
+        "requested_by": {
+          "type": "string",
+          "description": "The agent that requested the action."
+        },
+        "approver_id": {
+          "type": "string",
+          "description": "The human who approved the action."
+        },
+        "executed_by": {
+          "type": "string",
+          "description": "The system that executed the action."
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "ISO 8601 UTC timestamp of when this receipt was generated."
+        },
+        "hash_chain": {
+          "type": "object",
+          "properties": {
+            "intent_hash": { "type": "string", "description": "SHA-256 hash of the ActionRequest." },
+            "governance_hash": { "type": "string", "description": "SHA-256 hash of the governance decision." },
+            "authorization_hash": { "type": "string", "description": "SHA-256 hash of the ApprovalRecord." },
+            "execution_hash": { "type": "string", "description": "SHA-256 hash of the ExecutionRecord." },
+            "receipt_hash": { "type": "string", "description": "SHA-256 hash of this receipt (covers all preceding hashes)." }
+          },
+          "required": ["intent_hash", "governance_hash", "authorization_hash", "execution_hash", "receipt_hash"]
+        },
+        "ledger_hash": {
+          "type": "string",
+          "description": "SHA-256 hash of the canonical receipt content, used for ledger chain integrity."
+        },
+        "previous_hash": {
+          "type": "string",
+          "description": "The ledger_hash of the immediately preceding receipt. Value is 'GENESIS' for the first receipt in the chain."
+        },
+        "signature": {
+          "type": "string",
+          "description": "Cryptographic signature over the canonical receipt content."
+        },
+        "verification_method": {
+          "type": "string",
+          "enum": ["hmac_sha256", "ecdsa_secp256k1", "rsa_pss_sha256", "ed25519"],
+          "description": "The signature algorithm used."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["valid", "tampered", "unverified"],
+          "description": "The verification status of this receipt."
+        }
+      },
+      "required": ["receipt_id", "request_id", "recommendation_id", "approval_id", "execution_id", "action_type", "requested_by", "approver_id", "executed_by", "created_at", "ledger_hash", "previous_hash", "signature", "verification_method", "status"]
+    }
+  },
+  "hash_specification": {
+    "algorithm": "SHA-256",
+    "serialization": "Deterministic JSON (keys sorted alphabetically, no whitespace, UTF-8 encoding)",
+    "genesis_value": "GENESIS",
+    "chain_order": ["intent_hash", "governance_hash", "authorization_hash", "execution_hash", "receipt_hash"]
+  },
+  "supported_signature_methods": [
+    "hmac_sha256",
+    "ecdsa_secp256k1",
+    "rsa_pss_sha256",
+    "ed25519"
+  ]
+}

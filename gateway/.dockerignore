@@ -1,0 +1,5 @@
+node_modules
+data/keys/*.sec.hex
+*.log
+.env
+test_*.mjs

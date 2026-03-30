@@ -1,0 +1,50 @@
+{
+  "policy_type": "governance_architecture",
+  "policy_id": "canonical-ledger-001",
+  "declared_at": "2026-03-30T02:00:00.000Z",
+  "declared_by": "Brian Kent Rasmussen (System Owner)",
+  "status": "active",
+
+  "decision": "canonical_ledger",
+  "canonical_ledger": "gateway_postgresql",
+  "write_access": "gateway_only",
+  "read_access": [
+    "demo_site",
+    "mobile_app",
+    "verify_endpoint",
+    "github",
+    "email_receipts"
+  ],
+
+  "rule": "A receipt is only official if it exists in the gateway PostgreSQL ledger and passes hash verification.",
+  "reason": "Prevents ledger conflicts and ensures a single auditable source of truth.",
+
+  "implementation_phases": {
+    "phase_a": {
+      "status": "complete",
+      "description": "Internal engine operates independently. Gateway client module built and tested. Governance router dispatch layer wired into tRPC."
+    },
+    "phase_b": {
+      "status": "pending_gateway_url",
+      "description": "Gateway URL set. Write operations route through gateway (fail-closed). Read operations fall back to internal engine. Both ledgers active during transition.",
+      "blocker": "Permanent gateway URL not yet confirmed (Azure deployment DNS not resolving; Railway deployment in progress)"
+    },
+    "phase_c": {
+      "status": "not_started",
+      "description": "Internal ledger deprecated. All reads and writes go through gateway PostgreSQL. Demo site ledger entries migrated to gateway. Single source of truth fully enforced."
+    }
+  },
+
+  "enforcement": {
+    "write_ops_without_gateway": "BLOCKED (fail-closed)",
+    "read_ops_without_gateway": "FALLBACK to internal engine (graceful degradation)",
+    "receipt_without_gateway_entry": "NOT OFFICIAL per this policy"
+  },
+
+  "migration_required": {
+    "demo_site_entries": 5,
+    "includes_genesis_receipt": true,
+    "genesis_receipt_id": "e76156e6-34cc-43f0-83b0-69a85c86762a",
+    "note": "All 5 demo site ledger entries (including genesis) must be migrated to gateway PostgreSQL before Phase C activation"
+  }
+}

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Dependencies
 **/node_modules
 .pnpm-store/
@@ -111,3 +112,23 @@ temp/
 
 # Manus version file (auto-generated, not part of source)
 client/public/__manus__/version.json
+=======
+# Environment and secrets
+.env
+*.sec.hex
+
+# Node
+node_modules/
+
+# Data (local dev only — production uses Docker volumes)
+gateway/data/ledger/
+gateway/data/keys/*.sec.hex
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+policy-v1.0-PRIVATE.json
+>>>>>>> 0c891f6564af8850136cd1bb32f9ed246b7843f6

@@ -1,0 +1,19 @@
+{
+  "_comment": "Example receipt for a $2,000 vendor payment approved by a finance manager. This receipt proves the full chain was followed: request -> recommendation -> approval -> execution.",
+  "receipt_id": "a3f1c2d4-9e87-4b56-8a12-0f3e7c1d9b45",
+  "request_id": "7b2e4f1a-3c8d-4e9f-b012-5a6d7e8f9012",
+  "recommendation_id": "c4d5e6f7-1a2b-3c4d-5e6f-7a8b9c0d1e2f",
+  "approval_id": "d5e6f7a8-2b3c-4d5e-6f7a-8b9c0d1e2f3a",
+  "execution_id": "e6f7a8b9-3c4d-5e6f-7a8b-9c0d1e2f3a4b",
+  "action_type": "transfer_funds",
+  "requested_by": "brian.rasmussen@example.com",
+  "approver_id": "sarah.chen@example.com",
+  "executed_by": "rio-payment-service-v1",
+  "created_at": "2026-03-24T18:45:00Z",
+  "ledger_hash": "9f86d081884c7d659a2feaa0c55ad015a3bf4f1b2b0b822cd15d6c15b0f00a08",
+  "previous_hash": "3a7bd3e2360a3d29aa625dda9f1e8c4b5f2c7e1d9a0b6c3f4e5d2a1b8c9d0e1f",
+  "chain_index": 7,
+  "signature": "MEQCIHx9K2mP3vQ8rN1sT4uW5xY6zA7bC8dE9fG0hI1jK2lMCIAoP3qR4sT5uV6wX7yZ8aB9cD0eF1gH2iJ3kL4mN5oP",
+  "verification_method": "ecdsa_secp256k1",
+  "status": "valid"
+}

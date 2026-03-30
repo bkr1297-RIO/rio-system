@@ -1,0 +1,75 @@
+# RIO Governance Gateway — Docker Compose
+# Full stack: Gateway + PostgreSQL Ledger
+#
+# Usage:
+#   docker-compose up -d          # Start all services
+#   docker-compose logs -f        # View logs
+#   docker-compose down           # Stop all services
+#
+# For Azure deployment:
+#   docker-compose -f docker-compose.yml -f docker-compose.azure.yml up -d
+
+version: "3.8"
+
+services:
+  # -----------------------------------------------------------------------
+  # PostgreSQL — Persistent Ledger Database
+  # -----------------------------------------------------------------------
+  postgres:
+    image: postgres:16-alpine
+    container_name: rio-ledger-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: rio_ledger
+      POSTGRES_USER: rio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rio_gateway_2026}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./gateway/ledger/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rio -d rio_ledger"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # -----------------------------------------------------------------------
+  # RIO Governance Gateway
+  # -----------------------------------------------------------------------
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: rio-gateway
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "4400:4400"
+    environment:
+      RIO_GATEWAY_PORT: 4400
+      NODE_ENV: production
+      ED25519_MODE: optional
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      RIO_LOGIN_PASSPHRASE: ${RIO_LOGIN_PASSPHRASE:-rio-governed-2026}
+      # PostgreSQL connection
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: rio_ledger
+      PGUSER: rio
+      PGPASSWORD: ${POSTGRES_PASSWORD:-rio_gateway_2026}
+    volumes:
+      - gateway-keys:/app/data/keys
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4400/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+volumes:
+  pgdata:
+    driver: local
+  gateway-keys:
+    driver: local
