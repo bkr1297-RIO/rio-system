@@ -16,6 +16,7 @@ import { trpc } from "@/lib/trpc";
 import { Link } from "wouter";
 import { useAuth } from "@/_core/hooks/useAuth";
 import { getLoginUrl } from "@/const";
+import WalkthroughStepper from "@/components/WalkthroughStepper";
 
 // ── Scenarios ────────────────────────────────────────────────────────────────
 
@@ -297,6 +298,7 @@ export default function Go() {
     decision: string;
   } | null>(null);
   const [liveMode, setLiveMode] = useState(false);
+  const [walkthroughEnabled, setWalkthroughEnabled] = useState(true);
   const [connectorResult, setConnectorResult] = useState<ConnectorResult | null>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
   const verifyRef = useRef<HTMLDivElement>(null);
@@ -639,7 +641,7 @@ export default function Go() {
     >
       <NavBar />
 
-      <div className="max-w-2xl mx-auto px-4 pt-12 pb-24">
+      <div className="max-w-2xl mx-auto px-4 pt-6 sm:pt-12 pb-16 sm:pb-24">
         {/* ── Bondi Header ── */}
         <div className="flex flex-col items-center mb-8">
           <img
@@ -665,11 +667,11 @@ export default function Go() {
           </div>
         </div>
 
-        {/* ── Mode Toggle ── */}
-        <div className="flex items-center justify-center gap-3 mb-6">
+        {/* ── Mode Toggle + Walkthrough Toggle ── */}
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-3 mb-4">
           <button
             onClick={() => setLiveMode(false)}
-            className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
+            className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all w-full sm:w-auto"
             style={{
               backgroundColor: !liveMode ? "oklch(0.22 0.03 260)" : "transparent",
               color: !liveMode ? "#d1d5db" : "#6b7280",
@@ -680,7 +682,7 @@ export default function Go() {
           </button>
           <button
             onClick={() => setLiveMode(true)}
-            className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all"
+            className="px-4 py-1.5 rounded-full text-xs font-semibold transition-all w-full sm:w-auto"
             style={{
               backgroundColor: liveMode ? "#22c55e20" : "transparent",
               color: liveMode ? "#22c55e" : "#6b7280",
@@ -691,8 +693,23 @@ export default function Go() {
           </button>
         </div>
 
+        {/* Walkthrough toggle */}
+        <div className="flex items-center justify-center gap-2 mb-6">
+          <button
+            onClick={() => setWalkthroughEnabled(!walkthroughEnabled)}
+            className="px-3 py-1 rounded-full text-[11px] font-medium transition-all"
+            style={{
+              backgroundColor: walkthroughEnabled ? "#b8963e15" : "transparent",
+              color: walkthroughEnabled ? "#b8963e" : "#6b7280",
+              border: walkthroughEnabled ? "1px solid #b8963e30" : "1px solid oklch(0.3 0.02 260)",
+            }}
+          >
+            {walkthroughEnabled ? "▶ Guided Walkthrough ON" : "▷ Guided Walkthrough OFF"}
+          </button>
+        </div>
+
         {/* Scenario Selector (pill bar) */}
-        <div className="flex flex-wrap gap-2 justify-center mb-10">
+        <div className="flex flex-wrap gap-1.5 sm:gap-2 justify-center mb-8 sm:mb-10">
           {SCENARIOS.map((sc) => (
             <button
               key={sc.id}
@@ -717,6 +734,9 @@ export default function Go() {
             </button>
           ))}
         </div>
+
+        {/* ── Pipeline Walkthrough Stepper ── */}
+        <WalkthroughStepper flowState={flowState} enabled={walkthroughEnabled} />
 
         {/* ── Policy Auto-Decision Banner ── */}
         {(flowState === "auto_approved" || flowState === "auto_denied") && policyInfo && (
@@ -759,7 +779,7 @@ export default function Go() {
           }}
         >
           {/* AI Badge + Connector Badge */}
-          <div className="flex items-center justify-between mb-5">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 mb-5">
             <div className="flex items-center gap-2">
               <div
                 className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold"

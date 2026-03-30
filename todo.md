@@ -561,5 +561,20 @@
 - [x] Add /verify route — ALREADY IN App.tsx and NavBar under Demos dropdown
 - [x] Tests — ALREADY EXIST: gateway-client.test.ts (18KB) and governance-router.test.ts (17KB)
 - [x] Run full test suite (408 tests passing, 26 files)
-- [ ] Push to GitHub and save checkpoint
-- [ ] Update manus-sync.json on Google Drive
+- [x] Push to GitHub (commit 6a0357c) and save checkpoint (6a0357c5)
+- [x] Update manus-sync.json on Google Drive (v1.5 → v1.6, MSG-011 STATUS_UPDATE, WS-007 updated with 11 completed items)
+
+## Round 2 — Manny's Orders (2026-03-30)
+- [x] TASK-018: Build Guided Walkthrough mode for /go governance flow
+  - [x] Add walkthrough toggle/button to /go page
+  - [x] Create step-by-step narration for each of the 7 pipeline stages
+  - [x] Show explanatory overlays/banners as each stage activates
+  - [x] Make it clear what RIO is doing and why at each step
+- [x] TASK-019: Mobile-responsive polish across all routes
+  - [x] /go — mode toggle stacks vertically, reduced padding, AI badge wraps, scenario pills tighter
+  - [x] /chain — stats bar stacks vertically on small screens
+  - [x] /ledger — chain status bar stacks, block headers wrap, hash links wrap
+  - [x] /verify — tab labels shortened on mobile, lookup row stacks vertically
+  - [x] /app — already had mobile support (w-full sm:w-80 panel, mobile menu)
+  - [x] /dashboard — already had mobile support (useIsMobile hook, sticky header)
+- [ ] TASK-016: Connect frontend to production URL (PENDING — activates when Damon marks TASK-015 COMPLETE)

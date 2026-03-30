@@ -487,7 +487,7 @@ export default function VerifyReceipt() {
                     setMode(tab.id);
                     setResult(null);
                   }}
-                  className="flex-1 flex items-center justify-center gap-2 py-3 px-4 text-sm font-medium transition-colors duration-200"
+                  className="flex-1 flex items-center justify-center gap-1.5 sm:gap-2 py-3 px-2 sm:px-4 text-xs sm:text-sm font-medium transition-colors duration-200"
                   style={{
                     backgroundColor: active
                       ? "oklch(0.72 0.1 85 / 15%)"
@@ -496,8 +496,9 @@ export default function VerifyReceipt() {
                     borderBottom: active ? "2px solid #b8963e" : "2px solid transparent",
                   }}
                 >
-                  <Icon className="w-4 h-4" />
-                  {tab.label}
+                  <Icon className="w-4 h-4 flex-shrink-0" />
+                  <span className="hidden sm:inline">{tab.label}</span>
+                  <span className="sm:hidden">{tab.label.split(' ').pop()}</span>
                 </button>
               );
             })}
@@ -507,7 +508,7 @@ export default function VerifyReceipt() {
         {/* Input Area */}
         <div className="w-full max-w-3xl mb-6">
           {mode === "lookup" ? (
-            <div className="flex gap-3">
+            <div className="flex flex-col sm:flex-row gap-3">
               <input
                 type="text"
                 value={lookupId}

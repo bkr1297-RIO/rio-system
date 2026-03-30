@@ -81,7 +81,7 @@ export default function LedgerExplorer() {
         {/* Chain Status Banner */}
         {!isLoading && data && (
           <div
-            className="w-full max-w-5xl mb-6 p-4 rounded border flex items-center justify-between"
+            className="w-full max-w-5xl mb-6 p-4 rounded border flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
             style={{
               borderColor: chainValid
                 ? "rgba(34,197,94,0.4)"
@@ -207,7 +207,7 @@ export default function LedgerExplorer() {
                           className="w-px h-4"
                           style={{ backgroundColor: "rgba(184,150,62,0.3)" }}
                         />
-                        <div className="flex items-center gap-2">
+                        <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-2">
                           <span
                             className="text-[9px] font-mono px-2 py-0.5 rounded"
                             style={{
@@ -295,8 +295,8 @@ export default function LedgerExplorer() {
                     onClick={() => toggleExpand(index)}
                   >
                     {/* Block Header */}
-                    <div className="flex items-center justify-between p-3">
-                      <div className="flex items-center gap-3">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 p-3">
+                      <div className="flex flex-wrap items-center gap-2 sm:gap-3">
                         <span
                           className="text-[10px] font-mono font-bold px-2 py-0.5 rounded"
                           style={{
@@ -322,7 +322,7 @@ export default function LedgerExplorer() {
                           {entry.decision.toUpperCase()}
                         </span>
                       </div>
-                      <div className="flex items-center gap-3">
+                      <div className="flex items-center gap-2 sm:gap-3">
                         <span
                           className="text-[10px] font-mono"
                           style={{ color: "#6b7280" }}

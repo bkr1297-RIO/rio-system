@@ -613,7 +613,7 @@ export default function Chain() {
         {/* Stats bar */}
         {!isLoading && data && (
           <div className="w-full max-w-4xl mb-6">
-            <div className="flex flex-wrap items-center justify-between gap-4">
+            <div className="flex flex-col sm:flex-row flex-wrap items-start sm:items-center justify-between gap-3 sm:gap-4">
               {/* Chain integrity badge */}
               <div
                 className="flex items-center gap-2.5 px-4 py-2.5 rounded-lg border"
