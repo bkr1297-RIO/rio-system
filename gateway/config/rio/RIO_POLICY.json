@@ -2,12 +2,12 @@
   "one_governance_policy": {
     "policy_id": "ONE-GOV-DEPLOY-001",
     "policy_name": "Build Authority / Deploy Boundary",
-    "version": "1.0",
+    "version": "1.1",
     "status": "active",
     "purpose": "Allow agents to fully prepare systems for release while preserving explicit human authority over live externalization and irreversible change.",
     "scope": {
       "systems": ["ONE", "RIO", "Bondi", "PCP", "connected_agent_runtimes"],
-      "agents": ["MANUS", "Claude", "GPT", "Gemini", "Grok", "internal_subagents"],
+      "agents": ["MANUS", "manus", "Claude", "GPT", "Gemini", "Grok", "internal_subagents", "bondi", "brian.k.rasmussen"],
       "environments": ["local", "dev", "staging", "production"]
     },
     "governance_model": {
