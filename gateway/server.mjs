@@ -17,6 +17,10 @@ import { createToken, verifyToken, optionalAuth, isRegistered, getRegisteredUser
 import { replayPreventionMiddleware } from "./security/replay-prevention.mjs";
 import { initIdentityBinding } from "./security/identity-binding.mjs";
 import signerRoutes from "./routes/signers.mjs";
+import apiV1Routes from "./routes/api-v1.mjs";
+import { initApiKeys } from "./security/api-keys.mjs";
+import { apiKeyAuth } from "./security/api-auth.mjs";
+import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
 
 const app = express();
 const PORT = process.env.RIO_GATEWAY_PORT || process.env.PORT || 4400;
@@ -50,11 +54,12 @@ app.use((req, res, next) => {
 // Initialize
 // ---------------------------------------------------------------------------
 console.log("=".repeat(60));
-console.log("  RIO GOVERNANCE GATEWAY v2.5.0-identity-binding");
+console.log("  RIO GOVERNANCE GATEWAY v2.6.0-public-api");
 console.log("  Governed AI Execution Runtime");
 console.log("  Ledger: PostgreSQL (persistent)");
-console.log("  Auth: JWT + Ed25519 (PostgreSQL-backed identity binding)");
+console.log("  Auth: JWT + Ed25519 + API Keys (PostgreSQL-backed)");
 console.log("  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding");
+console.log("  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs");
 console.log("=".repeat(60));
 console.log();
 
@@ -77,6 +82,10 @@ async function start() {
     // Initialize identity binding (WS-010: Ed25519 signers from PostgreSQL)
     await initIdentityBinding();
     console.log("[RIO Gateway] Identity binding initialized (PostgreSQL).");
+
+    // Initialize API keys (WS-012: Public API)
+    await initApiKeys();
+    console.log("[RIO Gateway] API key store initialized (PostgreSQL).");
   } catch (err) {
     console.error(`[RIO Gateway] FATAL: Could not connect to ledger database: ${err.message}`);
     console.error("[RIO Gateway] Fail-closed: Gateway will not start without a persistent ledger.");
@@ -145,6 +154,12 @@ async function start() {
   app.use("/api/signers", signerRoutes);
 
   // ---------------------------------------------------------------------------
+  // Public API v1 Routes (WS-012)
+  // API key auth + rate limiting applied to all /api/v1/* routes
+  // ---------------------------------------------------------------------------
+  app.use("/api/v1", apiKeyAuth, rateLimitMiddleware, apiV1Routes);
+
+  // ---------------------------------------------------------------------------
   // Pipeline Routes
   // ---------------------------------------------------------------------------
   app.use("/", routes);
@@ -153,7 +168,7 @@ async function start() {
   app.get("/", (req, res) => {
     res.json({
       name: "RIO Governance Gateway",
-      version: "2.5.0",
+      version: "2.6.0",
       description: "Governed AI Execution Runtime — No Authorization, No Execution.",
       ledger: "PostgreSQL (persistent)",
       auth: "JWT + Ed25519",
@@ -175,6 +190,21 @@ async function start() {
         "POST /api/signers/register": "Register externally-generated Ed25519 public key",
         "GET /api/signers": "List all registered signers",
         "DELETE /api/signers/:signer_id": "Revoke a signer",
+        "--- Public API v1 ---": "---",
+        "POST /api/v1/intents": "Submit intent (API key or JWT)",
+        "GET /api/v1/intents": "List intents",
+        "POST /api/v1/intents/:id/govern": "Run governance",
+        "POST /api/v1/intents/:id/authorize": "Authorize/deny",
+        "POST /api/v1/intents/:id/execute": "Execute authorized intent",
+        "POST /api/v1/intents/:id/confirm": "Confirm execution",
+        "POST /api/v1/intents/:id/receipt": "Generate receipt",
+        "GET /api/v1/ledger": "View ledger entries",
+        "GET /api/v1/verify": "Verify hash chain",
+        "GET /api/v1/health": "API health check",
+        "GET /api/v1/docs": "OpenAPI 3.0 documentation",
+        "POST /api/v1/keys": "Create API key (owner only)",
+        "GET /api/v1/keys": "List API keys",
+        "DELETE /api/v1/keys/:key_id": "Revoke API key",
       },
       fail_mode: "closed",
     });
