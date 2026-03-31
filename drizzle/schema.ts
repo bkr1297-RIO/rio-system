@@ -181,3 +181,28 @@ export const demoWishes = mysqlTable("demo_wishes", {
 
 export type DemoWish = typeof demoWishes.$inferSelect;
 export type InsertDemoWish = typeof demoWishes.$inferInsert;
+
+// ── Key Backups (Encrypted Private Key Storage for Recovery) ──────────────
+
+export const keyBackups = mysqlTable("key_backups", {
+  id: int("id").autoincrement().primaryKey(),
+  /** User ID (from users table) */
+  userId: int("userId").notNull(),
+  /** Signer ID this backup belongs to */
+  signerId: varchar("signerId", { length: 128 }).notNull(),
+  /** Public key (hex) — for identity verification, not secret */
+  publicKey: text("publicKey").notNull(),
+  /** AES-GCM encrypted secret key (hex) */
+  encryptedKey: text("encryptedKey").notNull(),
+  /** PBKDF2 salt (hex) */
+  salt: text("salt").notNull(),
+  /** AES-GCM IV (hex) */
+  iv: text("iv").notNull(),
+  /** Encryption format version */
+  version: int("version").default(1).notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type KeyBackup = typeof keyBackups.$inferSelect;
+export type InsertKeyBackup = typeof keyBackups.$inferInsert;

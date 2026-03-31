@@ -9,6 +9,8 @@
 import { z } from "zod";
 import { publicProcedure, protectedProcedure, router } from "../_core/trpc";
 import { notifyOwner } from "../_core/notification";
+import { storeKeyBackup, getKeyBackup, listKeyBackups, deleteKeyBackup } from "../key-recovery";
+import { performDeviceSync, getLedgerHealthSummary } from "../device-sync";
 // Phase B: Core governance operations routed through the governance router
 // (dispatches to gateway or internal engine based on GATEWAY_URL)
 import {
@@ -79,21 +81,31 @@ export const rioRouter = router({
   approve: protectedProcedure
     .input(z.object({
       intentId: z.string(),
+      signature: z.string().optional(),
+      signatureTimestamp: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       // Identity is bound from the authenticated session — not client-supplied
       const decidedBy = ctx.user.name || ctx.user.email || `user:${ctx.user.id}`;
-      return approveIntent(input.intentId, decidedBy);
+      return approveIntent(input.intentId, decidedBy, {
+        signature: input.signature,
+        signatureTimestamp: input.signatureTimestamp,
+      });
     }),
 
   deny: protectedProcedure
     .input(z.object({
       intentId: z.string(),
+      signature: z.string().optional(),
+      signatureTimestamp: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       // Identity is bound from the authenticated session — not client-supplied
       const decidedBy = ctx.user.name || ctx.user.email || `user:${ctx.user.id}`;
-      return denyIntent(input.intentId, decidedBy);
+      return denyIntent(input.intentId, decidedBy, {
+        signature: input.signature,
+        signatureTimestamp: input.signatureTimestamp,
+      });
     }),
 
   execute: publicProcedure
@@ -414,6 +426,104 @@ export const rioRouter = router({
       }
 
       return { notified: ownerNotified, slackNotified, intentId: input.intentId };
+    }),
+
+  // ── Key Recovery & Backup ──────────────────────────────────────────
+
+  /** Store an encrypted key backup on the server */
+  backupKey: protectedProcedure
+    .input(z.object({
+      signerId: z.string(),
+      publicKey: z.string(),
+      encryptedKey: z.string(),
+      salt: z.string(),
+      iv: z.string(),
+      version: z.number().optional(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      return storeKeyBackup({
+        userId: ctx.user.id,
+        signerId: input.signerId,
+        publicKey: input.publicKey,
+        encryptedKey: input.encryptedKey,
+        salt: input.salt,
+        iv: input.iv,
+        version: input.version,
+      });
+    }),
+
+  /** Retrieve an encrypted key backup for recovery */
+  recoverKey: protectedProcedure
+    .input(z.object({
+      signerId: z.string(),
+    }))
+    .query(async ({ input, ctx }) => {
+      const backup = await getKeyBackup(ctx.user.id, input.signerId);
+      if (!backup) {
+        return { found: false, backup: null };
+      }
+      return {
+        found: true,
+        backup: {
+          signerId: backup.signerId,
+          publicKey: backup.publicKey,
+          encryptedKey: backup.encryptedKey,
+          salt: backup.salt,
+          iv: backup.iv,
+          version: backup.version,
+          createdAt: backup.createdAt.toISOString(),
+        },
+      };
+    }),
+
+  /** List all key backups for the current user */
+  listKeyBackups: protectedProcedure
+    .query(async ({ ctx }) => {
+      const backups = await listKeyBackups(ctx.user.id);
+      return {
+        backups: backups.map(b => ({
+          signerId: b.signerId,
+          publicKey: b.publicKey,
+          version: b.version,
+          createdAt: b.createdAt.toISOString(),
+          updatedAt: b.updatedAt.toISOString(),
+        })),
+        count: backups.length,
+      };
+    }),
+
+  /** Delete a key backup */
+  deleteKeyBackup: protectedProcedure
+    .input(z.object({
+      signerId: z.string(),
+    }))
+    .mutation(async ({ input, ctx }) => {
+      await deleteKeyBackup(ctx.user.id, input.signerId);
+      return { deleted: true, signerId: input.signerId };
+    }),
+
+  // ── Device Sync ──────────────────────────────────────────────────────
+
+  /** Full device sync — returns identity, key backup, and ledger state */
+  deviceSync: protectedProcedure
+    .input(z.object({
+      signerId: z.string().optional(),
+      lastKnownHash: z.string().optional(),
+      ledgerLimit: z.number().min(1).max(1000).optional(),
+    }).optional())
+    .query(async ({ input, ctx }) => {
+      return performDeviceSync({
+        userId: ctx.user.id,
+        signerId: input?.signerId,
+        lastKnownHash: input?.lastKnownHash,
+        ledgerLimit: input?.ledgerLimit,
+      });
+    }),
+
+  /** Lightweight ledger health check for drift detection */
+  ledgerHealth: publicProcedure
+    .query(async () => {
+      return getLedgerHealthSummary();
     }),
 
   // ── Governance Infrastructure Status ──────────────────────────────

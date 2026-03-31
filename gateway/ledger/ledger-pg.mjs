@@ -219,6 +219,14 @@ export function getCurrentHash() {
 }
 
 /**
+ * Get the latest (most recent) ledger entry.
+ */
+export function getLatestEntry() {
+  if (_cache.length === 0) return null;
+  return _cache[_cache.length - 1];
+}
+
+/**
  * Verify the entire hash chain.
  */
 export function verifyChain() {
