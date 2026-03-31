@@ -577,4 +577,138 @@
   - [x] /verify — tab labels shortened on mobile, lookup row stacks vertically
   - [x] /app — already had mobile support (w-full sm:w-80 panel, mobile menu)
   - [x] /dashboard — already had mobile support (useIsMobile hook, sticky header)
-- [ ] TASK-016: Connect frontend to production URL (PENDING — activates when Damon marks TASK-015 COMPLETE)
+- [x] TASK-016: Connect frontend to production URL (activated — gateway live)
+
+## TASK-026: PWA Mobile App Wrapper (2026-03-30)
+- [x] PWA: Upgrade manifest.json with RIO branding, shortcuts, and screenshots
+- [x] PWA: Upgrade service worker with proper caching strategy and offline fallback page
+- [x] PWA: Build "Install to Home Screen" prompt component (iOS + Android)
+- [x] PWA: Build standalone /m/approvals screen (mobile-optimized pending approvals)
+- [x] PWA: Build standalone /m/receipts screen (mobile-optimized receipt viewer)
+- [x] PWA: Build standalone /m/ledger screen (mobile-optimized ledger explorer)
+- [x] PWA: Build standalone /m/settings screen (connected apps, preferences, about)
+- [x] PWA: Build mobile app shell with bottom tab navigation (/m routes)
+- [x] PWA: Push notification registration hook (usePushNotifications)
+- [x] PWA: Push notification permission prompt UI
+- [x] PWA: Server endpoint to store push subscriptions
+- [x] PWA: Service worker push event handler (scaffolding)
+- [x] PWA: Vitest tests for PWA components and hooks
+- [x] PWA: Update sync file after completion
+
+## TASK-016: Connect Frontend to Live Production Gateway (2026-03-30)
+- [x] Explore live gateway API endpoints and response shapes
+- [x] Audit current frontend API calls and identify all integration points
+- [x] Create gateway client layer with configurable base URL and simulated fallback
+- [x] Add GATEWAY_URL environment variable via webdev_request_secrets
+- [x] Connect /go flow (intent submission) to live gateway
+- [x] Connect /chain (receipt chain visualizer) to live gateway
+- [x] Connect /ledger (ledger explorer) to live gateway
+- [x] Connect PWA /m/approvals to live gateway
+- [x] Connect PWA /m/receipts to live gateway
+- [x] Connect PWA /m/ledger to live gateway
+- [x] Graceful fallback to simulated mode for unconnected connectors
+- [x] Write vitest tests for gateway client and fallback logic
+- [x] Test all connected flows end-to-end
+- [x] Update sync file with live vs. simulated status report
+
+## PHASE 2: ONE App — Production User Interface (WS-014)
+
+### User Authentication
+- [x] Google OAuth login flow (login page, callback, session) — already exists via Manus OAuth
+- [ ] User identity mapping to gateway signer identity
+- [x] Authenticated dashboard shell with user profile — DashboardLayout exists, customizing for ONE App
+- [x] Mock Ed25519 key registration (placeholder for Romney's WS-010) — scaffolded in Settings
+
+### Account Connection Flow
+- [x] Account connection page (connect Google services)
+- [x] Google connector setup (Gmail, Calendar, Drive) — uses existing Connect.tsx OAuth flows
+- [x] Connector status display and management
+- [x] Disconnect flow
+
+### Approval Inbox
+- [x] Approval inbox page — pending intents requiring user action
+- [x] Intent detail view (action, target, agent, risk level, policy result)
+- [x] Approve action (mock Ed25519 signature, records in ledger)
+- [x] Deny action (records denial in ledger)
+- [x] Real-time updates (polling for new pending intents)
+
+### Receipt Viewer & History Explorer
+- [x] History page — all governed actions, approvals, denials, executions, receipts
+- [x] Filter by date, action type, status, agent
+- [x] Receipt detail view (hash chain position, signature verification)
+- [x] Click-through from history to receipt detail
+
+### Policy Management
+- [x] Policy viewer — current governance rules
+- [x] Policy editor — add/modify rules (accept/dismiss suggestions)
+- [x] Policy changes go through governance pipeline (governed policy changes)
+
+### ONE App Integration
+- [x] ONE App navigation structure (authenticated dashboard layout)
+- [x] Tagline on all pages: "See what RIO makes possible for you"
+- [x] Demo/walkthrough mode preserved as fallback for new visitors
+- [x] Mobile PWA screens updated for ONE App
+
+### Testing & Delivery
+- [x] Vitest tests for all new ONE App components (14 tests, 442 total passing)
+- [x] Push to GitHub PR on bkr1297-RIO/rio-system (PR #75)
+- [x] Update sync file with progress (v3.5)
+
+## PHASE 2 GATEWAY WIRING: ONE App → Live Production Gateway
+
+### Gateway Auth & Proxy
+- [x] Explore gateway API v1 endpoints and verify JWT auth flow
+- [x] Update gateway-client.ts endpoint paths from old format to /api/v1/* format
+- [x] Create tRPC procedures for gateway login and token-authenticated requests
+
+### ONE App Screen Wiring
+- [x] Wire Approvals screen to GET /api/v1/intents?status=pending_authorization
+- [x] Wire Approve/Deny to POST /api/v1/intents/{id}/authorize
+- [x] Wire Receipt viewer to GET /api/v1/intents/{id}
+- [x] Wire Ledger explorer to GET /api/v1/ledger
+- [x] Wire Chain verifier to GET /api/v1/verify
+
+### Ed25519 Client-Side Signing
+- [x] Ed25519 via Web Crypto API (no external dependency needed)
+- [x] Build key management UI (generate/regenerate/remove, stored in localStorage)
+- [x] Sign authorization payload (intent_id + decision + timestamp) on approve
+- [x] Send signature with authorization request
+- [x] Show signature verification status in receipt viewer
+
+### Real-Time Updates
+- [x] Check gateway for WebSocket support (not available)
+- [x] Implement polling fallback (10s interval on Approvals, 15s on History)
+- [x] Show real-time notifications for new intents, governance results, execution status (via polling)
+
+### Testing & Delivery
+- [x] Write vitest tests for gateway proxy, signing, and real-time updates (454 tests, 30 files, all passing)
+- [x] Push to GitHub PR on bkr1297-RIO/rio-system (PR #79)
+- [x] Update sync file with status report and message to Manny (v3.1)
+
+## PROXY ONBOARDING BUILD: Onboarding Wizard + Kill Switch + Context Entry
+
+### TASK 1: PWA Onboarding Wizard (/onboard)
+- [x] Screen 1 — Identity: Ed25519 keygen in-browser, show public key, auto-download encrypted .json backup, QR code for mobile seed recovery
+- [x] Screen 2 — Policy: Upload policy JSON or guided wizard with sensible defaults, skip button for power users
+- [x] Screen 3 — Confirm: Show key fingerprint + policy hash, user confirms with cryptographic signature
+- [x] Screen 4 — First Intent: Natural language intent submission, governed through RIO, show result
+- [x] "Create Proxy" button calls POST /api/onboard, show success + "Add to Home Screen" prompt
+- [x] Wire /onboard route in App.tsx
+
+### TASK 2: Kill Switch
+- [x] Persistent red "KILL PROXY" button on every ONE App screen
+- [x] One tap fires POST /api/kill — instant, no confirmation dialog
+- [x] Show immediate confirmation: "Proxy paused. All tokens burned. Receipt logged."
+- [x] Reachable in under 1 second from any screen
+
+### TASK 3: Context-Aware Entry Point
+- [x] On session start, call GET /api/sync to load full context
+- [x] Display: pending approvals count, recent receipts, system health, pattern confidence
+- [x] Warm sovereign feel — "your proxy is ready"
+- [x] Update OneAppLayout with context dashboard header
+
+### Infrastructure
+- [x] Server-side tRPC procedures for onboard, kill, sync (calling gateway endpoints)
+- [x] Vitest tests for all new flows (468 tests passing, was 454+)
+- [ ] Push to GitHub PR on bkr1297-RIO/rio-system
+- [ ] Update sync file with status report and MSG to Manny

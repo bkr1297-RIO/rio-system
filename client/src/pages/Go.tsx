@@ -273,6 +273,7 @@ type FlowState =
   | "checking_policy"
   | "auto_approved"
   | "auto_denied"
+  | "gateway_blocked"
   | "reviewing"
   | "approved"
   | "denied"
@@ -298,6 +299,8 @@ export default function Go() {
     decision: string;
   } | null>(null);
   const [liveMode, setLiveMode] = useState(false);
+  const [gatewayBlockReason, setGatewayBlockReason] = useState("");
+  const [gatewayGovernanceChecks, setGatewayGovernanceChecks] = useState<unknown[]>([]);
   const [walkthroughEnabled, setWalkthroughEnabled] = useState(true);
   const [connectorResult, setConnectorResult] = useState<ConnectorResult | null>(null);
   const receiptRef = useRef<HTMLDivElement>(null);
@@ -357,6 +360,8 @@ export default function Go() {
     setProcessing(false);
     setPolicyInfo(null);
     setConnectorResult(null);
+    setGatewayBlockReason("");
+    setGatewayGovernanceChecks([]);
     setFlowState("checking_policy");
 
     try {
@@ -370,7 +375,26 @@ export default function Go() {
       const newIntentId = data.intentId as string;
       setIntentId(newIntentId);
 
-      // 2. Check if a policy applies
+      // 1b. Check if this is a gateway-mode response with governance data
+      // The governance-router's createAndGovern returns { intent, governance, source }
+      // but createIntent just returns the intent. We need to check governance status
+      // by looking at the intent status from the gateway.
+      const intentStatus = data.status as string;
+      if (intentStatus === "blocked") {
+        // Gateway governance blocked this intent before it reached human review
+        setGatewayBlockReason(
+          "The production gateway's governance policy blocked this intent. " +
+          "The agent or environment is not recognized by the current policy configuration."
+        );
+        setDenialMessage(
+          "Governance policy blocked this action. The gateway is operating in fail-closed mode \u2014 " +
+          "unrecognized agents and environments are denied by default."
+        );
+        setFlowState("gateway_blocked");
+        return;
+      }
+
+      // 2. Check if a policy applies (internal engine policies)
       let policyResult: Record<string, unknown> | undefined;
       try {
         const policyInput = encodeURIComponent(JSON.stringify({ "0": { json: { action: scenario.action } } }));
@@ -380,7 +404,7 @@ export default function Go() {
         const batchResult = Array.isArray(policyJson) ? policyJson[0] : policyJson;
         policyResult = batchResult?.result?.data?.json ?? batchResult?.result?.data;
       } catch {
-        // Policy check failed — fall through to manual review
+        // Policy check failed \u2014 fall through to manual review
         policyResult = undefined;
       }
 
@@ -438,7 +462,7 @@ export default function Go() {
         return;
       }
 
-      // No policy match — show approval UI, notify owner
+      // No policy match \u2014 show approval UI, notify owner
       setFlowState("reviewing");
       notifyPending.mutateAsync({
         intentId: newIntentId,
@@ -447,8 +471,18 @@ export default function Go() {
         description: scenario.description,
         origin: window.location.origin,
       }).catch(() => {});
-    } catch {
-      setFlowState("reviewing");
+    } catch (err: unknown) {
+      // Check if this is a gateway API error (e.g., blocked by governance)
+      const errMsg = err instanceof Error ? err.message : String(err);
+      if (errMsg.includes("blocked") || errMsg.includes("not recognized")) {
+        setGatewayBlockReason(errMsg);
+        setDenialMessage(
+          "The production gateway blocked this action. The governance policy is enforcing fail-closed mode."
+        );
+        setFlowState("gateway_blocked");
+      } else {
+        setFlowState("reviewing");
+      }
     }
   };
 
@@ -541,7 +575,7 @@ export default function Go() {
 
   const isApprovedState = flowState === "approved" || flowState === "auto_approved";
   const isCompletedState = isApprovedState || flowState === "verifying" || flowState === "verified";
-  const isDeniedState = flowState === "denied" || flowState === "auto_denied";
+  const isDeniedState = flowState === "denied" || flowState === "auto_denied" || flowState === "gateway_blocked";
 
   // Determine connector status for this scenario
   const connectorStatus = (scenario.connector === "gmail" || scenario.connector === "slack" || scenario.connector === "github")
@@ -983,10 +1017,24 @@ export default function Go() {
                   {denialMessage}
                 </p>
                 <p className="text-xs mt-3" style={{ color: "#9ca3af" }}>
-                  {flowState === "auto_denied"
+                  {flowState === "gateway_blocked"
+                    ? "The production gateway blocked this intent at the governance layer. This is fail-closed enforcement \u2014 the gateway will not allow unrecognized agents or environments to proceed."
+                    : flowState === "auto_denied"
                     ? "This action was blocked by a learned policy before reaching a human. The governance engine enforced the rule."
                     : "This is fail-closed enforcement. No approval means no execution. The gate does not open."}
                 </p>
+                {flowState === "gateway_blocked" && gatewayBlockReason && (
+                  <div
+                    className="mt-3 rounded-lg p-3"
+                    style={{ backgroundColor: "oklch(0.12 0.02 260)", border: "1px solid oklch(0.25 0.02 260)" }}
+                  >
+                    <p className="text-[10px] uppercase tracking-wider mb-1" style={{ color: "#6b7280" }}>Gateway Governance Detail</p>
+                    <p className="text-xs font-mono" style={{ color: "#d1d5db" }}>{gatewayBlockReason}</p>
+                    <p className="text-[10px] mt-2" style={{ color: "#6b7280" }}>
+                      Source: Production Gateway ({process.env.VITE_GATEWAY_URL || "rio-gateway.onrender.com"})
+                    </p>
+                  </div>
+                )}
               </div>
               <button
                 onClick={handleTryAnother}

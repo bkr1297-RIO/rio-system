@@ -90,11 +90,16 @@ describe("RioGatewayClient", () => {
       expect(result.intent_hash).toBe("abc123hash");
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe(`${BASE_URL}/intent`);
+      expect(url).toBe(`${BASE_URL}/api/v1/intents`);
       expect(options.method).toBe("POST");
       const body = JSON.parse(options.body);
       expect(body.action).toBe("send_email");
       expect(body.agent_id).toBe("bondi-ai");
+      // Verify replay prevention fields are injected
+      expect(body.request_timestamp).toBeDefined();
+      expect(body.request_nonce).toBeDefined();
+      expect(typeof body.request_timestamp).toBe("string");
+      expect(typeof body.request_nonce).toBe("string");
     });
   });
 
@@ -173,7 +178,7 @@ describe("RioGatewayClient", () => {
     it("sends POST /execute and receives execution token", async () => {
       const mockResponse = {
         intent_id: "INT-abc123",
-        status: "execute_now",
+        status: "execution_authorized",
         execution_token: {
           intent_id: "INT-abc123",
           action: "send_email",
@@ -183,7 +188,7 @@ describe("RioGatewayClient", () => {
           parameters: { to: "jane@company.com" },
           cc_recipients: [],
           issued_at: "2026-03-29T22:44:16.000Z",
-          status: "execute_now",
+          status: "execution_authorized",
         },
         instruction: "Execute the action externally, then POST to /execute-confirm",
         timestamp: "2026-03-29T22:44:16.000Z",
@@ -192,9 +197,15 @@ describe("RioGatewayClient", () => {
 
       const result = await client.execute("INT-abc123");
 
-      expect(result.status).toBe("execute_now");
+      expect(result.status).toBe("execution_authorized");
       expect(result.execution_token.action).toBe("send_email");
       expect(result.execution_token.authorized_by).toBe("brian");
+
+      // Verify replay prevention fields in POST body
+      const [, options] = mockFetch.mock.calls[0];
+      const body = JSON.parse(options.body);
+      expect(body.request_timestamp).toBeDefined();
+      expect(body.request_nonce).toBeDefined();
     });
   });
 
@@ -308,7 +319,7 @@ describe("RioGatewayClient", () => {
       expect(result.ledger_chain_verification.valid).toBe(true);
 
       const [url] = mockFetch.mock.calls[0];
-      expect(url).toBe(`${BASE_URL}/verify`);
+      expect(url).toBe(`${BASE_URL}/api/v1/verify`);
     });
 
     it("calls GET /verify?intent_id=X for specific intent", async () => {

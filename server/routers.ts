@@ -7,6 +7,7 @@ import { blogRouter } from "./routers/blog";
 import { connectionsRouter } from "./routers/connections";
 import { workspaceRouter } from "./routers/workspace";
 import { demoRouter } from "./routers/demo";
+import { pushRouter } from "./routers/push";
 
 export const appRouter = router({
   system: systemRouter,
@@ -35,6 +36,8 @@ export const appRouter = router({
 
   // Demo tracking
   demo: demoRouter,
+  // Push notification subscriptions (scaffolding)
+  push: pushRouter,
 });
 
 export type AppRouter = typeof appRouter;

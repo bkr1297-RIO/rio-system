@@ -240,14 +240,65 @@ export async function executeIntent(intentId: string) {
   if (gatewayClient) {
     // Step 4: Get execution token from gateway
     const execResult = await gatewayClient.execute(intentId);
-    // Normalize to match internal format so frontend always sees the same shape
+
+    // In gateway mode, we also need to generate the receipt so the frontend
+    // gets the same shape as internal mode (receipt + ledger_entry inline).
+    let receipt: Record<string, unknown> | null = null;
+    let ledgerEntry: Record<string, unknown> | null = null;
+
+    if (execResult.status === "execution_authorized") {
+      try {
+        // Step 5+6: Confirm execution and generate receipt
+        // First confirm execution (even if simulated)
+        try {
+          await gatewayClient.executeConfirm({
+            intent_id: intentId,
+            execution_result: { status: "completed", simulated: true },
+          });
+        } catch {
+          // execute-confirm may fail if gateway doesn't require it — continue to receipt
+          console.warn("[RIO Governance Router] execute-confirm failed — continuing to receipt generation");
+        }
+
+        // Generate the receipt
+        const receiptResult = await gatewayClient.generateReceipt(intentId);
+        receipt = {
+          receipt_id: receiptResult.receipt_id,
+          intent_id: receiptResult.intent_id,
+          action: receiptResult.action,
+          hash_chain: receiptResult.hash_chain,
+          authorized_by: receiptResult.authorized_by,
+          timestamp: receiptResult.timestamp,
+          decision: "approved",
+          decision_source: "human",
+          execution_mode: "simulated",
+        };
+        // Build a ledger entry from the receipt for UI compatibility
+        ledgerEntry = {
+          block_id: receiptResult.receipt_id,
+          intent_id: receiptResult.intent_id,
+          action: receiptResult.action,
+          decision: "approved",
+          receipt_hash: receiptResult.hash_chain?.receipt_hash || null,
+          current_hash: receiptResult.hash_chain?.receipt_hash || "",
+          previous_hash: receiptResult.hash_chain?.execution_hash || null,
+          timestamp: receiptResult.timestamp,
+          recorded_by: receiptResult.authorized_by || "gateway",
+          source: "gateway",
+        };
+      } catch (err) {
+        console.warn("[RIO Governance Router] Receipt generation failed:", err);
+        // Continue without receipt — the action was still authorized
+      }
+    }
+
     return {
       allowed: execResult.status === "execution_authorized",
       httpStatus: execResult.status === "execution_authorized" ? 200 : 403,
       intentId: execResult.intent_id,
       status: execResult.status,
-      receipt: null as Record<string, unknown> | null, // Receipt comes from generateReceipt() in gateway mode
-      ledger_entry: null as Record<string, unknown> | null, // Ledger entry comes from gateway receipt flow
+      receipt,
+      ledger_entry: ledgerEntry,
       executionToken: execResult.execution_token,
       instruction: execResult.instruction,
       timestamp: execResult.timestamp,
@@ -361,6 +412,29 @@ export async function getAuditLog(intentId: string) {
 }
 
 /**
+ * Map gateway ledger entry status to the frontend's "decision" field.
+ * Gateway uses: submitted, governed, blocked, authorized, denied, execution_authorized, executed, receipted
+ * Frontend expects: approved, denied, pending, blocked
+ */
+function mapGatewayStatusToDecision(status: string): string {
+  switch (status) {
+    case "authorized":
+    case "execution_authorized":
+    case "executed":
+    case "receipted":
+      return "approved";
+    case "denied":
+      return "denied";
+    case "blocked":
+      return "blocked";
+    case "submitted":
+    case "governed":
+    default:
+      return "pending";
+  }
+}
+
+/**
  * Get the ledger chain.
  * In dual mode, returns entries from both sources with source labels.
  */
@@ -371,8 +445,34 @@ export async function getLedgerChain(limit: number = 50) {
   if (gatewayClient) {
     try {
       const gwLedger = await gatewayClient.getLedger({ limit });
+      // Normalize gateway entries to match the frontend's expected shape:
+      // Frontend expects: block_id, intent_id, action, decision, receipt_hash,
+      //   previous_hash, current_hash, ledger_signature, protocol_version,
+      //   timestamp, recorded_by, source
+      // Gateway returns: id, entry_id, intent_id, action, agent_id, status,
+      //   detail, intent_hash, authorization_hash, execution_hash, receipt_hash,
+      //   ledger_hash, prev_hash, timestamp
       results.push({
-        entries: gwLedger.entries.map(e => ({ ...e, source: "gateway" })),
+        entries: gwLedger.entries.map((e: any) => ({
+          block_id: e.entry_id || e.id?.toString() || e.intent_id,
+          intent_id: e.intent_id,
+          action: e.action,
+          decision: mapGatewayStatusToDecision(e.status),
+          receipt_hash: e.receipt_hash || null,
+          previous_hash: e.prev_hash || e.previous_hash || null,
+          current_hash: e.ledger_hash || e.hash || e.intent_hash || "",
+          ledger_signature: e.authorization_hash || null,
+          protocol_version: "v2",
+          timestamp: e.timestamp,
+          recorded_by: e.agent_id || "gateway",
+          // Preserve raw gateway fields for advanced views
+          intent_hash: e.intent_hash,
+          authorization_hash: e.authorization_hash,
+          execution_hash: e.execution_hash,
+          status: e.status,
+          detail: e.detail,
+          source: "gateway",
+        })),
         source: "gateway",
       });
     } catch (err) {

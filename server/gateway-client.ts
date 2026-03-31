@@ -197,6 +197,75 @@ export interface GatewayError {
   hint?: string;
 }
 
+// ── Proxy Lifecycle Types ───────────────────────────────────────────────
+
+export interface ProxyOnboardRequest {
+  /** User's Ed25519 public key (hex-encoded, 64 chars) */
+  public_key: string;
+  /** Key fingerprint (first 16 chars of SHA-256 of public key) */
+  key_fingerprint: string;
+  /** Display name for the proxy owner */
+  display_name: string;
+  /** Initial policy set (JSON object) */
+  policies: Record<string, unknown>;
+  /** SHA-256 hash of the policy JSON */
+  policy_hash: string;
+  /** Ed25519 signature over (public_key + policy_hash + timestamp) */
+  confirmation_signature: string;
+  /** ISO 8601 timestamp of the confirmation */
+  confirmation_timestamp: string;
+}
+
+export interface ProxyOnboardResponse {
+  status: string;
+  proxy_id: string;
+  user_id: string;
+  public_key_registered: boolean;
+  policies_applied: number;
+  onboard_receipt_id: string;
+  onboard_hash: string;
+  timestamp: string;
+}
+
+export interface ProxyKillRequest {
+  /** User's Ed25519 public key for identification */
+  public_key: string;
+  /** Ed25519 signature over ("KILL" + timestamp) for authentication */
+  kill_signature: string;
+  /** ISO 8601 timestamp */
+  kill_timestamp: string;
+}
+
+export interface ProxyKillResponse {
+  status: string;
+  proxy_id: string;
+  tokens_burned: number;
+  kill_receipt_id: string;
+  kill_hash: string;
+  timestamp: string;
+}
+
+export interface ProxySyncResponse {
+  status: string;
+  proxy_id: string;
+  pending_approvals: number;
+  recent_receipts: Array<{
+    receipt_id: string;
+    action: string;
+    decision: string;
+    timestamp: string;
+  }>;
+  health: {
+    gateway: string;
+    ledger_valid: boolean;
+    ledger_entries: number;
+  };
+  pattern_confidence: number;
+  active_policies: number;
+  last_activity: string;
+  timestamp: string;
+}
+
 // ── Error Classes ────────────────────────────────────────────────────────
 
 export class GatewayUnreachableError extends Error {
@@ -235,6 +304,17 @@ export class RioGatewayClient {
 
   // ── Internal fetch wrapper ──────────────────────────────────────────
 
+  /**
+   * Generate replay prevention fields required by the production gateway.
+   * All POST requests must include request_timestamp (ISO 8601) and request_nonce (UUID).
+   */
+  private replayFields(): { request_timestamp: string; request_nonce: string } {
+    return {
+      request_timestamp: new Date().toISOString(),
+      request_nonce: crypto.randomUUID(),
+    };
+  }
+
   private async request<T>(
     method: "GET" | "POST",
     path: string,
@@ -253,12 +333,20 @@ export class RioGatewayClient {
       headers["Authorization"] = `Bearer ${this.authToken}`;
     }
 
+    // Inject replay prevention fields into all POST request bodies
+    let finalBody = body;
+    if (method === "POST" && body && typeof body === "object") {
+      finalBody = { ...body, ...this.replayFields() };
+    } else if (method === "POST" && !body) {
+      finalBody = this.replayFields();
+    }
+
     let response: Response;
     try {
       response = await fetch(url, {
         method,
         headers,
-        body: body ? JSON.stringify(body) : undefined,
+        body: finalBody ? JSON.stringify(finalBody) : undefined,
         signal: controller.signal,
       });
     } catch (err: unknown) {
@@ -318,7 +406,7 @@ export class RioGatewayClient {
    * Returns the intent_id and intent_hash.
    */
   async submitIntent(intent: GatewayIntent): Promise<GatewayIntentResponse> {
-    return this.request<GatewayIntentResponse>("POST", "/intent", intent);
+    return this.request<GatewayIntentResponse>("POST", "/api/v1/intents", intent);
   }
 
   /**
@@ -326,9 +414,7 @@ export class RioGatewayClient {
    * Returns governance status, risk level, and whether approval is required.
    */
   async govern(intentId: string): Promise<GatewayGovernResponse> {
-    return this.request<GatewayGovernResponse>("POST", "/govern", {
-      intent_id: intentId,
-    });
+    return this.request<GatewayGovernResponse>("POST", `/api/v1/intents/${encodeURIComponent(intentId)}/govern`, {});
   }
 
   /**
@@ -336,7 +422,8 @@ export class RioGatewayClient {
    * Supports optional Ed25519 signatures for cryptographic proof.
    */
   async authorize(req: GatewayAuthorizeRequest): Promise<GatewayAuthorizeResponse> {
-    return this.request<GatewayAuthorizeResponse>("POST", "/authorize", req);
+    const { intent_id, ...body } = req;
+    return this.request<GatewayAuthorizeResponse>("POST", `/api/v1/intents/${encodeURIComponent(intent_id)}/authorize`, body);
   }
 
   /**
@@ -345,9 +432,7 @@ export class RioGatewayClient {
    * and then call executeConfirm().
    */
   async execute(intentId: string): Promise<GatewayExecuteResponse> {
-    return this.request<GatewayExecuteResponse>("POST", "/execute", {
-      intent_id: intentId,
-    });
+    return this.request<GatewayExecuteResponse>("POST", `/api/v1/intents/${encodeURIComponent(intentId)}/execute`, {});
   }
 
   /**
@@ -356,7 +441,8 @@ export class RioGatewayClient {
    * it reports back the result.
    */
   async executeConfirm(req: GatewayExecuteConfirmRequest): Promise<GatewayExecuteConfirmResponse> {
-    return this.request<GatewayExecuteConfirmResponse>("POST", "/execute-confirm", req);
+    const { intent_id, ...body } = req;
+    return this.request<GatewayExecuteConfirmResponse>("POST", `/api/v1/intents/${encodeURIComponent(intent_id)}/confirm`, body);
   }
 
   /**
@@ -364,9 +450,7 @@ export class RioGatewayClient {
    * Creates a receipt with a 5-link SHA-256 hash chain.
    */
   async generateReceipt(intentId: string): Promise<GatewayReceiptResponse> {
-    return this.request<GatewayReceiptResponse>("POST", "/receipt", {
-      intent_id: intentId,
-    });
+    return this.request<GatewayReceiptResponse>("POST", `/api/v1/intents/${encodeURIComponent(intentId)}/receipt`, {});
   }
 
   // ── Full Pipeline (convenience) ────────────────────────────────────
@@ -394,7 +478,7 @@ export class RioGatewayClient {
   /** Verify a receipt or the full ledger chain */
   async verify(intentId?: string): Promise<GatewayVerifyResponse> {
     const query = intentId ? `?intent_id=${encodeURIComponent(intentId)}` : "";
-    return this.request<GatewayVerifyResponse>("GET", `/verify${query}`);
+    return this.request<GatewayVerifyResponse>("GET", `/api/v1/verify${query}`);
   }
 
   /** Get ledger entries */
@@ -404,12 +488,13 @@ export class RioGatewayClient {
     if (options?.offset) params.set("offset", String(options.offset));
     if (options?.intentId) params.set("intent_id", options.intentId);
     const query = params.toString() ? `?${params.toString()}` : "";
-    return this.request<GatewayLedgerResponse>("GET", `/ledger${query}`);
+    return this.request<GatewayLedgerResponse>("GET", `/api/v1/ledger${query}`);
   }
 
   /** Check gateway health */
   async health(): Promise<GatewayHealthResponse> {
-    return this.request<GatewayHealthResponse>("GET", "/health");
+    // /health exists at both root and /api/v1/health — use /api/v1 for consistency
+    return this.request<GatewayHealthResponse>("GET", "/api/v1/health");
   }
 
   /** List intents */
@@ -418,12 +503,41 @@ export class RioGatewayClient {
     if (status) params.set("status", status);
     if (limit) params.set("limit", String(limit));
     const query = params.toString() ? `?${params.toString()}` : "";
-    return this.request("GET", `/intents${query}`);
+    return this.request("GET", `/api/v1/intents${query}`);
   }
 
   /** Get a specific intent with full pipeline state */
   async getIntent(intentId: string): Promise<unknown> {
-    return this.request("GET", `/intent/${encodeURIComponent(intentId)}`);
+    return this.request("GET", `/api/v1/intents/${encodeURIComponent(intentId)}`);
+  }
+
+  // ── Proxy Lifecycle Endpoints ──────────────────────────────────────
+
+  /**
+   * Onboard a new sovereign proxy.
+   * Registers the user's Ed25519 public key and initial policy set.
+   * POST /api/onboard (Romney is building this endpoint)
+   */
+  async onboard(req: ProxyOnboardRequest): Promise<ProxyOnboardResponse> {
+    return this.request<ProxyOnboardResponse>("POST", "/api/onboard", req);
+  }
+
+  /**
+   * Kill switch — immediately pause/destroy the proxy.
+   * Burns all active tokens and logs a governance receipt.
+   * POST /api/kill (Romney is building this endpoint)
+   */
+  async kill(req: ProxyKillRequest): Promise<ProxyKillResponse> {
+    return this.request<ProxyKillResponse>("POST", "/api/kill", req);
+  }
+
+  /**
+   * Session sync — load full context on session start.
+   * Returns pending approvals, recent receipts, health, pattern confidence.
+   * GET /api/sync (Romney is building this endpoint)
+   */
+  async sync(): Promise<ProxySyncResponse> {
+    return this.request<ProxySyncResponse>("GET", "/api/sync");
   }
 }
 

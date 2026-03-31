@@ -86,6 +86,7 @@ type FlowState =
   | "checking_policy"
   | "auto_approved"
   | "auto_denied"
+  | "gateway_blocked"
   | "reviewing"
   | "approved"
   | "denied"
@@ -103,6 +104,8 @@ function getActiveStageIndex(flowState: FlowState): number {
     case "auto_approved":
     case "auto_denied":
       return 6; // policy auto-decided → receipt + ledger done
+    case "gateway_blocked":
+      return 2; // governance blocked the intent at policy evaluation
     case "approved":
     case "denied":
       return 6; // human decided → receipt + ledger done
@@ -127,6 +130,7 @@ function getStageStatuses(flowState: FlowState): WalkthroughStage["status"][] {
       if (
         (flowState === "auto_approved" || flowState === "auto_denied" ||
          flowState === "approved" || flowState === "denied" ||
+         flowState === "gateway_blocked" ||
          flowState === "verifying" || flowState === "verified") &&
         i === 6
       )
@@ -295,7 +299,7 @@ export default function WalkthroughStepper({ flowState, enabled }: WalkthroughSt
         </div>
       )}
 
-      {(flowState === "denied" || flowState === "auto_denied") && (
+      {(flowState === "denied" || flowState === "auto_denied" || flowState === "gateway_blocked") && (
         <div
           className="mt-4 px-3 py-2.5 rounded-lg text-xs text-center"
           style={{ backgroundColor: "#ef444410", border: "1px solid #ef444425", color: "#ef4444" }}
