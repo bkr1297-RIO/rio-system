@@ -243,7 +243,7 @@ router.post("/intents/:id/govern", requireScope("write"), (req, res) => {
 router.post("/intents/:id/authorize", requireScope("admin"), (req, res) => {
   try {
     const intent_id = req.params.id;
-    const { decision, authorized_by, conditions, expires_at, signature, signature_timestamp } = req.body;
+    const { decision, authorized_by, conditions, expires_at, signature, signature_timestamp, signer_id: requestSignerId } = req.body;
 
     if (!decision || !authorized_by) {
       return res.status(400).json({
@@ -275,14 +275,15 @@ router.post("/intents/:id/authorize", requireScope("admin"), (req, res) => {
         intent_id,
         action: intent.action,
         decision,
-        signer_id: authorized_by,
+        signer_id: requestSignerId || authorized_by,
         timestamp: signature_timestamp || timestamp,
       });
 
-      const publicKeyHex = getSignerPublicKey(authorized_by);
+      const signerId = requestSignerId || authorized_by;
+      const publicKeyHex = getSignerPublicKey(signerId);
       if (!publicKeyHex) {
         return res.status(403).json({
-          error: `No registered public key for signer: ${authorized_by}`,
+          error: `No registered public key for signer: ${signerId}`,
         });
       }
 
@@ -313,10 +314,12 @@ router.post("/intents/:id/authorize", requireScope("admin"), (req, res) => {
       });
     }
 
+    const resolvedSignerId = requestSignerId || authorized_by;
     const authorization = {
       intent_id,
       decision,
       authorized_by,
+      signer_id: resolvedSignerId,
       timestamp,
       conditions: conditions || null,
       expires_at: expires_at || null,
