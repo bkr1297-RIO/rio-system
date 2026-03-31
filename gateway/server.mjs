@@ -15,6 +15,8 @@ import { initLedger } from "./ledger/ledger-pg.mjs";
 import routes from "./routes/index.mjs";
 import { createToken, verifyToken, optionalAuth, isRegistered, getRegisteredUser } from "./security/oauth.mjs";
 import { replayPreventionMiddleware } from "./security/replay-prevention.mjs";
+import { initIdentityBinding } from "./security/identity-binding.mjs";
+import signerRoutes from "./routes/signers.mjs";
 
 const app = express();
 const PORT = process.env.RIO_GATEWAY_PORT || process.env.PORT || 4400;
@@ -48,11 +50,11 @@ app.use((req, res, next) => {
 // Initialize
 // ---------------------------------------------------------------------------
 console.log("=".repeat(60));
-console.log("  RIO GOVERNANCE GATEWAY v2.2.0-hardened");
+console.log("  RIO GOVERNANCE GATEWAY v2.5.0-identity-binding");
 console.log("  Governed AI Execution Runtime");
 console.log("  Ledger: PostgreSQL (persistent)");
-console.log("  Auth: JWT + Ed25519 signatures (REQUIRED)");
-console.log("  Hardening: Token Burn + Replay Prevention + Ed25519 Required");
+console.log("  Auth: JWT + Ed25519 (PostgreSQL-backed identity binding)");
+console.log("  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding");
 console.log("=".repeat(60));
 console.log();
 
@@ -71,6 +73,10 @@ async function start() {
   try {
     await initLedger();
     console.log("[RIO Gateway] Ledger initialized (PostgreSQL).");
+
+    // Initialize identity binding (WS-010: Ed25519 signers from PostgreSQL)
+    await initIdentityBinding();
+    console.log("[RIO Gateway] Identity binding initialized (PostgreSQL).");
   } catch (err) {
     console.error(`[RIO Gateway] FATAL: Could not connect to ledger database: ${err.message}`);
     console.error("[RIO Gateway] Fail-closed: Gateway will not start without a persistent ledger.");
@@ -134,6 +140,11 @@ async function start() {
   });
 
   // ---------------------------------------------------------------------------
+  // Signer Management Routes (WS-010: Identity Binding)
+  // ---------------------------------------------------------------------------
+  app.use("/api/signers", signerRoutes);
+
+  // ---------------------------------------------------------------------------
   // Pipeline Routes
   // ---------------------------------------------------------------------------
   app.use("/", routes);
@@ -142,7 +153,7 @@ async function start() {
   app.get("/", (req, res) => {
     res.json({
       name: "RIO Governance Gateway",
-      version: "2.1.0",
+      version: "2.5.0",
       description: "Governed AI Execution Runtime — No Authorization, No Execution.",
       ledger: "PostgreSQL (persistent)",
       auth: "JWT + Ed25519",
@@ -160,6 +171,10 @@ async function start() {
         "GET /health": "System health check",
         "GET /intents": "List all intents",
         "GET /intent/:id": "Get a specific intent with full pipeline state",
+        "POST /api/signers/generate-keypair": "Generate Ed25519 keypair (private key returned ONCE)",
+        "POST /api/signers/register": "Register externally-generated Ed25519 public key",
+        "GET /api/signers": "List all registered signers",
+        "DELETE /api/signers/:signer_id": "Revoke a signer",
       },
       fail_mode: "closed",
     });

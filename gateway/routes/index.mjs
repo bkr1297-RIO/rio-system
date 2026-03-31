@@ -30,9 +30,9 @@ import { sendEmail } from "../execution/gmail-executor.mjs";
 import {
   buildSignaturePayload,
   verifySignature,
-  loadKeypair,
   hashPayload,
 } from "../security/ed25519.mjs";
+import { getSignerPublicKey } from "../security/identity-binding.mjs";
 import {
   validateIntake,
   normalizeLegacy,
@@ -242,16 +242,16 @@ router.post("/authorize", (req, res) => {
         timestamp: req.body.signature_timestamp || timestamp,
       });
 
-      // Load the signer's public key
-      const keypair = loadKeypair(authorized_by);
-      if (!keypair) {
+      // Load the signer's public key from PostgreSQL (WS-010: Identity Binding)
+      const publicKeyHex = getSignerPublicKey(authorized_by);
+      if (!publicKeyHex) {
         return res.status(403).json({
           error: `No registered public key for signer: ${authorized_by}`,
-          hint: "Register the signer's Ed25519 public key before authorizing.",
+          hint: "Register the signer's Ed25519 public key via POST /api/signers/register or /api/signers/generate-keypair.",
         });
       }
 
-      const valid = verifySignature(payload, signature, keypair.publicKey);
+      const valid = verifySignature(payload, signature, publicKeyHex);
       if (!valid) {
         // FAIL CLOSED — invalid signature means no authorization
         appendEntry({
@@ -577,7 +577,7 @@ router.post("/receipt", (req, res) => {
       });
     }
 
-    // Generate the full receipt
+    // Generate the full receipt with identity binding data (WS-010)
     const receipt = generateReceipt({
       intent_hash: hashIntent(intent),
       governance_hash: intent.governance?.governance_hash || "",
@@ -588,6 +588,19 @@ router.post("/receipt", (req, res) => {
       agent_id: intent.agent_id,
       authorized_by: intent.authorization?.authorized_by || "unknown",
     });
+
+    // Attach identity binding proof to receipt (WS-010)
+    const authBy = intent.authorization?.authorized_by;
+    const signerPubKey = authBy ? getSignerPublicKey(authBy) : null;
+    receipt.identity_binding = {
+      ed25519_signed: intent.authorization?.ed25519_signed || false,
+      signer_id: authBy || null,
+      signer_public_key_hex: signerPubKey || null,
+      signature_payload_hash: intent.authorization?.signature_payload_hash || null,
+      verification_method: intent.authorization?.ed25519_signed
+        ? "Ed25519 signature verified against registered public key in authorized_signers table"
+        : "No Ed25519 signature (unsigned authorization)",
+    };
 
     updateIntent(intent_id, {
       status: "receipted",
