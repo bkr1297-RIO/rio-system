@@ -1,0 +1,99 @@
+{
+  "title": "RIO HITL Proxy — API Playbook",
+  "description": "Copy-paste ready API calls for the full Human-in-the-Loop flow. Run steps in order.",
+  "base_url": "https://rio-hitl-proxy.onrender.com/api/hitl",
+  "steps": [
+    {
+      "step": 1,
+      "name": "Onboard a proxy user",
+      "method": "POST",
+      "url": "{{base_url}}/onboard",
+      "headers": { "Content-Type": "application/json" },
+      "body": { "userId": "brian" },
+      "notes": "Creates the proxy user bound to the system seed + policy. Run once per userId."
+    },
+    {
+      "step": 2,
+      "name": "Create a LOW risk intent (no approval needed)",
+      "method": "POST",
+      "url": "{{base_url}}/intent",
+      "headers": { "Content-Type": "application/json" },
+      "body": { "userId": "brian", "toolName": "echo", "toolArgs": { "message": "hello from RIO HITL" } },
+      "notes": "echo is LOW risk. approvalRequired will be false. Save the intentId."
+    },
+    {
+      "step": 3,
+      "name": "Execute the LOW risk intent directly",
+      "method": "POST",
+      "url": "{{base_url}}/execute",
+      "headers": { "Content-Type": "application/json" },
+      "body": { "intentId": "INTENT-<paste from step 2>" },
+      "notes": "No approvalId needed for LOW risk. Should return SUCCESS immediately."
+    },
+    {
+      "step": 4,
+      "name": "Create a HIGH risk intent (send email)",
+      "method": "POST",
+      "url": "{{base_url}}/intent",
+      "headers": { "Content-Type": "application/json" },
+      "body": { "userId": "brian", "toolName": "send_email", "toolArgs": { "to": "bkr1297@gmail.com", "subject": "RIO HITL Test", "body": "This email was sent via the RIO HITL proxy after human approval." } },
+      "notes": "send_email is HIGH risk. approvalRequired will be true. Save the intentId."
+    },
+    {
+      "step": 5,
+      "name": "Human Root approves the intent",
+      "method": "POST",
+      "url": "{{base_url}}/approval",
+      "headers": { "Content-Type": "application/json" },
+      "body": { "intentId": "INTENT-<paste from step 4>", "decision": { "value": "yes", "reason": "Reviewed and approved" }, "approvingUserId": "brian" },
+      "notes": "Creates an Ed25519-signed approval bound to the exact tool + args hash. Expires in 5 minutes. Max 1 execution."
+    },
+    {
+      "step": 6,
+      "name": "Execute the approved HIGH risk intent",
+      "method": "POST",
+      "url": "{{base_url}}/execute",
+      "headers": { "Content-Type": "application/json" },
+      "body": { "intentId": "INTENT-<paste from step 4>", "approvalId": "APPR-<paste from step 5>" },
+      "notes": "Runs 8 preflight checks before executing. On second call returns APPROVAL_EXHAUSTED."
+    },
+    {
+      "step": 7,
+      "name": "Human Root rejects an intent",
+      "method": "POST",
+      "url": "{{base_url}}/approval",
+      "headers": { "Content-Type": "application/json" },
+      "body": { "intentId": "INTENT-<any pending intentId>", "decision": { "value": "no", "reason": "Not authorized at this time" }, "approvingUserId": "brian" },
+      "notes": "Sets intent status to REJECTED. No execution possible."
+    },
+    {
+      "step": 8,
+      "name": "Check status for a user",
+      "method": "GET",
+      "url": "{{base_url}}/status/brian",
+      "notes": "Returns proxy user state, last 10 intents, last 10 approvals."
+    },
+    {
+      "step": 9,
+      "name": "View the audit ledger",
+      "method": "GET",
+      "url": "{{base_url}}/ledger",
+      "notes": "Returns last 100 ledger entries (most recent first). Every action has a SHA-256 hash chained to the previous entry."
+    },
+    {
+      "step": 10,
+      "name": "Kill switch — emergency stop",
+      "method": "POST",
+      "url": "{{base_url}}/kill",
+      "headers": { "Content-Type": "application/json" },
+      "body": { "userId": "brian", "reason": "Suspicious activity detected" },
+      "notes": "Immediately revokes all active approvals. All future intent creation and execution returns PROXY_KILLED (403). Irreversible."
+    }
+  ],
+  "invariants": {
+    "P-HUMAN-ROOT-ONLY-YES": "No HIGH or MEDIUM tool execution without explicit human approval",
+    "P-ALL-ACTIONS-LEDGERED": "Every action is written to the tamper-evident SHA-256 hash chain",
+    "P-KILL-IS-GLOBAL": "Kill switch immediately blocks all execution and revokes all approvals",
+    "P-APPROVAL-BOUND": "Approvals are cryptographically bound to tool + argsHash + expiry + maxExecutions"
+  }
+}

@@ -1,0 +1,32 @@
+# RIO HITL Proxy — Render Blueprint
+# Deploy: Connect GitHub repo → Render auto-detects this file
+#
+# This creates:
+#   1. A PostgreSQL database (rio-hitl-ledger)
+#   2. A Node.js web service (rio-hitl-proxy)
+#
+databases:
+  - name: rio-hitl-ledger
+    plan: free
+    databaseName: rio_hitl
+    user: rio_hitl
+    ipAllowList: []
+services:
+  - type: web
+    name: rio-hitl-proxy
+    plan: free
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "8080"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rio-hitl-ledger
+          property: connectionString
