@@ -8,6 +8,7 @@
 
 import { useState, useMemo } from "react";
 import { trpc } from "@/lib/trpc";
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -134,6 +135,12 @@ export default function HistoryExplorer() {
   const [sourceFilter, setSourceFilter] = useState("all");
   const [selectedEntry, setSelectedEntry] = useState<LedgerEntry | null>(null);
   const [page, setPage] = useState(0);
+  const [verifying, setVerifying] = useState(false);
+  const [verifyResult, setVerifyResult] = useState<{
+    chain_valid?: boolean;
+    total_entries?: number;
+    errors?: string[];
+  } | null>(null);
 
   const {
     data: ledgerData,
@@ -143,6 +150,32 @@ export default function HistoryExplorer() {
     { limit: 200 },
     { refetchOnWindowFocus: true }
   );
+
+  // Gateway chain verification (lazy query — only runs when user clicks Verify)
+  const verifyQuery = trpc.rio.gatewayVerify.useQuery(
+    {},
+    { enabled: false } // don't run automatically
+  );
+  const handleVerifyChain = async () => {
+    setVerifying(true);
+    try {
+      const { data: result } = await verifyQuery.refetch();
+      if (result) {
+        setVerifyResult(result as any);
+        const valid = (result as any)?.chain_valid ?? (result as any)?.valid;
+        if (valid) {
+          toast.success("Chain integrity verified", {
+            description: `${(result as any)?.total_entries || 0} entries validated`,
+          });
+        } else {
+          toast.error("Chain integrity issue detected");
+        }
+      }
+    } catch (err: any) {
+      toast.error("Verification failed", { description: err?.message });
+    }
+    setVerifying(false);
+  };
 
   const allEntries: LedgerEntry[] = (ledgerData as any)?.entries ?? [];
   const chainValid = (ledgerData as any)?.chainValid ?? true;
@@ -206,6 +239,33 @@ export default function HistoryExplorer() {
               Chain integrity issue
             </Badge>
           )}
+          {verifyResult && (
+            <Badge
+              variant={verifyResult.chain_valid ? "secondary" : "destructive"}
+              className="gap-1 text-xs"
+            >
+              {verifyResult.chain_valid ? (
+                <CheckCircle2 className="h-3 w-3" />
+              ) : (
+                <AlertTriangle className="h-3 w-3" />
+              )}
+              Gateway: {verifyResult.total_entries || 0} entries
+            </Badge>
+          )}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleVerifyChain}
+            disabled={verifying}
+            className="gap-2"
+          >
+            {verifying ? (
+              <Loader2 className="h-3.5 w-3.5 animate-spin" />
+            ) : (
+              <Shield className="h-3.5 w-3.5" />
+            )}
+            Verify Chain
+          </Button>
           {sources.length > 1 && (
             <Badge variant="secondary" className="text-xs">
               {sources.join(" + ")}

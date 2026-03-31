@@ -337,7 +337,7 @@ export class RioGatewayClient {
    * Returns the intent_id and intent_hash.
    */
   async submitIntent(intent: GatewayIntent): Promise<GatewayIntentResponse> {
-    return this.request<GatewayIntentResponse>("POST", "/intent", intent);
+    return this.request<GatewayIntentResponse>("POST", "/api/v1/intents", intent);
   }
 
   /**
@@ -345,9 +345,7 @@ export class RioGatewayClient {
    * Returns governance status, risk level, and whether approval is required.
    */
   async govern(intentId: string): Promise<GatewayGovernResponse> {
-    return this.request<GatewayGovernResponse>("POST", "/govern", {
-      intent_id: intentId,
-    });
+    return this.request<GatewayGovernResponse>("POST", `/api/v1/intents/${encodeURIComponent(intentId)}/govern`, {});
   }
 
   /**
@@ -355,7 +353,8 @@ export class RioGatewayClient {
    * Supports optional Ed25519 signatures for cryptographic proof.
    */
   async authorize(req: GatewayAuthorizeRequest): Promise<GatewayAuthorizeResponse> {
-    return this.request<GatewayAuthorizeResponse>("POST", "/authorize", req);
+    const { intent_id, ...body } = req;
+    return this.request<GatewayAuthorizeResponse>("POST", `/api/v1/intents/${encodeURIComponent(intent_id)}/authorize`, body);
   }
 
   /**
@@ -364,9 +363,7 @@ export class RioGatewayClient {
    * and then call executeConfirm().
    */
   async execute(intentId: string): Promise<GatewayExecuteResponse> {
-    return this.request<GatewayExecuteResponse>("POST", "/execute", {
-      intent_id: intentId,
-    });
+    return this.request<GatewayExecuteResponse>("POST", `/api/v1/intents/${encodeURIComponent(intentId)}/execute`, {});
   }
 
   /**
@@ -375,7 +372,8 @@ export class RioGatewayClient {
    * it reports back the result.
    */
   async executeConfirm(req: GatewayExecuteConfirmRequest): Promise<GatewayExecuteConfirmResponse> {
-    return this.request<GatewayExecuteConfirmResponse>("POST", "/execute-confirm", req);
+    const { intent_id, ...body } = req;
+    return this.request<GatewayExecuteConfirmResponse>("POST", `/api/v1/intents/${encodeURIComponent(intent_id)}/confirm`, body);
   }
 
   /**
@@ -383,9 +381,7 @@ export class RioGatewayClient {
    * Creates a receipt with a 5-link SHA-256 hash chain.
    */
   async generateReceipt(intentId: string): Promise<GatewayReceiptResponse> {
-    return this.request<GatewayReceiptResponse>("POST", "/receipt", {
-      intent_id: intentId,
-    });
+    return this.request<GatewayReceiptResponse>("POST", `/api/v1/intents/${encodeURIComponent(intentId)}/receipt`, {});
   }
 
   // ── Full Pipeline (convenience) ────────────────────────────────────
@@ -413,7 +409,7 @@ export class RioGatewayClient {
   /** Verify a receipt or the full ledger chain */
   async verify(intentId?: string): Promise<GatewayVerifyResponse> {
     const query = intentId ? `?intent_id=${encodeURIComponent(intentId)}` : "";
-    return this.request<GatewayVerifyResponse>("GET", `/verify${query}`);
+    return this.request<GatewayVerifyResponse>("GET", `/api/v1/verify${query}`);
   }
 
   /** Get ledger entries */
@@ -423,12 +419,13 @@ export class RioGatewayClient {
     if (options?.offset) params.set("offset", String(options.offset));
     if (options?.intentId) params.set("intent_id", options.intentId);
     const query = params.toString() ? `?${params.toString()}` : "";
-    return this.request<GatewayLedgerResponse>("GET", `/ledger${query}`);
+    return this.request<GatewayLedgerResponse>("GET", `/api/v1/ledger${query}`);
   }
 
   /** Check gateway health */
   async health(): Promise<GatewayHealthResponse> {
-    return this.request<GatewayHealthResponse>("GET", "/health");
+    // /health exists at both root and /api/v1/health — use /api/v1 for consistency
+    return this.request<GatewayHealthResponse>("GET", "/api/v1/health");
   }
 
   /** List intents */
@@ -437,12 +434,12 @@ export class RioGatewayClient {
     if (status) params.set("status", status);
     if (limit) params.set("limit", String(limit));
     const query = params.toString() ? `?${params.toString()}` : "";
-    return this.request("GET", `/intents${query}`);
+    return this.request("GET", `/api/v1/intents${query}`);
   }
 
   /** Get a specific intent with full pipeline state */
   async getIntent(intentId: string): Promise<unknown> {
-    return this.request("GET", `/intent/${encodeURIComponent(intentId)}`);
+    return this.request("GET", `/api/v1/intents/${encodeURIComponent(intentId)}`);
   }
 }
 

@@ -653,3 +653,34 @@
 - [x] Vitest tests for all new ONE App components (14 tests, 442 total passing)
 - [x] Push to GitHub PR on bkr1297-RIO/rio-system (PR #75)
 - [x] Update sync file with progress (v3.5)
+
+## PHASE 2 GATEWAY WIRING: ONE App → Live Production Gateway
+
+### Gateway Auth & Proxy
+- [x] Explore gateway API v1 endpoints and verify JWT auth flow
+- [x] Update gateway-client.ts endpoint paths from old format to /api/v1/* format
+- [x] Create tRPC procedures for gateway login and token-authenticated requests
+
+### ONE App Screen Wiring
+- [x] Wire Approvals screen to GET /api/v1/intents?status=pending_authorization
+- [x] Wire Approve/Deny to POST /api/v1/intents/{id}/authorize
+- [x] Wire Receipt viewer to GET /api/v1/intents/{id}
+- [x] Wire Ledger explorer to GET /api/v1/ledger
+- [x] Wire Chain verifier to GET /api/v1/verify
+
+### Ed25519 Client-Side Signing
+- [x] Ed25519 via Web Crypto API (no external dependency needed)
+- [x] Build key management UI (generate/regenerate/remove, stored in localStorage)
+- [x] Sign authorization payload (intent_id + decision + timestamp) on approve
+- [x] Send signature with authorization request
+- [x] Show signature verification status in receipt viewer
+
+### Real-Time Updates
+- [x] Check gateway for WebSocket support (not available)
+- [x] Implement polling fallback (10s interval on Approvals, 15s on History)
+- [x] Show real-time notifications for new intents, governance results, execution status (via polling)
+
+### Testing & Delivery
+- [x] Write vitest tests for gateway proxy, signing, and real-time updates (454 tests, 30 files, all passing)
+- [x] Push to GitHub PR on bkr1297-RIO/rio-system (PR #79)
+- [x] Update sync file with status report and message to Manny (v3.1)

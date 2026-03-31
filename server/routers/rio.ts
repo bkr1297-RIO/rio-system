@@ -22,6 +22,7 @@ import {
   getLearningAnalytics,
   getGovernanceHealth,
   getRoutingMode,
+  getGatewayClient,
 } from "../governance-router";
 // Policy functions remain internal-only (not routed through gateway)
 import {
@@ -79,21 +80,31 @@ export const rioRouter = router({
   approve: protectedProcedure
     .input(z.object({
       intentId: z.string(),
+      signature: z.string().optional(),
+      signatureTimestamp: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       // Identity is bound from the authenticated session — not client-supplied
       const decidedBy = ctx.user.name || ctx.user.email || `user:${ctx.user.id}`;
-      return approveIntent(input.intentId, decidedBy);
+      return approveIntent(input.intentId, decidedBy, {
+        signature: input.signature,
+        signatureTimestamp: input.signatureTimestamp,
+      });
     }),
 
   deny: protectedProcedure
     .input(z.object({
       intentId: z.string(),
+      signature: z.string().optional(),
+      signatureTimestamp: z.string().optional(),
     }))
     .mutation(async ({ input, ctx }) => {
       // Identity is bound from the authenticated session — not client-supplied
       const decidedBy = ctx.user.name || ctx.user.email || `user:${ctx.user.id}`;
-      return denyIntent(input.intentId, decidedBy);
+      return denyIntent(input.intentId, decidedBy, {
+        signature: input.signature,
+        signatureTimestamp: input.signatureTimestamp,
+      });
     }),
 
   execute: publicProcedure
@@ -414,6 +425,95 @@ export const rioRouter = router({
       }
 
       return { notified: ownerNotified, slackNotified, intentId: input.intentId };
+    }),
+
+  // ── Gateway V1 API (Live Production) ────────────────────────────
+
+  /** Login to the gateway and get JWT token (server-side proxy) */
+  gatewayLogin: publicProcedure
+    .input(z.object({
+      userId: z.string(),
+      passphrase: z.string(),
+    }))
+    .mutation(async ({ input }) => {
+      const client = getGatewayClient();
+      if (!client) {
+        return { success: false, error: "Gateway not configured" };
+      }
+      try {
+        const result = await client.login(input.userId, input.passphrase);
+        return {
+          success: true,
+          token: result.token,
+          userId: result.user_id,
+          displayName: result.display_name,
+          role: result.role,
+          expiresIn: result.expires_in,
+        };
+      } catch (err: any) {
+        return {
+          success: false,
+          error: err?.message || "Login failed",
+        };
+      }
+    }),
+
+  /** List intents from the gateway with optional status filter */
+  gatewayIntents: publicProcedure
+    .input(z.object({
+      status: z.string().optional(),
+      limit: z.number().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const client = getGatewayClient();
+      if (!client) {
+        return { intents: [], count: 0, source: "none" };
+      }
+      try {
+        const result = await client.listIntents(input?.status, input?.limit);
+        return { ...result, source: "gateway" };
+      } catch (err: any) {
+        console.warn("[RIO] Gateway listIntents failed:", err?.message);
+        return { intents: [], count: 0, source: "error", error: err?.message };
+      }
+    }),
+
+  /** Get a specific intent with full pipeline state from the gateway */
+  gatewayIntentDetail: publicProcedure
+    .input(z.object({
+      intentId: z.string(),
+    }))
+    .query(async ({ input }) => {
+      const client = getGatewayClient();
+      if (!client) {
+        return { found: false, source: "none" };
+      }
+      try {
+        const result = await client.getIntent(input.intentId);
+        return { found: true, intent: result, source: "gateway" };
+      } catch (err: any) {
+        console.warn("[RIO] Gateway getIntent failed:", err?.message);
+        return { found: false, source: "error", error: err?.message };
+      }
+    }),
+
+  /** Verify chain integrity from the gateway */
+  gatewayVerify: publicProcedure
+    .input(z.object({
+      intentId: z.string().optional(),
+    }).optional())
+    .query(async ({ input }) => {
+      const client = getGatewayClient();
+      if (!client) {
+        return { valid: false, source: "none" };
+      }
+      try {
+        const result = await client.verify(input?.intentId);
+        return { ...result, source: "gateway" };
+      } catch (err: any) {
+        console.warn("[RIO] Gateway verify failed:", err?.message);
+        return { valid: false, source: "error", error: err?.message };
+      }
     }),
 
   // ── Governance Infrastructure Status ──────────────────────────────

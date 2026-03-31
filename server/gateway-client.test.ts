@@ -90,7 +90,7 @@ describe("RioGatewayClient", () => {
       expect(result.intent_hash).toBe("abc123hash");
 
       const [url, options] = mockFetch.mock.calls[0];
-      expect(url).toBe(`${BASE_URL}/intent`);
+      expect(url).toBe(`${BASE_URL}/api/v1/intents`);
       expect(options.method).toBe("POST");
       const body = JSON.parse(options.body);
       expect(body.action).toBe("send_email");
@@ -319,7 +319,7 @@ describe("RioGatewayClient", () => {
       expect(result.ledger_chain_verification.valid).toBe(true);
 
       const [url] = mockFetch.mock.calls[0];
-      expect(url).toBe(`${BASE_URL}/verify`);
+      expect(url).toBe(`${BASE_URL}/api/v1/verify`);
     });
 
     it("calls GET /verify?intent_id=X for specific intent", async () => {

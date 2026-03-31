@@ -162,15 +162,21 @@ function OneAppContent({ children, setSidebarWidth }: ContentProps) {
   const sidebarRef = useRef<HTMLDivElement>(null);
   const isMobile = useIsMobile();
 
-  // Fetch pending approval count for badge
+  // Fetch pending approval count from live gateway (with fallback to ledger)
+  const { data: gwIntents } = trpc.rio.gatewayIntents.useQuery(
+    { status: "pending_authorization", limit: 50 },
+    { refetchInterval: 10000, refetchOnWindowFocus: true }
+  );
   const { data: ledgerData } = trpc.rio.ledgerChain.useQuery(
     { limit: 200 },
-    { refetchInterval: 30000, refetchOnWindowFocus: true }
+    { refetchInterval: 30000, refetchOnWindowFocus: true, enabled: !(gwIntents as any)?.intents }
   );
-  const entries = (ledgerData as any)?.entries ?? [];
-  const pendingCount = entries.filter(
+  // Gateway intents take priority; fall back to ledger pending count
+  const gwPending = (gwIntents as any)?.intents?.length ?? 0;
+  const ledgerPending = ((ledgerData as any)?.entries ?? []).filter(
     (e: any) => e.decision === "pending" || e.decision === "pending_approval"
   ).length;
+  const pendingCount = gwPending > 0 ? gwPending : ledgerPending;
 
   const activeMenuItem = menuItems.find((item) => location.startsWith(item.path));
 
