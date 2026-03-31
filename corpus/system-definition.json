@@ -1,0 +1,23 @@
+{
+  "system_name": "One",
+  "type": "Digital Proxy / Fiduciary Agent",
+  "owner": "Brian K. Rasmussen",
+  "date": "2026-03-31",
+  "definition": "A governed digital proxy that acts as a personal fiduciary agent. Intelligence suggests, governance approves, execution performs. The human is the absolute root authority. No action reaches the outside world without explicit cryptographic approval and a tamper-evident receipt.",
+  "architecture": {
+    "intelligence_layer": "Swappable LLMs (Gemini, GPT, Claude, Perplexity) — the brains that think and propose",
+    "governance_layer": "RIO Gateway — policy evaluation, cryptographic approval, fail-closed execution, hash-chained ledger",
+    "execution_layer": "Connectors (Gmail, Google Drive, Web Search) — the hands that act, only after Gate approval",
+    "state_layer": "IndexedDB on-device + cloud ledger sync — the memory that persists",
+    "witness_layer": "Mutual awareness system that records all actions, proposals, and system performance for all parties"
+  },
+  "core_invariants": [
+    "Human sovereignty is absolute",
+    "No Receipt = Did Not Happen",
+    "Fail-closed: if ambiguous, stop",
+    "The Gate cannot be bypassed, even if the system believes it knows better",
+    "Every action, observation, proposal, or change produces a cryptographic receipt"
+  ],
+  "current_phase": "Phase 2 — Activating the Hands (real tool execution through governance gate)",
+  "simulator_slot": "Defined in architecture, not built. Reserved for future quantum/advanced compute integration."
+}

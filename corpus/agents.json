@@ -1,0 +1,61 @@
+{
+  "roster_date": "2026-03-31",
+  "sovereign_root": {
+    "name": "Brian K. Rasmussen",
+    "role": "Human Root Authority — Sovereign Owner",
+    "authority": "Absolute. All Gate approvals, kill switch, policy changes."
+  },
+  "agents": [
+    {
+      "name": "Jordan",
+      "type": "AI Router / Proxy Interface",
+      "role": "Loads state, routes user intent to modes, enforces Sentinel pause. The 'mind' of the proxy.",
+      "status": "Stabilized"
+    },
+    {
+      "name": "Grok",
+      "type": "Documentation & Strategy Agent (xAI)",
+      "role": "Background research, policy refinement, vision documentation. Documentation mode only — does not execute.",
+      "status": "Active"
+    },
+    {
+      "name": "Manny (Executor)",
+      "type": "Manus Agent (Builder)",
+      "role": "Builds the operational proxy — PWA, onboarding, execution loop, connectors. The 'hands'.",
+      "status": "Active — Phase 2 build"
+    },
+    {
+      "name": "Manus (Translator/Architect)",
+      "type": "Manus Agent (This instance)",
+      "role": "Translates between agents, verifies coherence, builds corpus and documentation infrastructure. Independent witness.",
+      "status": "Active"
+    }
+  ],
+  "multi_brain_roster": [
+    {
+      "brain": "Gemini (Google)",
+      "role": "Creative / Visual logic",
+      "key_status": "Available"
+    },
+    {
+      "brain": "OpenAI / GPT",
+      "role": "Standard logic",
+      "key_status": "Available"
+    },
+    {
+      "brain": "Anthropic / Claude",
+      "role": "Nuanced / Coding logic",
+      "key_status": "Available"
+    },
+    {
+      "brain": "Perplexity Sonar",
+      "role": "Live search logic",
+      "key_status": "Pending — user to acquire"
+    },
+    {
+      "brain": "Microsoft / Azure Foundry",
+      "role": "Enterprise / Doing logic",
+      "key_status": "Pending — user to acquire"
+    }
+  ]
+}
