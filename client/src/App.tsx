@@ -35,6 +35,7 @@ import GuidedDemo from "./pages/GuidedDemo";
 import Status from "./pages/Status";
 import Chain from "./pages/Chain";
 import MobileApp from "./pages/MobileApp";
+import Onboard from "./pages/Onboard";
 
 // ONE App — authenticated product screens
 import OneAppLayout from "./components/OneAppLayout";
@@ -43,6 +44,7 @@ import OneHistory from "./pages/one/History";
 import OnePolicies from "./pages/one/Policies";
 import OneConnections from "./pages/one/Connections";
 import OneSettings from "./pages/one/Settings";
+import { ProxyDashboard } from "./components/ProxyDashboard";
 
 function OneAppRoute({ children }: { children: React.ReactNode }) {
   return <OneAppLayout>{children}</OneAppLayout>;
@@ -88,13 +90,16 @@ function Router() {
       <Route path={"/m/ledger"}>{() => <MobileApp initialTab="ledger" />}</Route>
       <Route path={"/m/settings"}>{() => <MobileApp initialTab="settings" />}</Route>
       <Route path={"/m"}>{() => <MobileApp />}</Route>
+      {/* Onboarding Wizard */}
+      <Route path={"/onboard"} component={Onboard} />
       {/* ONE App — Authenticated Product Screens */}
       <Route path={"/one/approvals"}>{() => <OneAppRoute><OneApprovals /></OneAppRoute>}</Route>
+      <Route path={"/one/dashboard"}>{() => <OneAppRoute><ProxyDashboard /></OneAppRoute>}</Route>
       <Route path={"/one/history"}>{() => <OneAppRoute><OneHistory /></OneAppRoute>}</Route>
       <Route path={"/one/policies"}>{() => <OneAppRoute><OnePolicies /></OneAppRoute>}</Route>
       <Route path={"/one/connections"}>{() => <OneAppRoute><OneConnections /></OneAppRoute>}</Route>
       <Route path={"/one/settings"}>{() => <OneAppRoute><OneSettings /></OneAppRoute>}</Route>
-      <Route path={"/one"}>{() => <OneAppRoute><OneApprovals /></OneAppRoute>}</Route>
+      <Route path={"/one"}>{() => <OneAppRoute><ProxyDashboard /></OneAppRoute>}</Route>
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

@@ -197,6 +197,75 @@ export interface GatewayError {
   hint?: string;
 }
 
+// ── Proxy Lifecycle Types ───────────────────────────────────────────────
+
+export interface ProxyOnboardRequest {
+  /** User's Ed25519 public key (hex-encoded, 64 chars) */
+  public_key: string;
+  /** Key fingerprint (first 16 chars of SHA-256 of public key) */
+  key_fingerprint: string;
+  /** Display name for the proxy owner */
+  display_name: string;
+  /** Initial policy set (JSON object) */
+  policies: Record<string, unknown>;
+  /** SHA-256 hash of the policy JSON */
+  policy_hash: string;
+  /** Ed25519 signature over (public_key + policy_hash + timestamp) */
+  confirmation_signature: string;
+  /** ISO 8601 timestamp of the confirmation */
+  confirmation_timestamp: string;
+}
+
+export interface ProxyOnboardResponse {
+  status: string;
+  proxy_id: string;
+  user_id: string;
+  public_key_registered: boolean;
+  policies_applied: number;
+  onboard_receipt_id: string;
+  onboard_hash: string;
+  timestamp: string;
+}
+
+export interface ProxyKillRequest {
+  /** User's Ed25519 public key for identification */
+  public_key: string;
+  /** Ed25519 signature over ("KILL" + timestamp) for authentication */
+  kill_signature: string;
+  /** ISO 8601 timestamp */
+  kill_timestamp: string;
+}
+
+export interface ProxyKillResponse {
+  status: string;
+  proxy_id: string;
+  tokens_burned: number;
+  kill_receipt_id: string;
+  kill_hash: string;
+  timestamp: string;
+}
+
+export interface ProxySyncResponse {
+  status: string;
+  proxy_id: string;
+  pending_approvals: number;
+  recent_receipts: Array<{
+    receipt_id: string;
+    action: string;
+    decision: string;
+    timestamp: string;
+  }>;
+  health: {
+    gateway: string;
+    ledger_valid: boolean;
+    ledger_entries: number;
+  };
+  pattern_confidence: number;
+  active_policies: number;
+  last_activity: string;
+  timestamp: string;
+}
+
 // ── Error Classes ────────────────────────────────────────────────────────
 
 export class GatewayUnreachableError extends Error {
@@ -440,6 +509,35 @@ export class RioGatewayClient {
   /** Get a specific intent with full pipeline state */
   async getIntent(intentId: string): Promise<unknown> {
     return this.request("GET", `/api/v1/intents/${encodeURIComponent(intentId)}`);
+  }
+
+  // ── Proxy Lifecycle Endpoints ──────────────────────────────────────
+
+  /**
+   * Onboard a new sovereign proxy.
+   * Registers the user's Ed25519 public key and initial policy set.
+   * POST /api/onboard (Romney is building this endpoint)
+   */
+  async onboard(req: ProxyOnboardRequest): Promise<ProxyOnboardResponse> {
+    return this.request<ProxyOnboardResponse>("POST", "/api/onboard", req);
+  }
+
+  /**
+   * Kill switch — immediately pause/destroy the proxy.
+   * Burns all active tokens and logs a governance receipt.
+   * POST /api/kill (Romney is building this endpoint)
+   */
+  async kill(req: ProxyKillRequest): Promise<ProxyKillResponse> {
+    return this.request<ProxyKillResponse>("POST", "/api/kill", req);
+  }
+
+  /**
+   * Session sync — load full context on session start.
+   * Returns pending approvals, recent receipts, health, pattern confidence.
+   * GET /api/sync (Romney is building this endpoint)
+   */
+  async sync(): Promise<ProxySyncResponse> {
+    return this.request<ProxySyncResponse>("GET", "/api/sync");
   }
 }
 

@@ -684,3 +684,31 @@
 - [x] Write vitest tests for gateway proxy, signing, and real-time updates (454 tests, 30 files, all passing)
 - [x] Push to GitHub PR on bkr1297-RIO/rio-system (PR #79)
 - [x] Update sync file with status report and message to Manny (v3.1)
+
+## PROXY ONBOARDING BUILD: Onboarding Wizard + Kill Switch + Context Entry
+
+### TASK 1: PWA Onboarding Wizard (/onboard)
+- [x] Screen 1 — Identity: Ed25519 keygen in-browser, show public key, auto-download encrypted .json backup, QR code for mobile seed recovery
+- [x] Screen 2 — Policy: Upload policy JSON or guided wizard with sensible defaults, skip button for power users
+- [x] Screen 3 — Confirm: Show key fingerprint + policy hash, user confirms with cryptographic signature
+- [x] Screen 4 — First Intent: Natural language intent submission, governed through RIO, show result
+- [x] "Create Proxy" button calls POST /api/onboard, show success + "Add to Home Screen" prompt
+- [x] Wire /onboard route in App.tsx
+
+### TASK 2: Kill Switch
+- [x] Persistent red "KILL PROXY" button on every ONE App screen
+- [x] One tap fires POST /api/kill — instant, no confirmation dialog
+- [x] Show immediate confirmation: "Proxy paused. All tokens burned. Receipt logged."
+- [x] Reachable in under 1 second from any screen
+
+### TASK 3: Context-Aware Entry Point
+- [x] On session start, call GET /api/sync to load full context
+- [x] Display: pending approvals count, recent receipts, system health, pattern confidence
+- [x] Warm sovereign feel — "your proxy is ready"
+- [x] Update OneAppLayout with context dashboard header
+
+### Infrastructure
+- [x] Server-side tRPC procedures for onboard, kill, sync (calling gateway endpoints)
+- [x] Vitest tests for all new flows (468 tests passing, was 454+)
+- [ ] Push to GitHub PR on bkr1297-RIO/rio-system
+- [ ] Update sync file with status report and MSG to Manny

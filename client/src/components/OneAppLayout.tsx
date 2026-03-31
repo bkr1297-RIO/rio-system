@@ -41,14 +41,17 @@ import {
   PanelLeft,
   Shield,
   ExternalLink,
+  LayoutDashboard,
 } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation, Link } from "wouter";
 import { DashboardLayoutSkeleton } from "./DashboardLayoutSkeleton";
 import { Button } from "./ui/button";
 import { trpc } from "@/lib/trpc";
+import { KillSwitch } from "@/components/KillSwitch";
 
 const menuItems = [
+  { icon: LayoutDashboard, label: "Dashboard", path: "/one/dashboard", description: "Proxy overview" },
   { icon: Inbox, label: "Approvals", path: "/one/approvals", description: "Pending intents" },
   { icon: History, label: "History", path: "/one/history", description: "Receipts & ledger" },
   { icon: ScrollText, label: "Policies", path: "/one/policies", description: "Governance rules" },
@@ -362,6 +365,7 @@ function OneAppContent({ children, setSidebarWidth }: ContentProps) {
           </div>
         )}
         <main className="flex-1 p-4 md:p-6">{children}</main>
+        <KillSwitch />
       </SidebarInset>
     </>
   );
