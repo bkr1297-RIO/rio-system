@@ -202,7 +202,7 @@ router.post("/govern", (req, res) => {
 // =========================================================================
 router.post("/authorize", (req, res) => {
   try {
-    const { intent_id, decision, authorized_by, conditions, expires_at, signature } = req.body;
+    const { intent_id, decision, authorized_by, conditions, expires_at, signature, signer_id: requestSignerId } = req.body;
 
     if (!intent_id || !decision || !authorized_by) {
       return res.status(400).json({
@@ -238,15 +238,17 @@ router.post("/authorize", (req, res) => {
         intent_id,
         action: intent.action,
         decision,
-        signer_id: authorized_by,
+        signer_id: requestSignerId || authorized_by,
         timestamp: req.body.signature_timestamp || timestamp,
       });
 
       // Load the signer's public key from PostgreSQL (WS-010: Identity Binding)
-      const publicKeyHex = getSignerPublicKey(authorized_by);
+      // Use explicit signer_id if provided, fall back to authorized_by
+      const signerId = requestSignerId || authorized_by;
+      const publicKeyHex = getSignerPublicKey(signerId);
       if (!publicKeyHex) {
         return res.status(403).json({
-          error: `No registered public key for signer: ${authorized_by}`,
+          error: `No registered public key for signer: ${signerId}`,
           hint: "Register the signer's Ed25519 public key via POST /api/signers/register or /api/signers/generate-keypair.",
         });
       }
@@ -283,10 +285,12 @@ router.post("/authorize", (req, res) => {
     }
 
     // Build authorization record
+    const resolvedSignerId = requestSignerId || authorized_by;
     const authorization = {
       intent_id,
       decision,
       authorized_by,
+      signer_id: resolvedSignerId,
       timestamp,
       conditions: conditions || null,
       expires_at: expires_at || null,
@@ -317,10 +321,14 @@ router.post("/authorize", (req, res) => {
 
     res.json({
       intent_id,
+      status: newStatus,
       authorization_status: newStatus,
       authorized_by,
+      signer_id: resolvedSignerId,
       authorization_hash: authHash,
+      signature_verified: signatureVerified,
       ed25519_signed: signatureVerified,
+      signature_payload_hash: signaturePayloadHash,
       timestamp,
     });
   } catch (err) {
@@ -590,11 +598,12 @@ router.post("/receipt", (req, res) => {
     });
 
     // Attach identity binding proof to receipt (WS-010)
-    const authBy = intent.authorization?.authorized_by;
-    const signerPubKey = authBy ? getSignerPublicKey(authBy) : null;
+    const signerIdForReceipt = intent.authorization?.signer_id || intent.authorization?.authorized_by;
+    const signerPubKey = signerIdForReceipt ? getSignerPublicKey(signerIdForReceipt) : null;
     receipt.identity_binding = {
       ed25519_signed: intent.authorization?.ed25519_signed || false,
-      signer_id: authBy || null,
+      signer_id: signerIdForReceipt || null,
+      public_key: signerPubKey || null,
       signer_public_key_hex: signerPubKey || null,
       signature_payload_hash: intent.authorization?.signature_payload_hash || null,
       verification_method: intent.authorization?.ed25519_signed
