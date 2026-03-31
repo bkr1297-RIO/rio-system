@@ -235,6 +235,17 @@ export class RioGatewayClient {
 
   // ── Internal fetch wrapper ──────────────────────────────────────────
 
+  /**
+   * Generate replay prevention fields required by the production gateway.
+   * All POST requests must include request_timestamp (ISO 8601) and request_nonce (UUID).
+   */
+  private replayFields(): { request_timestamp: string; request_nonce: string } {
+    return {
+      request_timestamp: new Date().toISOString(),
+      request_nonce: crypto.randomUUID(),
+    };
+  }
+
   private async request<T>(
     method: "GET" | "POST",
     path: string,
@@ -253,12 +264,20 @@ export class RioGatewayClient {
       headers["Authorization"] = `Bearer ${this.authToken}`;
     }
 
+    // Inject replay prevention fields into all POST request bodies
+    let finalBody = body;
+    if (method === "POST" && body && typeof body === "object") {
+      finalBody = { ...body, ...this.replayFields() };
+    } else if (method === "POST" && !body) {
+      finalBody = this.replayFields();
+    }
+
     let response: Response;
     try {
       response = await fetch(url, {
         method,
         headers,
-        body: body ? JSON.stringify(body) : undefined,
+        body: finalBody ? JSON.stringify(finalBody) : undefined,
         signal: controller.signal,
       });
     } catch (err: unknown) {

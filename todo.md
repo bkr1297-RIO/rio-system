@@ -577,7 +577,7 @@
   - [x] /verify — tab labels shortened on mobile, lookup row stacks vertically
   - [x] /app — already had mobile support (w-full sm:w-80 panel, mobile menu)
   - [x] /dashboard — already had mobile support (useIsMobile hook, sticky header)
-- [ ] TASK-016: Connect frontend to production URL (PENDING — activates when Damon marks TASK-015 COMPLETE)
+- [x] TASK-016: Connect frontend to production URL (activated — gateway live)
 
 ## TASK-026: PWA Mobile App Wrapper (2026-03-30)
 - [x] PWA: Upgrade manifest.json with RIO branding, shortcuts, and screenshots
@@ -594,3 +594,19 @@
 - [x] PWA: Service worker push event handler (scaffolding)
 - [x] PWA: Vitest tests for PWA components and hooks
 - [x] PWA: Update sync file after completion
+
+## TASK-016: Connect Frontend to Live Production Gateway (2026-03-30)
+- [x] Explore live gateway API endpoints and response shapes
+- [x] Audit current frontend API calls and identify all integration points
+- [x] Create gateway client layer with configurable base URL and simulated fallback
+- [x] Add GATEWAY_URL environment variable via webdev_request_secrets
+- [x] Connect /go flow (intent submission) to live gateway
+- [x] Connect /chain (receipt chain visualizer) to live gateway
+- [x] Connect /ledger (ledger explorer) to live gateway
+- [x] Connect PWA /m/approvals to live gateway
+- [x] Connect PWA /m/receipts to live gateway
+- [x] Connect PWA /m/ledger to live gateway
+- [x] Graceful fallback to simulated mode for unconnected connectors
+- [x] Write vitest tests for gateway client and fallback logic
+- [x] Test all connected flows end-to-end
+- [x] Update sync file with live vs. simulated status report
