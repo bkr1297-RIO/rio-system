@@ -34,6 +34,7 @@ import BondiApp from "./pages/BondiApp";
 import GuidedDemo from "./pages/GuidedDemo";
 import Status from "./pages/Status";
 import Chain from "./pages/Chain";
+import KeyRecovery from "./pages/KeyRecovery";
 
 function Router() {
   // make sure to consider if you need authentication for certain routes
@@ -69,6 +70,7 @@ function Router() {
       <Route path={"/blog"} component={Blog} />
       <Route path={"/status"} component={Status} />
       <Route path={"/chain"} component={Chain} />
+      <Route path={"/recovery"} component={KeyRecovery} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>

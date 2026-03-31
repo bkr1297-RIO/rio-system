@@ -425,6 +425,76 @@ export class RioGatewayClient {
   async getIntent(intentId: string): Promise<unknown> {
     return this.request("GET", `/intent/${encodeURIComponent(intentId)}`);
   }
+
+  // ── Key Backup Endpoints ────────────────────────────────────────────
+
+  /** Store an encrypted key backup on the gateway */
+  async storeKeyBackup(data: {
+    signer_id: string;
+    public_key_hex: string;
+    encrypted_key: string;
+    salt: string;
+    iv: string;
+    version?: number;
+  }): Promise<{ signer_id: string; status: string }> {
+    return this.request("POST", "/api/key-backup", data);
+  }
+
+  /** Retrieve an encrypted key backup from the gateway */
+  async getKeyBackup(signerId: string): Promise<{
+    signer_id: string;
+    public_key_hex: string;
+    encrypted_key: string;
+    salt: string;
+    iv: string;
+    version: number;
+    created_at: string;
+  }> {
+    return this.request("GET", `/api/key-backup/${encodeURIComponent(signerId)}`);
+  }
+
+  /** List all key backups */
+  async listKeyBackups(): Promise<{ backups: Array<{ signer_id: string; public_key_hex: string; version: number }>; count: number }> {
+    return this.request("GET", "/api/key-backup");
+  }
+
+  /** Delete a key backup */
+  async deleteKeyBackup(signerId: string): Promise<{ signer_id: string; status: string }> {
+    return this.request("GET", `/api/key-backup/${encodeURIComponent(signerId)}`);
+  }
+
+  // ── Device Sync Endpoints ──────────────────────────────────────────
+
+  /** Full device sync — returns identity, ledger state */
+  async deviceSync(data?: {
+    signer_id?: string;
+    last_known_hash?: string;
+    ledger_limit?: number;
+  }): Promise<{
+    identity: { signer_id: string | null; public_key_hex: string | null; registered: boolean };
+    ledger: {
+      entries: unknown[];
+      entry_count: number;
+      tip_hash: string | null;
+      chain_valid: boolean;
+      chain_errors: string[];
+      is_incremental: boolean;
+    };
+    synced_at: string;
+    sync_version: number;
+  }> {
+    return this.request("POST", "/api/sync", data || {});
+  }
+
+  /** Lightweight ledger health check for drift detection */
+  async syncHealth(): Promise<{
+    entry_count: number;
+    tip_hash: string | null;
+    chain_valid: boolean;
+    checked_at: string;
+  }> {
+    return this.request("GET", "/api/sync/health");
+  }
 }
 
 // ── Factory ──────────────────────────────────────────────────────────────

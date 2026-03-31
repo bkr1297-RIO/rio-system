@@ -18,6 +18,8 @@ import { replayPreventionMiddleware } from "./security/replay-prevention.mjs";
 import { initIdentityBinding } from "./security/identity-binding.mjs";
 import signerRoutes from "./routes/signers.mjs";
 import apiV1Routes from "./routes/api-v1.mjs";
+import keyBackupRoutes from "./routes/key-backup.mjs";
+import syncRoutes from "./routes/sync.mjs";
 import { initApiKeys } from "./security/api-keys.mjs";
 import { apiKeyAuth } from "./security/api-auth.mjs";
 import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
@@ -154,6 +156,16 @@ async function start() {
   app.use("/api/signers", signerRoutes);
 
   // ---------------------------------------------------------------------------
+  // Key Backup Routes (Encrypted key storage for recovery)
+  // ---------------------------------------------------------------------------
+  app.use("/api/key-backup", keyBackupRoutes);
+
+  // ---------------------------------------------------------------------------
+  // Device Sync Routes (Full state restoration)
+  // ---------------------------------------------------------------------------
+  app.use("/api/sync", syncRoutes);
+
+  // ---------------------------------------------------------------------------
   // Public API v1 Routes (WS-012)
   // API key auth + rate limiting applied to all /api/v1/* routes
   // ---------------------------------------------------------------------------
@@ -190,6 +202,14 @@ async function start() {
         "POST /api/signers/register": "Register externally-generated Ed25519 public key",
         "GET /api/signers": "List all registered signers",
         "DELETE /api/signers/:signer_id": "Revoke a signer",
+        "--- Key Recovery ---": "---",
+        "POST /api/key-backup": "Store encrypted key backup",
+        "GET /api/key-backup/:signer_id": "Retrieve encrypted key backup for recovery",
+        "GET /api/key-backup": "List all key backups",
+        "DELETE /api/key-backup/:signer_id": "Delete a key backup",
+        "--- Device Sync ---": "---",
+        "POST /api/sync": "Full device sync (identity + ledger)",
+        "GET /api/sync/health": "Lightweight ledger health check",
         "--- Public API v1 ---": "---",
         "POST /api/v1/intents": "Submit intent (API key or JWT)",
         "GET /api/v1/intents": "List intents",
