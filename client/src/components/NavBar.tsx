@@ -27,6 +27,7 @@ const navLinks: NavLink[] = [
     label: "Governance",
     href: "#",
     children: [
+      { label: "ONE App", href: "/one" },
       { label: "Try RIO", href: "/go" },
       { label: "Dashboard", href: "/dashboard" },
       { label: "Learning Loop", href: "/learning" },
@@ -229,18 +230,18 @@ export default function NavBar() {
               )
             )}
 
-            {/* Launch Bondi Button */}
+            {/* Launch ONE App Button */}
             <Link
-              href="/app"
+              href="/one"
               className="ml-2 px-4 py-1.5 text-xs font-semibold rounded transition-all duration-200 no-underline"
               style={{
-                background: "linear-gradient(135deg, oklch(0.55 0.15 260), oklch(0.45 0.2 280))",
-                color: "#ffffff",
-                boxShadow: "0 0 12px oklch(0.55 0.15 260 / 30%)",
+                background: "linear-gradient(135deg, oklch(0.72 0.1 85), oklch(0.62 0.12 85))",
+                color: "#0a0e1a",
+                boxShadow: "0 0 12px oklch(0.72 0.1 85 / 30%)",
               }}
             >
               <span className="flex items-center gap-1.5">
-                Launch Bondi
+                ONE App
               </span>
             </Link>
 

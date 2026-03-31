@@ -610,3 +610,46 @@
 - [x] Write vitest tests for gateway client and fallback logic
 - [x] Test all connected flows end-to-end
 - [x] Update sync file with live vs. simulated status report
+
+## PHASE 2: ONE App — Production User Interface (WS-014)
+
+### User Authentication
+- [x] Google OAuth login flow (login page, callback, session) — already exists via Manus OAuth
+- [ ] User identity mapping to gateway signer identity
+- [x] Authenticated dashboard shell with user profile — DashboardLayout exists, customizing for ONE App
+- [x] Mock Ed25519 key registration (placeholder for Romney's WS-010) — scaffolded in Settings
+
+### Account Connection Flow
+- [x] Account connection page (connect Google services)
+- [x] Google connector setup (Gmail, Calendar, Drive) — uses existing Connect.tsx OAuth flows
+- [x] Connector status display and management
+- [x] Disconnect flow
+
+### Approval Inbox
+- [x] Approval inbox page — pending intents requiring user action
+- [x] Intent detail view (action, target, agent, risk level, policy result)
+- [x] Approve action (mock Ed25519 signature, records in ledger)
+- [x] Deny action (records denial in ledger)
+- [x] Real-time updates (polling for new pending intents)
+
+### Receipt Viewer & History Explorer
+- [x] History page — all governed actions, approvals, denials, executions, receipts
+- [x] Filter by date, action type, status, agent
+- [x] Receipt detail view (hash chain position, signature verification)
+- [x] Click-through from history to receipt detail
+
+### Policy Management
+- [x] Policy viewer — current governance rules
+- [x] Policy editor — add/modify rules (accept/dismiss suggestions)
+- [x] Policy changes go through governance pipeline (governed policy changes)
+
+### ONE App Integration
+- [x] ONE App navigation structure (authenticated dashboard layout)
+- [x] Tagline on all pages: "See what RIO makes possible for you"
+- [x] Demo/walkthrough mode preserved as fallback for new visitors
+- [x] Mobile PWA screens updated for ONE App
+
+### Testing & Delivery
+- [x] Vitest tests for all new ONE App components (14 tests, 442 total passing)
+- [x] Push to GitHub PR on bkr1297-RIO/rio-system (PR #75)
+- [x] Update sync file with progress (v3.5)

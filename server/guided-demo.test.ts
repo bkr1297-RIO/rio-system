@@ -152,15 +152,17 @@ describe("Landing Page — Demo link", () => {
     expect(homeTsx).toContain("See What RIO Makes Possible for You");
   });
 
-  it("Home.tsx still has the Launch Bondi App link", async () => {
+  it("Home.tsx has the Launch ONE App link and Bondi App link", async () => {
     const fs = await import("fs");
     const path = await import("path");
     const homeTsx = fs.readFileSync(
       path.resolve(import.meta.dirname, "../client/src/pages/Home.tsx"),
       "utf-8"
     );
+    expect(homeTsx).toContain('href="/one"');
+    expect(homeTsx).toContain("Launch ONE App");
     expect(homeTsx).toContain('href="/app"');
-    expect(homeTsx).toContain("Launch Bondi App");
+    expect(homeTsx).toContain("Bondi App");
   });
 });
 

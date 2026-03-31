@@ -286,7 +286,7 @@ function ApprovalsScreen() {
               <Button
                 variant="outline"
                 size="sm"
-                onClick={() => window.open("/go", "_blank")}
+                onClick={() => window.open("/one/approvals", "_blank")}
                 className="text-xs"
               >
                 <ExternalLink className="w-3 h-3 mr-1.5" />
@@ -789,10 +789,10 @@ function SettingsScreen({ onLogout }: { onLogout: () => void }) {
           variant="ghost"
           size="sm"
           className="mt-2 text-xs text-muted-foreground w-full"
-          onClick={() => window.open("/connect", "_blank")}
+          onClick={() => window.open("/one/connections", "_blank")}
         >
           <Link2 className="w-3 h-3 mr-1.5" />
-          Manage Connections
+          Manage in ONE App
         </Button>
       </section>
 

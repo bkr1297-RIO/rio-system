@@ -87,11 +87,18 @@ export default function Home() {
               </a>
               <div className="flex flex-wrap justify-center gap-3">
                 <a
-                  href="/app"
+                  href="/one"
                   className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
                   style={{ borderColor: "#b8963e", color: "#b8963e" }}
                 >
-                  Launch Bondi App
+                  Launch ONE App
+                </a>
+                <a
+                  href="/app"
+                  className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
+                  style={{ borderColor: "#374151", color: "#9ca3af" }}
+                >
+                  Bondi App
                 </a>
                 <a
                   href="/whitepaper"
