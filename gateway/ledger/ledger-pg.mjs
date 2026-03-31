@@ -26,12 +26,83 @@ function sha256(data) {
 }
 
 /**
- * Initialize: connect to PostgreSQL and load existing entries into cache.
+ * Auto-migration: create tables if they don't exist.
+ * This runs on every boot but is idempotent (IF NOT EXISTS).
+ */
+async function autoMigrate(pool) {
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS intents (
+      id SERIAL PRIMARY KEY,
+      intent_id UUID UNIQUE NOT NULL,
+      action VARCHAR(255) NOT NULL,
+      agent_id VARCHAR(255) NOT NULL,
+      status VARCHAR(50) NOT NULL DEFAULT 'submitted',
+      parameters JSONB,
+      governance JSONB,
+      "authorization" JSONB,
+      execution JSONB,
+      receipt JSONB,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS ledger_entries (
+      id SERIAL PRIMARY KEY,
+      entry_id UUID NOT NULL,
+      intent_id UUID NOT NULL,
+      action VARCHAR(255),
+      agent_id VARCHAR(255),
+      status VARCHAR(50) NOT NULL,
+      detail TEXT,
+      intent_hash VARCHAR(64),
+      authorization_hash VARCHAR(64),
+      execution_hash VARCHAR(64),
+      receipt_hash VARCHAR(64),
+      ledger_hash VARCHAR(64) NOT NULL,
+      prev_hash VARCHAR(64) NOT NULL,
+      timestamp TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS receipts (
+      id SERIAL PRIMARY KEY,
+      receipt_id UUID UNIQUE NOT NULL,
+      intent_id UUID NOT NULL,
+      action VARCHAR(255) NOT NULL,
+      agent_id VARCHAR(255) NOT NULL,
+      authorized_by VARCHAR(255),
+      hash_chain JSONB NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE TABLE IF NOT EXISTS authorized_signers (
+      id SERIAL PRIMARY KEY,
+      signer_id VARCHAR(255) UNIQUE NOT NULL,
+      public_key_hex VARCHAR(64) NOT NULL,
+      display_name VARCHAR(255),
+      role VARCHAR(50) DEFAULT 'approver',
+      registered_at TIMESTAMPTZ DEFAULT NOW()
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_ledger_intent_id ON ledger_entries(intent_id);
+    CREATE INDEX IF NOT EXISTS idx_ledger_status ON ledger_entries(status);
+    CREATE INDEX IF NOT EXISTS idx_intents_status ON intents(status);
+    CREATE INDEX IF NOT EXISTS idx_receipts_intent_id ON receipts(intent_id);
+  `);
+  console.log("[RIO Ledger-PG] Auto-migration complete — tables verified.");
+}
+
+/**
+ * Initialize: connect to PostgreSQL, ensure tables exist, load cache.
  */
 export async function initLedger() {
   pool = new Pool(
     process.env.DATABASE_URL
-      ? { connectionString: process.env.DATABASE_URL }
+      ? {
+          connectionString: process.env.DATABASE_URL,
+          ssl: process.env.DATABASE_URL.includes("render.com")
+            ? { rejectUnauthorized: false }
+            : false,
+        }
       : {
           host: process.env.PG_HOST || "localhost",
           port: parseInt(process.env.PG_PORT || "5432"),
@@ -44,6 +115,9 @@ export async function initLedger() {
   const client = await pool.connect();
   client.release();
   console.log("[RIO Ledger-PG] Connected to PostgreSQL.");
+
+  // Ensure tables exist (idempotent)
+  await autoMigrate(pool);
 
   // Load all existing entries into cache
   const result = await pool.query(

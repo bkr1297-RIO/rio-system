@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS ledger_entries (
     execution_hash VARCHAR(64),
     receipt_hash VARCHAR(64),
     ledger_hash VARCHAR(64) NOT NULL,
-    previous_hash VARCHAR(64) NOT NULL,
+    prev_hash VARCHAR(64) NOT NULL,
     timestamp TIMESTAMPTZ DEFAULT NOW()
 );
 
