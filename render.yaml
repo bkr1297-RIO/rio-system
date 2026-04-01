@@ -1,0 +1,41 @@
+# RIO Governance Gateway — Render Blueprint
+# Deploy: Connect GitHub repo → Render auto-detects this file
+#
+# This creates:
+#   1. A PostgreSQL database (rio-ledger)
+#   2. A Node.js web service (rio-gateway)
+#
+# The gateway connects to PostgreSQL via DATABASE_URL (auto-injected by Render)
+
+databases:
+  - name: rio-ledger
+    plan: free
+    databaseName: rio_ledger
+    user: rio
+    ipAllowList: []
+
+services:
+  - type: web
+    name: rio-gateway
+    plan: free
+    runtime: docker
+    dockerfilePath: ./gateway/Dockerfile
+    dockerContext: ./gateway
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: RIO_GATEWAY_PORT
+        value: "4400"
+      - key: PORT
+        value: "4400"
+      - key: ED25519_MODE
+        value: required
+      - key: JWT_SECRET
+        generateValue: true
+      - key: RIO_LOGIN_PASSPHRASE
+        value: rio-governed-2026
+      - key: DATABASE_URL
+        fromDatabase:
+          name: rio-ledger
+          property: connectionString
