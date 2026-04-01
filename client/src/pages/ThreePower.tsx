@@ -765,6 +765,105 @@ export default function ThreePower() {
           </div>
         </div>
 
+        {/* Component Specifications */}
+        <h2
+          className="text-2xl sm:text-3xl font-bold mb-6"
+          style={{ color: "#b8963e" }}
+        >
+          <span style={{ color: "#60a5fa" }}>6.</span> Component Specifications
+        </h2>
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-14">
+          {[
+            {
+              name: "Mantis",
+              role: "Observer",
+              color: "#60a5fa",
+              version: "v1.0",
+              description:
+                "Observation and ingestion layer. Translates raw goals into structured intent envelopes with identity, context, and risk scope.",
+              capabilities: [
+                "Natural language → structured intent",
+                "Identity validation (WHO)",
+                "Risk scope assignment",
+                "Signal pattern monitoring",
+              ],
+              url: "https://github.com/bkr1297-RIO/rio-system/blob/feature/mantis-component-spec/spec/mantis-component-v1.json",
+            },
+            {
+              name: "Governor",
+              role: "Governor",
+              color: "#b8963e",
+              version: "v1.0",
+              description:
+                "Policy evaluation and approval authority. Evaluates intents against governance policies, issues execution tokens, and manages risk thresholds.",
+              capabilities: [
+                "Policy evaluation engine",
+                "Risk tier classification",
+                "Execution token issuance",
+                "Human escalation routing",
+              ],
+              url: "https://github.com/bkr1297-RIO/rio-system/blob/feature/mantis-component-spec/spec/governor-component-v1.json",
+            },
+            {
+              name: "Executor",
+              role: "Executor",
+              color: "#22d3ee",
+              version: "v1.0",
+              description:
+                "Authorized action execution layer. Executes only with valid tokens, generates signed receipts, and writes to the immutable ledger.",
+              capabilities: [
+                "Token-gated execution",
+                "Signed receipt generation",
+                "Ledger chain maintenance",
+                "Execution isolation",
+              ],
+              url: "https://github.com/bkr1297-RIO/rio-system/blob/feature/mantis-component-spec/spec/executor-component-v1.json",
+            },
+          ].map((spec) => (
+            <a
+              key={spec.name}
+              href={spec.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block p-5 rounded-xl border transition-all duration-200 hover:scale-[1.02]"
+              style={{
+                borderColor: `${spec.color}30`,
+                backgroundColor: `${spec.color}08`,
+              }}
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <div
+                  className="w-8 h-8 rounded-lg flex items-center justify-center"
+                  style={{ backgroundColor: `${spec.color}20` }}
+                >
+                  <FileCheck size={16} style={{ color: spec.color }} />
+                </div>
+                <div>
+                  <h3 className="text-sm font-bold text-white">{spec.name}</h3>
+                  <span className="text-[10px] font-mono" style={{ color: spec.color }}>
+                    {spec.role} · {spec.version}
+                  </span>
+                </div>
+              </div>
+              <p className="text-xs text-gray-400 leading-relaxed mb-3">
+                {spec.description}
+              </p>
+              <ul className="space-y-1">
+                {spec.capabilities.map((c, i) => (
+                  <li key={i} className="text-[11px] text-gray-500 flex items-center gap-1.5">
+                    <CheckCircle2 size={10} style={{ color: spec.color }} />
+                    {c}
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-3 flex items-center gap-1 text-[10px]" style={{ color: spec.color }}>
+                <FileCheck size={10} />
+                View JSON Spec on GitHub
+              </div>
+            </a>
+          ))}
+        </div>
+
         {/* Summary */}
         <div
           className="p-6 sm:p-8 rounded-xl text-center border"

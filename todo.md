@@ -730,5 +730,36 @@
 
 ### Infrastructure
 - [x] Write tests — 468/468 passing (all existing tests still green)
+- [x] Push to GitHub PR (feature/proxy-onboarding updated, PR #80)
+- [x] Update sync file with status
+
+## Jordan Parallel Work — Phase 2 (Governor/Executor Specs + Digital Chip)
+
+### Governor Component Spec
+- [x] Research Governor role from policy-v1.0.json, core-spec-v1.json, WS-011 roles spec
+- [x] Define Governor component spec (JSON schema) — companion to Mantis
+- [x] Push to GitHub corpus on bkr1297-RIO/rio-system (PR #83 updated)
+
+### Executor Component Spec
+- [x] Research Executor role from core-spec, intake-schema, receipt spec
+- [x] Define Executor component spec (JSON schema) — companion to Mantis + Governor
+- [x] Push to GitHub corpus on bkr1297-RIO/rio-system (PR #83 updated)
+
+### IndexedDB Local-First Storage (Digital Chip)
+- [x] Research Grok's Digital Chip concept from WS-015 Blueprint + sync file
+- [x] Implement IndexedDB storage layer for client-side sovereign data (digital-chip.ts)
+- [x] Store keypairs, policy cache, approval history, receipts locally (6 object stores)
+- [x] Sync mechanism with gateway when online (syncFromGateway + processOfflineQueue)
+- [x] Integrate into ONE App (Onboard wizard, ProxyDashboard, KillSwitch all use it)
+- [x] useDigitalChip React hook for component integration
+- [x] Migration helper from localStorage to IndexedDB
+- [x] Wipe function for kill switch integration
+
+### Visualization / Spec Page Enhancements
+- [x] Update Three-Power page with Governor and Executor spec links (Section 6: Component Specifications)
+- [x] Add component spec cards with descriptions, capabilities, and GitHub links
+
+### Infrastructure
+- [x] Write tests for IndexedDB storage layer (21 tests, 489 total passing)
 - [ ] Push to GitHub PR
 - [ ] Update sync file with status

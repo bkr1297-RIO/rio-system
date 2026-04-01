@@ -9,8 +9,9 @@
  * Design it to feel like creating your digital twin.
  */
 
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
+import { useDigitalChip } from "@/hooks/useDigitalChip";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
@@ -33,6 +34,7 @@ import { useLocation } from "wouter";
 
 export function ProxyDashboard() {
   const [, setLocation] = useLocation();
+  const chip = useDigitalChip();
 
   // Session sync — calls GET /api/sync (or assembled fallback)
   const {
@@ -49,6 +51,13 @@ export function ProxyDashboard() {
   const { data: healthData } = trpc.rio.governanceHealth.useQuery(undefined, {
     refetchInterval: 60000,
   });
+
+  // Sync gateway data to Digital Chip (IndexedDB) when new data arrives
+  useEffect(() => {
+    if (syncData && chip.initialized) {
+      chip.syncFromServer(syncData as any).catch(console.error);
+    }
+  }, [syncData, chip.initialized]);
 
   const pendingCount = (syncData as any)?.pending_approvals ?? 0;
   const recentReceipts = (syncData as any)?.recent_receipts ?? [];
@@ -336,6 +345,54 @@ export function ProxyDashboard() {
                 </span>
               </div>
             ))}
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Digital Chip Status */}
+      {chip.status && (
+        <Card className="bg-card/50 border-dashed">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Zap className="h-4 w-4" style={{ color: "#b8963e" }} />
+                <span className="text-sm font-medium">Digital Chip</span>
+              </div>
+              <Badge
+                variant="secondary"
+                className="text-[10px]"
+                style={{
+                  color: chip.status.connectionState === "online" ? "#22c55e" : "#6b7280",
+                }}
+              >
+                {chip.status.connectionState}
+              </Badge>
+            </div>
+            <div className="grid grid-cols-3 gap-2 mt-3">
+              <div className="text-center">
+                <p className="text-lg font-bold" style={{ color: "#b8963e" }}>
+                  {chip.status.receiptCount}
+                </p>
+                <p className="text-[10px] text-muted-foreground">Cached receipts</p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-bold text-foreground">
+                  {chip.status.approvalCount}
+                </p>
+                <p className="text-[10px] text-muted-foreground">Local approvals</p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-bold text-foreground">
+                  {chip.status.queuedDraftCount}
+                </p>
+                <p className="text-[10px] text-muted-foreground">Queued intents</p>
+              </div>
+            </div>
+            {chip.status.keyFingerprint && (
+              <p className="text-[10px] text-muted-foreground text-center mt-2 font-mono">
+                Key: {chip.status.keyFingerprint}
+              </p>
+            )}
           </CardContent>
         </Card>
       )}

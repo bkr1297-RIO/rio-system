@@ -44,6 +44,7 @@ import {
   SkipForward,
 } from "lucide-react";
 import { InstallPrompt } from "@/components/InstallPrompt";
+import { useDigitalChip } from "@/hooks/useDigitalChip";
 
 // ── Constants ──────────────────────────────────────────────────────────
 const ED25519_PUBKEY_KEY = "rio_ed25519_pubkey";
@@ -1033,6 +1034,7 @@ export default function Onboard() {
   );
 
   const onboardMut = trpc.rio.proxyOnboard.useMutation();
+  const chip = useDigitalChip();
 
   // If already onboarded, skip to dashboard
   useEffect(() => {
@@ -1055,6 +1057,15 @@ export default function Onboard() {
       const { publicKey, privateKey } = await generateEd25519KeyPair();
       localStorage.setItem(ED25519_PUBKEY_KEY, publicKey);
       localStorage.setItem(ED25519_PRIVKEY_KEY, privateKey);
+      // Store in Digital Chip (IndexedDB) for local-first sovereign storage
+      chip.saveKey({
+        id: "primary",
+        publicKey,
+        privateKeyEncrypted: privateKey,
+        fingerprint: publicKey.substring(0, 16),
+        createdAt: Date.now(),
+        label: "Primary Sovereign Key",
+      });
       setPubKey(publicKey);
       setPrivKey(privateKey);
       toast.success("Ed25519 key pair generated", {
@@ -1091,6 +1102,8 @@ export default function Onboard() {
         setProxyId(result.proxyId);
         localStorage.setItem(PROXY_ID_KEY, result.proxyId);
         localStorage.setItem(PROXY_ONBOARDED_KEY, "true");
+        // Update Digital Chip sync metadata
+        chip.setConnectionState("online");
         toast.success("Sovereign proxy created", {
           description: `Proxy ${result.proxyId} is now active (${result.source})`,
         });

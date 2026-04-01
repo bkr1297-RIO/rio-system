@@ -11,6 +11,7 @@
 
 import { useState, useCallback } from "react";
 import { trpc } from "@/lib/trpc";
+import { useDigitalChip } from "@/hooks/useDigitalChip";
 import { toast } from "sonner";
 import { OctagonX, Loader2, CheckCircle2, RotateCcw } from "lucide-react";
 
@@ -57,6 +58,7 @@ export function KillSwitch() {
     () => localStorage.getItem(PROXY_KILLED_KEY) === "true"
   );
   const [result, setResult] = useState<any>(null);
+  const chip = useDigitalChip();
 
   const killMut = trpc.rio.proxyKill.useMutation();
 
@@ -79,8 +81,11 @@ export function KillSwitch() {
       setKilled(true);
       localStorage.setItem(PROXY_KILLED_KEY, "true");
 
+      // Wipe Digital Chip local data on kill (keys, cached receipts, etc.)
+      chip.wipeAll().catch(console.error);
+
       toast.error("Proxy Killed", {
-        description: `Proxy paused. ${res.tokensBurned ?? 0} tokens burned. Receipt logged.`,
+        description: `Proxy paused. ${res.tokensBurned ?? 0} tokens burned. Receipt logged. Local data wiped.`,
         duration: 8000,
       });
     } catch (err: any) {
