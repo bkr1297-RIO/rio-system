@@ -1,61 +1,115 @@
-# RIO — Runtime Intelligence Orchestration
+<p align="center">
+  <strong>RIO — Runtime Intelligence Orchestration</strong><br>
+  Governance infrastructure for AI systems
+</p>
 
-**AI Control and Audit Protocol**
-
-A runtime authorization and audit control system that governs AI-initiated actions. RIO enforces governance structurally — not through prompts, policies, or alignment, but through a cryptographic control plane that requires human approval before any high-impact action can execute.
-
-> AI proposes → Human approves → System executes → System records
-
----
-
-## Demo Video
-
-A 2-minute walkthrough showing the complete RIO flow — from an AI finance agent proposing a $48,250 payment, through interception, phone-based cryptographic approval, execution, and audit trail generation.
-
-**[Watch the Demo Video](./demo/video/RIO_Demo_Video.mp4)**
+<p align="center">
+  <a href="https://rio-gateway.onrender.com/health">Gateway Status</a> &middot;
+  <a href="https://riodemo-ux2sxdqo.manus.space">Live Demo</a> &middot;
+  <a href="docs/ARCHITECTURE_v2.7.md">Architecture</a> &middot;
+  <a href="docs/whitepapers/RIO_White_Paper_v2.md">White Paper</a>
+</p>
 
 ---
 
-## What You Can Build
+## What Is RIO
 
-RIO is designed for enterprise-grade AI governance. Learn more about how RIO can be integrated into your organization and the solutions it provides in our [Enterprise Document](docs/enterprise/ENTERPRISE.md).
+RIO is a governed execution system that sits between AI agents, humans, and real-world actions. It translates goals into structured intent, evaluates risk against policy, requires human approval when necessary, controls execution through single-use tokens, and generates cryptographically signed receipts recorded in a tamper-evident ledger.
+
+> **AI proposes. Human approves. System executes. System records.**
+
+The system enforces the rules — not the AI. Execution without approval is structurally impossible.
 
 ---
 
-## Live Demo Site
+## The Problem
 
-The interactive demo site showcases three perspectives of the RIO system:
+Organizations deploying AI agents face a fundamental gap: the AI can reason and propose, but there is no structural guarantee that it cannot act without authorization. Prompt-level guardrails are bypassable. Policy documents are advisory. Audit logs can be incomplete or fabricated after the fact.
+
+Without a governance layer that is architecturally separate from the AI itself, every deployed agent is a liability — capable of taking actions that no human approved, with no cryptographic proof of what happened. As AI systems gain access to email, payments, databases, and APIs, the cost of ungoverned execution scales with capability.
+
+RIO closes this gap by making governance structural, not advisory. The execution gate is locked by default. Every action requires a signed approval, a single-use token, and produces a verifiable receipt. The ledger is append-only and hash-chained. There is no code path from intent to execution that bypasses governance.
+
+---
+
+## What You Can Build with RIO
+
+RIO is designed for any environment where AI agents take real-world actions that carry risk, require accountability, or must comply with policy.
+
+| Use Case | Description |
+|----------|-------------|
+| **Governed AI Assistants** | Personal or enterprise AI agents that propose actions (send email, schedule meeting, make payment) but cannot execute without human approval |
+| **Enterprise Compliance** | AI systems in regulated industries (finance, healthcare, legal) that need provable audit trails for every automated decision |
+| **Multi-Agent Orchestration** | Coordination layers where multiple AI agents propose actions through a single governance pipeline with unified policy enforcement |
+| **Autonomous Workflow Automation** | Automated business processes where low-risk actions execute automatically while high-risk actions pause for human review |
+| **AI Safety Research** | A reference implementation of structural AI containment — fail-closed execution with cryptographic proof |
+
+For enterprise deployment models, ROI analysis, and case studies, see the [Enterprise Overview](docs/enterprise/ENTERPRISE.md).
+
+---
+
+## Architecture Overview
+
+### Three-Power Separation
+
+RIO enforces separation of powers at the architectural level. No single component can both decide and act.
+
+**Observer (Mantis)** — Ingests goals, structures intent, assesses risk, and monitors outcomes. The Observer sees everything but controls nothing. It cannot approve or execute.
+
+**Governor** — Evaluates intent against policy, applies risk thresholds, and issues or denies approval. The Governor decides but cannot execute. Approval produces a signed token; denial produces a signed record.
+
+**Executor** — Receives approved intents with single-use execution tokens. The Executor acts but cannot approve. It verifies the token, executes the action, and produces a cryptographic receipt. If the token is missing, expired, or already used, execution is structurally blocked.
+
+For the full specification, see [Three-Power Separation](spec/THREE_POWER_SEPARATION.md).
+
+### The 7-Stage Pipeline
+
+Every action flows through a deterministic pipeline:
+
+```
+Intake → Observation → Policy Evaluation → Approval → Execution → Verification → Ledger
+```
+
+1. **Intake** — Goal is received and structured into a typed intent with metadata
+2. **Observation** — Mantis assesses risk level, classifies the action, and enriches context
+3. **Policy Evaluation** — Governor evaluates the intent against the loaded policy set
+4. **Approval** — Human approves or denies (or auto-approval for low-risk actions per policy)
+5. **Execution** — Executor validates the single-use token and performs the action
+6. **Verification** — Outcome is verified against the original intent
+7. **Ledger** — Cryptographic receipt is generated and appended to the hash-chained ledger
+
+For the complete architecture document, see [Architecture v2.7](docs/ARCHITECTURE_v2.7.md).
+
+---
+
+## Quick Start
+
+### Try the Live Demo
+
+The interactive demo site demonstrates the complete RIO governance flow:
 
 **[riodemo-ux2sxdqo.manus.space](https://riodemo-ux2sxdqo.manus.space)**
 
-| Demo | Description |
-|------|-------------|
-| **Demo 1 — Human Approval Required** | Walk through the approval story from the human's perspective: AI proposes, phone notification arrives, biometric approval or denial, cryptographic receipt generated |
-| **Demo 2 — How RIO Enforces Approval** | See the enforcement pipeline: intent registration, policy check, signature verification, execution gate, and ledger recording with stage-light indicators |
-| **Demo 3 — Audit & Runtime Log** | Examine the full audit trail: action summary, system log, cryptographic receipt, and tamper-evident ledger entry |
+The demo shows three perspectives: the AI agent proposing actions, the human approving or denying, and the system recording cryptographic proof.
 
----
+### Verify the Live Gateway
 
-## Live Backend Gateway
+The production gateway is deployed on Render with a PostgreSQL-backed ledger:
 
-The hardened RIO gateway is deployed and operational with full cryptographic enforcement:
+```bash
+# Check gateway health
+curl -s https://rio-gateway.onrender.com/health | python3 -m json.tool
 
-**Base URL:** `rio-router-gateway.replit.app`
+# View the ledger (append-only, hash-chained)
+curl -s https://rio-gateway.onrender.com/api/ledger | python3 -m json.tool
 
-| Endpoint | Purpose |
-|----------|---------|
-| `POST /api/rio-gateway/intake` | Sovereign gate — requires ECDSA signature + execution token |
-| `POST /api/rio-gateway/sign-intent` | Generate ECDSA signature + nonce for an intent |
-| `POST /api/rio-gateway/generate-execution-token` | Generate single-use execution token |
-| `GET /api/rio-gateway/execution-gate/audit-log` | View the tamper-evident execution ledger |
-| `POST /api/rio-gateway/execution-gate/verify-receipt` | Verify receipt authenticity |
-| `GET /api/rio-gateway/nonce-registry` | Monitor nonce/signature registry |
+# Verify chain integrity
+curl -s https://rio-gateway.onrender.com/api/verify-chain | python3 -m json.tool
+```
 
----
+### Verification Results
 
-## Verification Results
-
-Automated security testing confirmed 11 of 12 tests pass, with all critical attack vectors blocked:
+Automated security testing confirms 11 of 12 tests passing, with all critical attack vectors blocked:
 
 | Test | Description | Result |
 |------|-------------|--------|
@@ -72,76 +126,111 @@ Automated security testing confirmed 11 of 12 tests pass, with all critical atta
 | EG-001 | Execution gate full flow | PASS |
 | EG-002 | Receipt lookup verification | PARTIAL |
 
-See [VERIFICATION_RESULTS.md](./VERIFICATION_RESULTS.md) for detailed test results and [VERIFICATION_PLAN.md](./VERIFICATION_PLAN.md) for the complete test plan.
+See [VERIFICATION_RESULTS.md](VERIFICATION_RESULTS.md) for detailed results and [THREAT_MODEL.md](THREAT_MODEL.md) for the complete threat analysis.
 
 ---
-
-## How to Get Involved
-
-We welcome contributions to the RIO Governance Gateway. Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to report issues, suggest improvements, and submit code.
-
----
-
-## Architecture
-
-For a detailed overview of the system's design and components, please refer to the [RIO Governance Gateway Architecture](gateway/ARCHITECTURE.md).
-
-## Security & Verification
-
-Our system is built with a strong focus on security. You can find detailed information on our security posture and verification processes here:
-
-*   [Threat Model](THREAT_MODEL.md)
-*   [Verification Results](VERIFICATION_RESULTS.md)
 
 ## Documentation
 
-Explore our comprehensive documentation, including white papers and specifications:
-
-*   [RIO White Paper v2](docs/RIO_White_Paper_v2.md)
+| Document | Description |
+|----------|-------------|
+| [Architecture v2.7](docs/ARCHITECTURE_v2.7.md) | System architecture, invariants, module map, deployment topology |
+| [Three-Power Separation](spec/THREE_POWER_SEPARATION.md) | Observer / Governor / Executor specification with permission matrix |
+| [API Catalog v2.7](docs/API_CATALOG_v2.7.md) | Complete 43-endpoint catalog with auth requirements and examples |
+| [White Paper v2](docs/whitepapers/RIO_White_Paper_v2.md) | Technical white paper on governed execution |
+| [White Paper (Formal)](docs/whitepapers/RIO_White_Paper_Formal.md) | Formal specification of the RIO protocol |
+| [Enterprise Overview](docs/enterprise/ENTERPRISE.md) | Enterprise FAQ, deployment models, ROI, and case studies |
+| [Receipt Specification v2.1](spec/Receipt_Specification_v2.1.json) | Receipt schema with ingestion provenance and identity binding |
+| [Threat Model](THREAT_MODEL.md) | 12 threat vectors (T-001 to T-012) with mitigations |
+| [Deployment Guide](docs/guides/DEPLOYMENT_GUIDE.md) | Production deployment on Render with PostgreSQL |
+| [Gateway Architecture](gateway/ARCHITECTURE.md) | Gateway internals, route map, and middleware chain |
+| [Mantis Component](spec/MANTIS_COMPONENT.md) | Observer/ingestion layer component definition |
+| [Demo Walkthrough](DEMO_WALKTHROUGH.md) | Step-by-step demo with curl commands |
 
 ---
 
 ## Repository Structure
 
 ```
-├── README.md                   # This file
-├── RIO_SYSTEM_OVERVIEW.md      # Full system architecture and design
-├── VERIFICATION_PLAN.md        # 10 security verification tests (V-001 to V-010)
-├── VERIFICATION_RESULTS.md     # Complete test results with explanations
-├── THREAT_MODEL.md             # 12 threats (T-001 to T-012) with mitigations
-├── DEMO_WALKTHROUGH.md         # Step-by-step demo with curl commands
-├── demo/
-│   └── video/
-│       └── RIO_Demo_Video.mp4  # 2-minute professional demo video
-├── frontend/                   # Frontend UI (demo site, approval interfaces)
-├── backend/                    # Backend services (intent, policy, execution gateway)
-├── crypto/                     # Cryptographic signature and verification services
-├── ledger/                     # Tamper-evident ledger and hash chain logic
-├── database/                   # Database schemas, migrations, and models
-├── tests/                      # Test suites and automated verification harness
-└── verification_logs/          # Machine-readable test results (JSON)
+rio-system/
+├── gateway/                 # Production governance gateway (Node.js, deployed on Render)
+│   ├── config/              #   Policy and constitution configuration
+│   ├── execution/           #   Execution gate and token validation
+│   ├── governance/          #   Policy evaluation, approval logic, kill switch
+│   ├── ledger/              #   PostgreSQL-backed append-only hash-chained ledger
+│   ├── receipts/            #   Cryptographic receipt generation (Ed25519)
+│   ├── routes/              #   API routes (intake, signers, sync, proxy)
+│   ├── security/            #   Signature verification, replay prevention
+│   └── tests/               #   Gateway integration tests
+├── demo-site/               # Interactive demo site (3-perspective walkthrough)
+├── corpus/                  # Governing corpus (policies, directives, agent definitions)
+├── docs/                    # Documentation
+│   ├── architecture/        #   Architecture diagrams and wiring docs
+│   ├── whitepapers/         #   White papers (v1, v2, Formal, The Structural Read)
+│   ├── guides/              #   Deployment, verification, and handoff guides
+│   ├── enterprise/          #   Enterprise positioning and FAQ
+│   ├── security/            #   Security policies, invariants, roles spec
+│   └── reference/           #   System overview, master document, code audit
+├── spec/                    # Formal specifications
+│   ├── THREE_POWER_SEPARATION.md
+│   ├── MANTIS_COMPONENT.md
+│   ├── Receipt_Specification_v2.1.json
+│   └── [component schemas]
+├── internal/                # Working notes and development artifacts
+├── archive/                 # Historical code iterations (preserved for reference)
+├── CONTRIBUTING.md
+├── THREAT_MODEL.md
+├── VERIFICATION_RESULTS.md
+└── DEMO_WALKTHROUGH.md
 ```
 
 ---
 
 ## Security Model
 
-For a comprehensive understanding of our security measures, refer to our [Threat Model](THREAT_MODEL.md) and [Verification Results](VERIFICATION_RESULTS.md).
+RIO implements a **fail-closed** enforcement model. The default state is deny. Execution is structurally blocked unless every condition is met.
 
-RIO implements a **fail-closed** enforcement model. The system is designed so that structure enforces the rules, not policy.
+**Ed25519 Cryptographic Signatures.** Every receipt is signed with Ed25519. Signatures are generated server-side and can be independently verified. The signing key never leaves the server.
 
-**Key properties:**
+**SHA-256 Hash-Chained Ledger.** Every ledger entry includes the hash of the previous entry. Any modification to a historical record breaks the chain and is immediately detectable. The ledger is append-only — there is no update or delete operation.
 
-- **No approval = no execution.** The execution gate is structurally locked until a valid ECDSA signature and single-use execution token are presented.
-- **Single-use approvals.** Every nonce and signature hash is registered in a database. Replay attacks are blocked at the structural level.
-- **Timestamp freshness.** Approvals expire after 300 seconds. Stale signatures are rejected.
-- **Tamper-evident ledger.** Every action is recorded in a hash-chained ledger. Any modification to a previous entry breaks the chain and is detectable.
-- **Cryptographic receipts.** Every execution produces an ECDSA-signed receipt that can be independently verified.
+**Single-Use Execution Tokens.** Every approved action receives a unique token. The token is consumed on execution and cannot be reused. Replay attacks are blocked at the structural level.
+
+**Fail-Closed Execution Gate.** The execution gate requires a valid approval, a valid token, and a valid signature. If any element is missing, expired, or invalid, the gate does not open. There is no fallback, no override, and no bypass.
+
+**Server-Side Enforcement.** All governance logic runs server-side. The frontend cannot bypass policy evaluation, forge approvals, or skip the execution gate. The client is a view layer — the server is the authority.
+
+11 of 12 security verification tests pass. See [VERIFICATION_RESULTS.md](VERIFICATION_RESULTS.md) and [THREAT_MODEL.md](THREAT_MODEL.md).
 
 ---
 
-## Core Principle
+## Status and Roadmap
 
-> You set the rules. The system enforces them. Every decision is visible, traceable, and provable.
+### What's Built
 
-The AI does not execute actions. The system controls execution. Execution without approval is structurally blocked by the server. Every proposal, approval, denial, and execution is recorded with cryptographic proof.
+- Governance pipeline: 7-stage intake-to-ledger flow, production-deployed
+- Gateway: Node.js reference implementation on Render with PostgreSQL
+- Cryptography: Ed25519 signatures, SHA-256 hash chains, single-use tokens
+- Three-Power Separation: Observer, Governor, Executor with enforced boundaries
+- Demo site: Interactive 3-perspective walkthrough at [riodemo-ux2sxdqo.manus.space](https://riodemo-ux2sxdqo.manus.space)
+- Formal specifications: Receipt protocol v2.1, component schemas, policy definitions
+- Security: 100+ verification tests, threat model with 12 vectors, 11/12 passing
+- Governing corpus: Policy definitions, agent roles, witness records
+
+### What's Next
+
+- Agent adapter layer for multi-AI orchestration (Claude, GPT, Gemini)
+- Enterprise SSO integration
+- On-premise deployment option
+- SDK for third-party integrations
+- Advanced policy engine with conditional approval workflows
+
+### Get Involved
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on reporting issues, suggesting improvements, and submitting code.
+
+---
+
+<p align="center">
+  <em>You set the rules. The system enforces them. Every decision is visible, traceable, and provable.</em>
+</p>
