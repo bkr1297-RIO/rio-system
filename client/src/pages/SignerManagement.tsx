@@ -269,7 +269,7 @@ export default function SignerManagement() {
   const [detailTarget, setDetailTarget] = useState<number | null>(null);
   const [revokeTarget, setRevokeTarget] = useState<number | null>(null);
 
-  if (authLoading || status.isLoading) {
+  if (authLoading || status.isLoading || (!!user && !status.data)) {
     return (
       <div className="container max-w-2xl py-8 space-y-6">
         <Skeleton className="h-8 w-48" />

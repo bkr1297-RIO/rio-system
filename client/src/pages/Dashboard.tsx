@@ -41,26 +41,6 @@ export default function Dashboard() {
 
   const resyncLedger = trpc.sync.resyncLedger.useQuery(undefined, { enabled: false });
 
-  const handleResync = async () => {
-    setIsResyncing(true);
-    try {
-      const { data } = await resyncLedger.refetch();
-      if (data) {
-        await syncFromCloud({
-          entries: data.entries,
-          totalEntries: data.totalEntries,
-          chainValid: data.chainValid,
-          proxyUser: status?.proxyUser,
-        });
-        await refetch();
-      }
-    } catch (e) {
-      console.error("Resync failed:", e);
-    } finally {
-      setIsResyncing(false);
-    }
-  };
-
   const { data: status, isLoading, refetch } = trpc.proxy.status.useQuery(undefined, { enabled: isAuthenticated });
 
   const { data: syncData } = trpc.sync.pull.useQuery(
@@ -77,44 +57,14 @@ export default function Dashboard() {
     }
   }, [syncData, syncFromCloud]);
 
-  if (authLoading || isLoading) {
-    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
-  }
-
-  if (!isAuthenticated) {
-    return (
-      <div className="min-h-screen flex items-center justify-center px-4">
-        <Card className="max-w-md w-full bg-card">
-          <CardContent className="p-6 text-center space-y-4">
-            <Shield className="h-12 w-12 text-primary mx-auto" />
-            <p className="text-muted-foreground text-sm">Sign in to view your dashboard.</p>
-            <Button onClick={() => { window.location.href = getLoginUrl(); }} className="font-mono uppercase tracking-wider">Sign In</Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  if (!status?.proxyUser) {
-    navigate("/onboard");
-    return null;
-  }
-
-  const proxy = status.proxyUser;
-  const health = status.systemHealth;
-  const pendingIntents = status.recentIntents.filter((i) => i.status === "PENDING_APPROVAL");
-  const approvedIntents = status.recentIntents.filter((i) => i.status === "APPROVED");
-  const otherIntents = status.recentIntents.filter((i) => i.status !== "PENDING_APPROVAL" && i.status !== "APPROVED");
-
   // Derive the most active intent's stage for the three-power sigil
+  // MUST be called before any early returns to maintain hooks order
   const sigilState = useMemo(() => {
-    // Priority: executing > pending > approved > most recent completed
-    const allIntents = status.recentIntents;
+    const allIntents = status?.recentIntents ?? [];
     if (allIntents.length === 0) {
       return { stage: "IDLE" as SigilStage, riskLevel: "LOW" as RiskLevel };
     }
 
-    // Check for any actively executing (APPROVED that hasn't been executed yet)
     const executing = allIntents.find((i) => i.status === "APPROVED");
     if (executing) {
       return {
@@ -125,7 +75,6 @@ export default function Dashboard() {
       };
     }
 
-    // Check for pending approvals
     const pending = allIntents.find((i) => i.status === "PENDING_APPROVAL");
     if (pending) {
       return {
@@ -136,7 +85,6 @@ export default function Dashboard() {
       };
     }
 
-    // Check for most recent completed
     const executed = allIntents.find((i) => i.status === "EXECUTED");
     if (executed) {
       return {
@@ -168,7 +116,58 @@ export default function Dashboard() {
     }
 
     return { stage: "IDLE" as SigilStage, riskLevel: "LOW" as RiskLevel };
-  }, [status.recentIntents]);
+  }, [status?.recentIntents]);
+
+  const handleResync = async () => {
+    setIsResyncing(true);
+    try {
+      const { data } = await resyncLedger.refetch();
+      if (data) {
+        await syncFromCloud({
+          entries: data.entries,
+          totalEntries: data.totalEntries,
+          chainValid: data.chainValid,
+          proxyUser: status?.proxyUser,
+        });
+        await refetch();
+      }
+    } catch (e) {
+      console.error("Resync failed:", e);
+    } finally {
+      setIsResyncing(false);
+    }
+  };
+
+  // ─── Early returns AFTER all hooks ───────────────────────────
+
+  if (authLoading || isLoading) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <Card className="max-w-md w-full bg-card">
+          <CardContent className="p-6 text-center space-y-4">
+            <Shield className="h-12 w-12 text-primary mx-auto" />
+            <p className="text-muted-foreground text-sm">Sign in to view your dashboard.</p>
+            <Button onClick={() => { window.location.href = getLoginUrl(); }} className="font-mono uppercase tracking-wider">Sign In</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!status?.proxyUser) {
+    navigate("/onboard");
+    return null;
+  }
+
+  const proxy = status.proxyUser;
+  const health = status.systemHealth;
+  const pendingIntents = status.recentIntents.filter((i) => i.status === "PENDING_APPROVAL");
+  const approvedIntents = status.recentIntents.filter((i) => i.status === "APPROVED");
+  const otherIntents = status.recentIntents.filter((i) => i.status !== "PENDING_APPROVAL" && i.status !== "APPROVED");
 
   return (
     <div className="min-h-screen py-6 px-4">
