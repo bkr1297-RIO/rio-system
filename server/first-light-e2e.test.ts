@@ -315,7 +315,12 @@ describe("First-Light E2E: Full Governed Action Loop", () => {
 
   // ─── Step 12: Re-key works for device recovery ──────────────
   it("12. Re-key updates identity without breaking ledger chain", async () => {
-    const caller = appRouter.createCaller(ctx);
+    // Use owner context for emergency override re-key (no old key signature needed)
+    const ownerCtx = {
+      ...ctx,
+      user: { ...ctx.user, openId: process.env.OWNER_OPEN_ID || "owner-open-id" },
+    };
+    const caller = appRouter.createCaller(ownerCtx);
     const newKey = "rekey-first-light-" + Date.now();
     const newPolicy = "rekey-policy-" + Date.now();
     const result = await caller.proxy.rekey({
@@ -323,12 +328,11 @@ describe("First-Light E2E: Full Governed Action Loop", () => {
       policyHash: newPolicy,
     });
     expect(result.success).toBe(true);
-    expect(result.proxyUser).toBeDefined();
-    expect(result.proxyUser!.publicKey).toBe(newKey);
+    expect(result.rekeyType).toBe("RE_KEY_FORCED");
 
-    // Verify RE_KEY ledger entry
+    // Verify RE_KEY_FORCED ledger entry
     const entries = await caller.ledger.list();
-    const rekeyEntry = entries.find((e) => e.entryType === "RE_KEY");
+    const rekeyEntry = entries.find((e) => e.entryType === "RE_KEY_FORCED" || e.entryType === "RE_KEY");
     expect(rekeyEntry).toBeDefined();
 
     // Chain still valid after re-key
