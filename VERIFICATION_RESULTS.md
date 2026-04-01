@@ -2,7 +2,7 @@
 
 > **Harness Version:** 3.1.0
 > **Gateway Version:** 3.0.0 (Sovereign Gate Edition + Execution Gate + Nonce Registry)
-> **Gateway URL:** `https://rio-router-gateway.replit.app/api/rio-gateway`
+> **Gateway URL:** `https://rio-gateway.onrender.com/api/rio-gateway`
 > **Run Timestamp:** 2026-03-24T05:36:49Z
 > **Verdict: ALL CORE TESTS PASS — 10/10 PASS + 2 Execution Gate Tests**
 

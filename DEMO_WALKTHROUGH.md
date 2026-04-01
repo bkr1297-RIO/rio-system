@@ -11,7 +11,7 @@
 ## Pre-Flight: Gateway Health Check
 
 ```bash
-curl -s https://rio-router-gateway.replit.app/api/rio-gateway/health | python3 -m json.tool
+curl -s https://rio-gateway.onrender.com/api/rio-gateway/health | python3 -m json.tool
 ```
 
 **Response:**
@@ -35,7 +35,7 @@ Gateway is online. Sovereign Gate is active. ECDSA signature verification is enf
 **Scenario:** An AI agent attempts to execute an action with no human signature, no timestamp — raw unauthorized access.
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/intake \
   -H "Content-Type: application/json" \
   -d '{"intent": "send_email to target@example.com", "source": "rogue_agent"}'
 ```
@@ -61,7 +61,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
 ### Step 1: Human Signs the Intent
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/sign-intent \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/sign-intent \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <API_KEY>" \
   -d '{"intent": "send_email to demo@rio.dev with subject: V-002 Approved Test", "source": "client"}'
@@ -79,7 +79,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/sign-inten
 ### Step 2: Submit Signed Intent to the Sovereign Gate
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/intake \
   -H "Content-Type: application/json" \
   -d '{
     "intent": "send_email to demo@rio.dev with subject: V-002 Approved Test",
@@ -114,7 +114,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
 
 ```bash
 # Replay the EXACT same signed request from V-002
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/intake \
   -H "Content-Type: application/json" \
   -d '{
     "intent": "send_email to demo@rio.dev with subject: V-002 Approved Test",
@@ -144,7 +144,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
 ### Step 1: Sign a Legitimate Intent
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/sign-intent \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/sign-intent \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer <API_KEY>" \
   -d '{"intent": "send_email to safe@rio.dev", "source": "client"}'
@@ -153,7 +153,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/sign-inten
 ### Step 2: Submit with Tampered Intent
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/intake \
   -H "Content-Type: application/json" \
   -d '{
     "intent": "delete_all_data from production_db",
@@ -194,7 +194,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
 ### Attempt 1: No Authentication
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/tools/send_email \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/tools/send_email \
   -H "Content-Type: application/json" \
   -d '{"to": "victim@example.com", "subject": "Bypassed!"}'
 ```
@@ -204,7 +204,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/tools/send
 ### Attempt 2: Fake Token
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/tools/send_email \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/tools/send_email \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer FAKE_TOKEN_12345" \
   -d '{"to": "victim@example.com", "subject": "Bypassed!"}'
@@ -215,7 +215,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/tools/send
 ### Attempt 3: Direct /intent Endpoint
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intent \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/intent \
   -H "Content-Type: application/json" \
   -d '{"intent": "steal_data"}'
 ```
@@ -231,7 +231,7 @@ curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intent \
 **Scenario:** An attacker fabricates a signature string and submits it with a malicious intent.
 
 ```bash
-curl -s -X POST https://rio-router-gateway.replit.app/api/rio-gateway/intake \
+curl -s -X POST https://rio-gateway.onrender.com/api/rio-gateway/intake \
   -H "Content-Type: application/json" \
   -d '{
     "intent": "steal_data",

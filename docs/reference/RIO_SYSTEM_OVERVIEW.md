@@ -1,11 +1,11 @@
 # RIO — Runtime Intelligence Orchestration
 
-[Back to README.md](./README.md)
-[RIO Governance Gateway Architecture](./gateway/ARCHITECTURE.md)
-[Three-Power Separation](./spec/THREE_POWER_SEPARATION.md)
-[Threat Model](./THREAT_MODEL.md)
-[Verification Results](./VERIFICATION_RESULTS.md)
-[Enterprise Document](./docs/enterprise/ENTERPRISE.md)
+[Back to README.md](../../README.md)
+[RIO Governance Gateway Architecture](../../gateway/ARCHITECTURE.md)
+[Three-Power Separation](../../spec/THREE_POWER_SEPARATION.md)
+[Threat Model](../../THREAT_MODEL.md)
+[Verification Results](../../VERIFICATION_RESULTS.md)
+[Enterprise Document](../enterprise/ENTERPRISE.md)
 
 
 **System Overview, Architecture, Security Model, and Verification**
@@ -83,7 +83,7 @@ RIO introduces a runtime authorization layer between AI and execution systems.
 
 ## System Architecture
 
-For a more detailed technical architecture, refer to the [RIO Governance Gateway Architecture](./gateway/ARCHITECTURE.md).
+For a more detailed technical architecture, refer to the [RIO Governance Gateway Architecture](../../gateway/ARCHITECTURE.md).
 
 
 ### Components
@@ -138,7 +138,7 @@ Audit Log Stored
 
 ## Security Model
 
-For a comprehensive understanding of our security measures, refer to our [Threat Model](./THREAT_MODEL.md) and [Verification Results](./VERIFICATION_RESULTS.md).
+For a comprehensive understanding of our security measures, refer to our [Threat Model](../../THREAT_MODEL.md) and [Verification Results](../../VERIFICATION_RESULTS.md).
 
 
 ### Fail-Closed Execution
@@ -230,7 +230,7 @@ If any block is modified, all subsequent hashes change, making tampering detecta
 
 ## Testing and Verification
 
-For detailed test plans and results, refer to [VERIFICATION_PLAN.md](./VERIFICATION_PLAN.md) and [VERIFICATION_RESULTS.md](./VERIFICATION_RESULTS.md).
+For detailed test plans and results, refer to [VERIFICATION_PLAN.md](../../VERIFICATION_PLAN.md) and [VERIFICATION_RESULTS.md](../../VERIFICATION_RESULTS.md).
 
 
 ### Test 1 — Execution Without Approval
