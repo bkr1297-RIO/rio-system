@@ -128,7 +128,7 @@ Every threat listed below represents a path an attacker, a compromised AI agent,
 
 **Mitigation:** The ledger uses a chained hash structure. Each entry's hash is computed from the entry's data combined with the previous entry's hash. Modifying any entry causes all subsequent hashes to change, making the tampering immediately detectable during any audit or integrity check. The ledger is append-only — entries cannot be updated or deleted through the application layer. Periodic integrity checks verify the hash chain from the genesis entry to the most recent entry.
 
-**Verification Approach:** Ledger integrity verification (referenced in VERIFICATION_PLAN.md, Test 3 in RIO_SYSTEM_OVERVIEW.md)
+**Verification Approach:** Ledger integrity verification (referenced in VERIFICATION_PLAN.md, Test 3 in [RIO System Overview](docs/reference/RIO_SYSTEM_OVERVIEW.md))
 
 ---
 

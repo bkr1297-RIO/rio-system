@@ -2,13 +2,20 @@
 
 The RIO Gateway is a standalone Node.js Express service that sits between AI systems and execution tools. It enforces governance before any action is executed.
 
-**Fail Mode: CLOSED.** No authorization → no execution.
+**Fail Mode: CLOSED.** No authorization = no execution.
+
+**Production URL:** `https://rio-gateway.onrender.com`
+**Version:** 2.7.0
+
+---
 
 ## Pipeline
 
 ```
-Intent → Governance → Risk → Authorization → Execution → Receipt → Ledger → Verification
+Intake → Observation → Policy Evaluation → Approval → Execution → Verification → Ledger
 ```
+
+---
 
 ## Quick Start
 
@@ -20,20 +27,77 @@ npm run dev      # Development: auto-restart on changes
 npm test         # Run test suite
 ```
 
+**Environment variables:**
+
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DATABASE_URL` | Yes | PostgreSQL connection string |
+| `ED25519_PRIVATE_KEY` | Yes | Base64-encoded Ed25519 signing key |
+| `ED25519_PUBLIC_KEY` | Yes | Base64-encoded Ed25519 verification key |
+| `API_KEYS` | No | Comma-separated API keys for /api/v1 access |
+| `PORT` | No | Server port (default: 4400) |
+
+---
+
 ## API Endpoints
 
-| Method | Path | Description |
-|--------|------|-------------|
-| POST | `/intent` | Submit an intent from any AI agent |
-| POST | `/govern` | Run policy + risk evaluation |
-| POST | `/authorize` | Record human approval or denial |
-| POST | `/execute` | Execute an authorized action (simulated for MVP) |
-| POST | `/receipt` | Generate cryptographic receipt |
-| GET | `/ledger` | View ledger entries (supports `?intent_id=`, `?limit=`, `?offset=`) |
-| GET | `/verify` | Verify hash chain integrity (supports `?intent_id=`) |
-| GET | `/health` | System health check |
-| GET | `/intents` | List all intents (supports `?status=`, `?limit=`) |
-| GET | `/intent/:id` | Get a specific intent with full pipeline state |
+### Core Pipeline
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/intent` | Optional | Submit an intent from any AI agent |
+| POST | `/govern` | Optional | Run policy + risk evaluation |
+| POST | `/authorize` | Optional | Record human approval or denial |
+| POST | `/execute` | Optional | Execute an authorized action |
+| POST | `/execute-confirm` | Optional | Confirm execution with token |
+| POST | `/receipt` | Optional | Generate cryptographic receipt |
+| GET | `/ledger` | None | View ledger entries (`?intent_id=`, `?limit=`, `?offset=`) |
+| GET | `/verify` | None | Verify hash chain integrity (`?intent_id=`) |
+| GET | `/health` | None | System health check |
+| GET | `/intents` | None | List all intents (`?status=`, `?limit=`) |
+| GET | `/intent/:id` | None | Get a specific intent with full pipeline state |
+
+### Signer Management (`/api/signers`)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/signers` | Bearer | Rotate or create signing keys |
+| POST | `/api/signers/register` | Owner | Register a new signer identity |
+| GET | `/api/signers` | Bearer | List all registered signers |
+| GET | `/api/signers/:id` | Bearer | Get a specific signer |
+
+### Key Backup (`/api/key-backup`)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/key-backup` | Bearer | Store encrypted key backup |
+| GET | `/api/key-backup/:id` | Bearer | Retrieve key backup |
+| GET | `/api/key-backup` | Bearer | List all key backups |
+
+### Device Sync (`/api/sync`)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/sync` | Bearer | Push device sync state |
+| GET | `/api/sync/health` | None | Sync service health check |
+
+### Proxy / Onboarding (`/api`)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| POST | `/api/onboard` | None | Onboard a new proxy agent |
+| POST | `/api/kill` | Bearer | Emergency kill switch |
+| GET | `/api/receipts/recent` | None | Public feed of recent receipts |
+
+### Public API v1 (`/api/v1`)
+
+| Method | Path | Auth | Description |
+|--------|------|------|-------------|
+| All v1 routes | `/api/v1/*` | API Key | Rate-limited public API access |
+
+For the complete 43-endpoint catalog with request/response examples, see [API Catalog v2.7](../docs/API_CATALOG_v2.7.md).
+
+---
 
 ## Example: Full Pipeline
 
@@ -70,16 +134,22 @@ curl http://localhost:4400/verify?intent_id=<INTENT_ID>
 curl http://localhost:4400/ledger
 ```
 
+---
+
 ## Configuration
 
 Governance config files are in `config/rio/`:
 
-- `RIO_CONSTITUTION.json` — Core governance rules and invariants
-- `RIO_POLICY.json` — Build Authority / Deploy Boundary policy
-- `RIO_ROLE_MANUS.json` — Manus execution agent role
-- `RIO_ROLE_GEMINI.json` — Gemini verification agent role
+| File | Description |
+|------|-------------|
+| `RIO_CONSTITUTION.json` | Core governance rules and invariants |
+| `RIO_POLICY.json` | Build Authority / Deploy Boundary policy |
+| `RIO_ROLE_MANUS.json` | Manus execution agent role |
+| `RIO_ROLE_GEMINI.json` | Gemini verification agent role |
 
 The gateway will not start if any config file is missing (fail closed).
+
+---
 
 ## Architecture
 
@@ -92,20 +162,35 @@ gateway/
 │   ├── RIO_ROLE_MANUS.json
 │   └── RIO_ROLE_GEMINI.json
 ├── governance/                 # Policy engine
-│   ├── config.mjs              # Config loader
-│   ├── policy.mjs              # Policy evaluator
+│   ├── config.mjs              # Config loader (fail-closed)
+│   ├── policy.mjs              # Policy evaluator + kill switch
 │   └── intents.mjs             # Intent state machine
+├── execution/                  # Execution gate
+│   └── gate.mjs                # Token validation, single-use enforcement
 ├── ledger/                     # Append-only hash-chained ledger
-│   └── ledger.mjs
+│   ├── ledger-pg.mjs           # PostgreSQL-backed ledger
+│   ├── ledger.mjs              # In-memory ledger (development)
+│   └── init.sql                # Database schema
 ├── receipts/                   # Cryptographic receipt generation
-│   └── receipts.mjs
+│   └── receipts.mjs            # Ed25519 signatures, Receipt Spec v2.1
+├── security/                   # Security middleware
+│   └── auth.mjs                # Bearer auth, replay prevention
 ├── routes/                     # API route handlers
-│   └── index.mjs
-├── data/                       # Persisted ledger data (auto-created)
-│   └── ledger.json
+│   ├── index.mjs               # Core pipeline routes
+│   ├── signers.mjs             # Signer management
+│   ├── key-backup.mjs          # Encrypted key backup
+│   ├── sync.mjs                # Device sync
+│   ├── proxy.mjs               # Onboard, kill switch, receipts feed
+│   └── api-v1.mjs              # Public API v1 (rate-limited)
+├── monitoring/                 # System monitoring
+│   ├── admin_health.mjs        # Health metrics
+│   ├── alert_dispatcher.mjs    # Alert routing
+│   └── ledger_integrity_job.mjs # Hash chain integrity checks
 └── tests/                      # Test suite
     └── gateway.test.mjs
 ```
+
+---
 
 ## Governance Rules
 
@@ -115,7 +200,13 @@ gateway/
 4. All executions must generate receipts
 5. All receipts must be stored in ledger
 6. System fails closed on uncertainty
+7. Three-Power Separation: Observer, Governor, Executor are architecturally separate
+8. No single component can both decide and act
 
-## Part of ONE
+---
 
-This gateway is a component of the **ONE** system — a governed AI command center. It provides the governance and execution control layer that enforces policy, authorization, and receipt generation before any real-world action occurs.
+## Part of RIO
+
+This gateway is the reference implementation of the [RIO Protocol](../README.md) — governed execution infrastructure for AI systems. It provides the governance and execution control layer that enforces policy, authorization, and receipt generation before any real-world action occurs.
+
+For specifications, see [`/spec`](../spec/). For architecture documentation, see [`/docs`](../docs/).

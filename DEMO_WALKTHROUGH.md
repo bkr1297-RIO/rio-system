@@ -1,7 +1,8 @@
 # RIO Verification Demo — Live Attack Simulation Walkthrough
 
 **System:** RIO Gateway v3.0.0 — Sovereign Gate Edition
-**Target:** `https://rio-router-gateway.replit.app/api/rio-gateway`
+**Original Target:** `https://rio-router-gateway.replit.app/api/rio-gateway` (historical — Replit deployment)
+**Current Gateway:** `https://rio-gateway.onrender.com` (production — Render deployment)
 **Date:** 2026-03-23
 **Result:** 10/10 PASS — All attacks blocked, all authorized actions executed
 
@@ -327,7 +328,13 @@ curl -s -X POST .../intake -d '{...same payload...}'
 ## How to Reproduce
 
 1. Clone the repository: `git clone https://github.com/bkr1297-RIO/rio-system.git`
-2. Set the API token: `export RIO_API_TOKEN=<your_token>`
-3. Run the automated test suite: `python3 tests/run_verification.py`
-4. Run the demo recording: `bash tests/demo_recording.sh`
-5. View the terminal recording: `asciinema play tests/demo_recording.cast`
+2. Start the gateway: `cd gateway && npm install && npm start`
+3. Run the automated test suite: `python3 archive/tests/run_verification.py`
+4. Or verify the live production gateway:
+
+```bash
+curl -s https://rio-gateway.onrender.com/health | python3 -m json.tool
+curl -s https://rio-gateway.onrender.com/api/verify-chain | python3 -m json.tool
+```
+
+> **Note:** The curl examples above reference the original Replit deployment URL. The production gateway is now deployed on Render at `https://rio-gateway.onrender.com`. The API structure has evolved — see [API Catalog v2.7](docs/API_CATALOG_v2.7.md) for current endpoints.

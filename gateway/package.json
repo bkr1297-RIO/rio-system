@@ -1,6 +1,6 @@
 {
   "name": "rio-governance-gateway",
-  "version": "1.0.0",
+  "version": "2.7.0",
   "description": "RIO Governance Gateway — Governed AI Execution Runtime",
   "license": "UNLICENSED",
   "type": "module",
