@@ -175,7 +175,6 @@ All intents, approvals, denials, executions, and ledger writes are logged and ti
 
 ## Receipt Format (Example)
 
-For the full receipt specification, refer to [Receipt Specification v2.1.json](<path_to_receipt_spec>).
 
 
 ```json
@@ -215,7 +214,6 @@ If any block is modified, all subsequent hashes change, making tampering detecta
 
 ## API Endpoints (Example)
 
-For a complete list of API endpoints and their documentation, refer to [API Catalog v2.7.md](<path_to_api_catalog>).
 
 
 | Endpoint | Method | Purpose |
