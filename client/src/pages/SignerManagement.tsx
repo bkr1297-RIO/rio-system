@@ -136,11 +136,11 @@ function SignerDetailDialog({ signerId, open, onClose }: {
     <Dialog open={open} onOpenChange={(o) => !o && onClose()}>
       <DialogContent className="max-w-lg bg-card border-border">
         <DialogHeader>
-          <DialogTitle className="font-mono text-sm flex items-center gap-2">
+          <DialogTitle className="text-sm font-semibold flex items-center gap-2">
             <Key className="h-4 w-4" />
             Signer Detail
           </DialogTitle>
-          <DialogDescription className="font-mono text-xs">
+          <DialogDescription className="text-xs">
             User ID: {signerId}
           </DialogDescription>
         </DialogHeader>
@@ -185,11 +185,11 @@ function SignerDetailDialog({ signerId, open, onClose }: {
             {/* Stats */}
             <div className="grid grid-cols-2 gap-3">
               <div className="bg-secondary/30 rounded-md p-3 text-center">
-                <div className="text-lg font-bold font-mono">{detail.intents.length}</div>
+                <div className="text-lg font-bold">{detail.intents.length}</div>
                 <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Intents</div>
               </div>
               <div className="bg-secondary/30 rounded-md p-3 text-center">
-                <div className="text-lg font-bold font-mono">{detail.approvals.length}</div>
+                <div className="text-lg font-bold">{detail.approvals.length}</div>
                 <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Approvals</div>
               </div>
             </div>
@@ -282,7 +282,7 @@ export default function SignerManagement() {
     return (
       <div className="container max-w-2xl py-16 text-center">
         <Shield className="h-12 w-12 mx-auto text-muted-foreground/30 mb-4" />
-        <h2 className="text-lg font-mono font-bold mb-2">Authentication Required</h2>
+        <h2 className="text-lg font-semibold mb-2">Authentication Required</h2>
         <p className="text-sm text-muted-foreground">Sign in to access signer management.</p>
       </div>
     );
@@ -292,12 +292,12 @@ export default function SignerManagement() {
     return (
       <div className="container max-w-2xl py-16 text-center">
         <AlertTriangle className="h-12 w-12 mx-auto text-amber-400/50 mb-4" />
-        <h2 className="text-lg font-mono font-bold mb-2">Access Denied</h2>
+        <h2 className="text-lg font-semibold mb-2">Access Denied</h2>
         <p className="text-sm text-muted-foreground mb-4">Only the system owner can manage signers.</p>
-        <Link href="/dashboard">
+        <Link href="/settings">
           <Button variant="outline" size="sm">
             <ArrowLeft className="h-3.5 w-3.5 mr-1.5" />
-            Back to Dashboard
+            Back to Settings
           </Button>
         </Link>
       </div>
@@ -313,7 +313,7 @@ export default function SignerManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl font-mono font-bold flex items-center gap-2">
+          <h1 className="text-xl font-semibold flex items-center gap-2">
             <Users className="h-5 w-5 text-primary" />
             Signer Management
           </h1>
@@ -321,10 +321,10 @@ export default function SignerManagement() {
             Manage registered signers, view key status, and revoke compromised identities.
           </p>
         </div>
-        <Link href="/dashboard">
+        <Link href="/settings">
           <Button variant="outline" size="sm" className="text-xs">
             <ArrowLeft className="h-3.5 w-3.5 mr-1" />
-            Dashboard
+            Settings
           </Button>
         </Link>
       </div>
@@ -333,19 +333,19 @@ export default function SignerManagement() {
       <div className="grid grid-cols-3 gap-3">
         <Card className="bg-card/50">
           <CardContent className="p-3 text-center">
-            <div className="text-2xl font-bold font-mono">{signerList.length}</div>
+            <div className="text-2xl font-bold">{signerList.length}</div>
             <div className="text-[10px] text-muted-foreground uppercase tracking-wider">Total</div>
           </CardContent>
         </Card>
         <Card className="bg-emerald-500/5 border-emerald-500/20">
           <CardContent className="p-3 text-center">
-            <div className="text-2xl font-bold font-mono text-emerald-400">{activeCount}</div>
+            <div className="text-2xl font-bold text-emerald-600">{activeCount}</div>
             <div className="text-[10px] text-emerald-400/70 uppercase tracking-wider">Active</div>
           </CardContent>
         </Card>
         <Card className="bg-destructive/5 border-destructive/20">
           <CardContent className="p-3 text-center">
-            <div className="text-2xl font-bold font-mono text-destructive">{suspendedCount}</div>
+            <div className="text-2xl font-bold text-destructive">{suspendedCount}</div>
             <div className="text-[10px] text-destructive/70 uppercase tracking-wider">Suspended</div>
           </CardContent>
         </Card>
