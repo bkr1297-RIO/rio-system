@@ -1,355 +1,440 @@
-/**
- * /dashboard — RIO Governance Dashboard
- *
- * Shows all governed actions: receipts, ledger entries, decisions.
- * Filterable by action type, decision, and risk level.
- */
-
-import { useState, useMemo } from "react";
-import NavBar from "@/components/NavBar";
+import React, { useMemo } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { trpc } from "@/lib/trpc";
-import { Link } from "wouter";
+import { useLocalStore } from "@/hooks/useLocalStore";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Loader2, LayoutDashboard, Shield, ShieldCheck, ShieldAlert, Key, FileText, CheckCircle2, XCircle, AlertTriangle, Play, Clock, ArrowRight, RefreshCw, FileKey, Bell } from "lucide-react";
+import { useLocation } from "wouter";
+import { getLoginUrl } from "@/const";
+import { ThreePowerPanel, type SigilStage, type RiskLevel } from "@/components/ThreePowerSigil";
 
-interface LedgerEntry {
-  block_id: string;
-  intent_id: string;
-  action: string;
-  decision: string;
-  receipt_hash: string;
-  previous_hash: string;
-  current_hash: string;
-  ledger_signature: string | null;
-  protocol_version: string;
-  timestamp: string;
-  recorded_by: string;
+function StatusBadge({ status }: { status: string }) {
+  const map: Record<string, { color: string; icon: React.ReactNode }> = {
+    ACTIVE: { color: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", icon: <ShieldCheck className="h-3 w-3" /> },
+    KILLED: { color: "bg-red-500/15 text-red-400 border-red-500/30", icon: <ShieldAlert className="h-3 w-3" /> },
+    SUSPENDED: { color: "bg-amber-500/15 text-amber-400 border-amber-500/30", icon: <AlertTriangle className="h-3 w-3" /> },
+    PENDING_APPROVAL: { color: "bg-amber-500/15 text-amber-400 border-amber-500/30", icon: <Clock className="h-3 w-3" /> },
+    APPROVED: { color: "bg-emerald-500/15 text-emerald-400 border-emerald-500/30", icon: <CheckCircle2 className="h-3 w-3" /> },
+    REJECTED: { color: "bg-red-500/15 text-red-400 border-red-500/30", icon: <XCircle className="h-3 w-3" /> },
+    EXECUTED: { color: "bg-blue-500/15 text-blue-400 border-blue-500/30", icon: <Play className="h-3 w-3" /> },
+    FAILED: { color: "bg-red-500/15 text-red-400 border-red-500/30", icon: <XCircle className="h-3 w-3" /> },
+  };
+  const s = map[status] || map.ACTIVE;
+  return <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[10px] font-mono font-semibold border ${s.color}`}>{s.icon} {status}</span>;
 }
 
-type FilterDecision = "all" | "approved" | "denied";
-type FilterRisk = "all" | "low" | "medium" | "high" | "critical";
-
-const ACTION_LABELS: Record<string, string> = {
-  send_email: "Send Email",
-  transfer_funds: "Transfer Funds",
-  deploy_production: "Deploy Production",
-  read_data: "Read Data",
-  read_file: "Read File",
-  write_file: "Write File",
-  create_event: "Create Event",
-  delete_database: "Delete Database",
-};
-
-const ACTION_ICONS: Record<string, string> = {
-  send_email: "\u2709",
-  transfer_funds: "\uD83D\uDCB3",
-  deploy_production: "\uD83D\uDE80",
-  read_data: "\uD83C\uDFE5",
-  read_file: "\uD83D\uDCC4",
-  write_file: "\uD83D\uDCDD",
-  create_event: "\uD83D\uDCC5",
-  delete_database: "\uD83D\uDDD1",
-};
-
-const RISK_FROM_ACTION: Record<string, string> = {
-  read_data: "LOW",
-  read_file: "LOW",
-  create_event: "LOW",
-  write_file: "MEDIUM",
-  send_email: "HIGH",
-  deploy_production: "HIGH",
-  transfer_funds: "CRITICAL",
-  delete_database: "CRITICAL",
-};
-
-const RISK_COLORS: Record<string, string> = {
-  LOW: "#22c55e",
-  MEDIUM: "#f59e0b",
-  HIGH: "#f97316",
-  CRITICAL: "#ef4444",
-};
+function RiskDot({ tier }: { tier: string }) {
+  const colors: Record<string, string> = {
+    LOW: "bg-emerald-400",
+    MEDIUM: "bg-amber-400",
+    HIGH: "bg-red-400",
+  };
+  return <span className={`inline-block h-2 w-2 rounded-full ${colors[tier] || colors.LOW}`} />;
+}
 
 export default function Dashboard() {
-  const [filterDecision, setFilterDecision] = useState<FilterDecision>("all");
-  const [filterRisk, setFilterRisk] = useState<FilterRisk>("all");
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
+  const [, navigate] = useLocation();
+  const { keys, policy, syncFromCloud } = useLocalStore();
+  const [isResyncing, setIsResyncing] = React.useState(false);
 
-  const { data, isLoading, refetch } = trpc.rio.ledgerChain.useQuery({ limit: 200 });
+  const resyncLedger = trpc.sync.resyncLedger.useQuery(undefined, { enabled: false });
 
-  const entries: LedgerEntry[] = useMemo(() => {
-    if (!data?.entries) return [];
-    return (data.entries as LedgerEntry[]).reverse(); // newest first
-  }, [data]);
-
-  const filtered = useMemo(() => {
-    return entries.filter((e) => {
-      if (filterDecision !== "all" && e.decision !== filterDecision) return false;
-      if (filterRisk !== "all") {
-        const risk = (RISK_FROM_ACTION[e.action] || "MEDIUM").toLowerCase();
-        if (risk !== filterRisk) return false;
+  const handleResync = async () => {
+    setIsResyncing(true);
+    try {
+      const { data } = await resyncLedger.refetch();
+      if (data) {
+        await syncFromCloud({
+          entries: data.entries,
+          totalEntries: data.totalEntries,
+          chainValid: data.chainValid,
+          proxyUser: status?.proxyUser,
+        });
+        await refetch();
       }
-      return true;
-    });
-  }, [entries, filterDecision, filterRisk]);
+    } catch (e) {
+      console.error("Resync failed:", e);
+    } finally {
+      setIsResyncing(false);
+    }
+  };
 
-  // Stats
-  const stats = useMemo(() => {
-    const total = entries.length;
-    const approved = entries.filter((e) => e.decision === "approved").length;
-    const denied = entries.filter((e) => e.decision === "denied").length;
-    return { total, approved, denied };
-  }, [entries]);
+  const { data: status, isLoading, refetch } = trpc.proxy.status.useQuery(undefined, { enabled: isAuthenticated });
+
+  const { data: syncData } = trpc.sync.pull.useQuery(
+    { lastKnownEntryId: undefined },
+    { enabled: isAuthenticated && !!status?.proxyUser }
+  );
+
+  // Persist sync data to IndexedDB when it arrives
+  const syncedRef = React.useRef(false);
+  React.useEffect(() => {
+    if (syncData && !syncedRef.current) {
+      syncedRef.current = true;
+      syncFromCloud(syncData).catch(console.warn);
+    }
+  }, [syncData, syncFromCloud]);
+
+  if (authLoading || isLoading) {
+    return <div className="min-h-screen flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen flex items-center justify-center px-4">
+        <Card className="max-w-md w-full bg-card">
+          <CardContent className="p-6 text-center space-y-4">
+            <Shield className="h-12 w-12 text-primary mx-auto" />
+            <p className="text-muted-foreground text-sm">Sign in to view your dashboard.</p>
+            <Button onClick={() => { window.location.href = getLoginUrl(); }} className="font-mono uppercase tracking-wider">Sign In</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (!status?.proxyUser) {
+    navigate("/onboard");
+    return null;
+  }
+
+  const proxy = status.proxyUser;
+  const health = status.systemHealth;
+  const pendingIntents = status.recentIntents.filter((i) => i.status === "PENDING_APPROVAL");
+  const approvedIntents = status.recentIntents.filter((i) => i.status === "APPROVED");
+  const otherIntents = status.recentIntents.filter((i) => i.status !== "PENDING_APPROVAL" && i.status !== "APPROVED");
+
+  // Derive the most active intent's stage for the three-power sigil
+  const sigilState = useMemo(() => {
+    // Priority: executing > pending > approved > most recent completed
+    const allIntents = status.recentIntents;
+    if (allIntents.length === 0) {
+      return { stage: "IDLE" as SigilStage, riskLevel: "LOW" as RiskLevel };
+    }
+
+    // Check for any actively executing (APPROVED that hasn't been executed yet)
+    const executing = allIntents.find((i) => i.status === "APPROVED");
+    if (executing) {
+      return {
+        stage: "APPROVED" as SigilStage,
+        riskLevel: (executing.riskTier || "LOW") as RiskLevel,
+        intentId: executing.intentId,
+        toolName: executing.toolName,
+      };
+    }
+
+    // Check for pending approvals
+    const pending = allIntents.find((i) => i.status === "PENDING_APPROVAL");
+    if (pending) {
+      return {
+        stage: "WAITING_APPROVAL" as SigilStage,
+        riskLevel: (pending.riskTier || "MEDIUM") as RiskLevel,
+        intentId: pending.intentId,
+        toolName: pending.toolName,
+      };
+    }
+
+    // Check for most recent completed
+    const executed = allIntents.find((i) => i.status === "EXECUTED");
+    if (executed) {
+      return {
+        stage: "LOGGED" as SigilStage,
+        riskLevel: (executed.riskTier || "LOW") as RiskLevel,
+        intentId: executed.intentId,
+        toolName: executed.toolName,
+      };
+    }
+
+    const rejected = allIntents.find((i) => i.status === "REJECTED");
+    if (rejected) {
+      return {
+        stage: "REJECTED" as SigilStage,
+        riskLevel: (rejected.riskTier || "MEDIUM") as RiskLevel,
+        intentId: rejected.intentId,
+        toolName: rejected.toolName,
+      };
+    }
+
+    const failed = allIntents.find((i) => i.status === "FAILED");
+    if (failed) {
+      return {
+        stage: "VIOLATED" as SigilStage,
+        riskLevel: (failed.riskTier || "HIGH") as RiskLevel,
+        intentId: failed.intentId,
+        toolName: failed.toolName,
+      };
+    }
+
+    return { stage: "IDLE" as SigilStage, riskLevel: "LOW" as RiskLevel };
+  }, [status.recentIntents]);
 
   return (
-    <div
-      className="min-h-screen"
-      style={{ backgroundColor: "oklch(0.13 0.03 260)", fontFamily: "'Outfit', sans-serif" }}
-    >
-      <NavBar />
-
-      <div className="max-w-5xl mx-auto px-4 pt-12 pb-24">
+    <div className="min-h-screen py-6 px-4">
+      <div className="max-w-4xl mx-auto space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-2xl md:text-3xl font-bold" style={{ color: "#b8963e" }}>
-              Governance Dashboard
+        <div className="flex items-center justify-between">
+          <div className="space-y-0.5">
+            <h1 className="text-lg sm:text-xl font-bold font-mono tracking-tight flex items-center gap-2">
+              <LayoutDashboard className="h-5 w-5 text-primary" /> Proxy Dashboard
             </h1>
-            <p className="text-sm mt-1" style={{ color: "#9ca3af" }}>
-              Every governed action, receipt, and ledger entry.
-            </p>
+            <p className="text-xs sm:text-sm text-muted-foreground">Welcome, {user?.name || "Operator"}</p>
           </div>
-          <button
-            onClick={() => refetch()}
-            className="px-4 py-2 rounded-lg text-xs font-semibold transition-all"
-            style={{
-              backgroundColor: "transparent",
-              color: "#b8963e",
-              border: "1.5px solid #b8963e40",
-            }}
-          >
-            Refresh
-          </button>
+          <Button variant="outline" size="sm" onClick={() => refetch()} className="font-mono text-xs gap-1">
+            <RefreshCw className="h-3 w-3" /> Refresh
+          </Button>
         </div>
 
-        {/* Stats Bar */}
-        <div className="grid grid-cols-3 gap-3 mb-8">
-          <StatCard label="Total Actions" value={stats.total} color="#b8963e" />
-          <StatCard label="Approved" value={stats.approved} color="#22c55e" />
-          <StatCard label="Denied" value={stats.denied} color="#ef4444" />
-        </div>
+        {/* Three-Power Sigil — Real-time state visualization */}
+        <ThreePowerPanel
+          stage={sigilState.stage}
+          riskLevel={sigilState.riskLevel}
+          intentId={sigilState.intentId}
+          toolName={sigilState.toolName}
+        />
 
-        {/* Chain Integrity */}
-        {data && (
-          <div
-            className="rounded-lg px-4 py-3 mb-6 flex items-center gap-2"
-            style={{
-              backgroundColor: data.chainValid ? "#22c55e10" : "#ef444410",
-              border: `1px solid ${data.chainValid ? "#22c55e30" : "#ef444430"}`,
-            }}
-          >
-            <div
-              className="w-2 h-2 rounded-full"
-              style={{ backgroundColor: data.chainValid ? "#22c55e" : "#ef4444" }}
-            />
-            <span className="text-xs font-medium" style={{ color: data.chainValid ? "#22c55e" : "#ef4444" }}>
-              Ledger Chain: {data.chainValid ? "Intact" : "Broken"}
-            </span>
-            <span className="text-xs ml-auto" style={{ color: "#6b7280" }}>
-              {entries.length} entries
-            </span>
-          </div>
-        )}
-
-        {/* Filters */}
-        <div className="flex flex-wrap gap-3 mb-6">
-          <FilterGroup
-            label="Decision"
-            options={[
-              { value: "all", label: "All" },
-              { value: "approved", label: "Approved" },
-              { value: "denied", label: "Denied" },
-            ]}
-            selected={filterDecision}
-            onChange={(v) => setFilterDecision(v as FilterDecision)}
-          />
-          <FilterGroup
-            label="Risk"
-            options={[
-              { value: "all", label: "All" },
-              { value: "low", label: "Low" },
-              { value: "medium", label: "Medium" },
-              { value: "high", label: "High" },
-              { value: "critical", label: "Critical" },
-            ]}
-            selected={filterRisk}
-            onChange={(v) => setFilterRisk(v as FilterRisk)}
-          />
-        </div>
-
-        {/* Loading */}
-        {isLoading && (
-          <div className="flex items-center justify-center py-16">
-            <div
-              className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin"
-              style={{ borderColor: "#b8963e", borderTopColor: "transparent" }}
-            />
-          </div>
-        )}
-
-        {/* Empty State */}
-        {!isLoading && filtered.length === 0 && (
-          <div className="text-center py-16">
-            <p className="text-sm mb-4" style={{ color: "#6b7280" }}>
-              No governed actions yet.
-            </p>
-            <Link
-              href="/go"
-              className="px-6 py-3 rounded-lg text-sm font-semibold no-underline transition-all inline-block"
-              style={{ backgroundColor: "#b8963e", color: "oklch(0.13 0.03 260)" }}
-            >
-              Try Your First Action
-            </Link>
-          </div>
-        )}
-
-        {/* Entry List */}
-        <div className="space-y-3">
-          {filtered.map((entry) => {
-            const risk = RISK_FROM_ACTION[entry.action] || "MEDIUM";
-            const riskColor = RISK_COLORS[risk] || "#f59e0b";
-            const icon = ACTION_ICONS[entry.action] || "\u26A1";
-            const label = ACTION_LABELS[entry.action] || entry.action;
-            const isApproved = entry.decision === "approved";
-
-            return (
-              <div
-                key={entry.block_id}
-                className="rounded-lg border p-4"
-                style={{
-                  backgroundColor: "oklch(0.16 0.03 260)",
-                  borderColor: isApproved ? "#22c55e20" : "#ef444420",
-                }}
-              >
-                <div className="flex items-start gap-3">
-                  {/* Icon */}
-                  <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center text-lg flex-shrink-0"
-                    style={{ backgroundColor: "oklch(0.2 0.03 260)" }}
-                  >
-                    {icon}
-                  </div>
-
-                  {/* Content */}
-                  <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-semibold" style={{ color: "#e5e7eb" }}>
-                        {label}
-                      </span>
-                      <span
-                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
-                        style={{
-                          backgroundColor: isApproved ? "#22c55e20" : "#ef444420",
-                          color: isApproved ? "#22c55e" : "#ef4444",
-                        }}
-                      >
-                        {isApproved ? "APPROVED" : "DENIED"}
-                      </span>
-                      <span
-                        className="px-2 py-0.5 rounded-full text-[10px] font-semibold"
-                        style={{
-                          backgroundColor: riskColor + "20",
-                          color: riskColor,
-                        }}
-                      >
-                        {risk}
-                      </span>
-                    </div>
-
-                    {/* Hashes */}
-                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1">
-                      <span className="text-[10px] font-mono" style={{ color: "#6b7280" }}>
-                        Block: {entry.block_id}
-                      </span>
-                      <span className="text-[10px] font-mono" style={{ color: "#6b7280" }}>
-                        Hash: {entry.current_hash?.slice(0, 16)}...
-                      </span>
-                    </div>
-
-                    {/* Timestamp */}
-                    <p className="text-[10px] mt-1" style={{ color: "#4b5563" }}>
-                      {entry.timestamp ? new Date(entry.timestamp).toLocaleString() : "—"}
-                    </p>
-                  </div>
+        {/* Recovery Alert */}
+        {!keys && proxy.status === "ACTIVE" && (
+          <Card className="border-amber-500/50 bg-amber-500/5">
+            <CardContent className="py-3 px-4 space-y-3">
+              <div className="flex items-start sm:items-center gap-3">
+                <AlertTriangle className="h-5 w-5 text-amber-400 shrink-0 mt-0.5 sm:mt-0" />
+                <div>
+                  <div className="text-sm font-mono font-semibold text-amber-400">No Local Keys</div>
+                  <div className="text-xs text-muted-foreground">Restore from backup or generate new keys to approve actions.</div>
                 </div>
               </div>
-            );
-          })}
+              <div className="flex flex-col sm:flex-row gap-2">
+                <Button variant="outline" size="sm" onClick={() => navigate("/recovery")} className="font-mono text-xs gap-1 border-amber-500/30 text-amber-400 hover:bg-amber-500/10 flex-1">
+                  <FileKey className="h-3 w-3" /> Restore from Backup
+                </Button>
+                <Button size="sm" onClick={() => navigate("/onboard")} className="font-mono text-xs gap-1 flex-1">
+                  <Key className="h-3 w-3" /> Generate New Keys
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* PENDING APPROVALS — Prominent mobile-first section */}
+        {pendingIntents.length > 0 && (
+          <Card className="border-amber-500/40 bg-amber-500/5 shadow-lg shadow-amber-500/5">
+            <CardHeader className="pb-2 pt-4 px-4">
+              <CardTitle className="text-sm font-mono flex items-center gap-2 text-amber-400">
+                <Bell className="h-4 w-4 animate-pulse" /> ACTION REQUIRED — {pendingIntents.length} PENDING
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-4 pb-4">
+              <div className="space-y-2">
+                {pendingIntents.map((intent) => (
+                  <button
+                    key={intent.intentId}
+                    className="w-full text-left rounded-lg border border-amber-500/30 bg-amber-500/10 hover:bg-amber-500/20 active:bg-amber-500/25 px-4 py-3 transition-colors touch-manipulation"
+                    onClick={() => navigate(`/intent/${intent.intentId}`)}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-sm font-mono font-bold text-amber-300">{intent.toolName}</span>
+                      <RiskDot tier={intent.riskTier} />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-amber-400/60">{intent.intentId}</span>
+                      <span className="text-[10px] font-mono text-amber-400 uppercase tracking-wider">Tap to review →</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* APPROVED — Ready to execute */}
+        {approvedIntents.length > 0 && (
+          <Card className="border-emerald-500/30 bg-emerald-500/5">
+            <CardHeader className="pb-2 pt-4 px-4">
+              <CardTitle className="text-sm font-mono flex items-center gap-2 text-emerald-400">
+                <Play className="h-4 w-4" /> READY TO EXECUTE — {approvedIntents.length}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="px-4 pb-4">
+              <div className="space-y-2">
+                {approvedIntents.map((intent) => (
+                  <button
+                    key={intent.intentId}
+                    className="w-full text-left rounded-lg border border-emerald-500/30 bg-emerald-500/10 hover:bg-emerald-500/20 active:bg-emerald-500/25 px-4 py-3 transition-colors touch-manipulation"
+                    onClick={() => navigate(`/intent/${intent.intentId}`)}
+                  >
+                    <div className="flex items-center justify-between mb-1.5">
+                      <span className="text-sm font-mono font-bold text-emerald-300">{intent.toolName}</span>
+                      <StatusBadge status="APPROVED" />
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-mono text-emerald-400/60">{intent.intentId}</span>
+                      <span className="text-[10px] font-mono text-emerald-400 uppercase tracking-wider">Tap to execute →</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Status Cards Row */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <Card className="bg-card border-border">
+            <CardContent className="py-3 px-4 space-y-1.5">
+              <div className="text-[10px] font-mono text-muted-foreground">PROXY STATUS</div>
+              <StatusBadge status={proxy.status} />
+              {proxy.status === "KILLED" && proxy.killReason && (
+                <div className="text-xs text-red-400 font-mono mt-1">Reason: {proxy.killReason}</div>
+              )}
+            </CardContent>
+          </Card>
+          <Card className="bg-card border-border">
+            <CardContent className="py-3 px-4 space-y-1.5">
+              <div className="text-[10px] font-mono text-muted-foreground">LEDGER HEALTH</div>
+              <div className="flex items-center gap-2">
+                {health.ledgerValid ? (
+                  <span className="flex items-center gap-1 text-emerald-400 text-xs font-mono"><ShieldCheck className="h-3.5 w-3.5" /> Valid</span>
+                ) : (
+                  <span className="flex items-center gap-1 text-red-400 text-xs font-mono"><ShieldAlert className="h-3.5 w-3.5" /> Broken</span>
+                )}
+              </div>
+              <div className="text-xs text-muted-foreground font-mono">{health.ledgerEntries} entries</div>
+              {!health.ledgerValid && (
+                <Button variant="outline" size="sm" onClick={handleResync} disabled={isResyncing} className="mt-1 font-mono text-[10px] gap-1 h-6 px-2 border-red-500/30 text-red-400 hover:bg-red-500/10">
+                  {isResyncing ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />} Resync
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+          <Card className="bg-card border-border">
+            <CardContent className="py-3 px-4 space-y-1.5">
+              <div className="text-[10px] font-mono text-muted-foreground">LOCAL STATE</div>
+              <div className="flex items-center gap-2">
+                {keys ? (
+                  <span className="flex items-center gap-1 text-emerald-400 text-xs font-mono"><Key className="h-3.5 w-3.5" /> Keys stored</span>
+                ) : (
+                  <span className="flex items-center gap-1 text-amber-400 text-xs font-mono"><Key className="h-3.5 w-3.5" /> No local keys</span>
+                )}
+              </div>
+              <div className="text-xs text-muted-foreground font-mono">{policy ? `Policy: ${policy.seedVersion}` : "No policy"}</div>
+            </CardContent>
+          </Card>
         </div>
+
+        {/* Identity Card */}
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-mono flex items-center gap-2"><Shield className="h-4 w-4 text-primary" /> IDENTITY</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+              <div>
+                <div className="text-[10px] text-muted-foreground">SEED VERSION</div>
+                <div>{proxy.seedVersion}</div>
+              </div>
+              <div>
+                <div className="text-[10px] text-muted-foreground">ONBOARDED</div>
+                <div>{new Date(proxy.onboardedAt).toLocaleString()}</div>
+              </div>
+              <div className="col-span-1 sm:col-span-2">
+                <div className="text-[10px] text-muted-foreground">PUBLIC KEY</div>
+                <div className="break-all text-muted-foreground">{proxy.publicKey.slice(0, 64)}...</div>
+              </div>
+              <div className="col-span-1 sm:col-span-2">
+                <div className="text-[10px] text-muted-foreground">POLICY HASH</div>
+                <div className="break-all text-muted-foreground">{proxy.policyHash}</div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Recent Intents (non-pending, non-approved) */}
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-3 flex flex-row items-center justify-between">
+            <CardTitle className="text-sm font-mono flex items-center gap-2"><FileText className="h-4 w-4 text-primary" /> RECENT INTENTS</CardTitle>
+            <Button variant="outline" size="sm" onClick={() => navigate("/intent/new")} className="font-mono text-xs gap-1">
+              <ArrowRight className="h-3 w-3" /> New
+            </Button>
+          </CardHeader>
+          <CardContent>
+            {otherIntents.length === 0 && pendingIntents.length === 0 && approvedIntents.length === 0 ? (
+              <div className="text-center py-4">
+                <p className="text-xs font-mono text-muted-foreground">No intents yet. Create your first governed action.</p>
+              </div>
+            ) : otherIntents.length === 0 ? (
+              <div className="text-center py-3">
+                <p className="text-xs font-mono text-muted-foreground">All recent intents are shown above.</p>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {otherIntents.map((intent) => (
+                  <div
+                    key={intent.intentId}
+                    className="flex items-center justify-between rounded-md px-3 py-2.5 bg-secondary/30 hover:bg-secondary/50 active:bg-secondary/60 cursor-pointer transition-colors touch-manipulation"
+                    onClick={() => navigate(`/intent/${intent.intentId}`)}
+                  >
+                    <div className="flex items-center gap-2 min-w-0">
+                      <RiskDot tier={intent.riskTier} />
+                      <span className="text-xs font-mono font-semibold truncate">{intent.toolName}</span>
+                    </div>
+                    <StatusBadge status={intent.status} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Recent Approvals */}
+        <Card className="bg-card border-border">
+          <CardHeader className="pb-3">
+            <CardTitle className="text-sm font-mono flex items-center gap-2"><CheckCircle2 className="h-4 w-4 text-primary" /> RECENT APPROVALS</CardTitle>
+          </CardHeader>
+          <CardContent>
+            {status.recentApprovals.length === 0 ? (
+              <div className="text-center py-4">
+                <p className="text-xs font-mono text-muted-foreground">No approvals yet.</p>
+              </div>
+            ) : (
+              <div className="space-y-1.5">
+                {status.recentApprovals.map((approval) => (
+                  <div key={approval.approvalId} className="flex items-center justify-between rounded-md px-3 py-2.5 bg-secondary/30 touch-manipulation">
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span className="text-xs font-mono text-muted-foreground truncate">{approval.approvalId.slice(0, 12)}...</span>
+                      <span className="text-xs font-mono truncate">{approval.boundToolName}</span>
+                    </div>
+                    <div className="flex items-center gap-2 shrink-0">
+                      <StatusBadge status={approval.decision} />
+                      <span className="text-[10px] font-mono text-muted-foreground">{approval.executionCount}/{approval.maxExecutions}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Sync Status */}
+        {syncData && (
+          <Card className="bg-card border-border">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-mono flex items-center gap-2"><RefreshCw className="h-4 w-4 text-primary" /> SYNC STATUS</CardTitle>
+            </CardHeader>
+            <CardContent className="text-xs font-mono space-y-1">
+              <div className="flex justify-between"><span className="text-muted-foreground">Total ledger entries:</span><span>{syncData.totalEntries}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">Chain valid:</span><span className={syncData.chainValid ? "text-emerald-400" : "text-red-400"}>{syncData.chainValid ? "Yes" : "No"}</span></div>
+              <div className="flex justify-between"><span className="text-muted-foreground">New entries since last sync:</span><span>{syncData.entries.length}</span></div>
+              <div className="pt-2">
+                <Button variant="outline" size="sm" onClick={handleResync} disabled={isResyncing} className="w-full font-mono text-[10px] gap-1 h-7">
+                  {isResyncing ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />} Full Ledger Resync
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
-
-      {/* Footer */}
-      <footer
-        className="border-t py-6 text-center text-xs"
-        style={{
-          backgroundColor: "oklch(0.1 0.02 260)",
-          borderColor: "oklch(0.72 0.1 85 / 15%)",
-          color: "#6b7280",
-        }}
-      >
-        © 2025–2026 RIO Protocol. All rights reserved.
-      </footer>
-    </div>
-  );
-}
-
-// ── Sub-components ───────────────────────────────────────────────────────────
-
-function StatCard({ label, value, color }: { label: string; value: number; color: string }) {
-  return (
-    <div
-      className="rounded-lg p-4 text-center"
-      style={{
-        backgroundColor: "oklch(0.16 0.03 260)",
-        border: `1px solid ${color}20`,
-      }}
-    >
-      <p className="text-2xl font-bold" style={{ color }}>
-        {value}
-      </p>
-      <p className="text-xs mt-1" style={{ color: "#6b7280" }}>
-        {label}
-      </p>
-    </div>
-  );
-}
-
-function FilterGroup({
-  label,
-  options,
-  selected,
-  onChange,
-}: {
-  label: string;
-  options: { value: string; label: string }[];
-  selected: string;
-  onChange: (v: string) => void;
-}) {
-  return (
-    <div className="flex items-center gap-1.5">
-      <span className="text-xs font-medium mr-1" style={{ color: "#6b7280" }}>
-        {label}:
-      </span>
-      {options.map((opt) => (
-        <button
-          key={opt.value}
-          onClick={() => onChange(opt.value)}
-          className="px-3 py-1 rounded-full text-xs font-medium transition-all"
-          style={{
-            backgroundColor: selected === opt.value ? "oklch(0.25 0.03 260)" : "transparent",
-            color: selected === opt.value ? "#e5e7eb" : "#6b7280",
-            border: selected === opt.value ? "1px solid oklch(0.72 0.1 85 / 30%)" : "1px solid oklch(0.25 0.02 260)",
-          }}
-        >
-          {opt.label}
-        </button>
-      ))}
     </div>
   );
 }
