@@ -1,0 +1,24 @@
+{
+    "id": "receipt-123",
+    "timestamp": "2026-04-01T16:00:00Z",
+    "action": {
+        "type": "send_email",
+        "details": {
+            "to": "test@example.com",
+            "subject": "Hello from RIO"
+        }
+    },
+    "ai_proposal": {
+        "model": "gpt-4",
+        "confidence": 0.95
+    },
+    "human_approval": {
+        "approved_by": "Brian",
+        "timestamp": "2026-04-01T16:01:00Z"
+    },
+    "signature": "valid_signature_placeholder",
+    "payload": {
+        "intent_hash": "abc123def456",
+        "approval_hash": "ghi789jkl012"
+    }
+}

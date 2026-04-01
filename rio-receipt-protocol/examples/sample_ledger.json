@@ -1,0 +1,20 @@
+[
+    {
+        "id": "genesis-001",
+        "timestamp": "2026-04-01T15:59:00Z",
+        "hash": "genesis_hash_placeholder",
+        "previous_hash": "0"
+    },
+    {
+        "id": "receipt-123",
+        "timestamp": "2026-04-01T16:00:00Z",
+        "hash": "valid_receipt_hash_placeholder",
+        "previous_hash": "genesis_hash_placeholder"
+    },
+    {
+        "id": "receipt-456",
+        "timestamp": "2026-04-01T16:05:00Z",
+        "hash": "invalid_receipt_hash_placeholder",
+        "previous_hash": "valid_receipt_hash_placeholder"
+    }
+]
