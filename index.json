@@ -62,7 +62,9 @@
         { "name": "RIO_Permanent_Deployment_Spec.md", "drive_id": "1nD2hxS5xvz6iiM2S7rFN2ZRqJMIiiauJ", "type": "spec" },
         { "name": "Sovereign Inversion v4.0 — Plain English", "drive_id": "11_YVzL93ytXbsdMOrE_QBBlLlOsEFruTolWhqYME_KY", "type": "document", "format": "google_doc" },
         { "name": "The Structural Read & The Dependency Trail.pdf", "drive_id": "1ToGvpvXl0wcXMjoSa-Z1ItYXOsjH7iL4", "type": "document" },
-        { "name": "mantis-component-v1.json", "type": "component_spec", "status": "draft", "title": "Mantis — Observer/Ingestion Layer Component Definition" }
+        { "name": "mantis-component-v1.json", "type": "component_spec", "status": "draft", "title": "Mantis — Observer/Ingestion Layer Component Definition" },
+        { "name": "governor-component-v1.json", "type": "component_spec", "status": "draft", "title": "Governor — Policy Evaluation and Approval Authority Component Definition" },
+        { "name": "executor-component-v1.json", "type": "component_spec", "status": "draft", "title": "Executor — Action and Recording Layer Component Definition" }
       ]
     },
     "inbox": {
