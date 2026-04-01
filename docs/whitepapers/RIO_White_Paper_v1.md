@@ -486,7 +486,7 @@ Governed execution does not slow AI systems down. It makes them accountable. Eve
 2. RIO Governance Runtime Specification v1.1. Rasmussen, B.K. March 2026. Google Drive.
 3. RIO System Architecture — Six-Primitive Kernel. Rasmussen, B.K. 2026. Google Drive.
 4. RIO Receipt Protocol v0.1. github.com/bkr1297-RIO/rio-system/rio-receipt-protocol.
-5. RIO System Overview. github.com/bkr1297-RIO/rio-system/RIO_SYSTEM_OVERVIEW.md.
+5. RIO System Overview. github.com/bkr1297-RIO/rio-system/docs/reference/RIO_SYSTEM_OVERVIEW.md.
 6. RIO Connector Architecture. github.com/bkr1297-RIO/rio-system/connectors/README.md.
 7. RIO Verification Results — 10/10 PASS. github.com/bkr1297-RIO/rio-system/DEMO_WALKTHROUGH.md.
 8. The Structural Read & The Dependency Trail. Rasmussen, B.K. March 2026. Google Drive.
