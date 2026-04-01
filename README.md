@@ -4,6 +4,7 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/bkr1297-RIO/rio-receipt-protocol">Receipt Protocol</a> &middot;
   <a href="https://rio-gateway.onrender.com/health">Gateway Status</a> &middot;
   <a href="https://riodemo-ux2sxdqo.manus.space">Live Demo</a> &middot;
   <a href="docs/ARCHITECTURE_v2.7.md">Architecture</a> &middot;
@@ -204,6 +205,24 @@ RIO implements a **fail-closed** enforcement model. The default state is deny. E
 
 ---
 
+## Open Standard: RIO Receipt Protocol
+
+The cryptographic receipt and ledger layer has been extracted into a standalone open standard:
+
+**[rio-receipt-protocol](https://github.com/bkr1297-RIO/rio-receipt-protocol)** — Receipt schema, tamper-evident ledger, verifier CLI, and conformance test suite. Zero dependencies. Any AI system can implement RIO Receipts to produce verifiable audit trails without adopting the full RIO gateway.
+
+```bash
+git clone https://github.com/bkr1297-RIO/rio-receipt-protocol.git
+cd rio-receipt-protocol
+node examples/basic-usage.mjs    # Complete flow demo
+node tests/conformance.test.mjs  # 45 conformance tests
+node cli/verify.mjs remote https://rio-gateway.onrender.com  # Verify live gateway
+```
+
+This repository (rio-system) is the reference implementation and full governance platform built on top of that protocol.
+
+---
+
 ## Status and Roadmap
 
 ### What's Built
@@ -214,6 +233,7 @@ RIO implements a **fail-closed** enforcement model. The default state is deny. E
 - Three-Power Separation: Observer, Governor, Executor with enforced boundaries
 - Demo site: Interactive 3-perspective walkthrough at [riodemo-ux2sxdqo.manus.space](https://riodemo-ux2sxdqo.manus.space)
 - Formal specifications: Receipt protocol v2.1, component schemas, policy definitions
+- Open standard: [RIO Receipt Protocol](https://github.com/bkr1297-RIO/rio-receipt-protocol) extracted as standalone repo
 - Security: 100+ verification tests, threat model with 12 vectors, 11/12 passing
 - Governing corpus: Policy definitions, agent roles, witness records
 
