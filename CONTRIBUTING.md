@@ -36,7 +36,7 @@ To contribute code, please follow these steps:
 
 ## 4. Core Invariants (Do Not Break These)
 
-The following 8 invariants are non-negotiable and any PR that violates them will be rejected. These are detailed in the [Architecture v2.7 document](docs/architecture/ARCHITECTURE_v2.7.md).
+The following 8 invariants are non-negotiable and any PR that violates them will be rejected. These are detailed in the [RIO Governance Gateway Architecture](gateway/ARCHITECTURE.md).
 
 1.  No action executes without governance evaluation.
 2.  No execution without human authorization.
