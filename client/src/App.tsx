@@ -1,75 +1,124 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/NotFound";
-import { Route, Switch } from "wouter";
+import { Route, Switch, Link, useLocation } from "wouter";
 import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
-import Demo1 from "./pages/Demo1";
-import Demo2 from "./pages/Demo2";
-import Demo3 from "./pages/Demo3";
-import HowItWorks from "./pages/HowItWorks";
-import Architecture from "./pages/Architecture";
-import UseCases from "./pages/UseCases";
-import Docs from "./pages/Docs";
-import Demo4 from "./pages/Demo4";
-import Whitepaper from "./pages/Whitepaper";
-import FAQ from "./pages/FAQ";
-import GetStarted from "./pages/GetStarted";
-import VerifyReceipt from "./pages/VerifyReceipt";
-import LedgerExplorer from "./pages/LedgerExplorer";
-import TamperDemo from "./pages/TamperDemo";
-import Demo5 from "./pages/Demo5";
-import PositionPaper from "./pages/PositionPaper";
-import Contact from "./pages/Contact";
-import Roadmap from "./pages/Roadmap";
-import TryItLive from "./pages/TryItLive";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import Go from "./pages/Go";
+import Onboard from "./pages/Onboard";
+import CreateIntent from "./pages/CreateIntent";
+import IntentDetail from "./pages/IntentDetail";
+import Ledger from "./pages/Ledger";
 import Dashboard from "./pages/Dashboard";
-import Learning from "./pages/Learning";
-import Connect from "./pages/Connect";
-import BondiApp from "./pages/BondiApp";
-import GuidedDemo from "./pages/GuidedDemo";
-import Status from "./pages/Status";
-import Chain from "./pages/Chain";
+import Receipt from "./pages/Receipt";
+import KeyRecovery from "./pages/KeyRecovery";
+import Jordan from "./pages/Jordan";
+import LearningFeed from "./pages/LearningFeed";
+import SignerManagement from "./pages/SignerManagement";
+import { KillSwitch } from "./components/KillSwitch";
+import { useAuth } from "@/_core/hooks/useAuth";
+import { Shield, FileText, PlusCircle, LayoutDashboard, BookOpen, FileKey, Bot, Brain, Menu, X, Users } from "lucide-react";
+import { useState, useEffect } from "react";
+
+function NavLink({ href, children, icon: Icon, onClick }: { href: string; children: React.ReactNode; icon: React.ComponentType<{ className?: string }>; onClick?: () => void }) {
+  const [location] = useLocation();
+  const active = location === href;
+  return (
+    <Link
+      href={href}
+      onClick={onClick}
+      className={`flex items-center gap-1.5 px-3 py-2 md:py-1.5 rounded-md text-xs font-mono uppercase tracking-wider transition-colors ${active ? "bg-primary/15 text-primary" : "text-muted-foreground hover:text-foreground hover:bg-secondary"}`}
+    >
+      <Icon className="h-3.5 w-3.5" />
+      {children}
+    </Link>
+  );
+}
+
+function AppNav() {
+  const { isAuthenticated } = useAuth();
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const [location] = useLocation();
+
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location]);
+
+  if (!isAuthenticated) return null;
+
+  return (
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-background/80 backdrop-blur-xl">
+      <div className="container flex items-center justify-between h-12">
+        {/* Logo + Desktop Nav */}
+        <div className="flex items-center gap-1">
+          <Link href="/" className="flex items-center gap-2 mr-4">
+            <img src="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/cqY2yMbuJygAXmi9W2e2t9/rio-logo_0b5ca2f5.png" alt="RIO" className="h-7 w-7 rounded-sm" />
+            <span className="font-mono font-bold text-sm tracking-wider">RIO</span>
+          </Link>
+          {/* Desktop nav — hidden on mobile */}
+          <nav className="hidden md:flex items-center gap-0.5">
+            <NavLink href="/jordan" icon={Bot}>Jordan</NavLink>
+            <NavLink href="/dashboard" icon={LayoutDashboard}>Status</NavLink>
+            <NavLink href="/intent/new" icon={PlusCircle}>Intent</NavLink>
+            <NavLink href="/ledger" icon={BookOpen}>Ledger</NavLink>
+            <NavLink href="/learning" icon={Brain}>Learning</NavLink>
+            <NavLink href="/recovery" icon={FileKey}>Recovery</NavLink>
+            <NavLink href="/signers" icon={Users}>Signers</NavLink>
+          </nav>
+        </div>
+
+        {/* Desktop kill switch + Mobile hamburger */}
+        <div className="flex items-center gap-2">
+          <div className="hidden md:block">
+            <KillSwitch />
+          </div>
+          <button
+            onClick={() => setMobileOpen(!mobileOpen)}
+            className="md:hidden p-1.5 rounded-md text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
+            aria-label="Toggle navigation menu"
+          >
+            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile dropdown menu */}
+      {mobileOpen && (
+        <div className="md:hidden border-t border-border/50 bg-background/95 backdrop-blur-xl">
+          <nav className="container py-2 flex flex-col gap-0.5">
+            <NavLink href="/jordan" icon={Bot} onClick={() => setMobileOpen(false)}>Jordan</NavLink>
+            <NavLink href="/dashboard" icon={LayoutDashboard} onClick={() => setMobileOpen(false)}>Status</NavLink>
+            <NavLink href="/intent/new" icon={PlusCircle} onClick={() => setMobileOpen(false)}>Intent</NavLink>
+            <NavLink href="/ledger" icon={BookOpen} onClick={() => setMobileOpen(false)}>Ledger</NavLink>
+            <NavLink href="/learning" icon={Brain} onClick={() => setMobileOpen(false)}>Learning</NavLink>
+            <NavLink href="/recovery" icon={FileKey} onClick={() => setMobileOpen(false)}>Recovery</NavLink>
+            <NavLink href="/signers" icon={Users} onClick={() => setMobileOpen(false)}>Signers</NavLink>
+            <div className="pt-2 border-t border-border/30 mt-1">
+              <KillSwitch />
+            </div>
+          </nav>
+        </div>
+      )}
+    </header>
+  );
+}
 
 function Router() {
-  // make sure to consider if you need authentication for certain routes
   return (
     <Switch>
-      <Route path={"/"} component={Home} />
-      <Route path={"/how-it-works"} component={HowItWorks} />
-      <Route path={"/architecture"} component={Architecture} />
-      <Route path={"/use-cases"} component={UseCases} />
-      <Route path={"/docs"} component={Docs} />
-      <Route path={"/demo1"} component={Demo1} />
-      <Route path={"/demo2"} component={Demo2} />
-      <Route path={"/demo3"} component={Demo3} />
-      <Route path={"/demo4"} component={Demo4} />
-      <Route path={"/faq"} component={FAQ} />
-      <Route path={"/get-started"} component={GetStarted} />
-      <Route path={"/whitepaper"} component={Whitepaper} />
-      <Route path={"/verify"} component={VerifyReceipt} />
-      <Route path={"/ledger"} component={LedgerExplorer} />
-      <Route path={"/tamper"} component={TamperDemo} />
-      <Route path={"/demo5"} component={Demo5} />
-      <Route path={"/position-paper"} component={PositionPaper} />
-      <Route path={"/contact"} component={Contact} />
-      <Route path={"/roadmap"} component={Roadmap} />
-      <Route path={"/try-it-live"} component={TryItLive} />
-      <Route path={"/go"} component={Go} />
-      <Route path={"/dashboard"} component={Dashboard} />
-      <Route path={"/learning"} component={Learning} />
-      <Route path={"/connect"} component={Connect} />
-      <Route path={"/app"} component={BondiApp} />
-      <Route path={"/demo"} component={GuidedDemo} />
-      <Route path={"/blog/:slug"} component={BlogPost} />
-      <Route path={"/blog"} component={Blog} />
-      <Route path={"/status"} component={Status} />
-      <Route path={"/chain"} component={Chain} />
-      <Route path={"/404"} component={NotFound} />
+      <Route path="/" component={Home} />
+      <Route path="/onboard" component={Onboard} />
+      <Route path="/dashboard" component={Dashboard} />
+      <Route path="/intent/new" component={CreateIntent} />
+      <Route path="/intent/:intentId" component={IntentDetail} />
+      <Route path="/ledger" component={Ledger} />
+      <Route path="/receipt/:executionId" component={Receipt} />
+      <Route path="/jordan" component={Jordan} />
+      <Route path="/learning" component={LearningFeed} />
+      <Route path="/recovery" component={KeyRecovery} />
+      <Route path="/signers" component={SignerManagement} />
+      <Route path="/404" component={NotFound} />
       <Route component={NotFound} />
     </Switch>
   );
@@ -81,6 +130,7 @@ function App() {
       <ThemeProvider defaultTheme="dark">
         <TooltipProvider>
           <Toaster />
+          <AppNav />
           <Router />
         </TooltipProvider>
       </ThemeProvider>

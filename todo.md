@@ -1,580 +1,413 @@
-# Project TODO
+# RIO Digital Proxy - TODO
 
-- [x] Landing page with RIO logo, title, subtitle, three demo buttons
-- [x] Deep navy background, soft gold accents, Outfit font
-- [x] Demo 1 — Human Approval Required (stepper, phone notification, receipt)
-- [x] Demo 1 — Real JSON receipt with receipt_id, action, timestamps, signature, hash
-- [x] Demo 1 — Phone notification with Approve/Deny buttons
-- [x] Demo 1 — Centered Copy Receipt button
-- [x] Demo 1 — Bold CANNOT and records every approval and denial
-- [x] Demo 2 — How RIO Enforces Approval (system diagram, live log, receipt, ledger)
-- [x] Demo 2 — Attempt Execution Without Approval button (real 403 blocked)
-- [x] Demo 3 — Audit & Proof (three-panel layout, grounding statements)
-- [x] Upgrade to full-stack (backend server + database)
-- [x] Database schema: intents, approvals, executions, receipts, ledger tables
-- [x] Backend RIO logic: Ed25519 signing, intent creation, approval, execution gating, receipt/ledger
-- [x] tRPC endpoints: createIntent, approve, deny, execute, auditLog
-- [x] Wire Demo 1 to real backend
-- [x] Wire Demo 2 to real backend
-- [x] Wire Demo 3 to real backend
-- [x] Vitest tests for RIO backend (6 tests passing)
-- [x] End-to-end browser testing all 3 demos
-- [x] Demo 2 — Stage-light pipeline (Yellow→Red→Blue→Green→White) with color transitions
-- [x] Demo 1 — Deny flow on phone notification (denial recorded, execution permanently blocked)
-- [x] Demo 3 — Responsive mobile layout (three-panel stacks vertically on small screens)
-- [x] Landing page two-column layout: left side with The Challenge, Our Approach, With RIO What Changes; right side with demo buttons
-- [x] Swap logo to new silver/gold triad knot (save old logo)
-- [x] Fix two-column layout on landing page (left text, right buttons, properly side-by-side)
-- [x] Update landing page first sentence per user's new text
-- [x] Add thin gold divider line between columns
-- [x] Update Demo 1 text with RIO system flagging and biometric approval sentence
-- [x] Move Create Intent higher on Demo 1 page
-- [x] Update Demo 2 — add "No log, no go" after Structure
-- [x] Add reset demo button on Demo 2 and pulse animation on stage lights
-- [x] Update Demo 3 — add "under the hood" and "no more black box" text
-- [x] Add reset demo button on Demo 1 and Demo 3
-- [x] Landing page: Add more spacing between the three demo buttons
-- [x] Demo 2: Fix "No log, no go" orphan text — keep on same line as "Structure"
-- [x] Demo 1: Step 1 should NOT be yellow/highlighted on page load
-- [x] Demo 1: Add message on Step 2 telling user to click Approve or Deny on the phone notification
-- [x] Demo 1: Add note near receipt that user can copy and paste into any LLM to verify authenticity
-- [x] Landing page: Add intro text above demo buttons describing the 3 proof-of-concept demos and receipt verification
-- [x] Landing page: Raise right column content to align with top of left column (not vertically centered)
-- [x] Landing page: Update intro text wording to new version
-- [x] Landing page: Rename "The Challenge" to "The Problem" and replace body text with user's new copy
-- [x] Landing page: Update "Our Approach" text with user's new copy
-- [x] Landing page: Update "With RIO, What Changes" text with user's new copy
-- [x] Demo 1: Add "(RPR Rio Protocol Receipt)" after "The system records every approval" sentence
-- [x] Landing page: Add top-left GitHub repo link with "RIO - A runtime control and audit protocol for AI and automated systems"
-- [x] Landing page: Add link to Dyad structural papers repo alongside GitHub link
-- [x] Landing page: Improve mobile responsiveness (stack columns, adjust text sizes, wrap GitHub link)
-- [x] Demo 1: Improve mobile responsiveness
-- [x] Demo 2: Improve mobile responsiveness
-- [x] Demo 3: Improve mobile responsiveness
-- [x] Shared NavBar component for site-wide navigation
-- [x] How It Works page — execution pipeline walkthrough
-- [x] Architecture page — system components and layers
-- [x] Use Cases page — enterprise governance scenarios
-- [x] Docs page — links to GitHub docs, specs, whitepaper
-- [x] Update Home.tsx to include NavBar
-- [x] Update App.tsx routing for new pages
-- [x] Integrate NavBar into all existing demo pages
-- [x] Demo 4 — Interactive Pipeline frontend (scenario selector, 8-stage visualization, risk gauge)
-- [x] Demo 4 — Backend tRPC endpoint (existing rio endpoints already cover all Demo 4 needs)
-- [x] Whitepaper page — embedded content with PDF download
-- [x] Home page — reconfigure hero with "What is RIO?" summary above the fold
-- [x] Home page — remove redundant GitHub links (NavBar handles that now)
-- [x] Update NavBar with Demo 4 and Whitepaper in Demos dropdown
-- [x] Update App.tsx routing for Demo 4 and Whitepaper pages
-- [x] Home page: Replace "What is RIO?" text with user's new governance/execution control copy
-- [x] FAQ page with 10 Q&A items
-- [x] Update NavBar and App.tsx routing for FAQ page
-- [x] Get Started page with installation steps, folder overview, and quick start commands
-- [x] Update NavBar and App.tsx routing for Get Started page
-- [x] Demo 4: Update to show v2 receipt fields (intent_hash, action_hash, verification_hash, verification_status, ISO timestamps, signature)
-- [x] Architecture page: Add v2 receipt system, hash-chain ledger, and verification step
-- [x] How It Works page: Add Stage 6b verification step and dual receipt system (v1+v2)
-- [x] Whitepaper page: Update with v2 protocol changes (cryptographic receipts, hash-chain ledger, denial receipts)
-- [x] Three-Loop Architecture: Update How It Works page with Intake/Discovery, Execution/Governance, Learning loops
-- [x] Three-Loop Architecture: Update Architecture page with new model and Intake Translation Layer
-- [x] Three-Loop Architecture: Update Whitepaper with Three-Loop model
-- [x] Three-Loop Architecture: Update Home page with new standard description
-- [x] Three-Loop Architecture: Update GitHub repo (README, specs, diagrams)
-- [x] Demo 1: Update receipt display to show v2 fields (intent_hash, action_hash, verification_hash, verification_status, risk scoring)
-- [x] Demo 2: Update receipt/ledger display to show v2 fields
-- [x] Demo 3: Update audit panel receipt display to show v2 fields
-- [x] Architecture page: Add visual Three-Loop Architecture diagram (generated image)
-- [x] Whitepaper PDF: Regenerate to match updated website content with Three-Loop Architecture
-- [x] Add interactive Verify Receipt page where users can paste a receipt JSON and verify its signature and hash chain
-- [x] Add Three-Loop Architecture diagram image to GitHub repo README
-- [x] Push Whitepaper PDF to GitHub repo under docs/
-- [x] Add "Copy Receipt JSON" button to Demo 1 receipt display (already existed)
-- [x] Add "Copy Receipt JSON" button to Demo 2 receipt display
-- [x] Add "Copy Receipt JSON" button to Demo 3 receipt display
-- [x] Add "Copy Receipt JSON" button to Demo 4 receipt display
-- [x] Build Ledger Chain Explorer page with visual hash linkage and full chain browsing
-- [x] Build Tamper Demo page that modifies a receipt field and shows verification failing
-- [x] Demo 5 — Learning Loop: Build page showing how execution outcomes feed back into policy refinement
-- [x] Receipt export: Add JSON download button to Demo 1 receipt display
-- [x] Receipt export: Add JSON download button to Demo 2 receipt display
-- [x] Receipt export: Add JSON download button to Demo 3 receipt display
-- [x] Receipt export: Add JSON download button to Demo 4 receipt display
-- [x] Receipt export: Add TXT/JSON download buttons to all demos (via shared ReceiptExport component)
-- [x] Docs page: Add v1 vs v2 receipt comparison table
-- [x] How It Works page: Update header description with new RIO definition text
-- [x] Home page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline and update "What is RIO?" with canonical definition
-- [x] How It Works page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
-- [x] How It Works page: Replace header description with new concise version
-- [x] Architecture page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
-- [x] Whitepaper page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
-- [x] GitHub README: Push latest content updates with tagline and canonical definition
-- [x] Docs page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
-- [x] Use Cases page: Add "Runtime Governance and Execution Control Plane for AI Systems" tagline
-- [x] Get Started page: Update with guided walkthrough through demos
-- [x] Position Paper page — full 12-section paper with table of contents, scroll navigation, and professional layout
-- [x] Add Position Paper to NavBar navigation
-- [x] Add Position Paper route to App.tsx
-- [x] PDF download link on Position Paper page
-- [x] Vitest test for Position Paper page rendering
-- [x] NavBar: Create Resources dropdown grouping Whitepaper, Position Paper, and Docs
-- [x] Open Graph meta tags for Position Paper page (title, description, image for social sharing)
-- [x] Position Paper: Add "Get Involved" section at bottom with link to CONTRIBUTING.md
-- [x] Generate 1200x630 OG banner image with RIO logo and tagline
-- [x] Update OG meta tags in index.html with new banner image
-- [x] Add Contact page with LinkedIn (bkr-rio) and email (Riomethod5@gmail.com)
-- [x] Add Roadmap page with protocol milestones
-- [x] Add Contact and Roadmap to NavBar/Resources dropdown
-- [x] Register Contact and Roadmap routes in App.tsx
-- [x] Vitest tests for Contact page, Roadmap page, and OG image
-- [x] Repo: Add docs/Architecture.md (from Pasted_content_75)
-- [x] Repo: Add docs/Threat_Model.md (extracted from Architecture)
-- [x] Repo: Add docs/Trust_Model.md (extracted from Architecture)
-- [x] Repo: Add docs/EGI_Technical_Assessment.pdf (position paper v2)
-- [x] Repo: Create VERSION file (v1.0.0)
-- [x] Repo: Update README with "What RIO Guarantees" section
-- [x] Repo: Update README with verification instructions
-- [x] Repo: Update README with positioning statement
-- [x] Repo: Verify /spec, /schemas, /examples, /tests, /diagrams exist and are populated
-- [x] Repo: Generate standard 12-step pipeline diagram (PNG)
-- [x] Repo: Add diagram to README, Architecture.md, and website
-- [x] Repo: Tag v1.0.0 and push
-- [x] Website: Add Architecture page with full content
-- [x] Website: Update Architecture nav link to point to new page
-- [x] Website: Vitest tests for Architecture page
-- [ ] Try It Live: Interactive demo page that submits test intents to the RIO gateway
-- [ ] Try It Live: Show real-time receipt response with formatted JSON
-- [ ] Try It Live: Add health check, test-full-flow, and verify-receipt demo modes
-- [ ] Try It Live: Add to NavBar and register route in App.tsx
-- [ ] Blog: Create blog/updates section for protocol announcements
-- [ ] Blog: Database schema for blog posts (title, content, date, slug)
-- [ ] Blog: tRPC procedures for CRUD operations
-- [ ] Blog: Blog listing page and individual post page
-- [ ] Blog: Add to NavBar/Resources dropdown and register routes
-- [ ] Custom domain: Guide user through domain setup in Settings > Domains
-- [x] /go page: Build the 30-second governance loop — intent card, Approve/Deny, receipt display, verify
-- [x] /go page: Multiple demo scenarios (Send Email, Transfer Funds, Deploy Production, Access Patient Record)
-- [x] /go page: Mobile-first responsive design with large tap targets
-- [x] /go page: Deny flow showing fail-closed gate blocking execution
-- [x] /go page: "What just happened" explainer after completion
-- [x] /go page: Links to Learn More, Try Another Scenario, Run Your Own
-- [x] /dashboard page: Receipt and action history with all past governed actions
-- [x] /dashboard page: Filterable by action type, decision, risk level
-- [x] /learning page: Decision tracking with approval rate, decision time, confidence
-- [x] /learning page: Policy suggestions after ~10 decisions (auto-approve, adjust pause)
-- [x] /learning page: Accept/reject suggested policies
-- [x] Server: Add governance router endpoints for decision history and learning analytics
-- [x] NavBar: Add /go as prominent CTA button, add Dashboard and Learning to nav
-- [x] App.tsx: Register /go, /dashboard, /learning routes
-- [x] Vitest: Tests for /go page, /dashboard page, /learning page, and new server endpoints
-- [x] Persist Policies: Create policies table in DB schema (action_type, risk_level, decision, confidence, created_at, status)
-- [x] Persist Policies: Governance engine checks policies before showing approval screen
-- [x] Persist Policies: Auto-approved/auto-denied actions still generate receipts
-- [x] Persist Policies: Receipt records decision_source (human or policy_auto)
-- [x] Persist Policies: Wire /learning Accept Policy button to persist to DB
-- [x] Persist Policies: Active policies visible on /learning page
-- [x] Gmail Execution: Wire Gmail MCP tools for real email sending after receipt + ledger
-- [x] Gmail Execution: Fail-closed order: Approve → Receipt → Ledger → Execute
-- [x] Gmail Execution: Toggle on /go page: Simulated Mode vs Live Mode
-- [x] Gmail Execution: Receipt includes execution_mode (simulated or live)
-- [x] Gmail Execution: If Gmail send fails, receipt records execution_status: failed
-- [x] Notifications: Use notifyOwner() when intent status = pending_approval
-- [x] Notifications: Notification links directly to /go page
-- [x] PWA: Add manifest.json with RIO branding
-- [x] PWA: Add service worker for offline capability
-- [x] PWA: Enable Add to Home Screen support
-- [x] PWA: Phone functions as the approval device
-- [x] Vitest: Tests for policy persistence and governance engine
-- [x] Vitest: Tests for Gmail execution flow
-- [x] Vitest: Tests for notification triggers
-- [x] Connector Architecture: Refactor execution layer into pluggable connector modules
-- [x] Connector Architecture: Create base connector interface (name, execute, verify, capabilities)
-- [x] Connector Architecture: Gmail connector module (sends email via MCP after RIO authorization)
-- [x] Connector Architecture: Calendar connector module (creates event via MCP after RIO authorization)
-- [x] Connector Architecture: Connector registry that maps action types to connectors
-- [x] Gmail Live E2E: Wire MCP gmail tools into sendGmail endpoint for real email delivery
-- [x] Gmail Live E2E: Fail-closed order enforced (receipt → ledger → connector.execute)
-- [x] Gmail Live E2E: Receipt records connector used and execution result
-- [x] Calendar Connector: Add "Create Calendar Event" scenario to /go page
-- [x] Calendar Connector: Wire MCP calendar tools for real event creation in Live mode (simulated until Calendar MCP available)
-- [x] Calendar Connector: Receipt and ledger entry generated for calendar actions
-- [x] Policy Engine: Policies apply by action type regardless of connector
-- [x] Policy Engine: Auto-approved connector actions still generate receipts and ledger entries
-- [x] Mobile PWA: Verify /go, /dashboard, /learning work as mobile control panel
-- [x] Mobile PWA: Approval notifications link to /go page
-- [x] Vitest: Tests for connector architecture (base interface, registry, gmail connector, calendar connector)
-- [x] Vitest: Tests for live Gmail execution flow
-- [x] Vitest: Tests for calendar connector execution flow
-- [x] PWA: Fix service worker cache-first strategy causing stale pages (switched to network-first for navigation)
-- [x] Connector Architecture: Add Google Drive connector module
-- [x] /go page: Add 6 scenarios (email, calendar, drive, transfer, deploy, patient) with connector badges
-- [x] Gmail Live: Finalize live Gmail execution — wire MCP gmail_send_messages into connector, receipt records execution occurred
-- [x] GitHub Connector: Create GitHub connector module (create issue, create PR, commit file)
-- [x] GitHub Connector: Wire gh CLI into server-side execution after RIO authorization
-- [x] GitHub Connector: Add GitHub scenarios to /go page
-- [x] Google Drive Live: Wire gws CLI into Drive connector for real file writes after approval
-- [x] Google Drive Live: Add live Drive scenario to /go page
-- [x] Google Calendar Live: Check available tools and wire real event creation after approval (403 scope issue — graceful fallback to simulated)
-- [x] Google Calendar Live: Add live Calendar scenario to /go page
-- [x] Onboarding: Build "Connect Your Apps" page with connection status for each connector
-- [x] Onboarding: Show Connected / Simulated / Error status per connector
-- [x] Onboarding: Add to NavBar and register route
-- [x] Notifications: Improve approval notifications for quick mobile /go page access
-- [x] Vitest: Tests for GitHub connector
-- [x] Vitest: Tests for live Drive and Calendar connectors
-- [x] Vitest: Tests for onboarding page (covered by connector registry tests)
-- [x] Branding: Update LinkedIn link to Brian/RIO LinkedIn (linkedin.com/in/bkr-rio)
-- [x] Branding: Update GitHub link to RIO GitHub repository (bkr1297-RIO/rio-protocol)
-- [x] Branding: Remove or update any Twitter/X links to RIO account (none existed)
-- [x] Branding: Update footer copyright to RIO
-- [x] Branding: Update contact email to RIO contact email (Riomethod5@gmail.com)
-- [x] Branding: Ensure all branding shows RIO as the product, not Manus
-- [x] Live Gmail: Test end-to-end live Gmail send (approve → receipt → ledger → send) — Message ID: 19d31cd0e6e52e58
-- [x] GitHub Push: Sync connector architecture to rio-system repo — commit 76d0bca pushed to main
-- [x] OAuth: Create user_connections DB table (user_id, provider, access_token, refresh_token, email, connected_at)
-- [x] OAuth: Store Google OAuth credentials (Client ID + Secret)
-- [x] OAuth: Build server-side Google OAuth start endpoint
-- [x] OAuth: Build server-side Google OAuth callback with token storage
-- [x] OAuth: Build token refresh logic for expired Google tokens
-- [x] OAuth: Build disconnect/revoke endpoint
-- [x] OAuth: Create tRPC procedures for connection management
-- [x] OAuth: Update /connect page with real OAuth connect/disconnect buttons
-- [x] OAuth: Write vitest tests for OAuth flow
-- [x] OAuth: Implement Google OAuth flow for Gmail/Drive/Calendar
-- [x] OAuth: Implement GitHub OAuth flow
-- [x] OAuth: Store tokens per user in database
-- [x] OAuth: Connector registry uses user tokens, not global tokens
-- [x] OAuth: /connect page shows "Connected as [user email/username]"
-- [x] Slack: Add Slack webhook connector (HTTP POST, no OAuth needed)
-- [x] Slack: Add Slack scenario to /go page
-- [ ] Onboarding: Build onboarding flow (Connect apps → Install app → Start using)
-- [x] Per-User Tokens: Wire Gmail connector to use per-user OAuth tokens from getValidGoogleToken()
-- [x] Per-User Tokens: Wire Google Drive connector to use per-user OAuth tokens
-- [x] Per-User Tokens: Wire Google Calendar connector to use per-user OAuth tokens
-- [x] Per-User Tokens: Fallback to simulated mode if user has no connected account (falls back to CLI, not simulated)
-- [x] GitHub OAuth: Build server-side GitHub OAuth start endpoint
-- [x] GitHub OAuth: Build server-side GitHub OAuth callback with token storage
-- [x] GitHub OAuth: Build disconnect/revoke endpoint
-- [x] GitHub OAuth: Wire GitHub connector to use per-user OAuth tokens
-- [x] GitHub OAuth: Update /connect page with GitHub connect/disconnect button
-- [x] Branding: Update LinkedIn link to Bondi/RIO owner (already linkedin.com/in/bkr-rio)
-- [x] Branding: Update GitHub link to RIO repository (bkr1297-RIO/rio-protocol)
-- [x] Branding: Update footer copyright to © 2025–2026 RIO Protocol
-- [x] Branding: Update contact email to Riomethod5@gmail.com
-- [x] Branding: Remove developer placeholder links (none found)
-- [x] Vitest: Tests for per-user token connector wiring
-- [x] Vitest: Tests for GitHub OAuth flow
-- [ ] E2E: Verify full flow — connect Google → approve → execute with user tokens → receipt → ledger → verify
-- [x] Branding: Upload Bondi triangle/orbital logo (bottom-left) as CDN asset
-- [x] Branding: Add Bondi logo to /go page header
-- [x] Branding: Add Bondi logo to /connect page header
-- [x] Branding: Keep gold knot as RIO site logo in NavBar and Home hero
-- [x] Branding: Standardize all footers to "© 2025–2026 RIO Protocol. All rights reserved."
-- [x] Branding: Verify all GitHub links point to bkr1297-RIO/rio-protocol
-- [x] Branding: Verify LinkedIn link is linkedin.com/in/bkr-rio
-- [x] Branding: Verify contact email is Riomethod5@gmail.com
-- [x] Branding: Remove any placeholder/developer links
-- [x] Bondi App: Create PWA manifest with Bondi triangle/orbital icon
-- [x] Bondi App: Generate apple-touch-icon and favicon from Bondi logo
-- [x] Bondi App: Build /app as real Bondi app with embedded views (not links to pages)
-- [x] Bondi App: Login screen when not authenticated (Bondi branding, not RIO)
-- [x] Bondi App: Sidebar navigation (Inbox, Calendar, Drive, GitHub, Chat, Chief of Staff, Approvals, Ledger)
-- [x] Bondi App: Inbox view with email list, detail, reply with AI
-- [x] Bondi App: Calendar view with events list
-- [x] Bondi App: Drive view with files list
-- [x] Bondi App: AI Chat (Ask mode) with suggested prompts and Chief of Staff (Do mode)
-- [x] Bondi App: Add "Launch Bondi" button to RIO site NavBar
-- [x] Bondi App: Register /app route in App.tsx
-- [x] Bondi App: Service worker for offline support and caching
-- [x] Bondi App: PWA manifest + meta tags for standalone display mode
-- [ ] Bondi App: Pull-to-refresh on mobile
-- [x] Bondi Workspace: Finalize PWA manifest, service worker, index.html meta tags
-- [x] Bondi Workspace: tRPC procedure — gmail.listInbox (list emails via Gmail API)
-- [x] Bondi Workspace: tRPC procedure — gmail.readEmail (read single email)
-- [x] Bondi Workspace: tRPC procedure — gmail.sendEmail (send via RIO governance)
-- [x] Bondi Workspace: tRPC procedure — calendar.listEvents (list calendar events)
-- [x] Bondi Workspace: tRPC procedure — drive.listFiles (list Drive files)
-- [x] Bondi Workspace: Build /app workspace layout (sidebar, main window, AI panel, top bar)
-- [x] Bondi Workspace: Inbox view — list emails, read email, Reply with AI
-- [x] Bondi Workspace: Calendar view — read-only event list
-- [x] Bondi Workspace: Drive view — read-only file list
-- [x] Bondi Workspace: Ask mode — AI chat panel routing to LLM APIs (ai.chat + ai.draftReply procedures)
-- [x] Bondi Workspace: Do mode — Chief of Staff action requests through RIO
-- [x] Bondi Workspace: Approval notifications in top bar
-- [x] Bondi Workspace: MVP 30-Second Trust Loop (inbox → email → reply with AI → approve → send → receipt)
-- [x] Bondi Workspace: Add Launch Bondi button to RIO NavBar
-- [x] Bondi Workspace: Vitest tests for all new tRPC procedures
-- [x] Bug Fix: Login from /app should redirect back to /app after authentication (not /)
-- [x] Bug Fix: /app login loop — after signing in, user sees sign-in screen again instead of authenticated workspace (stale Vite dep cache causing duplicate React instance crash in TRPCProvider)
-- [x] Bug Fix: /app throws "Google account not connected" error on load — gate Google data queries on connection status
-- [x] Bug Fix: /app login loop persists — fixed 3 root causes: (1) service worker stripping credentials from API fetch, (2) OAuth callback redirecting to relative path instead of full origin, (3) SDK decodeState not parsing JSON state format
-- [x] Bug Fix: Google OAuth redirect_uri_mismatch — frontend now passes window.location.origin to /start endpoint; server uses it to build callback URL matching the user's domain
-- [x] Bug Fix: Vitest sends real notification emails to owner — mocked notifyOwner in rio.policies.test.ts
-- [x] Bug Fix: RIO approval notifications say "Go to /go" with no real link — now includes proper link to /app (Bondi workspace)
-- [x] Bug Fix: Google OAuth callback fails after user authorizes — stored callbackUrl in state during /start so token exchange uses the correct redirect_uri (same fix applied to GitHub OAuth)
-- [x] Slack Connector: Create Slack webhook connector module (HTTP POST to webhook URL)
-- [x] Slack Connector: Register Slack connector in connector registry
-- [x] Slack Connector: Add Slack scenario to /go page
-- [x] Slack Connector: Add Slack section to /connect page (webhook URL configuration)
-- [x] Slack Connector: Store webhook URL per user in user_connections table
-- [x] Slack Connector: Vitest tests for Slack connector
-- [x] Slack RIO Loop: Add "Send Slack Message" scenario to /go page
-- [x] Slack RIO Loop: Scenario creates real RIO intent requiring approval
-- [x] Slack RIO Loop: After approval, system POSTs to Slack webhook via connector
-- [x] Slack RIO Loop: Receipt generated with intent_hash, action_hash, verification_hash
-- [x] Slack RIO Loop: Ledger entry written with hash chain
-- [x] Slack RIO Loop: Verification page validates receipt and ledger
-- [x] Slack RIO Loop: Approval notification sent to Slack channel with approve/deny link
-- [x] Slack RIO Loop: Vitest tests for full Slack governance loop
-- [x] Slack RIO Loop: End-to-end browser test of full loop
-- [x] Slack Interactive Approval: Add SLACK_SIGNING_SECRET env var
-- [x] Slack Interactive Approval: Build POST /api/slack/interactions endpoint
-- [x] Slack Interactive Approval: Verify Slack request signature (HMAC-SHA256)
-- [x] Slack Interactive Approval: Extract intent_id, decision, approver from Slack payload
-- [x] Slack Interactive Approval: Record approval/denial in RIO authorization system
-- [x] Slack Interactive Approval: Generate authorization receipt after approval
-- [x] Slack Interactive Approval: Execute intent after approval → execution receipt + ledger entry
-- [x] Slack Interactive Approval: Fail-closed if signature verification fails
-- [x] Slack Interactive Approval: Reject replay attacks (timestamp check)
-- [x] Slack Interactive Approval: Reject approval for non-existent intents
-- [x] Slack Interactive Approval: Update notification payload to use interactive Block Kit buttons
-- [x] Slack Interactive Approval: Ledger entries include intent_hash, authorization_hash, execution_hash, prev_hash, ledger_hash, timestamp, decision, approver_id
-- [x] Slack Interactive Approval: Vitest — approval success flow
-- [x] Slack Interactive Approval: Vitest — denial flow
-- [x] Slack Interactive Approval: Vitest — invalid signature rejected
-- [x] Slack Interactive Approval: Vitest — replay attack rejected
-- [x] Slack Interactive Approval: Vitest — approval without matching intent rejected
-- [x] Slack Interactive Approval: Vitest — ledger chain integrity after Slack approvals
-- [x] MVP: Onboarding screen — shown after first login when no apps conne- [x] MVP: Connect page refactor — Google-first with prominent cardack/others below
-- [x] MVP: Try a Governed Action page — simple, focused, Google actions prominent
-- [x] MVP: Approval screen — pending approvals with Approve/Deny buttonsi workspace
-- [x] MVP: Receipt viewer page — clean display of receipt, hashes, verify button
-- [x] MVP: History/Ledger page — table of past governed actions with receipt links
-- [x] MVP: Dashboard home — connected apps, recent actions, pending count, run new action
-- [x] MVP: Wire routing in App.tsx and navigation flow
-- [x] MVP: Vitest tests for new MVP components
-- [x] MVP: Browser end-to-end verification of full MVP flow
-- [x] Bug: Dashboard page not scrolling — fixed overflow chain with min-h-0 and native overflow-y-auto
-- [x] Bug: History verification showing all red ❌ — fixed receipt_hash fallback lookup + deterministic Ed25519 key from JWT_SECRET
-- [x] Bug: Run Action / governance step screen not scrolling — fixed by replacing ScrollArea with native overflow-y-auto throughout BondiApp.tsx
-- [x] Guided Demo: Build /demo page — public, no login required, narrated step-by-step RIO governance story
-- [x] Guided Demo: Step 1 — Intro/Setup explaining AI assistant needs human approval
-- [x] Guided Demo: Step 2 — Simulated approval request card (AI wants to send email to jane@company.com)
-- [x] Guided Demo: Step 3 — Human decision (Approve/Deny buttons with narration)
-- [x] Guided Demo: Step 4 — Execution result (approved = sent, denied = blocked)
-- [x] Guided Demo: Step 5 — Receipt display with narration explaining cryptographic proof
-- [x] Guided Demo: Step 6 — Ledger record with narration (receipts logged in Google Drive file)
-- [x] Guided Demo: Step 7 — Verification with 5 checks and narration
-- [x] Guided Demo: Bridge screen after demo — Connect Google / Enter App / Watch Again
-- [x] Guided Demo: Clean focused layout — no sidebar, no dashboard, storytelling page
-- [x] Guided Demo: Mobile-friendly design
-- [x] Landing Page: Add prominent "See How It Works" button visible without scrolling
-- [x] Landing Page: Keep existing "Launch Bondi" button
-- [x] App.tsx: Register /demo route (public, no auth required)
-- [x] Vitest: Tests for guided demo page
-- [x] Guided Demo: Add deny path narration — when user clicks Deny, show detailed story about action being blocked with its own receipt
-- [x] Guided Demo: Add trust-building messaging to Intro step — governance evolves as trust builds between you and your assistant
-- [x] Guided Demo: Add trust-building messaging to Result step — not all actions carry the same risk, you decide which need approval based on context, recipients, trust
-- [x] Navigation: Add Demo link to main nav bar so it's accessible from every page
-- [x] Rename: Change "See How It Works" to "See What RIO Makes Possible for You" in NavBar, landing page, and demo header
-- [x] Demo Intro: Lead with nutshell definition — "A governed assistant that can take real-world actions for you, but only with your approval, and it keeps a permanent record of what it did and can learn over time"
-- [x] Nav Style: Give the "See What RIO Makes Possible for You" nav link a subtle gold highlight to stand out
-- [x] Alert Step: Add animated phone notification mockup sliding in to reinforce "you get an alert on your phone"
-- [x] Demo Tracking: Add DB schema, backend procedure, and frontend counter to track demo completion and drop-off per step
-- [x] Demo Intro: Add paragraph after nutshell definition about email being just one example — cancel subscriptions, schedule meetings, submit requests, follow up — always asks before acting, always keeps a record, "what would you want it to do for you?"
-- [x] Bug: Demo intro — nutshell definition and 'email is just one example' paragraph must be the very first visible content on mobile without scrolling; removed large robot emoji card, restructured as compact text-first layout
-- [x] Bridge Screen: Add text input asking "If you had an assistant that worked this way, what would you want it to do for you?" — store responses in DB
-- [x] Progress Bar: Tighten step progress bar on mobile/phone screens — smaller circles, horizontal-only, less vertical space
-- [x] Home page: Center hero text on mobile (Runtime Intelligence Orchestration and tagline are left-aligned on phone, should be centered)
-- [x] Demo: Rename "your AI assistant" to "Bondi — Your Digital Chief of Staff" throughout the guided demo
-- [x] License: Change package.json license from MIT to UNLICENSED (proprietary)
-- [x] Bug: Fix JSX syntax error in GuidedDemo.tsx line 91 (transient esbuild error, resolved on HMR refresh)
-- [x] Microsoft OAuth: Register Azure AD app credentials (Client ID, Client Secret, Tenant ID)
-- [x] Microsoft OAuth: Build server/oauth/microsoft.ts — OAuth start, callback, token exchange, token refresh
-- [x] Microsoft OAuth: Store access + refresh tokens in user_connections (provider = microsoft)
-- [x] Microsoft Connector: OutlookMailConnector — send email, list inbox via Graph API
-- [x] Microsoft Connector: OutlookCalendarConnector — create event, list events via Graph API
-- [x] Microsoft Connector: OneDriveConnector — list files, upload file via Graph API
-- [x] Microsoft Connector: Register all connectors in connector registry
-- [x] Microsoft UI: Add "Connect Microsoft" button to /connect page with status display
-- [x] Microsoft UI: Add Outlook email, calendar, OneDrive scenarios to /go page
-- [x] Microsoft: All actions generate RIO receipts and ledger entries (connectors use same RIO governance loop as Google)
-- [x] Microsoft: Vitest tests for OAuth flow and all 3 connectors (27 tests in microsoft-integration.test.ts + 5 in microsoft-oauth.test.ts)
-- [ ] Microsoft: Browser end-to-end test of full governed flow (requires user to connect Microsoft account)
-- [x] Nav: Move "Contact" as a standalone button next to the RIO logo (left side of nav bar)
-- [x] Logo: Switch site logo to the gold rings logo from the OG social preview banner (the one users see when sharing the link)
-- [x] Font: Match the "RIO" title font to the OG banner style (Outfit 900 weight, tracking 0.2em)
-- [x] Fix: Nav bar logo too small — increased to w-10 h-10 with transparent background
-- [x] Fix: Hero logo has dark rectangular background crop artifact — re-cropped with transparent background, increased to w-32/w-40
-- [ ] Bug: Microsoft OAuth callback fails after user consents — "OAuth callback failed. Please try again." error
-- [x] Email Brian Azure OAuth fix instructions via Gmail (delivered in chat — Gmail MCP send was interrupted)
-- [x] Build RIO Governance Gateway as standalone Node.js Express service (10 endpoints, policy engine, hash-chained ledger, fail-closed)
-- [x] Push RIO Gateway to rio-system GitHub repo (commit 190ce8f pushed to main)
-- [x] Fix: Change approve/deny endpoints from publicProcedure to protectedProcedure
-- [x] Fix: Pull approver identity from ctx.user instead of frontend hardcoded string
-- [x] Fix: Store full identity (user_id, name, email, auth_provider) in approval records
-- [x] Fix: Include real approver identity in receipts
-- [x] Fix: Update frontend to stop sending hardcoded decidedBy strings
-- [x] Fix: Update all 5 test files (rio.test.ts, rio.governance.test.ts, mvp-bondi-flow.test.ts, slack-governance-loop.test.ts, slack-interactive-approval.test.ts) to use authenticated context for approve/deny
-- [x] Fix: Add identity binding regression tests (unauthenticated rejection, name/email/id fallback chain)
-- [x] All 327 tests passing after identity binding fix (21 test files)
-- [x] Write RIO Technical White Paper v2 (formal, grounded in code and specs)
-- [x] Create system architecture diagram (PNG)
-- [x] Include receipt specification JSON
-- [x] Generate final PDF output
-- [ ] Upload all artifacts to Google Drive /One/
-- [x] Commit genesis receipt (4:44 PM action) to rio-system repo docs/ (already committed by other agent as receipts/first-real-governed-action.json)
-- [x] Commit white paper v2 to rio-system repo docs/ (commit 2ee4e5d)
-- [x] Commit receipt specification v2 to rio-system repo docs/ (commit 2ee4e5d)
-- [x] Commit architecture diagram to rio-system repo docs/ (commit 2ee4e5d)
-- [x] Write and commit cross-agent handoff document to rio-system repo docs/ (commit 2ee4e5d)
+## Database & Schema
+- [x] Create proxy_users table (userId, publicKey, policyHash, seedVersion, status, onboardedAt)
+- [x] Create intents table (intentId, userId, toolName, toolArgs, argsHash, riskTier, status, blastRadius, createdAt)
+- [x] Create approvals table (approvalId, intentId, userId, decision, signature, boundToolName, boundArgsHash, expiresAt, maxExecutions, executionCount, createdAt)
+- [x] Create executions table (executionId, intentId, approvalId, result, receiptHash, preflightResults, executedAt)
+- [x] Create ledger table (entryId, entryType, payload, hash, prevHash, timestamp)
+- [x] Create tool_registry table (toolName, description, riskTier, requiredParams)
 
-## Infrastructure Upgrade Sprint (2026-03-29)
-- [x] Step 1: Build persistent append-only ledger table (hash-chained, no UPDATE/DELETE)
-- [x] Step 1: Migrate in-memory ledger operations to use persistent DB
-- [x] Step 1: Ensure hash chain integrity on every insert
-- [x] Step 2: Add Ed25519 signing to receipt generation
-- [x] Step 2: Store public key for verification
-- [x] Step 3: Build public /api/verify endpoint (receipt hash lookup + chain validation)
-- [x] Step 3: Add CORS support for cross-origin verification from protocol site
-- [x] Step 4: Add GitHub connector as second governed action type (propose PR → approval → execution → receipt)
-- [x] Step 4: Wire GitHub connector into governance pipeline with full receipt + ledger
-- [x] Step 5: Seed ledger with real 4:44 PM genesis receipt (e76156e6-34cc-43f0-83b0-69a85c86762a)
-- [x] Step 5: Include all 5 original hash values in genesis entry
-- [x] Write tests for persistent ledger, Ed25519, /verify endpoint, and GitHub connector
-- [x] Write integration instructions for protocol site owner to connect /verify
+## Server-Side API (tRPC Procedures)
+- [x] POST /onboard - User onboarding with public key + policy binding
+- [x] POST /intent - Create new intent with risk assessment
+- [x] POST /approval - Submit approval decision with Ed25519 signature binding
+- [x] POST /execute - Execute approved intent with 8 preflight checks
+- [x] GET /ledger - Retrieve full tamper-evident ledger
+- [x] GET /verify - Verify SHA-256 hash chain integrity
+- [x] POST /kill - Global kill switch to revoke all access
+- [x] GET /status/:userId - Get user proxy status and recent activity
+- [x] GET /receipt/:executionId - Get execution receipt with verification data
+- [x] POST /sync - Bidirectional state sync between client and server
 
-## Post-Sprint Coordination (2026-03-29)
-- [x] Check GitHub repo for parallel agent's recent commits and avoid conflicts
-- [x] Write /api/verify integration instructions for protocol site owner
-- [x] Push latest demo site infrastructure code to rio-system GitHub repo
-- [x] Coordinate with parallel agent via AGENT_STATUS_UPDATE_20260329.md
+## Frontend Pages
+- [x] Onboarding page with Ed25519 key generation in browser, policy selection, first intent
+- [x] Intent creation page with tool selector, risk tier display, blast radius computation
+- [x] Approval interface with signature binding details (tool + argsHash + expiry + maxExecutions)
+- [x] Execution view with 8 preflight checks display and real-time status
+- [x] Ledger viewer showing tamper-evident SHA-256 hash chain with entry details
+- [x] Status dashboard showing proxy state, recent intents, approvals, system health
+- [x] Receipt viewer with cryptographic verification UI (Ed25519 signatures + hash chain)
 
-## Phase B Preparation (2026-03-29)
-- [x] Build gateway client module (server/gateway-client.ts) — REST client for all gateway endpoints
-- [x] Gateway client: POST /intent (submit intent)
-- [x] Gateway client: POST /authorize (record approval/denial)
-- [x] Gateway client: POST /execute (execute approved action)
-- [x] Gateway client: GET /verify/:id (verify receipt)
-- [x] Gateway client: GET /ledger (get ledger chain)
-- [x] Gateway client: GET /health (health check)
-- [x] Gateway client: Auth token forwarding (JWT from demo site user)
-- [x] Gateway client: Configurable base URL via env var (GATEWAY_URL)
-- [x] Gateway client: Fail-closed — if gateway unreachable, block action (don't fall back silently)
-- [x] Gateway client: Vitest tests with mocked HTTP responses (23 tests passing)
-- [x] Upload white paper PDF to Google Drive /One/ (already present — uploaded by parallel agent)
-- [x] Upload architecture diagram to Google Drive /One/ (already present — uploaded by parallel agent)
-- [x] Upload receipt specification to Google Drive /One/ (already present — uploaded by parallel agent)
+## Global UI
+- [x] Global kill switch button accessible from every screen with confirmation dialog
+- [x] Navigation layout with persistent kill switch visibility
+- [x] Dark theme with security-focused design tokens
 
-## Phase B Wiring — Azure Gateway Live (2026-03-30)
-- [x] Verify gateway health at https://rio-protocol-gateway.azurewebsites.net/health (DNS not resolving yet — deployment pending)
-- [x] Pull and review gateway/ARCHITECTURE.md from rio-system repo (infra/HANDOFF.md not yet pushed)
-- [ ] Set GATEWAY_URL env var (waiting for permanent URL from parallel agent)
-- [x] Wire Phase B routing: governance-router.ts dispatches to gateway or internal engine
-- [x] Maintain internal engine as fallback (Phase B dual-mode — read ops fall back, write ops fail-closed)
-- [ ] Test live /verify endpoint on the Azure gateway (waiting for URL)
-- [x] Write vitest tests for Phase B governance router (25 tests — internal mode, gateway mode, fail-closed)
-- [x] Push Phase B code to rio-system GitHub repo (commit 021749c)
+## Local State (IndexedDB)
+- [x] IndexedDB store for cryptographic keys
+- [x] IndexedDB store for active policy
+- [x] IndexedDB store for last known system state
+- [x] Sync mechanism between IndexedDB and cloud ledger
 
-## Governance Router Wiring & Status Page (2026-03-30)
-- [x] Wire RIO tRPC router to import from governance-router.ts instead of rio.ts
-- [x] Initialize governance router at server startup (server/_core/index.ts)
-- [x] Add tRPC endpoint for governance health status (governanceHealth + routingMode)
-- [x] Build /status page showing governance health, routing mode, ledger stats
-- [x] Run full test suite and verify no regressions (399 tests, 25 files)
-- [x] Push to GitHub repo (commit 021749c)
+## Testing
+- [x] Server-side tests for onboard, intent, approval, execute, kill, ledger, verify
+- [x] Hash chain integrity verification test
 
-## Canonical Ledger Policy Declaration (2026-03-30)
-- [x] Commit CANONICAL_LEDGER_POLICY.json to rio-system repo docs/ (commit c42d89c)
-- [x] Surface canonical ledger policy on /status page
-- [x] Run full test suite (399 tests, 25 files)
+## Gaps to Address
+- [x] Dedicated Receipt Viewer page with signature verification status and hash-chain linkage proof
+- [x] IndexedDB sync: persist pulled ledger state to IndexedDB and push local state updates
+- [x] Non-mocked hash chain integrity test that constructs entries and verifies chain validity
 
-## Bug Fix: Fake Email Recipient (2026-03-30)
-- [x] Fix placeholder/fake email recipient in demo and Go flows
-- [x] Allow user to specify real recipient when submitting governed email actions (Go.tsx + BondiApp.tsx)
+## Key Recovery & Ledger Resync (CRITICAL)
+- [x] Database table for encrypted key backups (AES-256-GCM encrypted private key, tied to user)
+- [x] Server endpoint: POST backup encrypted key (user provides passphrase-encrypted blob)
+- [x] Server endpoint: GET retrieve encrypted key backup (returns encrypted blob for user to decrypt locally)
+- [x] Server endpoint: GET ledger resync (returns full verified ledger for device to rebuild local state)
+- [x] Frontend: Key backup flow after onboarding (prompt user to set backup passphrase, encrypt private key in browser, upload)
+- [x] Frontend: Key recovery page (enter passphrase, download encrypted blob, decrypt in browser, restore to IndexedDB)
+- [x] Frontend: Ledger resync button on Dashboard (detect broken/missing local ledger, pull full chain from server, verify, store)
+- [x] Frontend: Device sync flow combining key recovery + ledger resync into single restore process
+- [x] Frontend: Recovery banner on Dashboard when local keys are missing but server identity exists
+- [x] Tests: encrypted backup round-trip, recovery flow, ledger resync verification
 
-## Governed Corpus — Google Drive ONE/ Structure (2026-03-30)
-- [x] Check existing /One/ folder in Drive and inventory current contents
-- [x] Create ONE/root/ subfolder (already existed)
-- [x] Create ONE/root/policies/ subfolder (already existed)
-- [x] Create ONE/root/invariants/ subfolder
-- [x] Create ONE/root/receipts/ subfolder (already existed)
-- [x] Create ONE/root/journals/ subfolder (first entry: 2026-03-30-corpus-setup.md)
-- [x] Create ONE/inbox/ subfolder (new items from Brian + Perplexity land here)
-- [x] Create ONE/archive/ subfolder (old versions, deprecated policies)
-- [x] Create ONE/root/index.json — master index of all corpus contents (with Drive IDs, types, statuses)
-- [x] Create email protocol spec (EMAIL_PROTOCOL.md — RIO-ENVELOPE format) in ONE/root/
-- [x] Move existing artifacts into correct subfolders (specs→root, white paper→archive, diagrams→root)
+## Bug Fixes
+- [x] Fix: Cannot update component (`Home`) while rendering — setState called during render instead of useEffect
 
-## First Invariant (2026-03-30)
-- [x] Write INVARIANT-001: No Action Without a Receipt
-- [x] Upload to ONE/root/invariants/ in Google Drive (drive_id: 1d-MvLfIv1Z48zmwbr2o1N2j7iNeu4Hri)
-- [x] Update index.json with invariant and journal entries
+## Jordan AI Router + Node Integration + Learning Loop
+### Server-Side
+- [x] Database: learning_events table (stores every approval/rejection/execution as learning context with feedback, tags, outcome)
+- [x] Database: conversations table (stores Jordan chat sessions with user + AI messages)
+- [x] Database: node_configs table (stores which AI models are available, their API keys reference, capabilities)
+- [x] AI Node abstraction: unified interface to call Claude, GPT, or Gemini via Manus Forge with identical input/output contract
+- [x] Pass selected node/model config into invokeLLM to support actual multi-provider routing
+- [x] Jordan Router: receives user message, loads context (policy, recent learnings, active intents, user state), routes to selected AI node
+- [x] Jordan context builder: assembles system prompt from Master Seed rules + policy + recent learning events + user proxy state
+- [x] Intent extraction: AI node proposes actions as structured tool calls, Jordan converts them to HITL intents automatically
+- [x] Learning Loop: after every approval/rejection/execution, store the decision + user feedback as a learning event
+- [x] Learning Loop: feed recent learning events back into AI context on every new conversation turn
+- [x] Sentinel orientation: on session start, verify identity, load authority, check status, load context before any AI interaction
+- [x] "Where does this break?" analysis: AI must include break analysis for MEDIUM+ risk intents before submission
+- [x] Enforce breakAnalysis server-side for MEDIUM/HIGH risk intents (validation error when missing)
 
-## Receipt #3 Sync — Parallel Agent (2026-03-30)
-- [x] Pull latest repo (commit a4a65c5) and review receipt #3 chain state
-- [x] Verify Drive corpus has receipt #3 at One/root/receipts/2026-03-30-outreach-receipt3.md (uploaded)
-- [x] Update index.json with receipt #3 entry (chain_position: 3, receipt_id: a07f681b)
+### Frontend
+- [x] Jordan chat page: conversational interface where user talks to the proxy through Jordan
+- [x] Node selector: dropdown to choose which AI model (Claude/GPT/Gemini) powers the current conversation
+- [x] Intent proposal cards: when AI suggests an action, display it as an approvable intent card inline in chat
+- [x] Feedback buttons: after every AI response, thumbs up/down + optional text feedback that feeds the Learning Loop
+- [x] Learning feed: summary counts on Jordan header
+- [x] Learning Feed UI: dedicated view listing learning events with type/outcome/feedback/timestamps (/learning route)
+- [x] Sentinel banner: shows orientation status at top of Jordan chat (identity verified, policy loaded, context synced)
+- [x] Mode indicator: shows current proxy mode (Reflect/Compute/Draft/Verify/Execute) in the chat header
 
-## Three Tasks Sprint (2026-03-30)
-- [x] Write INVARIANT-002: No Modification Without a Governance Receipt
-- [x] Upload INVARIANT-002 to Google Drive ONE/root/invariants/
-- [x] Update index.json with INVARIANT-002
-- [x] Build /chain receipt chain visualizer page
-- [x] Add tRPC endpoint for chain visualization data (reuses existing ledgerChain endpoint)
-- [x] Add /chain route to App.tsx and NavBar
-- [x] Run full test suite (408 tests passing, 26 files)
-- [x] Push to GitHub repo (commit c95d325, force-pushed to sync)
+### Tests
+- [x] Test: AI node abstraction returns structured response from each provider (via extractResponseText)
+- [x] Test: Jordan router builds correct context from Master Seed + learning events (buildJordanSystemPrompt)
+- [x] Test: Intent extraction converts AI tool calls to HITL intents (extractIntents)
+- [x] Test: Learning Loop stores feedback and includes it in subsequent context (createLearningEventPayload)
 
-## Auth Gate for /go Page (2026-03-30)
-- [x] Add sign-in requirement to /go page
-- [x] Show auth gate UI when user is not authenticated
-- [x] Bind approver identity to authenticated user session
-- [x] Run tests and save checkpoint (408 tests passing)
+## Phase 2: Activate the Hands (Real Tool Execution) — Architect Directive v1
+### CRITICAL: Connectors
+- [x] Integrate Gmail API connector (send/read email via approved intents) — see Core Loop section
+- [x] Integrate Google Drive connector (read/write/search files via approved intents) — see Core Loop section
+- [x] Integrate Web Search connector (search the web via approved intents) — see Core Loop section
 
-## /go Page UX Fixes (2026-03-30)
-- [x] Fix notification email URL — now includes both /go and /app links
-- [x] Investigate and fix grayed-out approve/deny buttons — root cause: approve/deny are protectedProcedure, auth gate now prevents unauthenticated access
-- [x] Improve /go page UX — added identity badge, decision-required banner above buttons
+### CRITICAL: Execution Loop
+- [x] Wire approved intents to trigger real-world API calls through RIO control plane — see Core Loop section
+- [x] Ensure every MEDIUM/HIGH tool call is an extracted intent that awaits human cryptographic 'Yes' (LOW risk auto-approved by policy) — enforced by dispatchExecution
+- [x] Do not allow 'Thinking Mode' to bypass the RIO Governance Kernel — all execution goes through connector dispatch
 
-## BUG: Approve/Deny buttons not appearing on /go (2026-03-30)
-- [x] Diagnose: SUBMIT button condition was editableParams["to"] === "" (hid button once user typed); checkPolicy used wrong tRPC input format
-- [x] Fixed both bugs — SUBMIT stays visible, checkPolicy uses batch format, approve/deny buttons appear correctly
+### MANDATORY: Receipts
+- [x] Post-execution SHA-256 hash must be recorded for every real tool execution — see Core Loop section
+- [x] Receipt includes execution result, timestamp, and proof of approval chain — see Core Loop section
 
-## Manus-Claude Coordination Infrastructure (2026-03-30)
-- [ ] Create Gmail label RIO-Claude-Tasks
-- [ ] Create Google Drive coordination file at ONE/root/manus-sync/coordination.json
-- [ ] Send first test task email to Claude via Gmail
+### MANDATORY: Fail-Closed
+- [x] Verify ARGS_HASH_MISMATCH blocks execution drift (approved args != execution args = HALT) — tested in connectors.test.ts
+- [x] Fix: ARGS_HASH_MISMATCH false positive caused by MySQL JSON key reordering — use stored argsHash instead of recomputing from DB-returned JSON
+- [x] All connector failures must fail closed (no partial execution, no silent errors) — tested in connectors.test.ts
 
-## INTEGRATION_MAP.md — Manny Assignment (2026-03-30)
-- [x] Read Romney's gateway routes from GitHub (rio-system/gateway/routes/index.mjs)
-- [x] Catalog all 10 simulated connectors in demo site with endpoints and data shapes
-- [x] Write INTEGRATION_MAP.md with full mapping, gaps, and migration plan
-- [x] Push INTEGRATION_MAP.md to rio-system GitHub repo (commit b166bea)
-- [x] Download, update, and re-upload manus-sync.json on Google Drive (v1.4 → v1.5)
-- [x] Verify sync file changes landed (confirmed: TASK-011 COMPLETE, MSG-010 STATUS_UPDATE, Jordan ACTIVE)
+### Gemini API Testing
+- [x] Create Gemini API demo script testing capabilities through Manus Forge
+- [x] Document Gemini capabilities brief for RIO integration planning
 
-## Gateway Client Adapter & /verify Page (2026-03-30)
-- [x] Build gateway-client.ts adapter — ALREADY EXISTS with full 6-step pipeline, Ed25519, fail-closed
-- [x] Handle /govern step, two-step execution, and Ed25519 — all implemented in gateway-client.ts
-- [x] Wire governance-router.ts — ALREADY WIRED with dual-mode dispatch (internal/gateway)
-- [x] Build /verify page — ALREADY EXISTS at VerifyReceipt.tsx with 3 modes (receipt, ledger, lookup)
-- [x] Add /verify route — ALREADY IN App.tsx and NavBar under Demos dropdown
-- [x] Tests — ALREADY EXIST: gateway-client.test.ts (18KB) and governance-router.test.ts (17KB)
-- [x] Run full test suite (408 tests passing, 26 files)
-- [x] Push to GitHub (commit 6a0357c) and save checkpoint (6a0357c5)
-- [x] Update manus-sync.json on Google Drive (v1.5 → v1.6, MSG-011 STATUS_UPDATE, WS-007 updated with 11 completed items)
+## Master Seed v1.1 Integration
+- [x] Save Master Seed v1.1 JSON to shared/master-seed-v1.1.json (canonical source of truth)
+- [x] Update Jordan system prompt (MASTER_SEED_RULES) to reflect v1.1 — add Robot mode, Phase 2 directive, updated end-goal, corpus anchoring
+- [x] Update ProxyMode type to include ROBOT mode
+- [x] Update mode detection to include Robot mode triggers
+- [x] Update frontend mode selector to include Robot mode
+- [x] Add Phase 2 directive constants to shared/master-seed-v1.1.json for cross-module access
 
-## Round 2 — Manny's Orders (2026-03-30)
-- [x] TASK-018: Build Guided Walkthrough mode for /go governance flow
-  - [x] Add walkthrough toggle/button to /go page
-  - [x] Create step-by-step narration for each of the 7 pipeline stages
-  - [x] Show explanatory overlays/banners as each stage activates
-  - [x] Make it clear what RIO is doing and why at each step
-- [x] TASK-019: Mobile-responsive polish across all routes
-  - [x] /go — mode toggle stacks vertically, reduced padding, AI badge wraps, scenario pills tighter
-  - [x] /chain — stats bar stacks vertically on small screens
-  - [x] /ledger — chain status bar stacks, block headers wrap, hash links wrap
-  - [x] /verify — tab labels shortened on mobile, lookup row stacks vertically
-  - [x] /app — already had mobile support (w-full sm:w-80 panel, mobile menu)
-  - [x] /dashboard — already had mobile support (useIsMobile hook, sticky header)
-- [ ] TASK-016: Connect frontend to production URL (PENDING — activates when Damon marks TASK-015 COMPLETE)
+## Phase 2 Core Loop: intent → approval → execution → receipt → ledger
+### Connector Abstraction
+- [x] Connector interface: unified execute(toolName, toolArgs, approvalProof) → ConnectorResult
+- [x] Register tools in tool_registry DB: web_search (LOW), read_email (MEDIUM), draft_email (MEDIUM), send_email (HIGH), drive_read (MEDIUM), drive_search (LOW), drive_write (HIGH)
+- [x] Risk tier definitions from Brian: LOW=[search, read-only, draft], MEDIUM=[read email, download, edit docs], HIGH=[send email, delete/move files, money, sign]
+
+### RIO Execution Loop
+- [x] Wire approved intent → connector dispatch: execution procedure calls connector.execute() with approval proof
+- [x] ARGS_HASH_MISMATCH enforcement: SHA-256(toolArgs at approval) must equal SHA-256(toolArgs at execution) or HALT
+- [x] Fail-closed on any connector error: no partial execution, no silent errors, error recorded to ledger
+- [x] HIGH risk requires explicit approval every time (no auto-approve)
+
+### Connector Implementations (Manus Forge APIs)
+- [x] Gmail send_email connector via Forge API (true fail-closed)
+- [x] Gmail read_email connector via Forge API (true fail-closed)
+- [x] Gmail draft_email connector via Forge API (true fail-closed)
+- [x] Google Drive read/search/write connectors via Forge API (true fail-closed)
+- [x] Web Search connector via Forge API (true fail-closed)
+
+### Receipts + Ledger
+- [x] SHA-256 receipt generated after every real execution (includes result, executionId, intentId)
+- [x] Receipt written to ledger as EXECUTION entry with full hash chain linkage
+- [x] Receipt visible in UI (execution view + receipt viewer) — IntentDetail links to receipt, ExecutedReceiptLink for DB-loaded intents
+
+### Tests
+- [x] Test: ARGS_HASH_MISMATCH blocks execution when args differ (connectors.test.ts)
+- [x] Test: Connector dispatch routes to correct connector based on toolName (connectors.test.ts)
+- [x] Test: Receipt SHA-256 includes execution result + approval proof (connectors.test.ts)
+- [x] Test: Fail-closed on connector error (no partial execution) (connectors.test.ts)
+
+### Definition of Done (from Brian)
+- [x] Full lifecycle works: create intent → system assigns risk → user approves → system executes real action → receipt generated → receipt in ledger → receipt visible in UI (RECEIPT HASH VALID + CHAIN LINK VALID confirmed)
+- [x] Mobile responsive code implemented — hamburger nav, collapsible Jordan sidebar, responsive sentinel banner
+- [ ] Verify phone UX on real device: responsive code is in place (hamburger nav, sidebar toggle, flex-wrap) but sandbox viewport is fixed at 1280px — Brian must test on phone
+- [x] Recovery UI verified: all 3 tabs render, server backup detected, resync returns 14 entries
+- [ ] Full restore E2E: enter passphrase → decrypt → keys in IndexedDB → policy restored → ledger synced → approval works (requires Brian's passphrase)
+
+## Logo + Corpus + Gmail Fix
+- [x] Upload sacred geometry icon (IMG_6712.PNG) as app logo and favicon
+- [x] Clone rio-system repo and read corpus/foundation-v1 branch content
+- [x] Integrate corpus files (policy-v0.3.json, identity, directives, witness records, build specs) into shared/corpus/
+- [x] Update Jordan system prompt with Policy v0.3 GREEN/YELLOW/RED zones from corpus
+- [x] Fix send_email red error: wired via notifyOwner transport (not Gmail API — delivers to owner via Manus notification)
+- [x] Wire draft_email as LIVE connector (returns draft content, never sends)
+- [x] Unit tests: 24 connector tests in connectors.test.ts (send_email, draft_email, DEFERRED, ARGS_HASH_MISMATCH, receipts)
+- [x] Browser E2E: verify send_email intent → approval → execute → receipt → ledger with notifyOwner path
+- [ ] True Gmail OAuth connector: replace notifyOwner transport with real Gmail API (requires Google Cloud project + OAuth consent)
+
+## Ledger Hash Chain Verification Fix
+- [x] Fix: Ledger chain verification fails (CHAIN BROKEN) due to MySQL JSON key reordering — same root cause as ARGS_HASH_MISMATCH
+- [x] Server-side: canonicalJsonStringify function sorts keys recursively before hashing — deterministic across MySQL round-trips
+- [x] Client-side: verification calls server-side verifyHashChain via tRPC (already uses canonical JSON)
+- [x] Verify chain shows CHAIN VALID after fix — 20 entries verified, no tampering detected
+
+## Twilio SMS Connector
+- [x] Store Twilio credentials (Account SID, Auth Token, Phone Number, Messaging Service SID) as secrets — validated active
+- [x] Register send_sms tool in tool registry with HIGH risk tier (blast radius 8, params: to, body)
+- [x] Build Twilio SMS connector in connectors.ts behind governance gate
+- [x] Add send_sms to frontend CreateIntent form with to/body fields (dynamic from tool registry)
+- [x] Write vitest tests for SMS connector — 97 tests pass (4 new SMS tests: missing to, missing body, missing creds, HIGH risk enforcement)
+- [x] E2E test: Intent → Approve → Execute → SMS delivered → Receipt → Ledger — INT-1Z2_DMxKzV8YCzWI, messageSid SM1dDd3ca4a1ee63dd3768432d650ae95f, twilioStatus: accepted, 8/8 preflight PASS
+
+## Bugs / Issues
+- [x] SMS not delivered to +18014555810 — diagnosed: toll-free blocked (30032), local blocked by 10DLC (30034). Requires A2P registration.
+- [x] Publish fails with S3 PutObject 429 rate limit error — transient Manus infra issue, retry resolves
+
+## Architecture Logs + Local Twilio Number
+- [x] Get local Twilio number (non-toll-free) to fix SMS delivery — (801) 457-0972 purchased, SMS+MMS+Voice
+- [x] Update TWILIO_PHONE_NUMBER secret with new local number — +18014570972
+- [x] Resend SMS to +18014052174 (verified number) — DELIVERED from +18014570972, no errors. +18014555810 blocked by 10DLC.
+- [x] Create /docs/architecture/ in repo and store RIO_Architecture_Log_2026-03-31.json
+- [x] Add ARCHITECTURE_STATE ledger entry type to the system — schema migrated, appendLedger updated, logArchitectureState tRPC mutation added
+- [x] Mirror architecture log to Google Drive One/root/architecture/ — folder created, file uploaded (id: 1jgFqEhzg8ZSuif_0gqtRUpskCNYKhCtD)
+- [x] Push architecture docs to GitHub repo bkr1297-RIO/rio-system — pushed to feature/hitl-proxy branch
+
+## RIO System Icon
+- [x] Generate RIO system icon from JSON spec (dark bg, center point, triangle, hexagon, outer ring, gold loop line) — v2 generated
+- [x] Upload to CDN — URL ready. User sets in Settings > General.
+
+## SMS From-Number Fix (Connector Bug)
+- [x] Fix connector to stop using Messaging Service SID — hardcoded From: +18014570972
+- [x] Verify via Twilio API that SMS sends from local number — confirmed from: +18014570972
+- [x] Resend first governed SMS to +18014052174 — DELIVERED (status: delivered, no error). +18014555810 requires 10DLC registration.
+
+## Current Issues (Brian reported)
+- [x] Published site still shows broken ledger — re-migrated all 48 entries, CHAIN VALID, needs re-publish
+- [x] Second email verified delivered — "RIO System Live - Loop Confirmed" sent Mar 31 10:58 PM UTC from riomethod5@gmail.com to bkr1297@gmail.com, confirmed in Gmail sent folder
+- [x] Investigate Telegram as RIO control plane channel — docs/telegram-control-plane-investigation.md written. Strong fit: inline keyboard for APPROVE/REJECT, node-telegram-bot-api (v0.67.0), ~200 LOC. Blocked on: Brian creates RIO bot via @BotFather + provides bot token + chat ID.
+
+## Mobile Approval Flow
+- [x] Audit mobile UX on key pages (dashboard, intent list, intent detail, approve, ledger)
+- [x] Dashboard: pending intents at top with ACTION REQUIRED banner, pulsing bell, large tap targets, risk dots
+- [x] Fix mobile nav — hamburger menu already in place, responsive breakpoints solid
+- [x] Fix mobile intent detail — fixed bottom action bar with 48px approve/execute buttons, touch-manipulation, backdrop-blur
+- [x] Fix mobile ledger — break-all for hashes, whitespace-pre-wrap for JSON payloads
+- [x] Test full mobile approval flow end-to-end — 97 tests pass, UI verified in browser
+
+## E2E Mobile Verification (Brian Required)
+- [ ] Brian: test full mobile approval flow on real phone — open riodigital-cqy2ymbu.manus.space, approve pending intent, execute, verify receipt
+- [x] Add E2E vitest covering approve→execute governance flow (11 steps: onboard, create HIGH intent, block without approval, approve, verify status, execute with 8/8 preflight, verify receipt hash, verify ledger entries, block re-execution, reject flow, kill switch) — 108 tests pass
+
+## Close The Loop — Control Plane (Andrew's Spec)
+### A1: Make intent envelope first-class
+- [x] Define canonical intent envelope schema (intent_id, request_id, source_type, source_id, actor_id, timestamp, nonce, action_type, target, parameters, context, correlation_id, policy_version_target, metadata)
+- [x] Canonicalize envelope for deterministic hashing (canonicalJsonStringify + hashEnvelope)
+
+### A2: Separate verification from governance
+- [x] Create verification layer that runs BEFORE policy evaluation (verifyIntentEnvelope)
+- [x] Reject malformed, expired, replayed, unsigned-when-required, or unauthorized requests
+- [x] Emit explicit verification_result object (verification_id, intent_hash, schema_valid, auth_valid, signature_valid, ttl_valid, nonce_valid, replay_check, verified, failure_reasons, timestamp)
+
+### A3: Formalize governance decision object
+- [x] Create governance_decision artifact (decision_id, intent_hash, verification_id, policy_version, risk_score, risk_level, decision, required_approvals, reasons, blocking_conditions, timestamp)
+
+### A4: Enforce explicit human authorization boundary
+- [x] Capture approver identity, approval payload, signed/authenticated approval artifact, timestamp, decision rationale
+- [x] Silence equals refusal — no implied approval (validateApproval)
+
+### A5: Add execution token and final preflight gate
+- [x] Issue single-use execution token after successful approval or auto-approval (issueExecutionToken)
+- [x] Bind token to intent hash, action hash, policy version, TTL, nonce, target
+- [x] Execution gate must verify token before connector call (executeGatePreflight — 8 checks)
+
+### A6: Produce receipt/witness artifact
+- [x] Receipt links to intent, governance, approval, execution, and verification artifacts (generateWitnessReceipt)
+- [x] Include timestamps, outcome, external response IDs, verification status, hashes, chain_of_custody
+
+### A7: Append full chain to immutable ledger
+- [x] Ledger entry stores receipt_hash, previous_ledger_hash, current_hash, block_index, timestamp (buildFormalLedgerEntry)
+- [x] Append only, no overwrite, chain validation in tests
+
+### A8: Close learning loop safely
+- [x] Build analytics over ledger and receipts (runLearningLoopAnalysis)
+- [x] Generate reports: false positives, false negatives, approval bottlenecks, execution failures, policy misses, repeated override patterns
+- [x] Output policy recommendations — no auto-change to live policy without explicit approved promotion (mutates_live_policy=false invariant)
+- [x] Wire learning.analyze tRPC endpoint to serve analysis from UI
+
+### Required Tests (all 9) — 34 tests in controlPlane.test.ts
+- [x] T1: malformed_intent_fails_before_governance (5 assertions)
+- [x] T2: expired_or_replayed_intent_fails_verification (4 assertions)
+- [x] T3: low_risk_intent_auto_approves_and_executes_through_gate (2 assertions)
+- [x] T4: high_risk_intent_blocks_without_human_approval (3 assertions)
+- [x] T5: approval_for_one_intent_cannot_be_reused_for_another (3 assertions)
+- [x] T6: execution_without_valid_token_is_denied (4 assertions)
+- [x] T7: successful_execution_generates_receipt_and_ledger_entry (4 assertions)
+- [x] T8: ledger_chain_validation_detects_tampering (3 assertions)
+- [x] T9: learning_loop_reads_ledger_and_emits_recommendations_without_mutating_live_policy (5 assertions)
+
+### Definition of Done — ALL PROVEN
+- [x] Single intent traceable end-to-end from proposal to receipt (DEMO test)
+- [x] System blocks execution when verification fails (T1, T2)
+- [x] System blocks execution when policy requires approval and no approval exists (T4)
+- [x] System binds approval to the exact intended action (T5)
+- [x] System emits verifiable receipt after execution (T7)
+- [x] System appends tamper-evident ledger entry (T7, T8)
+- [x] System runs learning analysis over completed records (T9)
+- [x] Demo/test proves full closed loop in one flow (DEMO: traces single HIGH-risk intent end-to-end)
+
+## First-Light Bring-Up Plan (Andrew's Operational Checklist)
+### Issue: Onboarding Loop + Broken Ledger + No Local Keys
+- [x] Fix onboarding loop — re-key flow added: Onboard.tsx detects already-onboarded, offers Generate New Keys or Restore from Backup
+- [x] Ensure key generation completes and persists to IndexedDB — Onboard.tsx saves to IndexedDB via useLocalStore, re-key auto-syncs ledger
+- [x] Fix ledger health — Dashboard auto-syncs on load, re-key auto-resyncs, Resync button on ledger health
+- [x] Verify hash chain — server-side verifyHashChain uses canonicalJsonStringify, chain valid across MySQL round-trips
+- [x] Ensure backup/recovery material created after onboarding — Onboard.tsx prompts backup passphrase after key generation
+- [x] Run governed action E2E (first-light-e2e.test.ts): gmail_send intent → policy → approval → 8/8 preflight → execution → receipt → ledger — 12 steps, all pass
+- [x] Confirm receipt and ledger entry independently verified — Steps 7-9: receipt hash is valid SHA-256, ledger contains EXECUTION entry, hash chain valid, 154 total tests pass
+
+## Three-Power Separation Architecture (Brian's v1.0 Spec)
+### Principle: "No component should be trusted because of what it is supposed to do; each component must be restricted by what it is technically impossible for it to do."
+
+### Phase 1: RBAC Boundaries (enforce identity separation)
+- [x] Define Observer/Governor/Executor roles as typed constants with explicit permission sets (PERMISSIONS matrix in threePowers.ts)
+- [x] Observer: canRead, canAssessRisk, canSendSignals, canReadFullState — approve()/execute() throw POWER_VIOLATION
+- [x] Governor: canApprove, canSign — execute()/readFullState() throw POWER_VIOLATION
+- [x] Executor: canExecute, canWriteLedger — approve()/sign()/readFullState() throw POWER_VIOLATION
+- [x] Runtime RBAC via checkPermission() — returns {allowed, reason} for every operation
+- [x] Component identity: each power has componentId, Ed25519 keypair (Governor), and typed power role
+
+### Phase 2: Queue-Based Message Flow + Signing
+- [x] Observer → Governor signal queue: PowerQueue<ObserverSignal> with sender=OBSERVER, receiver=GOVERNOR
+- [x] Governor → Executor approval queue: PowerQueue<GovernorApproval> with sender=GOVERNOR, receiver=EXECUTOR
+- [x] Cryptographic signing: Governor signs with Ed25519 (@noble/ed25519 v3), Executor verifies via verifyApprovalSignature()
+- [x] Queue isolation: wrong power enqueue/dequeue throws QUEUE_VIOLATION — 7 tests prove all boundary violations
+
+### Phase 3: One Closed-Loop Governed Action (THE FINISH LINE)
+- [x] Prove one full loop: executeThreePowerLoop() — Observer assesses → Governor signs → Executor verifies+executes → receipt → ledger
+- [x] Receipt independently verifiable: SHA-256 receipt_hash matches /^[a-f0-9]{64}$/
+- [x] Ledger entry links all artifacts: prev_hash, current_hash, block_index, receipt_hash — chain proven across 2 consecutive loops
+
+### Phase 4: Dashboard Visualization Connected to Real State
+- [x] Sigil-based dashboard showing real-time state of the three powers (ThreePowerSigil.tsx + ThreePowerPanel)
+- [x] Color intensity for risk (cool=LOW emerald, amber=MEDIUM, red=HIGH) — center orb radiates risk color
+- [x] Pulsing rays for "Waiting for Approval" — Governor hex pulses, GOV indicator has animated dot
+- [x] Solidified geometry on "Approved" — Governor turns emerald, no pulse
+- [x] Energy flow on "Executed" — Executor gear spins, indigo glow
+- [x] Chain link illumination on "Logged" — chain links + connection line illuminate gold
+- [x] Visual breaks/dimming on violations/expirations — VIOLATED: red flash on all powers; EXPIRED: full dim
+- [x] Clear visual separation of Observer/Governor/Executor panels — OBS/GOV/EXEC indicators + labeled SVG vertices
+- [x] Connected to real system state via useMemo over status.recentIntents — maps PENDING_APPROVAL/APPROVED/EXECUTED/REJECTED/FAILED to sigil stages
+
+### Tests Required — ALL 35 PASS (threePowers.test.ts)
+- [x] Test: Observer cannot execute or approve (POWER_VIOLATION throws)
+- [x] Test: Governor cannot execute (POWER_VIOLATION throws)
+- [x] Test: Executor cannot approve or observe full state (POWER_VIOLATION throws)
+- [x] Test: Unsigned/tampered approval is rejected by Executor (SIGNATURE_INVALID)
+- [x] Test: Full closed-loop: one HIGH-risk intent through all three powers with receipt + ledger
+- [x] Test: Tampered approval signature is rejected (verifyApprovalSignature returns false)
+- [x] Test: Action hash mismatch blocks execution (parameters changed after approval)
+- [x] Test: Queue isolation — 7 boundary violation tests
+- [x] Test: Rejection stops at GOVERNANCE, Executor queue empty
+- [x] Test: Two consecutive loops produce valid hash chain
+- [x] 189 total tests pass across 13 files
+
+## Romney Spec Conformance Audit
+- [x] Pull Romney's specs from GitHub (PR #82 docs/spec-and-architecture + commit bba7ee3 key recovery)
+- [x] Audit threePowers.ts against THREE_POWER_SEPARATION.md — docs/conformance-audit.md written, 10 gaps identified, 5 fixed
+- [x] Add Receipt Spec v2.1 fields to ExecutorResult: ingestion provenance, identity_binding, receipt_type, full hash_chain
+- [x] Fix Observer/Governor ledger append permissions per TPS-001 §7 — canWriteLedger=true for all three powers
+- [x] Audit MANTIS_COMPONENT.md against Observer role constraints — conformance verified, ingestion metadata gap noted
+- [x] Map tRPC endpoints against API_CATALOG_v2.7.md — docs/api-endpoint-mapping.md written. 22 covered, 2 different approach, 14 not needed (gateway-only), 3 gaps (signer list/detail/revocation), 2 minor gaps
+- [x] 191 tests pass across 13 files after all conformance fixes
+
+## Signer Management + Re-key Hardening + Telegram Bot
+### Signer Management Endpoints
+- [x] Add listSigners tRPC query — owner-only, returns all signers with metadata, backup status, intent count
+- [x] Add getSignerDetail tRPC query — full signer info with intents, approvals, backup status, fingerprint
+- [x] Add revokeSigner tRPC mutation — suspend signer + log REVOKE to ledger, blocks already-revoked
+- [x] Add REVOKE, RE_KEY_AUTHORIZED, RE_KEY_FORCED, TELEGRAM_NOTIFY to ledger entryType enum + migration applied
+
+### Re-key Hardening
+- [x] Require old-key signature on re-key mutation — AUTHORIZED re-key with oldKeySignature proof
+- [x] If no old key: recoveryProof (fingerprint match) or owner emergency override; non-owner without proof rejected
+- [x] Log RE_KEY_AUTHORIZED vs RE_KEY_FORCED distinction in ledger with verification detail
+- [x] Onboard.tsx: sign new public key with old private key when available (signData import)
+
+### Telegram Bot Module (pre-built, token-ready)
+- [x] Create server/telegram.ts — full bot module with intent notification + inline APPROVE/REJECT keyboard
+- [x] Format intent notifications: risk emoji, tool name, blast radius, args preview, 15-min silence=refusal
+- [x] handleWebhookUpdate + parseCallbackData for callback queries
+- [x] editMessageAfterDecision removes buttons and shows APPROVED/REJECTED
+- [x] TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID added to env.ts
+- [x] isTelegramConfigured() returns false when no credentials — safe to import
+- [x] TELEGRAM_NOTIFY ledger entry type for audit trail
+- [x] Long-polling mode (startPolling/stopPolling) for development
+- [ ] Blocked on: Brian creates bot via @BotFather + provides TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID
+
+### Tests — 17 new tests in signer-telegram.test.ts
+- [x] Test: listSigners returns registered users with metadata
+- [x] Test: listSigners rejects non-owner callers
+- [x] Test: getSignerDetail returns full info + backup status
+- [x] Test: getSignerDetail throws for non-existent signer
+- [x] Test: revokeSigner suspends + logs REVOKE entry
+- [x] Test: revokeSigner rejects already-revoked signer
+- [x] Test: re-key with old signature → RE_KEY_AUTHORIZED
+- [x] Test: re-key with recovery proof → RE_KEY_FORCED
+- [x] Test: re-key with mismatched proof → rejected
+- [x] Test: owner emergency override → RE_KEY_FORCED
+- [x] Test: non-owner without proof → rejected
+- [x] Test: re-key for non-onboarded user → error
+- [x] Test: isTelegramConfigured false when no credentials
+- [x] Test: parseCallbackData parses approve/reject/details
+- [x] Test: parseCallbackData null for invalid data
+- [x] 208 total tests pass across 14 files
+
+## Telegram Auto-Notification + Signer Management UI
+### Telegram Auto-Notification Hook
+- [x] Wire sendIntentNotification into proxy.createIntent procedure (fires after intent creation)
+- [x] Wire sendReceiptNotification into proxy.execute procedure (fires after successful execution)
+- [x] Wire sendKillNotification into proxy.kill procedure (fires on kill switch activation)
+- [x] Graceful skip when isTelegramConfigured() returns false (no errors, no blocking)
+
+### Signer Management UI Page
+- [x] Create client/src/pages/SignerManagement.tsx — owner-only page listing all signers
+- [x] Signer list view: public key fingerprint, status (active/suspended), onboarded date, intent count, backup status
+- [x] Signer detail modal/view: full signer info, recent intents, approvals, revocation button
+- [x] Revoke signer action: confirmation dialog, calls proxy.revokeSigner, updates list
+- [x] Add /signers route to App.tsx and navigation
+- [x] Owner-only access guard (non-owner sees "Access Denied")
+
+### Tests
+- [ ] Test: Telegram notification fires on intent creation (mocked)
+- [ ] Test: Telegram notification skipped when not configured
