@@ -20,6 +20,7 @@ import signerRoutes from "./routes/signers.mjs";
 import apiV1Routes from "./routes/api-v1.mjs";
 import keyBackupRoutes from "./routes/key-backup.mjs";
 import syncRoutes from "./routes/sync.mjs";
+import proxyRoutes from "./routes/proxy.mjs";
 import { initApiKeys } from "./security/api-keys.mjs";
 import { apiKeyAuth } from "./security/api-auth.mjs";
 import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
@@ -56,7 +57,7 @@ app.use((req, res, next) => {
 // Initialize
 // ---------------------------------------------------------------------------
 console.log("=".repeat(60));
-console.log("  RIO GOVERNANCE GATEWAY v2.6.0-public-api");
+console.log("  RIO GOVERNANCE GATEWAY v2.7.0-receipt-v2.1");
 console.log("  Governed AI Execution Runtime");
 console.log("  Ledger: PostgreSQL (persistent)");
 console.log("  Auth: JWT + Ed25519 + API Keys (PostgreSQL-backed)");
@@ -166,6 +167,12 @@ async function start() {
   app.use("/api/sync", syncRoutes);
 
   // ---------------------------------------------------------------------------
+  // Proxy Onboarding & Kill Switch Routes (WS-013: Jordan's frontend)
+  // Also serves GET /api/receipts/recent for the protocol site feed
+  // ---------------------------------------------------------------------------
+  app.use("/api", proxyRoutes);
+
+  // ---------------------------------------------------------------------------
   // Public API v1 Routes (WS-012)
   // API key auth + rate limiting applied to all /api/v1/* routes
   // ---------------------------------------------------------------------------
@@ -180,7 +187,7 @@ async function start() {
   app.get("/", (req, res) => {
     res.json({
       name: "RIO Governance Gateway",
-      version: "2.6.0",
+      version: "2.7.0",
       description: "Governed AI Execution Runtime — No Authorization, No Execution.",
       ledger: "PostgreSQL (persistent)",
       auth: "JWT + Ed25519",
@@ -210,6 +217,10 @@ async function start() {
         "--- Device Sync ---": "---",
         "POST /api/sync": "Full device sync (identity + ledger)",
         "GET /api/sync/health": "Lightweight ledger health check",
+        "--- Proxy Onboarding ---": "---",
+        "POST /api/onboard": "Register new user/device with Ed25519 key (onboard receipt)",
+        "POST /api/kill": "Emergency proxy shutdown (kill switch receipt, requires auth)",
+        "GET /api/receipts/recent": "Public recent receipts feed (no auth required)",
         "--- Public API v1 ---": "---",
         "POST /api/v1/intents": "Submit intent (API key or JWT)",
         "GET /api/v1/intents": "List intents",

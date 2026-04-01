@@ -25,6 +25,7 @@ import {
   hashExecution,
   generateReceipt,
   verifyReceipt,
+  buildIngestion,
 } from "../receipts/receipts.mjs";
 import { sendEmail } from "../execution/gmail-executor.mjs";
 import {
@@ -585,7 +586,10 @@ router.post("/receipt", (req, res) => {
       });
     }
 
-    // Generate the full receipt with identity binding data (WS-010)
+    // Generate the full receipt with v2.1 fields: receipt_type, ingestion, identity_binding
+    const signerIdForReceipt = intent.authorization?.signer_id || intent.authorization?.authorized_by;
+    const signerPubKey = signerIdForReceipt ? getSignerPublicKey(signerIdForReceipt) : null;
+
     const receipt = generateReceipt({
       intent_hash: hashIntent(intent),
       governance_hash: intent.governance?.governance_hash || "",
@@ -595,21 +599,23 @@ router.post("/receipt", (req, res) => {
       action: intent.action,
       agent_id: intent.agent_id,
       authorized_by: intent.authorization?.authorized_by || "unknown",
+      // v2.1: Receipt type
+      receipt_type: "governed_action",
+      // v2.1: Ingestion provenance
+      ingestion: buildIngestion({
+        source: intent._intake?.context?.ingestion_source || "api",
+        channel: intent._intake?.context?.ingestion_channel || "POST /intent",
+        source_message_id: intent._intake?.context?.source_message_id || null,
+      }),
+      // v2.1: Identity binding
+      identity_binding: {
+        signer_id: signerIdForReceipt || null,
+        public_key_hex: signerPubKey || null,
+        signature_payload_hash: intent.authorization?.signature_payload_hash || null,
+        verification_method: intent.authorization?.ed25519_signed ? "ed25519" : null,
+        ed25519_signed: intent.authorization?.ed25519_signed || false,
+      },
     });
-
-    // Attach identity binding proof to receipt (WS-010)
-    const signerIdForReceipt = intent.authorization?.signer_id || intent.authorization?.authorized_by;
-    const signerPubKey = signerIdForReceipt ? getSignerPublicKey(signerIdForReceipt) : null;
-    receipt.identity_binding = {
-      ed25519_signed: intent.authorization?.ed25519_signed || false,
-      signer_id: signerIdForReceipt || null,
-      public_key: signerPubKey || null,
-      signer_public_key_hex: signerPubKey || null,
-      signature_payload_hash: intent.authorization?.signature_payload_hash || null,
-      verification_method: intent.authorization?.ed25519_signed
-        ? "Ed25519 signature verified against registered public key in authorized_signers table"
-        : "No Ed25519 signature (unsigned authorization)",
-    };
 
     updateIntent(intent_id, {
       status: "receipted",
@@ -713,7 +719,7 @@ router.get("/health", (req, res) => {
     res.json({
       status: "operational",
       gateway: "RIO Governance Gateway",
-      version: "1.0.0",
+      version: "2.7.0",
       timestamp: new Date().toISOString(),
       governance: {
         constitution_loaded: !!config.constitution,
