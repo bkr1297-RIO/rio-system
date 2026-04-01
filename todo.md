@@ -409,5 +409,6 @@
 - [x] Owner-only access guard (non-owner sees "Access Denied")
 
 ### Tests
-- [ ] Test: Telegram notification fires on intent creation (mocked)
-- [ ] Test: Telegram notification skipped when not configured
+- [x] Test: Telegram notification fires on intent creation (mocked) — telegram-autofire.test.ts, 6 tests
+- [x] Test: Telegram notification skipped when not configured — telegram-autofire.test.ts
+- [x] 214 total tests pass across 15 files
