@@ -16,7 +16,7 @@ The canonical, production-deployed gateway lives in [`/gateway`](../gateway/).
 | `drizzle/` | Drizzle ORM migration files |
 | `hitl-proxy/` | Human-in-the-loop proxy prototype |
 | `ledger/` | Early ledger implementation (now in gateway/ledger) |
-| `monitoring/` | (Empty) Standalone monitoring scripts promoted to `gateway/monitoring/` |
+| `monitoring/` | Monitoring scripts (admin_health, alert_dispatcher, ledger_integrity) — copies kept for reference, canonical versions live in `gateway/monitoring/` |
 | `patches/` | Dependency patches (wouter) |
 | `receipts/` | Sample receipt documents and early receipt formats |
 | `reserve-builds/` | Static HTML builds (executive one-pager, verify page) |

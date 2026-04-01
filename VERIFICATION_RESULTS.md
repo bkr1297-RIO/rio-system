@@ -95,5 +95,5 @@ The RIO system passes verification if and only if:
 - [VERIFICATION_PLAN.md](VERIFICATION_PLAN.md) — Test definitions and procedures
 - [THREAT_MODEL.md](THREAT_MODEL.md) — Threat analysis and mitigations
 - [DEMO_WALKTHROUGH.md](DEMO_WALKTHROUGH.md) — Step-by-step demo with real commands and responses
-- [tests/run_verification.py](tests/run_verification.py) — Automated test harness (v3.1)
-- [verification_logs/results.json](verification_logs/results.json) — Machine-readable test output
+- [archive/tests/run_verification.py](archive/tests/run_verification.py) — Automated test harness (v3.1)
+- [archive/verification_logs/results.json](archive/verification_logs/results.json) — Machine-readable test output

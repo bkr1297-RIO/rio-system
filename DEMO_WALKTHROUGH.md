@@ -1,7 +1,7 @@
 # RIO Verification Demo — Live Attack Simulation Walkthrough
 
 **System:** RIO Gateway v3.0.0 — Sovereign Gate Edition
-**Original Target:** `https://rio-router-gateway.replit.app/api/rio-gateway` (historical — Replit deployment)
+**Original Target:** `https://rio-gateway.onrender.com/api/rio-gateway` (production — Render deployment)
 **Current Gateway:** `https://rio-gateway.onrender.com` (production — Render deployment)
 **Date:** 2026-03-23
 **Result:** 10/10 PASS — All attacks blocked, all authorized actions executed
@@ -337,4 +337,4 @@ curl -s https://rio-gateway.onrender.com/health | python3 -m json.tool
 curl -s https://rio-gateway.onrender.com/api/verify-chain | python3 -m json.tool
 ```
 
-> **Note:** The curl examples above reference the original Replit deployment URL. The production gateway is now deployed on Render at `https://rio-gateway.onrender.com`. The API structure has evolved — see [API Catalog v2.7](docs/API_CATALOG_v2.7.md) for current endpoints.
+> **Note:** All curl examples above reference the production Render deployment at `https://rio-gateway.onrender.com`. For the latest API structure, see [API Catalog v2.7](docs/API_CATALOG_v2.7.md).
