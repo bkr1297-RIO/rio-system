@@ -61,11 +61,14 @@ describe("Permission enforcement — compile-time + runtime", () => {
     expect(checkPermission("OBSERVER", "canReadFullState")).toEqual({ allowed: true });
   });
 
-  it("Observer CANNOT approve, sign, execute, or write ledger", () => {
+  it("Observer CANNOT approve, sign, or execute", () => {
     expect(checkPermission("OBSERVER", "canApprove").allowed).toBe(false);
     expect(checkPermission("OBSERVER", "canSign").allowed).toBe(false);
     expect(checkPermission("OBSERVER", "canExecute").allowed).toBe(false);
-    expect(checkPermission("OBSERVER", "canWriteLedger").allowed).toBe(false);
+  });
+
+  it("Observer CAN write ledger (append submit entries per TPS-001 §7)", () => {
+    expect(checkPermission("OBSERVER", "canWriteLedger")).toEqual({ allowed: true });
   });
 
   it("Governor CAN approve and sign", () => {
@@ -73,11 +76,14 @@ describe("Permission enforcement — compile-time + runtime", () => {
     expect(checkPermission("GOVERNOR", "canSign")).toEqual({ allowed: true });
   });
 
-  it("Governor CANNOT execute, read full state, assess risk, or write ledger", () => {
+  it("Governor CANNOT execute, read full state, or assess risk", () => {
     expect(checkPermission("GOVERNOR", "canExecute").allowed).toBe(false);
     expect(checkPermission("GOVERNOR", "canReadFullState").allowed).toBe(false);
     expect(checkPermission("GOVERNOR", "canAssessRisk").allowed).toBe(false);
-    expect(checkPermission("GOVERNOR", "canWriteLedger").allowed).toBe(false);
+  });
+
+  it("Governor CAN write ledger (append governance decision entries per TPS-001 §7)", () => {
+    expect(checkPermission("GOVERNOR", "canWriteLedger")).toEqual({ allowed: true });
   });
 
   it("Executor CAN execute and write ledger", () => {

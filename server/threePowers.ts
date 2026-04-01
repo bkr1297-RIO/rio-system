@@ -60,7 +60,7 @@ export const PERMISSIONS: Record<PowerRole, {
     canApprove: false,
     canSign: false,
     canExecute: false,
-    canWriteLedger: false,
+    canWriteLedger: true,     // Per TPS-001 §7: Observer can append "submit" entries
     canReadFullState: true,
   },
   GOVERNOR: {
@@ -70,7 +70,7 @@ export const PERMISSIONS: Record<PowerRole, {
     canApprove: true,
     canSign: true,
     canExecute: false,        // CRITICAL: Governor cannot execute
-    canWriteLedger: false,
+    canWriteLedger: true,     // Per TPS-001 §7: Governor can append governance decision entries
     canReadFullState: false,  // Only sees what Observer sends
   },
   EXECUTOR: {
@@ -133,6 +133,38 @@ export function generateComponentKeys(): { privateKey: string; publicKey: string
 // QUEUE MESSAGES — Typed messages between powers
 // ═══════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════
+// RECEIPT SPEC v2.1 TYPES — Ingestion + Identity Binding
+// ═══════════════════════════════════════════════════════════════
+
+/** Receipt Spec v2.1: Ingestion provenance (how intent entered the system) */
+export interface IngestionProvenance {
+  source: "api" | "email" | "sms" | "webhook" | "frontend" | "service_bus" | "onboard" | "kill_switch" | "internal";
+  channel: string;                  // e.g. "POST /intent", "outlook-power-automate"
+  source_message_id?: string;       // Original message ID from source system
+  timestamp: string;                // ISO 8601 UTC
+}
+
+/** Receipt Spec v2.1: Ed25519 identity binding proof */
+export interface IdentityBinding {
+  signer_id: string;                // Registered signer ID
+  public_key_hex: string;           // Ed25519 public key (64-char hex)
+  signature_payload_hash: string;   // SHA-256 of the canonical JSON that was signed
+  verification_method: "ed25519";
+}
+
+/** Receipt Spec v2.1: Receipt type enum */
+export type ReceiptType = "governed_action" | "kill_switch" | "onboard" | "system";
+
+/** Receipt Spec v2.1: Full hash chain linking all artifacts */
+export interface ReceiptHashChain {
+  intent_hash: string;
+  governance_hash: string;
+  authorization_hash: string;
+  execution_hash: string;
+  receipt_hash: string;
+}
+
 /**
  * Observer → Governor: Risk assessment signal.
  * Observer can only SEND signals, never approve or execute.
@@ -149,6 +181,7 @@ export interface ObserverSignal {
   recommendation: "AUTO_APPROVE" | "REQUIRE_HUMAN_APPROVAL" | "DENY";
   observed_at: number;
   signal_hash: string;
+  ingestion?: IngestionProvenance;   // v2.1: How this intent entered the system
 }
 
 /**
@@ -174,6 +207,7 @@ export interface GovernorApproval {
 /**
  * Executor → Ledger: Execution result with receipt.
  * Executor can only EXECUTE and WRITE to ledger.
+ * v2.1: Now includes identity_binding, ingestion, receipt_type, and full hash_chain.
  */
 export interface ExecutorResult {
   result_id: string;
@@ -186,6 +220,11 @@ export interface ExecutorResult {
   connector_output: unknown;
   receipt_hash: string;
   executed_at: number;
+  // Receipt Spec v2.1 additions
+  receipt_type: ReceiptType;
+  ingestion?: IngestionProvenance;
+  identity_binding?: IdentityBinding;
+  hash_chain: ReceiptHashChain;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -554,6 +593,11 @@ export class Executor {
       metadata?: Record<string, unknown>;
     }>;
     toolArgs: Record<string, unknown>;
+    // v2.1 optional context
+    ingestion?: IngestionProvenance;
+    signerId?: string;
+    receiptType?: ReceiptType;
+    governanceHash?: string;
   }): Promise<ExecutorResult> {
     const perm = checkPermission(this.power, "canExecute");
     if (!perm.allowed) throw new Error(perm.reason);
@@ -586,16 +630,46 @@ export class Executor {
       connectorResult = { success: false, output: null, metadata: { error: msg } };
     }
 
-    // Generate receipt hash
-    const receiptPayload = canonicalJson({
+    // Compute intermediate hashes for the full chain
+    const governance_hash = params.governanceHash ?? hashString(canonicalJson({
+      decision: params.approval.decision,
       intent_id: params.approval.intent_id,
-      intent_hash: params.approval.intent_hash,
+      policy_version: params.approval.policy_version,
+    }));
+    const authorization_hash = hashString(canonicalJson({
       approval_id: params.approval.approval_id,
-      approval_signature: params.approval.signature,
+      approver_id: params.approval.approver_id,
+      decision: params.approval.decision,
+      signature: params.approval.signature,
+    }));
+    const execution_hash = hashString(canonicalJson({
+      intent_id: params.approval.intent_id,
       execution_success: connectorResult.success,
       executed_at: Date.now(),
+    }));
+
+    // Generate receipt hash (covers all preceding hashes per Receipt Spec v2.1)
+    const receiptPayload = canonicalJson({
+      intent_hash: params.approval.intent_hash,
+      governance_hash,
+      authorization_hash,
+      execution_hash,
     });
     const receipt_hash = hashString(receiptPayload);
+
+    // Build identity binding if signer info is available
+    const identity_binding: IdentityBinding | undefined = params.signerId ? {
+      signer_id: params.signerId,
+      public_key_hex: params.approval.governor_public_key,
+      signature_payload_hash: hashString(canonicalJson({
+        intent_id: params.approval.intent_id,
+        action: params.approval.action_hash,
+        decision: params.approval.decision,
+        signer_id: params.signerId,
+        timestamp: new Date(params.approval.signed_at).toISOString(),
+      })),
+      verification_method: "ed25519",
+    } : undefined;
 
     return {
       result_id: `ERES-${nanoid(16)}`,
@@ -608,6 +682,17 @@ export class Executor {
       connector_output: connectorResult.output,
       receipt_hash,
       executed_at: Date.now(),
+      // Receipt Spec v2.1 fields
+      receipt_type: params.receiptType ?? "governed_action",
+      ingestion: params.ingestion,
+      identity_binding,
+      hash_chain: {
+        intent_hash: params.approval.intent_hash,
+        governance_hash,
+        authorization_hash,
+        execution_hash,
+        receipt_hash,
+      },
     };
   }
 
