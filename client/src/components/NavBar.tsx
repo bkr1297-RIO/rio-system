@@ -58,6 +58,7 @@ const navLinks: NavLink[] = [
     children: [
       { label: "Documentation", href: "/docs" },
       { label: "Whitepaper", href: "/whitepaper" },
+      { label: "Three-Power Separation", href: "/three-power" },
       { label: "Position Paper", href: "/position-paper" },
       { label: "FAQ", href: "/faq" },
       { label: "Updates", href: "/blog" },

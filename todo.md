@@ -710,5 +710,25 @@
 ### Infrastructure
 - [x] Server-side tRPC procedures for onboard, kill, sync (calling gateway endpoints)
 - [x] Vitest tests for all new flows (468 tests passing, was 454+)
-- [ ] Push to GitHub PR on bkr1297-RIO/rio-system
-- [ ] Update sync file with status report and MSG to Manny
+- [x] Push to GitHub PR on bkr1297-RIO/rio-system (PR #80)
+- [x] Update sync file with status report and MSG to Manny (v3.2, MSG-012)
+
+## Jordan Parallel Work (While Manny Handles Azure Pipeline)
+
+### Three-Power Separation Spec
+- [x] Research existing references to Three-Power Separation in codebase/Drive
+- [x] Build spec page with API contracts, permission boundaries, enforcement mechanisms
+- [x] Add interactive visualization showing Observer / Governor / Executor separation
+
+### Mantis Component Definition
+- [x] Define Mantis component spec (JSON schema)
+- [x] Push to GitHub corpus on bkr1297-RIO/rio-system (PR #83)
+
+### Sigil Visualization
+- [x] Build sigil as a React component in the demo site
+- [x] Integrate into Three-Power Separation page with interactive hover
+
+### Infrastructure
+- [x] Write tests — 468/468 passing (all existing tests still green)
+- [ ] Push to GitHub PR
+- [ ] Update sync file with status

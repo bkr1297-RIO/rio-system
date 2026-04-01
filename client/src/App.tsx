@@ -36,6 +36,7 @@ import Status from "./pages/Status";
 import Chain from "./pages/Chain";
 import MobileApp from "./pages/MobileApp";
 import Onboard from "./pages/Onboard";
+import ThreePower from "./pages/ThreePower";
 
 // ONE App — authenticated product screens
 import OneAppLayout from "./components/OneAppLayout";
@@ -92,6 +93,8 @@ function Router() {
       <Route path={"/m"}>{() => <MobileApp />}</Route>
       {/* Onboarding Wizard */}
       <Route path={"/onboard"} component={Onboard} />
+      {/* Three-Power Separation Spec */}
+      <Route path={"/three-power"} component={ThreePower} />
       {/* ONE App — Authenticated Product Screens */}
       <Route path={"/one/approvals"}>{() => <OneAppRoute><OneApprovals /></OneAppRoute>}</Route>
       <Route path={"/one/dashboard"}>{() => <OneAppRoute><ProxyDashboard /></OneAppRoute>}</Route>
