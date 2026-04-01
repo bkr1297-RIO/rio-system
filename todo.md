@@ -373,7 +373,7 @@
 - [x] isTelegramConfigured() returns false when no credentials — safe to import
 - [x] TELEGRAM_NOTIFY ledger entry type for audit trail
 - [x] Long-polling mode (startPolling/stopPolling) for development
-- [ ] Blocked on: Brian creates bot via @BotFather + provides TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID
+- [x] Blocked on: Brian creates bot via @BotFather + provides TELEGRAM_BOT_TOKEN + TELEGRAM_CHAT_ID — DONE
 
 ### Tests — 17 new tests in signer-telegram.test.ts
 - [x] Test: listSigners returns registered users with metadata
@@ -412,3 +412,57 @@
 - [x] Test: Telegram notification fires on intent creation (mocked) — telegram-autofire.test.ts, 6 tests
 - [x] Test: Telegram notification skipped when not configured — telegram-autofire.test.ts
 - [x] 214 total tests pass across 15 files
+
+## Phase 7 — Brian's Feedback & UX Overhaul
+
+### Telegram Bot Activation
+- [x] Set TELEGRAM_BOT_TOKEN secret (8563931494:AAEJrNC9SpGs5phhIEpk_R08C_uRDhu2p4g)
+- [x] Set TELEGRAM_CHAT_ID secret (6278170396)
+- [x] Send a test message via the bot to verify it works
+
+### Rename "Jordan" (that's Brian's son, not an AI name)
+- [x] Rename all references from "Jordan" to "Bondi" — 93 references across 10 files renamed, jordan.ts→bondi.ts, jordan.test.ts→bondi.test.ts, Jordan.tsx→Bondi.tsx, /jordan→/bondi route, BONDI_CHAT ledger type added (JORDAN_CHAT kept for backward compat), migration 0009 applied, 215 tests pass
+
+### Bug Fixes from Mobile Screenshots
+- [x] Fix crash error on Signers page — Dashboard hooks ordering bug (useMemo after early returns), ErrorBoundary shows friendly message
+- [x] Fix Access Denied flash on Signers page — show skeleton while status.data is still loading
+
+### Full UI Redesign (Brian's feedback: "looks like 1998", "not intuitive", "for engineers not people")
+- [ ] Make the AI chat the home page — not the dashboard
+- [ ] Simple approval cards: "RIO wants to [action]. Yes or No." — no hashes, no intent IDs
+- [ ] Hide engineering pages (Ledger, Identity, hashes) behind Settings/Advanced
+- [ ] Remove "Create Intent" form (engineering test tool, not user-facing)
+- [ ] Clean, modern, intuitive design — not monospace/terminal aesthetic
+- [ ] Mobile-first responsive design that actually works well on phone
+
+## Phase 8 — MVP "One" App Redesign (Apple sleek + Google intuitive + Microsoft grounding)
+### Design System
+-- [x] Color palette: clean blues, warm grays, white backgrounds — Apple-inspired
+- [x] Typography: Inter/SF-style sans-serif, no monospace except code snippets
+- [x] Theme tokens: light-first with subtle shadows, rounded corners, breathing whitespacee
+
+### Home Screen (Bondi Concierge)
+- [x] Bondi greeting: "Good morning, Brian" with personal assistant message
+- [x] Capability cards: Send an email, Research something, Draft a document, Just chat
+- [x] Single input field: "Ask Bondi anything..." at bottom
+- [x] Example prompts via capability cards
+
+### Approval Flow Redesign
+- [x] Simple approval cards: human-readable tool names, args displayed cleanly, Approve/Reject buttons
+- [x] No visible hashes, intent IDs, or technical metadata in default view
+- [x] "Show Technical Details" expandable for users who want to see the cryptographic proof
+
+### Navigation Restructure
+- [x] Home = Bondi concierge (chat + capabilities)
+- [x] Activity = recent intents, approvals, executions in a clean feed
+- [x] Settings = kill switch, recovery, advanced (ledger, identity, signers)
+- [x] Removed: standalone Intent page, standalone Ledger page, Learning page from main nav (moved to Settings)
+
+### Mobile-First
+- [x] Bottom tab bar navigation (Home, Activity, Settings) on mobile
+- [x] Touch-friendly approval cards with large tap targets
+- [x] Kill switch accessible from Settings, not floating red button
+
+### Receipts
+- [x] Receipts accessible from Activity feed — tap any executed item to see receipt
+- [x] Receipt view: clean summary card, expandable cryptographic proof section
