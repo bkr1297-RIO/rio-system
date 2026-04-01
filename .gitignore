@@ -16,6 +16,7 @@ build/
 .env.production.local
 *.sec.hex
 policy-v1.0-PRIVATE.json
+policy-*-PRIVATE.json
 
 # IDE and editor files
 .vscode/
@@ -97,6 +98,9 @@ temp/
 # Gateway data (local dev only — production uses Docker volumes)
 gateway/data/ledger/
 gateway/data/keys/*.sec.hex
+
+# Internal Manus working directory
+.manus/
 
 # Webdev artifacts
 .webdev/
