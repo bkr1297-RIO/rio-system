@@ -1,5 +1,13 @@
 # RIO — Runtime Intelligence Orchestration
 
+[Back to README.md](./README.md)
+[RIO Governance Gateway Architecture](./gateway/ARCHITECTURE.md)
+[Three-Power Separation](./spec/THREE_POWER_SEPARATION.md)
+[Threat Model](./THREAT_MODEL.md)
+[Verification Results](./VERIFICATION_RESULTS.md)
+[Enterprise Document](./docs/enterprise/ENTERPRISE.md)
+
+
 **System Overview, Architecture, Security Model, and Verification**
 
 ---
@@ -75,6 +83,9 @@ RIO introduces a runtime authorization layer between AI and execution systems.
 
 ## System Architecture
 
+For a more detailed technical architecture, refer to the [RIO Governance Gateway Architecture](./gateway/ARCHITECTURE.md).
+
+
 ### Components
 
 | Component | Description |
@@ -127,6 +138,9 @@ Audit Log Stored
 
 ## Security Model
 
+For a comprehensive understanding of our security measures, refer to our [Threat Model](./THREAT_MODEL.md) and [Verification Results](./VERIFICATION_RESULTS.md).
+
+
 ### Fail-Closed Execution
 
 The system defaults to blocking execution unless explicit approval is provided.
@@ -160,6 +174,9 @@ All intents, approvals, denials, executions, and ledger writes are logged and ti
 ---
 
 ## Receipt Format (Example)
+
+For the full receipt specification, refer to [Receipt Specification v2.1.json](<path_to_receipt_spec>).
+
 
 ```json
 {
@@ -198,6 +215,9 @@ If any block is modified, all subsequent hashes change, making tampering detecta
 
 ## API Endpoints (Example)
 
+For a complete list of API endpoints and their documentation, refer to [API Catalog v2.7.md](<path_to_api_catalog>).
+
+
 | Endpoint | Method | Purpose |
 |---|---|---|
 | `/intent/create` | POST | Create intent |
@@ -211,6 +231,9 @@ If any block is modified, all subsequent hashes change, making tampering detecta
 ---
 
 ## Testing and Verification
+
+For detailed test plans and results, refer to [VERIFICATION_PLAN.md](./VERIFICATION_PLAN.md) and [VERIFICATION_RESULTS.md](./VERIFICATION_RESULTS.md).
+
 
 ### Test 1 — Execution Without Approval
 
