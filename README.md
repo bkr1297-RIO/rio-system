@@ -16,6 +16,12 @@ A 2-minute walkthrough showing the complete RIO flow — from an AI finance agen
 
 ---
 
+## What You Can Build
+
+RIO is designed for enterprise-grade AI governance. Learn more about how RIO can be integrated into your organization and the solutions it provides in our [Enterprise Document](docs/enterprise/ENTERPRISE.md).
+
+---
+
 ## Live Demo Site
 
 The interactive demo site showcases three perspectives of the RIO system:
@@ -70,6 +76,31 @@ See [VERIFICATION_RESULTS.md](./VERIFICATION_RESULTS.md) for detailed test resul
 
 ---
 
+## How to Get Involved
+
+We welcome contributions to the RIO Governance Gateway. Please see our [CONTRIBUTING.md](./CONTRIBUTING.md) for guidelines on how to report issues, suggest improvements, and submit code.
+
+---
+
+## Architecture
+
+For a detailed overview of the system's design and components, please refer to the [RIO Governance Gateway Architecture](gateway/ARCHITECTURE.md).
+
+## Security & Verification
+
+Our system is built with a strong focus on security. You can find detailed information on our security posture and verification processes here:
+
+*   [Threat Model](THREAT_MODEL.md)
+*   [Verification Results](VERIFICATION_RESULTS.md)
+
+## Documentation
+
+Explore our comprehensive documentation, including white papers and specifications:
+
+*   [RIO White Paper v2](docs/RIO_White_Paper_v2.md)
+
+---
+
 ## Repository Structure
 
 ```
@@ -94,6 +125,8 @@ See [VERIFICATION_RESULTS.md](./VERIFICATION_RESULTS.md) for detailed test resul
 ---
 
 ## Security Model
+
+For a comprehensive understanding of our security measures, refer to our [Threat Model](THREAT_MODEL.md) and [Verification Results](VERIFICATION_RESULTS.md).
 
 RIO implements a **fail-closed** enforcement model. The system is designed so that structure enforces the rules, not policy.
 

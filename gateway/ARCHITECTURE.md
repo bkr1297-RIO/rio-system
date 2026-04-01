@@ -1,5 +1,9 @@
 # RIO Governance Gateway — Architecture
 
+[Back to README.md](../../README.md)
+
+This document provides a detailed overview of the RIO Governance Gateway's architecture. For information on how to contribute to the project, please see [CONTRIBUTING.md](../../CONTRIBUTING.md).
+
 ## Overview
 
 The RIO Gateway is a standalone Node.js Express service that sits between AI systems and execution tools. It enforces governance before any action is executed.
@@ -38,6 +42,16 @@ Intent → Governance → Risk → Authorization → Execution → Receipt → L
 - `ledger/` — Append-only hash-chained ledger (SHA-256)
 - `receipts/` — Receipt generation and verification
 - `config/rio/` — Governance configuration JSON files
+
+## Three-Power Separation
+
+RIO implements a three-power separation model to ensure robust governance and prevent single points of failure. This model separates the functions of **Intent**, **Governance**, and **Execution**.
+
+*   **Intent:** AI systems propose actions.
+*   **Governance:** Human authorities review and approve/deny actions.
+*   **Execution:** The RIO Gateway executes approved actions.
+
+For more details, refer to the [Three-Power Separation document](spec/THREE_POWER_SEPARATION.md).
 
 ## Invariants
 
