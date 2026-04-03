@@ -2,7 +2,7 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Manny
+Last updated: 2026-04-03 by Damon
 
 ---
 
@@ -21,6 +21,11 @@ Last updated: 2026-04-03 by Manny
 | Integration guide | **Done** | Romney | OpenAI, Anthropic, LangChain examples |
 | README restructure | **Done** | Romney | Quick Start first, concepts later |
 | Public/private boundary audit | **Done** | Romney | rio-overview.md trimmed (PR #5) |
+| Ed25519 signature integration | **Done** | Damon | Replaced placeholders in Python and JS |
+| Conformance test suite | **Done** | Damon | 6/6 tests passing for real crypto |
+| v2.2.0 Spec Alignment | **Done** | Damon | ledger-format.md and signing-rules.md updated |
+| SECURITY.md | **Done** | Damon | Vulnerability reporting and threat model added |
+| Landing page content | **Done** | Damon | Annotated JSON and proof-point cards drafted |
 
 ### ONE Command Center (Private — live at rio-one.manus.space)
 
@@ -90,6 +95,8 @@ When checking status, the ONE app is the canonical reference for what works. The
 - Google Drive knowledge base reorganization (Jordan)
 - Gateway server hardening for standalone deployment (future)
 - Agent onboarding and testing (Brian + team)
+- RIO Receipt Protocol launch hardening sprint (Damon/Jordan/Romney)
+- Integration guide gap analysis and refinement (Damon)
 
 ---
 
