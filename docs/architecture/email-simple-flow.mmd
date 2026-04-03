@@ -1,0 +1,17 @@
+---
+title: How It Works — AI Email with Human Approval
+---
+graph LR
+    A["AI Agent<br/>Drafts Email"] -->|"Proposes"| B["RIO<br/>(Guardian)"]
+    B -->|"Shows to"| C["Human Manager<br/>Reviews Email"]
+    C -->|"Approves ✓"| D["Email Sent<br/>+ Receipt Generated"]
+    C -->|"Denies ✗"| E["Email Blocked<br/>+ Receipt Generated"]
+    D --> F["Permanent<br/>Audit Record"]
+    E --> F
+
+    style A fill:#1a1a2e,stroke:#e2b340,color:#fff,stroke-width:2px
+    style B fill:#16213e,stroke:#e2b340,color:#fff,stroke-width:3px
+    style C fill:#0f3460,stroke:#4a9eff,color:#fff,stroke-width:2px
+    style D fill:#1a1a2e,stroke:#22c55e,color:#fff,stroke-width:2px
+    style E fill:#1a1a2e,stroke:#dc2626,color:#fff,stroke-width:2px
+    style F fill:#1a1a2e,stroke:#a855f7,color:#fff,stroke-width:2px

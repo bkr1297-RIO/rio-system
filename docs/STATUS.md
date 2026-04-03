@@ -99,6 +99,9 @@ When checking status, the ONE app is the canonical reference for what works. The
 | Prospect architecture diagram (full) | **Done** | Andrew | Mermaid source + rendered PNG — 4-layer governance flow |
 | Prospect pipeline diagram (simple) | **Done** | Andrew | Mermaid source + rendered PNG — 6-stage linear flow |
 | First Meeting Overview | **Done** | Andrew | Single document for 30-minute technical introductions |
+| Email Deployment Architecture | **Done** | Andrew | Full deployment doc: 10 sections covering components, HITL flow, install requirements, open vs licensed, diagrams |
+| Email system architecture diagram | **Done** | Andrew | Mermaid source + rendered PNG — full component and data flow |
+| Email simple flow diagram | **Done** | Andrew | Mermaid source + rendered PNG — non-technical stakeholder view |
 
 ---
 
