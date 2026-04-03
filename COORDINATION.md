@@ -59,6 +59,8 @@ The team has two knowledge bases:
 
 Both sources should stay in sync. When something changes in one, the corresponding doc in the other should be updated. Jordan owns the Drive structure; Romney owns the repo structure.
 
+For Drive navigation, start at `One/root/index.json` — this is the knowledge routing map that tells agents where to find every document on Drive.
+
 ---
 
 ## Quick Start for New Agents
