@@ -50,7 +50,15 @@ _None recorded yet._
 
 ## Product Decisions
 
-_None recorded yet._
+### 2026-04-03 — First deployment use case: Governed AI Email
+**Decision:** The first real-world deployment use case is Governed AI Email — AI drafts and sends email with human approval, cryptographic receipt, and ledger entry.
+**Rationale:** Already built (Gmail connector live), universally understood, demonstrates the full RIO loop end-to-end (intent → risk → approval → execution → receipt → ledger), maps to compliance requirements (SEC, HIPAA, legal), and can be piloted quickly with a real organization.
+**Decided by:** Brian
+
+### 2026-04-03 — Phase transition: Build → Deployment & Packaging
+**Decision:** The project is moving from the Build Phase to the Deployment and Packaging Phase. The team is no longer primarily building new core features. Focus is now on defining the first deployment, packaging the system for external installation, and making ONE the product interface.
+**Rationale:** Nothing is blocked on engineering. The core system works: receipt protocol, signing, verification, ledger, governance/HITL, gateway/execution, ONE control center, agent skills, knowledge base, and repo structure are all built. The bottleneck is now use case definition, packaging, and deployment model.
+**Decided by:** Brian
 
 ---
 
