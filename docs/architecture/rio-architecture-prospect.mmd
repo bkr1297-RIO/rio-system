@@ -1,0 +1,98 @@
+---
+title: RIO Governed Execution Architecture
+---
+graph TB
+    subgraph Layer1["Layer 1: AI Agents (Untrusted)"]
+        A1["Planning Agent<br/>(LLM)"]
+        A2["Execution Agent<br/>(LLM)"]
+        A3["Verification Agent<br/>(LLM)"]
+    end
+
+    subgraph Layer2["Layer 2: Governance Gateway (Trust Boundary)"]
+        direction TB
+        subgraph Intake["Intent Intake"]
+            II["POST /intent<br/>Submit Action Proposal"]
+        end
+        subgraph GovEngine["Governance Engine"]
+            PE["Policy Engine"]
+            RE["Risk Evaluator<br/>LOW | MED | HIGH | CRITICAL"]
+            CI["Constitutional<br/>Invariants"]
+        end
+        subgraph HumanAuth["Human Authority"]
+            WUI["ONE Dashboard"]
+            TG["Telegram Bot"]
+            MOB["Mobile PWA"]
+        end
+        subgraph AuthGate["Authorization Gate"]
+            SV["Signature<br/>Verification"]
+            NR["Nonce Registry<br/>(Replay Prevention)"]
+            ETV["Execution Token<br/>Verification"]
+        end
+        subgraph ExecCtrl["Execution Controller"]
+            FCG["Fail-Closed Gate"]
+        end
+        subgraph ReceiptGen["Receipt Generator"]
+            SHA["SHA-256<br/>Hash Chain"]
+            ED["Ed25519<br/>Signing"]
+        end
+    end
+
+    subgraph Layer3["Layer 3: Connectors"]
+        C1["Gmail"]
+        C2["Google Drive"]
+        C3["SMS (Twilio)"]
+        C4["Web Search"]
+        C5["Custom APIs"]
+    end
+
+    subgraph Layer4["Layer 4: Tamper-Evident Ledger"]
+        HC["Hash-Chained<br/>Append-Only Store"]
+        IV["Integrity<br/>Verification"]
+    end
+
+    DENY["HTTP 403<br/>EXECUTION DENIED"]
+
+    A1 -->|Submit Intent| II
+    A2 -->|Submit Intent| II
+    A3 -->|Submit Intent| II
+    II --> PE
+    PE --> RE
+    RE -->|AUTO_APPROVE| FCG
+    RE -->|REQUIRE_HUMAN| WUI
+    RE -->|REQUIRE_HUMAN| TG
+    RE -->|REQUIRE_HUMAN| MOB
+    CI -.->|Enforces| PE
+    WUI -->|Signed Approval| SV
+    TG -->|Signed Approval| SV
+    MOB -->|Signed Approval| SV
+    SV --> NR
+    NR --> ETV
+    ETV -->|All Checks Pass| FCG
+    ETV -->|Any Check Fails| DENY
+    FCG --> C1
+    FCG --> C2
+    FCG --> C3
+    FCG --> C4
+    FCG --> C5
+    C1 --> SHA
+    C2 --> SHA
+    C3 --> SHA
+    C4 --> SHA
+    C5 --> SHA
+    SHA --> ED
+    ED --> HC
+    HC --> IV
+
+    classDef agents fill:#1a1a2e,stroke:#e2b340,color:#fff
+    classDef governance fill:#16213e,stroke:#e2b340,color:#fff
+    classDef human fill:#0f3460,stroke:#e2b340,color:#fff
+    classDef connectors fill:#1a1a2e,stroke:#4a9eff,color:#fff
+    classDef ledger fill:#1a1a2e,stroke:#22c55e,color:#fff
+    classDef deny fill:#dc2626,stroke:#dc2626,color:#fff
+
+    class A1,A2,A3 agents
+    class II,PE,RE,CI,SV,NR,ETV,FCG,SHA,ED governance
+    class WUI,TG,MOB human
+    class C1,C2,C3,C4,C5 connectors
+    class HC,IV ledger
+    class DENY deny

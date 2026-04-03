@@ -2,7 +2,7 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Damon
+Last updated: 2026-04-03 by Andrew (Solutions Architect)
 
 ---
 
@@ -90,6 +90,18 @@ When checking status, the ONE app is the canonical reference for what works. The
 
 ---
 
+### Solutions Architect Materials (Private — docs/architecture/)
+
+| Component | Status | Owner | Notes |
+|-----------|--------|-------|-------|
+| Deployment Options brief | **Done** | Andrew | Hosted, Self-Hosted, Hybrid — with infra requirements and comparison table |
+| Integration Patterns guide | **Done** | Andrew | OpenAI, Anthropic, LangChain, Direct HTTP — with code examples |
+| Prospect architecture diagram (full) | **Done** | Andrew | Mermaid source + rendered PNG — 4-layer governance flow |
+| Prospect pipeline diagram (simple) | **Done** | Andrew | Mermaid source + rendered PNG — 6-stage linear flow |
+| First Meeting Overview | **Done** | Andrew | Single document for 30-minute technical introductions |
+
+---
+
 ## What Is In Progress
 
 - Google Drive knowledge base reorganization (Jordan)
@@ -111,4 +123,4 @@ _Nothing currently blocked._
 - Witness service (independent verification network)
 - Gateway server completion for self-hosted deployment
 - Developer tutorials and quickstart guides (Damon)
-- Solution architecture examples (Andrew)
+- Solution architecture examples — industry-specific (Andrew)
