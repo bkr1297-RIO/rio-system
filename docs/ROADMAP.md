@@ -41,7 +41,7 @@ Build the governance engine: risk assessment, policy enforcement, approval flow,
 
 ---
 
-## Phase 2 — ONE Command Center (Current)
+## Phase 2 — ONE Command Center (Complete)
 
 Build the human control surface for the RIO system.
 
@@ -66,17 +66,21 @@ Build the human control surface for the RIO system.
 
 ---
 
-## Phase 3 — Packaging and Distribution (Starting)
+## Phase 3 — Packaging and Distribution (Current)
 
 Make the system deployable and adoptable.
 
 | Item | Status | Owner |
 |------|--------|-------|
+| Define first deployment use case | In Progress | Chief of Staff |
 | Gateway server for self-hosted deployment | In Progress | Manny |
+| Docker/self-host packaging setup | Not Started | Manny |
+| ONE interface as demo/product center | In Progress | Manny |
 | Cloud deployment (CI/CD) | Not Started | Romney |
-| Developer documentation and tutorials | Not Started | Damon |
-| Solution architecture examples | Not Started | Andrew |
+| Developer documentation and tutorials | Done | Damon |
+| Solution architecture examples | Done | Andrew |
 | Compliance and regulatory mapping | Not Started | TBD |
+| Pilot documentation | Not Started | TBD |
 
 ---
 

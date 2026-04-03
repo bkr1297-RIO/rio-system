@@ -107,9 +107,12 @@ When checking status, the ONE app is the canonical reference for what works. The
 - Google Drive knowledge base reorganization (Jordan)
 - Gateway server hardening for standalone deployment (future)
 - Agent onboarding and testing (Br98	- RIO Receipt Protocol launch hardening sprint (Damon/Jordan/Romney)
-99	
-100	---
-# What Is Blocked
+- First deployment use case definition (Chief of Staff)
+- ONE interface refinement as demo/product center (Manny)
+
+---
+
+## What Is Blocked
 
 _Nothing currently blocked._
 
@@ -117,10 +120,10 @@ _Nothing currently blocked._
 
 ## What Is Next
 
+- Docker/self-host packaging setup (Manny)
+- Pilot documentation (TBD)
+- Compliance and regulatory mapping (TBD)
 - Protocol Packs (domain-specific policy profiles — engineering, legal, medical, financial)
 - Learning Loop feedback (learning events improving future Bondi recommendations)
 - PWA push notifications (requires VAPID key setup)
 - Witness service (independent verification network)
-- Gateway server completion for self-hosted deployment
-- Developer tutorials and quickstart guides (Damon)
-- Solution architecture examples — industry-specific (Andrew)
