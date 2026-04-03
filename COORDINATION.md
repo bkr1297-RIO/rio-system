@@ -55,7 +55,7 @@ The team has two knowledge bases:
 
 1. **This repo** (`rio-system`) — Code, specs, coordination docs, agent skills, architecture docs. This is the engineering source of truth.
 
-2. **Google Drive** (`RIO/` and `One/root/`) — Architecture maps, implementation status, builder map, policy documents, corpus files. This is the knowledge and documentation source of truth.
+2. **Google Drive** (`RIO/` and `One/root/`) — Architecture maps, implementation status, builder map, policy documents, corpus files. This is the knowledge and documentation source of truth. For Drive navigation, always start at `One/root/index.json` — this is the knowledge routing map that tells you where everything lives.
 
 Both sources should stay in sync. When something changes in one, the corresponding doc in the other should be updated. Jordan owns the Drive structure; Romney owns the repo structure.
 
