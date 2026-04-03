@@ -2,7 +2,7 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Andrew (Solutions Architect)
+Last updated: 2026-04-03 by Chief of Staff
 
 ---
 
@@ -24,12 +24,14 @@ Last updated: 2026-04-03 by Andrew (Solutions Architect)
 | Ed25519 signature integration | **Done** | Damon | Replaced placeholders in Python and JS |
 | Conformance test suite | **Done** | Damon | 6/6 tests passing for real crypto |
 | v2.2.0 Spec Alignment | **Done** | Damon | ledger-format.md and signing-rules.md updated |
-| SECURITY.md | **Done** | Damon | Vulnerability reporting and threat model add28	| Landing page content | **Done** | Damon | Annotated JSON and proof-point cards drafted |
-29	| Integration guide refinement | **Done** | Damon | Updated VERIFY_API_INTEGRATION.md with SDKs, rate limits, and Ed25519 examples |
-30	| Protocol examples audit | **Done** | Damon | Refined basic-usage.mjs and reference implementations for v2.2.0 alignment |
-31	
-32	### ONE Command Center (Private — live at rio-one.manus.space)
-omponent | Status | Owner | Notes |
+| SECURITY.md | **Done** | Damon | Vulnerability reporting and threat model added |
+| Landing page content | **Done** | Damon | Annotated JSON and proof-point cards drafted |
+| Integration guide refinement | **Done** | Damon | Updated VERIFY_API_INTEGRATION.md with SDKs, rate limits, and Ed25519 examples |
+| Protocol examples audit | **Done** | Damon | Refined basic-usage.mjs and reference implementations for v2.2.0 alignment |
+
+### ONE Command Center (Private — live at rio-one.manus.space)
+
+| Component | Status | Owner | Notes |
 |-----------|--------|-------|-------|
 | PWA with manifest + service worker | **Done** | Manny | Installable on iOS/Android, offline-capable |
 | Bondi AI orchestrator | **Done** | Manny | OpenAI + Claude dual routing, risk assessment |
@@ -108,10 +110,12 @@ When checking status, the ONE app is the canonical reference for what works. The
 ## What Is In Progress
 
 - Google Drive knowledge base reorganization (Jordan)
-- Gateway server hardening for standalone deployment (future)
-- Agent onboarding and testing (Br98	- RIO Receipt Protocol launch hardening sprint (Damon/Jordan/Romney)
+- Gateway server hardening for standalone deployment (Manny)
+- Agent onboarding and testing (Brian)
+- RIO Receipt Protocol launch hardening sprint (Damon/Jordan/Romney)
 - First deployment use case definition (Chief of Staff)
 - ONE interface refinement as demo/product center (Manny)
+- Pilot Deployment Playbook (Chief of Staff)
 
 ---
 
