@@ -33,6 +33,34 @@ Every agent should know these files and use them:
 
 ---
 
+## Agent Skills
+
+Reusable skill packs live in `skills/` at the repo root. Each skill teaches a Manus agent how to operate in a specific role. Skills can be imported into Manus via the settings UI.
+
+| Skill | Role | What It Does |
+|-------|------|--------------|
+| `skills/rio-one-builder/` | Chief Builder | Builds and extends the ONE Command Center app |
+| `skills/rio-solutions-architect/` | Solutions Architect | Explains architecture, deployment, and integration to prospects |
+| `skills/rio-developer/` | Developer Relations | Helps engineers implement receipts and build integrations |
+| `skills/rio-compliance/` | Compliance | Maps RIO to regulations, explains audit and governance |
+| `skills/rio-internal-ops/` | Internal Operations | Proposals, planning, communications, company operations |
+
+Skills read from this repo and from Google Drive. When docs here or on Drive are updated, agents using these skills automatically get the updated knowledge.
+
+---
+
+## Knowledge Sources
+
+The team has two knowledge bases:
+
+1. **This repo** (`rio-system`) — Code, specs, coordination docs, agent skills, architecture docs. This is the engineering source of truth.
+
+2. **Google Drive** (`RIO/` and `One/root/`) — Architecture maps, implementation status, builder map, policy documents, corpus files. This is the knowledge and documentation source of truth.
+
+Both sources should stay in sync. When something changes in one, the corresponding doc in the other should be updated. Jordan owns the Drive structure; Romney owns the repo structure.
+
+---
+
 ## Quick Start for New Agents
 
 1. Read [docs/TEAM.md](docs/TEAM.md) to understand the team
@@ -41,4 +69,5 @@ Every agent should know these files and use them:
 4. Read [docs/STATUS.md](docs/STATUS.md) to understand current state
 5. Read [docs/ROADMAP.md](docs/ROADMAP.md) to understand priorities
 6. Check [docs/OPEN_QUESTIONS.md](docs/OPEN_QUESTIONS.md) for anything relevant to your work
-7. Start building
+7. If you have a skill assigned, read it from `skills/` before starting work
+8. Start building
