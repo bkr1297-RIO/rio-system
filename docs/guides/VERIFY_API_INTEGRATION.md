@@ -7,15 +7,75 @@
 
 ---
 
-## Overview
+## 1. Overview
 
-The RIO Verification API allows any external system to independently verify that an action was governed, authorized, executed, and recorded in the tamper-evident ledger. This endpoint is intentionally separate from the tRPC router so that external sites (including the protocol site at `rioprotocol-q9cry3ny.manus.space`) can call it cross-origin without authentication.
+The RIO Verification API is designed to provide transparent and auditable proof of AI actions. It allows any external system to independently verify that an action was governed, authorized, executed, and recorded in the tamper-evident ledger. This endpoint is intentionally separate from the tRPC router so that external sites (including the protocol site at `rioprotocol-q9cry3ny.manus.space`) can call it cross-origin without authentication.
 
 Every response includes the `fail_mode: "CLOSED"` field, confirming that the system cannot verify what it cannot find — it never returns a false positive.
 
 ---
 
-## Endpoints
+## 2. SDK Support
+
+For a higher-level, more robust integration, developers are encouraged to use the official RIO Receipt Protocol SDKs, which handle canonicalization, hashing, and Ed25519 signature verification automatically.
+
+### Node.js / JavaScript
+
+```bash
+npm install rio-receipt-protocol
+```
+
+```javascript
+import { verifyRioReceipt } from 'rio-receipt-protocol';
+
+async function verifyWithSdk(receiptJson) {
+  try {
+    const isValid = await verifyRioReceipt(receiptJson);
+    console.log('Receipt SDK verification result:', isValid);
+    return isValid;
+  } catch (error) {
+    console.error('Receipt SDK verification error:', error);
+    return false;
+  }
+}
+```
+
+### Python
+
+```bash
+pip install rio-receipt-protocol
+```
+
+```python
+from rio_receipt_protocol.verifier import verify_rio_receipt
+
+def verify_with_sdk(receipt_json):
+    try:
+        is_valid = verify_rio_receipt(receipt_json)
+        print(f"Receipt SDK verification result: {is_valid}")
+        return is_valid
+    except Exception as e:
+        print(f"Receipt SDK verification error: {e}")
+        return False
+```
+
+---
+
+## 3. Endpoints
+
+### Rate Limiting & Quotas
+
+The public `/api/verify` endpoint is subject to rate limiting to ensure fair usage and system stability. Currently, the rate limit is **100 requests per minute per IP address**. Exceeding this limit will result in a `429 Too Many Requests` HTTP status code. For higher throughput requirements, please contact `support@rioprotocol.org`.
+
+### Local Development & Testing
+
+For local development and testing, you can run a local instance of the RIO Gateway. Refer to the `rio-system` repository for instructions on setting up a local development environment. This allows you to test integrations without hitting the production demo API.
+
+### JSON Schema Definitions
+
+Formal JSON Schema definitions for the request and response objects are available in the `rio-receipt-protocol` repository under `spec/`. These schemas provide a normative definition of the data structures and can be used for validation in your applications.
+
+---
 
 ### 1. Verify a Receipt
 
@@ -93,6 +153,33 @@ Looks up a receipt by any of the following identifiers:
 }
 ```
 
+**Response (400 — Bad Request):**
+
+```json
+{
+  "status": "ERROR",
+  "message": "Invalid identifier format. Expected RIO-XXXXXXXX, 64-char hex, or INT-XXXXXXXX."
+}
+```
+
+**Response (429 — Too Many Requests):**
+
+```json
+{
+  "status": "ERROR",
+  "message": "Rate limit exceeded. Please try again later."
+}
+```
+
+**Response (500 — Internal Server Error):**
+
+```json
+{
+  "status": "ERROR",
+  "message": "An unexpected error occurred on the server."
+}
+```
+
 **Response (404 — Not Found):**
 
 ```json
@@ -131,7 +218,7 @@ Looks up a receipt by any of the following identifiers:
 
 ---
 
-### 2. Get Ledger Chain
+## 4. Get Ledger Chain
 
 ```
 GET /api/verify/ledger/chain?limit=50
@@ -177,7 +264,7 @@ Returns the full ledger chain with integrity verification. Each entry links to t
 
 ---
 
-### 3. Get Ledger Statistics
+## 5. Get Ledger Statistics
 
 ```
 GET /api/verify/ledger/stats
@@ -211,135 +298,115 @@ Returns aggregate statistics about the ledger.
 
 ---
 
-### 4. Get Public Key
+## 6. Get Public Key
 
 ```
 GET /api/verify/public-key
 ```
 
-Returns the Ed25519 public key used to sign all receipts and ledger entries. External verifiers can use this to independently verify signatures without trusting the API.
+Retrieve the public key used for Ed25519 signature verification.
 
-**Response:**
-
+**Response (200):**
 ```json
 {
-  "algorithm": "Ed25519",
-  "format": "SPKI",
-  "hex": "302a300506032b6570032100...",
-  "pem": "-----BEGIN PUBLIC KEY-----\n...\n-----END PUBLIC KEY-----\n",
-  "usage": "Verify receipt and ledger signatures. Use crypto.verify(null, data, publicKey, signature) with Node.js crypto module.",
-  "system": "RIO Governance Gateway v2.0",
-  "failMode": "CLOSED"
+  "public_key_hex": "64-char-hex",
+  "algorithm": "Ed25519"
 }
 ```
 
 ---
 
-## Integration Examples
+## 7. Independent Ed25519 Signature Verification
 
-### JavaScript (Browser — Protocol Site "Verify" Button)
+While the `/api/verify` endpoint provides a convenient way to check signatures, you can also perform independent Ed25519 signature verification using the public key obtained from `/api/verify/public-key`. This is crucial for trustless verification, where you don't rely on the API for cryptographic proof.
+
+### JavaScript (Web Crypto API)
 
 ```javascript
-async function verifyReceipt(identifier) {
-  const BASE = "https://riodemo-ux2sxdqo.manus.space/api/verify";
-  
-  const response = await fetch(`${BASE}/${encodeURIComponent(identifier)}`);
-  const result = await response.json();
-  
-  if (result.status === "VERIFIED") {
-    // Show green checkmark — receipt is valid and ledger-recorded
-    console.log("Receipt verified:", result.receipt.receipt_id);
-    console.log("Approved by:", result.approval.decided_by);
-    console.log("Chain position:", result.chain_position);
-  } else if (result.status === "NOT_FOUND") {
-    // Show "not found" message
-    console.log("No receipt found for:", identifier);
-  } else {
-    // Show warning — verification failed
-    console.log("Verification failed:", result.note);
+async function verifyEd25519Signature(receipt, publicKeyHex) {
+  const identityBinding = receipt.identity_binding;
+  if (!identityBinding || !identityBinding.ed25519_signed || identityBinding.verification_method !== 'ed25519-nacl') {
+    console.warn('Receipt not Ed25519 signed or unsupported verification method.');
+    return false;
   }
+
+  try {
+    const signature = hexToUint8Array(receipt.signature);
+    const publicKey = hexToUint8Array(publicKeyHex);
+    const algorithm = { name: 'Ed25519' };
+    const key = await crypto.subtle.importKey(
+      'raw',
+      publicKey,
+      algorithm,
+      true,
+      ['verify']
+    );
+
+    // Reconstruct the payload that was signed (receipt_hash)
+    const payloadStr = identityBinding.signature_payload_hash;
+    const payload = new TextEncoder().encode(payloadStr);
+
+    const isValid = await crypto.subtle.verify(
+      algorithm,
+      key,
+      signature,
+      payload
+    );
+    return isValid;
+  } catch (error) {
+    console.error('Ed25519 verification error:', error);
+    return false;
+  }
+}
+
+function hexToUint8Array(hexString) {
+  return new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
 }
 ```
 
-### cURL (Command Line)
-
-```bash
-# Verify a specific receipt
-curl https://riodemo-ux2sxdqo.manus.space/api/verify/RIO-e76156e6
-
-# Get the full ledger chain
-curl https://riodemo-ux2sxdqo.manus.space/api/verify/ledger/chain
-
-# Get ledger statistics
-curl https://riodemo-ux2sxdqo.manus.space/api/verify/ledger/stats
-
-# Get the public key for independent verification
-curl https://riodemo-ux2sxdqo.manus.space/api/verify/public-key
-```
-
-### Python (Independent Verifier)
+### Python (using `pynacl`)
 
 ```python
-import requests
-import json
+from nacl.signing import VerifyKey
+from nacl.exceptions import BadSignatureError
 
-BASE = "https://riodemo-ux2sxdqo.manus.space/api/verify"
+def verify_signature(receipt, public_key_hex):
+    identity_binding = receipt.get("identity_binding", {})
+    if not identity_binding.get("ed25519_signed") or identity_binding.get("verification_method") != "ed25519-nacl":
+        print("Receipt not Ed25519 signed or unsupported verification method.")
+        return False
 
-# Verify by receipt ID
-result = requests.get(f"{BASE}/RIO-e76156e6").json()
-print(f"Status: {result['status']}")
-print(f"Fully verified: {result['fully_verified']}")
-
-# Get and display the ledger chain
-chain = requests.get(f"{BASE}/ledger/chain").json()
-print(f"Chain valid: {chain['chainValid']}")
-print(f"Signatures valid: {chain['signaturesValid']}")
-print(f"Total entries: {chain['total']}")
+    try:
+        verify_key = VerifyKey(bytes.fromhex(public_key_hex))
+        # Reconstruct the payload that was signed (receipt_hash)
+        payload = identity_binding.get("signature_payload_hash")
+        signature = bytes.fromhex(receipt.get("signature"))
+        
+        verify_key.verify(payload.encode(), signature)
+        return True
+    except BadSignatureError:
+        return False
+    except Exception as e:
+        print(f"Ed25519 verification error: {e}")
+        return False
 ```
 
 ---
 
-## Genesis Receipt
+## 8. Local Development & Testing
 
-The first real governed action was executed at 4:44 PM MDT on March 29, 2026. An email was sent through the full RIO governance pipeline, generating a 5-link SHA-256 hash chain receipt.
+To test your integration locally without hitting the production API:
 
-**Receipt ID:** `e76156e6-34cc-43f0-83b0-69a85c86762a`
+1. **Docker Compose**: Run a local instance of the RIO Gateway.
+   ```bash
+   git clone https://github.com/bkr1297-RIO/rio-system.git
+   cd rio-system
+   docker-compose up -d
+   ```
+2. **Health Check**: Verify your local instance is running.
+   ```bash
+   curl http://localhost:4400/health
+   ```
+3. **Mocking**: Use the [JSON Schema](../../spec/receipt-schema.json) to generate mock receipts for your test suite.
 
-This receipt is seeded as the genesis entry in the persistent ledger with `previous_hash: "0000000000000000"` — the anchor of the entire chain.
-
-To verify the genesis receipt:
-
-```bash
-curl https://riodemo-ux2sxdqo.manus.space/api/verify/e76156e6-34cc-43f0-83b0-69a85c86762a
-```
-
----
-
-## Security Properties
-
-| Property | Implementation |
-|---|---|
-| **Fail-closed** | System returns `false` for all verification fields when offline or in error state |
-| **No authentication** | Endpoint is public and read-only — anyone can verify |
-| **CORS enabled** | `Access-Control-Allow-Origin: *` — callable from any domain |
-| **Tamper-evident** | Hash chain links each entry to the previous; any modification breaks the chain |
-| **Cryptographic signatures** | Ed25519 signatures on every receipt and ledger entry |
-| **Independent verification** | Public key available at `/api/verify/public-key` for offline signature verification |
-| **Append-only** | Ledger entries cannot be modified or deleted after creation |
-
----
-
-## For Protocol Site Integration
-
-The protocol site at `rioprotocol-q9cry3ny.manus.space` can wire its "Verify" button to this API:
-
-1. Add an input field where users paste a receipt ID, receipt hash, or intent ID
-2. On submit, call `GET https://riodemo-ux2sxdqo.manus.space/api/verify/{identifier}`
-3. Display the verification result with status badges:
-   - Green: `VERIFIED` — receipt is valid, signed, and ledger-recorded
-   - Yellow: `PARTIALLY_VERIFIED` — receipt signature valid but ledger incomplete
-   - Red: `INVALID` — verification failed
-   - Gray: `NOT_FOUND` — no matching receipt
-4. Optionally show the full receipt details, ledger entry, and chain position
-
-No API key, authentication, or special headers required. The endpoint is designed for public, cross-origin access.
+Refer to the [Deployment Guide](./DEPLOYMENT_GUIDE.md) for more details on local setup.
