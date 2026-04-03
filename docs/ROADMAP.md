@@ -68,19 +68,16 @@ Build the human control surface for the RIO system.
 
 ## Phase 3 — Packaging and Distribution (Current)
 
-Make the system deployable and adoptable.
+We are managing this phase as a deployment program, not just a coding project. The goal is to produce the five artifacts required for a deployable product.
 
-| Item | Status | Owner |
-|------|--------|-------|
-| Define first deployment use case | In Progress | Chief of Staff |
-| Gateway server for self-hosted deployment | In Progress | Manny |
-| Docker/self-host packaging setup | Not Started | Manny |
-| ONE interface as demo/product center | In Progress | Manny |
-| Cloud deployment (CI/CD) | Not Started | Romney |
-| Developer documentation and tutorials | Done | Damon |
-| Solution architecture examples | Done | Andrew |
-| Compliance and regulatory mapping | Not Started | TBD |
-| Pilot documentation | Not Started | TBD |
+| Document / Artifact | Audience | Owner | Status |
+|---|---|---|---|
+| **1. Pilot Playbook** | Operations / Compliance | Chief of Staff | **Done** |
+| **2. Deployment Architecture** | CTO / Security / IT | Solutions Architect | **Done** |
+| **3. Integration Guide** | Developers | Developer Relations | **Done** |
+| **4. ONE Demo Readiness** | End Users | Manny | In Progress |
+| **5. Protocol Packaging** | Open Source Community | Romney | In Progress |
+| **6. Knowledge Base Sync** | Internal | Jordan | In Progress |
 
 ---
 

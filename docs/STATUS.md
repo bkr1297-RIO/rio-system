@@ -107,15 +107,27 @@ When checking status, the ONE app is the canonical reference for what works. The
 
 ---
 
-## What Is In Progress
+## Deployment Program Status (Phase 3)
+
+We are managing Phase 3 as a deployment program to produce the five artifacts required for a deployable product.
+
+| Document / Artifact | Audience | Owner | Status |
+|---|---|---|---|
+| **1. Pilot Playbook** | Operations / Compliance | Chief of Staff | **Done** |
+| **2. Deployment Architecture** | CTO / Security / IT | Solutions Architect | **Done** |
+| **3. Integration Guide** | Developers | Developer Relations | **Done** |
+| **4. ONE Demo Readiness** | End Users | Manny | In Progress |
+| **5. Protocol Packaging** | Open Source Community | Romney | In Progress |
+| **6. Knowledge Base Sync** | Internal | Jordan | In Progress |
+
+---
+
+## What Is In Progress (Other)
 
 - Google Drive knowledge base reorganization (Jordan)
 - Gateway server hardening for standalone deployment (Manny)
 - Agent onboarding and testing (Brian)
 - RIO Receipt Protocol launch hardening sprint (Damon/Jordan/Romney)
-- First deployment use case definition (Chief of Staff)
-- ONE interface refinement as demo/product center (Manny)
-- Pilot Deployment Playbook (Chief of Staff)
 
 ---
 
@@ -128,7 +140,6 @@ _Nothing currently blocked._
 ## What Is Next
 
 - Docker/self-host packaging setup (Manny)
-- Pilot documentation (TBD)
 - Compliance and regulatory mapping (TBD)
 - Protocol Packs (domain-specific policy profiles — engineering, legal, medical, financial)
 - Learning Loop feedback (learning events improving future Bondi recommendations)
