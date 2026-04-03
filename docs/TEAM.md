@@ -24,8 +24,5 @@ Andrew designs and explains how RIO integrates with real-world systems. He creat
 ### Damon — Developer Relations
 Damon is responsible for developer experience — tutorials, quickstart guides, example projects, community engagement, and making sure developers can go from zero to first receipt as fast as possible.
 
----
-
-## Future Roles
-
-- **Chief of Staff** — May be added later to monitor all coordination, track progress across agents, and surface blockers to Brian.
+### Chief of Staff
+The Chief of Staff monitors all agent activity through the repo and Google Drive, filters out noise, and produces concise status briefs for Brian. Brian's two contact points are Manny (for building) and the Chief of Staff (for coordination and status). Other agents deliver their work to the repo and Drive — the Chief of Staff reads it and surfaces only what Brian needs to see: decisions, conflicts, milestones, and blockers.
