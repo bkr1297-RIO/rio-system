@@ -1,7 +1,7 @@
 # RIO Platformization Tracker
 
 **Status:** Active
-**Phase:** Enforcement Implementation (Phase 2)
+**Phase:** Enforcement Implementation
 **Owner:** Chief of Staff
 **Last Updated:** 2026-04-04
 
@@ -50,98 +50,75 @@ The enforcement areas must be built in this exact sequence. You cannot enforce p
 | Enforcement Plans | Manny (Builder) | `/directives/DIRECTIVE_ENFORCEMENT_PLANS.md` |
 | Integration Planning | Damon (SDK) | `/directives/DIRECTIVE_INTEGRATION_PLANNING.md` |
 | Platformization Tracking | CoS (Chief of Staff) | `/directives/DIRECTIVE_PLATFORMIZATION_TRACKING.md` |
-| Gateway Enforcement Boundary | Manny, Andrew, Damon | `/directives/DIRECTIVE_GATEWAY_ENFORCEMENT_BOUNDARY.md` |
-| First Platform Slice | Andrew, Manny, Romney, Damon | `/directives/DIRECTIVE_FIRST_PLATFORM_SLICE.md` |
 
 ---
 
 ## Phase 1: Foundational Specs (Owner: Andrew / Architects)
 
-**STATUS: COMPLETE**
+Directive: `/directives/DIRECTIVE_FOUNDATIONAL_SPECS.md`
 
 These three specs must be finalized before implementation begins.
 
 ### 1. Identity and Roles Spec
 **Goal:** A unified identity model for humans, agents, services, and approvers. Roles must be explicit and cryptographically distinct.
-- [x] **Directive:** Issued — `/directives/DIRECTIVE_FOUNDATIONAL_SPECS.md`
-- [x] **Spec:** `IDENTITY_AND_ROLES_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
-- [x] **Protocol Review:** `IDENTITY_COMPATIBILITY_REVIEW.md` (Owner: Romney) — Approved
-- [x] **CoS Verification:** Verified 2026-04-04
+- [ ] **Directive:** Issued
+- [ ] **Spec:** `IDENTITY_AND_ROLES_SPEC.md` (Owner: Andrew)
+- [ ] **Protocol Review:** (Owner: Romney) — per `/directives/DIRECTIVE_PROTOCOL_REVIEW.md`
 
 ### 2. Policy Schema Spec
 **Goal:** A formal machine-readable policy schema defining risk levels, approval requirements, quorum rules, allowed executors, expirations, and action classes.
-- [x] **Directive:** Issued
-- [x] **Spec:** `POLICY_SCHEMA_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
-- [x] **CoS Verification:** Verified 2026-04-04
+- [ ] **Directive:** Issued
+- [ ] **Spec:** `POLICY_SCHEMA_SPEC.md` (Owner: Andrew)
 
 ### 3. Storage Architecture Spec
 **Goal:** Formal separation of full artifacts (Content-Addressable Storage) from proof artifacts (Append-Only Ledger).
-- [x] **Directive:** Issued
-- [x] **Spec:** `STORAGE_ARCHITECTURE_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
-- [x] **Protocol Review:** `STORAGE_COMPATIBILITY_REVIEW.md` (Owner: Romney) — Approved
-- [x] **CoS Verification:** Verified 2026-04-04
+- [ ] **Directive:** Issued
+- [ ] **Spec:** `STORAGE_ARCHITECTURE_SPEC.md` (Owner: Andrew)
+- [ ] **Protocol Review:** (Owner: Romney) — per `/directives/DIRECTIVE_PROTOCOL_REVIEW.md`
 
 ---
 
 ## Phase 2: Enforcement Implementation (Owner: Manny / Builder)
 
-**STATUS: IN PROGRESS**
+Directive: `/directives/DIRECTIVE_ENFORCEMENT_PLANS.md`
 
 Do not begin enforcement coding until Andrew's specs are finalized. Prepare implementation plans first.
 
 ### 1. Role Enforcement
-- [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
-- [x] **Code Enforcement:** (Owner: Manny) — **RESUBMITTED** — All code now in `gateway/security/principals.mjs` + route gating in `gateway/routes/*.mjs`. 49 tests, 0 failures. Previous submission (ONE PWA) failed verification at commit `3e2361d`.
-- [x] **Verification:** (Owner: CoS) — Verified 2026-04-04 (Commit 2d698d2)
+- [ ] **Implementation Plan:** (Owner: Manny)
+- [ ] **Code Enforcement:** (Owner: Manny)
+- [ ] **Verification:** (Owner: CoS)
 
 ### 2. Policy Evaluation Engine
-- [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
-- [x] **Code Enforcement:** (Owner: Manny) — Policy engine in `gateway/governance/policy-engine.mjs` + policy store in `gateway/governance/policy-store.mjs` + genesis policy v2.0.0. 57 tests, 0 failures. Wired into `/govern` route.
-- [x] **Verification:** (Owner: CoS) — **PASS** — Verified 2026-04-04 (Commit `239044d`). See `docs/reviews/AREA2_VERIFICATION_REPORT.md`.
+- [ ] **Implementation Plan:** (Owner: Manny)
+- [ ] **Code Enforcement:** (Owner: Manny)
+- [ ] **Verification:** (Owner: CoS)
 
 ### 3. CAS + Ledger Boundary
-- [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
+- [ ] **Implementation Plan:** (Owner: Manny)
 - [ ] **Code Enforcement:** (Owner: Manny)
 - [ ] **Verification:** (Owner: CoS)
 
 ### 4. Active Audit
-- [x] **Spec:** `AUTOMATED_AUDIT_SPEC.md` (Owner: Romney) — Verified
-- [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
+- [ ] **Implementation Plan:** (Owner: Manny)
 - [ ] **Code Enforcement:** (Owner: Manny)
 - [ ] **Verification:** (Owner: CoS)
 
 ### 5. Meta-Governance Enforcement
 - [x] **Spec:** `RIO_META_GOVERNANCE.md` (Completed)
-- [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
+- [ ] **Implementation Plan:** (Owner: Manny)
 - [ ] **Code Enforcement:** (Owner: Manny)
 - [ ] **Verification:** (Owner: CoS)
 
 ---
 
-## Parallel Deliveries (During Phase 2)
-
-The following deliveries landed while Phase 2 enforcement coding is in progress:
-
-| Commit | Owner | Delivery | Status |
-|---|---|---|---|
-| `c628f52` | Andrew | Identity Spec v1.1 (Implementation-Ready) | Delivered |
-| `fc95196` | Romney | Protocol Identity & Storage Compatibility Note | Delivered |
-| `c31af09` | Damon/Andrew | Gateway API Contract | Delivered |
-| `2c90943` | Damon | STATUS.md update for Gateway API Contract | Delivered |
-| (in docs/) | Damon | SDK Interface and Developer Flow guide | Delivered |
-| (pending) | Manny | First Platform Slice: Approvals table, Google OAuth, ONE rewired to Gateway, 3 screens | SUBMITTED |
-
----
-
 ## Phase 3: Integration Layer (Owner: Damon / SDK)
 
-**STATUS: PENDING**
+Directive: `/directives/DIRECTIVE_INTEGRATION_PLANNING.md`
 
 Do not build yet. Plan first. SDK and integration architecture must align with Identity, Policy, and Storage specs.
 
-- [x] **SDK Architecture Plan:** `EXTERNAL_INTEGRATION_PLAN.md` (Owner: Damon) — Verified
-- [x] **Gateway API Contract:** `GATEWAY_API_CONTRACT.md` (Owner: Damon/Andrew) — Delivered
-- [x] **SDK Interface Design:** `SDK_INTERFACE_AND_DEVELOPER_FLOW.md` (Owner: Damon) — Delivered
+- [ ] **SDK Architecture Plan:** (Owner: Damon)
 - [ ] **API Surface Reconciliation:** (Owner: Damon)
 - [ ] **Verification:** (Owner: CoS)
 
@@ -164,14 +141,10 @@ Andrew     Manny     Romney     Damon
               Platform Core
 ```
 
-### Current Focus Assignments
-
-| Person | Focus Now |
-|---|---|
-| **Andrew** | Identity spec, Policy schema, Storage spec — all must assume Gateway enforcement |
-| **Manny** | Move enforcement into Gateway and implement Areas 1–5 there |
-| **Romney** | Ensure receipts/ledger/verifier align with Gateway enforcement |
-| **Damon** | SDKs must call Gateway, not ONE PWA |
-| **CoS** | Track enforcement in Gateway only |
-| **Brian** | Governance model, invariants, product direction |
-| **Bondi** | Scribe, invariant logic, journey record |
+- **Andrew** = defines structures (Identity, Policy, Storage)
+- **Manny** = builds enforcement (Gateway code)
+- **Romney** = ensures proof/ledger compatibility (Receipt, Ledger)
+- **Damon** = builds integration layer (SDK, API, Docs)
+- **CoS** = ensures coordination, sequencing, and verification
+- **Brian** = governance, product definition, meta-governance
+- **Bondi** = scribe, invariant logic, journey record
