@@ -25,6 +25,7 @@ import { initApiKeys } from "./security/api-keys.mjs";
 import { apiKeyAuth } from "./security/api-auth.mjs";
 import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
 import { initPrincipals, resolvePrincipal } from "./security/principals.mjs";
+import { initPolicyStore } from "./governance/policy-store.mjs";
 
 const app = express();
 const PORT = process.env.RIO_GATEWAY_PORT || process.env.PORT || 4400;
@@ -98,6 +99,10 @@ async function start() {
     // Initialize principal registry (Area 1: Role Enforcement)
     await initPrincipals();
     console.log("[RIO Gateway] Principal registry initialized (PostgreSQL).");
+
+    // Initialize policy store (Area 2: Policy Evaluation Engine)
+    await initPolicyStore();
+    console.log("[RIO Gateway] Policy store initialized (PostgreSQL).");
   } catch (err) {
     console.error(`[RIO Gateway] FATAL: Could not connect to ledger database: ${err.message}`);
     console.error("[RIO Gateway] Fail-closed: Gateway will not start without a persistent ledger.");

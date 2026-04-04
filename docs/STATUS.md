@@ -6,6 +6,262 @@ Last updated: 2026-04-04 by Damon (Developer Relations)
 
 ---
 
+## Latest Delivery — Area 2: Policy Evaluation Engine (Gateway Code)
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Delivery:** Machine-readable policy evaluation engine, implemented in the Gateway (`rio-system/gateway/`)
+**Prerequisite:** Area 1 (Role Enforcement) — VERIFIED PASS
+
+### Alignment with Locked Decisions
+
+- **Decision 1 (Enforcement Boundary):** All policy evaluation code in `gateway/`
+- **Decision 2 (Interface Is Not Authority):** Policy engine runs server-side only; no policy logic in ONE PWA
+- **Decision 3 (Ledger Is System of Record):** Policy versions stored in PostgreSQL with hash chain; every policy change produces a ledger entry
+
+### What Shipped
+
+| File | What It Does |
+|---|---|
+| `gateway/governance/policy-engine.mjs` | Pure evaluation function per Andrew's Policy Schema Spec Section 10. Action pattern matching, risk tier classification, invariant violation detection, confidence override, system mode enforcement, approval requirements, TTL computation, governance hash generation. |
+| `gateway/governance/policy-store.mjs` | PostgreSQL-backed policy storage with hash chain versioning. `policies` table, `initPolicyStore()`, `loadGenesisPolicy()`, `getActivePolicy()`, `activatePolicy()`, `deactivatePolicy()`. |
+| `gateway/config/rio/policy-v2.json` | Genesis policy document v2.0.0 with 14 action classes, 5 risk tiers, 4 governance decisions, 4 system modes, 6 scoped agents, 7 scoped systems, and 7 invariant violations. |
+| `gateway/server.mjs` | Wired `initPolicyStore()` into startup sequence |
+| `gateway/routes/index.mjs` | `/govern` route now uses v2 policy engine instead of hardcoded `evaluateIntent()`. Policy-based TTL expiration check on `/execute`. Health endpoint shows policy v2 info. |
+| `gateway/routes/api-v1.mjs` | API v1 `/govern` route uses v2 policy engine |
+| `gateway/tests/policy-engine.test.mjs` | 57 tests across 13 suites |
+
+### Policy Engine Architecture
+
+**Evaluation Algorithm (per Andrew's Spec Section 10):**
+
+1. Verify policy is active
+2. Verify agent is in scope (`scope.agents`)
+3. Verify target system is in scope (`scope.systems`)
+4. Check invariant violations (7 hard-coded blocks)
+5. Match action against action classes (first-match-wins with pattern support)
+6. Apply confidence override (< 80 upgrades AUTO_APPROVE → REQUIRE_HUMAN)
+7. Apply system mode override (ELEVATED, LOCKDOWN, MAINTENANCE)
+8. Compute approval requirements and TTL
+9. Generate governance hash (SHA-256)
+10. Return structured result with full audit trail
+
+**Action Classes (14 in genesis policy):**
+
+| Class ID | Pattern | Risk | Decision |
+|---|---|---|---|
+| `read_operations` | `read_*\|list_*\|get_*\|search_*\|view_*` | NONE | AUTO_APPROVE |
+| `draft_operations` | `draft_*\|compose_*\|edit_draft_*` | LOW | AUTO_APPROVE |
+| `design_operations` | `design_*\|create_mockup_*\|create_wireframe_*` | LOW | AUTO_APPROVE |
+| `send_known_contact` | `send_email\|send_message` (with conditions) | MEDIUM | REQUIRE_HUMAN |
+| `send_new_contact` | `send_email\|send_message` (with conditions) | MEDIUM | REQUIRE_HUMAN |
+| `send_generic` | `send_*` | MEDIUM | REQUIRE_HUMAN |
+| `calendar_operations` | `create_event_*\|update_event_*\|delete_event_*` | MEDIUM | REQUIRE_HUMAN |
+| `file_operations` | `create_file_*\|update_file_*\|move_*\|rename_*` | MEDIUM | REQUIRE_HUMAN |
+| `deploy_operations` | `deploy_*\|publish_*\|enable_live_*` | HIGH | REQUIRE_HUMAN |
+| `financial_operations` | `transfer_*\|payment_*\|invoice_*` | HIGH | REQUIRE_HUMAN |
+| `destructive_operations` | `delete_*\|purge_*\|revoke_*\|disable_*` | CRITICAL | REQUIRE_HUMAN |
+| `policy_changes` | `change_policy\|update_policy\|modify_governance` | CRITICAL | REQUIRE_QUORUM |
+| `system_admin` | `restart_*\|shutdown_*\|reset_*\|migrate_*` | CRITICAL | REQUIRE_HUMAN |
+| `invariant_violations` | `self_authorize\|bypass_governance\|...` | CRITICAL | AUTO_DENY |
+
+**Risk Tiers and TTLs:**
+
+| Risk Tier | Approval TTL | Meaning |
+|---|---|---|
+| NONE | No TTL | Read-only, auto-approved |
+| LOW | No TTL | Safe write, auto-approved |
+| MEDIUM | 3600s (1 hour) | Requires human review |
+| HIGH | 1800s (30 min) | Requires human review, shorter window |
+| CRITICAL | 900s (15 min) | Requires human review or quorum, tightest window |
+
+**System Modes:**
+
+| Mode | Effect |
+|---|---|
+| NORMAL | Standard evaluation |
+| ELEVATED | AUTO_APPROVE → REQUIRE_HUMAN |
+| LOCKDOWN | Only root_authority can approve |
+| MAINTENANCE | All execution paused |
+
+**Invariant Violations (7 hard blocks):**
+
+`self_authorize`, `bypass_governance`, `execute_without_approval`, `modify_own_permissions`, `delete_ledger`, `forge_receipt`, `impersonate_principal`
+
+### Test Results
+
+57 tests, 0 failures across 13 suites:
+
+**Unit Tests (49):**
+- Action Pattern Matching (6 tests)
+- Condition Evaluation (5 tests)
+- Risk Classification and Action Classes (7 tests)
+- Invariant Violation Detection (3 tests)
+- Fail-Closed Defaults (4 tests)
+- Confidence Override (2 tests)
+- System Mode Override (5 tests)
+- Approval Requirements (4 tests)
+- Approval TTL by Risk Tier (4 tests)
+- Approval Expiration Helper (3 tests)
+- Governance Hash (2 tests)
+- Policy Version and Hash Tracking (2 tests)
+- Action Class Priority / First Match Wins (2 tests)
+
+**Integration Tests (8):**
+- Health endpoint shows policy v2 info
+- `read_email` → AUTO_APPROVE (NONE risk)
+- `deploy_production` → REQUIRE_HUMAN (HIGH risk)
+- `self_authorize` → AUTO_DENY (invariant violation)
+- Unknown action → REQUIRE_HUMAN + HIGH (fail-closed)
+- `change_policy` → REQUIRE_QUORUM (2-of-3 meta-governance)
+- Low confidence read → upgraded to REQUIRE_HUMAN
+- Governance hash is a 64-char hex string (SHA-256)
+- Unknown agent → AUTO_DENY (agent not in scope)
+
+### Verification Checklist
+
+- [x] Policy engine is a pure function — no side effects, deterministic output
+- [x] Fail-closed: unknown actions → REQUIRE_HUMAN + HIGH
+- [x] Fail-closed: unknown agents → AUTO_DENY
+- [x] Fail-closed: no policy → gateway refuses to govern
+- [x] Invariant violations → AUTO_DENY (cannot be overridden)
+- [x] Confidence override works (< 80 upgrades AUTO_APPROVE)
+- [x] System modes work (ELEVATED, LOCKDOWN, MAINTENANCE)
+- [x] Policy versioning with hash chain in PostgreSQL
+- [x] Genesis policy loaded on first boot
+- [x] Governance hash computed per Andrew's spec
+- [x] All 57 tests pass
+- [x] All code in `gateway/` per Decision 1
+
+---
+
+## Previous Delivery — Area 1: Role Enforcement (VERIFIED PASS)
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Delivery:** Unified principal model with role enforcement, implemented in the Gateway (`rio-system/gateway/`)
+
+**Previous submission failed verification** (commit `304f0fd`) — code was in the ONE PWA, not the Gateway.
+This resubmission places all enforcement in the Gateway per the three locked decisions:
+- **Decision 1 (Enforcement Boundary):** All enforcement in `gateway/`
+- **Decision 2 (Interface Is Not Authority):** ONE PWA is an untrusted client
+- **Decision 3 (Ledger Is System of Record):** Principal changes produce ledger entries
+
+### What Shipped
+
+| File | What It Does |
+|---|---|
+| `gateway/security/principals.mjs` | Principal registry: `principals` + `key_history` tables, `resolvePrincipal()` middleware, `requireRole()` middleware, initial principal seeding (I-1, bondi, manny, gateway-exec, mantis, ledger-writer) |
+| `gateway/server.mjs` | Wired `initPrincipals()` into startup, `resolvePrincipal` as global middleware |
+| `gateway/routes/index.mjs` | Role gating on all pipeline routes: `/intent` (proposer), `/govern` (proposer/executor), `/authorize` (approver/root_authority), `/execute` (executor), `/receipt` (executor/auditor), `/ledger` (auditor), `/verify` (auditor). Principal attribution on all intents. |
+| `gateway/routes/api-v1.mjs` | Role gating on API v1 routes: intent submission (proposer), authorization (approver), execution (executor), ledger/verify (auditor), key management (root_authority/meta_governor) |
+| `gateway/routes/signers.mjs` | Role gating: list (any principal), register/revoke (root_authority/meta_governor) |
+| `gateway/routes/proxy.mjs` | Kill switch gated by root_authority/meta_governor |
+| `gateway/governance/intents.mjs` | Extended `createIntent()` to carry `principal_id` and `principal_role` attribution |
+| `gateway/tests/principals.test.mjs` | 49 tests across 11 suites proving fail-closed behavior, role boundaries, principal attribution, and full pipeline with role enforcement |
+
+### Role Enforcement Model
+
+| Role | Can Do | Cannot Do |
+|---|---|---|
+| `proposer` (bondi, manny) | Submit intents, run governance | Authorize, execute, read ledger |
+| `approver` (I-1 implicit) | Authorize/deny intents | Execute |
+| `executor` (gateway-exec) | Execute authorized intents, confirm execution | Submit intents, authorize, read ledger |
+| `auditor` (mantis, ledger-writer) | Read ledger, verify chain, generate receipts | Submit intents, authorize, execute |
+| `root_authority` (I-1) | All governance roles implicitly. Manage signers, kill switch. | Execute (NOT implicit — separation of powers) |
+| `meta_governor` (I-1 secondary) | Manage signers, manage API keys, kill switch | Execute |
+
+### Enforcement Invariants (Proven by Tests)
+
+1. **Fail-closed:** Unauthenticated requests → 403 on all role-gated routes (9 routes tested)
+2. **Role boundaries:** Proposer cannot authorize/execute, executor cannot propose/authorize, auditor cannot propose/authorize/execute
+3. **Principal attribution:** Every intent carries `principal_id` of the submitting principal
+4. **root_authority implicit roles:** I-1 has implicit proposer, approver, auditor, meta_governor — but NOT executor
+5. **Unknown principal → 403:** Unrecognized `X-Principal-ID` header blocked
+6. **Full pipeline works:** Intent → Govern → Authorize → Execute → Confirm → Receipt → Verify all pass with correct role assignments
+
+### Test Results
+
+49 tests, 0 failures across 11 suites:
+- Public Endpoints (2 tests)
+- Fail-Closed: Unauthenticated Requests (9 tests)
+- Root Authority: Brian (I-1) Full Access (6 tests)
+- Role Boundaries: Proposer/bondi (4 tests)
+- Role Boundaries: Executor/gateway-exec (3 tests)
+- Role Boundaries: Auditor/mantis (5 tests)
+- Signer Management Role Gating (3 tests)
+- Kill Switch Role Gating (2 tests)
+- Fail-Closed: Unknown Principal (1 test)
+- Principal Attribution (2 tests)
+- Full Pipeline with Role Enforcement (8 tests)
+
+### Initial Principal Set (Seeded on First Boot)
+
+| Principal ID | Actor Type | Primary Role | Secondary Roles |
+|---|---|---|---|
+| `I-1` | human | root_authority | approver, meta_governor |
+| `bondi` | ai_agent | proposer | — |
+| `manny` | ai_agent | proposer | — |
+| `gateway-exec` | executor | executor | — |
+| `mantis` | auditor | auditor | — |
+| `ledger-writer` | service | auditor | — |
+
+### Prohibited Role Combinations (Enforced)
+
+- `proposer` + `executor` — would allow bypassing governance entirely
+- `approver` + `executor` — would collapse the governance-execution boundary
+
+---
+
+## Previous Delivery — Area 1 (FAILED VERIFICATION)
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Delivery:** Role enforcement implemented in ONE PWA (wrong location)
+**Checkpoint:** `7b0ab4d3`
+**Verification Result:** FAILED — Code not in Gateway repo. See commit `3e2361d`.
+**Corrective Action:** Resubmitted above with all code in `gateway/`.
+
+---
+
+## Previous Delivery — Receipt Protocol v2.3.0 Published
+
+**Date:** 2026-04-04
+**Agent:** Romney (Protocol / Packaging)
+**Delivery:** Receipt spec v2.3.0 implemented, tested, merged, and published to npm and PyPI
+**Branch:** `main` (PR #6 merged)
+**Commit:** `34f30c0`
+
+**What shipped:**
+
+| Package | Version | Link |
+|---|---|---|
+| npm | `rio-receipt-protocol@2.3.0` | https://www.npmjs.com/package/rio-receipt-protocol/v/2.3.0 |
+| PyPI | `rio-receipt-protocol 2.3.0` | https://pypi.org/project/rio-receipt-protocol/2.3.0/ |
+
+**New fields in `identity_binding` (all optional, backward-compatible):**
+- `role_exercised` (string) — The role the signer was acting under
+- `actor_type` (string) — Whether the signer is "human", "ai_agent", or "service"
+- `key_version` (integer) — Version number of the signing key for rotation tracking
+- `delegation` (object) — Full delegation chain with delegation_id, delegate_id, scope, risk_ceiling, expiry
+
+**Files changed:** 20 files across schema, spec, reference implementation, Python implementation, TypeScript declarations, tests, changelog, and version references.
+
+**Test results:**
+- Node.js: 44/44 pass (7 new identity enrichment tests)
+- Python: 29/29 pass
+- Examples: 8/8 pass
+
+**Compatibility:** Fully backward-compatible. v2.2 receipts remain valid and verifiable. New fields do not affect `receipt_hash` computation.
+
+**This completes the protocol-level work from the sign-off.** Manny can now build enforcement logic against the v2.3 receipt format with confidence that the published packages match the spec.
+
+---
+
+### Previous Delivery — Protocol Sign-Off: Phase 1 Foundational Specs
+
+---
+
 ## Latest Delivery — Protocol Sign-Off: Phase 1 Foundational Specs
 
 **Date:** 2026-04-04

@@ -10,6 +10,8 @@ import { Router } from "express";
 import { createIntent, getIntent, updateIntent, listIntents, getStats } from "../governance/intents.mjs";
 import { evaluateIntent } from "../governance/policy.mjs";
 import { getAllConfig, getConstitution, getPolicy } from "../governance/config.mjs";
+import { evaluatePolicy, computeGovernanceHash, isApprovalExpired } from "../governance/policy-engine.mjs";
+import { getActivePolicy, getSystemMode, getPolicyHistory, verifyPolicyChain } from "../governance/policy-store.mjs";
 import {
   appendEntry,
   getEntries,
@@ -167,15 +169,43 @@ router.post("/govern", requireRole("proposer", "executor"), (req, res) => {
       });
     }
 
-    // Evaluate against policy
-    const decision = evaluateIntent(intent);
-    const governanceHash = hashGovernance({ intent_id, ...decision });
+    // ─── Area 2: Policy Evaluation Engine ─────────────────────────
+    const activePolicy = getActivePolicy();
+    const currentSystemMode = getSystemMode();
 
-    // Update intent
-    const newStatus = decision.status === "blocked" ? "blocked" : "governed";
+    // Evaluate against policy (v2 engine)
+    const decision = evaluatePolicy(intent, activePolicy, {
+      systemMode: currentSystemMode,
+      principal: req.principal || null,
+    });
+
+    // Compute governance hash per POLICY_SCHEMA_SPEC.md Section 11
+    const timestamp = new Date().toISOString();
+    const governanceHash = computeGovernanceHash({
+      intent_hash: hashIntent(intent),
+      policy_hash: decision.policy_hash,
+      policy_version: decision.policy_version,
+      governance_decision: decision.governance_decision,
+      risk_tier: decision.risk_tier,
+      matched_class: decision.matched_class,
+      timestamp,
+    });
+
+    // Determine intent status
+    const newStatus = decision.governance_decision === "AUTO_DENY" ? "blocked"
+      : decision.governance_decision === "AUTO_APPROVE" ? "authorized"
+      : "governed";
+
+    // Update intent with full governance record
     updateIntent(intent_id, {
       status: newStatus,
-      governance: { ...decision, governance_hash: governanceHash },
+      governance: {
+        ...decision,
+        governance_hash: governanceHash,
+        evaluated_at: timestamp,
+        system_mode: currentSystemMode,
+        principal_id: req.principal?.principal_id || null,
+      },
     });
 
     // Write to ledger
@@ -184,20 +214,28 @@ router.post("/govern", requireRole("proposer", "executor"), (req, res) => {
       action: intent.action,
       agent_id: intent.agent_id,
       status: newStatus,
-      detail: `Governance: ${decision.status} — ${decision.reason}`,
+      detail: `Governance: ${decision.governance_decision} — ${decision.reason} (risk: ${decision.risk_tier}, class: ${decision.matched_class})`,
       intent_hash: hashIntent(intent),
     });
 
-    console.log(`[RIO Gateway] Governed: ${intent_id} — ${decision.status} (risk: ${decision.risk_level})`);
+    console.log(`[RIO Gateway] Governed: ${intent_id} — ${decision.governance_decision} (risk: ${decision.risk_tier}, class: ${decision.matched_class})`);
 
     res.json({
       intent_id,
+      governance_decision: decision.governance_decision,
       governance_status: decision.status,
+      risk_tier: decision.risk_tier,
       risk_level: decision.risk_level,
+      matched_class: decision.matched_class,
       requires_approval: decision.requires_approval,
+      approval_requirement: decision.approval_requirement,
+      approval_ttl: decision.approval_ttl,
       reason: decision.reason,
       checks: decision.checks,
+      policy_version: decision.policy_version,
+      policy_hash: decision.policy_hash,
       governance_hash: governanceHash,
+      system_mode: currentSystemMode,
     });
   } catch (err) {
     console.error(`[RIO Gateway] Govern error: ${err.message}`);
@@ -392,7 +430,7 @@ router.post("/execute", requireRole("executor"), (req, res) => {
       });
     }
 
-    // Check authorization expiry
+    // Check authorization expiry (explicit expires_at)
     if (intent.authorization?.expires_at) {
       const expiresAt = new Date(intent.authorization.expires_at);
       if (expiresAt < new Date()) {
@@ -410,6 +448,25 @@ router.post("/execute", requireRole("executor"), (req, res) => {
           reason: "Authorization has expired. Re-authorization required.",
         });
       }
+    }
+
+    // Area 2: Policy-based TTL expiration check
+    const approvalTtl = intent.governance?.approval_ttl;
+    const authTimestamp = intent.authorization?.timestamp;
+    if (approvalTtl && authTimestamp && isApprovalExpired(authTimestamp, approvalTtl)) {
+      updateIntent(intent_id, { status: "blocked" });
+      appendEntry({
+        intent_id,
+        action: intent.action,
+        agent_id: intent.agent_id,
+        status: "blocked",
+        detail: `Execution blocked: Approval TTL expired (${approvalTtl}s for risk tier ${intent.governance?.risk_tier}).`,
+      });
+      return res.status(403).json({
+        intent_id,
+        status: "blocked",
+        reason: `Approval has expired. TTL for risk tier ${intent.governance?.risk_tier} is ${approvalTtl} seconds.`,
+      });
     }
 
     // ---------------------------------------------------------------
@@ -742,7 +799,14 @@ router.get("/health", (req, res) => {
       timestamp: new Date().toISOString(),
       governance: {
         constitution_loaded: !!config.constitution,
-        policy_loaded: !!config.policy,
+        policy_v1_loaded: !!config.policy,
+        policy_v2: {
+          active: !!getActivePolicy(),
+          version: getActivePolicy()?.policy_version || null,
+          hash: getActivePolicy()?.policy_hash?.substring(0, 16) || null,
+          action_classes: getActivePolicy()?.action_classes?.length || 0,
+        },
+        system_mode: getSystemMode(),
         roles_loaded: {
           manus: !!config.role_manus,
           gemini: !!config.role_gemini,

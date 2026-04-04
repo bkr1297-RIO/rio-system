@@ -28,6 +28,8 @@ import { Router } from "express";
 import { createIntent, getIntent, updateIntent, listIntents, getStats } from "../governance/intents.mjs";
 import crypto from "node:crypto";
 import { evaluateIntent } from "../governance/policy.mjs";
+import { evaluatePolicy, computeGovernanceHash, isApprovalExpired } from "../governance/policy-engine.mjs";
+import { getActivePolicy, getSystemMode } from "../governance/policy-store.mjs";
 import {
   appendEntry,
   getEntries,
@@ -204,13 +206,39 @@ router.post("/intents/:id/govern", requireScope("write"), requireRole("proposer"
       });
     }
 
-    const decision = evaluateIntent(intent);
-    const governanceHash = hashGovernance({ intent_id, ...decision });
+    // Area 2: Policy Evaluation Engine (v2)
+    const activePolicy = getActivePolicy();
+    const currentSystemMode = getSystemMode();
 
-    const newStatus = decision.status === "blocked" ? "blocked" : "governed";
+    const decision = evaluatePolicy(intent, activePolicy, {
+      systemMode: currentSystemMode,
+      principal: req.principal || null,
+    });
+
+    const timestamp = new Date().toISOString();
+    const governanceHash = computeGovernanceHash({
+      intent_hash: hashIntent(intent),
+      policy_hash: decision.policy_hash,
+      policy_version: decision.policy_version,
+      governance_decision: decision.governance_decision,
+      risk_tier: decision.risk_tier,
+      matched_class: decision.matched_class,
+      timestamp,
+    });
+
+    const newStatus = decision.governance_decision === "AUTO_DENY" ? "blocked"
+      : decision.governance_decision === "AUTO_APPROVE" ? "authorized"
+      : "governed";
+
     updateIntent(intent_id, {
       status: newStatus,
-      governance: { ...decision, governance_hash: governanceHash },
+      governance: {
+        ...decision,
+        governance_hash: governanceHash,
+        evaluated_at: timestamp,
+        system_mode: currentSystemMode,
+        principal_id: req.principal?.principal_id || null,
+      },
     });
 
     appendEntry({
@@ -218,20 +246,28 @@ router.post("/intents/:id/govern", requireScope("write"), requireRole("proposer"
       action: intent.action,
       agent_id: intent.agent_id,
       status: newStatus,
-      detail: `[API v1] Governance: ${decision.status} — ${decision.reason}`,
+      detail: `[API v1] Governance: ${decision.governance_decision} — ${decision.reason} (risk: ${decision.risk_tier}, class: ${decision.matched_class})`,
       intent_hash: hashIntent(intent),
     });
 
-    console.log(`[RIO API v1] Governed: ${intent_id} — ${decision.status}`);
+    console.log(`[RIO API v1] Governed: ${intent_id} — ${decision.governance_decision} (risk: ${decision.risk_tier})`);
 
     res.json({
       intent_id,
+      governance_decision: decision.governance_decision,
       governance_status: decision.status,
+      risk_tier: decision.risk_tier,
       risk_level: decision.risk_level,
+      matched_class: decision.matched_class,
       requires_approval: decision.requires_approval,
+      approval_requirement: decision.approval_requirement,
+      approval_ttl: decision.approval_ttl,
       reason: decision.reason,
       checks: decision.checks,
+      policy_version: decision.policy_version,
+      policy_hash: decision.policy_hash,
       governance_hash: governanceHash,
+      system_mode: currentSystemMode,
       api_version: "v1",
     });
   } catch (err) {

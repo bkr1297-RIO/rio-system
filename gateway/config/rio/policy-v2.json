@@ -1,0 +1,219 @@
+{
+  "policy_version": "2.0.0",
+  "policy_id": "00000000-0000-0000-0000-000000000001",
+  "policy_hash": null,
+  "previous_policy_hash": null,
+  "created_at": "2026-04-04T00:00:00.000Z",
+  "created_by": "I-1",
+  "approved_by": ["I-1"],
+  "status": "active",
+  "scope": {
+    "agents": ["bondi", "manny", "andrew", "romney", "damon", "brian.k.rasmussen"],
+    "environments": ["local", "sandbox", "production"],
+    "systems": ["gmail", "google_drive", "github", "google_workspace", "calendar", "ONE", "RIO"]
+  },
+  "risk_tiers": {
+    "NONE": {
+      "severity": 0,
+      "description": "No external effect. Internal computation or read-only.",
+      "examples": ["summarize_text", "list_files", "read_email"]
+    },
+    "LOW": {
+      "severity": 1,
+      "description": "Internal effect only. Reversible. No external communication.",
+      "examples": ["draft_email", "organize_files", "create_local_document"]
+    },
+    "MEDIUM": {
+      "severity": 2,
+      "description": "External effect but reversible or limited scope.",
+      "examples": ["send_email_to_known_contact", "update_existing_document"]
+    },
+    "HIGH": {
+      "severity": 3,
+      "description": "External effect with significant scope or limited reversibility.",
+      "examples": ["send_email_to_new_contact", "modify_github_repo", "share_document_externally"]
+    },
+    "CRITICAL": {
+      "severity": 4,
+      "description": "Irreversible external effect, financial impact, or authority change.",
+      "examples": ["delete_repository", "send_payment", "revoke_access", "change_policy"]
+    }
+  },
+  "action_classes": [
+    {
+      "class_id": "read_operations",
+      "pattern": "read_*|list_*|get_*|summarize_*",
+      "risk_tier": "NONE",
+      "governance_decision": "AUTO_APPROVE",
+      "description": "Read-only operations with no external effect."
+    },
+    {
+      "class_id": "draft_operations",
+      "pattern": "draft_*|organize_*|create_local_*",
+      "risk_tier": "LOW",
+      "governance_decision": "AUTO_APPROVE",
+      "description": "Internal creation operations. Reversible, no external effect."
+    },
+    {
+      "class_id": "design_operations",
+      "pattern": "design_*|write_code_*|refactor_*|document_*|prepare_*|stage_*|simulate_*|ask_*|configure_dev_*|configure_staging_*|run_non_destructive_*",
+      "risk_tier": "LOW",
+      "governance_decision": "AUTO_APPROVE",
+      "description": "Build authority actions. Agents can prepare freely."
+    },
+    {
+      "class_id": "send_known_contact",
+      "pattern": "send_email",
+      "conditions": {
+        "recipient_in": "known_contacts",
+        "attachment_count": { "max": 3 },
+        "body_length": { "max": 5000 }
+      },
+      "risk_tier": "MEDIUM",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Sending email to a known contact. Requires human approval."
+    },
+    {
+      "class_id": "send_new_contact",
+      "pattern": "send_email",
+      "conditions": {
+        "recipient_not_in": "known_contacts"
+      },
+      "risk_tier": "HIGH",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Sending email to a new contact. Higher risk, requires human approval."
+    },
+    {
+      "class_id": "send_generic",
+      "pattern": "send_*",
+      "risk_tier": "MEDIUM",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Generic send operations. Requires human approval."
+    },
+    {
+      "class_id": "github_write",
+      "pattern": "github_commit|github_push|github_create_*|github_delete_*|github_merge_*",
+      "risk_tier": "HIGH",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Write operations to GitHub repositories."
+    },
+    {
+      "class_id": "deploy_operations",
+      "pattern": "deploy_*|publish_*|enable_live_*",
+      "risk_tier": "HIGH",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Deployment and publishing operations. Requires human approval."
+    },
+    {
+      "class_id": "external_write",
+      "pattern": "write_production_*|modify_live_*|persist_external_*",
+      "risk_tier": "HIGH",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "External write operations to production systems."
+    },
+    {
+      "class_id": "destructive_operations",
+      "pattern": "delete_*|revoke_*|destroy_*",
+      "risk_tier": "CRITICAL",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Destructive operations. Irreversible. Requires human approval."
+    },
+    {
+      "class_id": "financial_operations",
+      "pattern": "send_payment|transfer_*|purchase_*",
+      "risk_tier": "CRITICAL",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Financial operations. Requires human approval."
+    },
+    {
+      "class_id": "execute_irreversible",
+      "pattern": "execute_irreversible_*",
+      "risk_tier": "CRITICAL",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Irreversible external actions. Requires human approval."
+    },
+    {
+      "class_id": "policy_changes",
+      "pattern": "update_policy|change_constitution|modify_invariant|change_policy",
+      "risk_tier": "CRITICAL",
+      "governance_decision": "REQUIRE_QUORUM",
+      "description": "Changes to governance rules. Requires Meta-Governance quorum."
+    },
+    {
+      "class_id": "invariant_violations",
+      "pattern": "self_authorize|bypass_governance|execute_without_approval",
+      "risk_tier": "CRITICAL",
+      "governance_decision": "AUTO_DENY",
+      "description": "Actions that violate constitutional invariants. Always denied."
+    }
+  ],
+  "approval_requirements": {
+    "AUTO_APPROVE": {
+      "approvals_required": 0,
+      "description": "No approval needed. Action proceeds immediately."
+    },
+    "REQUIRE_HUMAN": {
+      "approvals_required": 1,
+      "required_roles": ["approver", "root_authority"],
+      "description": "One human approval required from an authorized approver."
+    },
+    "REQUIRE_QUORUM": {
+      "approvals_required": 2,
+      "quorum_size": 3,
+      "required_roles": ["meta_governor", "root_authority"],
+      "description": "2-of-3 Meta-Governance quorum required."
+    },
+    "REQUIRE_UNANIMOUS": {
+      "approvals_required": 3,
+      "quorum_size": 3,
+      "required_roles": ["meta_governor", "root_authority"],
+      "description": "3-of-3 unanimous Meta-Governance quorum required."
+    },
+    "AUTO_DENY": {
+      "approvals_required": -1,
+      "description": "Action is denied immediately. No approval path exists."
+    }
+  },
+  "delegation_rules": {
+    "enabled": true,
+    "max_duration_hours": 24,
+    "risk_ceiling": "LOW",
+    "allowed_delegators": ["root_authority", "approver"],
+    "allowed_delegates": ["ai_agent"],
+    "requires_receipt": true,
+    "auto_revoke_on_violation": true
+  },
+  "expiration_rules": {
+    "NONE": null,
+    "LOW": null,
+    "MEDIUM": 3600,
+    "HIGH": 1800,
+    "CRITICAL": 900
+  },
+  "system_modes": {
+    "NORMAL": {
+      "description": "Standard operation. All governance decisions available.",
+      "auto_approve_enabled": true,
+      "delegation_enabled": true
+    },
+    "ELEVATED": {
+      "description": "Heightened security. All actions require human approval.",
+      "auto_approve_enabled": false,
+      "delegation_enabled": false,
+      "override": "All governance_decision values are overridden to REQUIRE_HUMAN except AUTO_DENY."
+    },
+    "LOCKDOWN": {
+      "description": "Emergency mode. Only root_authority can approve. All delegation revoked.",
+      "auto_approve_enabled": false,
+      "delegation_enabled": false,
+      "override": "Only root_authority can approve. All other approvers are suspended.",
+      "trigger": "Emergency kill switch or constitutional violation detected."
+    },
+    "MAINTENANCE": {
+      "description": "System maintenance. All execution paused. Intents accepted but not processed.",
+      "auto_approve_enabled": false,
+      "delegation_enabled": false,
+      "execution_paused": true
+    }
+  }
+}

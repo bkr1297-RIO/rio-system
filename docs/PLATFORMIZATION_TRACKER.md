@@ -95,8 +95,8 @@ Do not begin enforcement coding until Andrew's specs are finalized. Prepare impl
 
 ### 2. Policy Evaluation Engine
 - [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
-- [ ] **Code Enforcement:** (Owner: Manny)
-- [ ] **Verification:** (Owner: CoS)
+- [x] **Code Enforcement:** (Owner: Manny) — **SUBMITTED** — Policy engine in `gateway/governance/policy-engine.mjs` + policy store in `gateway/governance/policy-store.mjs` + genesis policy v2.0.0. 57 tests, 0 failures. Wired into `/govern` route replacing hardcoded `evaluateIntent()`.
+- [ ] **Verification:** (Owner: CoS) — Awaiting verification
 
 ### 3. CAS + Ledger Boundary
 - [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
