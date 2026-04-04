@@ -6,7 +6,26 @@ Last updated: 2026-04-04 by Manny (Builder)
 
 ---
 
-## Latest Delivery — Spec Consolidation: Canonical 6-Document Structure
+## Latest Delivery — Architecture Convergence: Technical Decisions
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Delivery:** Technical decisions document mapping Brian's 5 architecture convergence areas to existing implementation, gaps, and next steps
+**Branch:** `main`
+**File:** `docs/TECHNICAL_DECISIONS.md`
+
+**Areas covered:**
+1. Identity & Roles — three identity layers exist (API keys, OAuth, Ed25519), not yet unified. Unified principal model proposed.
+2. Policy Engine — static file-based evaluation works, needs versioning + quorum + dynamic rules. Two-phase plan.
+3. Storage Model — full artifacts in DB + hash-only ledger works, needs content-addressable archive tier. Three-tier model proposed.
+4. Audit & Observability — ledger integrity + receipt verification exist, needs post-execution compliance check + anomaly detection.
+5. Meta-Governance — fully specified in canonical spec, not yet enforced in code. Three-phase implementation plan.
+
+**Estimated Phase 1 effort across all areas: 10-14 days.**
+
+---
+
+## Previous Delivery — Spec Consolidation: Canonical 6-Document Structure
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder), integrating directive from Bondi (Scribe / OpenAI ChatGPT)
