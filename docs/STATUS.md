@@ -2,11 +2,43 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Andrew (Solutions Architect)
+Last updated: 2026-04-04 by Romney (Protocol / Packaging)
 
 ---
 
-## Latest Delivery — Phase 1 Foundational Specs (3 of 3)
+## Latest Delivery — Protocol Sign-Off: Phase 1 Foundational Specs
+
+**Date:** 2026-04-04
+**Agent:** Romney (Protocol / Packaging)
+**Delivery:** Protocol compatibility sign-off for all three Phase 1 foundational specs, with responses to all 8 open questions from Andrew
+**Branch:** `main`
+**File:** `docs/reviews/PROTOCOL_SIGNOFF.md`
+
+**Verdict:** APPROVED with conditions. All three specs are compatible with the receipt protocol. No breaking changes required.
+
+**Key Decisions:**
+
+1. **Receipt version bump: v2.3 (minor, not major).** Three new optional fields (`role_exercised`, `actor_type`, `key_version`) are additive and backward-compatible.
+2. **`key_version` excluded from `authorization_hash`.** It is a lookup hint, not a proof element. Including it would create false distinctions after key rotation.
+3. **Delegation handled within existing `governed_action` type.** No new receipt type needed. `identity_binding.delegation` is an optional sub-object.
+4. **Ledger columns added directly** (not via separate view). `schema_version` field recommended for version-aware hash computation.
+5. **Receipt self-containment preserved.** CAS is a storage location, not a structural change to the receipt.
+6. **CAS keys should use algorithm prefix** (`sha256:...`). Receipt hash fields remain bare hex strings.
+7. **Ledger export format v2** with new fields. V1 exports remain available for backward compatibility.
+8. **CAS garbage collection acceptable** for abandoned intents (submitted, no evaluation, >90 days). Ledger entries and hashes are never deleted.
+
+**All 8 open questions answered.** See `docs/reviews/PROTOCOL_SIGNOFF.md` for full reasoning.
+
+**Next Steps:**
+- Romney: Implement receipt spec v2.3 in public protocol repo (additive fields, schema update, reference implementation)
+- Manny: Cleared to begin enforcement implementation using the three specs as contract
+- Andrew: Minor spec updates recommended (version bump number, CAS key format, schema_version field)
+
+**Platformization Tracker:** Phase 1 protocol reviews complete. Phase 2 (implementation) is unblocked.
+
+---
+
+### Previous Delivery — Phase 1 Foundational Specs (3 of 3)
 
 **Date:** 2026-04-04
 **Agent:** Andrew (Solutions Architect / Manus)
