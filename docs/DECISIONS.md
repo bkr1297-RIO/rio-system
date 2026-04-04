@@ -62,6 +62,24 @@ _None recorded yet._
 
 ---
 
+## System Invariants (Non-Negotiable)
+
+### 2026-04-03 — RIO System Invariants established
+**Decision:** The following 7 invariants are non-negotiable system rules. They apply to every deployment, feature, use case, and future connector. No agent, engineer, or product decision may violate them.
+
+1. **Human Authority:** A human is always the final approval authority for governed actions.
+2. **No Execution Without Approval:** High-risk or governed actions cannot execute without explicit approval.
+3. **Receipt Required:** Every governed action must produce a cryptographic receipt.
+4. **Ledger Required:** Every receipt must be written to an append-only, hash-chained ledger.
+5. **Fail Closed:** If approval, signing, receipt generation, or ledger write fails, the action must not execute.
+6. **Independent Verification:** Receipts and the ledger must be independently verifiable by a third party.
+7. **Separation of Roles:** The system must enforce separation between Intelligence (AI proposes), Authority (Human approves), Execution (Gateway executes), and Witness (Receipt + Ledger verify).
+
+**Rationale:** These invariants are the architectural and product definition of RIO. They are the foundation of the trust story, the compliance story, and the licensing boundary. Everything the team builds must enforce them. If a feature cannot satisfy all 7 invariants, it does not ship.
+**Decided by:** Brian
+
+---
+
 ## Technical Standards Decisions
 
 ### 2026-04-03 — Receipt format versions

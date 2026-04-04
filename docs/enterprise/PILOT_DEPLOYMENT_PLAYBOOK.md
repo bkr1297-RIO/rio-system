@@ -10,7 +10,7 @@ This playbook defines the exact sequence for deploying the RIO system into a new
 
 ## The Goal of the Pilot
 
-The pilot is not a technology test; it is a trust test. The goal is to prove to the organization's compliance, security, and operational teams that AI can be safely deployed because RIO guarantees human oversight and cryptographic auditability.
+The pilot is not a technology test; it is a trust test. The goal is to prove to the organization's compliance, security, and operational teams that AI can be safely deployed because RIO guarantees human oversight and cryptographic auditability. The pilot must demonstrate the 7 RIO System Invariants in action, specifically proving that **AI proposes, RIO governs, Humans approve, Systems execute, and Receipts prove.**
 
 **Success Criteria:**
 1. 100+ governed email actions completed.
@@ -77,13 +77,14 @@ The designated human approvers log into the ONE Command Center, complete the bio
 
 The system is live. The AI agent begins drafting emails and submitting them as intents.
 
-### 1. The Approval Loop
-- The AI agent submits an intent.
-- The RIO Gateway evaluates the policy and queues the intent.
-- The human approver receives a notification in ONE.
-- The human reviews the email and clicks **Approve**.
-- The RIO Gateway verifies the signature and executes the send via Gmail.
-- A cryptographic receipt is generated and logged to the ledger.
+### 1. The System Lifecycle Loop
+The system operates on the standard 9-step lifecycle:
+- **Observe/Analyze/Plan:** The AI agent determines an email is needed and submits a proposed intent.
+- **Govern:** The RIO Gateway evaluates the policy and queues the intent.
+- **Approve:** The human approver receives a notification in ONE, reviews the email, and provides cryptographic approval.
+- **Execute:** The RIO Gateway verifies the signature and executes the send via Gmail (Fail Closed).
+- **Record/Verify:** A cryptographic receipt is generated and logged to the immutable ledger.
+- **Learn:** The organization reviews the ledger to refine future policies.
 
 ### 2. Monitor and Adjust
 The organization monitors the approval queue. If certain types of emails are consistently approved without issue, the policy can be adjusted to lower their risk tier or automate approval under specific conditions.

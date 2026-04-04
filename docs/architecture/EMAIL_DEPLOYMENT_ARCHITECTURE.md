@@ -9,7 +9,7 @@
 
 ## 1. System Architecture — Components and Flow
 
-The deployment consists of five components. Each runs as a separate process (or container). They communicate over HTTPS.
+The deployment consists of five components that enforce the 7 RIO System Invariants (most notably: **AI proposes, RIO governs, Humans approve, Systems execute, Receipts prove**). Each runs as a separate process (or container). They communicate over HTTPS.
 
 | Component | Role | Runtime |
 |---|---|---|
@@ -19,15 +19,17 @@ The deployment consists of five components. Each runs as a separate process (or 
 | **Email Connector** | Executes approved email sends via Gmail API or SMTP | Module within Gateway (behind service boundary) |
 | **Ledger** | Stores hash-chained receipts and audit entries | MySQL/TiDB database (managed or self-hosted) |
 
-**Data flow (single action):**
+**System Lifecycle Loop (single action):**
 
 ```
+[Observe/Analyze/Plan]
 AI Agent
   │
   ├─ POST /api/v1/intents
   │   { tool: "gmail_send", args: { to, subject, body }, agent: "openai-gpt4" }
   │
   ▼
+[Govern]
 RIO Gateway
   │
   ├─ Intent created (SHA-256 hash computed)
@@ -35,6 +37,7 @@ RIO Gateway
   ├─ Intent queued for human approval
   │
   ▼
+[Approve]
 ONE Command Center
   │
   ├─ Human sees: recipient, subject, body, risk tier, convergence score
@@ -42,6 +45,7 @@ ONE Command Center
   │   OR Human clicks Deny (denial receipt generated)
   │
   ▼
+[Execute]
 RIO Gateway
   │
   ├─ Signature verified
@@ -55,6 +59,7 @@ Email Connector
   ├─ Send result captured (success/failure)
   │
   ▼
+[Record/Verify]
 Receipt Generator
   │
   ├─ Receipt created (SHA-256 + Ed25519 signed)

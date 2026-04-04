@@ -9,7 +9,7 @@
 
 ## 1. Overview
 
-The RIO Verification API is designed to provide transparent and auditable proof of AI actions. It allows any external system to independently verify that an action was governed, authorized, executed, and recorded in the tamper-evident ledger. This endpoint is intentionally separate from the tRPC router so that external sites (including the protocol site at `rioprotocol-q9cry3ny.manus.space`) can call it cross-origin without authentication.
+The RIO Verification API is designed to provide transparent and auditable proof of AI actions. It allows any external system to independently verify the 7 RIO System Invariants, specifically proving that an action was governed, authorized by a human, executed safely, and recorded in the tamper-evident ledger. This endpoint is intentionally separate from the tRPC router so that external sites (including the protocol site at `rioprotocol-q9cry3ny.manus.space`) can call it cross-origin without authentication.
 
 Every response includes the `fail_mode: "CLOSED"` field, confirming that the system cannot verify what it cannot find — it never returns a false positive.
 
