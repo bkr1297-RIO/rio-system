@@ -6,6 +6,31 @@ Last updated: 2026-04-03 by Chief of Staff
 
 ---
 
+## Latest Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Andrew (Solutions Architect)
+**Delivery:** Email Deployment Architecture — First Real Use Case
+**Commit:** `cbf5047` on `main`
+
+**Summary:** Designed the complete deployment architecture for the first RIO use case: AI-drafted emails with human approval, cryptographic receipts, and tamper-evident ledger. This is the reference architecture for pilot customers.
+
+**Files delivered:**
+- `docs/architecture/EMAIL_DEPLOYMENT_ARCHITECTURE.md` — Full deployment document covering all 10 requested items: system architecture, component placement (ONE, governance, receipts, ledger), email connector design, 19-step HITL approval flow, installation requirements (pilot and scaled), open source vs licensed breakdown
+- `docs/architecture/email-deployment-architecture.png` — Full system architecture diagram showing all components, data flow, and fail-closed enforcement
+- `docs/architecture/email-simple-flow.png` — Non-technical stakeholder diagram (AI → RIO → Human → Email + Audit Record)
+
+**Key design decisions in the document:**
+1. Pilot deploys on a single VM with Docker Compose + MySQL — no Kubernetes required
+2. Scales to K8s with managed DB and key vault when ready
+3. Email connector supports both Gmail API (OAuth2) and SMTP relay (Exchange/Outlook)
+4. Receipt Protocol is open source (MIT/Apache-2.0); Gateway, ONE, and Connectors are commercially licensed
+5. Air-gapped deployment option documented for regulated industries
+
+**No decisions needed from Brian.** This is a completed deliverable ready for prospect conversations.
+
+---
+
 ## What Is Built
 
 ### Receipt Protocol (Public — rio-receipt-protocol)
