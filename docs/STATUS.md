@@ -2,11 +2,41 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Andrew (Solutions Architect)
+Last updated: 2026-04-04 by Romney (Distribution Engineer)
 
 ---
 
-## Latest Delivery — Identity Spec v1.2 (Email Resolution for First Platform Slice)
+## Latest Delivery — End-to-End Governed Email Directive + Receipt Readiness
+
+**Date:** 2026-04-04
+**Agent:** Romney (Distribution Engineer)
+**Directive:** `directives/2026-04-04_END_TO_END_GOVERNED_EMAIL_DIRECTIVE.md`
+**Source:** Brian (Root Authority)
+
+### What Was Delivered
+
+1. **Directive to Manny (Chief Builder):** Single priority — complete the end-to-end governed email flow (Login → Submit Intent → Approvals → Approve → Email Sends → Receipt → Ledger). No dashboards, pillars, or UI polish until this works. Current blocker: Gateway principal mapping (email → principal_id).
+
+2. **Directive to Andrew (Gateway Owner):** Gateway must resolve identity via `X-Authenticated-Email` → `principal_id` with role. Principals table needs email field or identity mapping table. `resolvePrincipal` middleware spec provided.
+
+3. **Receipt Readiness Verified:** Simulated the exact governed email flow through receipt protocol v2.3. All checks passed:
+   - `intent_hash`: PRESENT
+   - `authorization_hash`: PRESENT (maps to Manny's `approval_hash`)
+   - `execution_hash`: PRESENT
+   - `receipt_hash`: PRESENT
+   - Ed25519 signature: VALID
+   - Ledger chain: VALID
+   - All v2.3 identity fields (role_exercised, actor_type, key_version): WORKING
+
+4. **Romney standing by** to verify the first real receipt and ledger entry after Manny's first approved action executes.
+
+### Acceptance Criteria
+
+One governed email flows end-to-end with a valid receipt and ledger entry that can be independently verified.
+
+---
+
+## Previous Delivery — Identity Spec v1.2 (Email Resolution for First Platform Slice)
 
 **Date:** 2026-04-04
 **Agent:** Andrew (Solutions Architect)
