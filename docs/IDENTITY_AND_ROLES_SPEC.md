@@ -1,12 +1,14 @@
 # RIO Identity and Roles Specification — Implementation-Ready
 
-**Version:** 1.1 (Implementation-Ready)
+**Version:** 1.2 (Email Resolution Update)
 **Date:** 2026-04-04
 **Author:** Andrew (Solutions Architect)
-**Status:** Final — Approved by Romney (Protocol Sign-Off, 2026-04-04). Manny cleared to implement.
-**Supersedes:** `spec/IDENTITY_AND_ROLES_SPEC.md` v1.0 (Draft)
+**Status:** Final — v1.1 approved by Romney. v1.2 adds email-based principal resolution for the First Platform Slice.
+**Supersedes:** `spec/IDENTITY_AND_ROLES_SPEC.md` v1.0 (Draft), `docs/IDENTITY_AND_ROLES_SPEC.md` v1.1
 **Canonical Location:** `docs/IDENTITY_AND_ROLES_SPEC.md`
-**Implementation Reference:** `gateway/security/principals.mjs` (Manny, Area 1)
+**Implementation Reference:** `gateway/security/principals.mjs`, `gateway/security/google-oauth.mjs` (Manny, Area 1 + First Platform Slice)
+
+**v1.2 Change Summary:** Added Section 9.5 (Email-Based Principal Resolution) to unblock the First Platform Slice. The Gateway must resolve `X-Authenticated-Email` → `principal_id` → role. This is the bridge between Google OAuth and the principal registry. Manny has already implemented `resolvePrincipalByEmail()` in `gateway/security/principals.mjs` — this spec formalizes the contract.
 
 ---
 
@@ -255,6 +257,8 @@ Every Gateway API endpoint declares which roles are permitted. The Gateway middl
 | `/api/intents/:id` | GET | `proposer`, `approver`, `auditor`, `root_authority` | View intent details |
 | `/api/approve` | POST | `approver`, `root_authority` | Approve an intent |
 | `/api/deny` | POST | `approver`, `root_authority` | Deny an intent |
+| `/api/approvals/:intent_id` | POST | `approver`, `root_authority` | Approve or deny (unified endpoint) |
+| `/api/approvals/:intent_id` | GET | `proposer`, `approver`, `auditor`, `root_authority` | List approvals for an intent |
 | `/api/execute` | POST | `executor` | Execute an approved intent |
 | `/api/receipts/:id` | GET | Any authenticated principal | View a receipt |
 | `/api/ledger` | GET | `auditor`, `root_authority` | View ledger entries |
@@ -404,15 +408,41 @@ Policy changes and authority-level actions require quorum approval from meta-gov
 
 ## 9. Authentication Flows
 
-### 9.1 Human Authentication
+### 9.1 Human Authentication (Google OAuth)
+
+The primary authentication flow for humans is Google OAuth via the Gateway. The ONE PWA is an untrusted client — it does not perform authentication. The Gateway handles the full OAuth flow and resolves the authenticated email to a principal.
 
 ```
-Browser → ONE PWA → OAuth Provider → ONE PWA → Gateway Registration
-                                                      ↓
-                                              principals table
-                                              (principal_id = OAuth openId)
-                                              (public_key_hex = browser-generated Ed25519)
+Browser → ONE PWA → Gateway /auth/google → Google Consent Screen
+                                                    ↓
+                                          Google returns auth code
+                                                    ↓
+                          Gateway /auth/google/callback
+                                    ↓
+                          Exchange code for tokens
+                                    ↓
+                          Fetch Google profile (email, name)
+                                    ↓
+                          resolvePrincipalByEmail(email)
+                                    ↓
+                          principal found? → Issue JWT with principal_id + role
+                          principal NOT found? → 403 ("No RIO principal registered")
+                                    ↓
+                          Redirect to ONE PWA with JWT token
+                                    ↓
+                          ONE stores token, includes in all Gateway API calls
 ```
+
+The JWT issued by the Gateway contains:
+
+| Claim | Value | Purpose |
+|---|---|---|
+| `sub` | `principal_id` (e.g., `I-1`) | Identity for `resolvePrincipal` middleware |
+| `email` | Google email | Audit trail |
+| `name` | Google display name | UI display |
+| `principal_id` | Same as `sub` | Explicit binding |
+| `role` | `primary_role` from principals table | Role for enforcement |
+| `auth_method` | `google_oauth` | Authentication method audit |
 
 ### 9.2 Agent Authentication
 
@@ -428,13 +458,108 @@ Internal Service → Shared Secret / mTLS → Gateway → principals table
 
 ### 9.4 Principal Resolution Middleware
 
-The Gateway `resolvePrincipal()` middleware runs on every request:
+The Gateway `resolvePrincipal()` middleware runs on every request. It resolves identity from multiple credential sources in priority order:
 
-1. Extract credential from request (API key header, OAuth session, service secret, or `X-Principal-ID` header).
-2. Look up `principal_id` in the `principals` table.
-3. Verify status is `active`. If not → 403.
-4. Inject `req.principal` with the full principal record (id, actor_type, primary_role, secondary_roles, public_key_hex, key_version).
-5. If no credential is found → 403 (fail-closed).
+1. **JWT `sub` claim** → Look up `principal_id` via `authBindings.jwt` map → principals table.
+2. **API key `owner_id`** → Look up `principal_id` via `authBindings.api_key` map → principals table.
+3. **`X-Principal-ID` header** → Direct lookup in principals table (service-to-service calls).
+4. **`X-Authenticated-Email` header** → Look up via `resolvePrincipalByEmail()` (see Section 9.5).
+5. Verify status is `active`. If not → 403.
+6. Inject `req.principal` with the full principal record (id, actor_type, primary_role, secondary_roles, public_key_hex, key_version).
+7. If no credential resolves to a principal → 403 (fail-closed).
+
+### 9.5 Email-Based Principal Resolution (First Platform Slice)
+
+This is the critical bridge for the First Platform Slice. Google OAuth gives the Gateway an email address. The Gateway must resolve that email to a `principal_id` with a role. Without this mapping, the intent flow cannot proceed.
+
+**Resolution Algorithm (`resolvePrincipalByEmail`):**
+
+```
+Input: email (string, from Google OAuth profile)
+Output: principal record or null
+
+1. Normalize email to lowercase, trim whitespace.
+2. Direct match: scan principals table for principal.email === normalized_email.
+   → If found and status === 'active', return principal.
+3. Metadata match: scan principals table for principal.metadata.emails[] containing normalized_email.
+   → If found and status === 'active', return principal.
+4. Alias match: check KNOWN_EMAIL_ALIASES map for hardcoded email → principal_id bindings.
+   → If found and principal status === 'active', return principal.
+5. No match → return null → Gateway returns 403 to user.
+```
+
+**The `email` field in the principals table:**
+
+The `email` field (VARCHAR 320) already exists in the principals table schema (Section 4.1). For the First Platform Slice, the following principals must have their email field populated:
+
+| principal_id | email | Purpose |
+|---|---|---|
+| `I-1` | `bkr1297@gmail.com` | Brian logs in via Google OAuth, creates intents, approves |
+| (second human) | (second person's email) | Second approver for two-user test |
+
+**Known Email Aliases (hardcoded fallback):**
+
+Brian has multiple email addresses. All must resolve to `I-1`:
+
+| Email | Principal |
+|---|---|
+| `bkr1297@gmail.com` | `I-1` |
+| `riomethod5@gmail.com` | `I-1` |
+| `rasmussenbr@hotmail.com` | `I-1` |
+
+**Registering a Second Human Principal:**
+
+For the two-user test (proposer ≠ approver), a second human principal must be registered. The Gateway provides `POST /principals` (requires `root_authority`). The registration payload:
+
+```json
+{
+  "principal_id": "user-2",
+  "actor_type": "human",
+  "display_name": "Test Approver",
+  "email": "second.person@gmail.com",
+  "primary_role": "approver",
+  "registered_by": "I-1"
+}
+```
+
+Once registered, the second person can log in via Google OAuth, their email resolves to `user-2` with role `approver`, and they can approve intents submitted by `I-1`.
+
+**End-to-End Flow (Login → Intent → Approval):**
+
+```
+1. Brian opens ONE PWA → clicks "Login with Google"
+2. ONE redirects to Gateway /auth/google
+3. Gateway redirects to Google consent screen
+4. Brian authenticates with bkr1297@gmail.com
+5. Google redirects to Gateway /auth/google/callback with auth code
+6. Gateway exchanges code for tokens, fetches profile: email=bkr1297@gmail.com
+7. Gateway calls resolvePrincipalByEmail("bkr1297@gmail.com")
+8. Match found: principal I-1, role root_authority, status active
+9. Gateway issues JWT: { sub: "I-1", role: "root_authority", email: "bkr1297@gmail.com" }
+10. Gateway redirects to ONE PWA with token
+11. ONE stores token in localStorage
+12. Brian clicks "Create Intent" → ONE calls POST /intents with Authorization: Bearer <token>
+13. Gateway resolvePrincipal middleware extracts JWT sub "I-1" → principal found
+14. requireRole("proposer") → I-1 is root_authority → implicit proposer → PASS
+15. Intent created with principal_id: "I-1", principal_role: "proposer"
+16. Gateway calls POST /govern → policy engine evaluates → requires_approval
+17. Intent appears in Approvals list
+18. Person 2 logs in → same flow → resolves to "user-2" with role "approver"
+19. Person 2 clicks Approve → POST /approvals/:intent_id
+20. Gateway checks: approver (user-2) ≠ proposer (I-1) → PASS
+21. Approval recorded → execution proceeds → receipt → ledger
+```
+
+**Implementation Status:**
+
+Manny has already implemented `resolvePrincipalByEmail()` in `gateway/security/principals.mjs` (lines 522-565). The function covers all three resolution paths (direct email, metadata.emails, known aliases). The Google OAuth callback in `gateway/security/google-oauth.mjs` calls this function at step 4 of the callback handler.
+
+**What remains for the First Platform Slice:**
+
+1. Ensure Brian's email (`bkr1297@gmail.com`) is populated in the `I-1` principal record (already in INITIAL_PRINCIPALS seed).
+2. Register a second human principal with their Google email.
+3. Set Google OAuth environment variables (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `ONE_FRONTEND_URL`).
+4. Set `VITE_GATEWAY_URL` in ONE PWA to point to the Gateway.
 
 ---
 
@@ -523,6 +648,13 @@ Remove `authorized_signers` and `api_keys` tables. All identity flows through `p
 | Principal attribution on intents | Done | `gateway/governance/intents.mjs` |
 | 49 enforcement tests | Done | `gateway/tests/principals.test.mjs` |
 | Andrew and Romney principals | **Not yet seeded** | Need to add to INITIAL_PRINCIPALS |
+| `resolvePrincipalByEmail()` | Done | `gateway/security/principals.mjs` (lines 522-565) |
+| Google OAuth flow | Done | `gateway/security/google-oauth.mjs` |
+| Google OAuth → principal resolution | Done | Callback calls `resolvePrincipalByEmail()` |
+| JWT with principal_id + role | Done | `gateway/security/oauth.mjs` createToken Mode 2 |
+| Approvals table | Done | `gateway/ledger/ledger-pg.mjs` |
+| `POST /approvals/:intent_id` | Done | `gateway/routes/index.mjs` |
+| Proposer ≠ approver enforcement | Done | `gateway/routes/index.mjs` |
 | Ed25519 key binding for humans | Not yet | Phase 4 of migration |
 | Delegation enforcement | Not yet | Requires delegation table and middleware |
 | Quorum enforcement | Not yet | Requires quorum table and vote counting |
@@ -543,3 +675,7 @@ Remove `authorized_signers` and `api_keys` tables. All identity flows through `p
 | Implement delegation table and enforcement | Manny | Phase 2+ |
 | Implement quorum table and vote counting | Manny | Phase 2+ |
 | ONE PWA Ed25519 key generation and registration | Manny | Phase 4 |
+| Register second human principal for two-user test | Brian (decision) | Blocking — need email address |
+| Set Google OAuth env vars on deployed Gateway | Brian (decision) | Blocking — need Google Cloud project |
+| Set `VITE_GATEWAY_URL` in ONE PWA | Manny | Pending |
+| Verify end-to-end: Login → Intent → Approval → Execute → Receipt → Ledger | All | Definition of Done |

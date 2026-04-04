@@ -2,11 +2,38 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Manny (Builder)
+Last updated: 2026-04-04 by Andrew (Solutions Architect)
 
 ---
 
-## Latest Delivery — First Platform Slice (Priorities 1-4)
+## Latest Delivery — Identity Spec v1.2 (Email Resolution for First Platform Slice)
+
+**Date:** 2026-04-04
+**Agent:** Andrew (Solutions Architect)
+**File:** `docs/IDENTITY_AND_ROLES_SPEC.md` v1.2
+**Directive:** `directives/DIRECTIVE_FIRST_PLATFORM_SLICE.md`
+
+**What changed:** Added Section 9.5 (Email-Based Principal Resolution) to formalize the contract between Google OAuth and the principal registry. This is the spec Manny needs to complete the Login → Intent → Approval → Execute → Receipt → Ledger flow.
+
+**Key additions:**
+- Section 9.1 rewritten: full Google OAuth flow with JWT claims table
+- Section 9.4 updated: principal resolution priority order (JWT → API key → X-Principal-ID → X-Authenticated-Email)
+- Section 9.5 new: `resolvePrincipalByEmail()` algorithm, email field requirements, known aliases, second human registration, end-to-end 21-step flow
+- Section 6.1 updated: added `POST /approvals/:intent_id` and `GET /approvals/:intent_id` endpoints
+- Section 13 updated: marked 7 additional items as Done (email resolution, Google OAuth, approvals table, proposer≠approver)
+- Section 14 updated: 4 new open items (second human principal, Google OAuth env vars, VITE_GATEWAY_URL, end-to-end verification)
+
+**Manny's implementation status:** `resolvePrincipalByEmail()` is already implemented (principals.mjs lines 522-565). Google OAuth callback already calls it. The spec formalizes what exists and identifies what remains.
+
+**Blocking items (need Brian's decision):**
+1. Who is the second human for the two-user test? (Need their email to register as a principal.)
+2. Google Cloud project credentials (`GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`) — does Brian have these or do we need to create a project?
+
+**No other decisions needed from Brian.**
+
+---
+
+## Previous Delivery — First Platform Slice (Priorities 1-4)
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder)
