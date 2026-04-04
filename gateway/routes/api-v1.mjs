@@ -61,6 +61,10 @@ import {
 } from "../security/token-manager.mjs";
 import { requireScope, requireAnyAuth } from "../security/api-auth.mjs";
 import { createApiKey, listApiKeys, revokeApiKey, getApiKey } from "../security/api-keys.mjs";
+import {
+  requireRole,
+  requirePrincipal,
+} from "../security/principals.mjs";
 import { getOpenApiSpec } from "./openapi.mjs";
 
 const router = Router();
@@ -77,7 +81,7 @@ const ED25519_MODE = process.env.ED25519_MODE || "required";
 // POST /api/v1/intents — Submit a new intent
 // Scope: write
 // ---------------------------------------------------------------------------
-router.post("/intents", requireScope("write"), (req, res) => {
+router.post("/intents", requireScope("write"), requireRole("proposer"), (req, res) => {
   try {
     let intake;
 
@@ -155,7 +159,7 @@ router.post("/intents", requireScope("write"), (req, res) => {
 // GET /api/v1/intents — List intents
 // Scope: read
 // ---------------------------------------------------------------------------
-router.get("/intents", requireScope("read"), (req, res) => {
+router.get("/intents", requireScope("read"), requirePrincipal, (req, res) => {
   try {
     const status = req.query.status;
     const limit = parseInt(req.query.limit) || 50;
@@ -170,7 +174,7 @@ router.get("/intents", requireScope("read"), (req, res) => {
 // GET /api/v1/intents/:id — Get intent details
 // Scope: read
 // ---------------------------------------------------------------------------
-router.get("/intents/:id", requireScope("read"), (req, res) => {
+router.get("/intents/:id", requireScope("read"), requirePrincipal, (req, res) => {
   try {
     const intent = getIntent(req.params.id);
     if (!intent) {
@@ -186,7 +190,7 @@ router.get("/intents/:id", requireScope("read"), (req, res) => {
 // POST /api/v1/intents/:id/govern — Run governance
 // Scope: write
 // ---------------------------------------------------------------------------
-router.post("/intents/:id/govern", requireScope("write"), (req, res) => {
+router.post("/intents/:id/govern", requireScope("write"), requireRole("proposer", "executor"), (req, res) => {
   try {
     const intent_id = req.params.id;
     const intent = getIntent(intent_id);
@@ -240,7 +244,7 @@ router.post("/intents/:id/govern", requireScope("write"), (req, res) => {
 // POST /api/v1/intents/:id/authorize — Authorize/deny
 // Scope: admin
 // ---------------------------------------------------------------------------
-router.post("/intents/:id/authorize", requireScope("admin"), (req, res) => {
+router.post("/intents/:id/authorize", requireScope("admin"), requireRole("approver"), (req, res) => {
   try {
     const intent_id = req.params.id;
     const { decision, authorized_by, conditions, expires_at, signature, signature_timestamp, signer_id: requestSignerId } = req.body;
@@ -364,7 +368,7 @@ router.post("/intents/:id/authorize", requireScope("admin"), (req, res) => {
 // POST /api/v1/intents/:id/execute — Execute authorized intent
 // Scope: admin
 // ---------------------------------------------------------------------------
-router.post("/intents/:id/execute", requireScope("admin"), (req, res) => {
+router.post("/intents/:id/execute", requireScope("admin"), requireRole("executor"), (req, res) => {
   try {
     const intent_id = req.params.id;
     const intent = getIntent(intent_id);
@@ -447,7 +451,7 @@ router.post("/intents/:id/execute", requireScope("admin"), (req, res) => {
 // POST /api/v1/intents/:id/confirm — Confirm execution
 // Scope: write
 // ---------------------------------------------------------------------------
-router.post("/intents/:id/confirm", requireScope("write"), (req, res) => {
+router.post("/intents/:id/confirm", requireScope("write"), requireRole("executor"), (req, res) => {
   try {
     const intent_id = req.params.id;
     const { execution_result, connector, execution_token } = req.body;
@@ -532,7 +536,7 @@ router.post("/intents/:id/confirm", requireScope("write"), (req, res) => {
 // POST /api/v1/intents/:id/receipt — Generate receipt
 // Scope: read
 // ---------------------------------------------------------------------------
-router.post("/intents/:id/receipt", requireScope("read"), (req, res) => {
+router.post("/intents/:id/receipt", requireScope("read"), requireRole("executor", "auditor"), (req, res) => {
   try {
     const intent_id = req.params.id;
     const intent = getIntent(intent_id);
@@ -592,7 +596,7 @@ router.post("/intents/:id/receipt", requireScope("read"), (req, res) => {
 // GET /api/v1/ledger — View ledger entries
 // Scope: read
 // ---------------------------------------------------------------------------
-router.get("/ledger", requireScope("read"), (req, res) => {
+router.get("/ledger", requireScope("read"), requireRole("auditor"), (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 100;
     const offset = parseInt(req.query.offset) || 0;
@@ -620,7 +624,7 @@ router.get("/ledger", requireScope("read"), (req, res) => {
 // GET /api/v1/verify — Verify hash chain integrity
 // Scope: read
 // ---------------------------------------------------------------------------
-router.get("/verify", requireScope("read"), (req, res) => {
+router.get("/verify", requireScope("read"), requireRole("auditor"), (req, res) => {
   try {
     const intentId = req.query.intent_id;
 
@@ -691,17 +695,8 @@ router.get("/docs", (req, res) => {
 // API Key Management Routes
 // ---------------------------------------------------------------------------
 
-// POST /api/v1/keys — Create API key (owner only via JWT)
-router.post("/keys", (req, res, next) => {
-  // Only JWT-authenticated owners can create keys
-  if (!req.user || req.user.role !== "owner") {
-    return res.status(403).json({
-      error: "Only the owner can create API keys.",
-      hint: "Authenticate via POST /login with owner credentials.",
-    });
-  }
-  next();
-}, async (req, res) => {
+// POST /api/v1/keys — Create API key (root_authority or meta_governor only)
+router.post("/keys", requireRole("root_authority", "meta_governor"), async (req, res) => {
   try {
     const { display_name, scopes, rate_limit } = req.body;
 
@@ -744,7 +739,7 @@ router.post("/keys", (req, res, next) => {
 });
 
 // GET /api/v1/keys — List API keys
-router.get("/keys", requireAnyAuth, (req, res) => {
+router.get("/keys", requirePrincipal, (req, res) => {
   try {
     const owner_id = req.user?.role === "owner" ? null : req.user?.sub;
     const keys = listApiKeys(owner_id);
@@ -755,7 +750,7 @@ router.get("/keys", requireAnyAuth, (req, res) => {
 });
 
 // GET /api/v1/keys/:key_id — Get API key details
-router.get("/keys/:key_id", requireAnyAuth, (req, res) => {
+router.get("/keys/:key_id", requirePrincipal, (req, res) => {
   try {
     const key = getApiKey(req.params.key_id);
     if (!key) {
@@ -771,13 +766,8 @@ router.get("/keys/:key_id", requireAnyAuth, (req, res) => {
   }
 });
 
-// DELETE /api/v1/keys/:key_id — Revoke API key (owner only)
-router.delete("/keys/:key_id", (req, res, next) => {
-  if (!req.user || req.user.role !== "owner") {
-    return res.status(403).json({ error: "Only the owner can revoke API keys." });
-  }
-  next();
-}, async (req, res) => {
+// DELETE /api/v1/keys/:key_id — Revoke API key (root_authority or meta_governor only)
+router.delete("/keys/:key_id", requireRole("root_authority", "meta_governor"), async (req, res) => {
   try {
     const result = await revokeApiKey(req.params.key_id);
     if (!result.revoked) {

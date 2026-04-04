@@ -78,6 +78,21 @@ _None recorded yet._
 **Rationale:** These invariants are the architectural and product definition of RIO. They are the foundation of the trust story, the compliance story, and the licensing boundary. Everything the team builds must enforce them. If a feature cannot satisfy all 7 invariants, it does not ship.
 **Decided by:** Brian
 
+### 2026-04-04 — Decision 1: Enforcement Boundary
+**Decision:** The Gateway is the enforcement boundary. All identity, role enforcement, policy evaluation, approval validation, execution authorization, audit, and ledger recording must occur in the Gateway. All clients (ONE PWA, CLI, SDKs, Slack, Email, API clients) are untrusted and must go through the Gateway.
+**Rationale:** If enforcement logic is built into an interface like the ONE PWA, any other client can bypass it by talking directly to the Gateway. Moving all enforcement to the Gateway makes the system non-bypassable, which is the entire point of governance.
+**Decided by:** Brian
+
+### 2026-04-04 — Decision 2: Interface Is Not Authority
+**Decision:** Interfaces may display data, collect approvals, and submit intents, but they are not the source of truth and cannot enforce policy or roles.
+**Rationale:** Interfaces are presentation layers. They can be compromised, bypassed, or replaced. The system's security model must not rely on the interface behaving correctly.
+**Decided by:** Brian
+
+### 2026-04-04 — Decision 3: Ledger Is System of Record
+**Decision:** The append-only ledger and receipts are the system of record for what actions occurred, who approved them, and under which policy version.
+**Rationale:** Databases can be altered. A hash-chained ledger and cryptographically signed receipts provide independent, tamper-evident proof of the system's history.
+**Decided by:** Brian
+
 ### 2026-04-04 — Platformization Phase: Enforcement Implementation
 **Decision:** The architecture is stable. The project transitions from architecture discovery to enforcement implementation. Five concrete enforcement areas are defined: (1) Identity and Roles, (2) Policy Schema, (3) Storage Architecture, (4) Active Audit, (5) Meta-Governance Enforcement. No work in these areas is complete without a canonical spec, an implementation plan, and a verified code path. The standard: no hidden assumptions, no role drift, no undocumented boundaries.
 **Rationale:** The design is not the problem. The gaps are enforcement gaps, not concept gaps. The rules must be non-bypassable in code and infrastructure, not just described in documents.

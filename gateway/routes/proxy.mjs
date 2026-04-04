@@ -18,6 +18,7 @@
 import { Router } from "express";
 import { randomUUID, createHash } from "node:crypto";
 import { requireAuth } from "../security/oauth.mjs";
+import { requireRole } from "../security/principals.mjs";
 import { registerSigner, getSigner, listSigners } from "../security/identity-binding.mjs";
 import {
   appendEntry,
@@ -184,9 +185,9 @@ router.post("/onboard", async (req, res) => {
 //         shutdown is handled by the frontend — this endpoint
 //         provides the cryptographic proof that the kill was requested.
 // =========================================================================
-router.post("/kill", requireAuth, async (req, res) => {
+router.post("/kill", requireRole("root_authority", "meta_governor"), async (req, res) => {
   try {
-    const userId = req.user.sub;
+    const userId = req.principal?.principal_id || req.user?.sub;
     const { reason, device_id } = req.body;
 
     const killReason = reason || "Emergency kill switch activated";
@@ -238,6 +239,10 @@ router.post("/kill", requireAuth, async (req, res) => {
         signature_payload_hash: null,
         verification_method: null,
         ed25519_signed: false,
+        // Area 1: Principal attribution
+        principal_id: req.principal?.principal_id || null,
+        role_exercised: req.principal?.primary_role || null,
+        actor_type: req.principal?.actor_type || null,
       },
     });
 

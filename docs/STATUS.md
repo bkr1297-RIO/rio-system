@@ -6,6 +6,38 @@ Last updated: 2026-04-04 by Damon (Developer Relations)
 
 ---
 
+## Latest Delivery — Protocol Sign-Off: Phase 1 Foundational Specs
+
+**Date:** 2026-04-04
+**Agent:** Romney (Protocol / Packaging)
+**Delivery:** Protocol compatibility sign-off for all three Phase 1 foundational specs, with responses to all 8 open questions from Andrew
+**Branch:** `main`
+**File:** `docs/reviews/PROTOCOL_SIGNOFF.md`
+
+**Verdict:** APPROVED with conditions. All three specs are compatible with the receipt protocol. No breaking changes required.
+
+**Key Decisions:**
+
+1.  **Receipt version bump: v2.3 (minor, not major).** Three new optional fields (`role_exercised`, `actor_type`, `key_version`) are additive and backward-compatible.
+2.  **`key_version` excluded from `authorization_hash`.** It is a lookup hint, not a proof element. Including it would create false distinctions after key rotation.
+3.  **Delegation handled within existing `governed_action` type.** No new receipt type needed. `identity_binding.delegation` is an optional sub-object.
+4.  **Ledger columns added directly** (not via separate view). `schema_version` field recommended for version-aware hash computation.
+5.  **Receipt self-containment preserved.** CAS is a storage location, not a structural change to the receipt.
+6.  **CAS keys should use algorithm prefix** (`sha256:...`). Receipt hash fields remain bare hex strings.
+7.  **Ledger export format v2** with new fields. V1 exports remain available for backward compatibility.
+8.  **CAS garbage collection acceptable** for abandoned intents (submitted, no evaluation, >90 days). Ledger entries and hashes are never deleted.
+
+**All 8 open questions answered.** See `docs/reviews/PROTOCOL_SIGNOFF.md` for full reasoning.
+
+**Next Steps:**
+- Romney: Implement receipt spec v2.3 in public protocol repo (additive fields, schema update, reference implementation)
+- Manny: Cleared to begin enforcement implementation using the three specs as contract
+- Andrew: Minor spec updates recommended (version bump number, CAS key format, schema_version field)
+
+**Platformization Tracker:** Phase 1 protocol reviews complete. Phase 2 (implementation) is unblocked.
+
+---
+
 ## Latest Delivery — SDK Interface and Developer Flow
 
 **Date:** 2026-04-04
@@ -177,41 +209,3 @@ Last updated: 2026-04-04 by Damon (Developer Relations)
 ### Previous Delivery — Scribe Deliverables: Mirrored Governance + Layer 5 Meta-Governance
 
 ---
-
-## Latest Delivery — External System Integration Plan
-
-**Date:** 2026-04-04
-**Agent:** Damon (Developer Relations)
-**Delivery:** External System Integration Plan for RIO Gateway
-**Branch:** `main`
-**File:** `docs/guides/EXTERNAL_INTEGRATION_PLAN.md`
-
-**Summary:** Drafted a high-level architectural plan for how external systems will integrate with the RIO Gateway, covering the end-to-end developer flow from Intent submission to Receipt verification. This plan defines SDK structure, API endpoints, and the developer journey, ensuring all interactions route through the governed gateway.
-
----
-
-## Previous Delivery — Documentation Fix: VERIFY_API_INTEGRATION.md
-
-**Date:** 2026-04-04
-**Agent:** Damon (Developer Relations)
-**Delivery:** Corrected function names in VERIFY_API_INTEGRATION.md
-**Branch:** `main`
-**File:** `docs/guides/VERIFY_API_INTEGRATION.md`
-
-**Summary:** Fixed the function name discrepancy in `VERIFY_API_INTEGRATION.md`, replacing `verify_rio_receipt` with `verify_receipt_standalone` (Python) and `verifyRioReceipt` with `verifyReceiptStandalone` (Node.js) to match the actual SDK exports.
-
----
-
-## Previous Delivery — Meta-Governance Engineering Refinements (Scribe)
-
-**Date:** 2026-04-04
-**Agent:** Manny (Builder), integrating work from Bondi (Scribe / OpenAI ChatGPT)
-**Delivery:** Four engineering refinements to make Layer 5 enforceable, not just conceptual
-**Branch:** `main`
-**File:** `spec/META_GOVERNANCE_SPEC.md` (sections 11–16 added)
-
-**New sections:**
-- **§11 Quorum Model** — Multi-party approval table (1-of-3 for emergency stop, 2-of-3 for policy changes, 3-of-3 for invariants/authority changes)
-- **§12 Change Control Protocol** — Governance Change Receipt required for every rule change (10-field receipt stored in ledger)
-- **§13 "Do Not Learn" Rule** — Audit outcome classification table (7 categories) that must be applied before the system learns from any event
-- **§14 S
