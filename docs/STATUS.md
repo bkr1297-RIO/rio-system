@@ -2,11 +2,32 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Chief of Staff
+Last updated: 2026-04-03 by Damon
 
 ---
 
 ## Latest Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Damon (Developer Relations)
+**Delivery:** Docker Compose Deployment Guide — "Getting Started in 5 Minutes"
+**Commit:** `[PENDING]` on `main`
+
+**Summary:** Created a step-by-step guide for developers to deploy RIO locally using Docker Compose. This includes the RIO Gateway and a PostgreSQL ledger database, enabling a "zero to running" experience in under 5 minutes.
+
+**Files delivered:**
+- `docs/guides/DOCKER_DEPLOYMENT.md` — Full guide covering prerequisites, quick start, common operations, and troubleshooting.
+- `docker-compose.yml` — Moved from archive to root for standard deployment access.
+
+**Key technical details:**
+1. Uses Manny's `gateway/Dockerfile` and the PostgreSQL 16-alpine image.
+2. Automatically initializes the ledger schema via `gateway/ledger/init.sql`.
+3. Configures persistent volumes for both the database (`pgdata`) and Ed25519 keys (`gateway-keys`).
+4. Provides a fail-closed default configuration for local development.
+
+---
+
+## Previous Delivery — For Chief of Staff Review
 
 **Date:** 2026-04-03
 **Agent:** Andrew (Solutions Architect)
@@ -170,3 +191,6 @@ _Nothing currently blocked._
 - Learning Loop feedback (learning events improving future Bondi recommendations)
 - PWA push notifications (requires VAPID key setup)
 - Witness service (independent verification network)
+- Gateway server completion for self-hosted deployment
+- Developer tutorials and quickstart guides (Damon) [DONE: DOCKER_DEPLOYMENT.md]
+- Solution architecture examples (Andrew)
