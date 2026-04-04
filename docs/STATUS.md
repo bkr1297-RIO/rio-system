@@ -2,11 +2,34 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Romney
+Last updated: 2026-04-03 by Chief of Staff
 
 ---
 
 ## Latest Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Chief of Staff
+**Delivery:** RIO Reference Architecture, Overview, and Visual Diagrams
+**Branch:** `main`
+
+**Summary:** Formalized the canonical RIO Reference Architecture (spec/), created a shorter public-facing Overview (docs/), generated 3 website/deck-ready visual diagrams, defined the RIO-Compliant standard, and recorded the compliance definition in DECISIONS.md.
+
+**Files delivered:**
+- `spec/RIO_REFERENCE_ARCHITECTURE.md` — Full canonical spec (12 sections: classification, core model, 7 invariants, 9-stage pipeline, role separation, 8 components, cryptographic guarantees, failure modes, licensing, compliance mapping, strategic direction, one-sentence architecture)
+- `docs/RIO_OVERVIEW.md` — Shorter public-facing overview with pipeline, roles, invariants, and RIO-Compliant definition
+- `docs/architecture/diagrams/rio-9-stage-pipeline.png` — 9-stage pipeline diagram (website/deck ready)
+- `docs/architecture/diagrams/rio-4-roles.png` — 4-role separation diagram with prohibited combinations (website/deck ready)
+- `docs/architecture/diagrams/rio-component-architecture.png` — ONE + RIO + Gateway + Ledger component architecture (website/deck ready)
+- `docs/DECISIONS.md` — Updated with RIO-Compliant definition
+
+**RIO-Compliant definition:** A system is RIO-compliant if and only if it (1) implements the 9-stage pipeline, (2) enforces 4-role separation, and (3) satisfies all 7 invariants.
+
+**No decisions needed from Brian.**
+
+---
+
+### Previous Delivery
 
 **Date:** 2026-04-03
 **Agent:** Romney (Repo / Packaging / Protocol)
