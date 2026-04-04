@@ -78,6 +78,11 @@ _None recorded yet._
 **Rationale:** These invariants are the architectural and product definition of RIO. They are the foundation of the trust story, the compliance story, and the licensing boundary. Everything the team builds must enforce them. If a feature cannot satisfy all 7 invariants, it does not ship.
 **Decided by:** Brian
 
+### 2026-04-04 — Gateway Enforcement Boundary
+**Decision:** All enforcement logic (identity, policy, storage, audit, meta-governance) MUST be implemented in the Gateway (`rio-system/gateway/`). The ONE PWA (`rio-one.manus.space`) and all other interfaces (CLI, API, Slack) are treated as untrusted clients. They do not implement their own enforcement.
+**Rationale:** The Gateway is the enforcement boundary. If enforcement logic is built into an interface like the ONE PWA, any other client can bypass it by talking directly to the Gateway. Moving all enforcement to the Gateway makes the system non-bypassable, which is the entire point of governance.
+**Decided by:** Brian
+
 ### 2026-04-04 — Platformization Phase: Enforcement Implementation
 **Decision:** The architecture is stable. The project transitions from architecture discovery to enforcement implementation. Five concrete enforcement areas are defined: (1) Identity and Roles, (2) Policy Schema, (3) Storage Architecture, (4) Active Audit, (5) Meta-Governance Enforcement. No work in these areas is complete without a canonical spec, an implementation plan, and a verified code path. The standard: no hidden assumptions, no role drift, no undocumented boundaries.
 **Rationale:** The design is not the problem. The gaps are enforcement gaps, not concept gaps. The rules must be non-bypassable in code and infrastructure, not just described in documents.
