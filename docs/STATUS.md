@@ -2,11 +2,42 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Romney (Protocol / Packaging)
+Last updated: 2026-04-04 by Manny (Builder)
 
 ---
 
-## Latest Delivery — Receipt Protocol v2.3.0 Published
+## Latest Delivery — Role Enforcement (Area 1) Implemented
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Delivery:** Unified principal model with 5 system roles, requireRole middleware, role-gated procedures, Principals management UI
+**Checkpoint:** `7b0ab4d3`
+
+**What shipped:**
+
+| Component | What It Does |
+|---|---|
+| `principals` table | Links users to system roles (proposer, approver, executor, auditor, meta) |
+| `resolvePrincipal` middleware | Resolves user → principal on every request, fail-closed on suspended/revoked |
+| `roleGatedProcedure(role)` | Enforces role check before procedure execution, fail-closed |
+| Policy/signer management | Now gated by `meta` role (was owner-only check) |
+| Principals management UI | `/principals` page for meta-role holders to assign/remove roles, suspend/revoke |
+| Role badges | Displayed on SystemControl profile card |
+| 15 new tests | `role-enforcement.test.ts` covering middleware, role gating, status enforcement, ledger logging |
+
+**Tests:** 320/320 passing across 21 test files.
+
+**Enforcement model:**
+- Owner auto-receives all 5 roles on first principal creation
+- Non-owners start with no roles (must be assigned by meta-role holder)
+- Suspended/revoked principals blocked from all role-gated procedures
+- All role changes logged to ledger as `POLICY_UPDATE` entries
+
+**Note:** Andrew's three specs (Identity, Policy Schema, Storage Architecture) landed in the repo during this delivery. Areas 2-5 of enforcement implementation are now unblocked.
+
+---
+
+## Previous Delivery — Receipt Protocol v2.3.0 Published
 
 **Date:** 2026-04-04
 **Agent:** Romney (Protocol / Packaging)
