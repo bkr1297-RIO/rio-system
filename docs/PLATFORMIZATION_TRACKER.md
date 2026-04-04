@@ -34,16 +34,16 @@ These three specs must be finalized before implementation begins.
 
 ### 1. Identity and Roles Spec
 **Goal:** A unified identity model for humans, agents, services, and approvers. Roles must be explicit and cryptographically distinct.
-- [ ] **Spec:** `IDENTITY_AND_ROLES_SPEC.md` (Owner: Andrew)
+- [x] **Spec:** `IDENTITY_AND_ROLES_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
 - [ ] **Protocol Review:** (Owner: Romney)
 
 ### 2. Policy Schema Spec
 **Goal:** A formal machine-readable policy schema defining risk levels, approval requirements, quorum rules, allowed executors, expirations, and action classes.
-- [ ] **Spec:** `POLICY_SCHEMA_SPEC.md` (Owner: Andrew)
+- [x] **Spec:** `POLICY_SCHEMA_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
 
 ### 3. Storage Architecture Spec
 **Goal:** Formal separation of full artifacts (Content-Addressable Storage) from proof artifacts (Append-Only Ledger).
-- [ ] **Spec:** `STORAGE_ARCHITECTURE_SPEC.md` (Owner: Andrew)
+- [x] **Spec:** `STORAGE_ARCHITECTURE_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
 - [ ] **Protocol Review:** (Owner: Romney)
 
 ---

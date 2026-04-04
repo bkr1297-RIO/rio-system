@@ -2,11 +2,51 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Romney (Protocol)
+Last updated: 2026-04-04 by Andrew (Solutions Architect)
 
 ---
 
-## Latest Delivery — Enforcement Implementation Plans
+## Latest Delivery — Phase 1 Foundational Specs (3 of 3)
+
+**Date:** 2026-04-04
+**Agent:** Andrew (Solutions Architect / Manus)
+**Delivery:** Three foundational specifications required before Manny can begin enforcement implementation
+**Branch:** `main`
+**Tracker Reference:** `docs/PLATFORMIZATION_TRACKER.md` — Phase 1
+
+**Files Delivered:**
+
+| File | Purpose | Lines | Status |
+|---|---|---|---|
+| `spec/IDENTITY_AND_ROLES_SPEC.md` | Unified identity model: 6 actor types, 6 roles, Ed25519 key model, principal registry, delegation, role enforcement at API boundary | ~450 | Draft — Romney review needed |
+| `spec/POLICY_SCHEMA_SPEC.md` | Machine-readable policy schema: risk tiers, action classes, approval requirements, quorum rules, delegation rules, system modes, policy versioning with hash chain | ~400 | Draft |
+| `spec/STORAGE_ARCHITECTURE_SPEC.md` | CAS + Append-Only Ledger boundary: what goes where, artifact lifecycle, verification endpoints, deployment configurations | ~400 | Draft — Romney review needed |
+
+**Key Design Decisions:**
+
+1. **Keys per principal, not per role.** A single principal has one active Ed25519 key pair. Simplifies key management. Key rotation is logged in the ledger.
+2. **Role separation enforced cryptographically.** An agent with role `proposer` cannot produce a valid approval even if it has a valid Ed25519 key — the Gateway checks both signature validity AND signer role.
+3. **Policy is versioned with a hash chain.** Every policy change produces a new document with `previous_policy_hash`, forming a tamper-evident chain of policy versions. Changes require Meta-Governance quorum.
+4. **CAS for content, Ledger for proof.** Full artifacts (intent body, execution result, receipt) go in Content-Addressable Storage (S3 or PostgreSQL fallback). Only hashes go in the ledger. This keeps the ledger small and permanent.
+5. **Fail-closed default.** If no action class matches an intent, the governance decision defaults to `REQUIRE_HUMAN`.
+
+**Open Questions for Romney (8 total across 3 specs):**
+- Receipt field additions (`role_exercised`, `actor_type`, `key_version`) — version bump needed?
+- Key version in hash chain computation?
+- Delegation representation in receipts?
+- Ledger backward compatibility approach?
+- Receipt self-containment with CAS separation?
+- Hash algorithm future-proofing (prefix scheme)?
+- Ledger export format update?
+- CAS garbage collection for abandoned intents?
+
+**Decisions Needed from Brian:** None. These are architectural specs within the Solutions Architect's territory. Romney review is the next gate.
+
+**Next Step:** Romney reviews Identity and Storage specs for receipt/ledger compatibility. Once approved, Manny begins enforcement implementation (Phase 2 of Platformization Tracker).
+
+---
+
+### Previous Delivery — Enforcement Implementation Plans
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder)
@@ -23,7 +63,7 @@ Last updated: 2026-04-04 by Romney (Protocol)
 
 **Total estimated effort: 16-24 days** (sequential, after specs land).
 **Dependency:** Awaiting Andrew's three specs (Identity, Policy Schema, Storage).
-**Status:** Plans ready. Builder is ready to build as soon as specs land.
+**Status:** Plans ready. Builder is ready to build as soon as specs land. **Andrew's specs have now landed — Manny is unblocked.**
 
 ---
 
@@ -43,7 +83,7 @@ Last updated: 2026-04-04 by Romney (Protocol)
 - Protocol is storage-model-agnostic. CAS integration is naturally compatible.
 - One ledger change recommended: add `execution_hash` to ledger entry schema.
 - One open question: will quorum approvals produce multi-signed receipts? If yes, `identity_binding` needs to become an array (major version bump).
-- Policy version checking is blocked on Andrew's Policy Schema Spec.
+- Policy version checking is blocked on Andrew's Policy Schema Spec. **Andrew's Policy Schema Spec has now landed.**
 
 **Platformization Tracker updates:**
 - Identity and Roles Spec → Protocol Review: **Ready** (review complete, awaiting Andrew's spec for final sign-off)
