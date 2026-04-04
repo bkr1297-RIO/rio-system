@@ -71,6 +71,63 @@ The Meta-Governance layer is responsible for deciding:
 | **Ledger rules** | **No** |
 | **Invariants** | **No** |
 
-## 6. The One-Sentence Architecture
+## 6. Meta-Governance Authority Model (Quorum)
+
+To prevent privilege escalation, silent lowering of safety, or system drift, Meta-Governance actions require multi-party approval. One person cannot change the rules alone.
+
+| Action | Required Approval |
+|---|---|
+| Policy change | 2 of 3 |
+| Risk threshold change | 2 of 3 |
+| Add/remove human authority | 3 of 3 |
+| Model retraining | 2 of 3 |
+| Connector permission change | 2 of 3 |
+| Emergency stop | 1 of 3 |
+| System rollback | 2 of 3 |
+| Change invariants | 3 of 3 |
+
+## 7. Change Control Protocol
+
+Any Meta-Governance change must produce a **Governance Change Receipt**. If this receipt does not exist, the rule cannot change. This prevents silent rule changes.
+
+A Governance Change Receipt must include:
+- **Change ID:** Unique identifier
+- **Requestor:** Who proposed the change
+- **Reason:** Why the change is needed
+- **Evidence:** Receipts or incident logs justifying the change
+- **Risk Assessment:** Impact analysis
+- **Approvers:** Cryptographic signatures of the quorum
+- **Effective Date:** When the change becomes active
+- **Rollback Plan:** How to undo the change
+- **Policy Version:** The new version number
+
+## 8. The "Do Not Learn" Rule
+
+Audit outcomes must be classified *before* learning occurs. Otherwise, the system may learn the wrong lesson (e.g., training a model to replicate a human mistake).
+
+| Audit Result | Learning Action |
+|---|---|
+| Human mistake | Do not train model |
+| Policy unclear | Update policy |
+| Model reasoning wrong | Retrain model |
+| Execution bug | Fix code |
+| Edge case | Add rule |
+| Malicious attempt | Update security |
+| Unknown | Escalate to Meta-Governance |
+
+## 9. The Freeze / Kill Switch Rule
+
+Meta-Governance must have the ability to halt or restrict the system at various layers during an emergency.
+
+| Action | Effect |
+|---|---|
+| **Freeze Cognition** | AI cannot propose actions |
+| **Freeze Execution** | Nothing executes |
+| **Force Human Approval** | All actions require human approval (bypasses auto-approve policies) |
+| **Disable Connector** | Specific API or integration is disabled |
+| **Rollback Policy** | Revert to previous policy version |
+| **Safe Mode** | Read-only system state |
+
+## 10. The One-Sentence Architecture
 
 > RIO/ONE is a governed execution platform with separated cognition, approval, execution, audit, and meta-governance layers, ensuring that AI can propose and act only within human-authorized policy, with cryptographic proof and controlled learning.
