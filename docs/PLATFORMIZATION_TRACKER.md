@@ -51,6 +51,7 @@ The enforcement areas must be built in this exact sequence. You cannot enforce p
 | Integration Planning | Damon (SDK) | `/directives/DIRECTIVE_INTEGRATION_PLANNING.md` |
 | Platformization Tracking | CoS (Chief of Staff) | `/directives/DIRECTIVE_PLATFORMIZATION_TRACKING.md` |
 | Gateway Enforcement Boundary | Manny, Andrew, Damon | `/directives/DIRECTIVE_GATEWAY_ENFORCEMENT_BOUNDARY.md` |
+| First Platform Slice | Andrew, Manny, Romney, Damon | `/directives/DIRECTIVE_FIRST_PLATFORM_SLICE.md` |
 
 ---
 
