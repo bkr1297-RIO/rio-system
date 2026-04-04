@@ -230,3 +230,116 @@ That last question is the one most systems forget. RIO does not forget it.
 | System constitution | **Documented** | Invariants defined in RIO_SYSTEM_INVARIANTS.md and Platform Spec |
 
 The Meta-Governance layer is architecturally complete. Several controls are already implemented through existing mechanisms (kill switch, role permissions, connector registry, protocol versioning). The remaining controls (formal audit review process, automated incident response, multi-human quorum) are documented and ready for implementation when enterprise pilots require them.
+
+---
+
+## 11. Meta-Governance Authority Model (Quorum)
+
+Meta-Governance actions require multi-party approval. No single person can change the rules. The quorum table defines the minimum number of authorized parties (out of the current Meta-Governance authority set) required to approve each type of change.
+
+| Action | Required Approval | Rationale |
+|---|---|---|
+| Policy change | 2 of 3 | Prevents unilateral safety reduction |
+| Risk threshold change | 2 of 3 | Changing what is "safe" requires consensus |
+| Add/remove human authority | 3 of 3 | Identity and authority changes are constitutional |
+| Model retraining | 2 of 3 | Changing how the AI thinks requires oversight |
+| Connector permission change | 2 of 3 | Adding new capabilities to the system |
+| Emergency stop | 1 of 3 | Must be fast — any authority can halt the system |
+| System rollback | 2 of 3 | Reverting state affects all downstream operations |
+| Change invariants | 3 of 3 | Constitutional changes require unanimous agreement |
+
+This quorum model prevents four failure modes: one person changing rules unilaterally, silent lowering of safety thresholds, privilege escalation without consensus, and gradual system drift through incremental changes that no single party would have approved in aggregate.
+
+The initial Meta-Governance authority set consists of the Human Root Authority (Brian / I-1). As the organization scales, additional authorities will be added (requiring 3-of-3 approval to add). The emergency stop is deliberately set at 1-of-3 because the ability to halt the system must never be blocked by quorum unavailability.
+
+---
+
+## 12. Change Control Protocol
+
+Any Meta-Governance change must produce a **Governance Change Receipt** before the change takes effect. If this receipt does not exist, the rule cannot change. This is how the system prevents silent rule changes.
+
+A Governance Change Receipt must include all of the following fields:
+
+| Field | Description |
+|---|---|
+| Change ID | Unique identifier for the governance change |
+| Requestor | Who proposed the change (human or system component) |
+| Reason | Why the change is needed (natural language justification) |
+| Evidence | Supporting receipts, incidents, or audit data that motivated the change |
+| Risk Assessment | Impact analysis — what changes, what could break, who is affected |
+| Approvers | Quorum signatures from the Meta-Governance authority set |
+| Effective Date | When the change becomes active |
+| Rollback Plan | How to undo the change if it causes problems |
+| Policy Version | The new version number of the affected policy or rule |
+| Previous Version | The version being replaced (for diff and audit) |
+
+Governance Change Receipts are stored in the ledger as `META_GOVERNANCE` entry types. They are subject to the same immutability, hash-chain linkage, and verification rules as all other ledger entries. This creates a complete, tamper-evident history of every rule change the system has ever undergone.
+
+The Change Control Protocol applies to all Meta-Governance actions in the quorum table. No exceptions. If the process was not followed, the change is invalid regardless of who requested it.
+
+---
+
+## 13. The "Do Not Learn" Rule — Audit Outcome Classification
+
+Audit outcomes must be classified before the system is allowed to learn from them. The system must not automatically incorporate feedback, incidents, or behavioral patterns into its models or policies without first determining what kind of event occurred and what the correct response is.
+
+This is one of the most important real-world AI governance problems: a system that learns from bad feedback becomes a system that encodes bad behavior.
+
+| Audit Result | Correct Learning Action | Incorrect Action |
+|---|---|---|
+| Human mistake | Do not train model | Training on human error teaches the AI to replicate mistakes |
+| Policy unclear | Update policy language | Retraining the model does not fix ambiguous rules |
+| Model reasoning wrong | Retrain model | Changing policy does not fix broken reasoning |
+| Execution bug | Fix code | Retraining or policy change does not fix software defects |
+| Edge case | Add rule | Retraining on edge cases without a rule creates fragile behavior |
+| Malicious attempt | Update security | Learning from attacks without security hardening creates vulnerability |
+| Unknown | Escalate to Meta-Governance | Acting on unclassified events is how systems drift |
+
+The classification must happen before any learning action is taken. If the audit result is "Unknown," the event is escalated to Meta-Governance for human review. The system must never learn from an unclassified event.
+
+This rule is enforced at the Meta-Governance layer. Mantis observes and records the event. Meta-Governance classifies it. Only then does the appropriate layer (code, policy, model, security, or rules) receive the update.
+
+---
+
+## 14. System Control Modes (Freeze / Kill Switch Rules)
+
+Meta-Governance must be able to place the system into restricted operational modes. These modes are standard in safety-critical systems (aviation, nuclear, financial) and provide graduated response to incidents.
+
+| Mode | Effect | Trigger | Recovery |
+|---|---|---|---|
+| Normal | All layers operational | Default state | N/A |
+| Elevated | All actions require human approval (no auto-approve) | Suspicious pattern detected | Meta-Governance review (2 of 3) |
+| Freeze Cognition | AI cannot propose new actions | Model behavior concern | Meta-Governance review (2 of 3) |
+| Freeze Execution | Nothing executes, approvals still possible | Execution layer incident | Meta-Governance review (2 of 3) |
+| Disable Connector | Specific tool/API disabled | Connector failure or abuse | Meta-Governance review (2 of 3) |
+| Rollback Policy | Revert to previous policy version | Bad policy change detected | Meta-Governance review (2 of 3) |
+| Safe Mode | Read-only system, no actions, no proposals | Serious incident | Meta-Governance review (2 of 3) |
+| Full Stop | Everything halted, kill switch engaged | Critical emergency | Any 1 authority can trigger; 2 of 3 to restart |
+
+These modes are ordered by severity. The system can be in exactly one mode at a time. Transitioning to a more restrictive mode requires fewer approvals than transitioning to a less restrictive mode. This is by design — it must always be easier to stop the system than to start it.
+
+The kill switch (Full Stop) is the most extreme mode. Any single Meta-Governance authority can trigger it. Restarting from Full Stop requires 2-of-3 quorum approval and a Governance Change Receipt documenting the incident, root cause, and remediation.
+
+---
+
+## 15. The Security Audit Question
+
+The canonical question for pressure-testing this architecture:
+
+> **Where in this architecture can an action happen without approval, and where can a rule change without Meta-Governance?**
+
+If the answer is "nowhere," the architecture is sound. If there is any path, that is the vulnerability. This question becomes the standing security audit question for all future reviews of the RIO/ONE platform.
+
+---
+
+## 16. Complete Stack Summary
+
+With the quorum model, change control protocol, learning classification, and system control modes, the Meta-Governance layer is fully specified. The complete governed AI control system architecture:
+
+| Layer | Name | Controlled By |
+|---|---|---|
+| 5 | Meta-Governance | Human quorum |
+| 4 | Witness | Ledger + Mantis |
+| 3 | Execution | Gateway |
+| 2 | Governance | RIO |
+| 1 | Cognition | AI Agents |

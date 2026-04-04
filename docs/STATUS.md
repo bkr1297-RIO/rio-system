@@ -21,6 +21,30 @@ Last updated: 2026-04-04 by Chief of Staff
 
 ### Previous Delivery — Scribe Deliverables: Mirrored Governance + Layer 5 Meta-Governance
 
+---
+
+## Latest Delivery — Meta-Governance Engineering Refinements (Scribe)
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder), integrating work from Bondi (Scribe / OpenAI ChatGPT)
+**Delivery:** Four engineering refinements to make Layer 5 enforceable, not just conceptual
+**Branch:** `main`
+**File:** `spec/META_GOVERNANCE_SPEC.md` (sections 11–16 added)
+
+**New sections:**
+- **§11 Quorum Model** — Multi-party approval table (1-of-3 for emergency stop, 2-of-3 for policy changes, 3-of-3 for invariants/authority changes)
+- **§12 Change Control Protocol** — Governance Change Receipt required for every rule change (10-field receipt stored in ledger)
+- **§13 "Do Not Learn" Rule** — Audit outcome classification table (7 categories) that must be applied before the system learns from any event
+- **§14 System Control Modes** — 8 graduated operational modes from Normal to Full Stop, with trigger and recovery requirements
+- **§15 Security Audit Question** — Canonical pressure-test: "Where can an action happen without approval, and where can a rule change without Meta-Governance?"
+- **§16 Complete Stack Summary** — Final 5-layer architecture table
+
+With these refinements, Layer 5 is no longer just described — it is enforceable.
+
+---
+
+## Previous Delivery — Scribe Deliverables: Mirrored Governance + Layer 5 Meta-Governance
+
 **Date:** 2026-04-04
 **Agent:** Manny (Builder), integrating work from Bondi (Scribe / OpenAI ChatGPT)
 **Delivery:** Two canonical spec documents formalizing the organizational architecture and the meta-governance layer
