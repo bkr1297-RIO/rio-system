@@ -6,7 +6,41 @@ Last updated: 2026-04-04 by Romney (Protocol / Packaging)
 
 ---
 
-## Latest Delivery — Protocol Sign-Off: Phase 1 Foundational Specs
+## Latest Delivery — Receipt Protocol v2.3.0 Published
+
+**Date:** 2026-04-04
+**Agent:** Romney (Protocol / Packaging)
+**Delivery:** Receipt spec v2.3.0 implemented, tested, merged, and published to npm and PyPI
+**Branch:** `main` (PR #6 merged)
+**Commit:** `34f30c0`
+
+**What shipped:**
+
+| Package | Version | Link |
+|---|---|---|
+| npm | `rio-receipt-protocol@2.3.0` | https://www.npmjs.com/package/rio-receipt-protocol/v/2.3.0 |
+| PyPI | `rio-receipt-protocol 2.3.0` | https://pypi.org/project/rio-receipt-protocol/2.3.0/ |
+
+**New fields in `identity_binding` (all optional, backward-compatible):**
+- `role_exercised` (string) — The role the signer was acting under
+- `actor_type` (string) — Whether the signer is "human", "ai_agent", or "service"
+- `key_version` (integer) — Version number of the signing key for rotation tracking
+- `delegation` (object) — Full delegation chain with delegation_id, delegate_id, scope, risk_ceiling, expiry
+
+**Files changed:** 20 files across schema, spec, reference implementation, Python implementation, TypeScript declarations, tests, changelog, and version references.
+
+**Test results:**
+- Node.js: 44/44 pass (7 new identity enrichment tests)
+- Python: 29/29 pass
+- Examples: 8/8 pass
+
+**Compatibility:** Fully backward-compatible. v2.2 receipts remain valid and verifiable. New fields do not affect `receipt_hash` computation.
+
+**This completes the protocol-level work from the sign-off.** Manny can now build enforcement logic against the v2.3 receipt format with confidence that the published packages match the spec.
+
+---
+
+### Previous Delivery — Protocol Sign-Off: Phase 1 Foundational Specs
 
 **Date:** 2026-04-04
 **Agent:** Romney (Protocol / Packaging)
