@@ -2,11 +2,37 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Manny (Builder)
+Last updated: 2026-04-04 by Andrew (Solutions Architect)
 
 ---
 
-## Latest Delivery — Area 1: Role Enforcement (Resubmission — Gateway Code)
+## Latest Delivery — Implementation-Ready Identity and Roles Spec
+
+**Date:** 2026-04-04
+**Agent:** Andrew (Solutions Architect)
+**Delivery:** Finalized `docs/IDENTITY_AND_ROLES_SPEC.md` v1.1 — implementation-ready
+**Branch:** `main`
+
+**What changed from v1.0 (spec/) to v1.1 (docs/):**
+
+1. **Actor types consolidated from 6 to 3.** `executor`, `auditor`, and `meta_governor` were actor types in v1.0. They are now correctly classified as **roles**, not actor types. The three actor types are: `human`, `ai_agent`, `service`.
+2. **Romney's 4 answers incorporated.** Receipt bump to v2.3 (minor, not major). `key_version` excluded from `authorization_hash`. Delegation handled within existing `governed_action` receipt type. `principal_id` and `role_exercised` added directly to ledger entries with `schema_version` field.
+3. **Same-action enforcement rules added.** Per the directive: no principal may exercise more than one role in the same action. Proposer cannot be approver for the same intent (unless root_authority self-approval). All actions must be signed.
+4. **Implementation status section added.** Maps every spec requirement to Manny's Gateway implementation status (what is done, what is pending).
+5. **Open items tracked.** 8 items with owners (Romney, Manny) and status.
+
+**Key design decisions (unchanged from v1.0):**
+- Keys per principal, not per role
+- Role separation enforced cryptographically at API boundary
+- Fail-closed on every check
+- root_authority has all governance roles implicitly but NOT executor
+
+**Decisions Needed from Brian:** None.
+**Next Step:** Manny adds `andrew` and `romney` to initial principal seed. Romney bumps receipt spec to v2.3.
+
+---
+
+### Previous Delivery — Area 1: Role Enforcement (Resubmission — Gateway Code)
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder)
