@@ -2,11 +2,32 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Chief of Staff
+Last updated: 2026-04-04 by Manny (Builder)
 
 ---
 
-## Latest Delivery — Meta-Governance Enforcement Mechanisms
+## Latest Delivery — Spec Consolidation: Canonical 6-Document Structure
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder), integrating directive from Bondi (Scribe / OpenAI ChatGPT)
+**Delivery:** Consolidated the entire spec/ directory into the Scribe's canonical 6-document structure
+**Branch:** `main`
+
+**Canonical Documents (spec/):**
+- `CONSTITUTION.md` — Highest authority. Invariants, 5 layers, quorum, accountability invariant, amendment process.
+- `ARCHITECTURE.md` — System design. Five layers, three loops, components, connector model, token model, deployment.
+- `META_GOVERNANCE.md` — Layer 5 operational manual. Quorum, change control, learning classification, control modes.
+- `WORK_PROTOCOL.md` — How work gets done. Agent work loop, roles, completion reports, audit checklist, definition of done.
+- `RECEIPT_SPEC.md` — Receipt format. 5-hash chain, verification algorithm, protocol versioning, SDK support.
+- `LEDGER_SPEC.md` — Ledger format. Append-only enforcement, hash chain algorithm, chain verification, integrity monitoring.
+
+**Archived (spec/archive/):** 11 superseded files preserved for historical reference.
+
+**Rationale:** Two Meta-Governance files existed (META_GOVERNANCE_SPEC.md and RIO_META_GOVERNANCE.md), creating governance drift risk. The Scribe directed: "Do not keep two specs — that creates governance drift." All content consolidated into one source of truth per domain.
+
+---
+
+## Previous Delivery — Meta-Governance Enforcement Mechanisms
 
 **Date:** 2026-04-04
 **Agent:** Chief of Staff
