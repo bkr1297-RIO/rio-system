@@ -78,6 +78,16 @@ _None recorded yet._
 **Rationale:** These invariants are the architectural and product definition of RIO. They are the foundation of the trust story, the compliance story, and the licensing boundary. Everything the team builds must enforce them. If a feature cannot satisfy all 7 invariants, it does not ship.
 **Decided by:** Brian
 
+### 2026-04-04 — Transition from project to platform (Platform Spec v1.0)
+**Decision:** RIO/ONE is now a platform, not a project. A 15-section Platform Specification v1.0 will be produced as the canonical document that all agents, developers, and future customers build against. The spec consolidates existing architecture docs, adds missing sections (governed_action() API, security model, ledger architecture), and defines the ecosystem mapping. No external pilot begins until the spec is complete, audited, and approved.
+**Rationale:** We are building three things simultaneously: the product, the platform, and the process. The platform spec is the contract that makes all three coherent.
+**Decided by:** Brian
+
+### 2026-04-04 — Build Process Directive issued
+**Decision:** All work now follows the formal Build → Self-Check → Audit → Approve → Complete workflow. When gaps are found, we fix the system that allowed the gap — not blame the person or agent. Mistakes are progress. The process is documented in `docs/directives/2026-04-04_BUILD_PROCESS_DIRECTIVE.md`.
+**Rationale:** The audit of Manny's enterprise features delivery revealed a gap between documented and implemented. This is the system working, not failing. The directive ensures we scale without chaos.
+**Decided by:** Brian
+
 ### 2026-04-03 — RIO Agent Work Protocol adopted
 **Decision:** All agent work within the RIO ecosystem must follow the Agent Work Loop (PLAN → BUILD → SELF-CHECK → AUDIT → FIX → APPROVE → COMPLETE → RECORD). No single agent may Architect + Build + Approve alone. Builders must produce a formal Completion Report before requesting audit. Auditors must verify against a standardized checklist. A task is only DONE when requirements are implemented, code is committed, docs are updated, the Auditor passes, the Human approves, and a receipt is generated.
 **Rationale:** LLMs optimize for producing answers, not verifying correctness. This protocol forces a verification loop that creates reliable multi-agent work instead of unchecked output. It extends RIO governance from runtime execution to the development process itself.
