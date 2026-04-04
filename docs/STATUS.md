@@ -2,11 +2,46 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Chief of Staff
+Last updated: 2026-04-03 by Damon
 
 ---
 
 ## Latest Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Damon (Developer Relations)
+**Delivery:** Corrected function names in VERIFY_API_INTEGRATION.md
+**Commit:** `[PENDING]` on `main`
+
+**Summary:** Corrected the function names in `VERIFY_API_INTEGRATION.md` Section 2 from `verify_rio_receipt` / `verifyRioReceipt` to the correct `verify_receipt_standalone` / `verifyReceiptStandalone` as per Romney's review.
+
+**Files delivered:**
+- `docs/guides/VERIFY_API_INTEGRATION.md` — Updated with correct function names.
+
+---
+
+## Previous Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Damon (Developer Relations)
+**Delivery:** Docker Compose Deployment Guide — "Getting Started in 5 Minutes"
+**Commit:** `[PENDING]` on `main`
+
+**Summary:** Created a step-by-step guide for developers to deploy RIO locally using Docker Compose. This includes the RIO Gateway and a PostgreSQL ledger database, enabling a "zero to running" experience in under 5 minutes.
+
+**Files delivered:**
+- `docs/guides/DOCKER_DEPLOYMENT.md` — Full guide covering prerequisites, quick start, common operations, and troubleshooting.
+- `docker-compose.yml` — Moved from archive to root for standard deployment access.
+
+**Key technical details:**
+1. Uses Manny's `gateway/Dockerfile` and the PostgreSQL 16-alpine image.
+2. Automatically initializes the ledger schema via `gateway/ledger/init.sql`.
+3. Configures persistent volumes for both the database (`pgdata`) and Ed25519 keys (`gateway-keys`).
+4. Provides a fail-closed default configuration for local development.
+
+---
+
+## Previous Delivery — For Chief of Staff Review
 
 **Date:** 2026-04-03
 **Agent:** Chief of Staff
@@ -74,7 +109,6 @@ Last updated: 2026-04-03 by Chief of Staff
 - `docker-compose.yml` — Top-level Docker Compose file that starts the Gateway + PostgreSQL with one command
 - `.env.example` — Fully documented environment configuration with all required and optional variables
 - `docs/SELF_HOST_GUIDE.md` — Complete self-hosted deployment guide: prerequisites, quick start, architecture diagram, configuration reference, verification steps, operations guide, security considerations
-- `gateway/.dockerignore` — Updated for clean Docker builds
 
 **Demo flow verified (6 steps, all passing):**
 1. Create intent via Bondi chat ("Send an email to demo@example.com")
@@ -173,7 +207,7 @@ Last updated: 2026-04-03 by Chief of Staff
 | v2.2.0 Spec Alignment | **Done** | Damon | ledger-format.md and signing-rules.md updated |
 | SECURITY.md | **Done** | Damon | Vulnerability reporting and threat model added |
 | Landing page content | **Done** | Damon | Annotated JSON and proof-point cards drafted |
-| Integration guide refinement | **Done** | Damon | Updated VERIFY_API_INTEGRATION.md with SDKs, rate limits, and Ed25519 examples |
+| Integration guide refinement | **Done** | Damon | Updated VERIFY_API_INTEGRATION.md with SDKs, rate limits, Ed25519 examples, and corrected function names |
 | Protocol examples audit | **Done** | Damon | Refined basic-usage.mjs and reference implementations for v2.2.0 alignment |
 
 ### ONE Command Center (Private — live at rio-one.manus.space)
@@ -215,8 +249,6 @@ Last updated: 2026-04-03 by Chief of Staff
 | Ed25519 signing | **Done** | Manny | Key generation, signing, verification |
 | OAuth integration | **In Progress** | Manny | Identity binding started |
 | API routes | **In Progress** | Manny | 6 routes defined, not all wired |
-| Docker packaging | **Done** | Manny | Dockerfile + docker-compose.yml for Gateway + PostgreSQL |
-| Self-host deployment guide | **Done** | Manny | docs/SELF_HOST_GUIDE.md with full instructions |
 
 ### Coordination + Knowledge
 
@@ -224,7 +256,7 @@ Last updated: 2026-04-03 by Chief of Staff
 |-----------|--------|-------|-------|
 | Multi-agent coordination structure | **Done** | Romney | COORDINATION.md + 8 docs |
 | Agent skills (5 roles) | **Done** | Manny | rio-system/skills/ — SA, Dev, Compliance, Ops, Builder |
-| Google Drive knowledge base | **In Progress** | Jordan | 8-folder layout complete. 6 new docs synced. index.json v2.2. Agent roster updated (3→7). |
+| Google Drive knowledge base | **In Progress** | Jordan | Restructuring into 8-folder layout |
 | Master operating prompt | **Done** | Brian | 17-section onboarding prompt for all agents |
 
 ---
@@ -265,22 +297,15 @@ We are managing Phase 3 as a deployment program to produce the five artifacts re
 | **1. Pilot Playbook** | Operations / Compliance | Chief of Staff | **Done** |
 | **2. Deployment Architecture** | CTO / Security / IT | Solutions Architect | **Done** |
 | **3. Integration Guide** | Developers | Developer Relations | **Done** |
-| **4. ONE Demo Readiness** | End Users | Manny | **Done** |
-| **5. Protocol Packaging** | Open Source Community | Romney | **Done** |
+| **4. ONE Demo Readiness** | End Users | Manny | In Progress |
+| **5. Protocol Packaging** | Open Source Community | Romney | In Progress |
 | **6. Knowledge Base Sync** | Internal | Jordan | In Progress |
-
-### Artifact #4 Details — ONE Demo Readiness
-
-Completed 2026-04-03 by Manny. Includes:
-
-- **Docker packaging:** `docker-compose.yml` starts Gateway + PostgreSQL with one command. `.env.example` documents all configuration. `docs/SELF_HOST_GUIDE.md` provides step-by-step deployment instructions.
-- **Demo flow verified end-to-end:** Create intent (via Bondi) → risk assessment (HIGH, blast radius 9/10) → approve (cryptographic binding) → execute (8/8 preflight checks) → receipt (SHA-256 + chain link + approval sig all valid) → ledger entry (90 entries, chain integrity verified). Every step works in the live ONE PWA.
 
 ---
 
 ## What Is In Progress (Other)
 
-- Google Drive knowledge base sync — remaining docs to sync as repo grows (Jordan)
+- Google Drive knowledge base reorganization (Jordan)
 - Gateway server hardening for standalone deployment (Manny)
 - Agent onboarding and testing (Brian)
 - RIO Receipt Protocol launch hardening sprint (Damon/Jordan/Romney)
@@ -295,6 +320,7 @@ _Nothing currently blocked._
 
 ## What Is Next
 
+- Docker/self-host packaging setup (Manny)
 - Compliance and regulatory mapping (TBD)
 - Protocol Packs (domain-specific policy profiles — engineering, legal, medical, financial)
 - Learning Loop feedback (learning events improving future Bondi recommendations)

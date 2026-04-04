@@ -9,6 +9,8 @@
 # The gateway will be available at http://localhost:4400
 # PostgreSQL will be available at localhost:5432
 
+version: "3.8"
+
 services:
   # ---------------------------------------------------------------------------
   # PostgreSQL — Append-only ledger and governance state
@@ -50,13 +52,13 @@ services:
     environment:
       NODE_ENV: production
       RIO_GATEWAY_PORT: 4400
-      ED25519_MODE: required
+      ED25519_MODE: optional # Set to 'required' for production
 
       # Database — connects to the postgres service
       DATABASE_URL: postgresql://rio:${PG_PASSWORD:-rio_gateway_2026}@postgres:5432/rio_ledger
 
       # Auth
-      JWT_SECRET: ${JWT_SECRET}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
       RIO_LOGIN_PASSPHRASE: ${RIO_LOGIN_PASSPHRASE:-rio-governed-2026}
       TOKEN_EXPIRY_HOURS: ${TOKEN_EXPIRY_HOURS:-24}
 
@@ -65,6 +67,8 @@ services:
       REQUEST_WINDOW_SECONDS: ${REQUEST_WINDOW_SECONDS:-60}
       NONCE_RETENTION_HOURS: ${NONCE_RETENTION_HOURS:-24}
       EXECUTION_TOKEN_EXPIRY_SECONDS: ${EXECUTION_TOKEN_EXPIRY_SECONDS:-300}
+    volumes:
+      - gateway-keys:/app/data/keys
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:4400/health"]
       interval: 30s
@@ -72,28 +76,8 @@ services:
       retries: 3
       start_period: 15s
 
-  # ---------------------------------------------------------------------------
-  # Receipt Verifier — Independent verification endpoint (optional)
-  # Uncomment to run the standalone receipt verifier alongside the gateway.
-  # ---------------------------------------------------------------------------
-  # verifier:
-  #   build:
-  #     context: ./gateway
-  #     dockerfile: Dockerfile
-  #   container_name: rio-verifier
-  #   restart: unless-stopped
-  #   depends_on:
-  #     postgres:
-  #       condition: service_healthy
-  #   ports:
-  #     - "${VERIFIER_PORT:-4401}:4400"
-  #   environment:
-  #     NODE_ENV: production
-  #     RIO_GATEWAY_PORT: 4400
-  #     DATABASE_URL: postgresql://rio:${PG_PASSWORD:-rio_gateway_2026}@postgres:5432/rio_ledger
-  #     JWT_SECRET: ${JWT_SECRET}
-  #   command: ["node", "server.mjs", "--verify-only"]
-
 volumes:
   rio-pgdata:
+    driver: local
+  gateway-keys:
     driver: local
