@@ -78,6 +78,15 @@ const INITIAL_PRINCIPALS = [
     registered_by: "system_bootstrap",
   },
   {
+    principal_id: "I-2",
+    actor_type: "human",
+    display_name: "Brian (Approver)",
+    email: "riomethod5@gmail.com",
+    primary_role: "approver",
+    secondary_roles: [],
+    registered_by: "system_bootstrap",
+  },
+  {
     principal_id: "bondi",
     actor_type: "ai_agent",
     display_name: "Bondi (AI Chief of Staff)",
@@ -566,7 +575,7 @@ export function resolvePrincipalByEmail(email) {
   //    Brian's emails: bkr1297@gmail.com, riomethod5@gmail.com, RasmussenBR@hotmail.com
   const KNOWN_EMAIL_ALIASES = {
     "bkr1297@gmail.com": "I-1",
-    "riomethod5@gmail.com": "I-1",
+    "riomethod5@gmail.com": "I-2",
     "rasmussenbr@hotmail.com": "I-1",
   };
 
