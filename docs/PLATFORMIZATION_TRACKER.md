@@ -146,10 +146,14 @@ Andrew     Manny     Romney     Damon
               Platform Core
 ```
 
-- **Andrew** = defines structures (Identity, Policy, Storage)
-- **Manny** = builds enforcement (Gateway code)
-- **Romney** = ensures proof/ledger compatibility (Receipt, Ledger)
-- **Damon** = builds integration layer (SDK, API, Docs)
-- **CoS** = ensures coordination, sequencing, and verification
-- **Brian** = governance, product definition, meta-governance
-- **Bondi** = scribe, invariant logic, journey record
+### Current Focus Assignments
+
+| Person | Focus Now |
+|---|---|
+| **Andrew** | Identity spec, Policy schema, Storage spec — all must assume Gateway enforcement |
+| **Manny** | Move enforcement into Gateway and implement Areas 1–5 there |
+| **Romney** | Ensure receipts/ledger/verifier align with Gateway enforcement |
+| **Damon** | SDKs must call Gateway, not ONE PWA |
+| **CoS** | Track enforcement in Gateway only |
+| **Brian** | Governance model, invariants, product direction |
+| **Bondi** | Scribe, invariant logic, journey record |
