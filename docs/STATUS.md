@@ -6,7 +6,28 @@ Last updated: 2026-04-04 by Chief of Staff
 
 ---
 
-## Latest Delivery — Platformization Phase: Enforcement Tracker + Directive
+## Latest Delivery — Enforcement Implementation Plans
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Delivery:** Implementation plans for all 5 enforcement areas. Plans only — no code until Andrew's specs land.
+**Branch:** `main`
+**File:** `docs/ENFORCEMENT_PLANS.md`
+
+**Five enforcement areas planned:**
+1. Role Enforcement — unified principal model, 5 roles, middleware enforcement, identity binding (2-3 days)
+2. Policy Evaluation Engine — machine-readable policy schema, rule evaluator, quorum enforcement, versioning (3-5 days)
+3. CAS + Ledger Boundary — content-addressable storage, hash-only ledger, artifact envelopes (3-4 days)
+4. Active Audit — automatic post-execution audit pipeline, 5 compliance checks, anomaly detection (3-5 days)
+5. Meta-Governance Enforcement — control modes, quorum, governance change receipts, learning classification (5-7 days)
+
+**Total estimated effort: 16-24 days** (sequential, after specs land).
+**Dependency:** Awaiting Andrew's three specs (Identity, Policy Schema, Storage).
+**Status:** Plans ready. Builder is ready to build as soon as specs land.
+
+---
+
+## Previous Delivery — Platformization Phase: Enforcement Tracker + Directive
 
 **Date:** 2026-04-04
 **Agent:** Chief of Staff
@@ -20,7 +41,7 @@ Last updated: 2026-04-04 by Chief of Staff
 
 ---
 
-### Previous Delivery — Architecture Convergence: Technical Decisions
+## Previous Delivery — Architecture Convergence: Technical Decisions
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder)
