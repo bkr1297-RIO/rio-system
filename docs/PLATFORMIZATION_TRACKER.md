@@ -89,7 +89,7 @@ Do not begin enforcement coding until Andrew's specs are finalized. Prepare impl
 
 ### 1. Role Enforcement
 - [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
-- [ ] **Code Enforcement:** (Owner: Manny)
+- [ ] **Code Enforcement:** (Owner: Manny) — **FAILED VERIFICATION** (Code not in Gateway repo)
 - [ ] **Verification:** (Owner: CoS)
 
 ### 2. Policy Evaluation Engine
