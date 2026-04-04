@@ -373,7 +373,19 @@ export function resolvePrincipalFromRequest(req) {
     }
   }
 
-  // 3. Try X-Principal-ID header (for service-to-service calls)
+   // 3. Try X-Authenticated-Email header (for untrusted client identity bridging)
+  //    ONE and other untrusted clients send the authenticated user's email.
+  //    The Gateway resolves the email to a principal — the client never sends
+  //    a raw principal ID (Decision 2: all interfaces are untrusted clients).
+  const authenticatedEmail = req.headers["x-authenticated-email"];
+  if (authenticatedEmail) {
+    const principal = resolvePrincipalByEmail(authenticatedEmail);
+    if (principal && principal.status === "active") {
+      return principal;
+    }
+  }
+  // 4. Try X-Principal-ID header (for trusted service-to-service calls only)
+  //    This should only be used by trusted internal services, not client apps.
   const headerPrincipalId = req.headers["x-principal-id"];
   if (headerPrincipalId) {
     const principal = principalCache.get(headerPrincipalId);
@@ -381,7 +393,6 @@ export function resolvePrincipalFromRequest(req) {
       return principal;
     }
   }
-
   return null;
 }
 
