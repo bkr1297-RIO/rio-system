@@ -2,11 +2,38 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Jordan
+Last updated: 2026-04-03 by Manny
 
 ---
 
 ## Latest Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Manny (Builder)
+**Delivery:** Deployment Program Artifact #4 — ONE Demo Readiness
+**Branch:** `main`
+
+**Summary:** Completed the ONE Demo Readiness artifact. Dockerized the Gateway server for self-hosted deployment and verified the full governed email loop end-to-end through the ONE PWA.
+
+**Files delivered:**
+- `docker-compose.yml` — Top-level Docker Compose file that starts the Gateway + PostgreSQL with one command
+- `.env.example` — Fully documented environment configuration with all required and optional variables
+- `docs/SELF_HOST_GUIDE.md` — Complete self-hosted deployment guide: prerequisites, quick start, architecture diagram, configuration reference, verification steps, operations guide, security considerations
+- `gateway/.dockerignore` — Updated for clean Docker builds
+
+**Demo flow verified (6 steps, all passing):**
+1. Create intent via Bondi chat ("Send an email to demo@example.com")
+2. Risk assessment displayed (HIGH risk, blast radius 9/10, affected systems listed)
+3. Approval with cryptographic binding (one-click approve, signature recorded)
+4. Execution with 8/8 preflight checks (proxy_active, args_hash_match, etc.)
+5. Receipt with cryptographic verification (SHA-256 hash valid, chain link valid, approval sig valid)
+6. Ledger entry in tamper-evident hash chain (90 entries, chain integrity verified)
+
+**No decisions needed from Brian.** Docker packaging is ready for self-hosted deployment. Demo flow is ready for prospect demonstrations.
+
+---
+
+### Previous Delivery
 
 **Date:** 2026-04-03
 **Agent:** Jordan (Knowledge Architect)
@@ -38,7 +65,6 @@ Last updated: 2026-04-03 by Jordan
 **Date:** 2026-04-03
 **Agent:** Damon (Developer Relations)
 **Delivery:** Docker Compose Deployment Guide — "Getting Started in 5 Minutes"
-**Commit:** `[PENDING]` on `main`
 
 **Summary:** Created a step-by-step guide for developers to deploy RIO locally using Docker Compose. This includes the RIO Gateway and a PostgreSQL ledger database, enabling a "zero to running" experience in under 5 minutes.
 
@@ -61,7 +87,7 @@ Last updated: 2026-04-03 by Jordan
 **Delivery:** Email Deployment Architecture — First Real Use Case
 **Commit:** `cbf5047` on `main`
 
-**Summary:** Designed the complete deployment architecture for the first RIO use case: AI-drafted emails with human approval, cryptographic receipts, and tamper-evident ledger. This is the reference architecture for pilot customers.
+**Summary:** Completed the ONE Demo Readiness artifact. Dockerized the Gateway server for self-hosted deployment and verified the full governed email loop end-to-end through the ONE PWA.
 
 **Files delivered:**
 - `docs/architecture/EMAIL_DEPLOYMENT_ARCHITECTURE.md` — Full deployment document covering all 10 requested items
@@ -134,6 +160,8 @@ Last updated: 2026-04-03 by Jordan
 | Ed25519 signing | **Done** | Manny | Key generation, signing, verification |
 | OAuth integration | **In Progress** | Manny | Identity binding started |
 | API routes | **In Progress** | Manny | 6 routes defined, not all wired |
+| Docker packaging | **Done** | Manny | Dockerfile + docker-compose.yml for Gateway + PostgreSQL |
+| Self-host deployment guide | **Done** | Manny | docs/SELF_HOST_GUIDE.md with full instructions |
 
 ### Coordination + Knowledge
 
@@ -182,9 +210,16 @@ We are managing Phase 3 as a deployment program to produce the five artifacts re
 | **1. Pilot Playbook** | Operations / Compliance | Chief of Staff | **Done** |
 | **2. Deployment Architecture** | CTO / Security / IT | Solutions Architect | **Done** |
 | **3. Integration Guide** | Developers | Developer Relations | **Done** |
-| **4. ONE Demo Readiness** | End Users | Manny | In Progress |
+| **4. ONE Demo Readiness** | End Users | Manny | **Done** |
 | **5. Protocol Packaging** | Open Source Community | Romney | In Progress |
 | **6. Knowledge Base Sync** | Internal | Jordan | In Progress |
+
+### Artifact #4 Details — ONE Demo Readiness
+
+Completed 2026-04-03 by Manny. Includes:
+
+- **Docker packaging:** `docker-compose.yml` starts Gateway + PostgreSQL with one command. `.env.example` documents all configuration. `docs/SELF_HOST_GUIDE.md` provides step-by-step deployment instructions.
+- **Demo flow verified end-to-end:** Create intent (via Bondi) → risk assessment (HIGH, blast radius 9/10) → approve (cryptographic binding) → execute (8/8 preflight checks) → receipt (SHA-256 + chain link + approval sig all valid) → ledger entry (90 entries, chain integrity verified). Every step works in the live ONE PWA.
 
 ---
 
@@ -205,7 +240,6 @@ _Nothing currently blocked._
 
 ## What Is Next
 
-- Docker/self-host packaging setup (Manny)
 - Compliance and regulatory mapping (TBD)
 - Protocol Packs (domain-specific policy profiles — engineering, legal, medical, financial)
 - Learning Loop feedback (learning events improving future Bondi recommendations)

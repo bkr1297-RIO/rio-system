@@ -1,42 +1,41 @@
 # RIO Governance Gateway — Docker Compose
-# Full stack: Gateway + PostgreSQL Ledger
+# Self-hosted deployment: Gateway + PostgreSQL
 #
 # Usage:
-#   docker-compose up -d          # Start all services
-#   docker-compose logs -f        # View logs
-#   docker-compose down           # Stop all services
+#   cp .env.example .env    # Fill in your secrets
+#   docker compose up -d    # Start all services
+#   docker compose logs -f  # Watch logs
 #
-# For Azure deployment:
-#   docker-compose -f docker-compose.yml -f docker-compose.azure.yml up -d
-
-version: "3.8"
+# The gateway will be available at http://localhost:4400
+# PostgreSQL will be available at localhost:5432
 
 services:
-  # -----------------------------------------------------------------------
-  # PostgreSQL — Persistent Ledger Database
-  # -----------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # PostgreSQL — Append-only ledger and governance state
+  # ---------------------------------------------------------------------------
   postgres:
     image: postgres:16-alpine
-    container_name: rio-ledger-db
+    container_name: rio-postgres
     restart: unless-stopped
     environment:
       POSTGRES_DB: rio_ledger
       POSTGRES_USER: rio
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-rio_gateway_2026}
+      POSTGRES_PASSWORD: ${PG_PASSWORD:-rio_gateway_2026}
     ports:
-      - "5432:5432"
+      - "${PG_EXTERNAL_PORT:-5432}:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
-      - ./gateway/ledger/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - rio-pgdata:/var/lib/postgresql/data
+      - ./gateway/ledger/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U rio -d rio_ledger"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 10s
 
-  # -----------------------------------------------------------------------
-  # RIO Governance Gateway
-  # -----------------------------------------------------------------------
+  # ---------------------------------------------------------------------------
+  # RIO Governance Gateway — Governed AI Execution Runtime
+  # ---------------------------------------------------------------------------
   gateway:
     build:
       context: ./gateway
@@ -47,29 +46,54 @@ services:
       postgres:
         condition: service_healthy
     ports:
-      - "4400:4400"
+      - "${RIO_GATEWAY_PORT:-4400}:4400"
     environment:
-      RIO_GATEWAY_PORT: 4400
       NODE_ENV: production
-      ED25519_MODE: optional
-      JWT_SECRET: ${JWT_SECRET:-change-me-in-production}
+      RIO_GATEWAY_PORT: 4400
+      ED25519_MODE: required
+
+      # Database — connects to the postgres service
+      DATABASE_URL: postgresql://rio:${PG_PASSWORD:-rio_gateway_2026}@postgres:5432/rio_ledger
+
+      # Auth
+      JWT_SECRET: ${JWT_SECRET}
       RIO_LOGIN_PASSPHRASE: ${RIO_LOGIN_PASSPHRASE:-rio-governed-2026}
-      # PostgreSQL connection
-      PGHOST: postgres
-      PGPORT: 5432
-      PGDATABASE: rio_ledger
-      PGUSER: rio
-      PGPASSWORD: ${POSTGRES_PASSWORD:-rio_gateway_2026}
-    volumes:
-      - gateway-keys:/app/data/keys
+      TOKEN_EXPIRY_HOURS: ${TOKEN_EXPIRY_HOURS:-24}
+
+      # Rate limiting
+      RATE_LIMIT_GLOBAL: ${RATE_LIMIT_GLOBAL:-100}
+      REQUEST_WINDOW_SECONDS: ${REQUEST_WINDOW_SECONDS:-60}
+      NONCE_RETENTION_HOURS: ${NONCE_RETENTION_HOURS:-24}
+      EXECUTION_TOKEN_EXPIRY_SECONDS: ${EXECUTION_TOKEN_EXPIRY_SECONDS:-300}
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:4400/health"]
       interval: 30s
       timeout: 5s
       retries: 3
+      start_period: 15s
+
+  # ---------------------------------------------------------------------------
+  # Receipt Verifier — Independent verification endpoint (optional)
+  # Uncomment to run the standalone receipt verifier alongside the gateway.
+  # ---------------------------------------------------------------------------
+  # verifier:
+  #   build:
+  #     context: ./gateway
+  #     dockerfile: Dockerfile
+  #   container_name: rio-verifier
+  #   restart: unless-stopped
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   ports:
+  #     - "${VERIFIER_PORT:-4401}:4400"
+  #   environment:
+  #     NODE_ENV: production
+  #     RIO_GATEWAY_PORT: 4400
+  #     DATABASE_URL: postgresql://rio:${PG_PASSWORD:-rio_gateway_2026}@postgres:5432/rio_ledger
+  #     JWT_SECRET: ${JWT_SECRET}
+  #   command: ["node", "server.mjs", "--verify-only"]
 
 volumes:
-  pgdata:
-    driver: local
-  gateway-keys:
+  rio-pgdata:
     driver: local
