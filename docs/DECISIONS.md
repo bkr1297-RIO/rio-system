@@ -78,6 +78,11 @@ _None recorded yet._
 **Rationale:** These invariants are the architectural and product definition of RIO. They are the foundation of the trust story, the compliance story, and the licensing boundary. Everything the team builds must enforce them. If a feature cannot satisfy all 7 invariants, it does not ship.
 **Decided by:** Brian
 
+### 2026-04-03 — RIO Agent Work Protocol adopted
+**Decision:** All agent work within the RIO ecosystem must follow the Agent Work Loop (PLAN → BUILD → SELF-CHECK → AUDIT → FIX → APPROVE → COMPLETE → RECORD). No single agent may Architect + Build + Approve alone. Builders must produce a formal Completion Report before requesting audit. Auditors must verify against a standardized checklist. A task is only DONE when requirements are implemented, code is committed, docs are updated, the Auditor passes, the Human approves, and a receipt is generated.
+**Rationale:** LLMs optimize for producing answers, not verifying correctness. This protocol forces a verification loop that creates reliable multi-agent work instead of unchecked output. It extends RIO governance from runtime execution to the development process itself.
+**Decided by:** Brian
+
 ### 2026-04-03 — RIO-Compliant definition established
 **Decision:** A system is considered RIO-compliant if and only if it: (1) implements the 9-stage pipeline with distinct governance and proof layers, (2) enforces the strict separation of the 4 roles (Intelligence, Authority, Execution, Witness), and (3) satisfies all 7 System Invariants without exception. Any system that collapses roles or bypasses receipt/ledger requirements is not RIO-compliant.
 **Rationale:** This definition creates a verifiable standard for any system claiming RIO compliance. It is the formal test for architecture reviews, licensing, and partner integrations.

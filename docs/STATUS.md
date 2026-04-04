@@ -2,11 +2,29 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Damon
+Last updated: 2026-04-03 by Chief of Staff
 
 ---
 
 ## Latest Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Chief of Staff
+**Delivery:** RIO Agent Work Protocol — Canonical Spec + Overview
+**Branch:** `main`
+
+**Summary:** Formalized the RIO Agent Work Protocol as a canonical spec. This defines the agent-to-agent building standard: the 8-step work loop, role separation for agents, Builder Completion Report requirements, Auditor Checklist, Definition of Done, and standardized task statuses. This is the spec that other agents and external builders will follow.
+
+**Files delivered:**
+- `spec/RIO_AGENT_WORK_PROTOCOL.md` — Full canonical spec (8 sections)
+- `docs/AGENT_WORK_PROTOCOL_OVERVIEW.md` — Shorter quick-reference for agents
+- `docs/DECISIONS.md` — Updated with Agent Work Protocol adoption decision
+
+**No decisions needed from Brian.**
+
+---
+
+### Previous Delivery
 
 **Date:** 2026-04-03
 **Agent:** Damon (Developer Relations)
