@@ -6,13 +6,26 @@
 **Last Updated:** 2026-04-04
 
 ## Purpose
+
 This document tracks the transition of RIO from a conceptual architecture to a software-enforced platform. The architecture is stable. The goal now is to close the enforcement gaps across five concrete areas.
 
-No work in these areas is considered complete without:
-1. A canonical specification
-2. An implementation plan
-3. A verified code path
-4. A verification path
+No work in these areas is considered complete without all five stages:
+
+> **Directive → Spec → Implementation Plan → Code → Verification**
+
+---
+
+## Coordination Model
+
+The repo is the coordination layer. Email, Slack, and Telegram are not agent communication channels; they are future interface surfaces for human approvals.
+
+| Layer | Purpose | Location |
+|---|---|---|
+| Directives | Tasking and instructions | `/directives/` |
+| Specs | System definition | `/spec/` and `/docs/` |
+| Code | Enforcement | `/gateway/` and codebase |
+| Verification | Proof | Verifier + Ledger |
+| Tracker | Status | This document |
 
 ---
 
@@ -28,29 +41,51 @@ The enforcement areas must be built in this exact sequence. You cannot enforce p
 
 ---
 
+## Active Directives
+
+| Directive | Target | File |
+|---|---|---|
+| Foundational Specs | Andrew (Architect) | `/directives/DIRECTIVE_FOUNDATIONAL_SPECS.md` |
+| Protocol Review | Romney (Protocol) | `/directives/DIRECTIVE_PROTOCOL_REVIEW.md` |
+| Enforcement Plans | Manny (Builder) | `/directives/DIRECTIVE_ENFORCEMENT_PLANS.md` |
+| Integration Planning | Damon (SDK) | `/directives/DIRECTIVE_INTEGRATION_PLANNING.md` |
+| Platformization Tracking | CoS (Chief of Staff) | `/directives/DIRECTIVE_PLATFORMIZATION_TRACKING.md` |
+
+---
+
 ## Phase 1: Foundational Specs (Owner: Andrew / Architects)
+
+Directive: `/directives/DIRECTIVE_FOUNDATIONAL_SPECS.md`
 
 These three specs must be finalized before implementation begins.
 
 ### 1. Identity and Roles Spec
 **Goal:** A unified identity model for humans, agents, services, and approvers. Roles must be explicit and cryptographically distinct.
+- [x] **Directive:** Issued — `/directives/DIRECTIVE_FOUNDATIONAL_SPECS.md`
 - [x] **Spec:** `IDENTITY_AND_ROLES_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
-- [ ] **Protocol Review:** (Owner: Romney)
+- [ ] **Protocol Review:** (Owner: Romney) — per `/directives/DIRECTIVE_PROTOCOL_REVIEW.md`
+- [ ] **CoS Verification:** Pending
 
 ### 2. Policy Schema Spec
 **Goal:** A formal machine-readable policy schema defining risk levels, approval requirements, quorum rules, allowed executors, expirations, and action classes.
+- [x] **Directive:** Issued
 - [x] **Spec:** `POLICY_SCHEMA_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
+- [ ] **CoS Verification:** Pending
 
 ### 3. Storage Architecture Spec
 **Goal:** Formal separation of full artifacts (Content-Addressable Storage) from proof artifacts (Append-Only Ledger).
+- [x] **Directive:** Issued
 - [x] **Spec:** `STORAGE_ARCHITECTURE_SPEC.md` (Owner: Andrew) — Delivered 2026-04-04
-- [ ] **Protocol Review:** (Owner: Romney)
+- [ ] **Protocol Review:** (Owner: Romney) — per `/directives/DIRECTIVE_PROTOCOL_REVIEW.md`
+- [ ] **CoS Verification:** Pending
 
 ---
 
 ## Phase 2: Enforcement Implementation (Owner: Manny / Builder)
 
-Once the specs are finalized, the Builder implements enforcement in this order:
+Directive: `/directives/DIRECTIVE_ENFORCEMENT_PLANS.md`
+
+Do not begin enforcement coding until Andrew's specs are finalized. Prepare implementation plans first.
 
 ### 1. Role Enforcement
 - [ ] **Implementation Plan:** (Owner: Manny)
@@ -73,9 +108,21 @@ Once the specs are finalized, the Builder implements enforcement in this order:
 - [ ] **Verification:** (Owner: CoS)
 
 ### 5. Meta-Governance Enforcement
-- [x] **Spec:** `META_GOVERNANCE.md` (Completed)
+- [x] **Spec:** `RIO_META_GOVERNANCE.md` (Completed)
 - [ ] **Implementation Plan:** (Owner: Manny)
 - [ ] **Code Enforcement:** (Owner: Manny)
+- [ ] **Verification:** (Owner: CoS)
+
+---
+
+## Phase 3: Integration Layer (Owner: Damon / SDK)
+
+Directive: `/directives/DIRECTIVE_INTEGRATION_PLANNING.md`
+
+Do not build yet. Plan first. SDK and integration architecture must align with Identity, Policy, and Storage specs.
+
+- [ ] **SDK Architecture Plan:** (Owner: Damon)
+- [ ] **API Surface Reconciliation:** (Owner: Damon)
 - [ ] **Verification:** (Owner: CoS)
 
 ---
@@ -90,15 +137,17 @@ Once the specs are finalized, the Builder implements enforcement in this order:
              │
    ┌─────────┼─────────┐
    ▼         ▼         ▼
-Andrew     Manny     Romney
-(Architect)(Builder) (Protocol)
-   │         │         │
-   └─────────┴─────────┘
-        Platform Core
+Andrew     Manny     Romney     Damon
+(Architect)(Builder) (Protocol) (SDK)
+   │         │         │         │
+   └─────────┴─────────┴─────────┘
+              Platform Core
 ```
 
-- **Andrew** = defines structures
-- **Manny** = builds enforcement
-- **Romney** = ensures proof/ledger compatibility
-- **CoS** = ensures coordination and sequencing
-- **Brian** = governance + product definition
+- **Andrew** = defines structures (Identity, Policy, Storage)
+- **Manny** = builds enforcement (Gateway code)
+- **Romney** = ensures proof/ledger compatibility (Receipt, Ledger)
+- **Damon** = builds integration layer (SDK, API, Docs)
+- **CoS** = ensures coordination, sequencing, and verification
+- **Brian** = governance, product definition, meta-governance
+- **Bondi** = scribe, invariant logic, journey record
