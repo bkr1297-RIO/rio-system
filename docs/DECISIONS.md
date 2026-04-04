@@ -78,6 +78,18 @@ _None recorded yet._
 **Rationale:** These invariants are the architectural and product definition of RIO. They are the foundation of the trust story, the compliance story, and the licensing boundary. Everything the team builds must enforce them. If a feature cannot satisfy all 7 invariants, it does not ship.
 **Decided by:** Brian
 
+### 2026-04-04 — Meta-Governance (Layer 5) adopted
+**Decision:** The RIO architecture is extended with a fifth layer: Meta-Governance. The system must not be allowed to change its own rules automatically. Learning, policy changes, risk threshold adjustments, authority assignments, and invariant modifications all require Meta-Governance approval. Learning flows from Mantis to Meta-Governance first, never directly back to the AI. The Platform Spec v1.0 is updated from 15 to 16 sections to include Meta-Governance.
+**Rationale:** A system that governs actions but not its own learning and policy changes is structurally unstable. This is a known problem in safety engineering. The Meta-Governance layer prevents drift and ensures the system remains stable and governable.
+**Source:** Bondi (Scribe / ChatGPT)
+**Decided by:** Brian
+
+### 2026-04-04 — Organizational Structure formalized (Mirrored Governance)
+**Decision:** The team structure must mirror the system architecture. Each system layer has a matching team role with explicit accountability. The Chief of Staff is the operational authority responsible for overall delivery. No work is complete without Builder Completion Report → Auditor PASS/FAIL → CoS scope confirmation → docs updated → deployment verified → human approval → receipt logged.
+**Rationale:** Most failures happen because people only build the product and ignore the organization and process. Mirrored governance ensures accountability exists at every layer.
+**Source:** Bondi (Scribe / ChatGPT)
+**Decided by:** Brian
+
 ### 2026-04-04 — Transition from project to platform (Platform Spec v1.0)
 **Decision:** RIO/ONE is now a platform, not a project. A 15-section Platform Specification v1.0 will be produced as the canonical document that all agents, developers, and future customers build against. The spec consolidates existing architecture docs, adds missing sections (governed_action() API, security model, ledger architecture), and defines the ecosystem mapping. No external pilot begins until the spec is complete, audited, and approved.
 **Rationale:** We are building three things simultaneously: the product, the platform, and the process. The platform spec is the contract that makes all three coherent.

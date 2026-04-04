@@ -64,17 +64,25 @@ Plus: Appendix A (Glossary), Appendix B (Document References).
 
 **Date:** 2026-04-04
 **Agent:** Chief of Staff
-**Delivery:** Manifesto, Ecosystem Map, Platform Spec v1.0 Outline, Build Process Directive
+**Delivery:** Meta-Governance (Layer 5) + Organizational Structure (Mirrored Governance)
 **Branch:** `main`
+**Source:** Bondi (Scribe / ChatGPT)
 
-**Summary:** Processed Brian's three foundational documents (Manifesto, Platform Spec outline, Synthesis). Created the Manifesto as a repo document, formalized the ecosystem mapping, drafted the Platform Spec v1.0 outline with assignments, and committed the Build Process Directive. Also recorded two new decisions: the project-to-platform transition and the build process shift.
+**Summary:** Integrated Bondi's two foundational architecture documents into the repo. Created the Meta-Governance spec (Layer 5 — the system must not change its own rules automatically) and the Organizational Structure (mirrored governance — team roles mirror system layers). Updated the Platform Spec v1.0 outline from 15 to 16 sections. Recorded two new decisions.
 
 **Files delivered:**
-- `docs/MANIFESTO.md` — Brian's founding statement for Sovereign ONE
-- `docs/architecture/ECOSYSTEM_MAP.md` — 5-layer model, industry mapping, multi-router model
-- `docs/RIO_ONE_PLATFORM_SPEC_v1_OUTLINE.md` — 15-section spec outline with status and assignments
-- `docs/directives/2026-04-04_BUILD_PROCESS_DIRECTIVE.md` — Formal build process shift
-- `docs/DECISIONS.md` — Two new decisions recorded
+- `spec/RIO_META_GOVERNANCE.md` — Layer 5 canonical spec (5 layers, control loop, auto-change rules)
+- `docs/ORGANIZATIONAL_STRUCTURE.md` — Mirrored governance, accountability matrix, delivery protocol
+- `docs/RIO_ONE_PLATFORM_SPEC_v1_OUTLINE.md` — Updated to 16 sections with org structure
+- `docs/DECISIONS.md` — Two new decisions (Meta-Governance adopted, Org Structure formalized)
+
+---
+
+### Previous Delivery
+
+**Date:** 2026-04-04
+**Agent:** Chief of Staff
+**Delivery:** Manifesto, Ecosystem Map, Platform Spec v1.0 Outline, Build Process Directive
 
 ---
 

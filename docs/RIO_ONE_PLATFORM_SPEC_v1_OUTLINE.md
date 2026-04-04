@@ -6,7 +6,7 @@
 
 This document outlines the canonical platform specification that all agents, developers, and future customers will build against. It marks the transition from project to platform.
 
-## The 15-Part Specification
+## The 16-Part Specification
 
 | # | Section | Current Status | Owner / Next Action |
 |---|---|---|---|
@@ -25,18 +25,34 @@ This document outlines the canonical platform specification that all agents, dev
 | 13 | Async approval / queue model | ⚠️ Exists in code, needs spec | **Manny:** Document queue architecture |
 | 14 | Connector model | ⚠️ Exists in code, needs spec | **Manny:** Document connector architecture |
 | 15 | Ledger architecture | ⚠️ Exists in code, needs spec | **Andrew/Romney:** Draft ledger architecture |
+| 16 | Meta-Governance (Layer 5) | ✅ Exists in `spec/RIO_META_GOVERNANCE.md` | **CoS:** Consolidate into master spec |
 
-## Ecosystem Mapping (The 5 Layers)
+## Ecosystem Mapping (The 5 Layers + Meta-Governance)
 
-1. **Interface Layer:** ONE (what user sees)
-2. **Intelligence Layer:** AI agents (OpenAI, Anthropic, etc.)
-3. **Governance Layer:** RIO policy + approval
-4. **Execution Layer:** Gateway + APIs (Google, Slack, etc.)
-5. **Proof Layer:** Receipts + Ledger
+| Layer | Name | Question | System Component |
+|---|---|---|---|
+| 1 | Cognition | What could we do? | Agents (OpenAI, Anthropic, etc.) |
+| 2 | Governance | Are we allowed to do it? | RIO |
+| 3 | Execution | Do it | Gateway + APIs |
+| 4 | Witness | What happened? | Receipts + Ledger + Mantis |
+| 5 | Meta-Governance | Should the rules change? | Human / Board / Root Authority |
+| — | Interface | How does the user interact? | ONE |
+
+## Organizational Structure (Mirrored Governance)
+
+| System Layer | Team Role | Accountable For |
+|---|---|---|
+| Meta-Governance | Human (Root Authority) | Direction correct |
+| Governance | Chief of Staff | Project complete |
+| Cognition | Systems Architect | Design correct |
+| Build | Developer / Builder | Code works |
+| Audit | Auditor / QA | Code correct |
+| Execution | DevOps | System runs |
+| Witness | Mantis | Logs & metrics |
 
 ## Next Steps (The Build Loop)
 
-1. **Build:** Manny implements missing pieces (TTL, Batch, Versioning, SLA, MFA, PII).
+1. **Build:** Manny implements missing pieces (TTL, Batch, Versioning, SLA, MFA, PII) in the Gateway codebase.
 2. **Document:** Chief of Staff consolidates existing docs into the v1.0 Spec.
 3. **Architect:** Systems Architect (Romney/Andrew) drafts missing architecture specs (API, Security, Ledger).
 4. **Audit:** External agents (Grok/Gemini/Claude) stress-test the spec.
