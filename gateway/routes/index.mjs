@@ -19,6 +19,10 @@ import {
   getEntryCount,
   verifyChain,
   getCurrentHash,
+  createApproval,
+  getApprovalsByIntent,
+  getApprovalByApprover,
+  getPendingApprovals,
 } from "../ledger/ledger-pg.mjs";
 import {
   hashIntent,
@@ -385,6 +389,197 @@ router.post("/authorize", requireRole("approver"), (req, res) => {
   } catch (err) {
     console.error(`[RIO Gateway] Authorize error: ${err.message}`);
     res.status(500).json({ error: "Internal error during authorization." });
+  }
+});
+
+// =========================================================================
+// POST /approvals/:intent_id — Record approval/denial decision
+// Per Gateway API Contract: POST /approvals/:intent_id
+// Writes to the separate approvals table with approver_id, decision, signature.
+// Enforces: proposer ≠ approver (the principal who created the intent cannot approve it).
+// =========================================================================
+router.post("/approvals/:intent_id", requireRole("approver"), async (req, res) => {
+  try {
+    const { intent_id } = req.params;
+    const { decision, reason, signature, signer_id: requestSignerId } = req.body;
+
+    if (!decision) {
+      return res.status(400).json({ error: "Missing required field: decision" });
+    }
+    if (!["approved", "denied"].includes(decision)) {
+      return res.status(400).json({ error: 'Decision must be \"approved\" or \"denied\".' });
+    }
+
+    const intent = getIntent(intent_id);
+    if (!intent) {
+      return res.status(404).json({ error: `Intent not found: ${intent_id}` });
+    }
+
+    if (intent.status !== "governed") {
+      return res.status(409).json({
+        error: `Intent is in status "${intent.status}", expected "governed".`,
+      });
+    }
+
+    // INVARIANT: Proposer cannot approve their own intent
+    const approverId = req.principal?.principal_id;
+    if (intent.principal_id && approverId === intent.principal_id) {
+      return res.status(403).json({
+        error: "Self-authorization denied. The proposer cannot approve their own intent.",
+        invariant: "proposer_ne_approver",
+      });
+    }
+
+    // Check if this approver already voted on this intent
+    const existingApproval = await getApprovalByApprover(intent_id, approverId);
+    if (existingApproval) {
+      return res.status(409).json({
+        error: `Approver ${approverId} has already voted on this intent.`,
+        existing_decision: existingApproval.decision,
+      });
+    }
+
+    const timestamp = new Date().toISOString();
+    let signatureVerified = false;
+    let signaturePayloadHash = null;
+
+    // Ed25519 Signature Verification (if provided)
+    if (signature) {
+      const payload = buildSignaturePayload({
+        intent_id,
+        action: intent.action,
+        decision,
+        signer_id: requestSignerId || approverId,
+        timestamp: req.body.signature_timestamp || timestamp,
+      });
+      const signerId = requestSignerId || approverId;
+      const publicKeyHex = getSignerPublicKey(signerId);
+      if (!publicKeyHex) {
+        return res.status(403).json({
+          error: `No registered public key for signer: ${signerId}`,
+        });
+      }
+      const valid = verifySignature(payload, signature, publicKeyHex);
+      if (!valid) {
+        appendEntry({
+          intent_id,
+          action: intent.action,
+          agent_id: intent.agent_id,
+          status: "blocked",
+          detail: `Approval BLOCKED: Invalid Ed25519 signature from ${approverId}`,
+        });
+        return res.status(403).json({
+          intent_id,
+          status: "blocked",
+          reason: "Ed25519 signature verification failed.",
+        });
+      }
+      signatureVerified = true;
+      signaturePayloadHash = hashPayload(payload);
+    } else if (ED25519_MODE === "required") {
+      return res.status(400).json({
+        error: "Ed25519 signature is required for approvals.",
+      });
+    }
+
+    // Write to approvals table
+    const approval = await createApproval({
+      intent_id,
+      approver_id: approverId,
+      decision,
+      reason: reason || null,
+      signature: signature || null,
+      signature_payload_hash: signaturePayloadHash,
+      ed25519_signed: signatureVerified,
+      principal_id: approverId,
+      principal_role: req.principal?.primary_role || null,
+    });
+
+    // Build authorization record (same as /authorize for backward compat)
+    const authorization = {
+      intent_id,
+      decision,
+      authorized_by: approverId,
+      signer_id: requestSignerId || approverId,
+      timestamp,
+      conditions: null,
+      expires_at: null,
+      ed25519_signed: signatureVerified,
+      signature_payload_hash: signaturePayloadHash,
+      principal_id: approverId,
+      principal_role: req.principal?.primary_role || null,
+      approval_id: approval.approval_id,
+    };
+
+    const authHash = hashAuthorization(authorization);
+    const newStatus = decision === "approved" ? "authorized" : "denied";
+
+    updateIntent(intent_id, {
+      status: newStatus,
+      authorization: { ...authorization, authorization_hash: authHash },
+    });
+
+    // Write to ledger
+    appendEntry({
+      intent_id,
+      action: intent.action,
+      agent_id: intent.agent_id,
+      status: newStatus,
+      detail: `Approval: ${decision} by ${approverId} (approval_id: ${approval.approval_id})${signatureVerified ? " (Ed25519 SIGNED)" : " (unsigned)"}`,
+      authorization_hash: authHash,
+      intent_hash: hashIntent(intent),
+    });
+
+    console.log(`[RIO Gateway] Approval: ${intent_id} — ${decision} by ${approverId} (approval_id: ${approval.approval_id})`);
+
+    res.json({
+      intent_id,
+      approval_id: approval.approval_id,
+      status: newStatus,
+      decision,
+      approver_id: approverId,
+      authorization_hash: authHash,
+      signature_verified: signatureVerified,
+      timestamp,
+    });
+  } catch (err) {
+    console.error(`[RIO Gateway] Approval error: ${err.message}`);
+    res.status(500).json({ error: "Internal error recording approval." });
+  }
+});
+
+// =========================================================================
+// GET /approvals/:intent_id — List all approvals for an intent
+// =========================================================================
+router.get("/approvals/:intent_id", requirePrincipal, async (req, res) => {
+  try {
+    const { intent_id } = req.params;
+    const intent = getIntent(intent_id);
+    if (!intent) {
+      return res.status(404).json({ error: `Intent not found: ${intent_id}` });
+    }
+    const approvals = await getApprovalsByIntent(intent_id);
+    res.json({
+      intent_id,
+      approvals,
+      count: approvals.length,
+    });
+  } catch (err) {
+    console.error(`[RIO Gateway] List approvals error: ${err.message}`);
+    res.status(500).json({ error: "Internal error listing approvals." });
+  }
+});
+
+// =========================================================================
+// GET /approvals — List all pending intents that need approval
+// =========================================================================
+router.get("/approvals", requireRole("approver"), async (req, res) => {
+  try {
+    const pending = await getPendingApprovals();
+    res.json({ pending_approvals: pending, count: pending.length });
+  } catch (err) {
+    console.error(`[RIO Gateway] Pending approvals error: ${err.message}`);
+    res.status(500).json({ error: "Internal error fetching pending approvals." });
   }
 });
 

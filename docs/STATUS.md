@@ -2,11 +2,91 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Damon (Developer Relations)
+Last updated: 2026-04-04 by Manny (Builder)
 
 ---
 
-## Latest Delivery — Area 2: Policy Evaluation Engine (Gateway Code)
+## Latest Delivery — First Platform Slice (Priorities 1-4)
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Directive:** `directives/DIRECTIVE_FIRST_PLATFORM_SLICE.md`
+**Prerequisites:** Area 1 (VERIFIED PASS), Area 2 (VERIFIED PASS)
+
+### What Was Requested (4 Priorities)
+
+1. Add a separate `approvals` table with `approver_id`, `decision`, `signature`
+2. Wire real Google OAuth into the Gateway so two humans can log in
+3. Rewire ONE to call the Gateway API — no enforcement in ONE
+4. ONE needs 3 screens: Login, Create Intent, Approvals. That's it.
+
+### What Shipped
+
+**Priority 1: Approvals Table (Gateway)**
+
+| File | What It Does |
+|---|---|
+| `gateway/ledger/ledger-pg.mjs` | New `approvals` table in autoMigrate: `approval_id`, `intent_id`, `approver_id`, `decision`, `reason`, `signature`, `signature_payload_hash`, `ed25519_signed`, `principal_id`, `principal_role`, `created_at`. Helper functions: `createApproval()`, `getApprovalsByIntent()`, `getApprovalByApprover()`, `getPendingApprovals()`. |
+| `gateway/ledger/init.sql` | Approvals table DDL for Docker/fresh deployments |
+| `gateway/routes/index.mjs` | `POST /approvals/:intent_id` — records approval/denial, enforces proposer ≠ approver, writes to approvals table + ledger. `GET /approvals/:intent_id` — lists all approvals for an intent. |
+
+**Priority 2: Google OAuth (Gateway)**
+
+| File | What It Does |
+|---|---|
+| `gateway/security/google-oauth.mjs` | Full Google OAuth flow: `GET /auth/google` → redirect to consent, `GET /auth/google/callback` → exchange code → resolve email → principal → JWT → redirect to ONE, `GET /auth/status` → check config. CSRF state tokens with 10-min TTL. Env vars: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REDIRECT_URI`, `ONE_FRONTEND_URL`. |
+| `gateway/security/oauth.mjs` | `createToken()` Mode 2: direct claims from Google OAuth (principal_id, role, auth_method). JWT now includes `auth_method` field. |
+| `gateway/security/principals.mjs` | `resolvePrincipalByEmail()` — bridges Google OAuth email → principal. Checks direct email, metadata.emails, known aliases. |
+| `gateway/server.mjs` | Google OAuth routes wired. Startup logs OAuth config status. Passphrase login preserved as fallback. |
+
+**Priority 3: Rewire ONE → Gateway API**
+
+| File | What It Does |
+|---|---|
+| `client/src/lib/gateway.ts` (ONE PWA) | Gateway API client — typed fetch wrappers for all Gateway endpoints. Token storage in localStorage. Replay prevention (request_timestamp, request_nonce) on all POST requests. |
+| `client/src/hooks/useGatewayAuth.ts` (ONE PWA) | Gateway auth context/hook — manages JWT token, whoami, login/logout state. |
+
+**Priority 4: ONE = 3 Screens Only**
+
+| File | What It Does |
+|---|---|
+| `client/src/App.tsx` (ONE PWA) | Stripped to 3 routes: `/` (Login), `/intent/new` (Create Intent), `/approvals` (Approvals). No enforcement logic. No old pages. |
+| `client/src/pages/Login.tsx` (ONE PWA) | Gateway status check, passphrase login, Google OAuth button (when configured), token handling from OAuth callback redirect. |
+| `client/src/pages/NewIntent.tsx` (ONE PWA) | Form → `POST /intent` → `POST /govern` → displays governance result (decision, risk tier, TTL). All 4 decision types rendered. |
+| `client/src/pages/GatewayApprovals.tsx` (ONE PWA) | Polls Gateway for pending approvals. Approve/Deny with reason. Handles proposer ≠ approver error. 30-second auto-refresh. |
+
+### Alignment with Locked Decisions
+
+- **Decision 1 (Enforcement Boundary):** All enforcement in `gateway/`. ONE is a thin client.
+- **Decision 2 (Interface Is Not Authority):** ONE calls Gateway API. No enforcement in ONE. Footer on every screen: "Decision 2: Interface Is Not Authority."
+- **Decision 3 (Ledger Is System of Record):** Every approval writes a ledger entry. Policy evaluation produces governance hash.
+
+### Test Results
+
+**Gateway Tests (27 pass, 0 fail):**
+- Unit (13): Google OAuth handlers, principal email resolution, createToken Mode 2, approvals table helpers
+- Integration (14): Full governed flow (submit → govern → approve → execute → receipt), proposer ≠ approver enforcement, denial flow, unauthenticated blocked
+
+**ONE PWA Tests (18 pass, 0 fail):**
+- App routing: exactly 3 screens, no old enforcement pages, no tRPC proxy calls
+- Gateway client: all required exports, VITE_GATEWAY_URL, replay prevention, Authorization header
+- Login page: uses Gateway API (not tRPC), Google OAuth support, Decision 2 footer
+- Create Intent page: calls Gateway directly, displays all 4 governance decisions
+- Approvals page: calls Gateway directly, handles proposer ≠ approver, polls for pending
+
+**Full project test suite: 339 tests, 0 failures across 23 files.**
+
+### What's Needed Before Two-User Test
+
+1. Set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in Gateway environment
+2. Set `GOOGLE_REDIRECT_URI` to `https://<gateway-domain>/auth/google/callback`
+3. Set `ONE_FRONTEND_URL` to the ONE PWA URL
+4. Set `VITE_GATEWAY_URL` in ONE PWA environment to the Gateway URL
+5. Register Brian's second email in a principal (or add a second human principal)
+
+---
+
+## Previous Delivery — Area 2: Policy Evaluation Engine (VERIFIED PASS)
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder)

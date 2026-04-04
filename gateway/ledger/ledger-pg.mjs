@@ -87,6 +87,27 @@ async function autoMigrate(pool) {
     CREATE INDEX IF NOT EXISTS idx_ledger_status ON ledger_entries(status);
     CREATE INDEX IF NOT EXISTS idx_intents_status ON intents(status);
     CREATE INDEX IF NOT EXISTS idx_receipts_intent_id ON receipts(intent_id);
+
+    -- Approvals table: separate record of each approval decision
+    CREATE TABLE IF NOT EXISTS approvals (
+      id              SERIAL PRIMARY KEY,
+      approval_id     UUID UNIQUE NOT NULL,
+      intent_id       UUID NOT NULL,
+      approver_id     VARCHAR(255) NOT NULL,
+      decision        VARCHAR(20) NOT NULL,
+      reason          TEXT,
+      signature       TEXT,
+      signature_payload_hash VARCHAR(64),
+      ed25519_signed  BOOLEAN DEFAULT FALSE,
+      principal_id    VARCHAR(255),
+      principal_role  VARCHAR(50),
+      created_at      TIMESTAMPTZ DEFAULT NOW(),
+      CONSTRAINT valid_approval_decision CHECK (
+        decision IN ('approved', 'denied')
+      )
+    );
+    CREATE INDEX IF NOT EXISTS idx_approvals_intent_id ON approvals(intent_id);
+    CREATE INDEX IF NOT EXISTS idx_approvals_approver_id ON approvals(approver_id);
   `);
   console.log("[RIO Ledger-PG] Auto-migration complete — tables verified.");
 }
@@ -226,9 +247,83 @@ export function getLatestEntry() {
   return _cache[_cache.length - 1];
 }
 
+// =========================================================================
+// Approvals — PostgreSQL-backed approval records
+// =========================================================================
+
 /**
- * Verify the entire hash chain.
+ * Create an approval record in the approvals table.
+ * Returns the created approval object.
  */
+export async function createApproval(data) {
+  const approvalId = randomUUID();
+  const timestamp = new Date().toISOString();
+  
+  const approval = {
+    approval_id: approvalId,
+    intent_id: data.intent_id,
+    approver_id: data.approver_id,
+    decision: data.decision,
+    reason: data.reason || null,
+    signature: data.signature || null,
+    signature_payload_hash: data.signature_payload_hash || null,
+    ed25519_signed: data.ed25519_signed || false,
+    principal_id: data.principal_id || null,
+    principal_role: data.principal_role || null,
+    created_at: timestamp,
+  };
+
+  await pool.query(
+    `INSERT INTO approvals 
+     (approval_id, intent_id, approver_id, decision, reason, signature, signature_payload_hash, ed25519_signed, principal_id, principal_role, created_at)
+     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+    [
+      approvalId, data.intent_id, data.approver_id, data.decision,
+      data.reason || null, data.signature || null,
+      data.signature_payload_hash || null, data.ed25519_signed || false,
+      data.principal_id || null, data.principal_role || null, timestamp,
+    ]
+  );
+
+  return approval;
+}
+
+/**
+ * Get all approvals for an intent.
+ */
+export async function getApprovalsByIntent(intentId) {
+  const result = await pool.query(
+    "SELECT * FROM approvals WHERE intent_id = $1 ORDER BY created_at ASC",
+    [intentId]
+  );
+  return result.rows;
+}
+
+/**
+ * Check if a specific approver has already approved/denied an intent.
+ */
+export async function getApprovalByApprover(intentId, approverId) {
+  const result = await pool.query(
+    "SELECT * FROM approvals WHERE intent_id = $1 AND approver_id = $2 LIMIT 1",
+    [intentId, approverId]
+  );
+  return result.rows[0] || null;
+}
+
+/**
+ * Get all pending intents that need approval (status = 'governed' with REQUIRE_HUMAN or REQUIRE_QUORUM).
+ */
+export async function getPendingApprovals() {
+  const result = await pool.query(
+    `SELECT * FROM intents 
+     WHERE status = 'governed' 
+     AND (governance->>'governance_decision' = 'REQUIRE_HUMAN' 
+          OR governance->>'governance_decision' = 'REQUIRE_QUORUM')
+     ORDER BY created_at DESC`
+  );
+  return result.rows;
+}
+
 export function verifyChain() {
   if (_cache.length === 0) {
     return { valid: true, entries_checked: 0, first_invalid: null };

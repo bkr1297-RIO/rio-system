@@ -24,8 +24,14 @@ import proxyRoutes from "./routes/proxy.mjs";
 import { initApiKeys } from "./security/api-keys.mjs";
 import { apiKeyAuth } from "./security/api-auth.mjs";
 import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
-import { initPrincipals, resolvePrincipal } from "./security/principals.mjs";
+import { initPrincipals, resolvePrincipal, resolvePrincipalByEmail, getPrincipal } from "./security/principals.mjs";
 import { initPolicyStore } from "./governance/policy-store.mjs";
+import {
+  handleGoogleAuthRedirect,
+  handleGoogleCallback,
+  handleAuthStatus,
+  isGoogleOAuthConfigured,
+} from "./security/google-oauth.mjs";
 
 const app = express();
 const PORT = process.env.RIO_GATEWAY_PORT || process.env.PORT || 4400;
@@ -63,9 +69,10 @@ app.use((req, res, next) => {
 // Initialize
 // ---------------------------------------------------------------------------
 console.log("=".repeat(60));
-console.log("  RIO GOVERNANCE GATEWAY v3.0.0-principals");console.log("  Governed AI Execution Runtime");
+console.log("  RIO GOVERNANCE GATEWAY v3.1.0-oauth");
+console.log("  Governed AI Execution Runtime");
 console.log("  Ledger: PostgreSQL (persistent)");
-console.log("  Auth: JWT + Ed25519 + API Keys (PostgreSQL-backed)");
+console.log("  Auth: JWT + Ed25519 + API Keys + Google OAuth (PostgreSQL-backed)");
 console.log("  Principals: Unified identity model with role enforcement");
 console.log("  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding");
 console.log("  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs");
@@ -113,38 +120,59 @@ async function start() {
   // Auth Routes (before pipeline routes)
   // ---------------------------------------------------------------------------
 
-  // POST /login — Authenticate and receive a JWT token
+    // POST /login — Authenticate and receive a JWT token
+  // Supports two modes:
+  //   1. Legacy: user_id in REGISTERED_USERS (e.g., brian.k.rasmussen)
+  //   2. Principal: user_id matches a principal_id (e.g., bondi, gateway-exec)
   app.post("/login", (req, res) => {
     const { user_id, passphrase } = req.body;
-
     if (!user_id) {
       return res.status(400).json({ error: "Missing required field: user_id" });
     }
 
-    if (!isRegistered(user_id)) {
-      return res.status(403).json({ error: `User not registered: ${user_id}` });
-    }
-
-    // MVP: Accept any registered user with the correct passphrase
-    // In production, this would be replaced by Google/Microsoft OAuth callback
-    const expectedPassphrase = process.env.RIO_LOGIN_PASSPHRASE || "rio-governed-2026";
+    const expectedPassphrase = process.env.RIO_PASSPHRASE || process.env.RIO_LOGIN_PASSPHRASE || "rio-governed-2026";
     if (passphrase !== expectedPassphrase) {
       return res.status(401).json({ error: "Invalid passphrase." });
     }
 
-    const token = createToken(user_id);
-    const user = getRegisteredUser(user_id);
+    // Mode 1: Legacy REGISTERED_USERS lookup
+    if (isRegistered(user_id)) {
+      const token = createToken(user_id);
+      const user = getRegisteredUser(user_id);
+      console.log(`[RIO Gateway] LOGIN: ${user_id} authenticated (legacy)`);
+      return res.json({
+        status: "authenticated",
+        user_id,
+        display_name: user.display_name,
+        role: user.role,
+        token,
+        expires_in: "24h",
+      });
+    }
 
-    console.log(`[RIO Gateway] LOGIN: ${user_id} authenticated`);
+    // Mode 2: Principal-based login
+    const principal = getPrincipal(user_id);
+    if (principal && principal.status === "active") {
+      const token = createToken(principal.principal_id, {
+        email: principal.email || null,
+        name: principal.display_name,
+        role: principal.primary_role,
+        principal_id: principal.principal_id,
+        auth_method: "passphrase",
+      });
+      console.log(`[RIO Gateway] LOGIN: ${user_id} authenticated (principal: ${principal.principal_id}, role: ${principal.primary_role})`);
+      return res.json({
+        status: "authenticated",
+        user_id: principal.principal_id,
+        display_name: principal.display_name,
+        role: principal.primary_role,
+        principal_id: principal.principal_id,
+        token,
+        expires_in: "24h",
+      });
+    }
 
-    res.json({
-      status: "authenticated",
-      user_id,
-      display_name: user.display_name,
-      role: user.role,
-      token,
-      expires_in: "24h",
-    });
+    return res.status(403).json({ error: `User not registered: ${user_id}` });
   });
 
   // GET /whoami — Return current authenticated user
@@ -164,6 +192,28 @@ async function start() {
       role: req.user.role,
     });
   });
+
+  // ---------------------------------------------------------------------------
+  // Google OAuth Routes (Priority 2: Two humans can log in)
+  // ---------------------------------------------------------------------------
+
+  // GET /auth/google — Redirect to Google consent screen
+  app.get("/auth/google", handleGoogleAuthRedirect);
+
+  // GET /auth/google/callback — Handle Google's redirect with authorization code
+  app.get("/auth/google/callback", (req, res) => {
+    handleGoogleCallback(req, res, { createToken, resolvePrincipalByEmail });
+  });
+
+  // GET /auth/status — Check OAuth configuration status
+  app.get("/auth/status", handleAuthStatus);
+
+  if (isGoogleOAuthConfigured()) {
+    console.log("[RIO Gateway] Google OAuth: CONFIGURED");
+  } else {
+    console.log("[RIO Gateway] Google OAuth: NOT CONFIGURED (passphrase login only)");
+    console.log("[RIO Gateway] Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET to enable.");
+  }
 
   // ---------------------------------------------------------------------------
   // Signer Management Routes (WS-010: Identity Binding)
@@ -201,16 +251,24 @@ async function start() {
   app.get("/", (req, res) => {
     res.json({
       name: "RIO Governance Gateway",
-      version: "2.7.0",
+      version: "3.1.0-oauth",
       description: "Governed AI Execution Runtime — No Authorization, No Execution.",
       ledger: "PostgreSQL (persistent)",
-      auth: "JWT + Ed25519",
+      auth: "JWT + Ed25519 + Google OAuth",
+      google_oauth: isGoogleOAuthConfigured() ? "configured" : "not_configured (passphrase fallback)",
       endpoints: {
-        "POST /login": "Authenticate and receive JWT token",
+        "--- Authentication ---": "---",
+        "POST /login": "Authenticate via passphrase and receive JWT token (testing fallback)",
+        "GET /auth/google": "Redirect to Google OAuth consent screen",
+        "GET /auth/google/callback": "Handle Google OAuth callback (issues JWT)",
+        "GET /auth/status": "Check OAuth configuration status",
         "GET /whoami": "Return current authenticated user",
+        "--- Governance Pipeline ---": "---",
         "POST /intent": "Submit an intent from any AI agent",
         "POST /govern": "Run policy + risk evaluation on an intent",
         "POST /authorize": "Record human approval or denial (supports Ed25519 signatures)",
+        "POST /approvals/:intent_id": "Record approval/denial with principal attribution",
+        "GET /approvals/:intent_id": "List all approvals for an intent",
         "POST /execute": "Execute an authorized action (returns execution token)",
         "POST /execute-confirm": "Confirm execution result from agent",
         "POST /receipt": "Generate cryptographic receipt",
@@ -269,7 +327,7 @@ async function start() {
   // ---------------------------------------------------------------------------
   // Start
   // ---------------------------------------------------------------------------
-  app.listen(PORT, () => {
+  const server = app.listen(PORT, () => {
     console.log();
     console.log(`[RIO Gateway] Listening on port ${PORT}`);
     console.log(`[RIO Gateway] Health: http://localhost:${PORT}/health`);
@@ -278,6 +336,14 @@ async function start() {
     console.log(`[RIO Gateway] Auth: JWT sessions + Ed25519 signatures`);
     console.log();
   });
+  return server;
 }
 
-start();
+export { start };
+
+// Auto-start when run directly (not imported by tests)
+const isDirectRun = process.argv[1] && import.meta.url === `file://${process.argv[1]}`;
+const isTestContext = process.env.NODE_TEST_CONTEXT === "1";
+if (isDirectRun || (!isTestContext && !process.argv[1]?.includes('test'))) {
+  start();
+}

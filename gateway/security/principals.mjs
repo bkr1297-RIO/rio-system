@@ -515,6 +515,59 @@ export function requirePrincipal(req, res, next) {
 }
 
 // ---------------------------------------------------------------------------
+// Email Resolution (for Google OAuth)
+// ---------------------------------------------------------------------------
+
+/**
+ * Resolve a principal by email address.
+ * Checks both the principal's email field and known email aliases.
+ *
+ * This is the bridge between Google OAuth (which gives us an email)
+ * and the principal registry (which gives us a principal_id + role).
+ *
+ * @param {string} email - The email address from Google OAuth
+ * @returns {object|null} The matching principal or null
+ */
+export function resolvePrincipalByEmail(email) {
+  if (!email) return null;
+  const normalizedEmail = email.toLowerCase().trim();
+
+  // 1. Direct email match on principal record
+  for (const principal of principalCache.values()) {
+    if (principal.email && principal.email.toLowerCase() === normalizedEmail) {
+      return principal;
+    }
+  }
+
+  // 2. Check metadata.emails array (for principals with multiple emails)
+  for (const principal of principalCache.values()) {
+    const meta = principal.metadata || {};
+    if (Array.isArray(meta.emails)) {
+      for (const e of meta.emails) {
+        if (e.toLowerCase() === normalizedEmail) {
+          return principal;
+        }
+      }
+    }
+  }
+
+  // 3. Check the known email aliases from REGISTERED_USERS in oauth.mjs
+  //    Brian's emails: bkr1297@gmail.com, riomethod5@gmail.com, RasmussenBR@hotmail.com
+  const KNOWN_EMAIL_ALIASES = {
+    "bkr1297@gmail.com": "I-1",
+    "riomethod5@gmail.com": "I-1",
+    "rasmussenbr@hotmail.com": "I-1",
+  };
+
+  const aliasMatch = KNOWN_EMAIL_ALIASES[normalizedEmail];
+  if (aliasMatch && principalCache.has(aliasMatch)) {
+    return principalCache.get(aliasMatch);
+  }
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
 // CRUD Operations
 // ---------------------------------------------------------------------------
 

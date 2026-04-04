@@ -63,6 +63,25 @@ CREATE INDEX IF NOT EXISTS idx_ledger_status ON ledger_entries(status);
 CREATE INDEX IF NOT EXISTS idx_intents_status ON intents(status);
 CREATE INDEX IF NOT EXISTS idx_receipts_intent_id ON receipts(intent_id);
 
+-- Approvals table: separate record of each approval decision
+CREATE TABLE IF NOT EXISTS approvals (
+    id              SERIAL PRIMARY KEY,
+    approval_id     UUID UNIQUE NOT NULL,
+    intent_id       UUID NOT NULL,
+    approver_id     VARCHAR(255) NOT NULL,
+    decision        VARCHAR(20) NOT NULL CHECK (decision IN ('approved', 'denied')),
+    reason          TEXT,
+    signature       TEXT,
+    signature_payload_hash VARCHAR(64),
+    ed25519_signed  BOOLEAN DEFAULT FALSE,
+    principal_id    VARCHAR(255),
+    principal_role  VARCHAR(50),
+    created_at      TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_approvals_intent_id ON approvals(intent_id);
+CREATE INDEX IF NOT EXISTS idx_approvals_approver_id ON approvals(approver_id);
+
 -- Prevent deletion from ledger (append-only enforcement)
 CREATE OR REPLACE FUNCTION prevent_ledger_delete()
 RETURNS TRIGGER AS $$

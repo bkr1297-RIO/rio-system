@@ -129,6 +129,7 @@ The following deliveries landed while Phase 2 enforcement coding is in progress:
 | `c31af09` | Damon/Andrew | Gateway API Contract | Delivered |
 | `2c90943` | Damon | STATUS.md update for Gateway API Contract | Delivered |
 | (in docs/) | Damon | SDK Interface and Developer Flow guide | Delivered |
+| (pending) | Manny | First Platform Slice: Approvals table, Google OAuth, ONE rewired to Gateway, 3 screens | SUBMITTED |
 
 ---
 

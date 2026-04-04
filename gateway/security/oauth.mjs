@@ -62,22 +62,47 @@ function hmacSign(data) {
 
 /**
  * Create a JWT token for a user.
+ *
+ * Supports two modes:
+ *   1. Legacy: createToken("brian.k.rasmussen") — looks up REGISTERED_USERS
+ *   2. Principal: createToken("I-1", { email, name, role, ... }) — direct claims
+ *
+ * Mode 2 is used by Google OAuth where we already have the profile info.
  */
-export function createToken(userId) {
-  const user = REGISTERED_USERS[userId];
-  if (!user) return null;
+export function createToken(userId, claims) {
+  let tokenPayload;
 
-  const header = base64url(JSON.stringify({ alg: "HS256", typ: "JWT" }));
-  const payload = base64url(
-    JSON.stringify({
+  if (claims) {
+    // Mode 2: Direct claims from Google OAuth / principal resolution
+    tokenPayload = {
+      sub: userId,
+      email: claims.email,
+      name: claims.name,
+      role: claims.role,
+      principal_id: claims.principal_id || userId,
+      picture: claims.picture || null,
+      auth_method: claims.auth_method || "google_oauth",
+      iat: Math.floor(Date.now() / 1000),
+      exp: Math.floor(Date.now() / 1000) + TOKEN_EXPIRY_HOURS * 3600,
+    };
+  } else {
+    // Mode 1: Legacy lookup from REGISTERED_USERS
+    const user = REGISTERED_USERS[userId];
+    if (!user) return null;
+
+    tokenPayload = {
       sub: userId,
       email: user.email,
       name: user.display_name,
       role: user.role,
+      auth_method: "passphrase",
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + TOKEN_EXPIRY_HOURS * 3600,
-    })
-  );
+    };
+  }
+
+  const header = base64url(JSON.stringify({ alg: "HS256", typ: "JWT" }));
+  const payload = base64url(JSON.stringify(tokenPayload));
   const signature = hmacSign(`${header}.${payload}`);
 
   return `${header}.${payload}.${signature}`;

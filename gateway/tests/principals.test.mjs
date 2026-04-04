@@ -120,7 +120,7 @@ describe("Area 1: Principal & Role Enforcement", () => {
   // =========================================================================
   describe("Fail-Closed: Unauthenticated Requests", () => {
     const roleGatedRoutes = [
-      ["POST", "/intent", { action: "test", agent_id: "test" }],
+      ["POST", "/intent", { action: "read_email", agent_id: "brian.k.rasmussen", target_environment: "gmail" }],
       ["POST", "/govern", { intent_id: "test" }],
       ["POST", "/authorize", { intent_id: "test", decision: "approved", authorized_by: "test" }],
       ["POST", "/execute", { intent_id: "test" }],
@@ -150,10 +150,11 @@ describe("Area 1: Principal & Role Enforcement", () => {
 
     it("POST /intent — Brian can submit intents (has implicit proposer)", async () => {
       const { status, data } = await apiAsBrian("POST", "/intent", {
-        action: "test_role_enforcement",
-        agent_id: "test-agent",
-        target_environment: "dev",
-        parameters: { test: true },
+        action: "send_email",
+        agent_id: "brian.k.rasmussen",
+        target_environment: "gmail",
+        parameters: { to: "test@example.com", subject: "Test", body: "Hello" },
+        confidence: 95,
         description: "Testing Area 1 role enforcement",
       });
       assert.equal(status, 201, `Expected 201, got ${status}: ${JSON.stringify(data)}`);
@@ -166,6 +167,7 @@ describe("Area 1: Principal & Role Enforcement", () => {
       const { status, data } = await apiAsBrian("POST", "/govern", { intent_id: intentId });
       assert.equal(status, 200, `Expected 200, got ${status}: ${JSON.stringify(data)}`);
       assert.ok(data.governance_hash || data.governance_status);
+      // send_email should get REQUIRE_HUMAN, putting intent in 'governed' status
     });
 
     it("POST /authorize — Brian can authorize (has implicit approver)", async () => {
@@ -202,9 +204,9 @@ describe("Area 1: Principal & Role Enforcement", () => {
 
     it("POST /intent — bondi (proposer) CAN submit intents", async () => {
       const { status, data } = await apiAsPrincipal("bondi", "POST", "/intent", {
-        action: "test_proposer_boundary",
+        action: "read_email",
         agent_id: "bondi",
-        target_environment: "dev",
+        target_environment: "gmail",
         parameters: { test: true },
         description: "Testing proposer role boundary",
       });
@@ -245,9 +247,9 @@ describe("Area 1: Principal & Role Enforcement", () => {
   describe("Role Boundaries: Executor (gateway-exec)", () => {
     it("POST /intent — gateway-exec (executor) CANNOT submit intents", async () => {
       const { status, data } = await apiAsPrincipal("gateway-exec", "POST", "/intent", {
-        action: "test_executor_boundary",
+        action: "read_email",
         agent_id: "gateway-exec",
-        target_environment: "dev",
+        target_environment: "gmail",
         parameters: { test: true },
       });
       assert.equal(status, 403, `Expected 403, got ${status}: ${JSON.stringify(data)}`);
@@ -289,9 +291,9 @@ describe("Area 1: Principal & Role Enforcement", () => {
 
     it("POST /intent — mantis (auditor) CANNOT submit intents", async () => {
       const { status, data } = await apiAsPrincipal("mantis", "POST", "/intent", {
-        action: "test_auditor_boundary",
+        action: "read_email",
         agent_id: "mantis",
-        target_environment: "dev",
+        target_environment: "gmail",
         parameters: { test: true },
       });
       assert.equal(status, 403, `Expected 403, got ${status}: ${JSON.stringify(data)}`);
@@ -384,7 +386,8 @@ describe("Area 1: Principal & Role Enforcement", () => {
     it("Intent created by Brian carries principal_id = I-1", async () => {
       const { status, data } = await apiAsBrian("POST", "/intent", {
         action: "test_attribution",
-        agent_id: "test",
+        agent_id: "brian.k.rasmussen",
+        target_environment: "gmail",
         description: "Testing principal attribution",
       });
       assert.equal(status, 201);
@@ -393,8 +396,9 @@ describe("Area 1: Principal & Role Enforcement", () => {
 
     it("Intent created by bondi carries principal_id = bondi", async () => {
       const { status, data } = await apiAsPrincipal("bondi", "POST", "/intent", {
-        action: "test_attribution_bondi",
+        action: "read_email",
         agent_id: "bondi",
+        target_environment: "gmail",
         description: "Testing bondi attribution",
       });
       assert.equal(status, 201);
@@ -413,8 +417,8 @@ describe("Area 1: Principal & Role Enforcement", () => {
     it("Step 1: Brian submits intent (proposer role)", async () => {
       const { status, data } = await apiAsBrian("POST", "/intent", {
         action: "send_email",
-        agent_id: "MANUS",
-        target_environment: "dev",
+        agent_id: "brian.k.rasmussen",
+        target_environment: "gmail",
         parameters: { to: "test@example.com", subject: "Test", body: "Hello" },
         confidence: 95,
         description: "Full pipeline test with role enforcement",
