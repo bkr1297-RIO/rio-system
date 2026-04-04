@@ -95,8 +95,8 @@ Do not begin enforcement coding until Andrew's specs are finalized. Prepare impl
 
 ### 2. Policy Evaluation Engine
 - [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
-- [x] **Code Enforcement:** (Owner: Manny) — **SUBMITTED** — Policy engine in `gateway/governance/policy-engine.mjs` + policy store in `gateway/governance/policy-store.mjs` + genesis policy v2.0.0. 57 tests, 0 failures. Wired into `/govern` route replacing hardcoded `evaluateIntent()`.
-- [ ] **Verification:** (Owner: CoS) — Awaiting verification
+- [x] **Code Enforcement:** (Owner: Manny) — Policy engine in `gateway/governance/policy-engine.mjs` + policy store in `gateway/governance/policy-store.mjs` + genesis policy v2.0.0. 57 tests, 0 failures. Wired into `/govern` route.
+- [x] **Verification:** (Owner: CoS) — **PASS** — Verified 2026-04-04 (Commit `239044d`). See `docs/reviews/AREA2_VERIFICATION_REPORT.md`.
 
 ### 3. CAS + Ledger Boundary
 - [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
@@ -117,6 +117,20 @@ Do not begin enforcement coding until Andrew's specs are finalized. Prepare impl
 
 ---
 
+## Parallel Deliveries (During Phase 2)
+
+The following deliveries landed while Phase 2 enforcement coding is in progress:
+
+| Commit | Owner | Delivery | Status |
+|---|---|---|---|
+| `c628f52` | Andrew | Identity Spec v1.1 (Implementation-Ready) | Delivered |
+| `fc95196` | Romney | Protocol Identity & Storage Compatibility Note | Delivered |
+| `c31af09` | Damon/Andrew | Gateway API Contract | Delivered |
+| `2c90943` | Damon | STATUS.md update for Gateway API Contract | Delivered |
+| (in docs/) | Damon | SDK Interface and Developer Flow guide | Delivered |
+
+---
+
 ## Phase 3: Integration Layer (Owner: Damon / SDK)
 
 **STATUS: PENDING**
@@ -124,6 +138,8 @@ Do not begin enforcement coding until Andrew's specs are finalized. Prepare impl
 Do not build yet. Plan first. SDK and integration architecture must align with Identity, Policy, and Storage specs.
 
 - [x] **SDK Architecture Plan:** `EXTERNAL_INTEGRATION_PLAN.md` (Owner: Damon) — Verified
+- [x] **Gateway API Contract:** `GATEWAY_API_CONTRACT.md` (Owner: Damon/Andrew) — Delivered
+- [x] **SDK Interface Design:** `SDK_INTERFACE_AND_DEVELOPER_FLOW.md` (Owner: Damon) — Delivered
 - [ ] **API Surface Reconciliation:** (Owner: Damon)
 - [ ] **Verification:** (Owner: CoS)
 
