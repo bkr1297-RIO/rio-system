@@ -2,11 +2,30 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Andrew (Solutions Architect)
+Last updated: 2026-04-04 by Romney (Protocol / Packaging)
 
 ---
 
-## Latest Delivery — Implementation-Ready Identity and Roles Spec
+## Latest Delivery — Protocol Identity & Storage Compatibility Confirmation
+
+**Date:** 2026-04-04
+**Agent:** Romney (Protocol / Packaging)
+**Delivery:** `docs/PROTOCOL_IDENTITY_STORAGE_NOTE.md` — confirms receipt protocol v2.3 is fully compatible with the Identity and Roles model and CAS/Ledger storage architecture.
+
+**Verdict: CONFIRMED COMPATIBLE — No adjustments required.**
+
+Verified through code-level testing against the reference implementation:
+
+1. **Identity:** All 6 identity model fields (`principal_id`, `actor_type`, `role`, `public_key`, `key_version`, `delegation`) map directly to receipt protocol fields. The 5 receipt fields (`signer_id`, `actor_type`, `role_exercised`, `key_version`, `delegation`) are sufficient for independent verification without access to the identity system.
+2. **Storage:** Receipts store hashes (never full artifacts). Ledger stores references (never full receipts). CAS artifact hashes naturally equal receipt `intent_hash` values. The artifact → receipt → ledger chain is fully reconstructable and verifiable.
+3. **End-to-end chain tested:** Artifact hash → receipt intent_hash match → receipt signature valid → ledger entry references receipt → ledger chain valid. All 5 steps pass.
+
+**Decisions Needed from Brian:** None.
+**Next Step:** Manny is cleared to build enforcement logic against v2.3 receipt format. No protocol changes needed.
+
+---
+
+### Previous Delivery — Implementation-Ready Identity and Roles Spec
 
 **Date:** 2026-04-04
 **Agent:** Andrew (Solutions Architect)
