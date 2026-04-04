@@ -24,6 +24,7 @@ import proxyRoutes from "./routes/proxy.mjs";
 import { initApiKeys } from "./security/api-keys.mjs";
 import { apiKeyAuth } from "./security/api-auth.mjs";
 import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
+import { initPrincipals, resolvePrincipal } from "./security/principals.mjs";
 
 const app = express();
 const PORT = process.env.RIO_GATEWAY_PORT || process.env.PORT || 4400;
@@ -36,6 +37,10 @@ app.use(express.json());
 
 // Optional auth on all routes — sets req.user if token present
 app.use(optionalAuth);
+
+// Principal resolution on all routes — resolves auth credential → principal
+// Must run AFTER optionalAuth so req.user is available
+app.use(resolvePrincipal);
 
 // Replay prevention on all state-changing POST requests (Fix #2)
 app.use(replayPreventionMiddleware);
@@ -57,10 +62,10 @@ app.use((req, res, next) => {
 // Initialize
 // ---------------------------------------------------------------------------
 console.log("=".repeat(60));
-console.log("  RIO GOVERNANCE GATEWAY v2.7.0-receipt-v2.1");
-console.log("  Governed AI Execution Runtime");
+console.log("  RIO GOVERNANCE GATEWAY v3.0.0-principals");console.log("  Governed AI Execution Runtime");
 console.log("  Ledger: PostgreSQL (persistent)");
 console.log("  Auth: JWT + Ed25519 + API Keys (PostgreSQL-backed)");
+console.log("  Principals: Unified identity model with role enforcement");
 console.log("  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding");
 console.log("  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs");
 console.log("=".repeat(60));
@@ -89,6 +94,10 @@ async function start() {
     // Initialize API keys (WS-012: Public API)
     await initApiKeys();
     console.log("[RIO Gateway] API key store initialized (PostgreSQL).");
+
+    // Initialize principal registry (Area 1: Role Enforcement)
+    await initPrincipals();
+    console.log("[RIO Gateway] Principal registry initialized (PostgreSQL).");
   } catch (err) {
     console.error(`[RIO Gateway] FATAL: Could not connect to ledger database: ${err.message}`);
     console.error("[RIO Gateway] Fail-closed: Gateway will not start without a persistent ledger.");

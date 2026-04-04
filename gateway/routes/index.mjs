@@ -47,6 +47,11 @@ import {
 import {
   getReplayPreventionStats,
 } from "../security/replay-prevention.mjs";
+import {
+  requireRole,
+  requirePrincipal,
+  getAllRoles,
+} from "../security/principals.mjs";
 
 const router = Router();
 
@@ -59,7 +64,7 @@ const ED25519_MODE = process.env.ED25519_MODE || "required";
 // New format: { identity, intent, context }
 // Legacy format: { action, agent_id, parameters, ... }
 // =========================================================================
-router.post("/intent", (req, res) => {
+router.post("/intent", requireRole("proposer"), (req, res) => {
   try {
     let intake;
 
@@ -105,6 +110,9 @@ router.post("/intent", (req, res) => {
       confidence,
       description,
       _intake: intake,
+      // Area 1: Principal attribution
+      principal_id: req.principal?.principal_id || null,
+      principal_role: req.principal?.primary_role || null,
     });
 
     // Hash the intent
@@ -127,6 +135,7 @@ router.post("/intent", (req, res) => {
       status: intent.status,
       action: intent.action,
       agent_id: intent.agent_id,
+      principal_id: intent.principal_id,
       intent_hash: intentHash,
       timestamp: intent.timestamp,
     });
@@ -139,7 +148,7 @@ router.post("/intent", (req, res) => {
 // =========================================================================
 // POST /govern — Run policy + risk evaluation
 // =========================================================================
-router.post("/govern", (req, res) => {
+router.post("/govern", requireRole("proposer", "executor"), (req, res) => {
   try {
     const { intent_id } = req.body;
 
@@ -201,7 +210,7 @@ router.post("/govern", (req, res) => {
 // Supports Ed25519 signatures: if `signature` field is provided, it is verified.
 // If ED25519_MODE=required, unsigned requests are rejected.
 // =========================================================================
-router.post("/authorize", (req, res) => {
+router.post("/authorize", requireRole("approver"), (req, res) => {
   try {
     const { intent_id, decision, authorized_by, conditions, expires_at, signature, signer_id: requestSignerId } = req.body;
 
@@ -297,6 +306,9 @@ router.post("/authorize", (req, res) => {
       expires_at: expires_at || null,
       ed25519_signed: signatureVerified,
       signature_payload_hash: signaturePayloadHash,
+      // Area 1: Principal attribution
+      principal_id: req.principal?.principal_id || null,
+      principal_role: req.principal?.primary_role || null,
     };
 
     const authHash = hashAuthorization(authorization);
@@ -341,7 +353,7 @@ router.post("/authorize", (req, res) => {
 // =========================================================================
 // POST /execute — Execute an authorized action
 // =========================================================================
-router.post("/execute", (req, res) => {
+router.post("/execute", requireRole("executor"), (req, res) => {
   try {
     const { intent_id } = req.body;
 
@@ -473,7 +485,7 @@ router.post("/execute", (req, res) => {
 // =========================================================================
 // POST /execute-confirm — Agent confirms external execution with result
 // =========================================================================
-router.post("/execute-confirm", (req, res) => {
+router.post("/execute-confirm", requireRole("executor"), (req, res) => {
   try {
     const { intent_id, execution_result, connector, execution_token } = req.body;
 
@@ -529,6 +541,9 @@ router.post("/execute-confirm", (req, res) => {
       result: execution_result,
       connector: connectorUsed,
       timestamp,
+      // Area 1: Principal attribution
+      principal_id: req.principal?.principal_id || null,
+      principal_role: req.principal?.primary_role || null,
     };
 
     const executionHash = hashExecution(execution);
@@ -567,7 +582,7 @@ router.post("/execute-confirm", (req, res) => {
 // =========================================================================
 // POST /receipt — Generate cryptographic receipt
 // =========================================================================
-router.post("/receipt", (req, res) => {
+router.post("/receipt", requireRole("executor", "auditor"), (req, res) => {
   try {
     const { intent_id } = req.body;
 
@@ -607,13 +622,17 @@ router.post("/receipt", (req, res) => {
         channel: intent._intake?.context?.ingestion_channel || "POST /intent",
         source_message_id: intent._intake?.context?.source_message_id || null,
       }),
-      // v2.1: Identity binding
+      // v2.1 + Area 1: Identity binding with principal attribution
       identity_binding: {
         signer_id: signerIdForReceipt || null,
         public_key_hex: signerPubKey || null,
         signature_payload_hash: intent.authorization?.signature_payload_hash || null,
         verification_method: intent.authorization?.ed25519_signed ? "ed25519" : null,
         ed25519_signed: intent.authorization?.ed25519_signed || false,
+        // Area 1: Principal fields
+        principal_id: intent.authorization?.principal_id || req.principal?.principal_id || null,
+        role_exercised: intent.authorization?.principal_role || req.principal?.primary_role || null,
+        actor_type: req.principal?.actor_type || null,
       },
     });
 
@@ -645,7 +664,7 @@ router.post("/receipt", (req, res) => {
 // =========================================================================
 // GET /ledger — View ledger entries
 // =========================================================================
-router.get("/ledger", (req, res) => {
+router.get("/ledger", requireRole("auditor"), (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 100;
     const offset = parseInt(req.query.offset) || 0;
@@ -672,7 +691,7 @@ router.get("/ledger", (req, res) => {
 // =========================================================================
 // GET /verify — Verify receipt hash chain integrity
 // =========================================================================
-router.get("/verify", (req, res) => {
+router.get("/verify", requireRole("auditor"), (req, res) => {
   try {
     const receiptId = req.query.receipt_id;
     const intentId = req.query.intent_id;
@@ -742,6 +761,11 @@ router.get("/health", (req, res) => {
         active_tokens: getActiveTokenCount(),
         replay_stats: getReplayPreventionStats(),
       },
+      principals: {
+        enforcement: "active",
+        role_gating: true,
+        fail_closed: true,
+      },
       fail_mode: "closed",
     });
   } catch (err) {
@@ -755,7 +779,7 @@ router.get("/health", (req, res) => {
 // =========================================================================
 // GET /intents — List intents (utility endpoint)
 // =========================================================================
-router.get("/intents", (req, res) => {
+router.get("/intents", requirePrincipal, (req, res) => {
   try {
     const status = req.query.status;
     const limit = parseInt(req.query.limit) || 50;
@@ -769,7 +793,7 @@ router.get("/intents", (req, res) => {
 // =========================================================================
 // GET /intent/:id — Get a specific intent with full pipeline state
 // =========================================================================
-router.get("/intent/:id", (req, res) => {
+router.get("/intent/:id", requirePrincipal, (req, res) => {
   try {
     const intent = getIntent(req.params.id);
     if (!intent) {

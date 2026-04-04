@@ -6,34 +6,92 @@ Last updated: 2026-04-04 by Manny (Builder)
 
 ---
 
-## Latest Delivery — Role Enforcement (Area 1) Implemented
+## Latest Delivery — Area 1: Role Enforcement (Resubmission — Gateway Code)
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder)
-**Delivery:** Unified principal model with 5 system roles, requireRole middleware, role-gated procedures, Principals management UI
-**Checkpoint:** `7b0ab4d3`
+**Delivery:** Unified principal model with role enforcement, implemented in the Gateway (`rio-system/gateway/`)
 
-**What shipped:**
+**Previous submission failed verification** (commit `304f0fd`) — code was in the ONE PWA, not the Gateway.
+This resubmission places all enforcement in the Gateway per the three locked decisions:
+- **Decision 1 (Enforcement Boundary):** All enforcement in `gateway/`
+- **Decision 2 (Interface Is Not Authority):** ONE PWA is an untrusted client
+- **Decision 3 (Ledger Is System of Record):** Principal changes produce ledger entries
 
-| Component | What It Does |
+### What Shipped
+
+| File | What It Does |
 |---|---|
-| `principals` table | Links users to system roles (proposer, approver, executor, auditor, meta) |
-| `resolvePrincipal` middleware | Resolves user → principal on every request, fail-closed on suspended/revoked |
-| `roleGatedProcedure(role)` | Enforces role check before procedure execution, fail-closed |
-| Policy/signer management | Now gated by `meta` role (was owner-only check) |
-| Principals management UI | `/principals` page for meta-role holders to assign/remove roles, suspend/revoke |
-| Role badges | Displayed on SystemControl profile card |
-| 15 new tests | `role-enforcement.test.ts` covering middleware, role gating, status enforcement, ledger logging |
+| `gateway/security/principals.mjs` | Principal registry: `principals` + `key_history` tables, `resolvePrincipal()` middleware, `requireRole()` middleware, initial principal seeding (I-1, bondi, manny, gateway-exec, mantis, ledger-writer) |
+| `gateway/server.mjs` | Wired `initPrincipals()` into startup, `resolvePrincipal` as global middleware |
+| `gateway/routes/index.mjs` | Role gating on all pipeline routes: `/intent` (proposer), `/govern` (proposer/executor), `/authorize` (approver/root_authority), `/execute` (executor), `/receipt` (executor/auditor), `/ledger` (auditor), `/verify` (auditor). Principal attribution on all intents. |
+| `gateway/routes/api-v1.mjs` | Role gating on API v1 routes: intent submission (proposer), authorization (approver), execution (executor), ledger/verify (auditor), key management (root_authority/meta_governor) |
+| `gateway/routes/signers.mjs` | Role gating: list (any principal), register/revoke (root_authority/meta_governor) |
+| `gateway/routes/proxy.mjs` | Kill switch gated by root_authority/meta_governor |
+| `gateway/governance/intents.mjs` | Extended `createIntent()` to carry `principal_id` and `principal_role` attribution |
+| `gateway/tests/principals.test.mjs` | 49 tests across 11 suites proving fail-closed behavior, role boundaries, principal attribution, and full pipeline with role enforcement |
 
-**Tests:** 320/320 passing across 21 test files.
+### Role Enforcement Model
 
-**Enforcement model:**
-- Owner auto-receives all 5 roles on first principal creation
-- Non-owners start with no roles (must be assigned by meta-role holder)
-- Suspended/revoked principals blocked from all role-gated procedures
-- All role changes logged to ledger as `POLICY_UPDATE` entries
+| Role | Can Do | Cannot Do |
+|---|---|---|
+| `proposer` (bondi, manny) | Submit intents, run governance | Authorize, execute, read ledger |
+| `approver` (I-1 implicit) | Authorize/deny intents | Execute |
+| `executor` (gateway-exec) | Execute authorized intents, confirm execution | Submit intents, authorize, read ledger |
+| `auditor` (mantis, ledger-writer) | Read ledger, verify chain, generate receipts | Submit intents, authorize, execute |
+| `root_authority` (I-1) | All governance roles implicitly. Manage signers, kill switch. | Execute (NOT implicit — separation of powers) |
+| `meta_governor` (I-1 secondary) | Manage signers, manage API keys, kill switch | Execute |
 
-**Note:** Andrew's three specs (Identity, Policy Schema, Storage Architecture) landed in the repo during this delivery. Areas 2-5 of enforcement implementation are now unblocked.
+### Enforcement Invariants (Proven by Tests)
+
+1. **Fail-closed:** Unauthenticated requests → 403 on all role-gated routes (9 routes tested)
+2. **Role boundaries:** Proposer cannot authorize/execute, executor cannot propose/authorize, auditor cannot propose/authorize/execute
+3. **Principal attribution:** Every intent carries `principal_id` of the submitting principal
+4. **root_authority implicit roles:** I-1 has implicit proposer, approver, auditor, meta_governor — but NOT executor
+5. **Unknown principal → 403:** Unrecognized `X-Principal-ID` header blocked
+6. **Full pipeline works:** Intent → Govern → Authorize → Execute → Confirm → Receipt → Verify all pass with correct role assignments
+
+### Test Results
+
+49 tests, 0 failures across 11 suites:
+- Public Endpoints (2 tests)
+- Fail-Closed: Unauthenticated Requests (9 tests)
+- Root Authority: Brian (I-1) Full Access (6 tests)
+- Role Boundaries: Proposer/bondi (4 tests)
+- Role Boundaries: Executor/gateway-exec (3 tests)
+- Role Boundaries: Auditor/mantis (5 tests)
+- Signer Management Role Gating (3 tests)
+- Kill Switch Role Gating (2 tests)
+- Fail-Closed: Unknown Principal (1 test)
+- Principal Attribution (2 tests)
+- Full Pipeline with Role Enforcement (8 tests)
+
+### Initial Principal Set (Seeded on First Boot)
+
+| Principal ID | Actor Type | Primary Role | Secondary Roles |
+|---|---|---|---|
+| `I-1` | human | root_authority | approver, meta_governor |
+| `bondi` | ai_agent | proposer | — |
+| `manny` | ai_agent | proposer | — |
+| `gateway-exec` | executor | executor | — |
+| `mantis` | auditor | auditor | — |
+| `ledger-writer` | service | auditor | — |
+
+### Prohibited Role Combinations (Enforced)
+
+- `proposer` + `executor` — would allow bypassing governance entirely
+- `approver` + `executor` — would collapse the governance-execution boundary
+
+---
+
+## Previous Delivery — Area 1 (FAILED VERIFICATION)
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Delivery:** Role enforcement implemented in ONE PWA (wrong location)
+**Checkpoint:** `7b0ab4d3`
+**Verification Result:** FAILED — Code not in Gateway repo. See commit `3e2361d`.
+**Corrective Action:** Resubmitted above with all code in `gateway/`.
 
 ---
 

@@ -32,6 +32,13 @@ export function createIntent(data) {
     authorization: null,
     execution: null,
     receipt: null,
+    // Area 1: Principal attribution
+    principal_id: data.principal_id || null,
+    principal_role: data.principal_role || null,
+    // Preserve intake and auth metadata
+    _intake: data._intake || null,
+    _auth_method: data._auth_method || null,
+    _api_key_id: data._api_key_id || null,
   };
 
   intents.set(intentId, intent);
