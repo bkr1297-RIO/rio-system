@@ -6,7 +6,41 @@ Last updated: 2026-04-04 by Chief of Staff
 
 ---
 
-## Latest Delivery — For Chief of Staff Review
+## Latest Delivery — Platform Specification v1.0
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder)
+**Delivery:** RIO / ONE Platform Specification v1.0 — Canonical Platform Spec
+**Branch:** `main`
+**File:** `spec/RIO_ONE_PLATFORM_SPEC_v1.0.md`
+
+**Summary:** Produced the canonical platform specification covering all 15 sections required to transition RIO from project to platform. This is the document that all agents, developers, and future customers build against. It defines the contract.
+
+### Sections Covered
+
+| # | Section | Content |
+|---|---|---|
+| 1 | System Architecture | Three-loop architecture, data flow, component topology |
+| 2 | System Invariants | 7 non-negotiable rules (fail-closed, no receipt = no commit, etc.) |
+| 3 | Governed Action Lifecycle | 7-stage pipeline: Submit → Govern → Authorize → Execute → Verify → Receipt → Commit |
+| 4 | System Roles | I-1, Bondi, Mantis, RIO, ONE — role definitions and boundaries |
+| 5 | System Components | Gateway, ONE, Mantis, Receipt Protocol, Ledger — what each does |
+| 6 | Governed Action API | Full endpoint reference with request/response schemas |
+| 7 | Receipt Schema | 5-hash receipt structure, protocol versioning, verification algorithm |
+| 8 | SDK and Developer Integration | JS + Python SDKs, integration patterns (OpenAI, Anthropic, LangChain) |
+| 9 | Deployment Architecture | Hosted, self-hosted (Docker), hybrid — infrastructure requirements |
+| 10 | Agent Work Protocol | PLAN → BUILD → SELF-CHECK → AUDIT → FIX → APPROVE → COMPLETE → RECORD |
+| 11 | Definition of Done | 7 conditions for task completion, governed action commit invariant |
+| 12 | Security Model | JWT + API Key + Ed25519 auth layers, replay prevention, token burn, kill switch |
+| 13 | Async Approval and Queue Model | Async flow, TTL/expiration, batch approval, SLA metrics |
+| 14 | Connector Model | Interface spec, risk classification, registration process, fail-closed rules |
+| 15 | Ledger Architecture | Hash chain structure, append-only enforcement, chain verification, integrity monitoring |
+
+Plus: Appendix A (Glossary), Appendix B (Document References).
+
+---
+
+## Previous Delivery — Platform Audit + Enterprise Features
 
 **Date:** 2026-04-04
 **Agent:** Chief of Staff
