@@ -50,6 +50,8 @@ The enforcement areas must be built in this exact sequence. You cannot enforce p
 | Enforcement Plans | Manny (Builder) | `/directives/DIRECTIVE_ENFORCEMENT_PLANS.md` |
 | Integration Planning | Damon (SDK) | `/directives/DIRECTIVE_INTEGRATION_PLANNING.md` |
 | Platformization Tracking | CoS (Chief of Staff) | `/directives/DIRECTIVE_PLATFORMIZATION_TRACKING.md` |
+| Gateway Enforcement Boundary | Manny (Builder) | `/directives/DIRECTIVE_GATEWAY_ENFORCEMENT_BOUNDARY.md` |
+| First Platform Slice | Manny (Builder) | `/directives/DIRECTIVE_FIRST_PLATFORM_SLICE.md` |
 
 ---
 
@@ -84,15 +86,19 @@ Directive: `/directives/DIRECTIVE_ENFORCEMENT_PLANS.md`
 
 Do not begin enforcement coding until Andrew's specs are finalized. Prepare implementation plans first.
 
+### 0. First Platform Slice (Approvals, OAuth, ONE Rewire)
+- [x] **Implementation:** (Owner: Manny)
+- [x] **Verification:** (Owner: CoS) — `docs/reviews/FIRST_PLATFORM_SLICE_VERIFICATION.md`
+
 ### 1. Role Enforcement
-- [ ] **Implementation Plan:** (Owner: Manny)
-- [ ] **Code Enforcement:** (Owner: Manny)
-- [ ] **Verification:** (Owner: CoS)
+- [x] **Implementation Plan:** (Owner: Manny)
+- [x] **Code Enforcement:** (Owner: Manny)
+- [x] **Verification:** (Owner: CoS) — `docs/reviews/AREA1_VERIFICATION_REPORT.md`
 
 ### 2. Policy Evaluation Engine
-- [ ] **Implementation Plan:** (Owner: Manny)
-- [ ] **Code Enforcement:** (Owner: Manny)
-- [ ] **Verification:** (Owner: CoS)
+- [x] **Implementation Plan:** (Owner: Manny)
+- [x] **Code Enforcement:** (Owner: Manny)
+- [x] **Verification:** (Owner: CoS) — `docs/reviews/AREA2_VERIFICATION_REPORT.md`
 
 ### 3. CAS + Ledger Boundary
 - [ ] **Implementation Plan:** (Owner: Manny)
