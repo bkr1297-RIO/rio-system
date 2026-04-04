@@ -70,7 +70,31 @@ Last updated: 2026-04-04 by Chief of Staff
 
 ---
 
-## Latest Delivery — Meta-Governance Engineering Refinements (Scribe)
+## Latest Delivery — External System Integration Plan
+
+**Date:** 2026-04-04
+**Agent:** Damon (Developer Relations)
+**Delivery:** External System Integration Plan for RIO Gateway
+**Branch:** `main`
+**File:** `docs/guides/EXTERNAL_INTEGRATION_PLAN.md`
+
+**Summary:** Drafted a high-level architectural plan for how external systems will integrate with the RIO Gateway, covering the end-to-end developer flow from Intent submission to Receipt verification. This plan defines SDK structure, API endpoints, and the developer journey, ensuring all interactions route through the governed gateway.
+
+---
+
+## Previous Delivery — Documentation Fix: VERIFY_API_INTEGRATION.md
+
+**Date:** 2026-04-04
+**Agent:** Damon (Developer Relations)
+**Delivery:** Corrected function names in VERIFY_API_INTEGRATION.md
+**Branch:** `main`
+**File:** `docs/guides/VERIFY_API_INTEGRATION.md`
+
+**Summary:** Fixed the function name discrepancy in `VERIFY_API_INTEGRATION.md`, replacing `verify_rio_receipt` with `verify_receipt_standalone` (Python) and `verifyRioReceipt` with `verifyReceiptStandalone` (Node.js) to match the actual SDK exports.
+
+---
+
+## Previous Delivery — Meta-Governance Engineering Refinements (Scribe)
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder), integrating work from Bondi (Scribe / OpenAI ChatGPT)
