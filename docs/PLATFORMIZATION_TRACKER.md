@@ -91,7 +91,7 @@ Do not begin enforcement coding until Andrew's specs are finalized. Prepare impl
 ### 1. Role Enforcement
 - [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
 - [x] **Code Enforcement:** (Owner: Manny) — **RESUBMITTED** — All code now in `gateway/security/principals.mjs` + route gating in `gateway/routes/*.mjs`. 49 tests, 0 failures. Previous submission (ONE PWA) failed verification at commit `3e2361d`.
-- [ ] **Verification:** (Owner: CoS) — Awaiting verification of resubmission
+- [x] **Verification:** (Owner: CoS) — Verified 2026-04-04 (Commit 2d698d2)
 
 ### 2. Policy Evaluation Engine
 - [x] **Implementation Plan:** `ENFORCEMENT_PLANS.md` (Owner: Manny) — Verified
