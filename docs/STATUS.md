@@ -38,6 +38,25 @@ Last updated: 2026-04-04 by Damon (Developer Relations)
 
 ---
 
+## Latest Delivery — Gateway API Contract
+
+**Date:** 2026-04-04
+**Agent:** Damon (Developer Relations)
+**Delivery:** Defined the developer contract for the Gateway API, standardizing it as the only enforcement and execution entry point.
+**Branch:** `main`
+**File:** `docs/GATEWAY_API_CONTRACT.md`
+
+**Summary:**
+- Standardized Gateway as the sole enforcement and execution entry point for ONE, CLI, Slack, and future SDKs.
+- Defined required Gateway Endpoints: `POST /intents`, `POST /approvals/:intent_id`, `POST /execute/:intent_id`, `GET /receipts/:receipt_id`, `GET /ledger/:entry_id`.
+- Specified request requirements: `principal_id`, `signature`, `key_version`, `intent_hash` (where applicable).
+
+**Current Status:**
+- Gateway API Contract defined and documented.
+- Ready for use by ONE, CLI, Slack, and future SDKs.
+
+---
+
 ## Latest Delivery — SDK Interface and Developer Flow
 
 **Date:** 2026-04-04
