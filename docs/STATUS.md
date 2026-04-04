@@ -2,11 +2,43 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Manny
+Last updated: 2026-04-03 by Romney
 
 ---
 
 ## Latest Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Romney (Repo / Packaging / Protocol)
+**Delivery:** Deployment Program Artifact #5 — Protocol Packaging
+**Branch:** `main`
+
+**Summary:** Completed the Protocol Packaging artifact. Set up CI/CD pipeline (3 GitHub Actions workflows), reviewed and signed off on Damon's protocol asset refinements, and verified Docker image for receipt verification.
+
+**Work completed:**
+- **CI/CD pipeline** — 3 workflows added to `.github/workflows/`:
+  - `ci.yml` — Runs Node.js (20/22) and Python (3.9-3.12) conformance tests on every push and PR. All passing.
+  - `publish.yml` — Automatically publishes to npm and PyPI when a version tag (v*.*.*) is pushed. Verifies version match before publishing.
+  - `docker.yml` — Builds Docker image and pushes to GitHub Container Registry (ghcr.io) on version tags. Tests image on every push.
+- **Repository secrets configured:** `NPM_TOKEN` and `PYPI_TOKEN` added to GitHub Actions secrets.
+- **Damon's protocol asset refinements reviewed:**
+  - Protocol repo code: **APPROVED** — 38/38 Node.js tests pass, 29/29 Python tests pass, all 8 examples run, CLI verifier works, versions aligned at 2.2.0.
+  - Integration guide (`docs/guides/VERIFY_API_INTEGRATION.md`): **NEEDS FIX** — Section 2 references `verify_rio_receipt` (Python) and `verifyRioReceipt` (Node.js) which don't exist. Correct exports are `verify_receipt_standalone` and `verifyReceiptStandalone`. Damon should update.
+- **Docker image for receipt verifier:** Already exists (Dockerfile merged in PR #3). Now automatically built and pushed to ghcr.io via the Docker workflow on version tags. Supports: API server, CLI verifier, test runner, and Node.js REPL modes.
+
+**Release workflow (for future versions):**
+1. Bump version in `package.json` and `python/pyproject.toml`
+2. Commit and push to `main`
+3. Tag: `git tag v2.3.0 && git push origin v2.3.0`
+4. CI runs tests → Publish workflow pushes to npm + PyPI → Docker workflow pushes image to ghcr.io
+
+**One item for Damon:** Fix the function names in `VERIFY_API_INTEGRATION.md` Section 2 (see review findings above).
+
+**No decisions needed from Brian.**
+
+---
+
+### Previous Delivery
 
 **Date:** 2026-04-03
 **Agent:** Manny (Builder)
@@ -211,7 +243,7 @@ We are managing Phase 3 as a deployment program to produce the five artifacts re
 | **2. Deployment Architecture** | CTO / Security / IT | Solutions Architect | **Done** |
 | **3. Integration Guide** | Developers | Developer Relations | **Done** |
 | **4. ONE Demo Readiness** | End Users | Manny | **Done** |
-| **5. Protocol Packaging** | Open Source Community | Romney | In Progress |
+| **5. Protocol Packaging** | Open Source Community | Romney | **Done** |
 | **6. Knowledge Base Sync** | Internal | Jordan | In Progress |
 
 ### Artifact #4 Details — ONE Demo Readiness
