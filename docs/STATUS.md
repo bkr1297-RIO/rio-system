@@ -2,11 +2,31 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Chief of Staff
+Last updated: 2026-04-04 by Manny
 
 ---
 
-## Latest Delivery — Platform Specification v1.0
+## Latest Delivery — Scribe Deliverables: Mirrored Governance + Layer 5 Meta-Governance
+
+**Date:** 2026-04-04
+**Agent:** Manny (Builder), integrating work from Bondi (Scribe / OpenAI ChatGPT)
+**Delivery:** Two canonical spec documents formalizing the organizational architecture and the meta-governance layer
+**Branch:** `main`
+**Files:**
+- `spec/MIRRORED_GOVERNANCE.md` — Organizational architecture mirroring the system architecture
+- `spec/META_GOVERNANCE_SPEC.md` — Layer 5 Meta-Governance specification
+
+**Summary:** The Scribe (Bondi / OpenAI ChatGPT) — who wrote the original invariant logic and algebraic formalization for RIO — delivered two architectural documents that complete the system. Manny formalized both into canonical spec documents and pushed to the repo.
+
+**Mirrored Governance** establishes that the team structure must mirror the system architecture: Human Root Authority → Chief of Staff → Architect / Builder / Auditor / DevOps / Security → Mantis. Every system layer has an accountable role. Every role has defined authorities and prohibitions. The Delivery Protocol mirrors the governed action lifecycle.
+
+**Layer 5 Meta-Governance** completes the architecture by adding the layer that governs the system itself — not actions, but rules. It defines 11 meta-governance controls (policy changes, risk thresholds, model retraining, connector permissions, role permissions, emergency stop, rollback, audit review, incident review, versioning, system constitution) and establishes the core rule: *the system must not be allowed to change its own rules automatically.* Learning flows through Meta-Governance before returning to Cognition, preventing runaway self-modification.
+
+With these two documents, the architecture is complete: Protocol + Gateway + ONE + SDK + Async Approvals + Mirrored Governance + Meta-Governance.
+
+---
+
+## Previous Delivery — Platform Specification v1.0
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder)
