@@ -2,11 +2,38 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-03 by Damon
+Last updated: 2026-04-03 by Jordan
 
 ---
 
 ## Latest Delivery — For Chief of Staff Review
+
+**Date:** 2026-04-03
+**Agent:** Jordan (Knowledge Architect)
+**Delivery:** Knowledge Base Sync — Artifact #6 of Deployment Program
+
+**Summary:** Synced Google Drive knowledge base with current repo state. Uploaded 6 new docs that existed in the repo but not in Drive. Updated index.json from v2.1 to v2.2. Updated agent roster from 3 to 7.
+
+**Files synced to Drive:**
+- `THREE_POWER_SEPARATION.md` → RIO/01_ARCHITECTURE (from repo `spec/`)
+- `MANTIS_COMPONENT.md` → RIO/01_ARCHITECTURE (from repo `spec/`)
+- `EMAIL_DEPLOYMENT_ARCHITECTURE.md` → RIO/01_ARCHITECTURE (from repo `docs/architecture/`)
+- `PILOT_DEPLOYMENT_PLAYBOOK.md` → RIO/03_CONTROL_PLANE (from repo `docs/enterprise/`)
+- `DEPLOYMENT_PACKAGING_CHECKLIST.md` → RIO/03_CONTROL_PLANE (from repo `docs/`)
+- `FIRST_DEPLOYMENT_USE_CASE.md` → RIO/03_CONTROL_PLANE (from repo `docs/`)
+
+**index.json changes (v2.1 → v2.2):**
+- Added `build_state` section reflecting Phase 0-4 status
+- Added `new_files_synced_2026_04_03` entries in 01_ARCHITECTURE and 03_CONTROL_PLANE with Drive IDs and source paths
+- Replaced `agent_roles` (3 stale entries) with `team` section (7 members matching repo TEAM.md)
+- Added `deployment_program` section with all 6 artifact statuses
+- Added `delivery` rule to `rules` section
+
+**No decisions needed from Brian.** This is a sync operation — no new content was created, only existing repo docs copied to their correct Drive folders.
+
+---
+
+### Previous Delivery
 
 **Date:** 2026-04-03
 **Agent:** Damon (Developer Relations)
@@ -27,7 +54,7 @@ Last updated: 2026-04-03 by Damon
 
 ---
 
-## Previous Delivery — For Chief of Staff Review
+### Previous Delivery
 
 **Date:** 2026-04-03
 **Agent:** Andrew (Solutions Architect)
@@ -37,18 +64,11 @@ Last updated: 2026-04-03 by Damon
 **Summary:** Designed the complete deployment architecture for the first RIO use case: AI-drafted emails with human approval, cryptographic receipts, and tamper-evident ledger. This is the reference architecture for pilot customers.
 
 **Files delivered:**
-- `docs/architecture/EMAIL_DEPLOYMENT_ARCHITECTURE.md` — Full deployment document covering all 10 requested items: system architecture, component placement (ONE, governance, receipts, ledger), email connector design, 19-step HITL approval flow, installation requirements (pilot and scaled), open source vs licensed breakdown
-- `docs/architecture/email-deployment-architecture.png` — Full system architecture diagram showing all components, data flow, and fail-closed enforcement
-- `docs/architecture/email-simple-flow.png` — Non-technical stakeholder diagram (AI → RIO → Human → Email + Audit Record)
+- `docs/architecture/EMAIL_DEPLOYMENT_ARCHITECTURE.md` — Full deployment document covering all 10 requested items
+- `docs/architecture/email-deployment-architecture.png` — Full system architecture diagram
+- `docs/architecture/email-simple-flow.png` — Non-technical stakeholder diagram
 
-**Key design decisions in the document:**
-1. Pilot deploys on a single VM with Docker Compose + MySQL — no Kubernetes required
-2. Scales to K8s with managed DB and key vault when ready
-3. Email connector supports both Gmail API (OAuth2) and SMTP relay (Exchange/Outlook)
-4. Receipt Protocol is open source (MIT/Apache-2.0); Gateway, ONE, and Connectors are commercially licensed
-5. Air-gapped deployment option documented for regulated industries
-
-**No decisions needed from Brian.** This is a completed deliverable ready for prospect conversations.
+**No decisions needed from Brian.** Completed deliverable ready for prospect conversations.
 
 ---
 
@@ -121,7 +141,7 @@ Last updated: 2026-04-03 by Damon
 |-----------|--------|-------|-------|
 | Multi-agent coordination structure | **Done** | Romney | COORDINATION.md + 8 docs |
 | Agent skills (5 roles) | **Done** | Manny | rio-system/skills/ — SA, Dev, Compliance, Ops, Builder |
-| Google Drive knowledge base | **In Progress** | Jordan | Restructuring into 8-folder layout |
+| Google Drive knowledge base | **In Progress** | Jordan | 8-folder layout complete. 6 new docs synced. index.json v2.2. Agent roster updated (3→7). |
 | Master operating prompt | **Done** | Brian | 17-section onboarding prompt for all agents |
 
 ---
@@ -170,7 +190,7 @@ We are managing Phase 3 as a deployment program to produce the five artifacts re
 
 ## What Is In Progress (Other)
 
-- Google Drive knowledge base reorganization (Jordan)
+- Google Drive knowledge base sync — remaining docs to sync as repo grows (Jordan)
 - Gateway server hardening for standalone deployment (Manny)
 - Agent onboarding and testing (Brian)
 - RIO Receipt Protocol launch hardening sprint (Damon/Jordan/Romney)
