@@ -26,11 +26,11 @@ npm install rio-receipt-protocol
 ```
 
 ```javascript
-import { verifyRioReceipt } from 'rio-receipt-protocol';
+import { verifyReceiptStandalone } from 'rio-receipt-protocol';
 
 async function verifyWithSdk(receiptJson) {
   try {
-    const isValid = await verifyRioReceipt(receiptJson);
+    const isValid = await verifyReceiptStandalone(receiptJson);
     console.log('Receipt SDK verification result:', isValid);
     return isValid;
   } catch (error) {
@@ -47,11 +47,11 @@ pip install rio-receipt-protocol
 ```
 
 ```python
-from rio_receipt_protocol.verifier import verify_rio_receipt
+from rio_receipt_protocol.verifier import verify_receipt_standalone
 
 def verify_with_sdk(receipt_json):
     try:
-        is_valid = verify_rio_receipt(receipt_json)
+        is_valid = verify_receipt_standalone(receipt_json)
         print(f"Receipt SDK verification result: {is_valid}")
         return is_valid
     except Exception as e:
