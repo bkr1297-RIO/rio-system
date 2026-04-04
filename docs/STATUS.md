@@ -2,11 +2,25 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-04 by Manny (Builder)
+Last updated: 2026-04-04 by Chief of Staff
 
 ---
 
-## Latest Delivery — Architecture Convergence: Technical Decisions
+## Latest Delivery — Platformization Phase: Enforcement Tracker + Directive
+
+**Date:** 2026-04-04
+**Agent:** Chief of Staff
+**Delivery:** Platformization Tracker, Directive, and Decision
+**Branch:** `main`
+**Source:** Brian (Root Authority)
+**Files:**
+- `docs/PLATFORMIZATION_TRACKER.md` — 5 enforcement areas with spec/implementation/verification checklist
+- `docs/directives/2026-04-04_PLATFORMIZATION_DIRECTIVE.md` — Formal directive: enforcement implementation phase
+- `docs/DECISIONS.md` — Platformization phase decision recorded
+
+---
+
+### Previous Delivery — Architecture Convergence: Technical Decisions
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder)
@@ -14,18 +28,11 @@ Last updated: 2026-04-04 by Manny (Builder)
 **Branch:** `main`
 **File:** `docs/TECHNICAL_DECISIONS.md`
 
-**Areas covered:**
-1. Identity & Roles — three identity layers exist (API keys, OAuth, Ed25519), not yet unified. Unified principal model proposed.
-2. Policy Engine — static file-based evaluation works, needs versioning + quorum + dynamic rules. Two-phase plan.
-3. Storage Model — full artifacts in DB + hash-only ledger works, needs content-addressable archive tier. Three-tier model proposed.
-4. Audit & Observability — ledger integrity + receipt verification exist, needs post-execution compliance check + anomaly detection.
-5. Meta-Governance — fully specified in canonical spec, not yet enforced in code. Three-phase implementation plan.
-
 **Estimated Phase 1 effort across all areas: 10-14 days.**
 
 ---
 
-## Previous Delivery — Spec Consolidation: Canonical 6-Document Structure
+### Previous Delivery — Spec Consolidation: Canonical 6-Document Structure
 
 **Date:** 2026-04-04
 **Agent:** Manny (Builder), integrating directive from Bondi (Scribe / OpenAI ChatGPT)

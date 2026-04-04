@@ -78,6 +78,11 @@ _None recorded yet._
 **Rationale:** These invariants are the architectural and product definition of RIO. They are the foundation of the trust story, the compliance story, and the licensing boundary. Everything the team builds must enforce them. If a feature cannot satisfy all 7 invariants, it does not ship.
 **Decided by:** Brian
 
+### 2026-04-04 — Platformization Phase: Enforcement Implementation
+**Decision:** The architecture is stable. The project transitions from architecture discovery to enforcement implementation. Five concrete enforcement areas are defined: (1) Identity and Roles, (2) Policy Schema, (3) Storage Architecture, (4) Active Audit, (5) Meta-Governance Enforcement. No work in these areas is complete without a canonical spec, an implementation plan, and a verified code path. The standard: no hidden assumptions, no role drift, no undocumented boundaries.
+**Rationale:** The design is not the problem. The gaps are enforcement gaps, not concept gaps. The rules must be non-bypassable in code and infrastructure, not just described in documents.
+**Decided by:** Brian
+
 ### 2026-04-04 — Meta-Governance enforcement mechanisms adopted (Quorum, Change Control, Do Not Learn, Kill Switch)
 **Decision:** Meta-Governance is now enforceable, not just described. Four mechanisms are added: (1) Quorum Model — multi-party approval required for all rule changes, with invariant changes requiring unanimous 3-of-3 approval. (2) Change Control Protocol — every rule change must produce a Governance Change Receipt with requestor, reason, evidence, risk assessment, quorum signatures, effective date, rollback plan, and policy version. If no receipt exists, the rule cannot change. (3) Do Not Learn Rule — audit outcomes must be classified before learning occurs (human mistakes must not train the model). (4) Freeze/Kill Switch — Meta-Governance can freeze cognition, freeze execution, force human approval, disable connectors, rollback policy, or enter safe mode.
 **Rationale:** A governance layer that is only described but not enforceable is a policy document, not a control system. These four mechanisms make Meta-Governance a runtime-enforceable layer.
