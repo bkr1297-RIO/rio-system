@@ -114,17 +114,28 @@ export function validateIntake(body) {
  * Normalize a legacy request (old format) into the intake schema.
  * Legacy format: { action, agent_id, parameters, description, ... }
  * Returns a valid intake object.
+ *
+ * IMPORTANT: identity.subject is the AGENT proposing the action (body.agent_id),
+ * NOT the authenticated human principal (req.user.sub). The human principal
+ * is tracked via on_behalf_of and req.principal in the route handler.
+ * This distinction matters because the policy engine checks agent scope
+ * against identity.subject — human principals are not in agent scope.
  */
 export function normalizeLegacy(body, req) {
   const user = req?.user;
 
   return {
     identity: {
-      subject: user?.sub || body.agent_id || "unknown",
+      // Preserve the original agent_id from the request body.
+      // The agent_id is the AI agent proposing the action — this is what
+      // the policy engine checks for scope.
+      // The authenticated user (JWT sub) is the *principal* who submitted it,
+      // tracked via on_behalf_of and req.principal in the route handler.
+      subject: body.agent_id || user?.sub || "unknown",
       auth_method: user ? "jwt_session" : "api_key",
       email: user?.email || null,
       role: user?.role || "agent",
-      on_behalf_of: body.on_behalf_of || null,
+      on_behalf_of: user?.sub || body.on_behalf_of || null,
     },
     intent: {
       action: body.action,
