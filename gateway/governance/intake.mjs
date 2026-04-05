@@ -139,7 +139,7 @@ export function normalizeLegacy(body, req) {
     },
     intent: {
       action: body.action,
-      target: body.target_environment || body.parameters?.to || null,
+      target: body.target_environment || null,
       parameters: body.parameters || {},
     },
     context: {
