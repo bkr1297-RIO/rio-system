@@ -33,7 +33,7 @@ HEALTHCHECK --interval=30s --timeout=5s --retries=3 \
 # Environment variables (defaults — override in .env or docker-compose)
 ENV NODE_ENV=production
 ENV RIO_GATEWAY_PORT=4400
-ENV ED25519_MODE=required
+ENV ED25519_MODE=optional
 
 # Start the gateway
 CMD ["node", "server.mjs"]

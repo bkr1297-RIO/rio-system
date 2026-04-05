@@ -226,11 +226,9 @@ export async function initPrincipals() {
 
   console.log("[RIO Principals] Tables created/verified.");
 
-  // Seed initial principals if table is empty
-  const countResult = await pool.query("SELECT COUNT(*) FROM principals");
-  if (parseInt(countResult.rows[0].count) === 0) {
-    await seedInitialPrincipals();
-  }
+  // Always seed initial principals — ON CONFLICT DO NOTHING makes this idempotent.
+  // This ensures new principals added to INITIAL_PRINCIPALS are picked up on redeploy.
+  await seedInitialPrincipals();
 
   // Load all principals into cache
   await reloadCache();

@@ -30,7 +30,7 @@ services:
       - key: PORT
         value: "4400"
       - key: ED25519_MODE
-        value: required
+        value: optional
       - key: JWT_SECRET
         generateValue: true
       - key: RIO_LOGIN_PASSPHRASE
