@@ -1,0 +1,104 @@
+{
+  "version": "7",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1774970703091,
+      "tag": "0000_shiny_emma_frost",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "5",
+      "when": 1774970872692,
+      "tag": "0001_optimal_sebastian_shaw",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1774973924334,
+      "tag": "0002_goofy_blur",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1774978273620,
+      "tag": "0003_loose_ultragirl",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1774981258919,
+      "tag": "0004_lame_tarantula",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1774984967288,
+      "tag": "0005_dear_elektra",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1774994090144,
+      "tag": "0006_strange_human_fly",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1775001956246,
+      "tag": "0007_known_starbolt",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "5",
+      "when": 1775007627035,
+      "tag": "0008_jazzy_young_avengers",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1775016031337,
+      "tag": "0009_clammy_grandmaster",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "5",
+      "when": 1775161620690,
+      "tag": "0010_condemned_blazing_skull",
+      "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "5",
+      "when": 1775239363705,
+      "tag": "0011_fat_raider",
+      "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "5",
+      "when": 1775278557933,
+      "tag": "0012_wandering_mac_gargan",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "5",
+      "when": 1775320926610,
+      "tag": "0013_amazing_winter_soldier",
+      "breakpoints": true
+    }
+  ]
+}
