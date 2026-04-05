@@ -1,116 +1,85 @@
 /**
- * RIO Gmail Executor — Real Connector
+ * RIO Gmail Executor — Nodemailer Connector
  *
- * Executes a real Gmail send via the manus-mcp-cli tool.
- * This module is called ONLY by the gateway execute route
+ * Sends real email via Gmail SMTP using nodemailer.
+ * Called ONLY by the gateway /execute-action route
  * AFTER the full governance pipeline has completed and
  * human authorization has been verified.
  *
+ * Required env vars:
+ *   GMAIL_USER         — Gmail address (e.g. bkr1297@gmail.com)
+ *   GMAIL_APP_PASSWORD — Gmail App Password (16-char, no spaces)
+ *
  * Architecture rule: All external API calls go through
  * the gateway. No agent calls Gmail directly.
- *
- * Implementation note: manus-mcp-cli must be invoked via
- * shell, so we write a script file and execute it via bash.
  */
-import { execSync, spawnSync } from "node:child_process";
-import { writeFileSync, readFileSync, unlinkSync, existsSync } from "node:fs";
-import { randomUUID } from "node:crypto";
+import nodemailer from "nodemailer";
+
+let transporter = null;
 
 /**
- * Send a real email via Gmail MCP.
+ * Initialize the nodemailer transporter (lazy, once).
+ */
+function getTransporter() {
+  if (transporter) return transporter;
+
+  const user = process.env.GMAIL_USER;
+  const pass = process.env.GMAIL_APP_PASSWORD;
+
+  if (!user || !pass) {
+    throw new Error(
+      "Gmail executor not configured. Set GMAIL_USER and GMAIL_APP_PASSWORD environment variables."
+    );
+  }
+
+  transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user, pass },
+  });
+
+  console.log(`[RIO Gmail Executor] Transporter initialized for ${user}`);
+  return transporter;
+}
+
+/**
+ * Send a real email via Gmail SMTP.
  *
  * @param {object} params
  * @param {string|string[]} params.to - Recipient email(s)
  * @param {string[]} [params.cc] - CC recipients
  * @param {string} params.subject - Email subject
  * @param {string} params.body - Email body (plain text)
- * @param {string[]} [params.attachments] - File paths to attach
- * @returns {object} { status, connector, detail }
+ * @returns {Promise<object>} { status, connector, detail, message_id }
  */
-export function sendEmail({ to, cc, subject, body, attachments }) {
-  // Normalize 'to' to array
-  const toList = Array.isArray(to) ? to : [to];
+export async function sendEmail({ to, cc, subject, body }) {
+  const transport = getTransporter();
 
-  const message = {
-    to: toList,
+  // Normalize 'to' to comma-separated string
+  const toStr = Array.isArray(to) ? to.join(", ") : to;
+
+  const mailOptions = {
+    from: process.env.GMAIL_USER,
+    to: toStr,
     subject,
-    content: body,
+    text: body,
   };
 
   if (cc && cc.length > 0) {
-    message.cc = cc;
+    mailOptions.cc = Array.isArray(cc) ? cc.join(", ") : cc;
   }
 
-  if (attachments && attachments.length > 0) {
-    message.attachments = attachments;
-  }
-
-  const mcpInput = JSON.stringify({ messages: [message] });
-
-  console.log(`[RIO Gmail Executor] Sending email to: ${toList.join(", ")}`);
-  if (cc) console.log(`[RIO Gmail Executor] CC: ${cc.join(", ")}`);
+  console.log(`[RIO Gmail Executor] Sending email to: ${toStr}`);
+  if (cc) console.log(`[RIO Gmail Executor] CC: ${mailOptions.cc}`);
   console.log(`[RIO Gmail Executor] Subject: ${subject}`);
 
-  // Write the MCP input to a temp JSON file
-  const uid = randomUUID();
-  const inputFile = `/tmp/rio-mcp-input-${uid}.json`;
-  const scriptFile = `/tmp/rio-mcp-exec-${uid}.sh`;
-  const resultFile = `/tmp/rio-mcp-result-${uid}.txt`;
+  const info = await transport.sendMail(mailOptions);
 
-  writeFileSync(inputFile, mcpInput);
+  console.log(`[RIO Gmail Executor] Sent — Message ID: ${info.messageId}`);
 
-  // Write a shell script that reads the JSON and calls manus-mcp-cli
-  const script = `#!/bin/bash
-INPUT=$(cat '${inputFile}')
-manus-mcp-cli tool call gmail_send_messages --server gmail --input "$INPUT" > '${resultFile}' 2>&1
-echo "EXIT_CODE=$?" >> '${resultFile}'
-`;
-  writeFileSync(scriptFile, script);
-
-  try {
-    const proc = spawnSync("bash", [scriptFile], {
-      encoding: "utf-8",
-      timeout: 60000,
-      env: { ...process.env, HOME: "/home/ubuntu" },
-      stdio: ["pipe", "pipe", "pipe"],
-    });
-
-    let resultText = "";
-    if (existsSync(resultFile)) {
-      resultText = readFileSync(resultFile, "utf-8");
-    }
-
-    // Also capture stdout/stderr from the process
-    const fullOutput = [
-      proc.stdout || "",
-      proc.stderr || "",
-      resultText,
-    ].join("\n").trim();
-
-    console.log(`[RIO Gmail Executor] Result: ${fullOutput.substring(0, 500)}`);
-
-    // Check for success indicators
-    if (fullOutput.includes("Message ID") || fullOutput.includes("mcp_result") || fullOutput.includes("Email Details")) {
-      return {
-        status: "sent",
-        connector: "gmail_mcp",
-        detail: fullOutput.substring(0, 1000),
-      };
-    }
-
-    if (proc.status !== 0 || fullOutput.includes("Error:")) {
-      throw new Error(fullOutput.substring(0, 500));
-    }
-
-    return {
-      status: "sent",
-      connector: "gmail_mcp",
-      detail: fullOutput.substring(0, 1000),
-    };
-  } finally {
-    // Clean up temp files
-    try { unlinkSync(inputFile); } catch (_) {}
-    try { unlinkSync(scriptFile); } catch (_) {}
-    try { unlinkSync(resultFile); } catch (_) {}
-  }
+  return {
+    status: "sent",
+    connector: "gmail_smtp",
+    detail: `Email sent to ${toStr} — Message ID: ${info.messageId}`,
+    message_id: info.messageId,
+  };
 }

@@ -270,6 +270,7 @@ async function start() {
         "POST /approvals/:intent_id": "Record approval/denial with principal attribution",
         "GET /approvals/:intent_id": "List all approvals for an intent",
         "POST /execute": "Execute an authorized action (returns execution token)",
+        "POST /execute-action": "Full pipeline: execute authorized action, generate receipt, write ledger (one call)",
         "POST /execute-confirm": "Confirm execution result from agent",
         "POST /receipt": "Generate cryptographic receipt",
         "GET /ledger": "View ledger entries",

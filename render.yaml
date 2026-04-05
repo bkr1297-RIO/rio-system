@@ -39,3 +39,7 @@ services:
         fromDatabase:
           name: rio-ledger
           property: connectionString
+      - key: GMAIL_USER
+        sync: false  # Set manually in Render dashboard
+      - key: GMAIL_APP_PASSWORD
+        sync: false  # Set manually in Render dashboard

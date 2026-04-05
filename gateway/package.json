@@ -1,7 +1,7 @@
 {
   "name": "rio-governance-gateway",
-  "version": "2.7.0",
-  "description": "RIO Governance Gateway — Governed AI Execution Runtime",
+  "version": "2.8.0",
+  "description": "RIO Governance Gateway \u2014 Governed AI Execution Runtime",
   "license": "UNLICENSED",
   "type": "module",
   "main": "server.mjs",
@@ -15,6 +15,7 @@
     "express": "^4.21.0",
     "pg": "^8.20.0",
     "tweetnacl": "^1.0.3",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "nodemailer": "^6.9.0"
   }
 }

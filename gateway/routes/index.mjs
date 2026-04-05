@@ -922,6 +922,205 @@ router.post("/receipt", requireRole("executor", "auditor"), (req, res) => {
 });
 
 // =========================================================================
+// POST /execute-action — Full execution pipeline in one call
+// Verifies intent is authorized → sends email → generates receipt → writes ledger
+// This is the "close the loop" endpoint for the first governed action.
+// =========================================================================
+router.post("/execute-action", requireRole("proposer"), async (req, res) => {
+  try {
+    const { intent_id } = req.body;
+    if (!intent_id) {
+      return res.status(400).json({ error: "Missing required field: intent_id" });
+    }
+
+    const intent = getIntent(intent_id);
+    if (!intent) {
+      return res.status(404).json({ error: `Intent not found: ${intent_id}` });
+    }
+
+    // Must be authorized (approved by human)
+    if (intent.status !== "authorized") {
+      return res.status(409).json({
+        error: `Intent is in status "${intent.status}", expected "authorized".`,
+        hint: "The intent must be approved before it can be executed.",
+      });
+    }
+
+    // Check authorization expiry
+    if (intent.authorization?.expires_at) {
+      const expiresAt = new Date(intent.authorization.expires_at);
+      if (expiresAt < new Date()) {
+        updateIntent(intent_id, { status: "blocked" });
+        appendEntry({
+          intent_id,
+          action: intent.action,
+          agent_id: intent.agent_id,
+          status: "blocked",
+          detail: "Execution blocked: Authorization has expired.",
+        });
+        return res.status(403).json({
+          intent_id,
+          status: "blocked",
+          reason: "Authorization has expired.",
+        });
+      }
+    }
+
+    // Policy-based TTL check
+    const approvalTtl = intent.governance?.approval_ttl;
+    const authTimestamp = intent.authorization?.timestamp;
+    if (approvalTtl && authTimestamp && isApprovalExpired(authTimestamp, approvalTtl)) {
+      updateIntent(intent_id, { status: "blocked" });
+      appendEntry({
+        intent_id,
+        action: intent.action,
+        agent_id: intent.agent_id,
+        status: "blocked",
+        detail: `Execution blocked: Approval TTL expired (${approvalTtl}s).`,
+      });
+      return res.status(403).json({
+        intent_id,
+        status: "blocked",
+        reason: `Approval has expired. TTL is ${approvalTtl} seconds.`,
+      });
+    }
+
+    // ——— STEP 1: Execute the action ———————————————————————————————
+    const timestamp = new Date().toISOString();
+    let executionResult;
+
+    if (intent.action === "send_email") {
+      // Extract email parameters
+      const params = intent.parameters || {};
+      const to = params.to || params.recipient;
+      const subject = params.subject || "(no subject)";
+      const body = params.body || params.content || params.message || "";
+      const cc = params.cc ? (Array.isArray(params.cc) ? params.cc : [params.cc]) : [];
+
+      if (!to) {
+        return res.status(400).json({
+          error: "Cannot execute send_email: missing 'to' or 'recipient' in parameters.",
+        });
+      }
+
+      try {
+        executionResult = await sendEmail({ to, cc, subject, body });
+      } catch (emailErr) {
+        // Email send failed — record failure but don't crash
+        console.error(`[RIO Gateway] Email send failed: ${emailErr.message}`);
+        updateIntent(intent_id, { status: "blocked" });
+        appendEntry({
+          intent_id,
+          action: intent.action,
+          agent_id: intent.agent_id,
+          status: "blocked",
+          detail: `Execution failed: ${emailErr.message}`,
+        });
+        return res.status(502).json({
+          intent_id,
+          status: "execution_failed",
+          error: emailErr.message,
+          hint: "Check GMAIL_USER and GMAIL_APP_PASSWORD environment variables.",
+        });
+      }
+    } else {
+      // For non-email actions, record as simulated execution
+      executionResult = {
+        status: "simulated",
+        connector: "none",
+        detail: `Action '${intent.action}' executed (simulated — no connector configured).`,
+      };
+    }
+
+    // ——— STEP 2: Record execution ——————————————————————————————————
+    const execution = {
+      intent_id,
+      action: intent.action,
+      result: executionResult,
+      connector: executionResult.connector,
+      timestamp,
+      principal_id: req.principal?.principal_id || null,
+      principal_role: req.principal?.primary_role || null,
+    };
+    const executionHash = hashExecution(execution);
+
+    updateIntent(intent_id, {
+      status: "executed",
+      execution: { ...execution, execution_hash: executionHash },
+    });
+
+    appendEntry({
+      intent_id,
+      action: intent.action,
+      agent_id: intent.agent_id,
+      status: "executed",
+      detail: `Executed: ${intent.action} (${executionResult.connector}) — ${executionResult.detail?.substring(0, 200)}`,
+      intent_hash: hashIntent(intent),
+    });
+
+    console.log(`[RIO Gateway] Executed: ${intent_id} — ${intent.action} via ${executionResult.connector}`);
+
+    // ——— STEP 3: Generate receipt ——————————————————————————————————
+    const receipt = generateReceipt({
+      intent_hash: hashIntent(intent),
+      governance_hash: intent.governance?.governance_hash || "",
+      authorization_hash: intent.authorization?.authorization_hash || "",
+      execution_hash: executionHash,
+      intent_id,
+      action: intent.action,
+      agent_id: intent.agent_id,
+      authorized_by: intent.authorization?.authorized_by || "unknown",
+      receipt_type: "governed_action",
+      ingestion: buildIngestion({
+        source: "one_pwa",
+        channel: "POST /execute-action",
+      }),
+    });
+
+    updateIntent(intent_id, {
+      status: "receipted",
+      receipt,
+    });
+
+    // ——— STEP 4: Write receipt to ledger ——————————————————————————
+    appendEntry({
+      intent_id,
+      action: intent.action,
+      agent_id: intent.agent_id,
+      status: "receipted",
+      detail: `Receipt generated: ${receipt.receipt_id}`,
+      receipt_hash: receipt.hash_chain.receipt_hash,
+      intent_hash: hashIntent(intent),
+    });
+
+    console.log(`[RIO Gateway] Receipt: ${intent_id} — ${receipt.receipt_id}`);
+    console.log(`[RIO Gateway] ✓ FULL LOOP CLOSED: ${intent.action} — submit → govern → approve → execute → receipt → ledger`);
+
+    // Return the complete result
+    res.json({
+      intent_id,
+      status: "receipted",
+      pipeline: "complete",
+      execution: {
+        connector: executionResult.connector,
+        status: executionResult.status,
+        detail: executionResult.detail,
+        message_id: executionResult.message_id || null,
+      },
+      receipt: {
+        receipt_id: receipt.receipt_id,
+        receipt_hash: receipt.hash_chain.receipt_hash,
+        hash_chain: receipt.hash_chain,
+      },
+      timestamp,
+    });
+  } catch (err) {
+    console.error(`[RIO Gateway] Execute-action error: ${err.message}`);
+    res.status(500).json({ error: "Internal error during execute-action." });
+  }
+});
+
+// =========================================================================
 // GET /ledger — View ledger entries
 // =========================================================================
 router.get("/ledger", requireRole("auditor"), (req, res) => {
