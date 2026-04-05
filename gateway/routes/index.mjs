@@ -575,8 +575,16 @@ router.get("/approvals/:intent_id", requirePrincipal, async (req, res) => {
 // =========================================================================
 router.get("/approvals", requireRole("approver"), async (req, res) => {
   try {
-    const pending = await getPendingApprovals();
-    res.json({ pending_approvals: pending, count: pending.length });
+    // Use in-memory intent store (listIntents) since intents are not in PostgreSQL.
+    // getPendingApprovals() queries PostgreSQL which has no intent rows.
+    const allGoverned = listIntents("governed");
+    const pending = allGoverned.filter(
+      (i) =>
+        i.governance &&
+        (i.governance.governance_decision === "REQUIRE_HUMAN" ||
+         i.governance.governance_decision === "REQUIRE_QUORUM")
+    );
+    res.json({ pending_approvals: pending, pending: pending, count: pending.length });
   } catch (err) {
     console.error(`[RIO Gateway] Pending approvals error: ${err.message}`);
     res.status(500).json({ error: "Internal error fetching pending approvals." });
