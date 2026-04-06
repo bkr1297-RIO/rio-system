@@ -1343,7 +1343,7 @@ router.get("/health", (req, res) => {
     res.json({
       status: "operational",
       gateway: "RIO Governance Gateway",
-      version: "2.7.0",
+      version: "2.9.0",
       timestamp: new Date().toISOString(),
       governance: {
         constitution_loaded: !!config.constitution,
@@ -1364,6 +1364,11 @@ router.get("/health", (req, res) => {
         entries: getEntryCount(),
         chain_valid: chainStatus.valid,
         chain_tip: getCurrentHash(),
+        hashes_verified: chainStatus.hashes_verified || chainStatus.entries_checked,
+        hash_mismatches: chainStatus.hash_mismatches || 0,
+        linkage_breaks: chainStatus.linkage_breaks || 0,
+        epochs: chainStatus.epochs || 1,
+        current_epoch: chainStatus.current_epoch || null,
       },
       pipeline_stats: stats,
       hardening: {

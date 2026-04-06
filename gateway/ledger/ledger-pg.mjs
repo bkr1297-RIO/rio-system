@@ -144,7 +144,18 @@ export async function initLedger() {
   const result = await pool.query(
     "SELECT * FROM ledger_entries ORDER BY id ASC"
   );
-  _cache = result.rows;
+  // CRITICAL: PostgreSQL returns TIMESTAMPTZ columns as JavaScript Date objects.
+  // The ledger hashes were computed using ISO string timestamps (new Date().toISOString()).
+  // We must normalize timestamps back to ISO strings for chain verification to work.
+  _cache = result.rows.map((row) => ({
+    ...row,
+    timestamp:
+      row.timestamp instanceof Date
+        ? row.timestamp.toISOString()
+        : typeof row.timestamp === "string"
+          ? row.timestamp
+          : new Date(row.timestamp).toISOString(),
+  }));
 
   if (_cache.length > 0) {
     currentHash = _cache[_cache.length - 1].ledger_hash;
@@ -326,23 +337,24 @@ export async function getPendingApprovals() {
 
 export function verifyChain() {
   if (_cache.length === 0) {
-    return { valid: true, entries_checked: 0, first_invalid: null };
+    return { valid: true, entries_checked: 0, first_invalid: null, epochs: 1 };
   }
 
   let prev = GENESIS_HASH;
+  let linkageBreaks = [];
+  let hashMismatches = [];
+  let currentEpochStart = 0;
 
   for (let i = 0; i < _cache.length; i++) {
     const e = _cache[i];
 
+    // Check prev_hash linkage
     if (e.prev_hash !== prev) {
-      return {
-        valid: false,
-        entries_checked: i + 1,
-        first_invalid: i,
-        reason: `Entry ${i} prev_hash mismatch.`,
-      };
+      linkageBreaks.push(i);
+      currentEpochStart = i; // New epoch starts here
     }
 
+    // Recompute hash to verify integrity
     const content = JSON.stringify({
       entry_id: e.entry_id,
       prev_hash: e.prev_hash,
@@ -359,16 +371,35 @@ export function verifyChain() {
 
     const computed = sha256(content);
     if (computed !== e.ledger_hash) {
-      return {
-        valid: false,
-        entries_checked: i + 1,
-        first_invalid: i,
-        reason: `Entry ${i} hash mismatch. Computed: ${computed}, Stored: ${e.ledger_hash}`,
-      };
+      hashMismatches.push({ index: i, computed, stored: e.ledger_hash });
     }
 
     prev = e.ledger_hash;
   }
 
-  return { valid: true, entries_checked: _cache.length, first_invalid: null };
+  // Chain is valid if ALL hashes verify and ALL linkages are correct
+  const fullChainValid = hashMismatches.length === 0 && linkageBreaks.length === 0;
+  // Current epoch is valid if no hash mismatches exist in the current epoch
+  const currentEpochEntries = _cache.length - currentEpochStart;
+  const currentEpochHashOk = hashMismatches.every((m) => m.index < currentEpochStart);
+
+  return {
+    valid: fullChainValid,
+    entries_checked: _cache.length,
+    first_invalid: linkageBreaks.length > 0 ? linkageBreaks[0] : (hashMismatches.length > 0 ? hashMismatches[0].index : null),
+    hashes_verified: _cache.length - hashMismatches.length,
+    hash_mismatches: hashMismatches.length,
+    linkage_breaks: linkageBreaks.length,
+    epochs: linkageBreaks.length + 1,
+    current_epoch: {
+      start_index: currentEpochStart,
+      entries: currentEpochEntries,
+      valid: currentEpochHashOk,
+    },
+    reason: fullChainValid
+      ? null
+      : linkageBreaks.length > 0
+        ? `${linkageBreaks.length} linkage break(s) from Gateway redeploys. ${hashMismatches.length} hash mismatch(es). Current epoch (${currentEpochEntries} entries) is ${currentEpochHashOk ? "valid" : "invalid"}.`
+        : `${hashMismatches.length} hash mismatch(es).`,
+  };
 }
