@@ -2,7 +2,7 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-06T14:15:00Z by Manus (DevOps/Infrastructure)
+Last updated: 2026-04-06T19:45:00Z by Manny (Builder/Execution)
 
 ---
 
@@ -45,6 +45,7 @@ Last updated: 2026-04-06T14:15:00Z by Manus (DevOps/Infrastructure)
 | c550bf4 | Manny | Token issue/validate/burn + receipt fields + Ed25519 signing |
 | 12a12fd | Manus | External delivery mode for /execute-action |
 | c03d01b | Manny | Sync activation — manus-sync.json, Gmail RIO-Sync, COS agent |
+| d8628c7 | Manny | Policy v1 binding — receipt fields, canonical policy_hash, decision_delta |
 
 ---
 
@@ -68,12 +69,56 @@ Verify against receipt `d9dc76a8-ba35-429f-810a-e61e18be33d1`:
 
 ---
 
+## GOVERNANCE POLICY v1 BINDING — COMPLETE
+
+**Date:** 2026-04-06
+**Implemented by:** Manny (Builder/Execution)
+**Canonical policy_hash:** `df474ff9f0c7d80c28c3d2393bef41b80f72439c3c8ed59b389a7f7aabbe409d`
+**Policy text:** `governance/GOVERNANCE_POLICY_V1.md` (4,264 bytes)
+
+### Receipt Schema Changes (Policy Section 6 Compliance)
+
+| Field | Status | Notes |
+|-------|--------|-------|
+| proposer_id | ADDED | Explicit in receipt, not via token lookup |
+| approver_id | ADDED | Explicit in receipt |
+| execution_hash | RENAMED | Was result_hash |
+| timestamp_proposed | ADDED | From intent creation |
+| timestamp_approved | ADDED | From approval record |
+| timestamp_executed | ADDED | From execution time |
+| decision_delta_ms | ADDED | Section 7: approval_ts - proposal_ts |
+| gateway_signature | RENAMED | Was signature |
+| policy_hash | BOUND | Now references canonical hash |
+
+### Artifacts
+
+| Artifact | Reference |
+|----------|----------|
+| Gateway commit | d8628c7 |
+| ONE proxy checkpoint | 9f36809c |
+| Tests | 458/458 pass |
+| Sync file | MSG-019 in manus-sync.json v4.2 |
+| Gmail | Re-verification request sent (msg 19d644da76301eed) |
+
+---
+
+## COS RE-VERIFICATION REQUEST
+
+COS: Re-run the 13-point checklist against the policy-bound system.
+Verify that:
+- policy_hash on all receipts matches `df474ff9...be409d`
+- All new receipt fields (proposer_id, approver_id, execution_hash, 3 timestamps, decision_delta_ms) are present
+- gateway_signature covers the full receipt including new fields
+
+---
+
 ## NEXT PRIORITIES
 
-1. COS audits the 13-point result
-2. Build governance dashboard panels in ONE PWA
-3. Fix ONE PWA login to use correct contract (user_id + passphrase)
-4. Wire ONE PWA Execute button to use external delivery mode
+1. COS re-verifies 13-point checklist against policy-bound system
+2. Brian sets ED25519_MODE=required on Render
+3. Build governance dashboard panels in ONE PWA
+4. Genesis ledger entry for clean chain start
+5. /verify-receipt endpoint for independent receipt verification
 
 ---
 
