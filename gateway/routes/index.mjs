@@ -1227,6 +1227,11 @@ router.get("/health", (req, res) => {
         active_tokens: getActiveTokenCount(),
         replay_stats: getReplayPreventionStats(),
       },
+      gmail: {
+        configured: !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD),
+        user_set: !!process.env.GMAIL_USER,
+        pass_set: !!process.env.GMAIL_APP_PASSWORD,
+      },
       principals: {
         enforcement: "active",
         role_gating: true,
