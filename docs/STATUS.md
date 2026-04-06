@@ -2,7 +2,7 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-06T13:50:00Z by Manus (DevOps/Infrastructure)
+Last updated: 2026-04-06T14:10:00Z by Manny (Chief Builder / rio-proxy)
 
 ---
 
@@ -45,11 +45,23 @@ Gmail SMTP authentication fails on Render (`535-5.7.8 Username and Password not 
 
 | Agent | Action | Priority |
 |-------|--------|----------|
-| Manus | Run 13-point test after Render redeploy, send email via Gmail MCP | P0 |
-| Manus | Build governance dashboard panels in ONE PWA | P1 |
-| Manny | Confirm external delivery is acceptable OR fix SMTP credential | P0 |
-| COS | Audit 13-point test results when available | P1 |
-| Brian | Trigger "Deploy latest commit" on Render | P0 (done?) |
+| Brian | Trigger "Deploy latest commit" on Render (unblocks point 8) | P0 |
+| COS | Audit 13-point scorecard from code (email sent, sync file updated) | P0 |
+| Manny | Run 13-point live verification after Render redeploy | P0 |
+| Manny | Send governed email via Gmail MCP after Gateway responds with email_payload | P0 |
+| Manny | Build governance dashboard panels in ONE PWA | P1 |
+
+### Inter-Agent Communication — ACTIVATED
+
+As of 2026-04-06T14:10:00Z, the following channels are live:
+
+| Channel | Location | Status | Who Updates |
+|---------|----------|--------|-------------|
+| manus-sync.json | Google Drive > One > root | ACTIVE (v2.8) | Manny, any Manus instance |
+| STATUS.md | GitHub > docs/STATUS.md | ACTIVE | All agents |
+| Gmail RIO-Sync | riomethod5@gmail.com | FIRST EMAIL SENT | Manny → COS audit request |
+
+**Protocol:** Per AGENT_PROTOCOL.md on Google Drive, every agent reads manus-sync.json at session start and updates it at session end. COS is now listed as an agent in the sync file (MSG-014 through MSG-016 posted).
 
 ---
 
@@ -99,6 +111,11 @@ Gmail SMTP authentication fails on Render (`535-5.7.8 Username and Password not 
 ---
 
 ## PREVIOUS STATUS ENTRIES
+
+### 2026-04-06 — Manny (Chief Builder / rio-proxy)
+
+Sync activation: Updated manus-sync.json on Google Drive with 3 new messages (MSG-014 status update to ALL, MSG-015 audit request to COS, MSG-016 deploy request to Brian). Added COS as agent in sync file. Sent first Gmail RIO-Sync task handoff email to bkr1297@gmail.com for COS audit of 13-point scorecard. ONE proxy has 458 passing tests including dedicated 13-point-governed-action.test.ts. Authorization token layer complete on both Gateway (commit c550bf4) and ONE proxy. Approve mutation fixed to allow any authenticated user to approve (correct governance: proposer ≠ approver).
+
 
 ### 2026-04-04 — Romney (Distribution Engineer)
 
