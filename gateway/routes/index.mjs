@@ -1041,6 +1041,9 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
     const timestamp = new Date().toISOString();
     let executionResult;
 
+    // Check if caller requests external delivery (caller will send email via OAuth/MCP)
+    const deliveryMode = req.body.delivery_mode || "gateway";
+
     if (intent.action === "send_email") {
       // Extract email parameters
       const params = intent.parameters || {};
@@ -1055,25 +1058,31 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
         });
       }
 
-      try {
-        executionResult = await sendEmail({ to, cc, subject, body });
-      } catch (emailErr) {
-        // Email send failed — record failure but don't crash
-        console.error(`[RIO Gateway] Email send failed: ${emailErr.message}`);
-        updateIntent(intent_id, { status: "blocked" });
-        appendEntry({
-          intent_id,
-          action: intent.action,
-          agent_id: intent.agent_id,
-          status: "blocked",
-          detail: `Execution failed: ${emailErr.message}`,
-        });
-        return res.status(502).json({
-          intent_id,
-          status: "execution_failed",
-          error: emailErr.message,
-          hint: "Check GMAIL_USER and GMAIL_APP_PASSWORD environment variables.",
-        });
+      if (deliveryMode === "external") {
+        // External delivery mode: Gateway handles ALL governance (token, receipt, ledger)
+        // but the caller is responsible for actually sending the email.
+        // We record execution as "external_pending" and return the email payload.
+        executionResult = {
+          status: "external_pending",
+          connector: "external",
+          detail: `Email delivery delegated to external caller. To: ${to}, Subject: ${subject}`,
+          email_payload: { to, cc, subject, body },
+        };
+      } else {
+        // Gateway delivery mode: send via nodemailer SMTP
+        try {
+          executionResult = await sendEmail({ to, cc, subject, body });
+        } catch (emailErr) {
+          // SMTP failed — fall back to external mode instead of blocking
+          console.warn(`[RIO Gateway] SMTP failed (${emailErr.message}) — switching to external delivery mode`);
+          executionResult = {
+            status: "external_pending",
+            connector: "external_fallback",
+            detail: `SMTP failed: ${emailErr.message}. Email delivery delegated to external caller. To: ${to}, Subject: ${subject}`,
+            email_payload: { to, cc, subject, body },
+            smtp_error: emailErr.message,
+          };
+        }
       }
     } else {
       // For non-email actions, record as simulated execution
@@ -1188,7 +1197,7 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
     console.log(`[RIO Gateway] ✓ FULL LOOP CLOSED: ${intent.action} — submit → govern → approve → token → execute → burn → receipt → sign → ledger`);
 
     // Return the complete result
-    res.json({
+    const responsePayload = {
       intent_id,
       status: "receipted",
       pipeline: "complete",
@@ -1211,7 +1220,16 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
         ledger_entry_id: receipt.ledger_entry_id,
       },
       timestamp,
-    });
+    };
+
+    // If external delivery, include the email payload so caller can send it
+    if (executionResult.email_payload) {
+      responsePayload.email_payload = executionResult.email_payload;
+      responsePayload.delivery_mode = executionResult.connector === "external" ? "external" : "external_fallback";
+      responsePayload.delivery_instruction = "Email not yet sent. Use the email_payload to send via your preferred method (OAuth, MCP, etc). The receipt and ledger entry are already written.";
+    }
+
+    res.json(responsePayload);
   } catch (err) {
     console.error(`[RIO Gateway] Execute-action error: ${err.message}`);
     res.status(500).json({ error: "Internal error during execute-action." });
