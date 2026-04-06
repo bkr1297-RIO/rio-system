@@ -38,6 +38,9 @@ import {
   buildSignaturePayload,
   verifySignature,
   hashPayload,
+  signPayload,
+  loadKeypair,
+  generateAndSaveKeypair,
 } from "../security/ed25519.mjs";
 import { getSignerPublicKey } from "../security/identity-binding.mjs";
 import {
@@ -63,6 +66,18 @@ const router = Router();
 
 // Ed25519 enforcement mode: "optional" (accepts unsigned), "required" (rejects unsigned)
 const ED25519_MODE = process.env.ED25519_MODE || "required";
+
+// Gateway Ed25519 keypair for receipt signing (lazy-init on first use)
+let _gatewayKeypair = null;
+function getGatewayKeypair() {
+  if (_gatewayKeypair) return _gatewayKeypair;
+  _gatewayKeypair = loadKeypair("gateway");
+  if (!_gatewayKeypair) {
+    console.log("[RIO Gateway] No gateway keypair found — generating new Ed25519 keypair.");
+    _gatewayKeypair = generateAndSaveKeypair("gateway");
+  }
+  return _gatewayKeypair;
+}
 
 // =========================================================================
 // POST /intent — Submit a new intent
@@ -985,6 +1000,43 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       });
     }
 
+    // ——— ITEM 1: Issue authorization token after verifying approval ————
+    const { token: executionToken, expires_at: tokenExpiresAt } = issueExecutionToken(intent_id);
+    const tokenId = executionToken; // UUID token string serves as token_id
+
+    console.log(`[RIO Gateway] Token issued for ${intent_id} — expires ${tokenExpiresAt}`);
+
+    appendEntry({
+      intent_id,
+      action: intent.action,
+      agent_id: intent.agent_id,
+      status: "token_issued",
+      detail: `Authorization token issued (single-use, expires ${tokenExpiresAt}).`,
+    });
+
+    // ——— ITEM 2 + 3: Validate and burn token before execution ——————————
+    // validateAndBurnToken is single-use: it marks the token as burned on
+    // first call. If the same token is presented again, it returns
+    // { valid: false, reason: "...already been used..." }.
+    const burnResult = validateAndBurnToken(intent_id, executionToken);
+    if (!burnResult.valid) {
+      // FAIL CLOSED: token validation failed — do not execute
+      appendEntry({
+        intent_id,
+        action: intent.action,
+        agent_id: intent.agent_id,
+        status: "blocked",
+        detail: `Execution BLOCKED: Token validation failed — ${burnResult.reason}`,
+      });
+      return res.status(403).json({
+        intent_id,
+        status: "blocked",
+        reason: burnResult.reason,
+      });
+    }
+
+    console.log(`[RIO Gateway] Token validated and burned for ${intent_id}`);
+
     // ——— STEP 1: Execute the action ———————————————————————————————
     const timestamp = new Date().toISOString();
     let executionResult;
@@ -1077,13 +1129,43 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       }),
     });
 
+    // ——— ITEM 4: Add missing fields to receipt ————————————————————
+    // approver_id — from the approval record on the intent
+    receipt.approver_id = intent.authorization?.authorized_by || "unknown";
+    // token_id — from the token issued in Item 1
+    receipt.token_id = tokenId;
+    // policy_hash — from intent.governance.policy_hash (set during /govern)
+    receipt.policy_hash = intent.governance?.policy_hash || null;
+    // execution_result — the raw result from the connector
+    receipt.execution_result = executionResult;
+    // previous_receipt_hash — from the last ledger entry's hash
+    receipt.previous_receipt_hash = getCurrentHash() || null;
+    // ledger_entry_id — will be set after ledger write (see below)
+
+    // ——— ITEM 5: Sign receipt with Gateway Ed25519 key ————————————
+    const receiptHash = receipt.hash_chain.receipt_hash;
+    const gatewayKeypair = getGatewayKeypair();
+    const signaturePayload = buildSignaturePayload({
+      intent_id,
+      action: intent.action,
+      decision: "receipted",
+      signer_id: "gateway",
+      timestamp,
+    });
+    const receiptSignature = signPayload(signaturePayload, gatewayKeypair.secretKey);
+    receipt.receipt_signature = receiptSignature;
+    receipt.gateway_public_key = gatewayKeypair.publicKey;
+    receipt.signature_payload_hash = hashPayload(signaturePayload);
+
+    console.log(`[RIO Gateway] Receipt signed with Gateway Ed25519 key`);
+
     updateIntent(intent_id, {
       status: "receipted",
       receipt,
     });
 
     // ——— STEP 4: Write receipt to ledger ——————————————————————————
-    appendEntry({
+    const ledgerEntry = appendEntry({
       intent_id,
       action: intent.action,
       agent_id: intent.agent_id,
@@ -1091,10 +1173,19 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       detail: `Receipt generated: ${receipt.receipt_id}`,
       receipt_hash: receipt.hash_chain.receipt_hash,
       intent_hash: hashIntent(intent),
+      approver_id: receipt.approver_id,
+      token_id: tokenId,
+      policy_hash: receipt.policy_hash,
+      receipt_signature: receiptSignature,
     });
 
+    // Set ledger_entry_id on receipt (now that we have it)
+    receipt.ledger_entry_id = ledgerEntry?.entry_id || ledgerEntry?.id || null;
+    // Update intent with final receipt including ledger_entry_id
+    updateIntent(intent_id, { receipt });
+
     console.log(`[RIO Gateway] Receipt: ${intent_id} — ${receipt.receipt_id}`);
-    console.log(`[RIO Gateway] ✓ FULL LOOP CLOSED: ${intent.action} — submit → govern → approve → execute → receipt → ledger`);
+    console.log(`[RIO Gateway] ✓ FULL LOOP CLOSED: ${intent.action} — submit → govern → approve → token → execute → burn → receipt → sign → ledger`);
 
     // Return the complete result
     res.json({
@@ -1111,6 +1202,13 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
         receipt_id: receipt.receipt_id,
         receipt_hash: receipt.hash_chain.receipt_hash,
         hash_chain: receipt.hash_chain,
+        approver_id: receipt.approver_id,
+        token_id: receipt.token_id,
+        policy_hash: receipt.policy_hash,
+        receipt_signature: receipt.receipt_signature,
+        gateway_public_key: receipt.gateway_public_key,
+        previous_receipt_hash: receipt.previous_receipt_hash,
+        ledger_entry_id: receipt.ledger_entry_id,
       },
       timestamp,
     });
