@@ -1138,15 +1138,32 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       }),
     });
 
-    // ——— ITEM 4: Add missing fields to receipt ————————————————————
-    // approver_id — from the approval record on the intent
+    // ——— POLICY-COMPLIANT RECEIPT FIELDS (Governance Policy v1, Section 6) ——
+    // Canonical policy_hash: SHA-256 of governance/GOVERNANCE_POLICY_V1.md
+    const CANONICAL_POLICY_HASH = "df474ff9f0c7d80c28c3d2393bef41b80f72439c3c8ed59b389a7f7aabbe409d";
+
+    // proposer_id — who proposed the intent
+    receipt.proposer_id = intent.agent_id || intent.proposer_id || req.principal?.principal_id || "unknown";
+    // approver_id — who approved the intent
     receipt.approver_id = intent.authorization?.authorized_by || "unknown";
-    // token_id — from the token issued in Item 1
+    // token_id — from the token issued above
     receipt.token_id = tokenId;
-    // policy_hash — from intent.governance.policy_hash (set during /govern)
-    receipt.policy_hash = intent.governance?.policy_hash || null;
+    // policy_hash — bind to the canonical governance policy v1
+    receipt.policy_hash = CANONICAL_POLICY_HASH;
     // execution_result — the raw result from the connector
     receipt.execution_result = executionResult;
+    // execution_hash — the SHA-256 of the execution record (top-level alias)
+    receipt.execution_hash = executionHash;
+    // timestamp_proposed — when the intent was created
+    receipt.timestamp_proposed = intent.created_at || intent.timestamp || null;
+    // timestamp_approved — when the intent was approved
+    receipt.timestamp_approved = intent.authorization?.timestamp || null;
+    // timestamp_executed — when execution completed
+    receipt.timestamp_executed = timestamp;
+    // decision_delta — time between proposal and approval (Section 7)
+    const tProposed = receipt.timestamp_proposed ? new Date(receipt.timestamp_proposed).getTime() : null;
+    const tApproved = receipt.timestamp_approved ? new Date(receipt.timestamp_approved).getTime() : null;
+    receipt.decision_delta_ms = (tProposed && tApproved) ? (tApproved - tProposed) : null;
     // previous_receipt_hash — from the last ledger entry's hash
     receipt.previous_receipt_hash = getCurrentHash() || null;
     // ledger_entry_id — will be set after ledger write (see below)
@@ -1182,9 +1199,15 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       detail: `Receipt generated: ${receipt.receipt_id}`,
       receipt_hash: receipt.hash_chain.receipt_hash,
       intent_hash: hashIntent(intent),
+      proposer_id: receipt.proposer_id,
       approver_id: receipt.approver_id,
       token_id: tokenId,
       policy_hash: receipt.policy_hash,
+      execution_hash: receipt.execution_hash,
+      decision_delta_ms: receipt.decision_delta_ms,
+      timestamp_proposed: receipt.timestamp_proposed,
+      timestamp_approved: receipt.timestamp_approved,
+      timestamp_executed: receipt.timestamp_executed,
       receipt_signature: receiptSignature,
     });
 
@@ -1211,13 +1234,20 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
         receipt_id: receipt.receipt_id,
         receipt_hash: receipt.hash_chain.receipt_hash,
         hash_chain: receipt.hash_chain,
+        proposer_id: receipt.proposer_id,
         approver_id: receipt.approver_id,
         token_id: receipt.token_id,
         policy_hash: receipt.policy_hash,
-        receipt_signature: receipt.receipt_signature,
-        gateway_public_key: receipt.gateway_public_key,
+        execution_hash: receipt.execution_hash,
+        execution_result: receipt.execution_result,
+        timestamp_proposed: receipt.timestamp_proposed,
+        timestamp_approved: receipt.timestamp_approved,
+        timestamp_executed: receipt.timestamp_executed,
+        decision_delta_ms: receipt.decision_delta_ms,
         previous_receipt_hash: receipt.previous_receipt_hash,
         ledger_entry_id: receipt.ledger_entry_id,
+        receipt_signature: receipt.receipt_signature,
+        gateway_public_key: receipt.gateway_public_key,
       },
       timestamp,
     };
