@@ -31,7 +31,7 @@ import {
   hashIntent,
   buildIngestion,
 } from "../receipts/receipts.mjs";
-import { createIntent, getIntent, updateIntent } from "../governance/intents.mjs";
+import { createIntent, getIntent, updateIntent, listIntents } from "../governance/intents.mjs";
 
 const router = Router();
 
@@ -287,32 +287,53 @@ router.post("/kill", requireRole("root_authority", "meta_governor"), async (req,
 router.get("/receipts/recent", async (req, res) => {
   try {
     const limit = Math.min(parseInt(req.query.limit) || 20, 100);
+    const format = req.query.format || "protocol"; // "protocol" (default) or "ledger"
     const totalCount = getEntryCount();
-    const allEntries = getEntries(totalCount);
 
-    // Filter to receipted entries and take the most recent N
-    const receiptedEntries = allEntries
-      .filter((e) => e.status === "receipted")
-      .slice(-limit)
-      .reverse();
+    if (format === "protocol") {
+      // Option A: Return full protocol-format receipts from intent store
+      // These contain hash_chain, verification, identity_binding — everything
+      // the CLI verifier needs for full hash chain verification.
+      const receiptedIntents = listIntents("receipted", limit);
+      const protocolReceipts = receiptedIntents
+        .filter((i) => i.receipt && i.receipt.hash_chain)
+        .map((i) => i.receipt);
 
-    res.json({
-      receipts: receiptedEntries.map((e) => ({
-        entry_id: e.entry_id,
-        intent_id: e.intent_id,
-        action: e.action,
-        agent_id: e.agent_id,
-        status: e.status,
-        detail: e.detail,
-        receipt_hash: e.receipt_hash,
-        ledger_hash: e.ledger_hash,
-        timestamp: e.timestamp,
-      })),
-      count: receiptedEntries.length,
-      total_ledger_entries: totalCount,
-      chain_tip: getCurrentHash(),
-      fetched_at: new Date().toISOString(),
-    });
+      res.json({
+        receipts: protocolReceipts,
+        count: protocolReceipts.length,
+        format: "protocol",
+        total_ledger_entries: totalCount,
+        chain_tip: getCurrentHash(),
+        fetched_at: new Date().toISOString(),
+      });
+    } else {
+      // Legacy: Return ledger entry summaries
+      const allEntries = getEntries(totalCount);
+      const receiptedEntries = allEntries
+        .filter((e) => e.status === "receipted")
+        .slice(-limit)
+        .reverse();
+
+      res.json({
+        receipts: receiptedEntries.map((e) => ({
+          entry_id: e.entry_id,
+          intent_id: e.intent_id,
+          action: e.action,
+          agent_id: e.agent_id,
+          status: e.status,
+          detail: e.detail,
+          receipt_hash: e.receipt_hash,
+          ledger_hash: e.ledger_hash,
+          timestamp: e.timestamp,
+        })),
+        count: receiptedEntries.length,
+        format: "ledger",
+        total_ledger_entries: totalCount,
+        chain_tip: getCurrentHash(),
+        fetched_at: new Date().toISOString(),
+      });
+    }
   } catch (err) {
     console.error(`[RIO Proxy] Recent receipts error: ${err.message}`);
     res.status(500).json({ error: "Internal error fetching recent receipts." });
