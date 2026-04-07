@@ -167,11 +167,11 @@ The production gateway is deployed on Render with a PostgreSQL-backed ledger:
 # Check gateway health
 curl -s https://rio-gateway.onrender.com/health | python3 -m json.tool
 
-# View the ledger (append-only, hash-chained)
-curl -s https://rio-gateway.onrender.com/api/ledger | python3 -m json.tool
+# Fetch recent protocol-format receipts (persisted in PostgreSQL)
+curl -s 'https://rio-gateway.onrender.com/api/receipts/recent?format=protocol' | python3 -m json.tool
 
-# Verify chain integrity
-curl -s https://rio-gateway.onrender.com/api/verify-chain | python3 -m json.tool
+# Verify receipts using the CLI
+npx rio-verify remote https://rio-gateway.onrender.com
 ```
 
 ### Verification Results

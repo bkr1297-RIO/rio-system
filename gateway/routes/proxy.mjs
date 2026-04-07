@@ -25,6 +25,8 @@ import {
   getEntries,
   getEntryCount,
   getCurrentHash,
+  getRecentReceipts,
+  storeReceipt,
 } from "../ledger/ledger-pg.mjs";
 import {
   generateReceipt,
@@ -151,6 +153,9 @@ router.post("/onboard", async (req, res) => {
       intent_hash: intentHash,
     });
 
+    // Persist receipt to PostgreSQL (survives redeploys)
+    await storeReceipt(receipt);
+
     console.log(`[RIO Proxy] ONBOARD: ${user_id} registered (device: ${device_id || "unknown"})`);
 
     res.status(201).json({
@@ -257,6 +262,9 @@ router.post("/kill", requireRole("root_authority", "meta_governor"), async (req,
       intent_hash: intentHash,
     });
 
+    // Persist receipt to PostgreSQL (survives redeploys)
+    await storeReceipt(receipt);
+
     console.log(`[RIO Proxy] KILL SWITCH: ${userId} — ${killReason}`);
 
     res.json({
@@ -291,13 +299,9 @@ router.get("/receipts/recent", async (req, res) => {
     const totalCount = getEntryCount();
 
     if (format === "protocol") {
-      // Option A: Return full protocol-format receipts from intent store
-      // These contain hash_chain, verification, identity_binding — everything
-      // the CLI verifier needs for full hash chain verification.
-      const receiptedIntents = listIntents("receipted", limit);
-      const protocolReceipts = receiptedIntents
-        .filter((i) => i.receipt && i.receipt.hash_chain)
-        .map((i) => i.receipt);
+      // Query full protocol-format receipts from PostgreSQL.
+      // These survive Gateway redeploys (persisted, not in-memory).
+      const protocolReceipts = await getRecentReceipts(limit);
 
       res.json({
         receipts: protocolReceipts,

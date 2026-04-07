@@ -23,6 +23,7 @@ import {
   getApprovalsByIntent,
   getApprovalByApprover,
   getPendingApprovals,
+  storeReceipt,
 } from "../ledger/ledger-pg.mjs";
 import {
   hashIntent,
@@ -1239,6 +1240,9 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
     receipt.ledger_entry_id = ledgerEntry?.entry_id || ledgerEntry?.id || null;
     // Update intent with final receipt including ledger_entry_id
     updateIntent(intent_id, { receipt });
+
+    // ——— Persist receipt to PostgreSQL (survives redeploys) ———————
+    await storeReceipt(receipt);
 
     console.log(`[RIO Gateway] Receipt: ${intent_id} — ${receipt.receipt_id}`);
     console.log(`[RIO Gateway] ✓ FULL LOOP CLOSED: ${intent.action} — submit → govern → approve → token → execute → burn → receipt → sign → ledger`);

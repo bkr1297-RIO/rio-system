@@ -37,6 +37,7 @@ import {
   getEntryCount,
   verifyChain,
   getCurrentHash,
+  storeReceipt,
 } from "../ledger/ledger-pg.mjs";
 import {
   hashIntent,
@@ -620,6 +621,9 @@ router.post("/intents/:id/receipt", requireScope("read"), requireRole("executor"
       receipt_hash: receipt.hash_chain.receipt_hash,
       intent_hash: hashIntent(intent),
     });
+
+    // Persist receipt to PostgreSQL (survives redeploys)
+    await storeReceipt(receipt);
 
     res.json({ ...receipt, api_version: "v1" });
   } catch (err) {

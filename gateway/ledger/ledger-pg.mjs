@@ -71,8 +71,12 @@ async function autoMigrate(pool) {
       agent_id VARCHAR(255) NOT NULL,
       authorized_by VARCHAR(255),
       hash_chain JSONB NOT NULL,
+      protocol_receipt JSONB,
       created_at TIMESTAMPTZ DEFAULT NOW()
     );
+
+    -- Add protocol_receipt column if table already exists without it
+    ALTER TABLE receipts ADD COLUMN IF NOT EXISTS protocol_receipt JSONB;
 
     CREATE TABLE IF NOT EXISTS authorized_signers (
       id SERIAL PRIMARY KEY,
@@ -333,6 +337,58 @@ export async function getPendingApprovals() {
      ORDER BY created_at DESC`
   );
   return result.rows;
+}
+
+// =========================================================================
+// Receipts — PostgreSQL-backed protocol-format receipt storage
+// =========================================================================
+
+/**
+ * Store a full protocol-format receipt in the receipts table.
+ * The protocol_receipt column holds the entire receipt JSON.
+ */
+export async function storeReceipt(receipt) {
+  if (!pool) {
+    console.error("[RIO Ledger-PG] Cannot store receipt — pool not initialized");
+    return;
+  }
+  try {
+    await pool.query(
+      `INSERT INTO receipts (receipt_id, intent_id, action, agent_id, authorized_by, hash_chain, protocol_receipt)
+       VALUES ($1, $2, $3, $4, $5, $6, $7)
+       ON CONFLICT (receipt_id) DO NOTHING`,
+      [
+        receipt.receipt_id,
+        receipt.intent_id || receipt.hash_chain?.intent_id || null,
+        receipt.action || null,
+        receipt.agent_id || null,
+        receipt.authorized_by || receipt.approver_id || null,
+        JSON.stringify(receipt.hash_chain || {}),
+        JSON.stringify(receipt),
+      ]
+    );
+    console.log(`[RIO Ledger-PG] Receipt stored: ${receipt.receipt_id}`);
+  } catch (err) {
+    console.error(`[RIO Ledger-PG] Failed to store receipt ${receipt.receipt_id}: ${err.message}`);
+  }
+}
+
+/**
+ * Get recent protocol-format receipts from PostgreSQL.
+ * Returns full receipt JSON objects that survive redeploys.
+ */
+export async function getRecentReceipts(limit = 20) {
+  if (!pool) return [];
+  try {
+    const result = await pool.query(
+      `SELECT protocol_receipt FROM receipts ORDER BY created_at DESC LIMIT $1`,
+      [limit]
+    );
+    return result.rows.map((r) => r.protocol_receipt);
+  } catch (err) {
+    console.error(`[RIO Ledger-PG] Failed to fetch recent receipts: ${err.message}`);
+    return [];
+  }
 }
 
 export function verifyChain() {
