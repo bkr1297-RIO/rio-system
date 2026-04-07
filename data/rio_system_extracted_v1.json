@@ -1,0 +1,149 @@
+{
+  "metadata": {
+    "name": "RIO System Extracted Signal",
+    "version": "v1.0",
+    "source": "conversation corpus (sanitized)",
+    "date": "2026-04-07",
+    "purpose": "System-only extraction for public repository"
+  },
+
+  "core_definition": {
+    "one_liner": "RIO converts AI actions into human-authorized, policy-controlled, cryptographically verifiable transactions.",
+    "system_type": "Policy-Governed Execution Runtime with Human-in-the-Loop Authorization",
+    "category": "AI Control Plane / Execution Governance Layer"
+  },
+
+  "three_views": {
+    "invariants": 7,
+    "lifecycle_stages": 9,
+    "functional_layers": 8,
+    "description": "Three views of the same system: rules, flow, and structure"
+  },
+
+  "7_invariants": [
+    "Human is final authority",
+    "No execution without approval (when required)",
+    "Every action produces a receipt",
+    "Every receipt is written to a ledger",
+    "System fails closed",
+    "Independent verification is always possible",
+    "Strict separation of roles (intelligence, governance, execution, witness)"
+  ],
+
+  "9_stage_lifecycle": [
+    "Observe",
+    "Analyze",
+    "Plan",
+    "Govern",
+    "Approve",
+    "Execute",
+    "Record",
+    "Prove",
+    "Learn"
+  ],
+
+  "8_layer_model": [
+    "Human Authority Layer",
+    "Execution Layer",
+    "Learning Layer",
+    "Governance Gate Layer",
+    "Witness Layer",
+    "Stress Testing Layer",
+    "Convergence Layer",
+    "Canonical Rules Layer"
+  ],
+
+  "core_architecture": {
+    "flow": [
+      "AI generates proposal",
+      "Policy engine evaluates risk",
+      "Human approval required if threshold exceeded",
+      "Execution gateway performs action",
+      "Receipt generated",
+      "Ledger append",
+      "Verification possible"
+    ],
+    "principle": "Control before execution, not after"
+  },
+
+  "governance_model": {
+    "roles": {
+      "generator": "AI proposes",
+      "governor": "Policy evaluates",
+      "gate": "Execution enforces",
+      "human": "Final authority",
+      "witness": "Receipt + ledger"
+    },
+    "separation": "No role can self-validate or self-execute"
+  },
+
+  "receipt_model": {
+    "required_fields": [
+      "intent_hash",
+      "action_hash",
+      "policy_decision",
+      "risk_score",
+      "approval",
+      "signature",
+      "timestamp"
+    ],
+    "properties": [
+      "tamper-evident",
+      "cryptographically verifiable",
+      "chainable"
+    ]
+  },
+
+  "ledger_model": {
+    "type": "append-only hash chain",
+    "properties": [
+      "immutable",
+      "verifiable",
+      "linked via previous_hash"
+    ]
+  },
+
+  "convergence_model": {
+    "definition": "Multi-model agreement used as validation signal",
+    "threshold": 88,
+    "purpose": [
+      "confidence scoring",
+      "human review trigger",
+      "stability indicator"
+    ]
+  },
+
+  "learning_loop": {
+    "mechanism": [
+      "Receipts analyzed",
+      "Patterns detected",
+      "Policy updates proposed",
+      "Human approves policy change",
+      "System evolves"
+    ],
+    "constraint": "Learning cannot bypass governance"
+  },
+
+  "key_patterns": [
+    "Triadic separation (Generator / Governor / Gate)",
+    "Pre-execution control",
+    "Cryptographic proof as trust layer",
+    "Fail-closed safety model",
+    "Human authority preservation",
+    "Feedback-driven policy evolution"
+  ],
+
+  "system_boundary": {
+    "does": [
+      "govern actions",
+      "enforce approval",
+      "record proof",
+      "enable verification"
+    ],
+    "does_not": [
+      "grant AI authority",
+      "allow autonomous execution",
+      "replace human decision-making"
+    ]
+  }
+}
