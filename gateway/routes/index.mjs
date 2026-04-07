@@ -34,6 +34,7 @@ import {
   buildIngestion,
 } from "../receipts/receipts.mjs";
 import { sendEmail } from "../execution/gmail-executor.mjs";
+import { sendSms } from "../execution/sms-executor.mjs";
 import {
   buildSignaturePayload,
   verifySignature,
@@ -1084,8 +1085,31 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
           };
         }
       }
+    } else if (intent.action === "send_sms") {
+      // Extract SMS parameters
+      const params = intent.parameters || {};
+      const to = params.to || params.phone || params.recipient;
+      const smsBody = params.body || params.message || params.content || "";
+
+      if (!to) {
+        return res.status(400).json({
+          error: "Cannot execute send_sms: missing 'to', 'phone', or 'recipient' in parameters.",
+        });
+      }
+
+      try {
+        executionResult = await sendSms({ to, body: smsBody });
+      } catch (smsErr) {
+        console.warn(`[RIO Gateway] Twilio SMS failed (${smsErr.message})`);
+        executionResult = {
+          status: "failed",
+          connector: "twilio_sms",
+          detail: `SMS failed: ${smsErr.message}. To: ${to}`,
+          sms_error: smsErr.message,
+        };
+      }
     } else {
-      // For non-email actions, record as simulated execution
+      // For other actions, record as simulated execution
       executionResult = {
         status: "simulated",
         connector: "none",
@@ -1382,6 +1406,12 @@ router.get("/health", (req, res) => {
         configured: !!(process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD),
         user_set: !!process.env.GMAIL_USER,
         pass_set: !!process.env.GMAIL_APP_PASSWORD,
+      },
+      twilio: {
+        configured: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN && process.env.TWILIO_PHONE_NUMBER),
+        sid_set: !!process.env.TWILIO_ACCOUNT_SID,
+        token_set: !!process.env.TWILIO_AUTH_TOKEN,
+        phone_set: !!process.env.TWILIO_PHONE_NUMBER,
       },
       principals: {
         enforcement: "active",
