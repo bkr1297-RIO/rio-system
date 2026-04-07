@@ -7,14 +7,18 @@
   <a href="https://github.com/bkr1297-RIO/rio-receipt-protocol">Receipt Protocol</a> &middot;
   <a href="https://rio-gateway.onrender.com/health">Gateway Status</a> &middot;
   <a href="https://riodemo-ux2sxdqo.manus.space">Live Demo</a> &middot;
-  <a href="https://riodemo-ux2sxdqo.manus.space/ask">Ask Bondi</a> &middot;
+  <a href="https://riodemo-bt7mgkkb.manus.space">Ask Bondi</a> &middot;
   <a href="docs/ARCHITECTURE_v2.7.md">Architecture</a> &middot;
   <a href="docs/whitepapers/RIO_White_Paper_v2.md">White Paper</a>
 </p>
 
 <p align="center">
-  <a href="https://riodemo-ux2sxdqo.manus.space/ask"><img src="https://img.shields.io/badge/Ask%20Bondi-Implementation%20Assistant-blue" alt="Ask Bondi" /></a>
+  <a href="https://riodemo-bt7mgkkb.manus.space"><img src="https://img.shields.io/badge/Ask%20Bondi-Implementation%20Assistant-blue" alt="Ask Bondi" /></a>
 </p>
+
+---
+
+> **Have implementation questions?** [Ask Bondi](https://riodemo-bt7mgkkb.manus.space) — an interactive assistant that can answer technical questions about RIO architecture, the receipt protocol, verification, and how to implement.
 
 ---
 
