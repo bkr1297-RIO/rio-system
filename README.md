@@ -301,6 +301,43 @@ See [docs/MEMORY_LAYER.md](docs/MEMORY_LAYER.md) for the full definition.
 
 ---
 
+## System Extraction (Sanitized Signal)
+
+This repository includes a system-only extraction derived from a large multi-session conversation corpus. The original source contained both system architecture and personal context. Only the architectural signal has been retained here.
+
+### Purpose
+
+To provide a clean, developer-readable representation of the RIO system without exposing any personal or identity data.
+
+### What This File Contains
+
+- Core system definition
+- The three unified views:
+  - 7 Invariants (rules)
+  - 9-Stage Lifecycle (flow)
+  - 8-Layer Model (structure)
+- Governance model (Generator → Governor → Gate)
+- Receipt and ledger architecture
+- Learning loop and feedback model
+- Key system patterns
+
+### What Has Been Removed
+
+- Personal context
+- Identity-linked data
+- Conversation-specific narrative
+- Any non-system information
+
+### Key Principle
+
+The raw corpus is not the product.
+
+The system extracted from it is.
+
+This file represents the minimal, portable, implementation-ready signal of RIO.
+
+---
+
 ## Status and Roadmap
 
 ### What's Built
