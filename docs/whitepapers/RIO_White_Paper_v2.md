@@ -362,6 +362,42 @@ The source code, schemas, threat model, and verification results are available a
 
 ---
 
+## 13. System Extraction from Conversational Corpus
+
+During development, a large corpus of multi-model and human-AI interaction data was generated across 120 sessions spanning February to April 2026. This corpus contained both architectural signal (system patterns, invariants, execution models) and non-architectural data (personal context, narrative, experiential content). To ensure clarity, portability, and safety, a structured extraction process was applied.
+
+### 13.1 Extraction Objective
+
+Isolate the system-level architecture independent of identity, narrative, contextual bias, and source-specific framing. The extraction was performed through iterative review across multiple AI models and human verification, retaining only content that could be independently validated as system architecture.
+
+### 13.2 Result
+
+A normalized representation of RIO consisting of three convergent views:
+
+| View | Function | Count |
+|------|----------|-------|
+| Invariants | Non-negotiable system rules | 7 |
+| Lifecycle | End-to-end execution flow | 9 stages |
+| Layer Model | Functional decomposition | 8 layers |
+
+These views describe the same system from different angles and are fully interoperable. Each has been validated against the working reference implementation — the extraction maps to running code, not theoretical architecture.
+
+### 13.3 Key Insight
+
+The system does not depend on the corpus. The corpus revealed the system.
+
+### 13.4 Implication
+
+RIO can be reconstructed independently, implemented without access to the original conversation data, and verified through behavior and outputs rather than narrative origin. A developer needs only the specification documents, reference implementation, and verification tools contained in the public repositories.
+
+### 13.5 Constraint
+
+All extracted artifacts must exclude personal or identity-linked data, preserve only structural and operational information, and remain implementation-focused. This ensures that RIO remains auditable, portable, and safe for public distribution.
+
+The raw corpus is not the product. The system extracted from it is. The extraction artifact represents the minimal, portable, implementation-ready signal of RIO.
+
+---
+
 ## References
 
 [1] RIO System Repository. GitHub. https://github.com/bkr1297-RIO/rio-system
