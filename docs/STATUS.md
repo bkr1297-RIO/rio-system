@@ -2,7 +2,22 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-06T20:15:00Z by Manus (COS Re-Verification)
+Last updated: 2026-04-07 by Andrew (Solutions Architect)
+
+---
+
+## Latest Delivery — Ask Bondi (/ask) Added to RIO Demo Site
+
+| Field | Value |
+|---|---|
+| Date | 2026-04-07 |
+| Agent | Andrew (Solutions Architect) |
+| Delivery | Ask Bondi (/ask) page added to RIO Demo Site |
+| Checkpoint | `aabd7a41` |
+| Files | `client/src/pages/AskBondi.tsx`, `client/src/pages/Home.tsx` (navbar + CTA), `client/src/App.tsx` (route) |
+| Backend | External — `POST https://rio-one.manus.space/api/ask-bondi` (Manny's endpoint, already live) |
+| Status | Live on riodemo site. No login required. Markdown rendering. Example questions. |
+| Decision needed | None |
 
 ---
 
