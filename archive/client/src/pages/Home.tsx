@@ -68,26 +68,28 @@ export default function Home() {
               {" "}{"\u2014"} RIO creates a closed-loop system where every action is authorized, executed, verified,
               recorded, and used to improve future decisions.
             </p>
-            {/* Primary CTA — See What RIO Makes Possible for You */}
+            {/* Primary CTA — Ask Bondi */}
             <div className="flex flex-col items-center gap-4 mt-6">
               <a
-                href="/demo"
-                className="inline-block py-3.5 px-10 text-base sm:text-lg font-bold rounded-lg transition-all duration-200 hover:scale-[1.02]"
+                href="https://riodemo-bt7mgkkb.manus.space"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-block py-3.5 px-10 text-base sm:text-lg font-bold rounded-lg transition-all duration-200 hover:scale-[1.02] text-center"
                 style={{
                   backgroundColor: "#b8963e",
                   color: "#0a0e1a",
                   boxShadow: "0 4px 20px rgba(184,150,62,0.3)",
                 }}
               >
-                See What RIO Makes Possible for You
+                Ask interactive questions and learn specifics of how to implement
               </a>
               <div className="flex flex-wrap justify-center gap-3">
                 <a
-                  href="/app"
+                  href="/demo"
                   className="text-xs font-medium py-1.5 px-4 border rounded transition-colors hover:bg-white/5"
                   style={{ borderColor: "#b8963e", color: "#b8963e" }}
                 >
-                  Launch Bondi App
+                  See What RIO Makes Possible for You
                 </a>
                 <a
                   href="/whitepaper"
