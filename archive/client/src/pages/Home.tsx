@@ -58,11 +58,7 @@ export default function Home() {
               What is RIO?
             </h2>
             <p className="text-sm sm:text-base leading-relaxed mb-3" style={{ color: "#d1d5db" }}>
-              RIO is a <strong style={{ color: "#ffffff" }}>governed execution system</strong> that sits between
-              AI, humans, and real-world actions. It translates goals into structured intent, evaluates risk and
-              policy, requires approval when necessary, controls execution, verifies outcomes, and generates
-              cryptographically signed receipts recorded in a tamper-evident ledger.
-              {" "}<strong style={{ color: "#b8963e" }}>The system enforces the rules, not the AI.</strong>
+              At a structural level RIO converts AI actions into human-authorized, policy-controlled, cryptographically verifiable transactions.
             </p>
             <p className="text-sm sm:text-base leading-relaxed" style={{ color: "#d1d5db" }}>
               Built on a three-loop architecture {"\u2014"}{" "}
@@ -148,7 +144,7 @@ export default function Home() {
                 className="text-sm sm:text-base leading-relaxed"
                 style={{ color: "#d1d5db" }}
               >
-                RIO is a governed execution system that sits between AI, humans, and real-world actions. It translates goals into structured intent, evaluates risk and policy, requires approval when necessary, controls execution, verifies outcomes, and generates cryptographically signed receipts recorded in a tamper-evident ledger. The system enforces the rules, not the AI. Built on a three-loop architecture — Intake (goal → intent), Governance (policy → approval → execution → verification), and Learning (ledger → policy improvement) — RIO creates a closed-loop system where every action is authorized, executed, verified, recorded, and used to improve future decisions.
+                At a structural level RIO converts AI actions into human-authorized, policy-controlled, cryptographically verifiable transactions.
               </p>
             </div>
 

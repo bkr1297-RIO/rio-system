@@ -534,14 +534,7 @@ export default function GetStarted() {
               className="text-sm sm:text-base leading-relaxed"
               style={{ color: "#d1d5db" }}
             >
-              RIO is a governed execution system that sits between AI, humans, and
-              real-world actions. It translates goals into structured intent, evaluates
-              risk and policy, requires approval when necessary, controls execution,
-              verifies outcomes, and generates cryptographically signed receipts recorded
-              in a tamper-evident ledger.{" "}
-              <span className="font-bold" style={{ color: "#b8963e" }}>
-                The system enforces the rules, not the AI.
-              </span>
+              At a structural level RIO converts AI actions into human-authorized, policy-controlled, cryptographically verifiable transactions.
             </p>
           </div>
 
