@@ -7,8 +7,13 @@
   <a href="https://github.com/bkr1297-RIO/rio-receipt-protocol">Receipt Protocol</a> &middot;
   <a href="https://rio-gateway.onrender.com/health">Gateway Status</a> &middot;
   <a href="https://riodemo-ux2sxdqo.manus.space">Live Demo</a> &middot;
+  <a href="https://riodemo-ux2sxdqo.manus.space/ask">Ask Bondi</a> &middot;
   <a href="docs/ARCHITECTURE_v2.7.md">Architecture</a> &middot;
   <a href="docs/whitepapers/RIO_White_Paper_v2.md">White Paper</a>
+</p>
+
+<p align="center">
+  <a href="https://riodemo-ux2sxdqo.manus.space/ask"><img src="https://img.shields.io/badge/Ask%20Bondi-Implementation%20Assistant-blue" alt="Ask Bondi" /></a>
 </p>
 
 ---
@@ -20,6 +25,17 @@ RIO is a governed execution system that sits between AI agents, humans, and real
 > **AI proposes. Human approves. System executes. System records.**
 
 The system enforces the rules — not the AI. Execution without approval is structurally impossible.
+
+---
+
+## Ask Bondi (Implementation Assistant)
+
+Have questions about how to implement RIO?
+
+> Don't want to read the docs?
+> Ask Bondi → https://riodemo-ux2sxdqo.manus.space/ask
+
+Ask anything about receipt protocol, gateway integration, governed action flow, or end-to-end implementation. Bondi provides step-by-step, developer-ready answers.
 
 ---
 
