@@ -573,7 +573,7 @@ router.post("/intents/:id/confirm", requireScope("write"), requireRole("executor
 // POST /api/v1/intents/:id/receipt — Generate receipt
 // Scope: read
 // ---------------------------------------------------------------------------
-router.post("/intents/:id/receipt", requireScope("read"), requireRole("executor", "auditor"), (req, res) => {
+router.post("/intents/:id/receipt", requireScope("read"), requireRole("executor", "auditor"), async (req, res) => {
   try {
     const intent_id = req.params.id;
     const intent = getIntent(intent_id);
