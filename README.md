@@ -18,13 +18,64 @@
 
 ---
 
-## What Is RIO
+## What RIO Is
 
-RIO is a governed execution system that sits between AI agents, humans, and real-world actions. It translates goals into structured intent, evaluates risk against policy, requires human approval when necessary, controls execution through single-use tokens, and generates cryptographically signed receipts recorded in a tamper-evident ledger.
+> **RIO converts AI actions into human-authorized, policy-controlled, cryptographically verifiable transactions.**
 
-> **AI proposes. Human approves. System executes. System records.**
+RIO is a governed execution protocol. Every action follows a fixed loop:
 
-The system enforces the rules — not the AI. Execution without approval is structurally impossible.
+```
+Intent → Govern → Approve → Execute → Receipt → Ledger
+```
+
+This is enforced, not suggested. The system enforces the rules — not the AI. There is no code path from intent to execution that bypasses governance.
+
+---
+
+## Three Views of the Same System
+
+RIO is defined in three complementary ways. They are not different systems — they describe the same system completely.
+
+### 1. Invariants (What Cannot Break)
+
+| # | Rule |
+|---|------|
+| 1 | Human is final authority |
+| 2 | No execution without approval (when required) |
+| 3 | Every action produces a receipt |
+| 4 | Every receipt is written to a ledger |
+| 5 | System fails closed |
+| 6 | Independent verification is always possible |
+| 7 | Roles are strictly separated |
+
+### 2. Lifecycle (How It Runs)
+
+```
+Observe → Analyze → Plan → Govern → Approve → Execute → Record → Prove → Learn
+```
+
+Governance happens before execution. Proof happens after execution. Learning is controlled and auditable.
+
+### 3. Layers (What Exists)
+
+| Layer | Function |
+|-------|----------|
+| Authority | Human |
+| Governance | Policy Engine |
+| Execution | Gateway |
+| Witness | Receipt + Ledger |
+| Learning | Feedback Loop |
+| Stress Testing | Failure Analysis |
+| Stabilization | Convergence / Invariants |
+| System Grammar | Architecture + Rules |
+
+---
+
+## What This Means
+
+This system does not trust AI. It controls what AI is allowed to do, requires explicit approval when needed, and produces verifiable proof of every action. If it cannot be approved, logged, and verified — it does not execute.
+
+For a complete orientation, see [How to Understand RIO](docs/HOW_TO_UNDERSTAND_RIO.md) and [System Overview](docs/SYSTEM_OVERVIEW.md).
 
 ---
 
@@ -32,8 +83,7 @@ The system enforces the rules — not the AI. Execution without approval is stru
 
 Have questions about how to implement RIO?
 
-> Don't want to read the docs?
-> Ask Bondi → https://riodemo-ux2sxdqo.manus.space/ask
+> Ask Bondi → [https://riodemo-ux2sxdqo.manus.space/ask](https://riodemo-ux2sxdqo.manus.space/ask)
 
 Ask anything about receipt protocol, gateway integration, governed action flow, or end-to-end implementation. Bondi provides step-by-step, developer-ready answers.
 
