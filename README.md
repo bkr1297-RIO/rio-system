@@ -289,6 +289,18 @@ This repository (rio-system) is the reference implementation and full governance
 
 ---
 
+## Memory Layer (MANTIS)
+
+The complete build history of RIO is available as a structured conversation corpus — 120 sessions spanning February to April 2026. This is the system's memory: queryable context and provenance, not training data and not authority.
+
+- **Location:** `/data/conversations_export_2026-04-07.json`
+- **Purpose:** Retrieval, grounding, and audit — any agent can query prior decisions and rationale
+- **Boundary:** Memory informs. It does not decide, approve, or execute. Governance remains separate.
+
+See [docs/MEMORY_LAYER.md](docs/MEMORY_LAYER.md) for the full definition.
+
+---
+
 ## Status and Roadmap
 
 ### What's Built
