@@ -1,6 +1,7 @@
 <p align="center">
   <strong>RIO — Runtime Intelligence Orchestration</strong><br>
-  Governance infrastructure for AI systems
+  RIO is a control plane that turns AI actions into approved, auditable transactions.<br>
+  AI can propose. It cannot act without human approval. The system enforces this at runtime.
 </p>
 
 <p align="center">
@@ -359,6 +360,29 @@ All decisions remain:
 See:
 - /docs/spec/state-aware-governance.md
 - /spec/policy_input_schema.json
+
+---
+
+## System Scope — Current vs Planned
+
+### Currently Implemented
+- RIO governance engine
+- Proposal → approval → execution → receipt → ledger
+- Cryptographic proof system
+
+### Defined but Not Implemented
+- Atlas (SAS) observation layer
+- State-aware governance inputs
+
+### Design Principle
+
+Atlas is intentionally decoupled.
+
+- Atlas observes (zero authority)
+- RIO governs (execution control)
+- Human bridges between them
+
+This separation is deliberate and enforced.
 
 ---
 
