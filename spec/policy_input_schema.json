@@ -1,0 +1,15 @@
+{
+  "intent": "...",
+  "state": {
+    "activation_level": "low | medium | high",
+    "stability": "stable | unstable",
+    "coherence": "aligned | mixed | fragmented"
+  },
+  "integrity": {
+    "authority_drift_risk": "low | medium | high",
+    "ambiguity_level": "low | medium | high"
+  },
+  "risk": {
+    "impact": "low | medium | high | critical"
+  }
+}

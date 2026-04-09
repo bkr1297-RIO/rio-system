@@ -1,0 +1,11 @@
+{
+  "receipt": {
+    "intent_hash": "...",
+    "decision": "...",
+    "state_snapshot": {},
+    "risk_snapshot": {},
+    "timestamp": "...",
+    "signature": "...",
+    "ledger_hash": "..."
+  }
+}

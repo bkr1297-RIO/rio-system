@@ -342,6 +342,26 @@ This file represents the minimal, portable, implementation-ready signal of RIO.
 
 ---
 
+## State-Aware Governance (vNext)
+
+RIO now supports structured state input for governance decisions.
+
+State is:
+- Explicit
+- Non-authoritative
+- User-mediated
+
+All decisions remain:
+- Deterministic
+- Auditable
+- Human-approved
+
+See:
+- /docs/spec/state-aware-governance.md
+- /spec/policy_input_schema.json
+
+---
+
 ## Status and Roadmap
 
 ### What's Built
