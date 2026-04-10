@@ -1,18 +1,25 @@
 {
-  "updated_at": "2026-04-10T19:30:00Z",
+  "updated_at": "2026-04-10T19:45:00Z",
   "updated_by": "MANNY",
   "system_state": "OPERATIONAL",
   "last_build": {
-    "commit": "c5d2ff7",
-    "description": "Azure Integration Layer — Enterprise-Lite Pilot",
+    "commit": "62fb8ba",
+    "description": "Coordination Surface — shared task board replaces clipboard relay",
     "repo": "rio-system",
-    "timestamp": "2026-04-10T19:05:00Z"
+    "timestamp": "2026-04-10T19:35:00Z"
+  },
+  "coordination_surface": {
+    "status": "ACTIVE",
+    "issue_templates": ["TASK", "RESULT", "APPROVAL"],
+    "labels": ["task", "pending", "result", "needs-review", "approval", "manny", "bondi", "gemini", "claude", "now", "next", "later"],
+    "guide": "docs/coordination-surface.md",
+    "task_board": "https://github.com/bkr1297-RIO/rio-system/issues"
   },
   "repos": {
     "rio-system": {
       "status": "ACTIVE",
-      "last_commit": "c5d2ff7",
-      "purpose": "Running system — gateway, monitor, governance, packets"
+      "last_commit": "62fb8ba",
+      "purpose": "Running system — gateway, monitor, governance, packets, coordination"
     },
     "rio-protocol": {
       "status": "ACTIVE",
@@ -32,7 +39,7 @@
     "violations": 0
   },
   "agents": {
-    "manny": { "role": "Builder", "status": "ACTIVE", "last_action": "Azure integration deployed" },
+    "manny": { "role": "Builder", "status": "ACTIVE", "last_action": "Coordination surface deployed" },
     "bondi": { "role": "Strategist", "status": "ACTIVE", "last_action": "Executive Receipt issued" },
     "gemini": { "role": "Librarian", "status": "ACTIVE", "last_action": "MANTIS Dashboard updated" },
     "claude": { "role": "Architect", "status": "ACTIVE", "last_action": "Coordination surface spec" }
@@ -43,6 +50,7 @@
   ],
   "next_actions": [
     "Brian: Follow Azure Integration Guide (docs/azure-integration-guide.md)",
-    "Brian: Upload .github/workflows/notify-azure.yml via GitHub web UI"
+    "Brian: Upload .github/workflows/notify-azure.yml via GitHub web UI",
+    "All agents: Use GitHub Issues for task coordination going forward"
   ]
 }
