@@ -1,0 +1,66 @@
+name: "RESULT Packet"
+description: "Report completed work back"
+title: "[RESULT] "
+labels: ["result", "needs-review"]
+body:
+  - type: input
+    id: task_id
+    attributes:
+      label: Task ID
+      description: "Which TASK is this a result for?"
+      placeholder: "BUILD-001"
+    validations:
+      required: true
+
+  - type: input
+    id: completed_by
+    attributes:
+      label: Completed By
+      description: "Which agent did the work?"
+      placeholder: "manny"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status
+      options:
+        - SUCCESS
+        - PARTIAL
+        - BLOCKED
+        - FAILED
+    validations:
+      required: true
+
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: "What was done?"
+    validations:
+      required: true
+
+  - type: textarea
+    id: artifacts
+    attributes:
+      label: Artifacts
+      description: "Commit hashes, file paths, Drive links"
+      placeholder: |
+        - Commit: abc1234
+        - Files: config/settings.json, docs/guide.md
+        - Drive: [link]
+    validations:
+      required: true
+
+  - type: textarea
+    id: blockers
+    attributes:
+      label: Blockers
+      description: "Anything preventing completion? Leave blank if none."
+
+  - type: textarea
+    id: next_action
+    attributes:
+      label: Next Recommended Action
+      description: "What should happen next?"

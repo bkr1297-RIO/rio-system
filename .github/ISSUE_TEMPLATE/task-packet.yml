@@ -1,0 +1,69 @@
+name: "TASK Packet"
+description: "Propose work for an agent to do"
+title: "[TASK] "
+labels: ["task", "pending"]
+body:
+  - type: input
+    id: task_id
+    attributes:
+      label: Task ID
+      description: "Short unique ID (e.g., BUILD-007)"
+      placeholder: "BUILD-001"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: assigned_to
+    attributes:
+      label: Assigned To
+      description: "Which agent should do this work?"
+      options:
+        - manny (Builder)
+        - bondi (Strategist)
+        - gemini (Librarian)
+        - claude (Architect)
+        - brian (Sovereign)
+    validations:
+      required: true
+
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objective
+      description: "What needs to happen? Be specific."
+      placeholder: "Update README.md to include the M.A.N.T.I.S. acronym"
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: Context
+      description: "Links to files, commits, or docs that provide background"
+      placeholder: |
+        - Repo: rio-system
+        - Related commit: abc1234
+        - Drive doc: [link]
+
+  - type: textarea
+    id: definition_of_done
+    attributes:
+      label: Definition of Done
+      description: "How do we know this is complete?"
+      placeholder: |
+        - [ ] File created/modified
+        - [ ] Tests pass
+        - [ ] Commit hash provided
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      options:
+        - now
+        - next
+        - later
+    validations:
+      required: true

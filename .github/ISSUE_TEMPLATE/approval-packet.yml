@@ -1,0 +1,46 @@
+name: "APPROVAL Packet"
+description: "Authorize or reject a proposed action"
+title: "[APPROVAL] "
+labels: ["approval"]
+body:
+  - type: input
+    id: task_id
+    attributes:
+      label: Task ID
+      description: "Which TASK or RESULT is this approving?"
+      placeholder: "BUILD-001"
+    validations:
+      required: true
+
+  - type: input
+    id: approved_by
+    attributes:
+      label: Approved By
+      description: "Who is authorizing this? (Should be brian)"
+      placeholder: "brian"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: decision
+    attributes:
+      label: Decision
+      options:
+        - APPROVED
+        - REJECTED
+        - REVISE
+    validations:
+      required: true
+
+  - type: textarea
+    id: conditions
+    attributes:
+      label: Conditions
+      description: "Any conditions on the approval? Scope limits?"
+      placeholder: "Approved as-is, no scope expansion"
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Notes
+      description: "Additional context for the decision"
