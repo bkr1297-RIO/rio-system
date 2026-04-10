@@ -294,15 +294,22 @@ This repository (rio-system) is the reference implementation and full governance
 
 ---
 
-## Memory Layer (MANTIS)
+## Memory Layer (M.A.N.T.I.S.)
+
+**M.A.N.T.I.S.** — **M**emory, **A**udit, **N**otification, **T**racking, **I**ntegrity, **S**ynchronization.
+
+The observation and recording layer of the RIO system. M.A.N.T.I.S. sees and records all actions and data within the system. If an event is not recorded by M.A.N.T.I.S., it is considered as if it did not happen.
 
 The complete build history of RIO is available as a structured conversation corpus — 120 sessions spanning February to April 2026. This is the system's memory: queryable context and provenance, not training data and not authority.
 
 - **Location:** `/data/conversations_export_2026-04-07.json`
 - **Purpose:** Retrieval, grounding, and audit — any agent can query prior decisions and rationale
 - **Boundary:** Memory informs. It does not decide, approve, or execute. Governance remains separate.
+- **Integrity:** `rio_monitor.py` performs SHA-256 verification of all governance artifacts. Mechanical Guard active, fail-closed.
 
 See [docs/MEMORY_LAYER.md](docs/MEMORY_LAYER.md) for the full definition.
+
+> *Governance is the floor, not the ceiling.*
 
 ---
 
