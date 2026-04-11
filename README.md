@@ -112,7 +112,7 @@ RIO is designed for any environment where AI agents take real-world actions that
 |----------|-------------|
 | **Governed AI Assistants** | Personal or enterprise AI agents that propose actions (send email, schedule meeting, make payment) but cannot execute without human approval |
 | **Enterprise Compliance** | AI systems in regulated industries (finance, healthcare, legal) that need provable audit trails for every automated decision |
-| **Multi-Agent Orchestration** | Coordination layers where multiple AI agents propose actions through a single governance pipeline with unified policy enforcement |
+| **Multi-Agent Coordination** | Coordination layers where multiple AI agents propose actions through a single governance pipeline with unified policy enforcement |
 | **Autonomous Workflow Automation** | Automated business processes where low-risk actions execute automatically while high-risk actions pause for human review |
 | **AI Safety Research** | A reference implementation of structural AI containment — fail-closed execution with cryptographic proof |
 

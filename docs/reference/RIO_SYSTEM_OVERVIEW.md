@@ -1,4 +1,4 @@
-# RIO — Runtime Intelligence Orchestration
+# RIO — Runtime Intelligence Operation
 
 [Back to README.md](../../README.md)
 [RIO Governance Gateway Architecture](../../gateway/ARCHITECTURE.md)
@@ -90,14 +90,14 @@ For a more detailed technical architecture, refer to the [RIO Governance Gateway
 
 | Component | Description |
 |---|---|
-| Intent Service | Records requested action |
-| Policy Engine | Determines if approval required |
+| Bondi Interface (`bondi_interface`) | Human-facing interface, captures and structures intent |
+| Generator (`generator_service`) | Produces structured action proposals |
+| Rio Interceptor (`rio_interceptor`) | Pre-execution interception, risk assessment, routing |
+| Governor (`governor_policy_engine`) | Policy evaluation, determines if approval required |
 | Human Authorization | Approve / Deny |
-| Signature Service | Cryptographic authorization |
-| Execution Gateway | Allows or blocks execution |
-| Receipt Service | Generates proof |
-| Ledger | Tamper-evident log |
-| Audit Log | Records all system events |
+| Execution Gate (`execution_gate`) | Validates token, executes action, produces receipt |
+| Receipt Service (`receipt_service`) | Generates cryptographic proof |
+| Ledger Service (`ledger_service`) | Append-only tamper-evident log |
 
 ---
 

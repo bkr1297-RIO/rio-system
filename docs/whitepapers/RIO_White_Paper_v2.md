@@ -8,7 +8,7 @@
 
 ## Abstract
 
-As AI agents gain the ability to execute real-world actions — sending emails, committing code, transferring funds, modifying infrastructure — the absence of a structural enforcement layer between the agent and the target system creates a class of risk that cannot be addressed by prompt engineering, model alignment, or client-side confirmation dialogs. RIO (Runtime Intelligence Orchestration) is a governed execution protocol that interposes a fail-closed control plane between AI systems and external APIs. Every action must traverse a deterministic pipeline — Intent, Governance, Execution, Receipt — before reaching the target system. The protocol enforces server-side authorization, generates cryptographically signed receipts for every action, and appends those receipts to a tamper-evident hash-chained ledger. This paper describes the protocol specification, the threat model, the reference implementations, and the verification results from two independent codebases totaling over 327 automated tests.
+As AI agents gain the ability to execute real-world actions — sending emails, committing code, transferring funds, modifying infrastructure — the absence of a structural enforcement layer between the agent and the target system creates a class of risk that cannot be addressed by prompt engineering, model alignment, or client-side confirmation dialogs. RIO (Runtime Intelligence Operation) is a governed execution protocol that interposes a fail-closed control plane between AI systems and external APIs. Every action must traverse a deterministic pipeline — Intent, Governance, Execution, Receipt — before reaching the target system. The protocol enforces server-side authorization, generates cryptographically signed receipts for every action, and appends those receipts to a tamper-evident hash-chained ledger. This paper describes the protocol specification, the threat model, the reference implementations, and the verification results from two independent codebases totaling over 327 automated tests.
 
 ---
 
@@ -325,7 +325,7 @@ An AI agent prepares a pull request on GitHub. Under the governance policy, `cre
 
 An AI agent proposes a fund transfer. The action is classified as `critical` risk. The policy engine requires human approval with enhanced verification (MFA or biometric). The approval is time-limited to 60 seconds and bound to the exact transfer parameters. Any modification to the amount, recipient, or account after approval invalidates the signature and blocks execution.
 
-### 10.4 Multi-Agent Orchestration
+### 10.4 Multi-Agent Coordination
 
 Multiple AI agents (planning agent, execution agent, verification agent) operate within a single RIO-governed environment. Each agent submits intents through the same gateway. The policy engine applies agent-specific permissions — the planning agent can draft and recommend, but only the execution agent (with human approval) can perform external actions. All agents' actions are recorded in the same ledger, providing a unified audit trail across the entire agent system.
 

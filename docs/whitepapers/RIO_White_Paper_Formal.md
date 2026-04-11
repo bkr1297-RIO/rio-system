@@ -1,4 +1,4 @@
-# RIO: Runtime Intelligence Orchestration
+# RIO: Runtime Intelligence Operation
 
 ## A Technical White Paper on Governed AI Execution
 
@@ -10,7 +10,7 @@
 
 ## 1. Abstract
 
-Runtime Intelligence Orchestration (RIO) is a fail-closed authorization and audit runtime that governs the execution of actions performed by autonomous AI agents. RIO decouples the intelligence of an AI system from the authority to execute real-world actions by inserting a structural governance layer between the agent and the tools it controls. Every action follows a deterministic pipeline: intent is created, policy is evaluated, human approval is obtained when required, execution is gated, outcomes are verified, and a cryptographically signed receipt is appended to a tamper-evident ledger. The system enforces governance structurally at runtime rather than relying on model alignment, prompt engineering, or advisory guardrails.
+Runtime Intelligence Operation (RIO) is a fail-closed authorization and audit runtime that governs the execution of actions performed by autonomous AI agents. RIO decouples the intelligence of an AI system from the authority to execute real-world actions by inserting a structural governance layer between the agent and the tools it controls. Every action follows a deterministic pipeline: intent is created, policy is evaluated, human approval is obtained when required, execution is gated, outcomes are verified, and a cryptographically signed receipt is appended to a tamper-evident ledger. The system enforces governance structurally at runtime rather than relying on model alignment, prompt engineering, or advisory guardrails.
 
 ---
 
@@ -158,7 +158,7 @@ RIO applies to any scenario where an AI agent performs actions with real-world c
 
 | Term | Definition |
 |---|---|
-| **RIO** | Runtime Intelligence Orchestration. A fail-closed governance runtime for AI agent execution. |
+| **RIO** | Runtime Intelligence Operation. A fail-closed governance runtime for AI agent execution. |
 | **Intent** | A structured, immutable record of a proposed action submitted by an AI agent. |
 | **Execution Gateway** | The server-side enforcement point that verifies approvals and dispatches actions to connectors. |
 | **Connector** | An execution module that interfaces with an external system (Gmail, Drive, GitHub, etc.). |

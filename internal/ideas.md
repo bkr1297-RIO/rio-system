@@ -1,7 +1,7 @@
 # RIO Demo Site — Design Brainstorm
 
 ## Context
-A demo website for RIO (Runtime Intelligence Orchestration) that shows how the system ensures AI/automated systems cannot execute real-world actions without human approval. The landing page is the "front door" to three demos. Design must feel like secure infrastructure, aerospace, banking, or control systems — not a playful app.
+A demo website for RIO (Runtime Intelligence Operation) that shows how the system ensures AI/automated systems cannot execute real-world actions without human approval. The landing page is the "front door" to three demos. Design must feel like secure infrastructure, aerospace, banking, or control systems — not a playful app.
 
 ---
 

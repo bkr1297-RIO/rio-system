@@ -9,7 +9,7 @@
 
 ## 1. Core Concepts
 
-RIO (Responsible Intelligence Orchestration) is a governance protocol for AI agent actions. Every action must be proposed, risk-assessed, approved by a human, executed with a signed receipt, and logged to a tamper-evident ledger.
+RIO (Runtime Intelligence Operation) is a governance protocol for AI agent actions. Every action must be proposed, risk-assessed, approved by a human, executed with a signed receipt, and logged to a tamper-evident ledger.
 
 **Fundamental Invariant:** No action executes without human authority, cryptographic proof, and an immutable record.
 

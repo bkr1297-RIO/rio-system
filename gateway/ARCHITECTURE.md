@@ -11,7 +11,7 @@ The RIO Gateway is a standalone Node.js Express service that sits between AI sys
 ## Pipeline
 
 ```
-Intent → Governance → Risk → Authorization → Execution → Receipt → Ledger → Verification
+Human → Bondi → Generator → Rio → Governor → Gate → Action → Receipt + Ledger
 ```
 
 ## API Endpoints
@@ -38,18 +38,18 @@ Intent → Governance → Risk → Authorization → Execution → Receipt → L
 
 - `server.mjs` — Express server, middleware, route mounting
 - `routes/` — One file per endpoint group
-- `governance/` — Policy engine, risk evaluator, config loader
-- `ledger/` — Append-only hash-chained ledger (SHA-256)
-- `receipts/` — Receipt generation and verification
+- `governance/` — `governor_policy_engine` — Policy evaluation, risk classification, config loader
+- `ledger/` — `ledger_service` — Append-only hash-chained ledger (SHA-256)
+- `receipts/` — `receipt_service` — Cryptographic receipt generation and verification
 - `config/rio/` — Governance configuration JSON files
 
 ## Three-Power Separation
 
-RIO implements a three-power separation model to ensure robust governance and prevent single points of failure. This model separates the functions of **Intent**, **Governance**, and **Execution**.
+RIO implements a three-power separation model to ensure robust governance and prevent single points of failure. This model separates the functions of **Interception**, **Governance**, and **Execution**.
 
-*   **Intent:** AI systems propose actions.
-*   **Governance:** Human authorities review and approve/deny actions.
-*   **Execution:** The RIO Gateway executes approved actions.
+*   **Rio Interceptor (`rio_interceptor`):** Intercepts proposed actions, assesses risk, routes to governance. Cannot approve or execute.
+*   **Governor (`governor_policy_engine`):** Evaluates policy, determines approval requirements. Cannot execute.
+*   **Execution Gate (`execution_gate`):** Validates tokens, dispatches authorized actions. Cannot approve. Must fail closed.
 
 For more details, refer to the [Three-Power Separation document](spec/THREE_POWER_SEPARATION.md).
 

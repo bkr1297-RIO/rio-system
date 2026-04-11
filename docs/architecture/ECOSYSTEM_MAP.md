@@ -99,7 +99,7 @@ The system contains multiple routing layers, each responsible for a different ty
 |---|---|---|---|
 | Human Authority | Final decision | Users | Customer |
 | Governance | Policy + approval | RIO | Okta / Auth0 / IAM |
-| Orchestration | Task routing | Chief of Staff | Zapier / Make / Airflow |
+| Coordination | Task routing | Chief of Staff | Zapier / Make / Airflow |
 | Intelligence | AI proposals | Agents | OpenAI / Anthropic / Google |
 | Execution | Do the action | Gateway | APIs (Google, Slack, etc.) |
 | Data | Where data lives | External systems | Google / Microsoft / Salesforce |

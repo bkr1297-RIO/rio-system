@@ -24,7 +24,7 @@ Intelligence	AI Models	Propose, plan, analyze
 Governance	Gateway	Approve, issue tokens, sign receipts, write ledger
 Execution	Manus	Execute actions using valid token only
 Interface	ONE / Demo App	Display, collect input, show receipts
-Orchestration	Agent Token App (Replit)	Route tasks between systems
+Coordination	Agent Token App (Replit)	Route tasks between systems
 Audit	COS / Auditor	Verify receipts and ledger
 
 No system may perform more than one authority role in the same action.

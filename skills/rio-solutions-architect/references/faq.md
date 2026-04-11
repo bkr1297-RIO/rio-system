@@ -14,7 +14,7 @@
 
 ### "What is RIO exactly?"
 
-RIO (Responsible Intelligence Orchestration) is a governance layer for AI agent actions. It sits between AI agents and the real world. When an AI agent wants to do something — send an email, delete a file, transfer money, call an API — RIO assesses the risk, routes it for human approval if needed, executes it with authorization, and generates a cryptographic receipt proving what happened. Think of it as the compliance and audit layer for AI operations.
+RIO (Runtime Intelligence Operation) is a governance layer for AI agent actions. It sits between AI agents and the real world. When an AI agent wants to do something — send an email, delete a file, transfer money, call an API — RIO assesses the risk, routes it for human approval if needed, executes it with authorization, and generates a cryptographic receipt proving what happened. Think of it as the compliance and audit layer for AI operations.
 
 ### "How is this different from just adding approval workflows?"
 

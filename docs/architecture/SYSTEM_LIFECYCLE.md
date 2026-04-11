@@ -10,7 +10,7 @@ The RIO system operates on a continuous, 9-step lifecycle loop. This loop ensure
 
 | Step | Action | Component | Description |
 |---|---|---|---|
-| 1 | **Observe** | Mantis / Observer | Monitors environment, receives signals, detects anomalies. |
+| 1 | **Observe** | Rio Interceptor | Monitors environment, receives signals, detects anomalies. |
 | 2 | **Analyze** | AI / Intelligence | Processes observations, identifies patterns, determines goals. |
 | 3 | **Plan** | AI / Intelligence | Translates goals into structured, proposed intents. |
 | 4 | **Govern** | RIO Gateway | Evaluates intent against policy, calculates risk, determines approval requirements. |

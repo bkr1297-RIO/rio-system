@@ -12,16 +12,17 @@ Every action in RIO follows the same fixed sequence. There are no exceptions and
 
 | Step | What Happens | Component |
 |------|-------------|-----------|
-| 1 | AI proposes intent | Observer (Mantis) |
-| 2 | Policy evaluates risk | Governance Engine |
-| 3 | Human approves (if required) | Governor (via ONE) |
-| 4 | Gateway executes | Executor (Gateway) |
-| 5 | Receipt is generated | Receipt Protocol |
-| 6 | Ledger records proof | Ledger (hash-chained) |
-| 7 | System learns (controlled) | Feedback Loop |
+| 1 | Human states intent | Bondi Interface (`bondi_interface`) |
+| 2 | Structured action generated | Generator (`generator_service`) |
+| 3 | Intent intercepted, risk assessed | Rio Interceptor (`rio_interceptor`) |
+| 4 | Policy evaluates risk | Governor (`governor_policy_engine`) |
+| 5 | Human approves (if required) | Human via ONE |
+| 6 | Gate validates token, executes | Execution Gate (`execution_gate`) |
+| 7 | Receipt is generated | Receipt Service (`receipt_service`) |
+| 8 | Ledger records proof | Ledger Service (`ledger_service`) |
 
 ```
-Intent → Govern → Approve → Execute → Receipt → Ledger
+Human → Bondi → Generator → Rio → Governor → Gate → Action → Receipt + Ledger
 ```
 
 ---
@@ -32,9 +33,9 @@ No single component can both decide and act.
 
 | Power | Role | Can Do | Cannot Do |
 |-------|------|--------|-----------|
-| Observer (Mantis) | See everything | Ingest goals, structure intent, assess risk | Approve or execute |
-| Governor | Decide | Evaluate policy, issue/deny approval tokens | Execute |
-| Executor (Gateway) | Act | Execute with valid token, produce receipt | Approve |
+| Rio Interceptor (`rio_interceptor`) | Intercept | Receive intents, assess risk, route to governance | Approve or execute |
+| Governor (`governor_policy_engine`) | Decide | Evaluate policy, issue/deny approval tokens | Execute |
+| Execution Gate (`execution_gate`) | Act | Validate token, dispatch action, produce receipt | Approve |
 
 This separation is architectural, not advisory. It is enforced by the Gateway at runtime.
 
@@ -67,11 +68,19 @@ The receipt protocol is the proof layer — open standard, zero dependencies. Th
 
 ```
 ┌─────────────────────────────────────────────┐
-│  AI Agent (proposes intent)                 │
+│  Human (states intent via Bondi)            │
 └──────────────────┬──────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────┐
-│  Policy Engine (risk + rules)               │
+│  Generator (structured action proposal)     │
+└──────────────────┬──────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────┐
+│  Rio Interceptor (risk + routing)           │
+└──────────────────┬──────────────────────────┘
+                   │
+┌──────────────────▼──────────────────────────┐
+│  Governor (policy evaluation)               │
 └──────────────────┬──────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────┐
@@ -79,11 +88,7 @@ The receipt protocol is the proof layer — open standard, zero dependencies. Th
 └──────────────────┬──────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────┐
-│  Gateway (token validation + execution)     │
-└──────────────────┬──────────────────────────┘
-                   │
-┌──────────────────▼──────────────────────────┐
-│  Connectors (Gmail, Twilio, etc.)           │
+│  Execution Gate (token + dispatch)          │
 └──────────────────┬──────────────────────────┘
                    │
 ┌──────────────────▼──────────────────────────┐

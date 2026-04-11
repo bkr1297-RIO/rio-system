@@ -12,7 +12,7 @@ The RIO Gateway is a standalone Node.js Express service that sits between AI sys
 ## Pipeline
 
 ```
-Intake → Observation → Policy Evaluation → Approval → Execution → Verification → Ledger
+Human → Bondi → Generator → Rio → Governor → Gate → Action → Receipt + Ledger
 ```
 
 ---
@@ -161,17 +161,17 @@ gateway/
 │   ├── RIO_POLICY.json
 │   ├── RIO_ROLE_MANUS.json
 │   └── RIO_ROLE_GEMINI.json
-├── governance/                 # Policy engine
+├── governance/                 # governor_policy_engine
 │   ├── config.mjs              # Config loader (fail-closed)
 │   ├── policy.mjs              # Policy evaluator + kill switch
 │   └── intents.mjs             # Intent state machine
-├── execution/                  # Execution gate
+├── execution/                  # execution_gate
 │   └── gate.mjs                # Token validation, single-use enforcement
-├── ledger/                     # Append-only hash-chained ledger
+├── ledger/                     # ledger_service — append-only hash-chained
 │   ├── ledger-pg.mjs           # PostgreSQL-backed ledger
 │   ├── ledger.mjs              # In-memory ledger (development)
 │   └── init.sql                # Database schema
-├── receipts/                   # Cryptographic receipt generation
+├── receipts/                   # receipt_service — cryptographic receipt generation
 │   └── receipts.mjs            # Ed25519 signatures, Receipt Spec v2.1
 ├── security/                   # Security middleware
 │   └── auth.mjs                # Bearer auth, replay prevention
@@ -200,7 +200,7 @@ gateway/
 4. All executions must generate receipts
 5. All receipts must be stored in ledger
 6. System fails closed on uncertainty
-7. Three-Power Separation: Observer, Governor, Executor are architecturally separate
+7. Three-Power Separation: Rio Interceptor, Governor (Policy Engine), Execution Gate are architecturally separate
 8. No single component can both decide and act
 
 ---

@@ -10,7 +10,7 @@
 
 ## 1. System Overview
 
-RIO (Relational Intent Orchestration) is a governance-first intent execution gateway. It sits between AI agents, humans, and real-world actions. Every action is authorized, executed, verified, recorded, and used to improve future decisions.
+RIO (Runtime Intelligence Operation) is a governance-first intent execution gateway. It sits between AI agents, humans, and real-world actions. Every action is authorized, executed, verified, recorded, and used to improve future decisions.
 
 The system enforces a **fail-closed architecture**: nothing executes unless explicitly approved through the governance pipeline. The default state is denial.
 
@@ -29,7 +29,7 @@ These invariants are structural, not advisory. They cannot be overridden by conf
 | 5 | Hash chain is contiguous | Each entry's `prev_hash` must equal the preceding entry's `hash` |
 | 6 | Ed25519 signatures bind identity to decisions | When `ED25519_MODE=required`, unsigned authorizations are rejected |
 | 7 | Replay prevention on all mutations | `request_timestamp` + `request_nonce` validated on every POST |
-| 8 | Three-Power Separation | Observer, Governor, and Executor cannot cross boundaries |
+| 8 | Three-Power Separation | Rio Interceptor, Governor (Policy Engine), and Execution Gate cannot cross boundaries |
 
 ---
 
@@ -59,9 +59,9 @@ Each stage appends an entry to the hash-chained ledger. The pipeline is strictly
 
 The system separates governance authority into three independent powers:
 
-### Observer (Mantis)
+### Rio Interceptor (`rio_interceptor`)
 
-The observation layer. Receives raw intents, normalizes them, attaches metadata, performs advisory risk classification, and forwards to the Governor.
+The interception layer. Receives raw intents, normalizes them, attaches metadata, performs advisory risk classification, and forwards to the Governor. Can pause, flag, or escalate — but cannot approve or execute.
 
 **Capabilities:** Intent reception, format normalization, metadata attachment, advisory risk classification, replay prevention, ledger logging (submit entries).
 
@@ -69,7 +69,7 @@ The observation layer. Receives raw intents, normalizes them, attaches metadata,
 
 **Implementation:** `gateway/governance/intake.mjs`, `gateway/governance/intents.mjs`, `gateway/routes/index.mjs` (POST /intent)
 
-### Governor (Policy Engine)
+### Governor (`governor_policy_engine`)
 
 The decision layer. Evaluates intents against the constitution and policy. Determines risk level and whether human authorization is required.
 
@@ -79,9 +79,9 @@ The decision layer. Evaluates intents against the constitution and policy. Deter
 
 **Implementation:** `gateway/governance/policy.mjs`, `gateway/governance/config.mjs`, `gateway/routes/index.mjs` (POST /govern)
 
-### Executor (Connector Layer)
+### Execution Gate (`execution_gate`)
 
-The action layer. Dispatches authorized intents to target systems using single-use execution tokens.
+The action layer. Validates single-use tokens and dispatches authorized intents to target systems. This is the hard final gate — it must fail closed.
 
 **Capabilities:** Token validation, connector dispatch, result capture, execution confirmation.
 
