@@ -1,5 +1,5 @@
 <p align="center">
-  <strong>RIO — Runtime Intelligence Orchestration</strong><br>
+  <strong>RIO — Runtime Intelligence Operation</strong><br>
   RIO is a control plane that turns AI actions into approved, auditable transactions.<br>
   AI can propose. It cannot act without human approval. The system enforces this at runtime.
 </p>
@@ -30,7 +30,7 @@
 RIO is a governed execution protocol. Every action follows a fixed loop:
 
 ```
-Intent → Govern → Approve → Execute → Receipt → Ledger
+Human → Bondi → Generator → Rio → Governor → Gate → Action → Receipt + Ledger
 ```
 
 This is enforced, not suggested. The system enforces the rules — not the AI. There is no code path from intent to execution that bypasses governance.
@@ -126,11 +126,11 @@ For enterprise deployment models, ROI analysis, and case studies, see the [Enter
 
 RIO enforces separation of powers at the architectural level. No single component can both decide and act.
 
-**Observer (Mantis)** — Ingests goals, structures intent, assesses risk, and monitors outcomes. The Observer sees everything but controls nothing. It cannot approve or execute.
+**Rio Interceptor** — Intercepts every proposed action at the boundary. Structures intent, assesses risk, and routes to governance. The Interceptor sees everything but controls nothing. It cannot approve or execute.
 
-**Governor** — Evaluates intent against policy, applies risk thresholds, and issues or denies approval. The Governor decides but cannot execute. Approval produces a signed token; denial produces a signed record.
+**Governor (Policy Engine)** — Evaluates intent against policy, applies risk thresholds, and issues or denies approval. The Governor decides but cannot execute. Approval produces a signed token; denial produces a signed record.
 
-**Executor** — Receives approved intents with single-use execution tokens. The Executor acts but cannot approve. It verifies the token, executes the action, and produces a cryptographic receipt. If the token is missing, expired, or already used, execution is structurally blocked.
+**Execution Gate** — Receives approved intents with single-use execution tokens. The Gate acts but cannot approve. It verifies the token, executes the action, and produces a cryptographic receipt. If the token is missing, expired, or already used, execution is structurally blocked.
 
 For the full specification, see [Three-Power Separation](spec/THREE_POWER_SEPARATION.md).
 
@@ -139,14 +139,14 @@ For the full specification, see [Three-Power Separation](spec/THREE_POWER_SEPARA
 Every action flows through a deterministic pipeline:
 
 ```
-Intake → Observation → Policy Evaluation → Approval → Execution → Verification → Ledger
+Intake → Interception → Policy Evaluation → Approval → Gate → Verification → Ledger
 ```
 
 1. **Intake** — Goal is received and structured into a typed intent with metadata
-2. **Observation** — Mantis assesses risk level, classifies the action, and enriches context
+2. **Interception** — Rio Interceptor assesses risk level, classifies the action, and enriches context
 3. **Policy Evaluation** — Governor evaluates the intent against the loaded policy set
 4. **Approval** — Human approves or denies (or auto-approval for low-risk actions per policy)
-5. **Execution** — Executor validates the single-use token and performs the action
+5. **Execution** — Gate validates the single-use token and performs the action
 6. **Verification** — Outcome is verified against the original intent
 7. **Ledger** — Cryptographic receipt is generated and appended to the hash-chained ledger
 
@@ -207,7 +207,7 @@ See [VERIFICATION_RESULTS.md](VERIFICATION_RESULTS.md) for detailed results and 
 | Document | Description |
 |----------|-------------|
 | [Architecture v2.7](docs/ARCHITECTURE_v2.7.md) | System architecture, invariants, module map, deployment topology |
-| [Three-Power Separation](spec/THREE_POWER_SEPARATION.md) | Observer / Governor / Executor specification with permission matrix |
+| [Three-Power Separation](spec/THREE_POWER_SEPARATION.md) | Rio Interceptor / Governor / Execution Gate specification with permission matrix |
 | [API Catalog v2.7](docs/API_CATALOG_v2.7.md) | Complete 43-endpoint catalog with auth requirements and examples |
 | [White Paper v2](docs/whitepapers/RIO_White_Paper_v2.md) | Technical white paper on governed execution |
 | [White Paper (Formal)](docs/whitepapers/RIO_White_Paper_Formal.md) | Formal specification of the RIO protocol |
@@ -400,7 +400,7 @@ This separation is deliberate and enforced.
 - Governance pipeline: 7-stage intake-to-ledger flow, production-deployed
 - Gateway: Node.js reference implementation on Render with PostgreSQL
 - Cryptography: Ed25519 signatures, SHA-256 hash chains, single-use tokens
-- Three-Power Separation: Observer, Governor, Executor with enforced boundaries
+- Three-Power Separation: Rio Interceptor, Governor, Execution Gate with enforced boundaries
 - Demo site: Interactive 3-perspective walkthrough at [riodemo-ux2sxdqo.manus.space](https://riodemo-ux2sxdqo.manus.space)
 - Formal specifications: Receipt protocol v2.1, component schemas, policy definitions
 - Open standard: [RIO Receipt Protocol](https://github.com/bkr1297-RIO/rio-receipt-protocol) extracted as standalone repo
