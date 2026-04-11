@@ -1,0 +1,29 @@
+{
+  "receipt_id": "2d2620cc-6c88-4072-a7f0-ec4fa54ef6ad",
+  "timestamp": "2026-04-11T08:56:47.032Z",
+  "event_type": "BLOCK",
+  "email_context": {
+    "subject": "Partnership Opportunity",
+    "hash": "c498a88e9386d07ec40b0a15d01900c0d9f15bfbfaaed7a2c4e2b6d7aa5d2381",
+    "to": "dr.smith@clinic.com"
+  },
+  "policy": {
+    "rule_id": "INDUCEMENT_001",
+    "category": "INDUCEMENT",
+    "confidence": "high"
+  },
+  "decision": {
+    "action": "BLOCK",
+    "reason": "[BLOCK] INDUCEMENT: Direct financial inducement tied to prescribing behavior"
+  },
+  "human": {
+    "approved": false,
+    "approved_by": null,
+    "approval_text": null
+  },
+  "system": {
+    "engine_version": "v1",
+    "policy_mode": "standard",
+    "strictness": "standard"
+  }
+}
