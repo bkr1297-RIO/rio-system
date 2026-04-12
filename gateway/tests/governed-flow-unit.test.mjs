@@ -111,10 +111,12 @@ describe("Principal Email Resolution", async () => {
     assert.equal(principal.primary_role, "root_authority");
   });
 
-  it("resolves Brian's secondary email to I-1", () => {
+  it("resolves riomethod5 email to I-2 (seed email match)", () => {
     const principal = principals.resolvePrincipalByEmail("riomethod5@gmail.com");
     assert.ok(principal, "Should resolve riomethod5@gmail.com to a principal");
-    assert.equal(principal.principal_id, "I-1");
+    // I-2 owns riomethod5@gmail.com in the seed; the KNOWN_EMAIL_ALIASES
+    // fallback to I-1 is only reached if no direct email match exists.
+    assert.equal(principal.principal_id, "I-2");
   });
 
   it("resolves Brian's hotmail email to I-1 (case insensitive)", () => {
@@ -169,13 +171,26 @@ describe("createToken with direct claims (Mode 2)", async () => {
     assert.equal(decoded.picture, "https://example.com/photo.jpg");
   });
 
-  it("creates a token with legacy mode (Mode 1)", () => {
+  it("creates a token with legacy alias (Mode 1 — resolves to email)", () => {
     const token = oauth.createToken("brian.k.rasmussen");
     assert.ok(token, "Token should be created");
 
     const decoded = oauth.verifyToken(token);
     assert.ok(decoded, "Token should be verifiable");
-    assert.equal(decoded.sub, "brian.k.rasmussen");
+    assert.equal(decoded.sub, "bkr1297@gmail.com", "Legacy alias should resolve to email as sub");
+    assert.equal(decoded.email, "bkr1297@gmail.com");
+    assert.equal(decoded.principal_id, "I-1", "Should include principal_id");
+    assert.equal(decoded.auth_method, "passphrase");
+  });
+
+  it("creates a token with email directly (Mode 1)", () => {
+    const token = oauth.createToken("bkr1297@gmail.com");
+    assert.ok(token, "Token should be created");
+
+    const decoded = oauth.verifyToken(token);
+    assert.ok(decoded, "Token should be verifiable");
+    assert.equal(decoded.sub, "bkr1297@gmail.com");
+    assert.equal(decoded.principal_id, "I-1");
     assert.equal(decoded.auth_method, "passphrase");
   });
 

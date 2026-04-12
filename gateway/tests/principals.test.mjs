@@ -12,7 +12,8 @@
  * Test strategy:
  *   - Start Gateway on test port 4402
  *   - Use JWT login to authenticate as Brian (I-1, root_authority)
- *   - Use X-Principal-ID header to simulate different principals
+ *   - Use JWT tokens (via createToken) to simulate different principals
+ *   - X-Principal-ID header has been removed (identity-cleanup, 2026-04-11)
  *   - Verify each endpoint enforces the correct role
  */
 import { describe, it, before } from "node:test";
@@ -20,6 +21,9 @@ import assert from "node:assert/strict";
 
 const BASE = "http://localhost:4402";
 let brianToken = null;
+
+// Principal tokens created via createToken for role-boundary tests
+const principalTokens = {};
 
 // Helper: generate unique nonce
 function nonce() {
@@ -63,10 +67,12 @@ async function apiAsBrian(method, path, body) {
   });
 }
 
-// Helper: make request as a specific principal (via X-Principal-ID header)
+// Helper: make request as a specific principal (via JWT token)
 async function apiAsPrincipal(principalId, method, path, body) {
+  const token = principalTokens[principalId];
+  if (!token) throw new Error(`No token for principal: ${principalId}`);
   return api(method, path, body, {
-    "X-Principal-ID": principalId,
+    Authorization: `Bearer ${token}`,
   });
 }
 
@@ -81,7 +87,7 @@ describe("Area 1: Principal & Role Enforcement", () => {
     // Give the server time to start and seed principals
     await new Promise((r) => setTimeout(r, 2000));
 
-    // Login as Brian to get a JWT token
+    // Login as Brian to get a JWT token (uses legacy alias)
     const loginResult = await api("POST", "/login", {
       user_id: "brian.k.rasmussen",
       passphrase: process.env.RIO_LOGIN_PASSPHRASE || "rio-governed-2026",
@@ -89,7 +95,16 @@ describe("Area 1: Principal & Role Enforcement", () => {
     assert.equal(loginResult.status, 200, "Brian should be able to login");
     brianToken = loginResult.data.token;
     assert.ok(brianToken, "Should receive a JWT token");
-    console.log(`[TEST] Brian authenticated — token received`);
+    // Verify login now resolves to email
+    assert.equal(loginResult.data.email, "bkr1297@gmail.com", "Login should resolve to bkr1297@gmail.com");
+    console.log(`[TEST] Brian authenticated — token received (email: ${loginResult.data.email})`);
+
+    // Create JWT tokens for other principals (X-Principal-ID removed)
+    const { createToken } = await import("../security/oauth.mjs");
+    principalTokens["bondi"] = createToken("bondi", { principal_id: "bondi", role: "proposer", auth_method: "service" });
+    principalTokens["gateway-exec"] = createToken("gateway-exec", { principal_id: "gateway-exec", role: "executor", auth_method: "service" });
+    principalTokens["mantis"] = createToken("mantis", { principal_id: "mantis", role: "auditor", auth_method: "service" });
+    console.log(`[TEST] Principal tokens created for bondi, gateway-exec, mantis`);
   });
 
   // =========================================================================
@@ -369,12 +384,23 @@ describe("Area 1: Principal & Role Enforcement", () => {
   // 9. Unknown principal → 403 (fail-closed)
   // =========================================================================
   describe("Fail-Closed: Unknown Principal", () => {
-    it("X-Principal-ID with unknown ID → 403", async () => {
-      const { status, data } = await apiAsPrincipal("rogue-agent-999", "POST", "/intent", {
+    it("Request with no auth → 403", async () => {
+      const { status, data } = await api("POST", "/intent", {
         action: "test_unknown",
         agent_id: "rogue",
       });
       assert.equal(status, 403, `Expected 403, got ${status}: ${JSON.stringify(data)}`);
+      assert.equal(data.error, "PRINCIPAL_REQUIRED");
+    });
+
+    it("X-Principal-ID header is ignored (removed)", async () => {
+      // Even with a valid principal ID in the header, it should be rejected
+      // because X-Principal-ID resolution has been removed.
+      const { status, data } = await api("POST", "/intent", {
+        action: "test_header_injection",
+        agent_id: "bondi",
+      }, { "X-Principal-ID": "bondi" });
+      assert.equal(status, 403, `Expected 403 — X-Principal-ID should be ignored, got ${status}`);
       assert.equal(data.error, "PRINCIPAL_REQUIRED");
     });
   });
