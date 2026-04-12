@@ -121,9 +121,10 @@ async function start() {
   // ---------------------------------------------------------------------------
 
     // POST /login — Authenticate and receive a JWT token
-  // Supports two modes:
-  //   1. Legacy: user_id in REGISTERED_USERS (e.g., brian.k.rasmussen)
-  //   2. Principal: user_id matches a principal_id (e.g., bondi, gateway-exec)
+  // Supports three resolution paths (tried in order):
+  //   1. Registered-user lookup (email or legacy alias → bkr1297@gmail.com)
+  //   2. Principal-based login (principal_id e.g. I-1, bondi, gateway-exec)
+  //   3. Email → principal resolution (any registered email)
   app.post("/login", (req, res) => {
     const { user_id, passphrase } = req.body;
     if (!user_id) {
@@ -135,22 +136,26 @@ async function start() {
       return res.status(401).json({ error: "Invalid passphrase." });
     }
 
-    // Mode 1: Legacy REGISTERED_USERS lookup
+    // Path 1: Registered-user lookup (email key, with legacy alias support)
     if (isRegistered(user_id)) {
-      const token = createToken(user_id);
       const user = getRegisteredUser(user_id);
-      console.log(`[RIO Gateway] LOGIN: ${user_id} authenticated (legacy)`);
+      // Create token with email as sub and principal_id
+      const token = createToken(user_id);
+      const principalId = user.principal_id || null;
+      console.log(`[RIO Gateway] LOGIN: ${user_id} → ${user.email} authenticated (registered-user, principal: ${principalId})`);
       return res.json({
         status: "authenticated",
-        user_id,
+        user_id: user.email,
         display_name: user.display_name,
+        email: user.email,
         role: user.role,
+        principal_id: principalId,
         token,
         expires_in: "24h",
       });
     }
 
-    // Mode 2: Principal-based login
+    // Path 2: Principal-based login (e.g. I-1, bondi, gateway-exec)
     const principal = getPrincipal(user_id);
     if (principal && principal.status === "active") {
       const token = createToken(principal.principal_id, {
@@ -165,8 +170,32 @@ async function start() {
         status: "authenticated",
         user_id: principal.principal_id,
         display_name: principal.display_name,
+        email: principal.email || null,
         role: principal.primary_role,
         principal_id: principal.principal_id,
+        token,
+        expires_in: "24h",
+      });
+    }
+
+    // Path 3: Email → principal resolution
+    const emailPrincipal = resolvePrincipalByEmail(user_id);
+    if (emailPrincipal && emailPrincipal.status === "active") {
+      const token = createToken(emailPrincipal.principal_id, {
+        email: emailPrincipal.email || user_id,
+        name: emailPrincipal.display_name,
+        role: emailPrincipal.primary_role,
+        principal_id: emailPrincipal.principal_id,
+        auth_method: "passphrase",
+      });
+      console.log(`[RIO Gateway] LOGIN: ${user_id} → ${emailPrincipal.principal_id} authenticated (email→principal)`);
+      return res.json({
+        status: "authenticated",
+        user_id: emailPrincipal.principal_id,
+        display_name: emailPrincipal.display_name,
+        email: emailPrincipal.email || user_id,
+        role: emailPrincipal.primary_role,
+        principal_id: emailPrincipal.principal_id,
         token,
         expires_in: "24h",
       });
@@ -190,6 +219,7 @@ async function start() {
       display_name: req.user.name,
       email: req.user.email,
       role: req.user.role,
+      principal_id: req.user.principal_id || null,
     });
   });
 
