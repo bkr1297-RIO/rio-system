@@ -143,8 +143,11 @@ Verify against receipt `d9dc76a8-ba35-429f-810a-e61e18be33d1`:
 
 | System | URL | Status |
 |--------|-----|--------|
-| Gateway | https://rio-gateway.onrender.com | LIVE |
-| ONE PWA | https://riocommand-glyfckjy.manus.space | LIVE |
+| Gateway v2.9.0 | https://rio-gateway.onrender.com | LIVE |
+| ONE Command Center | https://rio-one.manus.space | LIVE |
+| Email Action Firewall | https://rio-one.manus.space (integrated) | LIVE |
+| Policy Evaluate API | https://rio-one.manus.space/api/policy/evaluate | LIVE |
+| Telegram Webhook | https://rio-one.manus.space/api/telegram/webhook | LIVE |
 
 ---
 
@@ -235,15 +238,27 @@ Verify against receipt `d9dc76a8-ba35-429f-810a-e61e18be33d1`:
 
 ---
 
+## CURRENT STATE (Apr 14)
+
+- **Gateway v2.9.0** live on Render — Policy v2.0.0 active with 14 action classes
+- **Ledger:** 752 entries, 60 epochs, current epoch valid (4 entries, chain valid)
+- **Email Action Firewall v1** shipped — policy engine blocks/warns/passes emails with receipts
+- **Demo Proof Artifacts:** 3 live runs documented (demo-artifacts/RIO_DEMO_PROOF.md)
+- **Proposer ≠ Approver** enforced at Gateway level (governed denial receipt on violation)
+- **13/13 COS verification** passing (two independent runs)
+- **System used for real governed emails** to real people outside the system
+- **Fail mode:** closed
+
+---
+
 ## NEXT PRIORITIES
 
-1. ~~COS re-verifies 13-point checklist against policy-bound system~~ DONE (13/13)
-2. Brian sets ED25519_MODE=required on Render
-3. Build governance dashboard panels in ONE PWA
-4. Genesis ledger entry for clean chain start (repair 11 linkage breaks)
-5. /verify-receipt endpoint for independent receipt verification
-6. Wire ONE PWA Approvals page to live Gateway (I-2 approval flow)
-7. Push notification support for pending approvals
+1. ~~COS re-verifies 13-point checklist~~ DONE (13/13)
+2. ~~Proposer ≠ approver enforcement~~ DONE (commit 9993465)
+3. Brian: Outreach and monetization — using the system to generate opportunities
+4. Repo cleanup and doc alignment (this task)
+5. Open PR decisions (#91, #80)
+6. Open source protocol traction (rio-protocol visibility)
 
 ---
 

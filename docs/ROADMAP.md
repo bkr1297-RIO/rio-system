@@ -2,7 +2,7 @@
 
 Build plan for the RIO system. Phases are sequential but may overlap.
 
-Last updated: 2026-04-03 by Manny
+Last updated: 2026-04-14 by Manny
 
 ---
 
@@ -59,7 +59,7 @@ Build the human control surface for the RIO system.
 | Learning events tracking | Done | Manny |
 | Multi-agent coordination structure | Done | Romney |
 | Agent skills (5 roles in repo) | Done | Manny |
-| Agent onboarding | In Progress | Brian |
+| Agent onboarding (cold-start prompts) | Done | Brian |
 | Protocol Packs (domain-specific policies) | Not Started | Manny |
 | Learning Loop feedback (events improve Bondi) | Not Started | Manny |
 | PWA push notifications (VAPID keys) | Not Started | Manny |
@@ -75,9 +75,11 @@ We are managing this phase as a deployment program, not just a coding project. T
 | **1. Pilot Playbook** | Operations / Compliance | Chief of Staff | **Done** |
 | **2. Deployment Architecture** | CTO / Security / IT | Solutions Architect | **Done** |
 | **3. Integration Guide** | Developers | Developer Relations | **Done** |
-| **4. ONE Demo Readiness** | End Users | Manny | In Progress |
+| **4. ONE Demo Readiness** | End Users | Manny | **Done** |
 | **5. Protocol Packaging** | Open Source Community | Romney | In Progress |
 | **6. Knowledge Base Sync** | Internal | Jordan | In Progress |
+
+> **Operational Note (Apr 14, 2026):** The system has transitioned from build-first to operate-first. Core governance loop is proven with real-world governed actions. Current focus is outreach, monetization, and real-world usage while packaging continues in parallel.
 
 ---
 

@@ -31,11 +31,27 @@ When a decision is made, add it below with:
 **Rationale:** Developers need context to adopt the protocol, but detailed system operation and deployment architecture is the product.
 **Decided by:** Brian
 
+### 2026-04-06 — Policy v2.0.0 Binding
+**Decision:** Governance Policy v1 is now bound to the system with canonical policy_hash `df474ff9f0c7d80c28c3d2393bef41b80f72439c3c8ed59b389a7f7aabbe409d`. Receipt schema updated with 8 new fields (proposer_id, approver_id, execution_hash, timestamps, decision_delta_ms, gateway_signature, policy_hash).
+**Rationale:** Policy must be cryptographically bound to the system so every receipt references the exact policy version under which the action was governed. Enables independent verification that the correct policy was applied.
+**Evidence:** Commit d8628c7, MSG-019 in manus-sync.json
+**Decided by:** Brian
+
+### 2026-04-06 — Canonical ONE Determination
+**Decision:** rio-proxy (rio-one.manus.space) is the canonical ONE Command Center. The COS-built riocommand-glyfckjy.manus.space is decommissioned.
+**Rationale:** Single source of truth for the control surface. Avoids confusion between multiple deployments.
+**Evidence:** MSG-021 in manus-sync.json, docs/COS_RESPONSE_TO_MANNY.md
+**Decided by:** Brian
+
 ---
 
 ## Naming Decisions
 
-_None recorded yet._
+### 2026-04-11 — Naming Lock
+**Decision:** All docs and code aligned to locked RIO protocol naming definitions. No more name drift.
+**Rationale:** Consistent naming across all agents, docs, and code prevents confusion and ensures the system is describable to external audiences.
+**Evidence:** Commits 802186d, 49d5c5b
+**Decided by:** Brian
 
 ---
 
@@ -49,6 +65,23 @@ _None recorded yet._
 ---
 
 ## Product Decisions
+
+### 2026-04-11 — Email Action Firewall as Product Feature
+**Decision:** Email Action Firewall v1 shipped — policy engine that blocks, warns, or passes emails with receipts for every decision.
+**Rationale:** First standalone product feature that demonstrates governed execution in a real-world use case. Every email decision produces a receipt, creating an auditable trail.
+**Evidence:** Commit 9b97dc9, email-firewall/ directory
+**Decided by:** Brian
+
+### 2026-04-13 — Proposer ≠ Approver Enforcement at Gateway
+**Decision:** Gateway now enforces separation of duties — proposer cannot approve their own action. Governed denial receipt issued on violation.
+**Rationale:** Core governance invariant. Without this enforcement, a single actor could propose and approve their own actions, defeating the purpose of the approval system.
+**Evidence:** Commit 9993465, PR #95 merged
+**Decided by:** Brian
+
+### 2026-04-14 — Phase Shift: Build → Operate
+**Decision:** The system is no longer primarily in build mode. Focus is now on operating the system in real life — outreach, demos, generating opportunities and revenue. Building continues only as needed to support operations.
+**Rationale:** Core governance loop is proven with real-world governed actions. The bottleneck is no longer engineering — it is adoption, usage, and monetization.
+**Decided by:** Brian
 
 ### 2026-04-03 — First deployment use case: Governed AI Email
 **Decision:** The first real-world deployment use case is Governed AI Email — AI drafts and sends email with human approval, cryptographic receipt, and ledger entry.
