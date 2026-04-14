@@ -2,11 +2,79 @@
 
 Current state of the RIO system. Updated by agents as work progresses.
 
-Last updated: 2026-04-07 by Andrew (Solutions Architect)
+Last updated: 2026-04-14 by Manny (Builder)
 
 ---
 
-## Latest Delivery — Ask Bondi (/ask) Added to RIO Demo Site
+## Latest Delivery — Full Repo Sync + Policy Engine (Apr 14)
+
+| Field | Value |
+|---|---|
+| Date | 2026-04-14 |
+| Agent | Manny (Builder) |
+| Delivery | Complete repo sync: 166 files changed, 60,604 insertions |
+| Checkpoint | `851cfc36` (policy engine formalization) |
+| Branch | `sync/manus-build-apr14` |
+| Status | All code from live site (rio-one.manus.space) pushed to repo |
+
+### What was synced (Apr 5–14 build)
+
+**Core Governance Modules:** emailApproval.ts (DB-backed, HTML buttons), smsApproval.ts (Twilio signed links), policyMatrix.ts (11 rules, 4 risk tiers, SHA-256 integrity, fail-closed), learningEngine.ts (advisory risk scoring), integritySubstrate.ts (nonce/dedup/chain), pausePlacement.ts (3 pause paths), firewallGovernance.ts, oneClickApproval.ts (HMAC 15-min TTL), telegramInput.ts (/send command), telegramStatusCommand.ts, driveRestore.ts, standardReceipt.ts, readApis.ts, adapters.ts (5 adapters), rioConfig.ts, driveSubFiles.ts, approvalSystem.ts, stateExpansion.ts, outlookGoverned.ts, smsGoverned.ts, gmailSmtp.ts, librarian.ts, actionStore.ts, intentPipeline.ts, coherence.ts, resonance.ts, continuity.ts, authorityLayer.ts, constrainedDelegation.ts, mantis.ts, policySnapshot.ts, policyEvaluateEndpoint.ts
+
+**UI Pages:** Authorize.tsx (mobile-first approval), SendAction.tsx (self-trigger), RIODashboard.tsx, GovernanceDashboard.tsx, EmailFirewall.tsx, AskBondi.tsx, SystemArchitecture.tsx, LearningFeed.tsx
+
+**Tests:** 65+ test files, 200+ individual tests
+
+**Docs:** 20+ new documents including CBS spec, integrity substrate spec, pause placement spec, proof artifacts
+
+**DB Migrations:** 0014–0024 (pending_email_approvals, learning_events, schema expansions)
+
+---
+
+## Milestone History (Apr 5–14)
+
+| Date | Milestone | Key Artifact |
+|---|---|---|
+| Apr 14 | Full repo sync (166 files) | Branch: sync/manus-build-apr14 |
+| Apr 13 | Policy engine formalization | policyMatrix.ts, 27 tests |
+| Apr 12 | Self-trigger feature | /send page, Telegram /send |
+| Apr 12 | Minimum learning loop | learningEngine.ts, advisory only |
+| Apr 11 | Email approval flow fixed | DB-backed, HTML emails, auto-bootstrap |
+| Apr 10 | SMS approval + Telegram webhook | smsApproval.ts, webhook auto-set |
+| Apr 9 | Canonical Build Spec v1.0 | 14 CBS items, 59 tests |
+| Apr 8 | Pause Placement Model | 3 pause paths, IntakeRule CRUD |
+| Apr 7 | Drive Sync + Claude Spec | Librarian, StandardReceipt, /status |
+| Apr 6 | FIRST GOVERNED ACTION 13/13 | Full E2E with receipt + ledger |
+
+---
+
+## Pending Items
+
+| Item | Status | Owner |
+|---|---|---|
+| Telegram self-trigger live test | Needs publish + test | Brian |
+| SMS/A2P 10DLC registration | Pending Twilio approval | Brian |
+| TASKPACKET review | In progress | Manny |
+| Protocol packaging (rio-protocol) | Pending | Operator |
+| Stress test with Claude | Next phase | Bondi roadmap |
+| Extend with Gemini (corpus/pattern) | After stress test | Bondi roadmap |
+
+---
+
+## Live Endpoints
+
+| Endpoint | URL | Status |
+|---|---|---|
+| ONE UI | https://rio-one.manus.space | LIVE |
+| Policy Evaluate | https://rio-one.manus.space/api/policy/evaluate | LIVE |
+| Policy Matrix | https://rio-one.manus.space/api/policy/matrix | LIVE |
+| Policy Health | https://rio-one.manus.space/api/policy/health | LIVE |
+| Email Approve | https://rio-one.manus.space/api/rio/approve | LIVE |
+| Telegram Webhook | https://rio-one.manus.space/api/telegram/webhook | LIVE |
+
+---
+
+## Previous Delivery — Ask Bondi (/ask) Added to RIO Demo Site (Apr 7)
 
 | Field | Value |
 |---|---|
@@ -14,10 +82,6 @@ Last updated: 2026-04-07 by Andrew (Solutions Architect)
 | Agent | Andrew (Solutions Architect) |
 | Delivery | Ask Bondi (/ask) page added to RIO Demo Site |
 | Checkpoint | `aabd7a41` |
-| Files | `client/src/pages/AskBondi.tsx`, `client/src/pages/Home.tsx` (navbar + CTA), `client/src/App.tsx` (route) |
-| Backend | External — `POST https://rio-one.manus.space/api/ask-bondi` (Manny's endpoint, already live) |
-| Status | Live on riodemo site. No login required. Markdown rendering. Example questions. |
-| Decision needed | None |
 
 ---
 

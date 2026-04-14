@@ -14,7 +14,99 @@
  * The Gateway remains the enforcement boundary. ONE only bridges identity via email.
  */
 
+import { checkDelegation, type DelegationCheck, type RoleSeparation } from "./constrainedDelegation";
+
 const GATEWAY_URL = process.env.VITE_GATEWAY_URL || "";
+
+// ─── Authority Model Labels (Audit Trail) ───────────────────────
+// These are the canonical labels for the audit trail.
+// They appear in receipts, ledger entries, and governance reports.
+
+export type AuthorityModel =
+  | "Separated Authority"
+  | "Constrained Single-Actor Execution"
+  | "BLOCKED — Self-Authorization Sub-Policy Not Met";
+
+export function resolveAuthorityModel(roleSeparation: RoleSeparation): AuthorityModel {
+  switch (roleSeparation) {
+    case "separated": return "Separated Authority";
+    case "constrained": return "Constrained Single-Actor Execution";
+    case "self": return "BLOCKED — Self-Authorization Sub-Policy Not Met";
+  }
+}
+
+// ─── Gateway-Level Identity Evaluation ──────────────────────────
+// This is the enforcement boundary for Rule 3: IF proposer_identity_id ==
+// approver_identity_id, THEN the transaction is INVALID unless the
+// Self-Authorization sub-policy is met (cooldown elapsed).
+//
+// This function MUST be called before any Gateway /authorize call.
+// It is the single source of truth for identity verification at the
+// Gateway evaluation level.
+
+export interface GatewayIdentityEvaluation {
+  /** Whether the transaction may proceed */
+  allowed: boolean;
+  /** Explicit proposer identity ID for the receipt */
+  proposer_identity_id: string;
+  /** Explicit approver identity ID for the receipt */
+  approver_identity_id: string;
+  /** Canonical audit trail label */
+  authority_model: AuthorityModel;
+  /** Role separation classification */
+  role_separation: RoleSeparation;
+  /** Human-readable reason */
+  reason: string;
+  /** Remaining cooldown in ms (0 if allowed) */
+  cooldown_remaining_ms: number;
+  /** Full delegation check result for logging */
+  delegation_check: DelegationCheck;
+}
+
+/**
+ * Evaluate identity separation at the Gateway boundary.
+ *
+ * This is Rule 3 enforcement: IF proposer_identity_id == approver_identity_id,
+ * THEN the transaction is INVALID unless the Self-Authorization sub-policy is met.
+ *
+ * The Self-Authorization sub-policy requires:
+ *   - Cooldown period (120s) has elapsed since intent creation
+ *   - The approval is explicitly invoked in the approver role
+ *
+ * @param proposerIdentityId - The identity that created the intent
+ * @param approverIdentityId - The identity attempting to approve
+ * @param intentCreatedAt - Timestamp (ms) when the intent was created
+ * @param approvalAttemptedAt - Timestamp (ms) when approval is attempted (defaults to now)
+ * @param cooldownOverrideMs - Override cooldown for testing
+ */
+export function evaluateIdentityAtGatewayBoundary(
+  proposerIdentityId: string,
+  approverIdentityId: string,
+  intentCreatedAt: number,
+  approvalAttemptedAt?: number,
+  cooldownOverrideMs?: number,
+): GatewayIdentityEvaluation {
+  const delegationCheck = checkDelegation({
+    proposerIdentity: proposerIdentityId,
+    approverIdentity: approverIdentityId,
+    intentCreatedAt,
+    approvalAttemptedAt,
+    cooldownOverrideMs,
+  });
+
+  const authorityModel = resolveAuthorityModel(delegationCheck.role_separation);
+
+  return {
+    allowed: delegationCheck.allowed,
+    proposer_identity_id: proposerIdentityId,
+    approver_identity_id: approverIdentityId,
+    authority_model: authorityModel,
+    role_separation: delegationCheck.role_separation,
+    reason: delegationCheck.reason,
+    cooldown_remaining_ms: delegationCheck.cooldown_remaining_ms,
+    delegation_check: delegationCheck,
+  };
+}
 
 // ─── Identity Resolution ─────────────────────────────────────────
 // Maps Manus OAuth user to their email for Gateway identity bridging.

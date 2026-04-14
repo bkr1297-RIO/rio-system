@@ -64,6 +64,8 @@ export const intents = mysqlTable("intents", {
   riskTier: mysqlEnum("riskTier", ["LOW", "MEDIUM", "HIGH"]).notNull(),
   blastRadius: json("blastRadius").$type<{ score: number; affectedSystems: string[]; reversible: boolean }>(),
   status: mysqlEnum("status", ["PENDING_APPROVAL", "APPROVED", "REJECTED", "EXECUTED", "FAILED", "KILLED", "EXPIRED"]).default("PENDING_APPROVAL").notNull(),
+  /** Principal who created this intent */
+  principalId: varchar("principalId", { length: 64 }),
   reflection: text("reflection"),
   sourceConversationId: varchar("sourceConversationId", { length: 64 }),
   /** Intent TTL — Unix ms timestamp after which a PENDING_APPROVAL intent auto-expires. NULL = no expiry. */
@@ -82,6 +84,8 @@ export const approvals = mysqlTable("approvals", {
   approvalId: varchar("approvalId", { length: 64 }).notNull().unique(),
   intentId: varchar("intentId", { length: 64 }).notNull(),
   userId: int("userId").notNull(),
+  /** Principal who made this approval decision */
+  principalId: varchar("principalId", { length: 64 }),
   decision: mysqlEnum("decision", ["APPROVED", "REJECTED"]).notNull(),
   signature: text("signature").notNull(),
   boundToolName: varchar("boundToolName", { length: 128 }).notNull(),
@@ -117,7 +121,7 @@ export type Execution = typeof executions.$inferSelect;
 export const ledger = mysqlTable("ledger", {
   id: int("id").autoincrement().primaryKey(),
   entryId: varchar("entryId", { length: 64 }).notNull().unique(),
-  entryType: mysqlEnum("entryType", ["ONBOARD", "INTENT", "APPROVAL", "EXECUTION", "KILL", "SYNC", "JORDAN_CHAT", "BONDI_CHAT", "LEARNING", "ARCHITECTURE_STATE", "RE_KEY", "REVOKE", "RE_KEY_AUTHORIZED", "RE_KEY_FORCED", "TELEGRAM_NOTIFY", "POLICY_UPDATE", "NOTIFICATION"]).notNull(),
+  entryType: mysqlEnum("entryType", ["ONBOARD", "INTENT", "APPROVAL", "EXECUTION", "KILL", "SYNC", "JORDAN_CHAT", "BONDI_CHAT", "LEARNING", "ARCHITECTURE_STATE", "RE_KEY", "REVOKE", "RE_KEY_AUTHORIZED", "RE_KEY_FORCED", "TELEGRAM_NOTIFY", "POLICY_UPDATE", "NOTIFICATION", "GENESIS", "AUTHORITY_TOKEN", "EMAIL_DELIVERY", "COHERENCE_CHECK", "FIREWALL_SCAN", "ACTION_COMPLETE", "DELEGATION_BLOCKED", "DELEGATION_APPROVED", "SUBSTRATE_BLOCK"]).notNull(),
   payload: json("payload").$type<Record<string, unknown>>().notNull(),
   hash: varchar("hash", { length: 128 }).notNull(),
   prevHash: varchar("prevHash", { length: 128 }).notNull(),
@@ -187,6 +191,12 @@ export const learningEvents = mysqlTable("learning_events", {
     userMessage?: string;
     aiResponse?: string;
   }>(),
+  /** Hash of action_type + target — used for learning aggregation */
+  actionSignature: varchar("actionSignature", { length: 128 }),
+  /** Current risk score at time of decision (0-100) */
+  riskScore: int("riskScore").default(50),
+  /** Decision made: APPROVED / REJECTED / BLOCKED */
+  decision: mysqlEnum("decision", ["APPROVED", "REJECTED", "BLOCKED"]),
   feedback: text("feedback"),
   outcome: mysqlEnum("outcome", ["POSITIVE", "NEGATIVE", "NEUTRAL"]).default("NEUTRAL").notNull(),
   tags: json("tags").$type<string[]>(),
@@ -346,3 +356,57 @@ export const principals = mysqlTable("principals", {
 
 export type Principal = typeof principals.$inferSelect;
 export type InsertPrincipal = typeof principals.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════
+// EMAIL FIREWALL CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Email firewall config — per-owner configurable policy layer.
+ * Stores which rules are enabled/disabled, strictness per category,
+ * internal domains, and preset selection.
+ * One row per owner (userId). If no row exists, defaults apply.
+ */
+export const emailFirewallConfig = mysqlTable("email_firewall_config", {
+  id: int("id").autoincrement().primaryKey(),
+  userId: int("userId").notNull().unique(),
+  /** Global strictness: strict / standard / permissive */
+  strictness: mysqlEnum("strictness", ["strict", "standard", "permissive"]).notNull().default("standard"),
+  /** Preset name (personal / team / enterprise) or "custom" */
+  preset: varchar("preset", { length: 32 }).notNull().default("personal"),
+  /** Rule overrides — JSON map of rule_id → { enabled: boolean } */
+  ruleOverrides: json("ruleOverrides").$type<Record<string, { enabled: boolean }>>().notNull(),
+  /** Category strictness overrides — JSON map of category → strictness level */
+  categoryOverrides: json("categoryOverrides").$type<Record<string, string>>().notNull(),
+  /** Internal domains — JSON array of domain strings */
+  internalDomains: json("internalDomains").$type<string[]>().notNull(),
+  /** Whether LLM-enhanced scanning is enabled */
+  llmEnabled: boolean("llmEnabled").notNull().default(true),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type EmailFirewallConfig = typeof emailFirewallConfig.$inferSelect;
+export type InsertEmailFirewallConfig = typeof emailFirewallConfig.$inferInsert;
+
+
+/**
+ * Pending email/SMS approval requests — persisted so approve/decline links
+ * work across server restarts and on the published site.
+ */
+export const pendingEmailApprovals = mysqlTable("pending_email_approvals", {
+  id: int("id").autoincrement().primaryKey(),
+  intentId: varchar("intentId", { length: 128 }).notNull().unique(),
+  actionType: varchar("actionType", { length: 128 }).notNull(),
+  actionSummary: text("actionSummary").notNull(),
+  actionDetails: json("actionDetails").$type<Record<string, unknown>>(),
+  proposerEmail: varchar("proposerEmail", { length: 320 }).notNull(),
+  approverEmail: varchar("approverEmail", { length: 320 }).notNull(),
+  tokenNonce: varchar("tokenNonce", { length: 128 }).notNull().unique(),
+  status: mysqlEnum("status", ["PENDING", "APPROVED", "DECLINED", "EXPIRED"]).default("PENDING").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  expiresAt: timestamp("expiresAt").notNull(),
+});
+
+export type PendingEmailApproval = typeof pendingEmailApprovals.$inferSelect;
+export type InsertPendingEmailApproval = typeof pendingEmailApprovals.$inferInsert;

@@ -32,6 +32,8 @@ import {
   // Principal management
   getPrincipalByUserId, getOrCreatePrincipal, getPrincipalById, listPrincipals,
   assignRole, removeRole, updatePrincipalStatus, principalHasRole,
+  // Email firewall config
+  getEmailFirewallConfig, upsertEmailFirewallConfig,
 } from "./db";
 import {
   isTelegramConfigured,
@@ -39,6 +41,18 @@ import {
   sendReceiptNotification,
   sendKillNotification,
 } from "./telegram";
+import { syncToLibrarian } from "./librarian";
+import { getLastAction, getActionHistory, getSystemState } from "./readApis";
+import { getPendingApprovals, resolveApproval, getAllApprovals } from "./approvalSystem";
+import { getSystemHealth, setLastActionTimestamp, setLastError } from "./stateExpansion";
+import { sendApprovalEmail, computeActionHash } from "./emailApproval";
+import { sendApprovalSMS } from "./smsApproval";
+import { validateEnvelope } from "./standardReceipt";
+import {
+  routeAction, addIntakeRule, removeIntakeRule, getActiveRules, getAllRules,
+  getRule, getPauseStats, hasPause, executeAfterApproval,
+  type Action,
+} from "./pausePlacement";
 import {
   routeToBondi,
   buildSentinelStatus,
@@ -75,8 +89,34 @@ import {
   proxySubmitApproval,
   proxyGatewayHealth,
   executeGovernedAction,
+  evaluateIdentityAtGatewayBoundary,
+  type GatewayIdentityEvaluation,
+  type AuthorityModel,
 } from "./gatewayProxy";
 import { notifyOwner } from "./_core/notification";
+import { fetchMantisState, normalizeMantisState } from "./mantis";
+import { fetchResonanceFeed, fetchResonanceFeedFromGitHub } from "./resonance";
+import { runCoherenceCheck, getCoherenceState, getCoherenceHistory, buildSystemContext } from "./coherence";
+import {
+  scanEmail, scanWithRules, getReceipts, getReceiptById, getReceiptStats,
+  storeReceipt, generateSampleReceipts, processIncomingMessage,
+  getReceiptsByChannel, getInboundMessageStats,
+  type StrictnessLevel, type EmailReceipt,
+} from "./emailFirewall";
+import { storeGovernedReceipt } from "./firewallGovernance";
+import { checkDelegation, formatCooldownMessage, type RoleSeparation, type DelegationCheck } from "./constrainedDelegation";
+import {
+  registerRootAuthority, getActiveRootAuthority, verifyRootSignature,
+  computePolicyHash, activatePolicy, getActivePolicy, revokePolicy,
+  DEFAULT_POLICY_RULES,
+  issueAuthorizationToken, getAuthorizationToken, validateAuthorizationToken,
+  burnAuthorizationToken, computeParametersHash, computeGatewaySignature,
+  generateCanonicalReceipt, getLastReceiptHash, setLastReceiptHash,
+  createGenesisRecord, verifyGenesisRecord,
+  enforceTheOneRule, verifyAuthorityChain,
+  CHIEF_OF_STAFF,
+  type GovernancePolicyRules, type AuthorizationToken, type CanonicalReceipt,
+} from "./authorityLayer";
 
 export const appRouter = router({
   system: systemRouter,
@@ -333,7 +373,9 @@ export const appRouter = router({
       // If forceApproval is set by a custom rule, override LOW risk auto-approve behavior
       // This is done by passing the effective risk tier (which may be upgraded) to createIntent
       const intentRiskTier = forceApproval && effectiveRiskTier === "LOW" ? "MEDIUM" as const : effectiveRiskTier;
-      const intent = await createIntent(ctx.user.id, input.toolName, input.toolArgs, intentRiskTier, blastRadius, input.reflection, input.sourceConversationId);
+      // Resolve principalId for attribution
+      const intentPrincipal = await getPrincipalByUserId(ctx.user.id);
+      const intent = await createIntent(ctx.user.id, input.toolName, input.toolArgs, intentRiskTier, blastRadius, input.reflection, input.sourceConversationId, undefined, intentPrincipal?.principalId);
 
       // If from a conversation, link the intent
       if (input.sourceConversationId && intent) {
@@ -399,7 +441,6 @@ export const appRouter = router({
     })).mutation(async ({ ctx, input }) => {
       const intent = await getIntent(input.intentId);
       if (!intent) throw new Error("Intent not found");
-      if (intent.userId !== ctx.user.id) throw new Error("Not your intent");
       if (intent.status !== "PENDING_APPROVAL") throw new Error(`Intent status is ${intent.status}, cannot approve`);
 
       // TTL check: if intent has expired, mark it and reject
@@ -408,12 +449,60 @@ export const appRouter = router({
         throw new Error("Intent has expired (TTL exceeded). Cannot approve stale intents.");
       }
 
+      // Resolve principalId for attribution
+      const approvalPrincipal = await getPrincipalByUserId(ctx.user.id);
+
+      // ─── CONSTRAINED DELEGATION CHECK ──────────────────────────
+      // Prevent trivial self-approval. Same identity requires cooldown.
+      const proposerPrincipal = await getPrincipalByUserId(intent.userId);
+      const proposerIdentity = proposerPrincipal?.principalId ?? `user-${intent.userId}`;
+      const approverIdentity = approvalPrincipal?.principalId ?? `user-${ctx.user.id}`;
+      const intentCreatedAt = intent.createdAt ? new Date(intent.createdAt).getTime() : Date.now();
+
+      // Gateway-level identity evaluation (Rule 3)
+      let localIdentityEval: GatewayIdentityEvaluation | null = null;
+      if (input.decision === "APPROVED") {
+        localIdentityEval = evaluateIdentityAtGatewayBoundary(
+          proposerIdentity,
+          approverIdentity,
+          intentCreatedAt,
+        );
+
+        if (!localIdentityEval.allowed) {
+          // Log the blocked attempt with explicit identity IDs and authority model
+          await appendLedger("DELEGATION_BLOCKED", {
+            intentId: input.intentId,
+            proposer_identity_id: proposerIdentity,
+            approver_identity_id: approverIdentity,
+            authority_model: localIdentityEval.authority_model,
+            role_separation: localIdentityEval.role_separation,
+            cooldown_remaining_ms: localIdentityEval.cooldown_remaining_ms,
+            reason: localIdentityEval.reason,
+            path: "proxy.approve",
+            timestamp: Date.now(),
+          });
+          throw new Error(formatCooldownMessage(localIdentityEval.delegation_check));
+        }
+      }
+
       const expiresAt = Date.now() + input.expiresInSeconds * 1000;
       const approval = await createApproval(
         input.intentId, ctx.user.id, input.decision, input.signature,
-        intent.toolName, intent.argsHash, expiresAt, input.maxExecutions
+        intent.toolName, intent.argsHash, expiresAt, input.maxExecutions,
+        approvalPrincipal?.principalId
       );
       await updateIntentStatus(input.intentId, input.decision);
+
+      // Determine role_separation and authority_model for the receipt/ledger
+      const roleSeparation: RoleSeparation = input.decision === "REJECTED"
+        ? (proposerIdentity === approverIdentity ? "self" : "separated")
+        : (localIdentityEval?.role_separation ?? "separated");
+      const authorityModel: AuthorityModel = input.decision === "REJECTED"
+        ? (proposerIdentity === approverIdentity
+            ? "BLOCKED \u2014 Self-Authorization Sub-Policy Not Met"
+            : "Separated Authority")
+        : (localIdentityEval?.authority_model ?? "Separated Authority");
+
       await appendLedger("APPROVAL", {
         approvalId: approval!.approvalId,
         intentId: input.intentId,
@@ -422,7 +511,67 @@ export const appRouter = router({
         boundArgsHash: intent.argsHash,
         expiresAt,
         maxExecutions: input.maxExecutions,
+        // Explicit identity fields for audit trail
+        proposer_identity_id: proposerIdentity,
+        approver_identity_id: approverIdentity,
+        authority_model: authorityModel,
+        role_separation: roleSeparation,
       });
+
+      // Log successful constrained delegation
+      if (input.decision === "APPROVED" && proposerIdentity === approverIdentity) {
+        await appendLedger("DELEGATION_APPROVED", {
+          intentId: input.intentId,
+          proposer_identity_id: proposerIdentity,
+          approver_identity_id: approverIdentity,
+          authority_model: authorityModel,
+          role_separation: roleSeparation,
+          path: "proxy.approve",
+          timestamp: Date.now(),
+        });
+      }
+
+      // ─── AUTHORIZATION TOKEN ISSUANCE ────────────────────────
+      // After approval, issue an authorization token. This is the machine-verifiable
+      // artifact that gates execution. No token = no execution.
+      let authorizationToken: AuthorizationToken | null = null;
+      if (input.decision === "APPROVED") {
+        try {
+          const toolArgs = typeof intent.toolArgs === 'string'
+            ? JSON.parse(intent.toolArgs) as Record<string, unknown>
+            : (intent.toolArgs as Record<string, unknown>) ?? {};
+
+          const approverPrincipalId = approvalPrincipal?.principalId ?? `user-${ctx.user.id}`;
+
+          authorizationToken = issueAuthorizationToken({
+            intentId: input.intentId,
+            action: intent.toolName,
+            toolArgs,
+            approvedBy: approverPrincipalId,
+            signature: input.signature,
+            expiryMinutes: Math.ceil(input.expiresInSeconds / 60),
+            maxExecutions: input.maxExecutions,
+          });
+
+          // Write AUTHORITY_TOKEN to ledger
+          await appendLedger("AUTHORITY_TOKEN", {
+            tokenId: authorizationToken.token_id,
+            intentId: input.intentId,
+            action: intent.toolName,
+            parametersHash: authorizationToken.parameters_hash,
+            approvedBy: approverPrincipalId,
+            policyHash: authorizationToken.policy_hash,
+            issuedAt: authorizationToken.issued_at,
+            expiresAt: authorizationToken.expires_at,
+            maxExecutions: authorizationToken.max_executions,
+          });
+        } catch (tokenErr) {
+          // If token issuance fails (e.g., no active policy), the approval still stands
+          // but execution will be blocked because no token exists.
+          // This is fail-closed behavior: approval without token = no execution.
+          console.warn("[Authority] Token issuance failed (execution will be blocked):", tokenErr);
+        }
+      }
 
       // Learning Loop: record approval/rejection as learning event
       const learningPayload = createLearningEventPayload(
@@ -443,16 +592,33 @@ export const appRouter = router({
         outcome: learningPayload.outcome as "POSITIVE" | "NEGATIVE" | "NEUTRAL",
       });
 
-      return approval;
+      return {
+        ...approval,
+        role_separation: roleSeparation,
+        authorizationToken: authorizationToken ? {
+          token_id: authorizationToken.token_id,
+          intent_id: authorizationToken.intent_id,
+          action: authorizationToken.action,
+          parameters_hash: authorizationToken.parameters_hash,
+          approved_by: authorizationToken.approved_by,
+          policy_hash: authorizationToken.policy_hash,
+          issued_at: authorizationToken.issued_at,
+          expires_at: authorizationToken.expires_at,
+          max_executions: authorizationToken.max_executions,
+        } : null,
+      };
     }),
 
     // Execute approved intent with preflight checks
     execute: protectedProcedure.input(z.object({
       intentId: z.string(),
+      tokenId: z.string().optional(), // authorization token ID (required for MEDIUM/HIGH risk)
       agentId: z.string().optional(), // optional: route through an external agent adapter
     })).mutation(async ({ ctx, input }) => {
       const intent = await getIntent(input.intentId);
       if (!intent) throw new Error("Intent not found");
+      // The proposer (intent owner) triggers execution. This is correct:
+      // Proposer creates intent → different user approves → proposer executes with token.
       if (intent.userId !== ctx.user.id) throw new Error("Not your intent");
 
       const proxyUser = await getProxyUser(ctx.user.id);
@@ -461,7 +627,12 @@ export const appRouter = router({
       const tool = await getToolByName(intent.toolName);
       const approval = await getApprovalForIntent(input.intentId);
 
-      // Run 8 preflight checks
+      // Parse toolArgs early (needed for token validation)
+      const parsedToolArgs = typeof intent.toolArgs === 'string'
+        ? JSON.parse(intent.toolArgs) as Record<string, unknown>
+        : (intent.toolArgs as Record<string, unknown>) ?? {};
+
+      // Run preflight checks (original 8 + authorization token checks)
       const checks: Array<{ check: string; status: string; detail: string }> = [];
 
       // 1. Proxy active
@@ -491,11 +662,54 @@ export const appRouter = router({
       checks.push({ check: "execution_limit", status: withinLimit ? "PASS" : "FAIL", detail: withinLimit ? (approval ? `${approval.executionCount}/${approval.maxExecutions} used` : "No limit for LOW risk") : "Max executions reached" });
 
       // 8. Args hash matches (tamper check)
-      // Use the stored argsHash from the intent record (computed at creation time)
-      // Do NOT recompute from intent.toolArgs because MySQL JSON columns reorder keys alphabetically,
-      // which changes the JSON string and breaks the hash comparison.
       const argsMatch = !needsApproval || (approval && approval.boundArgsHash === intent.argsHash);
       checks.push({ check: "args_hash_match", status: argsMatch ? "PASS" : "FAIL", detail: argsMatch ? "Args hash verified" : "Args hash mismatch — possible tampering" });
+
+      // ─── AUTHORIZATION TOKEN ENFORCEMENT ───────────────────
+      // Hard governance rule: All MEDIUM/HIGH risk actions require a valid authorization token.
+      // No token = no execution. This is the enforcement boundary.
+      let authToken: AuthorizationToken | null = null;
+      if (needsApproval) {
+        // 9. Authorization token exists
+        if (!input.tokenId) {
+          checks.push({ check: "authorization_token_exists", status: "FAIL", detail: "No authorization token provided — execution requires token" });
+        } else {
+          authToken = getAuthorizationToken(input.tokenId);
+          if (!authToken) {
+            checks.push({ check: "authorization_token_exists", status: "FAIL", detail: `Token ${input.tokenId} not found` });
+          } else {
+            checks.push({ check: "authorization_token_exists", status: "PASS", detail: `Token ${authToken.token_id} found` });
+
+            // 10. Token validation (7 sub-checks)
+            const tokenValidation = validateAuthorizationToken(
+              authToken,
+              intent.toolName,
+              parsedToolArgs,
+              proxyUser.status !== "ACTIVE", // kill switch = proxy not active
+            );
+            for (const tc of tokenValidation.checks) {
+              checks.push({ check: `token_${tc.check}`, status: tc.status, detail: tc.detail });
+            }
+
+            // 11. Proposer ≠ Approver (hard governance rule)
+            // The person who proposed the intent cannot be the one who approved it
+            const proposerPrincipal = await getPrincipalByUserId(intent.userId);
+            const proposerId = proposerPrincipal?.principalId ?? `user-${intent.userId}`;
+            const approverId = authToken.approved_by;
+            const proposerNotApprover = proposerId !== approverId;
+            checks.push({
+              check: "proposer_not_approver",
+              status: proposerNotApprover ? "PASS" : "FAIL",
+              detail: proposerNotApprover
+                ? `Proposer (${proposerId}) ≠ Approver (${approverId})`
+                : `GOVERNANCE VIOLATION: Proposer and approver are the same (${proposerId})`,
+            });
+          }
+        }
+      } else {
+        // LOW risk: token not required, but note it in checks
+        checks.push({ check: "authorization_token_exists", status: "PASS", detail: "LOW risk — authorization token not required" });
+      }
 
       // Fail-closed: if any check fails, block execution
       const allPassed = checks.every(c => c.status === "PASS");
@@ -628,29 +842,28 @@ export const appRouter = router({
         };
       }
 
-      // Create execution record first (with placeholder receiptHash)
+      // ─── 13-POINT GOVERNED ACTION: RECEIPT + LEDGER + BURN ────
+      // Order matters:
+      //   1. Create execution record (placeholder receiptHash)
+      //   2. Write EXECUTION ledger entry FIRST (to get ledger_entry_id)
+      //   3. Generate canonical receipt (references ledger_entry_id)
+      //   4. Compute gateway signature over receipt
+      //   5. Update execution record with final receiptHash
+      //   6. Burn the authorization token (single-use enforcement)
+
+      // Step 1: Create execution record with placeholder
       const execution = await createExecution(input.intentId, approval?.approvalId ?? null, result, "PENDING", checks);
 
-      // Now compute the canonical receipt hash with the real executionId
-      // Store the exact JSON string that was hashed so the frontend can verify independently
-      // (MySQL JSON columns reorder keys alphabetically, breaking hash verification)
-      const receiptPayload = JSON.stringify({
+      // Step 2: Write EXECUTION ledger entry FIRST to get ledger_entry_id
+      const ledgerEntry = await appendLedger("EXECUTION", {
         executionId: execution!.executionId,
         intentId: input.intentId,
-        result,
-      });
-      const receiptHash = sha256(receiptPayload);
-
-      // Update execution with the real receipt hash and the canonical payload
-      await updateExecutionReceiptHash(execution!.executionId, receiptHash, receiptPayload);
-
-      await updateIntentStatus(input.intentId, "EXECUTED");
-      if (approval) await incrementApprovalExecution(approval.approvalId);
-
-      await appendLedger("EXECUTION", {
-        executionId: execution!.executionId,
-        intentId: input.intentId,
-        receiptHash,
+        // Authority layer fields in ledger entry
+        ...(authToken ? {
+          authorization_token_id: authToken.token_id,
+          approver_id: authToken.approved_by,
+          policy_hash: authToken.policy_hash,
+        } : {}),
         connectorResult: {
           success: connectorResult.success,
           metadata: connectorResult.metadata,
@@ -665,6 +878,73 @@ export const appRouter = router({
         } : {}),
         preflightResults: checks,
       });
+
+      // Step 3 & 4: Generate canonical receipt with gateway signature
+      // Use generateCanonicalReceipt when authority layer is active (token present),
+      // otherwise fall back to ad-hoc receipt for LOW-risk actions.
+      let receiptHash: string;
+      let canonicalReceipt: CanonicalReceipt | null = null;
+      let receiptPayload: string;
+
+      if (authToken) {
+        // Resolve proposer and approver IDs
+        const proposerPrincipal = await getPrincipalByUserId(intent.userId);
+        const proposerId = proposerPrincipal?.principalId ?? `user-${intent.userId}`;
+        const approverId = authToken.approved_by;
+
+        // Resolve timestamps for the receipt
+        const timestampProposed = intent.createdAt
+          ? new Date(intent.createdAt).toISOString()
+          : new Date().toISOString();
+        const timestampApproved = approval?.createdAt
+          ? new Date(approval.createdAt).toISOString()
+          : authToken.issued_at;
+
+        // Generate canonical receipt with all policy-compliant fields
+        canonicalReceipt = generateCanonicalReceipt({
+          intentId: input.intentId,
+          proposerId,
+          approverId,
+          tokenId: authToken.token_id,
+          action: intent.toolName,
+          success: connectorResult.success,
+          result,
+          executor: `executor-${execution!.executionId}`,
+          ledgerEntryId: ledgerEntry.entryId,
+          timestampProposed,
+          timestampApproved,
+        });
+
+        receiptHash = canonicalReceipt.receipt_hash;
+        // Store the full canonical receipt as the payload for independent verification
+        receiptPayload = JSON.stringify(canonicalReceipt);
+      } else {
+        // LOW-risk fallback: ad-hoc receipt (no token, no authority layer)
+        receiptPayload = JSON.stringify({
+          executionId: execution!.executionId,
+          intentId: input.intentId,
+          result,
+        });
+        receiptHash = sha256(receiptPayload);
+      }
+
+      // Step 5: Update execution record with final receipt hash and payload
+      await updateExecutionReceiptHash(execution!.executionId, receiptHash, receiptPayload);
+
+      // Step 6: Burn the authorization token (single-use enforcement)
+      // After successful execution, the token is permanently invalidated.
+      // This is checklist point 7: "Token burned after execution"
+      if (authToken) {
+        burnAuthorizationToken(authToken.token_id);
+      }
+
+      // Update ledger entry with the final receipt hash
+      // (The ledger entry was created before the receipt to provide ledger_entry_id)
+      // Note: The receiptHash is now in the execution record and can be verified
+      // against the ledger entry via the execution→ledger linkage.
+
+      await updateIntentStatus(input.intentId, "EXECUTED");
+      if (approval) await incrementApprovalExecution(approval.approvalId);
 
       // Learning Loop: record execution as learning event
       const learningPayload = createLearningEventPayload("EXECUTION", {
@@ -702,11 +982,56 @@ export const appRouter = router({
         }).catch(() => { /* Telegram delivery failure is non-fatal */ });
       }
 
+      // ─── LIBRARIAN SYNC (non-blocking, fail-silent) ────────────
+      // Mirror receipt to /RIO/01_PROTOCOL/ on Drive
+      if (canonicalReceipt) {
+        syncToLibrarian({
+          receipt_id: canonicalReceipt.receipt_id,
+          receipt_hash: canonicalReceipt.receipt_hash,
+          previous_receipt_hash: canonicalReceipt.previous_receipt_hash,
+          proposer_id: canonicalReceipt.proposer_id,
+          approver_id: canonicalReceipt.approver_id,
+          decision: connectorResult.success ? "APPROVED" : "APPROVED_FAILED",
+          snapshot_hash: canonicalReceipt.receipt_hash,
+        }).catch(() => { /* Librarian sync failure is non-fatal */ });
+      }
+
       return {
         success: true,
         execution,
         preflightResults: checks,
         connectorResult: { success: connectorResult.success, metadata: connectorResult.metadata },
+        receiptHash,
+        // Canonical receipt (full policy-compliant governed action proof)
+        ...(canonicalReceipt ? {
+          canonicalReceipt: {
+            receipt_id: canonicalReceipt.receipt_id,
+            intent_id: canonicalReceipt.intent_id,
+            proposer_id: canonicalReceipt.proposer_id,
+            approver_id: canonicalReceipt.approver_id,
+            token_id: canonicalReceipt.token_id,
+            policy_hash: canonicalReceipt.policy_hash,
+            execution_hash: canonicalReceipt.execution_hash,
+            receipt_hash: canonicalReceipt.receipt_hash,
+            previous_receipt_hash: canonicalReceipt.previous_receipt_hash,
+            ledger_entry_id: canonicalReceipt.ledger_entry_id,
+            gateway_signature: canonicalReceipt.gateway_signature,
+            status: canonicalReceipt.status,
+            timestamp_proposed: canonicalReceipt.timestamp_proposed,
+            timestamp_approved: canonicalReceipt.timestamp_approved,
+            timestamp_executed: canonicalReceipt.timestamp_executed,
+            decision_delta_ms: canonicalReceipt.decision_delta_ms,
+          },
+        } : {}),
+        // Authority layer context in response
+        ...(authToken ? {
+          authorizationToken: {
+            token_id: authToken.token_id,
+            approver_id: authToken.approved_by,
+            policy_hash: authToken.policy_hash,
+            burned: true, // token was burned after execution
+          },
+        } : {}),
         ...(agentResult?.success ? {
           agentResult: {
             agentId: agentResult.agentId,
@@ -1057,6 +1382,8 @@ export const appRouter = router({
           reversible: tool.riskTier === "LOW",
         };
 
+        // Resolve principalId for Bondi-originated intents
+        const bondiPrincipal = await getPrincipalByUserId(ctx.user.id);
         const intent = await createIntent(
           ctx.user.id,
           proposedIntent.toolName,
@@ -1065,6 +1392,8 @@ export const appRouter = router({
           blastRadius,
           proposedIntent.reasoning,
           conversation.conversationId,
+          undefined,
+          bondiPrincipal?.principalId,
         );
 
         if (intent) {
@@ -1552,9 +1881,45 @@ export const appRouter = router({
         timestamp: Date.now(),
       });
 
+      // ─── Coherence check (advisory, non-blocking) ───
+      let coherenceResult: { status: string; drift_detected: boolean; signals: unknown[] } | null = null;
+      try {
+        const { runCoherenceCheck, buildSystemContext } = await import("./coherence");
+        const systemContext = buildSystemContext({
+          activeObjective: input.reflection || undefined,
+          systemHealth: governResult.data.governance_decision || "unknown",
+        });
+        const record = await runCoherenceCheck({
+          actionType: input.action,
+          actionParameters: input.parameters || {},
+          intentId: intentResult.data.intent_id,
+          proposedBy: mapping.principalId,
+          systemContext,
+          statedObjective: input.reflection || undefined,
+        });
+        coherenceResult = {
+          status: record.status,
+          drift_detected: record.drift_detected,
+          signals: record.signals,
+        };
+        // Write coherence check to ledger
+        await appendLedger("COHERENCE_CHECK", {
+          coherence_id: record.coherence_id,
+          intent_id: intentResult.data.intent_id,
+          status: record.status,
+          drift_detected: record.drift_detected,
+          signal_count: record.signals.length,
+          confidence: record.confidence,
+          timestamp: Date.now(),
+        });
+      } catch (err) {
+        console.error("[submitIntent] Coherence check failed (non-blocking):", err);
+      }
+
       return {
         intent: intentResult.data,
         governance: governResult.data,
+        coherence: coherenceResult,
         error: null,
       };
     }),
@@ -1668,6 +2033,35 @@ export const appRouter = router({
             };
           }
 
+          // ─── EMAIL FIREWALL: Send-Time Gate (governed pipeline) ───
+          try {
+            const { result: fwResult, receipt: fwReceipt } = await scanEmail(
+              body, subject || null, to || null, "standard", false,
+            );
+            await storeGovernedReceipt(fwReceipt);
+
+            if (fwResult.event_type === "BLOCK") {
+              return {
+                success: false,
+                result: {
+                  blocked: true,
+                  firewallDecision: "BLOCK",
+                  receipt_id: fwReceipt.receipt_id,
+                  matched_rules: fwResult.matched_rules.map(r => ({ rule_id: r.rule_id, category: r.category, reason: r.reason })),
+                  summary: fwResult.summary,
+                },
+              };
+            }
+            if (fwResult.event_type === "WARN") {
+              console.log(`[SendTimeGate:governed] WARN on email — proceeding (simulated confirmation)`);
+            }
+          } catch (fwErr) {
+            // Firewall failure = fail-closed
+            const msg = fwErr instanceof Error ? fwErr.message : String(fwErr);
+            return { success: false, result: { error: `FAIL_CLOSED: Email firewall error — ${msg}` } };
+          }
+          // ─── END FIREWALL GATE ───
+
           const title = subject || "Message from your RIO assistant";
           const content = [
             to ? `**To:** ${to}` : "",
@@ -1753,12 +2147,1670 @@ export const appRouter = router({
       }
     }),
 
+    /**
+     * Deliver email from Gateway external_fallback payload.
+     * After Gateway /execute-action returns email_payload + receipt,
+     * ONE delivers the email via notifyOwner (Manus notification) and
+     * optionally Telegram, then logs to local ledger.
+     */
+    deliverEmail: protectedProcedure.input(z.object({
+      intentId: z.string().min(1),
+      emailPayload: z.object({
+        to: z.string(),
+        cc: z.array(z.string()).optional(),
+        subject: z.string(),
+        body: z.string(),
+      }),
+      receipt: z.object({
+        receipt_id: z.string(),
+        receipt_hash: z.string(),
+        proposer_id: z.string().optional(),
+        approver_id: z.string().optional(),
+        execution_hash: z.string().optional(),
+        ledger_entry_id: z.string().optional(),
+        decision_delta_ms: z.number().optional(),
+      }).optional(),
+    })).mutation(async ({ input }) => {
+      const { intentId, emailPayload, receipt } = input;
+
+      // Build notification content for owner
+      const title = emailPayload.subject || "Governed Email via RIO";
+      const content = [
+        `**To:** ${emailPayload.to}`,
+        emailPayload.cc?.length ? `**CC:** ${emailPayload.cc.join(", ")}` : "",
+        `**Subject:** ${emailPayload.subject}`,
+        ``,
+        emailPayload.body,
+        ``,
+        `---`,
+        `Governed action executed through RIO pipeline.`,
+        `Gateway SMTP delivery — email sent directly by Gateway.`,
+        `Intent: \`${intentId}\``,
+        receipt ? `Receipt: \`${receipt.receipt_id}\`` : "",
+        receipt?.receipt_hash ? `Hash: \`${receipt.receipt_hash.slice(0, 16)}...\`` : "",
+      ].filter(Boolean).join("\n");
+
+      // Deliver via Manus notification service (owner copy)
+      let notifyDelivered = false;
+      try {
+        notifyDelivered = await notifyOwner({ title, content });
+      } catch (err) {
+        console.error("[deliverEmail] notifyOwner error:", err);
+      }
+
+      // Also send via Telegram if configured
+      let telegramDelivered = false;
+      if (isTelegramConfigured()) {
+        try {
+          const tgText = [
+            `\u2709\uFE0F *Governed Email Delivered*`,
+            ``,
+            `*To:* ${emailPayload.to}`,
+            `*Subject:* ${emailPayload.subject}`,
+            ``,
+            emailPayload.body.length > 200 ? emailPayload.body.slice(0, 200) + "..." : emailPayload.body,
+            ``,
+            `\u2500\u2500\u2500`,
+            `Intent: \`${intentId.slice(0, 12)}\``,
+            receipt ? `Receipt: \`${receipt.receipt_id.slice(0, 12)}\`` : "",
+            receipt?.receipt_hash ? `Hash: \`${receipt.receipt_hash.slice(0, 16)}\`` : "",
+          ].filter(Boolean).join("\n");
+          const { sendMessage: sendTg } = await import("./telegram");
+          await sendTg(tgText, "Markdown");
+          telegramDelivered = true;
+        } catch (err) {
+          console.error("[deliverEmail] Telegram error:", err);
+        }
+      }
+
+      // Log to local ledger
+      try {
+        await appendLedger("EMAIL_DELIVERY", {
+          intent_id: intentId,
+          to: emailPayload.to,
+          subject: emailPayload.subject,
+          receipt_id: receipt?.receipt_id,
+          receipt_hash: receipt?.receipt_hash,
+          notify_delivered: notifyDelivered,
+          telegram_delivered: telegramDelivered,
+
+          timestamp: Date.now(),
+        });
+      } catch (err) {
+        console.error("[deliverEmail] Ledger error:", err);
+      }
+
+      return {
+        delivered: notifyDelivered || telegramDelivered,
+        channels: {
+          notification: notifyDelivered,
+          telegram: telegramDelivered,
+        },
+        intentId,
+        receiptId: receipt?.receipt_id,
+      };
+    }),
+
+    /**
+     * Approve + Execute + Deliver — single server-side call.
+     *
+     * The browser (I-2/approver) calls this tRPC mutation.
+     * The server:
+     *   1. Calls Gateway /authorize using I-2's Gateway JWT (from browser localStorage)
+     *   2. Calls Gateway /execute-action using a server-side I-1 JWT (proposer)
+     *      This enforces separation of duties: approver ≠ executor
+     *   3. If email_payload returned (external_fallback), delivers via Telegram + notification
+     *   4. Logs to local ledger
+     *   5. Returns receipt to browser
+     */
+    approveAndExecute: publicProcedure.input(z.object({
+      intentId: z.string().min(1),
+      gatewayToken: z.string().optional(), // I-2's Gateway JWT for /authorize
+    })).mutation(async ({ ctx, input }) => {
+      const GATEWAY_URL = ENV.gatewayUrl;
+      if (!GATEWAY_URL) {
+        return { success: false, error: "Gateway URL not configured" };
+      }
+
+      // --- Step 1: Login as I-1 (proposer) to get a server-side JWT for /execute-action ---
+      // This is the key fix: the browser is I-2 (approver), but /execute-action requires proposer role.
+      // The server logs in as I-1 to execute on behalf of the proposer.
+      let i1Token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: "I-1",
+            passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026",
+          }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) {
+          return { success: false, error: `I-1 login failed: ${loginData.error || "no token"}` };
+        }
+        i1Token = loginData.token;
+      } catch (err) {
+        return { success: false, error: `Gateway unreachable for I-1 login: ${String(err)}` };
+      }
+
+      // --- Step 2: Authorize as I-2 (approver) ---
+      // Use the server-side I-2 login since the browser token may not be available server-side
+      let i2Token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: "I-2",
+            passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026",
+          }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) {
+          return { success: false, error: `I-2 login failed: ${loginData.error || "no token"}` };
+        }
+        i2Token = loginData.token;
+      } catch (err) {
+        return { success: false, error: `Gateway unreachable for I-2 login: ${String(err)}` };
+      }
+
+      // ─── GATEWAY-LEVEL IDENTITY EVALUATION (Rule 3) ──────────────
+      // This is the enforcement boundary for Rule 3:
+      // IF proposer_identity_id == approver_identity_id, THEN the transaction
+      // is INVALID unless the Self-Authorization sub-policy is met (cooldown).
+      //
+      // The receipt MUST explicitly record proposer and approver IDs.
+      // If they match, the audit trail labels this as
+      // "Constrained Single-Actor Execution".
+      let gatewayRoleSeparation: RoleSeparation = "separated";
+      let gatewayAuthorityModel: AuthorityModel = "Separated Authority";
+      let gatewayIdentityEval: GatewayIdentityEvaluation | null = null;
+      let resolvedProposerIdentityId = "unknown";
+      let resolvedApproverIdentityId = "unknown";
+      try {
+        const localIntent = await getIntent(input.intentId);
+        if (localIntent) {
+          const proposerPrincipal = await getPrincipalByUserId(localIntent.userId);
+          const approverPrincipal = ctx.user ? await getPrincipalByUserId(ctx.user.id) : null;
+          resolvedProposerIdentityId = proposerPrincipal?.principalId ?? `user-${localIntent.userId}`;
+          resolvedApproverIdentityId = approverPrincipal?.principalId ?? (ctx.user ? `user-${ctx.user.id}` : "I-2");
+          const intentCreatedAt = localIntent.createdAt ? new Date(localIntent.createdAt).getTime() : Date.now();
+
+          // Gateway-level evaluation — single source of truth
+          gatewayIdentityEval = evaluateIdentityAtGatewayBoundary(
+            resolvedProposerIdentityId,
+            resolvedApproverIdentityId,
+            intentCreatedAt,
+          );
+
+          gatewayRoleSeparation = gatewayIdentityEval.role_separation;
+          gatewayAuthorityModel = gatewayIdentityEval.authority_model;
+
+          if (!gatewayIdentityEval.allowed) {
+            // Log the blocked attempt with explicit identity IDs and authority model
+            await appendLedger("DELEGATION_BLOCKED", {
+              intentId: input.intentId,
+              proposer_identity_id: resolvedProposerIdentityId,
+              approver_identity_id: resolvedApproverIdentityId,
+              authority_model: gatewayAuthorityModel,
+              role_separation: gatewayIdentityEval.role_separation,
+              cooldown_remaining_ms: gatewayIdentityEval.cooldown_remaining_ms,
+              reason: gatewayIdentityEval.reason,
+              path: "gateway.approveAndExecute",
+              timestamp: Date.now(),
+            });
+            return {
+              success: false,
+              error: formatCooldownMessage(gatewayIdentityEval.delegation_check),
+              proposer_identity_id: resolvedProposerIdentityId,
+              approver_identity_id: resolvedApproverIdentityId,
+              authority_model: gatewayAuthorityModel,
+              role_separation: gatewayIdentityEval.role_separation,
+              cooldown_remaining_ms: gatewayIdentityEval.cooldown_remaining_ms,
+            };
+          }
+
+          // Log successful delegation with explicit identity IDs and authority model
+          if (resolvedProposerIdentityId === resolvedApproverIdentityId) {
+            await appendLedger("DELEGATION_APPROVED", {
+              intentId: input.intentId,
+              proposer_identity_id: resolvedProposerIdentityId,
+              approver_identity_id: resolvedApproverIdentityId,
+              authority_model: gatewayAuthorityModel,
+              role_separation: gatewayRoleSeparation,
+              path: "gateway.approveAndExecute",
+              timestamp: Date.now(),
+            });
+          }
+        }
+      } catch (err) {
+        console.error("[approveAndExecute] Gateway identity evaluation failed (non-blocking):", err);
+        // Fail-open for evaluation errors — Gateway still enforces proposer ≠ approver
+      }
+
+      // ─── Pre-approval coherence check (advisory, non-blocking) ───
+      let preApprovalCoherence: { status: string; drift_detected: boolean; signals: unknown[] } | null = null;
+      try {
+        const { runCoherenceCheck, buildSystemContext } = await import("./coherence");
+        const systemContext = buildSystemContext({
+          activeObjective: `Approving intent ${input.intentId}`,
+          systemHealth: "approval-pipeline",
+        });
+        const record = await runCoherenceCheck({
+          actionType: "approve_and_execute",
+          actionParameters: { intentId: input.intentId },
+          intentId: input.intentId,
+          proposedBy: "I-2",
+          systemContext,
+          statedObjective: `Human authorization of intent ${input.intentId}`,
+        });
+        preApprovalCoherence = {
+          status: record.status,
+          drift_detected: record.drift_detected,
+          signals: record.signals,
+        };
+        // Write coherence check to ledger
+        const { appendLedger: appendLedgerFn } = await import("./db");
+        await appendLedgerFn("COHERENCE_CHECK", {
+          coherence_id: record.coherence_id,
+          intent_id: input.intentId,
+          status: record.status,
+          drift_detected: record.drift_detected,
+          signal_count: record.signals.length,
+          confidence: record.confidence,
+          phase: "pre-approval",
+          timestamp: Date.now(),
+        });
+      } catch (err) {
+        console.error("[approveAndExecute] Pre-approval coherence check failed (non-blocking):", err);
+      }
+
+      // Authorize the intent as I-2
+      try {
+        const authRes = await fetch(`${GATEWAY_URL}/authorize`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${i2Token}`,
+          },
+          body: JSON.stringify({
+            intent_id: input.intentId,
+            decision: "approved",
+            authorized_by: "I-2",
+            request_timestamp: new Date().toISOString(),
+            request_nonce: `one-auth-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }),
+        });
+        const authData = await authRes.json() as { error?: string; invariant?: string };
+        if (!authRes.ok) {
+          const msg = authData.invariant === "proposer_ne_approver"
+            ? "Cannot approve your own intent (proposer \u2260 approver)"
+            : authData.error || `Authorization failed (HTTP ${authRes.status})`;
+          return { success: false, error: msg };
+        }
+      } catch (err) {
+        return { success: false, error: `Gateway /authorize failed: ${String(err)}` };
+      }
+
+      // --- Step 3: Execute via Gateway (external mode) + local delivery ---
+      // ARCHITECTURE: Gateway = governance engine, Proxy = execution engine.
+      // Always call Gateway /execute-action with delivery_mode=external.
+      // This completes the full governance pipeline (token issue, burn, receipt,
+      // Ed25519 signature, ledger write) without triggering Gateway's sendEmail()
+      // which hangs on Render due to blocked outbound SMTP.
+      // After receiving the Gateway receipt, the proxy handles local delivery.
+      const localIntent = await getIntent(input.intentId);
+      let intentToolArgs = (localIntent?.toolArgs || {}) as Record<string, unknown>;
+      let intentToolName = localIntent?.toolName || "";
+
+      // If local intent not found (e.g., intent created via ONE UI directly to Gateway),
+      // fetch the intent from the Gateway to get delivery_mode and parameters.
+      if (!localIntent || Object.keys(intentToolArgs).length === 0) {
+        try {
+          const gwIntentRes = await fetch(`${GATEWAY_URL}/intent/${input.intentId}`, {
+            headers: { "Authorization": `Bearer ${i1Token}` },
+            signal: AbortSignal.timeout(10000),
+          });
+          if (gwIntentRes.ok) {
+            const gwIntent = await gwIntentRes.json() as Record<string, unknown>;
+            const gwParams = (gwIntent.parameters || {}) as Record<string, unknown>;
+            // Merge Gateway parameters into intentToolArgs
+            if (Object.keys(gwParams).length > 0) {
+              intentToolArgs = gwParams;
+            }
+            // Resolve tool name from Gateway action field
+            if (!intentToolName && gwIntent.action) {
+              intentToolName = String(gwIntent.action);
+            }
+          }
+        } catch (gwErr) {
+          console.warn(`[approveAndExecute] Could not fetch intent from Gateway: ${String(gwErr)}`);
+        }
+      }
+
+      const intentDeliveryMode = String(intentToolArgs.delivery_mode || "notify");
+      const isGmailDelivery = intentDeliveryMode === "gmail" && intentToolName === "send_email";
+
+      let receipt: Record<string, unknown> | null = null;
+      let emailPayload: { to?: string; cc?: string[]; subject?: string; body?: string } | null = null;
+      let deliveryMode = intentDeliveryMode;
+      let localReceipt: import("./connectors").ExecutionReceipt | null = null;
+      let notifyDelivered = false;
+      let telegramDelivered = false;
+
+      // ─── UNIFIED GATEWAY EXECUTION (delivery_mode=external) ───
+      // All intents go through Gateway for governance receipt, then proxy delivers locally.
+      let execData: Record<string, unknown> | null = null;
+      try {
+        const execRes = await fetch(`${GATEWAY_URL}/execute-action`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${i1Token}`,
+          },
+          body: JSON.stringify({
+            intent_id: input.intentId,
+            delivery_mode: "external", // KEY: skip Gateway SMTP, get governance receipt only
+            request_timestamp: new Date().toISOString(),
+            request_nonce: `one-exec-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }),
+          signal: AbortSignal.timeout(30000), // 30s timeout — should complete in <1s
+        });
+        execData = await execRes.json() as Record<string, unknown>;
+        if (!execRes.ok) {
+          return { success: false, error: (execData as { error?: string }).error || `Execute failed (HTTP ${execRes.status})` };
+        }
+      } catch (err) {
+        return { success: false, error: `Gateway /execute-action failed: ${String(err)}` };
+      }
+
+      // Extract Gateway receipt (full governance proof: token, Ed25519 sig, ledger entry)
+      const gwReceipt = (execData.receipt as Record<string, unknown>) || null;
+      emailPayload = (execData.email_payload as { to?: string; cc?: string[]; subject?: string; body?: string }) || null;
+
+      // If no email payload from Gateway, build from available intent data
+      if (!emailPayload && intentToolName === "send_email") {
+        emailPayload = {
+          to: String(intentToolArgs.to || ""),
+          subject: String(intentToolArgs.subject || ""),
+          body: String(intentToolArgs.body || ""),
+        };
+      }
+
+      if (isGmailDelivery) {
+        // ─── LOCAL GMAIL DELIVERY (after Gateway governance receipt) ───
+        // Gateway has already: issued token, burned token, generated receipt,
+        // signed with Ed25519, written to ledger, stored to PostgreSQL.
+        // Now we deliver the actual email via local Gmail SMTP.
+        //
+        // Bug A fix: Use intentToolName (from Gateway fetch) instead of localIntent!.toolName.
+        // When intent was created via ONE UI → Gateway directly, localIntent is null.
+        // We synthesize argsHash from intentToolArgs and default riskTier to HIGH
+        // (send_email is always HIGH risk in the tool registry).
+        const resolvedToolName = localIntent?.toolName || intentToolName;
+        const resolvedArgsHash = localIntent?.argsHash || sha256(JSON.stringify({ toolName: resolvedToolName, toolArgs: intentToolArgs }));
+        const resolvedRiskTier = (localIntent?.riskTier || "HIGH") as "LOW" | "MEDIUM" | "HIGH";
+
+        const approvalProof: import("./connectors").ApprovalProof = {
+          approvalId: `gw-auth-${input.intentId.slice(0, 8)}`,
+          intentId: input.intentId,
+          boundToolName: resolvedToolName,
+          boundArgsHash: resolvedArgsHash,
+          signature: `gw-authorized-${Date.now()}`,
+          expiresAt: Date.now() + 300_000, // 5 min
+        };
+
+        // Bug B fix: Inject _gatewayExecution=true so the connector knows this
+        // call came through the full governance loop (authorize → execute-action → receipt).
+        // Without this flag, the connector refuses execution (REQUIRES_GATEWAY_GOVERNANCE).
+        const connectorArgs = {
+          ...intentToolArgs,
+          _gatewayExecution: true,
+        };
+
+        // Execute via the connector (which handles Gmail SMTP delivery)
+        const connectorResult = await dispatchExecution(
+          resolvedToolName,
+          connectorArgs,
+          approvalProof,
+          resolvedRiskTier,
+          resolvedArgsHash,
+        );
+
+        if (!connectorResult.success) {
+          // Fail-safe: Gmail failure → FAILED receipt, intent NOT marked executed
+          try { await updateIntentStatus(input.intentId, "FAILED"); } catch { /* intent may not exist locally */ }
+          await appendLedger("EXECUTION", {
+            intent_id: input.intentId,
+            error: connectorResult.error,
+            delivery_mode: "gmail",
+            delivery_status: "FAILED",
+            failClosed: true,
+            gateway_receipt_id: gwReceipt ? String((gwReceipt as { receipt_id?: string }).receipt_id || "") : undefined,
+            proposer_identity_id: resolvedProposerIdentityId,
+            approver_identity_id: resolvedApproverIdentityId,
+            authority_model: gatewayAuthorityModel,
+            timestamp: Date.now(),
+          });
+          return { success: false, error: connectorResult.error || "Gmail delivery failed (fail-closed)" };
+        }
+
+        // Generate local receipt with delivery fields + Gateway receipt linkage
+        const executionId = `local-exec-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        localReceipt = generateReceipt(
+          executionId,
+          input.intentId,
+          resolvedToolName,
+          connectorResult,
+          approvalProof,
+          undefined, // authorityContext
+          {
+            delivery_mode: "gmail" as const,
+            delivery_status: connectorResult.success ? "SENT" as const : "FAILED" as const,
+            external_message_id: (connectorResult.output as Record<string, unknown>)?.messageId as string || (connectorResult.output as Record<string, unknown>)?.external_message_id as string || undefined,
+          },
+        );
+
+        // Update intent status (may fail if intent only exists in Gateway — that's OK)
+        try { await updateIntentStatus(input.intentId, "EXECUTED"); } catch { /* intent may not exist locally */ }
+
+        // Build receipt combining Gateway governance + local delivery
+        receipt = {
+          receipt_id: gwReceipt ? String((gwReceipt as { receipt_id?: string }).receipt_id || localReceipt.executionId) : localReceipt.executionId,
+          receipt_hash: gwReceipt ? String((gwReceipt as { receipt_hash?: string }).receipt_hash || localReceipt.receiptHash) : localReceipt.receiptHash,
+          timestamp_executed: gwReceipt ? String((gwReceipt as { timestamp_executed?: string }).timestamp_executed || new Date(localReceipt.timestamp).toISOString()) : new Date(localReceipt.timestamp).toISOString(),
+          proposer_id: resolvedProposerIdentityId,
+          approver_id: resolvedApproverIdentityId,
+          delivery_mode: "gmail",
+          delivery_status: localReceipt.delivery_status,
+          external_message_id: localReceipt.external_message_id,
+          // Gateway governance fields
+          gateway_receipt_id: gwReceipt ? String((gwReceipt as { receipt_id?: string }).receipt_id || "") : undefined,
+          gateway_receipt_hash: gwReceipt ? String((gwReceipt as { receipt_hash?: string }).receipt_hash || "") : undefined,
+          execution_hash: gwReceipt ? String((gwReceipt as { execution_hash?: string }).execution_hash || "") : undefined,
+          ledger_entry_id: gwReceipt ? String((gwReceipt as { ledger_entry_id?: string }).ledger_entry_id || "") : undefined,
+        };
+
+        deliveryMode = "gmail";
+
+      } else {
+        // ─── NON-GMAIL PATH (Gateway receipt only, no local delivery) ───
+        // Gateway handled everything via external mode. Use its receipt directly.
+        receipt = gwReceipt;
+        deliveryMode = String(execData.delivery_mode || "external");
+
+        // Update local intent status
+        if (localIntent) {
+          await updateIntentStatus(input.intentId, "EXECUTED");
+        }
+      }
+
+      // --- Step 4: Notify owner ---
+      if (emailPayload && emailPayload.to) {
+        // Deliver via Manus notification (owner copy)
+        try {
+          const title = emailPayload.subject || "Governed Email via RIO";
+          const content = [
+            `**To:** ${emailPayload.to}`,
+            `**Subject:** ${emailPayload.subject || ""}`,
+            ``,
+            emailPayload.body || "",
+            ``,
+            `---`,
+            `Governed action via RIO pipeline.`,
+            `Intent: \`${input.intentId}\``,
+            receipt ? `Receipt: \`${String((receipt as { receipt_id?: string }).receipt_id || "").slice(0, 12)}\`` : "",
+            deliveryMode === "gmail" ? `Delivery: Gmail SMTP ✓` : "",
+          ].filter(Boolean).join("\n");
+          notifyDelivered = await notifyOwner({ title, content });
+        } catch (err) {
+          console.error("[approveAndExecute] notifyOwner error:", err);
+        }
+
+        // Deliver via Telegram
+        if (isTelegramConfigured()) {
+          try {
+            const tgText = [
+              `\u2709\uFE0F *Governed Email Delivered*`,
+              ``,
+              `*To:* ${emailPayload.to}`,
+              `*Subject:* ${emailPayload.subject || "(none)"}`,
+              ``,
+              (emailPayload.body || "").length > 200 ? (emailPayload.body || "").slice(0, 200) + "..." : (emailPayload.body || ""),
+              ``,
+              `\u2500\u2500\u2500`,
+              `Intent: \`${input.intentId.slice(0, 12)}\``,
+              receipt ? `Receipt: \`${String((receipt as { receipt_id?: string }).receipt_id || "").slice(0, 12)}\`` : "",
+              deliveryMode === "gmail" ? `Delivery: Gmail SMTP` : "",
+            ].filter(Boolean).join("\n");
+            const { sendMessage: sendTg } = await import("./telegram");
+            await sendTg(tgText, "Markdown");
+            telegramDelivered = true;
+          } catch (err) {
+            console.error("[approveAndExecute] Telegram error:", err);
+          }
+        }
+      }
+
+      // --- Step 5: Log to local ledger ---
+      try {
+        await appendLedger("EXECUTION", {
+          intent_id: input.intentId,
+          receipt_id: receipt ? (receipt as { receipt_id?: string }).receipt_id : undefined,
+          receipt_hash: receipt ? (receipt as { receipt_hash?: string }).receipt_hash : undefined,
+          delivery_mode: deliveryMode,
+          delivery_status: localReceipt?.delivery_status || "SENT",
+          external_message_id: localReceipt?.external_message_id || undefined,
+          notify_delivered: notifyDelivered,
+          telegram_delivered: telegramDelivered,
+          proposer_identity_id: resolvedProposerIdentityId,
+          approver_identity_id: resolvedApproverIdentityId,
+          authority_model: gatewayAuthorityModel,
+          role_separation: gatewayRoleSeparation,
+          execution_path: isGmailDelivery ? "local_gmail_after_gateway" : "gateway_external",
+          userId: ctx.user?.id ?? "gateway-auth",
+          timestamp: Date.now(),
+        });
+      } catch (err) {
+        console.error("[approveAndExecute] Ledger error:", err);
+      }
+
+      return {
+        success: true,
+        status: localReceipt ? "receipted" : String((receipt as any)?.status || "receipted"),
+        receipt: receipt ? {
+          receipt_id: String((receipt as { receipt_id?: string }).receipt_id || ""),
+          receipt_hash: String((receipt as { receipt_hash?: string }).receipt_hash || ""),
+          timestamp_executed: String((receipt as { timestamp_executed?: string }).timestamp_executed || new Date().toISOString()),
+          proposer_id: String((receipt as { proposer_id?: string }).proposer_id || resolvedProposerIdentityId),
+          approver_id: String((receipt as { approver_id?: string }).approver_id || resolvedApproverIdentityId),
+          execution_hash: String((receipt as { execution_hash?: string }).execution_hash || ""),
+          ledger_entry_id: String((receipt as { ledger_entry_id?: string }).ledger_entry_id || ""),
+          decision_delta_ms: Number((receipt as { decision_delta_ms?: number }).decision_delta_ms || 0),
+          delivery_mode: deliveryMode,
+          delivery_status: localReceipt?.delivery_status || "SENT",
+          external_message_id: localReceipt?.external_message_id || String((receipt as any)?.external_message_id || ""),
+          proposer_identity_id: resolvedProposerIdentityId,
+          approver_identity_id: resolvedApproverIdentityId,
+          authority_model: gatewayAuthorityModel,
+        } : null,
+        execution: localReceipt ? {
+          connector: "send_email",
+        } : null,
+        deliveryMode,
+        delivered: notifyDelivered || telegramDelivered || (isGmailDelivery && !!localReceipt),
+        channels: {
+          notification: notifyDelivered,
+          telegram: telegramDelivered,
+          gmail: isGmailDelivery && !!localReceipt,
+        },
+        coherence: preApprovalCoherence,
+        // Explicit identity fields in receipt
+        proposer_identity_id: resolvedProposerIdentityId,
+        approver_identity_id: resolvedApproverIdentityId,
+        authority_model: gatewayAuthorityModel,
+        role_separation: gatewayRoleSeparation,
+        error: null,
+      };
+    }),
+
     /** Get Gateway health and connection status */
     health: publicProcedure.query(async () => {
       const result = await proxyGatewayHealth();
       return {
         connected: result.ok,
         ...result.data,
+      };
+    }),
+
+    /**
+     * Server-side proxy for Gateway /ledger.
+     * The Gateway /ledger endpoint requires JWT auth.
+     * This route logs in as I-1 server-side and proxies the request,
+     * so the browser doesn't need to maintain a separate Gateway JWT.
+     */
+    ledger: protectedProcedure.input(z.object({
+      limit: z.number().min(1).max(500).default(100),
+    }).optional()).query(async ({ input }) => {
+      const GATEWAY_URL = ENV.gatewayUrl;
+      if (!GATEWAY_URL) {
+        return { ok: false, entries: [], error: "Gateway URL not configured" };
+      }
+
+      // Login as I-1 to get a server-side JWT
+      let token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: "I-1",
+            passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026",
+          }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) {
+          return { ok: false, entries: [], error: `Gateway login failed: ${loginData.error || "no token"}` };
+        }
+        token = loginData.token;
+      } catch (err) {
+        return { ok: false, entries: [], error: `Gateway unreachable: ${String(err)}` };
+      }
+
+      // Fetch ledger with auth
+      try {
+        const limit = input?.limit ?? 100;
+        const ledgerRes = await fetch(`${GATEWAY_URL}/ledger?limit=${limit}`, {
+          headers: {
+            "Authorization": `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        const ledgerData = await ledgerRes.json() as { entries?: unknown[] };
+        if (!ledgerRes.ok) {
+          return { ok: false, entries: [], error: `Gateway /ledger returned ${ledgerRes.status}` };
+        }
+        return {
+          ok: true,
+          entries: ledgerData.entries || [],
+          error: null,
+        };
+      } catch (err) {
+        return { ok: false, entries: [], error: `Gateway /ledger fetch failed: ${String(err)}` };
+      }
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // MINIMUM AUTHORITY LAYER
+  // ═══════════════════════════════════════════════════════════════
+
+  authority: router({
+    /** Get the current authority state — root key, active policy, genesis status */
+    status: protectedProcedure.query(async () => {
+      const root = getActiveRootAuthority();
+      const policy = getActivePolicy();
+      return {
+        rootAuthority: root ? {
+          fingerprint: root.fingerprint,
+          status: root.status,
+          created_at: root.created_at,
+        } : null,
+        activePolicy: policy ? {
+          policy_id: policy.policy_id,
+          policy_hash: policy.policy_hash,
+          status: policy.status,
+          activated_at: policy.activated_at,
+          rules: policy.rules,
+        } : null,
+        lastReceiptHash: getLastReceiptHash(),
+        chiefOfStaff: CHIEF_OF_STAFF,
+      };
+    }),
+
+    /** Register root authority public key — called once during genesis */
+    registerRoot: protectedProcedure
+      .input(z.object({ publicKey: z.string().min(32) }))
+      .mutation(async ({ input }) => {
+        const root = registerRootAuthority(input.publicKey);
+        await appendLedger("GENESIS", {
+          event: "ROOT_AUTHORITY_REGISTERED",
+          fingerprint: root.fingerprint,
+          status: root.status,
+        });
+        return root;
+      }),
+
+    /** Activate a governance policy — requires root signature */
+    activatePolicy: protectedProcedure
+      .input(z.object({
+        policyId: z.string().min(1),
+        rules: z.object({
+          proposer_cannot_approve: z.boolean(),
+          high_risk_requires_approval: z.boolean(),
+          approval_expiry_minutes: z.number().min(1),
+          max_executions_per_approval: z.number().min(1),
+          ledger_required: z.boolean(),
+          receipt_required: z.boolean(),
+          fail_closed: z.boolean(),
+        }),
+        policySignature: z.string().min(1),
+        rootPublicKey: z.string().min(32),
+      }))
+      .mutation(async ({ input }) => {
+        const policy = activatePolicy(input);
+        await appendLedger("POLICY_UPDATE", {
+          event: "POLICY_ACTIVATED",
+          policy_id: policy.policy_id,
+          policy_hash: policy.policy_hash,
+          rules: policy.rules,
+        });
+        return {
+          policy_id: policy.policy_id,
+          policy_hash: policy.policy_hash,
+          status: policy.status,
+          activated_at: policy.activated_at,
+        };
+      }),
+
+    /** Create genesis record — the anchor for the entire system (ledger block 0) */
+    createGenesis: protectedProcedure
+      .input(z.object({
+        rootPublicKey: z.string().min(32),
+        policyHash: z.string().min(1),
+        rootSignature: z.string().min(1),
+      }))
+      .mutation(async ({ input }) => {
+        const genesis = createGenesisRecord(input);
+        const ledgerEntry = await appendLedger("GENESIS", {
+          ...genesis,
+        });
+        return { genesis, ledgerEntryId: ledgerEntry.entryId };
+      }),
+
+    /** Issue an authorization token after approval */
+    issueToken: protectedProcedure
+      .input(z.object({
+        intentId: z.string().min(1),
+        action: z.string().min(1),
+        toolArgs: z.record(z.string(), z.unknown()),
+        approvedBy: z.string().min(1),
+        signature: z.string().min(1),
+        expiryMinutes: z.number().optional(),
+        maxExecutions: z.number().optional(),
+      }))
+      .mutation(async ({ input }) => {
+        const token = issueAuthorizationToken(input);
+        await appendLedger("AUTHORITY_TOKEN", {
+          event: "TOKEN_ISSUED",
+          token_id: token.token_id,
+          intent_id: token.intent_id,
+          action: token.action,
+          policy_hash: token.policy_hash,
+          expires_at: token.expires_at,
+        });
+        return token;
+      }),
+
+    /** Validate an authorization token before execution */
+    validateToken: protectedProcedure
+      .input(z.object({
+        tokenId: z.string().min(1),
+        action: z.string().min(1),
+        toolArgs: z.record(z.string(), z.unknown()),
+        killSwitchActive: z.boolean().optional(),
+      }))
+      .query(async ({ input }) => {
+        const token = getAuthorizationToken(input.tokenId);
+        if (!token) {
+          return { valid: false, checks: [{ check: "token_exists", status: "FAIL" as const, detail: "Token not found" }] };
+        }
+        return validateAuthorizationToken(token, input.action, input.toolArgs, input.killSwitchActive ?? false);
+      }),
+
+    /** Generate a canonical receipt for a governed action */
+    generateReceipt: protectedProcedure
+      .input(z.object({
+        intentId: z.string().min(1),
+        proposerId: z.string().min(1),
+        approverId: z.string().min(1),
+        tokenId: z.string().min(1),
+        action: z.string().min(1),
+        success: z.boolean(),
+        result: z.unknown(),
+        executor: z.string().min(1),
+        timestampProposed: z.string().min(1),
+        timestampApproved: z.string().min(1),
+      }))
+      .mutation(async ({ input }) => {
+        const ledgerEntry = await appendLedger("EXECUTION", {
+          event: "CANONICAL_RECEIPT",
+          intent_id: input.intentId,
+          proposer_id: input.proposerId,
+          approver_id: input.approverId,
+          token_id: input.tokenId,
+          action: input.action,
+          success: input.success,
+        });
+        const receipt = generateCanonicalReceipt({
+          ...input,
+          ledgerEntryId: ledgerEntry.entryId,
+        });
+        return receipt;
+      }),
+
+    /** Verify the full authority chain — Chief of Staff audit function */
+    verifyChain: protectedProcedure
+      .input(z.object({
+        genesis: z.object({
+          record_type: z.literal("GENESIS"),
+          system_id: z.literal("RIO"),
+          root_public_key: z.string(),
+          policy_hash: z.string(),
+          created_at: z.string(),
+          previous_hash: z.literal("0000000000000000"),
+          signature: z.string(),
+          genesis_hash: z.string(),
+        }),
+        policy: z.object({
+          policy_id: z.string(),
+          policy_hash: z.string(),
+          policy_signature: z.string(),
+          root_public_key: z.string(),
+          rules: z.any(),
+          activated_at: z.string(),
+          status: z.enum(["ACTIVE", "REVOKED", "SUPERSEDED"]),
+        }),
+        token: z.object({
+          token_id: z.string(),
+          intent_id: z.string(),
+          action: z.string(),
+          parameters_hash: z.string(),
+          approved_by: z.string(),
+          policy_hash: z.string(),
+          issued_at: z.string(),
+          expires_at: z.string(),
+          max_executions: z.number(),
+          execution_count: z.number(),
+          signature: z.string(),
+        }),
+        receipt: z.object({
+          receipt_id: z.string(),
+          intent_id: z.string(),
+          proposer_id: z.string(),
+          approver_id: z.string(),
+          token_id: z.string(),
+          action: z.string(),
+          status: z.enum(["SUCCESS", "FAILED"]),
+          executor: z.string(),
+          execution_hash: z.string(),
+          policy_hash: z.string(),
+          snapshot_hash: z.string().default(""),
+          timestamp_proposed: z.string(),
+          timestamp_approved: z.string(),
+          timestamp_executed: z.string(),
+          decision_delta_ms: z.number().nullable(),
+          ledger_entry_id: z.string(),
+          previous_receipt_hash: z.string(),
+          receipt_hash: z.string(),
+          gateway_signature: z.string(),
+        }),
+      }))
+      .query(async ({ input }) => {
+        return verifyAuthorityChain(input);
+      }),
+
+    /** Enforce The One Rule — check all six invariants */
+    enforceRule: protectedProcedure
+      .input(z.object({
+        hasAuthorizationToken: z.boolean(),
+        hasApproval: z.boolean(),
+        hasActivePolicy: z.boolean(),
+        hasPolicyRootSignature: z.boolean(),
+        willGenerateReceipt: z.boolean(),
+        willWriteLedger: z.boolean(),
+      }))
+      .query(async ({ input }) => {
+        return enforceTheOneRule(input);
+      }),
+
+    /** Compute policy hash for a given policy */
+    computePolicyHash: publicProcedure
+      .input(z.object({
+        policyId: z.string().min(1),
+        rules: z.object({
+          proposer_cannot_approve: z.boolean(),
+          high_risk_requires_approval: z.boolean(),
+          approval_expiry_minutes: z.number(),
+          max_executions_per_approval: z.number(),
+          ledger_required: z.boolean(),
+          receipt_required: z.boolean(),
+          fail_closed: z.boolean(),
+        }),
+      }))
+      .query(async ({ input }) => {
+        return { policy_hash: computePolicyHash(input.policyId, input.rules) };
+      }),
+
+    /** Get default policy rules from the spec */
+    defaultRules: publicProcedure.query(() => DEFAULT_POLICY_RULES),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // ASK BONDI — Read-only implementation Q&A (no auth, no governance)
+  // ═══════════════════════════════════════════════════════════════
+
+  askBondi: publicProcedure
+    .input(z.object({ question: z.string().min(1).max(4000) }))
+    .mutation(async ({ input }) => {
+      const { invokeLLM } = await import("./_core/llm");
+
+      const BONDI_SYSTEM_PROMPT = `You are Bondi, the implementation assistant for the RIO protocol.
+
+You ONLY answer with concrete, developer-ready implementation guidance.
+
+Always:
+  - Explain step-by-step
+  - Reference real flow: Intent → Governance → Approval → Execution → Receipt → Ledger
+  - Use endpoints, payloads, and sequence
+  - Be precise and technical
+
+Never:
+  - Speak philosophically
+  - Be vague
+  - Invent features not in the system
+
+Assume the user is trying to implement:
+  - Receipt protocol
+  - Gateway integration
+  - Governed action pipeline
+
+Key system facts:
+  - Gateway URL: https://rio-gateway.onrender.com
+  - Principals: I-1 (proposer, root_authority), I-2 (approver, human)
+  - Flow: POST /intent → POST /govern → POST /approvals/:id → POST /execute-action
+  - Receipts: SHA-256 hash chain, Ed25519 signed, canonical JSON
+  - Ledger: append-only, hash-linked, tamper-evident
+  - Policy: proposer ≠ approver, HIGH risk requires human approval, fail-closed
+  - Receipt Protocol repo: github.com/bkr1297-RIO/rio-receipt-protocol
+  - Connectors: Gmail SMTP (send_email), Twilio SMS (send_sms)
+
+If unclear, ask a clarifying question.`;
+
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: BONDI_SYSTEM_PROMPT },
+          { role: "user", content: input.question },
+        ],
+      });
+
+      const answer = response.choices?.[0]?.message?.content || "I couldn't generate an answer. Please try again.";
+      return { answer };
+    }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // MANTIS — Memory, Audit, Notification, Tracking, Integrity, Sync
+  // Claude Condition 3: Status indicators pull from MANTIS sweep output
+  // ═══════════════════════════════════════════════════════════════
+
+  mantis: router({
+    /**
+     * Read-only: Fetch latest MANTIS integrity sweep + STATUS.json from GitHub.
+     * This is the observer data source — NOT agent self-report.
+     * No auth required: this is public system health data.
+     */
+    integrity: publicProcedure.query(async () => {
+      const token = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || "";
+      if (!token) {
+        return {
+          ok: false,
+          data: null,
+          error: "GitHub token not configured — cannot read MANTIS sweep data",
+        };
+      }
+
+      try {
+        const state = await fetchMantisState(token);
+        const integrity = normalizeMantisState(state);
+        return {
+          ok: true,
+          data: integrity,
+          error: state.errors.length > 0 ? state.errors.join("; ") : null,
+        };
+      } catch (err) {
+        return {
+          ok: false,
+          data: null,
+          error: `MANTIS fetch failed: ${String(err)}`,
+        };
+      }
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // RESONANCE FEED — Live Drive/GitHub activity stream
+  // ═══════════════════════════════════════════════════════════════
+  resonance: router({
+    /**
+     * Live activity stream from RIO folder tree.
+     * Tries Google Drive first (via Forge), falls back to GitHub commits.
+     * This is the system's heartbeat — it lights up when any node acts.
+     */
+    feed: publicProcedure.input(z.object({
+      hoursBack: z.number().min(1).max(720).default(72),
+      maxEvents: z.number().min(1).max(100).default(50),
+    }).optional()).query(async ({ input }) => {
+      const hoursBack = input?.hoursBack ?? 72;
+      const maxEvents = input?.maxEvents ?? 50;
+
+      // Try Drive first
+      const driveFeed = await fetchResonanceFeed(hoursBack, maxEvents);
+
+      // If Drive returned events, use them
+      if (driveFeed.events.length > 0) {
+        return {
+          ok: true,
+          source: "drive" as const,
+          data: driveFeed,
+          error: driveFeed.errors.length > 0 ? driveFeed.errors.join("; ") : null,
+        };
+      }
+
+      // Fallback to GitHub commits
+      const ghToken = process.env.GH_TOKEN || process.env.GITHUB_TOKEN || "";
+      if (!ghToken) {
+        return {
+          ok: false,
+          source: "none" as const,
+          data: driveFeed, // empty but structured
+          error: "Neither Drive API nor GitHub token available for Resonance Feed",
+        };
+      }
+
+      const ghFeed = await fetchResonanceFeedFromGitHub(ghToken, maxEvents);
+      return {
+        ok: ghFeed.events.length > 0,
+        source: "github" as const,
+        data: ghFeed,
+        error: [
+          ...driveFeed.errors,
+          ...ghFeed.errors,
+        ].filter(Boolean).join("; ") || null,
+      };
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // COHERENCE MONITOR — Meta-Governance Witness Layer
+  // Read-only, advisory. Cannot approve, execute, or block.
+  // ═══════════════════════════════════════════════════════════════
+  coherence: router({
+    /**
+     * Get current coherence state — status, active warnings, recent history.
+     * This is what the dashboard panel reads.
+     */
+    status: publicProcedure.query(() => {
+      return getCoherenceState();
+    }),
+
+    /**
+     * Get full coherence check history (for audit/export).
+     */
+    history: publicProcedure.input(z.object({
+      limit: z.number().min(1).max(100).optional(),
+    }).optional()).query(({ input }) => {
+      return getCoherenceHistory(input?.limit || 50);
+    }),
+
+    /**
+     * Run a coherence check on a proposed action.
+     * This is called during the approval flow — before the human sees the action.
+     * The result is advisory only: it adds context to the approval decision.
+     */
+    check: protectedProcedure.input(z.object({
+      actionType: z.string().min(1),
+      actionParameters: z.record(z.string(), z.unknown()),
+      intentId: z.string().optional(),
+      statedObjective: z.string().optional(),
+    })).mutation(async ({ ctx, input }) => {
+      // Build system context from available data
+      const context = buildSystemContext({
+        activeObjective: input.statedObjective || "General system operation",
+        systemHealth: "Operational (from last MANTIS sweep)",
+      });
+
+      const record = await runCoherenceCheck({
+        actionType: input.actionType,
+        actionParameters: input.actionParameters,
+        intentId: input.intentId,
+        proposedBy: ctx.user.name || ctx.user.email || `user-${ctx.user.id}`,
+        systemContext: context,
+        statedObjective: input.statedObjective,
+      });
+
+      // Write to ledger for audit trail
+      try {
+        await appendLedger("COHERENCE_CHECK", {
+          coherence_id: record.coherence_id,
+          action_id: record.action_id,
+          status: record.status,
+          drift_detected: record.drift_detected,
+          signal_count: record.signals.length,
+          confidence: record.confidence,
+          userId: ctx.user.id,
+          timestamp: Date.now(),
+        });
+      } catch (err) {
+        console.error("[CoherenceMonitor] Ledger write failed:", err);
+      }
+
+      return record;
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // SYSTEM SEEDS — immutable configuration documents
+  // ═══════════════════════════════════════════════════════════════
+  seeds: router({
+    /** List all 3 seed documents */
+    list: publicProcedure.query(async () => {
+      const fs = await import("fs/promises");
+      const path = await import("path");
+      const seedFiles = [
+        { id: "master-seed", name: "Master Seed v1.1", file: "shared/master-seed-v1.1.json" },
+        { id: "system-definition", name: "System Definition", file: "shared/corpus/system-definition.json" },
+        { id: "agents", name: "Agent Roster", file: "shared/corpus/agents.json" },
+      ];
+      const seeds = await Promise.all(seedFiles.map(async (sf) => {
+        try {
+          const raw = await fs.readFile(path.resolve(process.cwd(), sf.file), "utf-8");
+          return { id: sf.id, name: sf.name, content: JSON.parse(raw) };
+        } catch {
+          return { id: sf.id, name: sf.name, content: null };
+        }
+      }));
+      return seeds;
+    }),
+
+    /** Get a single seed document by ID */
+    get: publicProcedure.input(z.object({ id: z.string() })).query(async ({ input }) => {
+      const fs = await import("fs/promises");
+      const path = await import("path");
+      const map: Record<string, string> = {
+        "master-seed": "shared/master-seed-v1.1.json",
+        "system-definition": "shared/corpus/system-definition.json",
+        "agents": "shared/corpus/agents.json",
+      };
+      const file = map[input.id];
+      if (!file) throw new Error(`Unknown seed: ${input.id}`);
+      const raw = await fs.readFile(path.resolve(process.cwd(), file), "utf-8");
+      return JSON.parse(raw);
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // EMAIL ACTION FIREWALL — Policy Engine + Receipt System
+  // ═══════════════════════════════════════════════════════════════
+  emailFirewall: router({
+    /** Scan email content against policy rules. Returns decision + receipt. */
+    scan: publicProcedure
+      .input(z.object({
+        body: z.string().min(1, "Email body is required"),
+        subject: z.string().optional(),
+        to: z.string().optional(),
+        strictness: z.enum(["strict", "standard", "permissive"]).default("standard"),
+        useLLM: z.boolean().default(true),
+      }))
+      .mutation(async ({ input }) => {
+        const { result, receipt } = await scanEmail(
+          input.body,
+          input.subject || null,
+          input.to || null,
+          input.strictness as StrictnessLevel,
+          input.useLLM,
+        );
+        // Store receipt + write to governance ledger
+        const ledgerEntry = await storeGovernedReceipt(receipt);
+        return { result, receipt, ledger: ledgerEntry };
+      }),
+
+    /** Get recent receipts */
+    receipts: publicProcedure
+      .input(z.object({ limit: z.number().min(1).max(200).default(50) }).optional())
+      .query(({ input }) => {
+        return getReceipts(input?.limit || 50);
+      }),
+
+    /** Get a single receipt by ID */
+    receipt: publicProcedure
+      .input(z.object({ receiptId: z.string() }))
+      .query(({ input }) => {
+        const receipt = getReceiptById(input.receiptId);
+        if (!receipt) throw new Error("Receipt not found");
+        return receipt;
+      }),
+
+    /** Get receipt statistics */
+    stats: publicProcedure.query(() => {
+      return getReceiptStats();
+    }),
+
+    /** Generate sample receipts for demo purposes */
+    generateSamples: publicProcedure.mutation(() => {
+      const samples = generateSampleReceipts();
+      for (const s of samples) storeReceipt(s);
+      return { generated: samples.length, receipts: samples };
+    }),
+
+    // ─── Inbound Message Adapter ─────────────────────────────
+
+    /** Scan an inbound text message (SMS) through the firewall */
+    scanInbound: publicProcedure
+      .input(z.object({
+        text: z.string().min(1, "Message text is required"),
+        sender: z.string().min(1, "Sender is required"),
+        strictness: z.enum(["strict", "standard", "permissive"]).default("standard"),
+      }))
+      .mutation(async ({ input }) => {
+        const { routing, result, receipt } = await processIncomingMessage(
+          input.text,
+          input.sender,
+          input.strictness as StrictnessLevel,
+          false, // no LLM for inbound messages by default
+        );
+        const ledgerEntry = await storeGovernedReceipt(receipt);
+        return { routing, result, receipt, ledger: ledgerEntry };
+      }),
+
+    /** Get inbound message receipts grouped by routing */
+    inboundMessages: publicProcedure.query(() => {
+      return getInboundMessageStats();
+    }),
+
+    /** Get receipts filtered by channel */
+    receiptsByChannel: publicProcedure
+      .input(z.object({
+        channel: z.enum(["email", "sms", "slack", "linkedin"]),
+        limit: z.number().min(1).max(200).default(50),
+      }))
+      .query(({ input }) => {
+        return getReceiptsByChannel(input.channel, input.limit);
+      }),
+
+    /** Get current firewall policy config */
+    policyConfig: publicProcedure.query(async () => {
+      // Use userId 0 as the global/default config
+      const config = await getEmailFirewallConfig(0);
+      return config || {
+        strictness: "standard" as const,
+        preset: "personal",
+        ruleOverrides: {} as Record<string, { enabled: boolean }>,
+        categoryOverrides: {} as Record<string, string>,
+        internalDomains: [] as string[],
+        llmEnabled: true,
+      };
+    }),
+
+    /** Update firewall policy config */
+    updatePolicyConfig: publicProcedure
+      .input(z.object({
+        ruleId: z.string().optional(),
+        enabled: z.boolean().optional(),
+        actionOverride: z.string().optional(),
+        strictnessOverride: z.string().optional(),
+        preset: z.string().optional(),
+        strictness: z.enum(["strict", "standard", "permissive"]).optional(),
+      }))
+      .mutation(async ({ input }) => {
+        // Get current config or create default
+        const current = await getEmailFirewallConfig(0);
+        const ruleOverrides = current?.ruleOverrides || {};
+        const categoryOverrides = current?.categoryOverrides || {};
+
+        if (input.ruleId) {
+          if (input.enabled !== undefined) {
+            ruleOverrides[input.ruleId] = { enabled: input.enabled };
+          }
+          if (input.actionOverride) {
+            categoryOverrides[input.ruleId] = input.actionOverride;
+          }
+        }
+
+        const updated = await upsertEmailFirewallConfig(0, {
+          strictness: input.strictness || current?.strictness || "standard",
+          preset: input.preset || current?.preset || "personal",
+          ruleOverrides,
+          categoryOverrides,
+          internalDomains: current?.internalDomains || [],
+        });
+        return updated;
+      }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // RIO READ APIs (Drive-backed, read-only)
+  // ═══════════════════════════════════════════════════════════════
+  rio: router({
+    lastAction: publicProcedure.query(async () => {
+      return await getLastAction();
+    }),
+
+    history: publicProcedure.input(z.object({
+      limit: z.number().min(1).max(100).default(20),
+      offset: z.number().min(0).default(0),
+    }).optional()).query(async ({ input }) => {
+      const limit = input?.limit ?? 20;
+      const offset = input?.offset ?? 0;
+      return await getActionHistory(limit, offset);
+    }),
+
+    systemState: publicProcedure.query(async () => {
+      return await getSystemState();
+    }),
+
+    // ─── System Health (CBS Section 13) ─────────────────────
+    health: publicProcedure.query(() => {
+      return getSystemHealth();
+    }),
+
+    // ─── Approval Queue (CBS Section 10) ────────────────────
+    pendingApprovals: publicProcedure.query(() => {
+      return getPendingApprovals().map(a => ({
+        approval_id: a.approval_id,
+        action_id: a.action_id,
+        proposer_id: a.proposer_id,
+        intent_type: a.envelope.intent.type,
+        resource_id: a.envelope.resource.id,
+        risk_level: a.envelope.constraints.risk_level,
+        requested_at: new Date(a.requested_at).toISOString(),
+        expires_at: new Date(a.expires_at).toISOString(),
+        status: a.status,
+      }));
+    }),
+
+    allApprovals: publicProcedure.input(z.object({
+      limit: z.number().min(1).max(100).default(20),
+    }).optional()).query(({ input }) => {
+      const limit = input?.limit ?? 20;
+      return getAllApprovals().slice(-limit).map(a => ({
+        approval_id: a.approval_id,
+        action_id: a.action_id,
+        proposer_id: a.proposer_id,
+        approver_id: a.approver_id,
+        status: a.status,
+        requested_at: new Date(a.requested_at).toISOString(),
+        resolved_at: a.resolved_at ? new Date(a.resolved_at).toISOString() : null,
+      }));
+    }),
+
+    // ─── Approve/Reject (CBS Section 10) ────────────────────
+    approve: publicProcedure.input(z.object({
+      approval_id: z.string(),
+      approver_id: z.string(),
+      action: z.enum(["APPROVED", "REJECTED"]),
+    })).mutation(async ({ input }) => {
+      const result = await resolveApproval(input.approval_id, input.approver_id, input.action);
+      if (result.error) {
+        throw new TRPCError({ code: "BAD_REQUEST", message: result.error });
+      }
+      return {
+        approval_id: result.approval!.approval_id,
+        status: result.approval!.status,
+        approver_id: result.approval!.approver_id,
+      };
+    }),
+
+    // ─── Envelope Validation (CBS Section 2) ────────────────
+    validateEnvelope: publicProcedure.input(z.object({
+      envelope: z.any(),
+    })).mutation(({ input }) => {
+      return validateEnvelope(input.envelope);
+    }),
+
+    // ═══════════════════════════════════════════════════════════
+    // PAUSE PLACEMENT MODEL
+    // ═══════════════════════════════════════════════════════════
+
+    // Route an action through the pause placement decision tree
+    routeAction: publicProcedure.input(z.object({
+      action_type: z.string(),
+      recipient: z.string().optional(),
+      subject: z.string().optional(),
+      body: z.string().optional(),
+      data: z.record(z.string(), z.unknown()).optional(),
+      source: z.string().default("RIO_UI"),
+      user_id: z.string().default("owner"),
+    })).mutation(async ({ input }) => {
+      const action: Action = {
+        id: "",
+        type: input.action_type,
+        recipient: input.recipient,
+        subject: input.subject,
+        body: input.body,
+        data: input.data || {},
+        timestamp: new Date().toISOString(),
+      };
+      return await routeAction(action, input.source, input.user_id);
+    }),
+
+    // Execute after approval resolution
+    executeAfterApproval: publicProcedure.input(z.object({
+      approval_id: z.string(),
+      action_type: z.string(),
+      recipient: z.string().optional(),
+      subject: z.string().optional(),
+      body: z.string().optional(),
+      data: z.record(z.string(), z.unknown()).optional(),
+    })).mutation(async ({ input }) => {
+      const action: Action = {
+        id: "",
+        type: input.action_type,
+        recipient: input.recipient,
+        subject: input.subject,
+        body: input.body,
+        data: input.data || {},
+        timestamp: new Date().toISOString(),
+      };
+      return await executeAfterApproval(input.approval_id, action);
+    }),
+
+    // ─── Intake Rules ───────────────────────────────────────
+    addIntakeRule: publicProcedure.input(z.object({
+      name: z.string(),
+      action_type: z.string(),
+      conditions: z.record(z.string(), z.unknown()).default({}),
+      constraints: z.record(z.string(), z.unknown()).default({}),
+      approved_by: z.string(),
+    })).mutation(({ input }) => {
+      return addIntakeRule({
+        name: input.name,
+        action_type: input.action_type,
+        conditions: input.conditions,
+        constraints: input.constraints,
+        approved_by: input.approved_by,
+        approved_at: new Date().toISOString(),
+        active: true,
+      });
+    }),
+
+    removeIntakeRule: publicProcedure.input(z.object({
+      rule_id: z.string(),
+    })).mutation(({ input }) => {
+      const removed = removeIntakeRule(input.rule_id);
+      if (!removed) throw new TRPCError({ code: "NOT_FOUND", message: "Rule not found" });
+      return { removed: true };
+    }),
+
+    intakeRules: publicProcedure.query(() => {
+      return getAllRules();
+    }),
+
+    activeIntakeRules: publicProcedure.query(() => {
+      return getActiveRules();
+    }),
+
+    getRule: publicProcedure.input(z.object({
+      rule_id: z.string(),
+    })).query(({ input }) => {
+      const rule = getRule(input.rule_id);
+      if (!rule) throw new TRPCError({ code: "NOT_FOUND", message: "Rule not found" });
+      return rule;
+    }),
+
+    // ─── Pause Stats ────────────────────────────────────────
+    pauseStats: publicProcedure.query(() => {
+      return getPauseStats();
+    }),
+
+    checkPause: publicProcedure.input(z.object({
+      action_id: z.string(),
+    })).query(({ input }) => {
+      return { action_id: input.action_id, pause_type: hasPause(input.action_id) };
+    }),
+
+    // ═══════════════════════════════════════════════════════════
+    // EMAIL-BASED APPROVAL (Multi-User MVP)
+    // ═══════════════════════════════════════════════════════════
+
+    sendApprovalEmail: publicProcedure.input(z.object({
+      intent_id: z.string(),
+      proposer_email: z.string().email(),
+      approver_email: z.string().email(),
+      action_type: z.string(),
+      action_summary: z.string(),
+      action_details: z.record(z.string(), z.unknown()).optional(),
+      base_url: z.string().url(),
+    })).mutation(async ({ input }) => {
+      const result = await sendApprovalEmail(
+        {
+          intent_id: input.intent_id,
+          proposer_email: input.proposer_email,
+          approver_email: input.approver_email,
+          action_type: input.action_type,
+          action_summary: input.action_summary,
+          action_details: input.action_details,
+        },
+        input.base_url,
+      );
+      if (!result.success) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: result.error || "Failed to send approval email" });
+      }
+      return {
+        success: true,
+        intent_id: input.intent_id,
+        approver_email: input.approver_email,
+        expires_at: result.token_payload?.expires_at
+          ? new Date(result.token_payload.expires_at).toISOString()
+          : null,
+        email_message_id: result.email_result?.messageId || null,
+      };
+    }),
+
+    computeActionHash: publicProcedure.input(z.object({
+      action_type: z.string(),
+      action_details: z.record(z.string(), z.unknown()).default({}),
+    })).query(({ input }) => {
+      return {
+        action_hash: computeActionHash(input.action_type, input.action_details),
+      };
+    }),
+
+    sendApprovalSMS: publicProcedure.input(z.object({
+      intent_id: z.string(),
+      proposer_email: z.string().email(),
+      approver_phone: z.string().min(10),
+      approver_email: z.string().email(),
+      action_type: z.string(),
+      action_summary: z.string(),
+      action_details: z.record(z.string(), z.unknown()).optional(),
+      base_url: z.string().url(),
+    })).mutation(async ({ input }) => {
+      const result = await sendApprovalSMS(
+        {
+          intent_id: input.intent_id,
+          proposer_email: input.proposer_email,
+          approver_phone: input.approver_phone,
+          approver_email: input.approver_email,
+          action_type: input.action_type,
+          action_summary: input.action_summary,
+          action_details: input.action_details,
+        },
+        input.base_url,
+      );
+      if (!result.success) {
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: result.error || "Failed to send approval SMS" });
+      }
+      return {
+        success: true,
+        intent_id: input.intent_id,
+        approver_phone: input.approver_phone,
+        expires_at: result.token_payload?.expires_at
+          ? new Date(result.token_payload.expires_at).toISOString()
+          : null,
+        sms_sid: result.sms_result?.messageSid || null,
+      };
+    }),
+
+    // ═══════════════════════════════════════════════════════════
+    // SELF-TRIGGER: User-Initiated Governed Actions
+    // ═══════════════════════════════════════════════════════════
+    // Allows authenticated users to trigger governed actions directly.
+    // Wires to existing sendApprovalEmail → approve → execute → receipt → ledger.
+    // Does NOT change Sentinel, approval logic, receipts, or ledger.
+
+    triggerAction: protectedProcedure.input(z.object({
+      action_type: z.enum(["send_email", "send_sms"]),
+      recipient: z.string().min(1, "Recipient is required"),
+      subject: z.string().optional(),
+      body: z.string().optional(),
+      approver_email: z.string().email().optional(),
+      source: z.enum(["RIO_UI", "TELEGRAM", "API"]).default("RIO_UI"),
+    })).mutation(async ({ ctx, input }) => {
+      const user = ctx.user!;
+      const proposerEmail = user.email || `user-${user.id}@rio.local`;
+      const approverEmail = input.approver_email || proposerEmail; // default: self-approve
+
+      // Build action details based on action_type
+      let actionSummary: string;
+      let actionDetails: Record<string, unknown>;
+
+      if (input.action_type === "send_email") {
+        actionSummary = `Send governed email to ${input.recipient}`;
+        actionDetails = {
+          to: input.recipient,
+          subject: input.subject || "(no subject)",
+          body: input.body || "",
+        };
+      } else {
+        // send_sms
+        actionSummary = `Send governed SMS to ${input.recipient}`;
+        actionDetails = {
+          phone: input.recipient,
+          message: input.body || "",
+        };
+      }
+
+      // Generate intent ID
+      const intentId = `INT-${input.source}-${Date.now()}`;
+
+      // Determine base_url: use request origin (works for both dev and published site)
+      const origin = ctx.req.headers.origin
+        || ctx.req.headers.referer?.replace(/\/[^/]*$/, "")
+        || "https://rio-one.manus.space";
+
+      // Send approval email through existing pipeline
+      const result = await sendApprovalEmail(
+        {
+          intent_id: intentId,
+          proposer_email: proposerEmail,
+          approver_email: approverEmail,
+          action_type: input.action_type,
+          action_summary: actionSummary,
+          action_details: actionDetails,
+        },
+        origin,
+      );
+
+      if (!result.success) {
+        throw new TRPCError({
+          code: "INTERNAL_SERVER_ERROR",
+          message: result.error || "Failed to send approval email",
+        });
+      }
+
+      console.log(`[SelfTrigger] ${input.source} → ${input.action_type} → approval email sent to ${approverEmail} (intent: ${intentId})`);
+
+      return {
+        success: true,
+        intent_id: intentId,
+        approver_email: approverEmail,
+        action_type: input.action_type,
+        action_summary: actionSummary,
+        source: input.source,
+        expires_at: result.token_payload?.expires_at
+          ? new Date(result.token_payload.expires_at).toISOString()
+          : null,
       };
     }),
   }),

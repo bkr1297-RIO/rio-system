@@ -1,7 +1,8 @@
 /**
  * BONDI AI ROUTER
  * ================
- * The orchestration layer that sits between the human and AI nodes.
+ * The interface/translation layer that sits between the human and AI nodes.
+ * Bondi is interface only — no governance authority, no execution authority.
  * Bondi receives user messages, builds context from Master Seed rules + policy + 
  * recent learning events + proxy state, routes to the selected AI node, extracts
  * structured intents from AI responses, and feeds execution results back as learning.

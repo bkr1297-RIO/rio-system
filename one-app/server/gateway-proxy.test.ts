@@ -220,11 +220,11 @@ describe("GatewayApprovals uses Gateway-direct calls", () => {
     expect(approvalsContent).not.toContain('from "@/_core/hooks/useAuth"');
   });
 
-  it("should call /api/gateway/execute for post-approval execution pipeline", () => {
-    // Approvals page uses Gateway-direct calls for approval/deny,
-    // and calls /api/gateway/execute (a dedicated Express endpoint)
-    // for the execution pipeline — no Manus OAuth required.
-    expect(approvalsContent).toContain("/api/gateway/execute");
+  it("should use server-side approveAndExecute for post-approval execution pipeline", () => {
+    // Approvals page uses server-side approveAndExecute tRPC mutation.
+    // Server handles: I-2 authorize + I-1 execute + deliver (separation of duties).
+    expect(approvalsContent).toContain("approveAndExecute");
+    expect(approvalsContent).not.toContain("gatewayExecuteAction");
   });
 
   it("should poll for pending approvals via setInterval", () => {
@@ -242,8 +242,10 @@ describe("GatewayApprovals uses Gateway-direct calls", () => {
     expect(approvalsContent).toContain("New Action");
   });
 
-  it("should handle proposer_ne_approver invariant error", () => {
-    expect(approvalsContent).toContain("proposer_ne_approver");
+  it("should handle approval errors from server", () => {
+    // The server-side approveAndExecute handles proposer_ne_approver internally.
+    // The UI shows the error message returned by the server.
+    expect(approvalsContent).toContain("toast.error");
   });
 
   it("should show Decision 2 footer", () => {

@@ -1,6 +1,12 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeAll } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";
+import {
+  registerRootAuthority,
+  activatePolicy,
+  DEFAULT_POLICY_RULES,
+  _resetAuthorityState,
+} from "./authorityLayer";
 
 /**
  * Enterprise Features Test Suite
@@ -10,8 +16,11 @@ import type { TrpcContext } from "./_core/context";
  * 2. Batch approval
  * 3. Expire stale intents
  * 4. Approval SLA metrics
- * 5. Versioned receipt schema (protocolVersion)
+ * 5. Versioned receipt schema (protocolVersion) — requires full token flow
  */
+
+const MOCK_ROOT_PUBLIC_KEY = "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2";
+const MOCK_ROOT_SIGNATURE = "deadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef";
 
 // Mock the db module with full in-memory state
 vi.mock("./db", async (importOriginal) => {
@@ -38,24 +47,14 @@ vi.mock("./db", async (importOriginal) => {
     getDb: vi.fn().mockResolvedValue({}),
     upsertUser: vi.fn().mockResolvedValue(undefined),
     getUserByOpenId: vi.fn().mockResolvedValue(undefined),
-
-    sha256: (data: string) => {
-      const crypto = require("crypto");
-      return crypto.createHash("sha256").update(data).digest("hex");
-    },
+    sha256: (data: string) => require("crypto").createHash("sha256").update(data).digest("hex"),
 
     getProxyUser: vi.fn(async (userId: number) => proxyUsers.get(String(userId))),
     createProxyUser: vi.fn(async (userId: number, publicKey: string, policyHash: string) => {
       const user = {
-        id: proxyUsers.size + 1,
-        userId,
-        publicKey,
-        policyHash,
-        seedVersion: "SEED-v1.0.0",
-        status: "ACTIVE",
-        onboardedAt: new Date(),
-        killedAt: null,
-        killReason: null,
+        id: proxyUsers.size + 1, userId, publicKey, policyHash,
+        seedVersion: "SEED-v1.0.0", status: "ACTIVE",
+        onboardedAt: new Date(), killedAt: null, killReason: null,
       };
       proxyUsers.set(String(userId), user);
       return user;
@@ -72,31 +71,23 @@ vi.mock("./db", async (importOriginal) => {
       intentCounter++;
       const argsHash = require("crypto").createHash("sha256").update(JSON.stringify(toolArgs)).digest("hex");
       const intent = {
-        id: intentCounter,
-        intentId: `INT-ENT-${intentCounter}`,
-        userId,
-        toolName,
-        toolArgs: JSON.stringify(toolArgs),
-        riskTier,
-        argsHash,
-        blastRadius: JSON.stringify(blastRadius),
-        reflection: reflection || null,
+        id: intentCounter, intentId: `INT-ENT-${intentCounter}`, userId, toolName,
+        toolArgs: JSON.stringify(toolArgs), riskTier, argsHash,
+        blastRadius: JSON.stringify(blastRadius), reflection: reflection || null,
         sourceConversationId: null,
         status: riskTier === "LOW" ? "APPROVED" : "PENDING_APPROVAL",
-        expiresAt: expiresAt ?? null,
-        createdAt: new Date(),
+        expiresAt: expiresAt ?? null, createdAt: new Date(),
       };
       intents.set(intent.intentId, intent);
       return intent;
     }),
     getIntent: vi.fn(async (intentId: string) => intents.get(intentId)),
-    getUserIntents: vi.fn(async () => Array.from(intents.values()).slice(-20)),
+    getUserIntents: vi.fn(async (userId: number) => Array.from(intents.values()).filter(i => i.userId === userId).slice(-20)),
     updateIntentStatus: vi.fn(async (intentId: string, status: string) => {
       const intent = intents.get(intentId);
       if (intent) intent.status = status;
     }),
 
-    // Expire stale intents — find PENDING_APPROVAL intents past their TTL
     expireStaleIntents: vi.fn(async () => {
       let count = 0;
       const now = Date.now();
@@ -109,26 +100,17 @@ vi.mock("./db", async (importOriginal) => {
       return count;
     }),
 
-    // Batch approve intents
     batchApproveIntents: vi.fn(async (intentIds: string[], userId: number, decision: string, signature: string, expiresAt: number, maxExecutions: number) => {
       const results: any[] = [];
       for (const intentId of intentIds) {
         const intent = intents.get(intentId);
-        if (!intent || intent.userId !== userId || intent.status !== "PENDING_APPROVAL") continue;
+        if (!intent || intent.status !== "PENDING_APPROVAL") continue;
         approvalCounter++;
         const approval = {
-          id: approvalCounter,
-          approvalId: `APR-ENT-${approvalCounter}`,
-          intentId,
-          userId,
-          decision,
-          signature,
-          boundToolName: intent.toolName,
-          boundArgsHash: intent.argsHash,
-          expiresAt,
-          maxExecutions,
-          executionCount: 0,
-          createdAt: new Date(),
+          id: approvalCounter, approvalId: `APR-ENT-${approvalCounter}`,
+          intentId, userId, decision, signature,
+          boundToolName: intent.toolName, boundArgsHash: intent.argsHash,
+          expiresAt, maxExecutions, executionCount: 0, createdAt: new Date(),
         };
         approvals.set(approval.approvalId, approval);
         intent.status = decision;
@@ -137,14 +119,12 @@ vi.mock("./db", async (importOriginal) => {
       return results;
     }),
 
-    // Approval metrics
     getApprovalMetrics: vi.fn(async (userId: number) => {
       const userIntents = Array.from(intents.values()).filter(i => i.userId === userId);
       const pending = userIntents.filter(i => i.status === "PENDING_APPROVAL");
       const approved = userIntents.filter(i => i.status === "APPROVED" || i.status === "EXECUTED");
       const rejected = userIntents.filter(i => i.status === "REJECTED");
       const expired = userIntents.filter(i => i.status === "EXPIRED");
-
       let avgTimeToApprovalMs = 0;
       const approvedWithTime = Array.from(approvals.values()).filter(a => a.userId === userId);
       if (approvedWithTime.length > 0) {
@@ -155,37 +135,23 @@ vi.mock("./db", async (importOriginal) => {
         }, 0);
         avgTimeToApprovalMs = totalMs / approvedWithTime.length;
       }
-
       const oldestPending = pending.reduce((oldest: number, i: any) => {
         const age = Date.now() - new Date(i.createdAt).getTime();
         return age > oldest ? age : oldest;
       }, 0);
-
       return {
-        queueSize: pending.length,
-        totalApproved: approved.length,
-        totalRejected: rejected.length,
-        totalExpired: expired.length,
-        avgTimeToApprovalMs,
-        oldestPendingAgeMs: oldestPending,
+        queueSize: pending.length, totalApproved: approved.length,
+        totalRejected: rejected.length, totalExpired: expired.length,
+        avgTimeToApprovalMs, oldestPendingAgeMs: oldestPending,
       };
     }),
 
     createApproval: vi.fn(async (intentId: string, userId: number, decision: string, signature: string, boundToolName: string, boundArgsHash: string, expiresAt: number, maxExecutions: number) => {
       approvalCounter++;
       const approval = {
-        id: approvalCounter,
-        approvalId: `APR-ENT-${approvalCounter}`,
-        intentId,
-        userId,
-        decision,
-        signature,
-        boundToolName,
-        boundArgsHash,
-        expiresAt,
-        maxExecutions,
-        executionCount: 0,
-        createdAt: new Date(),
+        id: approvalCounter, approvalId: `APR-ENT-${approvalCounter}`,
+        intentId, userId, decision, signature, boundToolName, boundArgsHash,
+        expiresAt, maxExecutions, executionCount: 0, createdAt: new Date(),
       };
       approvals.set(approval.approvalId, approval);
       return approval;
@@ -202,14 +168,9 @@ vi.mock("./db", async (importOriginal) => {
     createExecution: vi.fn(async (intentId: string, approvalId: string | null, result: any, receiptHash: string, preflightResults: any) => {
       executionCounter++;
       const exec = {
-        id: executionCounter,
-        executionId: `EXE-ENT-${executionCounter}`,
-        intentId,
-        approvalId,
-        result: JSON.stringify(result),
-        receiptHash,
-        receiptPayload: null,
-        preflightResults: JSON.stringify(preflightResults),
+        id: executionCounter, executionId: `EXE-ENT-${executionCounter}`,
+        intentId, approvalId, result: JSON.stringify(result), receiptHash,
+        receiptPayload: null, preflightResults: JSON.stringify(preflightResults),
         executedAt: new Date(),
       };
       executions.set(exec.executionId, exec);
@@ -221,10 +182,7 @@ vi.mock("./db", async (importOriginal) => {
     }),
     updateExecutionReceiptHash: vi.fn(async (executionId: string, receiptHash: string, receiptPayload?: string) => {
       const exec = executions.get(executionId);
-      if (exec) {
-        exec.receiptHash = receiptHash;
-        if (receiptPayload) exec.receiptPayload = receiptPayload;
-      }
+      if (exec) { exec.receiptHash = receiptHash; if (receiptPayload) exec.receiptPayload = receiptPayload; }
     }),
 
     appendLedger: vi.fn(async (entryType: string, payload: any) => {
@@ -247,21 +205,43 @@ vi.mock("./db", async (importOriginal) => {
     }),
     getUserLearningEvents: vi.fn(async () => learningEvents),
     getRecentLearningContext: vi.fn(async () => []),
-
-    saveKeyBackup: vi.fn(),
-    getKeyBackup: vi.fn().mockResolvedValue(null),
-    deleteKeyBackup: vi.fn(),
-
-    createConversation: vi.fn(),
-    getConversation: vi.fn().mockResolvedValue(null),
-    getUserConversations: vi.fn(async () => []),
-    updateConversationMessages: vi.fn(),
-    addIntentToConversation: vi.fn(),
-    closeConversation: vi.fn(),
-
-    getAllNodeConfigs: vi.fn(async () => []),
-    getActiveNodeConfigs: vi.fn(async () => []),
+    saveKeyBackup: vi.fn(), getKeyBackup: vi.fn().mockResolvedValue(null), deleteKeyBackup: vi.fn(),
+    createConversation: vi.fn(), getConversation: vi.fn().mockResolvedValue(null),
+    getUserConversations: vi.fn(async () => []), updateConversationMessages: vi.fn(),
+    addIntentToConversation: vi.fn(), closeConversation: vi.fn(),
+    getAllNodeConfigs: vi.fn(async () => []), getActiveNodeConfigs: vi.fn(async () => []),
     getNodeConfig: vi.fn().mockResolvedValue(null),
+
+    // Principal management
+    getPrincipalByUserId: vi.fn(async (userId: number) => ({
+      principalId: `PRI-ENT-${userId}`, userId,
+      displayName: userId === 1 ? "Proposer" : "Approver",
+      principalType: "human",
+      roles: ["proposer", "approver", "executor", "auditor", "meta"],
+      status: "active",
+    })),
+    getOrCreatePrincipal: vi.fn(async (userId: number) => ({
+      principalId: `PRI-ENT-${userId}`, userId,
+      displayName: userId === 1 ? "Proposer" : "Approver",
+      principalType: "human",
+      roles: ["proposer", "approver", "executor", "auditor", "meta"],
+      status: "active",
+    })),
+    getPrincipalById: vi.fn(async () => null),
+    listPrincipals: vi.fn(async () => []),
+    assignRole: vi.fn(), removeRole: vi.fn(), updatePrincipalStatus: vi.fn(),
+    principalHasRole: vi.fn(async () => true),
+
+    createNotification: vi.fn(async () => undefined),
+    getUserNotifications: vi.fn(async () => []),
+    getUnreadNotificationCount: vi.fn(async () => 0),
+    markNotificationRead: vi.fn(), markAllNotificationsRead: vi.fn(),
+
+    getActivePolicyRulesForTool: vi.fn(async () => []),
+    createPolicyRule: vi.fn(), getUserPolicyRules: vi.fn(async () => []),
+    getAllPolicyRules: vi.fn(async () => []),
+    updatePolicyRule: vi.fn(), deletePolicyRule: vi.fn(), togglePolicyRule: vi.fn(),
+    getSystemComponents: vi.fn(async () => []), getSystemComponent: vi.fn(async () => null),
   };
 });
 
@@ -270,29 +250,21 @@ vi.mock("./connectors", async (importOriginal) => {
   const actual = await importOriginal() as Record<string, unknown>;
   return {
     ...actual,
-    dispatchExecution: vi.fn(async (toolName: string) => {
-      return {
-        success: true,
-        output: { messageId: "MSG-ENT-001", status: "delivered" },
-        metadata: { connector: toolName, transport: "test" },
-        executedAt: Date.now(),
-      };
-    }),
+    dispatchExecution: vi.fn(async (toolName: string) => ({
+      success: true,
+      output: { messageId: "MSG-ENT-001", status: "delivered" },
+      metadata: { connector: toolName, transport: "test" },
+      executedAt: Date.now(),
+    })),
   };
 });
 
-function createAuthContext(userId = 1, openId = "ent-test-user"): TrpcContext {
+function createAuthContext(userId: number, openId: string, name: string): TrpcContext {
   return {
     user: {
-      id: userId,
-      openId,
-      email: "enterprise@example.com",
-      name: "Enterprise Test User",
-      loginMethod: "manus",
-      role: "user",
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      lastSignedIn: new Date(),
+      id: userId, openId, email: `${openId}@example.com`, name,
+      loginMethod: "manus", role: "user",
+      createdAt: new Date(), updatedAt: new Date(), lastSignedIn: new Date(),
     },
     req: { protocol: "https", headers: {} } as TrpcContext["req"],
     res: { clearCookie: vi.fn() } as unknown as TrpcContext["res"],
@@ -300,11 +272,24 @@ function createAuthContext(userId = 1, openId = "ent-test-user"): TrpcContext {
 }
 
 describe("Enterprise Features", () => {
-  const ctx = createAuthContext();
+  const proposerCtx = createAuthContext(1, "ent-proposer", "Enterprise Proposer");
+  const approverCtx = createAuthContext(2, "ent-approver", "Enterprise Approver");
 
-  // Setup: onboard user first
-  it("Setup: Onboard user", async () => {
-    const caller = appRouter.createCaller(ctx);
+  // Initialize authority layer
+  beforeAll(() => {
+    _resetAuthorityState();
+    registerRootAuthority(MOCK_ROOT_PUBLIC_KEY);
+    activatePolicy({
+      policyId: "POLICY-ENT-v1.0.0",
+      rules: DEFAULT_POLICY_RULES,
+      policySignature: MOCK_ROOT_SIGNATURE,
+      rootPublicKey: MOCK_ROOT_PUBLIC_KEY,
+    });
+  });
+
+  // Setup: onboard proposer
+  it("Setup: Onboard proposer", async () => {
+    const caller = appRouter.createCaller(proposerCtx);
     const result = await caller.proxy.onboard({
       publicKey: "ent-test-public-key",
       policyHash: "ent-test-policy-hash",
@@ -315,9 +300,8 @@ describe("Enterprise Features", () => {
 
   describe("Intent TTL / Expiration", () => {
     it("cannot approve an expired intent", async () => {
-      const caller = appRouter.createCaller(ctx);
+      const caller = appRouter.createCaller(proposerCtx);
 
-      // Create an intent (it will have expiresAt set by createIntent)
       const intent = await caller.proxy.createIntent({
         toolName: "send_email",
         toolArgs: { to: "ttl@example.com", subject: "TTL Test", body: "This should expire" },
@@ -330,12 +314,13 @@ describe("Enterprise Features", () => {
       const { getIntent } = await import("./db");
       const storedIntent = await getIntent(intent!.intentId);
       if (storedIntent) {
-        (storedIntent as any).expiresAt = Date.now() - 1000; // expired 1 second ago
+        (storedIntent as any).expiresAt = Date.now() - 1000;
       }
 
-      // Try to approve — should fail with TTL error
+      // Approver tries to approve — should fail with TTL error
+      const approverCaller = appRouter.createCaller(approverCtx);
       await expect(
-        caller.proxy.approve({
+        approverCaller.proxy.approve({
           intentId: intent!.intentId,
           decision: "APPROVED",
           signature: "ttl-test-signature",
@@ -344,7 +329,6 @@ describe("Enterprise Features", () => {
         })
       ).rejects.toThrow("Intent has expired");
 
-      // Verify intent status changed to EXPIRED
       const updatedIntent = await getIntent(intent!.intentId);
       expect(updatedIntent!.status).toBe("EXPIRED");
     });
@@ -352,9 +336,8 @@ describe("Enterprise Features", () => {
 
   describe("Batch Approval", () => {
     it("approves multiple intents in a single call", async () => {
-      const caller = appRouter.createCaller(ctx);
+      const caller = appRouter.createCaller(proposerCtx);
 
-      // Create 3 HIGH-risk intents
       const intent1 = await caller.proxy.createIntent({
         toolName: "send_email",
         toolArgs: { to: "batch1@example.com", subject: "Batch 1", body: "First batch email" },
@@ -375,7 +358,6 @@ describe("Enterprise Features", () => {
       expect(intent2!.status).toBe("PENDING_APPROVAL");
       expect(intent3!.status).toBe("PENDING_APPROVAL");
 
-      // Batch approve all 3
       const result = await caller.proxy.batchApprove({
         intentIds: [intent1!.intentId, intent2!.intentId, intent3!.intentId],
         decision: "APPROVED",
@@ -388,7 +370,6 @@ describe("Enterprise Features", () => {
       expect(result.processed).toBe(3);
       expect(result.results).toHaveLength(3);
 
-      // Verify all intents are now APPROVED
       const { getIntent } = await import("./db");
       const i1 = await getIntent(intent1!.intentId);
       const i2 = await getIntent(intent2!.intentId);
@@ -399,9 +380,9 @@ describe("Enterprise Features", () => {
     });
 
     it("batch reject skips already-approved intents", async () => {
-      const caller = appRouter.createCaller(ctx);
+      const caller = appRouter.createCaller(proposerCtx);
+      const approverCaller = appRouter.createCaller(approverCtx);
 
-      // Create 2 intents, approve one individually first
       const intent1 = await caller.proxy.createIntent({
         toolName: "send_email",
         toolArgs: { to: "skip1@example.com", subject: "Skip Test 1", body: "Already approved" },
@@ -413,8 +394,8 @@ describe("Enterprise Features", () => {
         breakAnalysis: "Skip test",
       });
 
-      // Approve intent1 individually
-      await caller.proxy.approve({
+      // Approver approves intent1 individually
+      await approverCaller.proxy.approve({
         intentId: intent1!.intentId,
         decision: "APPROVED",
         signature: "individual-approve",
@@ -429,16 +410,14 @@ describe("Enterprise Features", () => {
         signature: "batch-reject",
       });
 
-      // Only intent2 should have been processed
       expect(result.processed).toBe(1);
     });
   });
 
   describe("Expire Stale Intents", () => {
     it("expires intents past their TTL", async () => {
-      const caller = appRouter.createCaller(ctx);
+      const caller = appRouter.createCaller(proposerCtx);
 
-      // Create an intent and manually set its expiresAt to the past
       const intent = await caller.proxy.createIntent({
         toolName: "send_email",
         toolArgs: { to: "stale@example.com", subject: "Stale", body: "Should expire" },
@@ -448,14 +427,12 @@ describe("Enterprise Features", () => {
       const { getIntent } = await import("./db");
       const storedIntent = await getIntent(intent!.intentId);
       if (storedIntent) {
-        (storedIntent as any).expiresAt = Date.now() - 60000; // expired 1 minute ago
+        (storedIntent as any).expiresAt = Date.now() - 60000;
       }
 
-      // Run expire stale
       const result = await caller.proxy.expireStale();
       expect(result.expired).toBeGreaterThanOrEqual(1);
 
-      // Verify the intent is now EXPIRED
       const updatedIntent = await getIntent(intent!.intentId);
       expect(updatedIntent!.status).toBe("EXPIRED");
     });
@@ -463,7 +440,7 @@ describe("Enterprise Features", () => {
 
   describe("Approval SLA Metrics", () => {
     it("returns queue size, approval counts, and timing metrics", async () => {
-      const caller = appRouter.createCaller(ctx);
+      const caller = appRouter.createCaller(proposerCtx);
 
       const metrics = await caller.proxy.approvalMetrics();
       expect(metrics).toBeDefined();
@@ -474,35 +451,42 @@ describe("Enterprise Features", () => {
       expect(typeof metrics.avgTimeToApprovalMs).toBe("number");
       expect(typeof metrics.oldestPendingAgeMs).toBe("number");
 
-      // We've approved several intents, so totalApproved should be > 0
       expect(metrics.totalApproved).toBeGreaterThan(0);
     });
   });
 
   describe("Versioned Receipt Schema", () => {
     it("receipt includes protocolVersion field", async () => {
-      const caller = appRouter.createCaller(ctx);
+      const proposerCaller = appRouter.createCaller(proposerCtx);
+      const approverCaller = appRouter.createCaller(approverCtx);
 
-      // Create and approve an intent
-      const intent = await caller.proxy.createIntent({
+      // Proposer creates intent
+      const intent = await proposerCaller.proxy.createIntent({
         toolName: "send_email",
         toolArgs: { to: "receipt@example.com", subject: "Receipt Test", body: "Testing versioned receipt" },
         breakAnalysis: "Receipt version test",
       });
-      await caller.proxy.approve({
+
+      // Approver approves (different user → token issued)
+      const approval = await approverCaller.proxy.approve({
         intentId: intent!.intentId,
         decision: "APPROVED",
         signature: "receipt-test-sig",
         expiresInSeconds: 300,
         maxExecutions: 1,
       });
+      const tokenId = (approval as any)?.authorizationToken?.token_id;
+      expect(tokenId).toBeTruthy();
 
-      // Execute
-      const execResult = await caller.proxy.execute({ intentId: intent!.intentId });
+      // Proposer executes with token
+      const execResult = await proposerCaller.proxy.execute({
+        intentId: intent!.intentId,
+        tokenId,
+      });
       expect(execResult.success).toBe(true);
 
       // Get receipt and verify protocolVersion
-      const receipt = await caller.proxy.getReceipt({ executionId: execResult.execution!.executionId });
+      const receipt = await proposerCaller.proxy.getReceipt({ executionId: execResult.execution!.executionId });
       expect(receipt).toBeDefined();
       expect(receipt!.protocolVersion).toBeDefined();
       expect(receipt!.protocolVersion).toMatch(/^\d+\.\d+\.\d+$/);

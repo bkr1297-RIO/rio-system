@@ -99,6 +99,83 @@
       "when": 1775320926610,
       "tag": "0013_amazing_winter_soldier",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "5",
+      "when": 1775452011004,
+      "tag": "0014_reflective_nextwave",
+      "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "5",
+      "when": 1775452989490,
+      "tag": "0015_zippy_guardsmen",
+      "breakpoints": true
+    },
+    {
+      "idx": 16,
+      "version": "5",
+      "when": 1775506920247,
+      "tag": "0016_flat_spyke",
+      "breakpoints": true
+    },
+    {
+      "idx": 17,
+      "version": "5",
+      "when": 1775890719609,
+      "tag": "0017_great_firebird",
+      "breakpoints": true
+    },
+    {
+      "idx": 18,
+      "version": "5",
+      "when": 1775936910160,
+      "tag": "0018_chief_micromacro",
+      "breakpoints": true
+    },
+    {
+      "idx": 19,
+      "version": "5",
+      "when": 1775966603232,
+      "tag": "0019_late_timeslip",
+      "breakpoints": true
+    },
+    {
+      "idx": 20,
+      "version": "5",
+      "when": 1775969458141,
+      "tag": "0020_sharp_patriot",
+      "breakpoints": true
+    },
+    {
+      "idx": 21,
+      "version": "5",
+      "when": 1776015579099,
+      "tag": "0021_sour_cloak",
+      "breakpoints": true
+    },
+    {
+      "idx": 22,
+      "version": "5",
+      "when": 1776100611961,
+      "tag": "0022_woozy_abomination",
+      "breakpoints": true
+    },
+    {
+      "idx": 23,
+      "version": "5",
+      "when": 1776127068552,
+      "tag": "0023_misty_phil_sheldon",
+      "breakpoints": true
+    },
+    {
+      "idx": 24,
+      "version": "5",
+      "when": 1776138241893,
+      "tag": "0024_freezing_wind_dancer",
+      "breakpoints": true
     }
   ]
 }
