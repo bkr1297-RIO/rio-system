@@ -1,13 +1,8 @@
 /**
  * ONE Command Center — App Shell
  *
- * Screens:
- * 1. Login (/)
- * 2. Create Intent (/intent/new)
- * 3. Approvals (/approvals)
- * 4. Receipts (/receipts)
- * 5. Ledger (/ledger)
- * 6. Status (/status)
+ * Primary screen: /authorize (minimal authorization surface)
+ * Login redirects to /authorize after authentication.
  *
  * ONE is an untrusted client. All enforcement happens in the Gateway.
  */
@@ -16,11 +11,18 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import { ThemeProvider } from "./contexts/ThemeContext";
 import { Toaster } from "@/components/ui/sonner";
 import Login from "@/pages/Login";
+import Authorize from "@/pages/Authorize";
 import NewIntent from "@/pages/NewIntent";
 import GatewayApprovals from "@/pages/GatewayApprovals";
 import Receipts from "@/pages/Receipts";
 import Ledger from "@/pages/Ledger";
 import Status from "@/pages/Status";
+import SystemArchitecture from "@/pages/SystemArchitecture";
+import GovernanceDashboard from "@/pages/GovernanceDashboard";
+import AskBondi from "@/pages/AskBondi";
+import EmailFirewall from "@/pages/EmailFirewall";
+import RIODashboard from "@/pages/RIODashboard";
+import SendAction from "@/pages/SendAction";
 
 function App() {
   return (
@@ -28,11 +30,18 @@ function App() {
       <ThemeProvider defaultTheme="dark" switchable>
         <Switch>
           <Route path="/" component={Login} />
+          <Route path="/authorize" component={Authorize} />
+          <Route path="/dashboard" component={GovernanceDashboard} />
           <Route path="/intent/new" component={NewIntent} />
           <Route path="/approvals" component={GatewayApprovals} />
           <Route path="/receipts" component={Receipts} />
           <Route path="/ledger" component={Ledger} />
           <Route path="/status" component={Status} />
+          <Route path="/architecture" component={SystemArchitecture} />
+          <Route path="/ask-bondi" component={AskBondi} />
+          <Route path="/email-firewall" component={EmailFirewall} />
+          <Route path="/rio" component={RIODashboard} />
+          <Route path="/send" component={SendAction} />
           {/* Catch-all: redirect to login */}
           <Route>
             <Redirect to="/" />

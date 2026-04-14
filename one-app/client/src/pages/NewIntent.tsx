@@ -184,6 +184,9 @@ export default function NewIntent() {
   const [confidence, setConfidence] = useState("85");
   const [reflection, setReflection] = useState("");
 
+  // Delivery mode for send_email
+  const [deliveryMode, setDeliveryMode] = useState<"notify" | "gmail">("gmail");
+
   // Submission state
   const [governResult, setGovernResult] = useState<GovernanceResult | null>(null);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -213,6 +216,23 @@ export default function NewIntent() {
     setFieldValues(prev => ({ ...prev, [key]: value }));
   }
 
+  /**
+   * Sanitize a phone number to E.164 format for Twilio.
+   * Strips formatting, handles 10/11 digit US numbers, prepends +1 if needed.
+   */
+  function sanitizePhoneToE164(raw: string): string {
+    let digits = raw.replace(/[^\d+]/g, "");
+    if (digits.startsWith("+")) {
+      digits = "+" + digits.slice(1).replace(/\+/g, "");
+    }
+    if (/^\+\d{10,15}$/.test(digits)) return digits;
+    const justDigits = digits.replace(/^\+/, "");
+    if (justDigits.length === 11 && justDigits.startsWith("1")) return `+${justDigits}`;
+    if (justDigits.length === 10) return `+1${justDigits}`;
+    if (justDigits.length >= 12) return `+${justDigits}`;
+    return `+${justDigits}`;
+  }
+
   function buildParameters(): Record<string, unknown> {
     if (advancedMode) {
       try {
@@ -230,6 +250,17 @@ export default function NewIntent() {
         params[key] = value.trim();
       }
     }
+
+    // E.164 sanitization for SMS phone numbers
+    if (selectedAction === "send_sms" && typeof params.phone === "string") {
+      params.phone = sanitizePhoneToE164(params.phone);
+    }
+
+    // Inject delivery_mode for send_email
+    if (selectedAction === "send_email") {
+      params.delivery_mode = deliveryMode;
+    }
+
     return params;
   }
 
@@ -506,6 +537,42 @@ export default function NewIntent() {
                     </div>
                   ))}
                 </div>
+
+                {/* Delivery Mode selector — only for send_email */}
+                {selectedAction === "send_email" && (
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-foreground flex items-center gap-1.5">
+                      <Mail className="h-3.5 w-3.5" />
+                      Delivery Channel
+                    </label>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setDeliveryMode("gmail")}
+                        className={`rounded-lg border p-3 text-left transition-all ${
+                          deliveryMode === "gmail"
+                            ? "border-primary bg-primary/5 ring-1 ring-primary/30"
+                            : "border-border/40 bg-card hover:border-border"
+                        }`}
+                      >
+                        <p className="text-sm font-medium">Gmail SMTP</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">Real email delivery</p>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDeliveryMode("notify")}
+                        className={`rounded-lg border p-3 text-left transition-all ${
+                          deliveryMode === "notify"
+                            ? "border-primary bg-primary/5 ring-1 ring-primary/30"
+                            : "border-border/40 bg-card hover:border-border"
+                        }`}
+                      >
+                        <p className="text-sm font-medium">Notification</p>
+                        <p className="text-[10px] text-muted-foreground mt-0.5">Owner notification only</p>
+                      </button>
+                    </div>
+                  </div>
+                )}
 
                 {/* Optional: add a reason */}
                 <div className="space-y-1.5">

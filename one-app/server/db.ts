@@ -1,6 +1,6 @@
 import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, proxyUsers, toolRegistry, intents, approvals, executions, ledger, keyBackups, conversations, learningEvents, nodeConfigs, systemComponents, policyRules, notifications, principals, type SystemRole, SYSTEM_ROLES } from "../drizzle/schema";
+import { InsertUser, users, proxyUsers, toolRegistry, intents, approvals, executions, ledger, keyBackups, conversations, learningEvents, nodeConfigs, systemComponents, policyRules, notifications, principals, type SystemRole, SYSTEM_ROLES, emailFirewallConfig, type EmailFirewallConfig, type InsertEmailFirewallConfig, pendingEmailApprovals } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { nanoid } from "nanoid";
 import { createHash } from "crypto";
@@ -84,7 +84,7 @@ export async function getLastLedgerEntry() {
   return rows[0] ?? null;
 }
 
-export async function appendLedger(entryType: "ONBOARD" | "INTENT" | "APPROVAL" | "EXECUTION" | "KILL" | "SYNC" | "JORDAN_CHAT" | "BONDI_CHAT" | "LEARNING" | "ARCHITECTURE_STATE" | "RE_KEY" | "REVOKE" | "RE_KEY_AUTHORIZED" | "RE_KEY_FORCED" | "TELEGRAM_NOTIFY" | "POLICY_UPDATE" | "NOTIFICATION", payload: Record<string, unknown>) {
+export async function appendLedger(entryType: "ONBOARD" | "INTENT" | "APPROVAL" | "EXECUTION" | "KILL" | "SYNC" | "JORDAN_CHAT" | "BONDI_CHAT" | "LEARNING" | "ARCHITECTURE_STATE" | "RE_KEY" | "REVOKE" | "RE_KEY_AUTHORIZED" | "RE_KEY_FORCED" | "TELEGRAM_NOTIFY" | "POLICY_UPDATE" | "NOTIFICATION" | "GENESIS" | "AUTHORITY_TOKEN" | "EMAIL_DELIVERY" | "COHERENCE_CHECK" | "FIREWALL_SCAN" | "ACTION_COMPLETE" | "DELEGATION_BLOCKED" | "DELEGATION_APPROVED" | "SUBSTRATE_BLOCK", payload: Record<string, unknown>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const last = await getLastLedgerEntry();
@@ -185,7 +185,7 @@ export async function getToolByName(toolName: string) {
 }
 
 // ─── Intent Helpers ─────────────────────────────────────────────
-export async function createIntent(userId: number, toolName: string, toolArgs: Record<string, unknown>, riskTier: "LOW" | "MEDIUM" | "HIGH", blastRadius: { score: number; affectedSystems: string[]; reversible: boolean }, reflection?: string, sourceConversationId?: string, ttlSeconds?: number) {
+export async function createIntent(userId: number, toolName: string, toolArgs: Record<string, unknown>, riskTier: "LOW" | "MEDIUM" | "HIGH", blastRadius: { score: number; affectedSystems: string[]; reversible: boolean }, reflection?: string, sourceConversationId?: string, ttlSeconds?: number, principalId?: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const intentId = `INT-${nanoid(16)}`;
@@ -193,7 +193,7 @@ export async function createIntent(userId: number, toolName: string, toolArgs: R
   const status = riskTier === "LOW" ? "APPROVED" : "PENDING_APPROVAL";
   // Intent TTL: default 24h for PENDING intents, configurable
   const expiresAt = status === "PENDING_APPROVAL" ? Date.now() + (ttlSeconds ?? 86400) * 1000 : null;
-  await db.insert(intents).values({ intentId, userId, toolName, toolArgs, argsHash, riskTier, blastRadius, status, reflection, sourceConversationId, expiresAt });
+  await db.insert(intents).values({ intentId, userId, toolName, toolArgs, argsHash, riskTier, blastRadius, status, reflection, sourceConversationId, expiresAt, principalId: principalId ?? null });
   const rows = await db.select().from(intents).where(eq(intents.intentId, intentId)).limit(1);
   return rows[0];
 }
@@ -302,11 +302,11 @@ export async function getApprovalMetrics(userId: number) {
 }
 
 // ─── Approval Helpers ───────────────────────────────────────────
-export async function createApproval(intentId: string, userId: number, decision: "APPROVED" | "REJECTED", signature: string, boundToolName: string, boundArgsHash: string, expiresAt: number, maxExecutions: number) {
+export async function createApproval(intentId: string, userId: number, decision: "APPROVED" | "REJECTED", signature: string, boundToolName: string, boundArgsHash: string, expiresAt: number, maxExecutions: number, principalId?: string) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const approvalId = `APR-${nanoid(16)}`;
-  await db.insert(approvals).values({ approvalId, intentId, userId, decision, signature, boundToolName, boundArgsHash, expiresAt, maxExecutions });
+  await db.insert(approvals).values({ approvalId, intentId, userId, decision, signature, boundToolName, boundArgsHash, expiresAt, maxExecutions, principalId: principalId ?? null });
   const rows = await db.select().from(approvals).where(eq(approvals.approvalId, approvalId)).limit(1);
   return rows[0];
 }
@@ -804,4 +804,202 @@ export function principalHasRole(principal: { roles: unknown; status: string } |
   const roles = principal.roles as SystemRole[] | null;
   if (!roles || !Array.isArray(roles)) return false;
   return roles.includes(role);
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// EMAIL FIREWALL CONFIG
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Get the email firewall config for a user.
+ * Returns null if no config exists (defaults should be used).
+ */
+export async function getEmailFirewallConfig(userId: number): Promise<EmailFirewallConfig | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const rows = await db.select().from(emailFirewallConfig).where(eq(emailFirewallConfig.userId, userId)).limit(1);
+    return rows[0] ?? null;
+  } catch (error) {
+    console.error("[DB] getEmailFirewallConfig error:", error);
+    return null;
+  }
+}
+
+/**
+ * Upsert email firewall config for a user.
+ * Creates if not exists, updates if exists.
+ */
+export async function upsertEmailFirewallConfig(userId: number, config: {
+  strictness?: "strict" | "standard" | "permissive";
+  preset?: string;
+  ruleOverrides?: Record<string, { enabled: boolean }>;
+  categoryOverrides?: Record<string, string>;
+  internalDomains?: string[];
+  llmEnabled?: boolean;
+}): Promise<EmailFirewallConfig | null> {
+  const db = await getDb();
+  if (!db) return null;
+  try {
+    const existing = await getEmailFirewallConfig(userId);
+    if (existing) {
+      // Update existing
+      await db.update(emailFirewallConfig)
+        .set({
+          ...(config.strictness !== undefined && { strictness: config.strictness }),
+          ...(config.preset !== undefined && { preset: config.preset }),
+          ...(config.ruleOverrides !== undefined && { ruleOverrides: config.ruleOverrides }),
+          ...(config.categoryOverrides !== undefined && { categoryOverrides: config.categoryOverrides }),
+          ...(config.internalDomains !== undefined && { internalDomains: config.internalDomains }),
+          ...(config.llmEnabled !== undefined && { llmEnabled: config.llmEnabled }),
+        })
+        .where(eq(emailFirewallConfig.userId, userId));
+    } else {
+      // Insert new
+      await db.insert(emailFirewallConfig).values({
+        userId,
+        strictness: config.strictness ?? "standard",
+        preset: config.preset ?? "personal",
+        ruleOverrides: config.ruleOverrides ?? {},
+        categoryOverrides: config.categoryOverrides ?? {},
+        internalDomains: config.internalDomains ?? [],
+        llmEnabled: config.llmEnabled ?? true,
+      });
+    }
+    return getEmailFirewallConfig(userId);
+  } catch (error) {
+    console.error("[DB] upsertEmailFirewallConfig error:", error);
+    return null;
+  }
+}
+
+
+// ─── Pending Email Approvals (persisted for cross-deploy link survival) ──────
+
+export async function createPendingEmailApproval(params: {
+  intentId: string;
+  actionType: string;
+  actionSummary: string;
+  actionDetails?: Record<string, unknown>;
+  proposerEmail: string;
+  approverEmail: string;
+  tokenNonce: string;
+  expiresAt: Date;
+}): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(pendingEmailApprovals).values({
+    intentId: params.intentId,
+    actionType: params.actionType,
+    actionSummary: params.actionSummary,
+    actionDetails: params.actionDetails ?? null,
+    proposerEmail: params.proposerEmail,
+    approverEmail: params.approverEmail,
+    tokenNonce: params.tokenNonce,
+    status: "PENDING",
+    expiresAt: params.expiresAt,
+  });
+}
+
+export async function getPendingEmailApproval(intentId: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(pendingEmailApprovals)
+    .where(eq(pendingEmailApprovals.intentId, intentId))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+export async function getPendingEmailApprovalByNonce(nonce: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(pendingEmailApprovals)
+    .where(eq(pendingEmailApprovals.tokenNonce, nonce))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+export async function updatePendingEmailApprovalStatus(
+  intentId: string,
+  status: "APPROVED" | "DECLINED" | "EXPIRED",
+): Promise<void> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(pendingEmailApprovals)
+    .set({ status })
+    .where(eq(pendingEmailApprovals.intentId, intentId));
+}
+
+export async function isNonceUsedInDb(nonce: string): Promise<boolean> {
+  const db = await getDb();
+  if (!db) return false;
+  const rows = await db.select().from(pendingEmailApprovals)
+    .where(eq(pendingEmailApprovals.tokenNonce, nonce))
+    .limit(1);
+  if (!rows[0]) return false;
+  return rows[0].status !== "PENDING";
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// LEARNING LOOP — DB HELPERS
+// ═══════════════════════════════════════════════════════════════════
+
+export async function insertLearningEvent(event: {
+  actionSignature: string;
+  riskScore: number;
+  decision: "APPROVED" | "REJECTED" | "BLOCKED";
+  eventType: "APPROVAL" | "REJECTION" | "EXECUTION" | "FEEDBACK" | "CORRECTION";
+  intentId?: string;
+  userId?: number;
+  context?: Record<string, unknown>;
+}): Promise<string> {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const eventId = `LE-${nanoid(12)}`;
+  await db.insert(learningEvents).values({
+    eventId,
+    userId: event.userId ?? 0,
+    eventType: event.eventType,
+    intentId: event.intentId,
+    actionSignature: event.actionSignature,
+    riskScore: event.riskScore,
+    decision: event.decision,
+    context: event.context,
+    outcome: event.decision === "APPROVED" ? "POSITIVE" : event.decision === "REJECTED" ? "NEGATIVE" : "NEUTRAL",
+  });
+  return eventId;
+}
+
+export async function getLearningStats(actionSignature: string): Promise<{
+  totalEvents: number;
+  approvedCount: number;
+  rejectedCount: number;
+  blockedCount: number;
+  avgRiskScore: number;
+}> {
+  const db = await getDb();
+  if (!db) return { totalEvents: 0, approvedCount: 0, rejectedCount: 0, blockedCount: 0, avgRiskScore: 50 };
+  
+  const rows = await db.select().from(learningEvents)
+    .where(eq(learningEvents.actionSignature, actionSignature));
+  
+  if (rows.length === 0) {
+    return { totalEvents: 0, approvedCount: 0, rejectedCount: 0, blockedCount: 0, avgRiskScore: 50 };
+  }
+
+  const approvedCount = rows.filter(r => r.decision === "APPROVED").length;
+  const rejectedCount = rows.filter(r => r.decision === "REJECTED").length;
+  const blockedCount = rows.filter(r => r.decision === "BLOCKED").length;
+  const riskScores = rows.filter(r => r.riskScore != null).map(r => r.riskScore!);
+  const avgRiskScore = riskScores.length > 0 
+    ? Math.round(riskScores.reduce((a, b) => a + b, 0) / riskScores.length)
+    : 50;
+
+  return {
+    totalEvents: rows.length,
+    approvedCount,
+    rejectedCount,
+    blockedCount,
+    avgRiskScore,
+  };
 }

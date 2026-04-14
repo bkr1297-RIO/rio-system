@@ -139,6 +139,7 @@ export default function IntentDetail() {
   const [executionResult, setExecutionResult] = useState<Record<string, unknown> | null>(null);
   const [executionId, setExecutionId] = useState<string | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<string | null>(null);
+  const [authTokenId, setAuthTokenId] = useState<string | null>(null);
 
   const { data: intent, isLoading, refetch } = trpc.proxy.getIntent.useQuery(
     { intentId: params.intentId || "" },
@@ -158,7 +159,17 @@ export default function IntentDetail() {
   }, [recommendQuery.data, selectedAgent]);
 
   const approveMutation = trpc.proxy.approve.useMutation({
-    onSuccess: () => { toast.success("Approved! Ready to execute."); refetch(); },
+    onSuccess: (data) => {
+      // Capture the authorization token ID for execution
+      const tokenId = (data as any)?.authorizationToken?.token_id;
+      if (tokenId) {
+        setAuthTokenId(tokenId);
+        toast.success("Approved! Authorization token issued. Ready to execute.");
+      } else {
+        toast.success("Approved! Ready to execute.");
+      }
+      refetch();
+    },
     onError: (err) => toast.error(err.message),
   });
 
@@ -242,7 +253,11 @@ export default function IntentDetail() {
   };
 
   const handleExecute = () => {
-    executeMutation.mutate({ intentId: intent.intentId, agentId: selectedAgent ?? "passthrough" });
+    executeMutation.mutate({
+      intentId: intent.intentId,
+      agentId: selectedAgent ?? "passthrough",
+      ...(authTokenId ? { tokenId: authTokenId } : {}),
+    });
   };
 
   const toolMeta = TOOL_META[intent.toolName] ?? { label: intent.toolName, icon: Zap, color: "text-gray-600 bg-gray-50" };

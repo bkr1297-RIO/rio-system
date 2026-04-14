@@ -16,6 +16,7 @@
 
 import { ENV } from "./_core/env";
 import { appendLedger } from "./db";
+import { buildApprovalUrl } from "./oneClickApproval";
 
 // ─── Types ──────────────────────────────────────────────────────
 
@@ -41,7 +42,8 @@ export interface TelegramUpdate {
 
 interface InlineKeyboardButton {
   text: string;
-  callback_data: string;
+  callback_data?: string;
+  url?: string;
 }
 
 interface SendMessagePayload {
@@ -116,7 +118,11 @@ export async function sendIntentNotification(intent: {
   const riskEmoji = intent.riskTier === "HIGH" ? "🔴" : intent.riskTier === "MEDIUM" ? "🟡" : "🟢";
   const reversible = intent.blastRadius?.reversible ? "✅ Reversible" : "⛔ Irreversible";
 
+  // Build one-click approval URL
+  const approvalUrl = buildApprovalUrl(intent.intentId);
+
   const argsPreview = Object.entries(intent.toolArgs)
+    .filter(([k]) => k !== "delivery_mode")
     .map(([k, v]) => `  • ${k}: ${typeof v === "string" ? v.substring(0, 80) : JSON.stringify(v).substring(0, 80)}`)
     .join("\n");
 
@@ -145,6 +151,9 @@ export async function sendIntentNotification(intent: {
     parse_mode: "Markdown",
     reply_markup: {
       inline_keyboard: [
+        [
+          { text: "✅ One-Click Approve", url: approvalUrl },
+        ],
         [
           { text: "✅ APPROVE", callback_data: `approve:${intent.intentId}` },
           { text: "❌ REJECT", callback_data: `reject:${intent.intentId}` },

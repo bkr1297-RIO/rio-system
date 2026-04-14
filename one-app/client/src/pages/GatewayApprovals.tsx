@@ -14,8 +14,8 @@ import {
   getPendingApprovals,
   submitApproval,
   type PendingApproval,
-  getGatewayToken,
 } from "@/lib/gateway";
+import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -206,6 +206,17 @@ export default function GatewayApprovals() {
   const [fetchError, setFetchError] = useState<string | null>(null);
   const [isFetching, setIsFetching] = useState(false);
 
+  // Inline receipt display — shown immediately after approval+execution
+  const [lastReceipt, setLastReceipt] = useState<{
+    intentId: string;
+    receiptId?: string;
+    status: string;
+    toolName?: string;
+    timestamp: string;
+    receiptHash?: string;
+    deliveryMode?: string;
+  } | null>(null);
+
   // Fetch pending approvals directly from Gateway
   const fetchPending = useCallback(async () => {
     if (!isAuthenticated) return;
@@ -215,8 +226,10 @@ export default function GatewayApprovals() {
       if (result.ok) {
         setPending(result.data.pending || []);
         setFetchError(null);
+      } else if (result.status === 401 || result.status === 403) {
+        setFetchError("Session expired — please login again via the home screen");
       } else {
-        setFetchError("Failed to fetch pending approvals from Gateway");
+        setFetchError(`Gateway returned ${result.status} — try refreshing or re-login`);
       }
     } catch (err) {
       setFetchError(err instanceof Error ? err.message : "Gateway unreachable");
@@ -239,51 +252,62 @@ export default function GatewayApprovals() {
     }
   }, [gwLoading, isAuthenticated, navigate]);
 
+  // tRPC mutation: server-side approve → execute (as I-1) → deliver email
+  const approveAndExecute = trpc.gateway.approveAndExecute.useMutation();
+
   async function handleApprove(intentId: string) {
     setApprovingId(intentId);
     try {
-      // Step 1: Approve on the Gateway
-      const result = await submitApproval(intentId, "approved");
-      if (!result.ok) {
-        const msg = result.data.invariant === "proposer_ne_approver"
-          ? "Cannot approve your own intent (proposer ≠ approver invariant)"
-          : result.data.error || `Approval failed (HTTP ${result.status})`;
-        toast.error(msg);
+      // Single server-side call handles the full pipeline:
+      //   1. Browser sends Gateway JWT (I-2/approver) for authorization
+      //   2. Server calls Gateway /authorize with I-2 token
+      //   3. Server calls Gateway /execute-action with I-1 JWT (proposer) — separation of duties
+      //   4. Server delivers email via Telegram + notification
+      //   5. Server logs to local ledger
+      //   6. Returns receipt to browser
+      toast.info("Approving and executing...");
+
+      const result = await approveAndExecute.mutateAsync({
+        intentId,
+      });
+
+      if (!result.success) {
+        setLastReceipt({
+          intentId,
+          status: "FAILED",
+          timestamp: new Date().toISOString(),
+        });
+        toast.error(result.error || "Approve + execute failed");
+        fetchPending();
         setApprovingId(null);
         return;
       }
 
-      toast.success("Intent approved — executing action...");
+      // Show receipt
+      setLastReceipt({
+        intentId,
+        receiptId: result.receipt?.receipt_id || "generated",
+        status: result.status || "receipted",
+        toolName: result.execution?.connector || "send_email",
+        timestamp: result.receipt?.timestamp_executed || new Date().toISOString(),
+        receiptHash: result.receipt?.receipt_hash,
+        deliveryMode: result.deliveryMode,
+      });
 
-      // Step 2: Trigger execution via dedicated server endpoint
-      // This bypasses tRPC (which requires Manus OAuth) and uses the Gateway JWT instead.
-      try {
-        const gwToken = getGatewayToken();
-        const execRes = await fetch("/api/gateway/execute", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...(gwToken ? { "Authorization": `Bearer ${gwToken}` } : {}),
-          },
-          body: JSON.stringify({ intentId }),
-        });
-        const execResult = await execRes.json();
-
-        if (execResult.success) {
-          toast.success("Action executed successfully! Receipt generated.", {
-            duration: 5000,
-          });
-        } else {
-          toast.error(execResult.error || "Approved but execution failed. Check receipts for details.");
-        }
-      } catch (execErr) {
-        const execMsg = execErr instanceof Error ? execErr.message : "Execution failed";
-        toast.error(`Approved but execution failed: ${execMsg}`);
+      // Show delivery status
+      if (result.delivered) {
+        const channels = [];
+        if (result.channels?.notification) channels.push("notification");
+        if (result.channels?.telegram) channels.push("Telegram");
+        toast.success(`Executed + delivered via ${channels.join(" + ")}`, { duration: 4000 });
+      } else {
+        toast.success("Executed — receipt generated", { duration: 3000 });
       }
 
       fetchPending();
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Approval failed");
+      const msg = err instanceof Error ? err.message : "Approval failed";
+      toast.error(msg);
     }
     setApprovingId(null);
   }
@@ -291,8 +315,10 @@ export default function GatewayApprovals() {
   async function handleDeny(intentId: string) {
     setDenyingId(intentId);
     try {
+      // Step 1: Deny on Gateway
       const result = await submitApproval(intentId, "denied", "Denied by human via ONE");
       if (result.ok) {
+        // Gateway deny is the only path — no parallel systems
         toast.success("Intent denied");
         fetchPending();
       } else {
@@ -434,6 +460,94 @@ export default function GatewayApprovals() {
               <Plus className="h-3.5 w-3.5" />
               New Action
             </Button>
+          </div>
+        )}
+
+        {/* Inline Receipt — shown immediately after approval+execution */}
+        {lastReceipt && (
+          <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5 space-y-3 animate-in fade-in slide-in-from-bottom-2 duration-300">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="h-8 w-8 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                  {lastReceipt.status === "FAILED" ? (
+                    <XCircle className="h-4 w-4 text-red-400" />
+                  ) : (
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold">
+                    {lastReceipt.status === "FAILED" ? "Execution Failed" : "Receipt Generated"}
+                  </p>
+                  <p className="text-[10px] text-muted-foreground">
+                    {new Date(lastReceipt.timestamp).toLocaleString()}
+                  </p>
+                </div>
+              </div>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setLastReceipt(null)}
+                className="text-muted-foreground hover:text-foreground text-xs"
+              >
+                Dismiss
+              </Button>
+            </div>
+            <div className="rounded-lg bg-background/50 p-3 space-y-1.5 text-xs">
+              {lastReceipt.receiptId && (
+                <div className="flex gap-2">
+                  <span className="text-muted-foreground font-mono min-w-[80px]">receipt:</span>
+                  <span className="text-foreground font-mono break-all">{lastReceipt.receiptId}</span>
+                </div>
+              )}
+              {lastReceipt.toolName && (
+                <div className="flex gap-2">
+                  <span className="text-muted-foreground font-mono min-w-[80px]">action:</span>
+                  <span className="text-foreground">{getActionDisplay(lastReceipt.toolName).label}</span>
+                </div>
+              )}
+              <div className="flex gap-2">
+                <span className="text-muted-foreground font-mono min-w-[80px]">status:</span>
+                <Badge variant="outline" className={cn(
+                  "text-[10px]",
+                  lastReceipt.status === "FAILED" ? "text-red-400 border-red-500/20" : "text-emerald-400 border-emerald-500/20"
+                )}>
+                  {lastReceipt.status}
+                </Badge>
+              </div>
+              {lastReceipt.receiptHash && (
+                <div className="flex gap-2">
+                  <span className="text-muted-foreground font-mono min-w-[80px]">hash:</span>
+                  <span className="text-foreground font-mono text-[10px] break-all">{lastReceipt.receiptHash}</span>
+                </div>
+              )}
+              {lastReceipt.deliveryMode && (
+                <div className="flex gap-2">
+                  <span className="text-muted-foreground font-mono min-w-[80px]">delivery:</span>
+                  <Badge variant="outline" className="text-[10px] text-blue-400 border-blue-500/20">
+                    {lastReceipt.deliveryMode}
+                  </Badge>
+                </div>
+              )}
+            </div>
+            <div className="flex gap-2 pt-1">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/receipts")}
+                className="text-xs gap-1"
+              >
+                View All Receipts
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/ledger")}
+                className="text-xs gap-1"
+              >
+                View Ledger
+              </Button>
+            </div>
           </div>
         )}
 

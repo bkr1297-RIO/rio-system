@@ -288,6 +288,7 @@ function ActivityIntentCard({ intent, onRefresh, expandByDefault }: {
   const [executionResult, setExecutionResult] = useState<Record<string, unknown> | null>(null);
   const [executionId, setExecutionId] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [authTokenId, setAuthTokenId] = useState<string | null>(null);
 
   const approveMutation = trpc.proxy.approve.useMutation();
   const rejectMutation = trpc.proxy.approve.useMutation();
@@ -317,15 +318,18 @@ function ActivityIntentCard({ intent, onRefresh, expandByDefault }: {
     });
     try {
       const signature = await signData(keys.privateKey, dataToSign);
-      await approveMutation.mutateAsync({
+      const approveResult = await approveMutation.mutateAsync({
         intentId: intent.intentId,
         decision: "APPROVED",
         signature,
         expiresInSeconds: 300,
         maxExecutions: 1,
       });
+      // Capture the authorization token ID for execution
+      const tokenId = (approveResult as any)?.authorizationToken?.token_id;
+      if (tokenId) setAuthTokenId(tokenId);
       setLocalStatus("APPROVED");
-      toast.success("Approved!");
+      toast.success(tokenId ? "Approved! Authorization token issued." : "Approved!");
       onRefresh();
     } catch (e) {
       toast.error("Approval failed: " + (e as Error).message);
@@ -352,7 +356,10 @@ function ActivityIntentCard({ intent, onRefresh, expandByDefault }: {
   const handleExecute = async () => {
     setExecuting(true);
     try {
-      const result = await executeMutation.mutateAsync({ intentId: intent.intentId });
+      const result = await executeMutation.mutateAsync({
+        intentId: intent.intentId,
+        ...(authTokenId ? { tokenId: authTokenId } : {}),
+      });
       if (result.success) {
         setLocalStatus("EXECUTED");
         const execData = (result as Record<string, unknown>).execution as { result: unknown; executionId: string } | undefined;

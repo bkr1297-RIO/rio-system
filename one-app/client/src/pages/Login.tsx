@@ -1,12 +1,10 @@
 /**
- * Login — Screen 1 of 3
+ * Login — Single-User Product Mode
  *
- * Primary: Gateway passphrase login (POST /login → JWT)
- * Secondary: Manus OAuth (for non-Gateway features)
+ * One passphrase, one session. The server handles I-1/I-2 internally.
+ * No principal selector. No dev ceremony.
  *
  * Decision 2: Interface Is Not Authority — ONE displays, Gateway enforces.
- * The Gateway has its own identity system. Passphrase login issues a JWT
- * that ONE stores in localStorage and sends as Authorization: Bearer <token>.
  */
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
@@ -14,8 +12,8 @@ import { useGatewayAuth } from "@/hooks/useGatewayAuth";
 import { gatewayAuthStatus } from "@/lib/gateway";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { LogIn, Shield, Loader2, Lock } from "lucide-react";
+import { Shield, Loader2, Lock, MessageCircleQuestion, ShieldAlert } from "lucide-react";
+import { Link } from "wouter";
 import { toast } from "sonner";
 
 export default function Login() {
@@ -26,69 +24,49 @@ export default function Login() {
   const [gatewayStatus, setGatewayStatus] = useState<{
     reachable: boolean;
     version?: string;
-    mode?: string;
-    policyActive?: boolean;
   }>({ reachable: false });
 
   // Login fields
-  const [userId, setUserId] = useState("");
   const [passphrase, setPassphrase] = useState("");
-  const [passphraseLoading, setPassphraseLoading] = useState(false);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   // Check Gateway status on mount
   useEffect(() => {
     gatewayAuthStatus()
       .then((s) => {
-        setGatewayStatus({
-          reachable: true,
-          version: s.version,
-          mode: s.system_mode,
-          policyActive: s.policy_active,
-        });
+        setGatewayStatus({ reachable: true, version: s.version });
       })
       .catch(() => {
         setGatewayStatus({ reachable: false });
       });
   }, []);
 
-  // If already authenticated via Gateway JWT, redirect based on role
+  // If already authenticated, go to approvals (the main screen)
   useEffect(() => {
     if (!gwLoading && isAuthenticated && user) {
-      // Approvers go to Approvals tab, proposers/root_authority go to New Action
-      const role = user.role || "";
-      if (role === "approver") {
-        navigate("/approvals");
-      } else {
-        navigate("/intent/new");
-      }
+      navigate("/authorize");
     }
   }, [gwLoading, isAuthenticated, user, navigate]);
 
-  const handlePassphraseLogin = async () => {
-    if (!userId.trim()) {
-      toast.error("Enter your Principal ID (e.g. I-1)");
-      return;
-    }
+  const handleLogin = async () => {
     if (!passphrase.trim()) {
       toast.error("Enter the Gateway passphrase");
       return;
     }
-    setPassphraseLoading(true);
+    setIsLoggingIn(true);
     try {
-      const result = await login(userId.trim(), passphrase);
+      // Login as I-1 (proposer) — the server handles I-2 internally for approvals
+      const result = await login("I-1", passphrase);
       if (result.success) {
-        toast.success("Gateway authenticated");
-        // Route based on principal role
-        // I-2 (approver) → Approvals, I-1 (root_authority/proposer) → New Action
-        const isApprover = userId.trim().toUpperCase() === "I-2";
-        navigate(isApprover ? "/approvals" : "/intent/new");
+        toast.success("Authenticated");
+        navigate("/authorize");
       } else {
         toast.error(result.error || "Passphrase rejected");
       }
     } catch {
       toast.error("Gateway unreachable");
     }
-    setPassphraseLoading(false);
+    setIsLoggingIn(false);
   };
 
   if (gwLoading) {
@@ -106,77 +84,90 @@ export default function Login() {
         <div className="w-16 h-16 mx-auto mb-4 rounded-xl bg-primary/10 flex items-center justify-center">
           <Shield className="h-8 w-8 text-primary" />
         </div>
-        <h1 className="text-3xl font-bold tracking-tight">ONE Command Center</h1>
+        <h1 className="text-3xl font-bold tracking-tight">ONE</h1>
         <p className="text-muted-foreground mt-2">
-          Human control surface for the RIO system
+          Command Center
         </p>
       </div>
 
-      {/* Gateway Status */}
-      <Card className="w-full max-w-sm mb-6 border-border/50">
-        <CardContent className="py-3 px-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-mono uppercase text-muted-foreground">
-              Gateway
-            </span>
-            {gatewayStatus.reachable ? (
-              <span className="text-xs text-emerald-400">
-                {gatewayStatus.policyActive ? "Policy active" : "Connected"}{" "}
-                {gatewayStatus.mode && `| Mode: ${gatewayStatus.mode}`}
+      {/* Gateway Connected Badge */}
+      <div className="w-full max-w-sm mb-8">
+        <div className="flex items-center justify-center gap-2 py-2">
+          {gatewayStatus.reachable ? (
+            <>
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500" />
               </span>
-            ) : (
-              <span className="text-xs text-amber-400">Checking...</span>
-            )}
-          </div>
-          {gatewayStatus.version && (
-            <span className="text-xs font-mono text-emerald-400/70 border border-emerald-400/30 rounded px-2 py-0.5">
-              v{gatewayStatus.version}
-            </span>
+              <span className="text-sm font-medium text-emerald-400">
+                Gateway Connected
+              </span>
+              {gatewayStatus.version && (
+                <span className="text-xs font-mono text-emerald-400/70 border border-emerald-400/30 rounded px-2 py-0.5 ml-1">
+                  v{gatewayStatus.version}
+                </span>
+              )}
+            </>
+          ) : (
+            <>
+              <span className="relative flex h-2.5 w-2.5">
+                <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-amber-500" />
+              </span>
+              <span className="text-sm font-medium text-amber-400">
+                Connecting to Gateway...
+              </span>
+            </>
           )}
-        </CardContent>
-      </Card>
-
-      {/* Primary: Gateway Passphrase Login */}
-      <div className="w-full max-w-sm space-y-4">
-        <div className="space-y-3">
-          <Input
-            type="text"
-            placeholder="Principal ID (e.g. I-1)"
-            value={userId}
-            onChange={(e) => setUserId(e.target.value)}
-            className="h-12 font-mono"
-            autoFocus
-          />
-          <Input
-            type="password"
-            placeholder="Gateway passphrase"
-            value={passphrase}
-            onChange={(e) => setPassphrase(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handlePassphraseLogin()}
-            className="h-12"
-          />
-          <Button
-            onClick={handlePassphraseLogin}
-            disabled={passphraseLoading || !userId.trim() || !passphrase.trim()}
-            className="w-full h-12 text-base font-medium"
-            size="lg"
-          >
-            {passphraseLoading ? (
-              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-            ) : (
-              <Lock className="mr-2 h-5 w-5" />
-            )}
-            Authenticate
-          </Button>
-          <p className="text-center text-xs text-muted-foreground">
-            Enter your Gateway passphrase to sign in
-          </p>
         </div>
       </div>
 
+      {/* Passphrase Input + Login Button */}
+      <div className="w-full max-w-sm space-y-4">
+        <div>
+          <Input
+            type="password"
+            placeholder="Enter passphrase"
+            value={passphrase}
+            onChange={(e) => setPassphrase(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+            className="h-12 text-center text-lg tracking-wider"
+            autoFocus
+          />
+        </div>
+        <Button
+          onClick={handleLogin}
+          disabled={isLoggingIn || !passphrase.trim()}
+          className="w-full h-12 text-base font-medium"
+          size="lg"
+        >
+          {isLoggingIn ? (
+            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+          ) : (
+            <Lock className="mr-2 h-5 w-5" />
+          )}
+          Authenticate
+        </Button>
+      </div>
+
+      {/* Public tools — no login required */}
+      <div className="mt-12 w-full max-w-sm space-y-3">
+        <Link href="/email-firewall">
+          <button className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-amber-500/30 bg-amber-500/5 hover:bg-amber-500/10 hover:border-amber-500/50 transition-all text-amber-400 hover:text-amber-300">
+            <ShieldAlert className="h-5 w-5" />
+            <span className="text-sm font-medium">Email Firewall</span>
+          </button>
+        </Link>
+        <Link href="/ask-bondi">
+          <button className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl border border-blue-500/30 bg-blue-500/5 hover:bg-blue-500/10 hover:border-blue-500/50 transition-all text-blue-400 hover:text-blue-300">
+            <MessageCircleQuestion className="h-5 w-5" />
+            <span className="text-sm font-medium">Ask Bondi</span>
+          </button>
+        </Link>
+      </div>
+
       {/* Footer */}
-      <p className="mt-12 text-xs text-muted-foreground/40 text-center max-w-sm">
-        Decision 2: Interface Is Not Authority — ONE displays, Gateway enforces.
+      <p className="mt-8 text-xs text-muted-foreground/40 text-center max-w-sm">
+        Interface Is Not Authority — ONE displays, Gateway enforces.
       </p>
     </div>
   );

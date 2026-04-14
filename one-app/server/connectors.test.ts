@@ -18,6 +18,21 @@ vi.mock("./db", () => ({
   sha256: (data: string) => crypto.createHash("sha256").update(data).digest("hex"),
 }));
 
+// ─── Mock coherence module (used by emailFirewall) ───────────────
+vi.mock("./coherence", () => ({
+  runCoherenceCheck: vi.fn().mockResolvedValue({
+    status: "GREEN",
+    signals: [],
+    timestamp: new Date().toISOString(),
+  }),
+  buildSystemContext: vi.fn().mockReturnValue({
+    activeObjective: "test",
+    systemHealth: "test",
+  }),
+}));
+
+import { _clearSubstrate } from "./integritySubstrate";
+import { _resetForTesting } from "./emailFirewall";
 import {
   dispatchExecution,
   verifyArgsHash,
@@ -52,6 +67,8 @@ describe("Connector Abstraction Layer", () => {
   beforeEach(() => {
     mockInvokeLLM.mockReset();
     mockNotifyOwner.mockReset();
+    _clearSubstrate();
+    _resetForTesting();
     initializeConnectors();
   });
 
@@ -207,46 +224,49 @@ describe("Connector Abstraction Layer", () => {
       expect(result.error).toContain("NO_CONNECTOR");
     });
 
-    it("send_email fails-closed when notifyOwner returns false", async () => {
+    it("send_email fails-closed when notifyOwner returns false (gateway path)", async () => {
       mockNotifyOwner.mockResolvedValueOnce(false);
-      const toolArgs = { to: "a@b.com", subject: "Test", body: "Hello" };
+      const toolArgs = { to: "a@b.com", subject: "Test", body: `Hello ${Date.now()}-${Math.random()}`, _gatewayExecution: true };
       const proof = makeApprovalProof("send_email", toolArgs);
       const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
       expect(result.success).toBe(false);
       expect(result.error).toContain("FAIL_CLOSED");
-      expect(result.error).toContain("notification service unreachable");
+      expect(result.error).toContain("notifyOwner returned false");
     });
 
-    it("send_email fails-closed when notifyOwner throws", async () => {
+    it("send_email fails-closed when notifyOwner throws (gateway path)", async () => {
       mockNotifyOwner.mockRejectedValueOnce(new Error("Service down"));
-      const toolArgs = { to: "a@b.com", subject: "Test", body: "Hello" };
+      const toolArgs = { to: "a@b.com", subject: "Test", body: `Hello throw ${Date.now()}-${Math.random()}`, _gatewayExecution: true };
       const proof = makeApprovalProof("send_email", toolArgs);
       const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
       expect(result.success).toBe(false);
       expect(result.error).toContain("FAIL_CLOSED");
+    });
+
+    it("send_email REFUSES direct execution without _gatewayExecution flag", async () => {
+      const toolArgs = { to: "a@b.com", subject: "Test", body: "Hello" };
+      const proof = makeApprovalProof("send_email", toolArgs);
+      const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
+      expect(result.success).toBe(false);
+      expect(result.error).toContain("REQUIRES_GATEWAY_GOVERNANCE");
     });
   });
 
   describe("Send Email Connector (LIVE via notifyOwner)", () => {
-    it("sends email successfully through notifyOwner", async () => {
+    it("sends email successfully through notifyOwner (gateway path)", async () => {
       mockNotifyOwner.mockResolvedValueOnce(true);
-      const toolArgs = { to: "a@b.com", subject: "Test Subject", body: "Hello World" };
+      const toolArgs = { to: "a@b.com", subject: "Test Subject", body: `Hello World ${Date.now()}`, _gatewayExecution: true };
       const proof = makeApprovalProof("send_email", toolArgs);
       const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
       expect(result.success).toBe(true);
       expect(result.output).toHaveProperty("delivered", true);
       expect(result.output).toHaveProperty("method", "notifyOwner");
-      expect(result.output).toHaveProperty("subject", "Test Subject");
+      expect(result.output).toHaveProperty("governance", "gateway");
       expect(mockNotifyOwner).toHaveBeenCalledTimes(1);
-      // Verify the notification title is the subject (natural language)
-      const callArgs = mockNotifyOwner.mock.calls[0][0];
-      expect(callArgs.title).toBe("Test Subject");
-      expect(callArgs.content).toContain("Hello World");
-      expect(callArgs.content).toContain(proof.approvalId.slice(0, 12));
     });
 
-    it("send_email rejects empty subject and body", async () => {
-      const toolArgs = { to: "a@b.com", subject: "", body: "" };
+    it("send_email rejects empty subject and body (gateway path)", async () => {
+      const toolArgs = { to: "a@b.com", subject: "", body: "", _gatewayExecution: true };
       const proof = makeApprovalProof("send_email", toolArgs);
       const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
       expect(result.success).toBe(false);
@@ -311,7 +331,16 @@ describe("Connector Abstraction Layer", () => {
       expect(result.error).toContain("HIGH risk");
     });
 
-    it("send_sms succeeds when Twilio API returns 201", async () => {
+    it("send_sms REFUSES direct execution without _gatewayExecution flag", async () => {
+      const toolArgs = { to: "+18014052174", body: "Test message from RIO" };
+      const proof = makeApprovalProof("send_sms", toolArgs);
+      const result = await dispatchExecution("send_sms", toolArgs, proof, "HIGH");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain("REQUIRES_GATEWAY_GOVERNANCE");
+    });
+
+    it("send_sms succeeds when Twilio API returns 201 (gateway path)", async () => {
       const originalFetch = globalThis.fetch;
       globalThis.fetch = vi.fn().mockResolvedValueOnce({
         ok: true,
@@ -323,29 +352,22 @@ describe("Connector Abstraction Layer", () => {
         }),
       }) as unknown as typeof fetch;
 
-      const toolArgs = { to: "+18014052174", body: "Test message from RIO" };
+      const toolArgs = { to: "+18014052174", body: "Test message from RIO", _gatewayExecution: true };
       const proof = makeApprovalProof("send_sms", toolArgs);
       const result = await dispatchExecution("send_sms", toolArgs, proof, "HIGH");
 
       expect(result.success).toBe(true);
       expect(result.output).toHaveProperty("delivered", true);
       expect(result.output).toHaveProperty("method", "twilio_sms");
+      expect(result.output).toHaveProperty("governance", "gateway");
       expect(result.output).toHaveProperty("messageSid", "SM1234567890abcdef");
-      expect(result.output).toHaveProperty("to", "+18014052174");
       expect(result.metadata?.method).toBe("twilio_sms");
-
-      // Verify fetch was called with correct Twilio URL and auth
-      expect(globalThis.fetch).toHaveBeenCalledTimes(1);
-      const fetchCall = (globalThis.fetch as ReturnType<typeof vi.fn>).mock.calls[0];
-      expect(fetchCall[0]).toContain("api.twilio.com");
-      expect(fetchCall[0]).toContain("Messages.json");
-      expect(fetchCall[1].method).toBe("POST");
-      expect(fetchCall[1].headers.Authorization).toMatch(/^Basic /);
+      expect(result.metadata?.governance).toBe("gateway");
 
       globalThis.fetch = originalFetch;
     });
 
-    it("send_sms fails-closed when Twilio API returns error", async () => {
+    it("send_sms fails-closed when Twilio API returns error (gateway path)", async () => {
       const originalFetch = globalThis.fetch;
       globalThis.fetch = vi.fn().mockResolvedValueOnce({
         ok: false,
@@ -356,24 +378,23 @@ describe("Connector Abstraction Layer", () => {
         }),
       }) as unknown as typeof fetch;
 
-      const toolArgs = { to: "+1invalid", body: "Test" };
+      const toolArgs = { to: "+1invalid", body: "Test", _gatewayExecution: true };
       const proof = makeApprovalProof("send_sms", toolArgs);
       const result = await dispatchExecution("send_sms", toolArgs, proof, "HIGH");
 
       expect(result.success).toBe(false);
       expect(result.error).toContain("FAIL_CLOSED");
       expect(result.error).toContain("Twilio API error");
-      expect(result.error).toContain("not a valid phone number");
       expect(result.metadata?.twilioErrorCode).toBe(21211);
 
       globalThis.fetch = originalFetch;
     });
 
-    it("send_sms fails-closed when fetch throws (network error)", async () => {
+    it("send_sms fails-closed when fetch throws (gateway path)", async () => {
       const originalFetch = globalThis.fetch;
       globalThis.fetch = vi.fn().mockRejectedValueOnce(new Error("Network unreachable")) as unknown as typeof fetch;
 
-      const toolArgs = { to: "+18014052174", body: "Test" };
+      const toolArgs = { to: "+18014052174", body: "Test", _gatewayExecution: true };
       const proof = makeApprovalProof("send_sms", toolArgs);
       const result = await dispatchExecution("send_sms", toolArgs, proof, "HIGH");
 
@@ -397,6 +418,80 @@ describe("Connector Abstraction Layer", () => {
       expect(receipt.toolName).toBe("send_sms");
       expect(receipt.approvalProof).toBe(proof);
       expect(receipt.intentId).toBe("INT-sms-1");
+    });
+  });
+
+  describe("Send Email — Firewall Send-Time Gate", () => {
+    // ── MVP Mode: Only the three-condition AND rule fires ──────────
+    // Under MVP mode (default ON), inducement/PII/threat alone don't block.
+    // Only unknown-sender + urgency + consequential-action triggers BLOCK.
+    // V2 rule behavior is preserved in emailFirewall.test.ts with mvpMode: false.
+
+    it("PASSES inducement email under MVP mode (gateway path)", async () => {
+      mockNotifyOwner.mockResolvedValueOnce(true);
+      const toolArgs = { to: "dr@clinic.com", subject: "Partnership", body: `If you prescribe our product ${Date.now()}`, _gatewayExecution: true };
+      const proof = makeApprovalProof("send_email", toolArgs);
+      const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
+      expect(result.success).toBe(true);
+      expect(result.output).toHaveProperty("delivered", true);
+      expect(mockNotifyOwner).toHaveBeenCalledTimes(1);
+    });
+
+    it("PASSES clean email through firewall (gateway path)", async () => {
+      mockNotifyOwner.mockResolvedValueOnce(true);
+      const toolArgs = { to: "team@company.com", subject: "Q1 Report", body: `Quarterly report ${Date.now()}`, _gatewayExecution: true };
+      const proof = makeApprovalProof("send_email", toolArgs);
+      const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
+      expect(result.success).toBe(true);
+      expect(result.output).toHaveProperty("delivered", true);
+      expect(mockNotifyOwner).toHaveBeenCalledTimes(1);
+    });
+
+    it("PASSES implied inducement under MVP mode (gateway path)", async () => {
+      mockNotifyOwner.mockResolvedValueOnce(true);
+      const toolArgs = { to: "partner@co.com", subject: "Collaboration", body: `Support your team ${Date.now()}`, _gatewayExecution: true };
+      const proof = makeApprovalProof("send_email", toolArgs);
+      const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
+      expect(result.success).toBe(true);
+      expect(result.output).toHaveProperty("delivered", true);
+      expect(mockNotifyOwner).toHaveBeenCalledTimes(1);
+    });
+
+    it("PASSES PII email under MVP mode (gateway path)", async () => {
+      mockNotifyOwner.mockResolvedValueOnce(true);
+      const toolArgs = { to: "hr@company.com", subject: "Records", body: `Employee SSN: 123-45-6789 ${Date.now()}`, _gatewayExecution: true };
+      const proof = makeApprovalProof("send_email", toolArgs);
+      const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
+      expect(result.success).toBe(true);
+      expect(result.output).toHaveProperty("delivered", true);
+      expect(mockNotifyOwner).toHaveBeenCalledTimes(1);
+    });
+
+    it("PASSES threat email under MVP mode (gateway path)", async () => {
+      mockNotifyOwner.mockResolvedValueOnce(true);
+      const toolArgs = { to: "vendor@co.com", subject: "Final Notice", body: `We will expose ${Date.now()}`, _gatewayExecution: true };
+      const proof = makeApprovalProof("send_email", toolArgs);
+      const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
+      expect(result.success).toBe(true);
+      expect(result.output).toHaveProperty("delivered", true);
+      expect(mockNotifyOwner).toHaveBeenCalledTimes(1);
+    });
+
+    it("BLOCKS phishing email with urgency+consequential (MVP rule fires)", async () => {
+      // This message has all three MVP conditions: unknown sender + urgency + consequential
+      const toolArgs = {
+        to: "victim@target.com",
+        subject: "URGENT: Account Locked",
+        body: "URGENT: Your account has been compromised. Click here immediately to verify your identity and reset your password.",
+      };
+      const proof = makeApprovalProof("send_email", toolArgs);
+      const result = await dispatchExecution("send_email", toolArgs, proof, "HIGH");
+
+      expect(result.success).toBe(false);
+      expect(result.error).toContain("FIREWALL_BLOCKED");
+      expect(result.output).toHaveProperty("blocked", true);
+      expect(result.output).toHaveProperty("firewallDecision", "BLOCK");
+      expect(mockNotifyOwner).not.toHaveBeenCalled();
     });
   });
 

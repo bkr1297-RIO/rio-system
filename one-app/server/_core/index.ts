@@ -7,6 +7,22 @@ import { registerOAuthRoutes } from "./oauth";
 import { appRouter } from "../routers";
 import { createContext } from "./context";
 import { serveStatic, setupVite } from "./vite";
+import { ENV } from "./env";
+import { registerCheckMessageRoutes } from "../checkMessage";
+import { registerTelegramWebhook, setTelegramWebhook } from "../telegramInput";
+import { registerOneClickApproval } from "../oneClickApproval";
+import { registerEmailApproval } from "../emailApproval";
+import { restoreFromDrive } from "../driveRestore";
+import { registerPolicyEndpoints } from "../policyEvaluateEndpoint";
+import { loadDefaultMatrix } from "../policyMatrix";
+import {
+  registerRootAuthority,
+  activatePolicy,
+  getActivePolicy,
+  DEFAULT_POLICY_RULES,
+  computePolicyHash,
+} from "../authorityLayer";
+import { createHash } from "crypto";
 
 function isPortAvailable(port: number): Promise<boolean> {
   return new Promise(resolve => {
@@ -30,158 +46,165 @@ async function findAvailablePort(startPort: number = 3000): Promise<number> {
 async function startServer() {
   const app = express();
   const server = createServer(app);
-  // Configure body parser with larger size limit for file uploads
   app.use(express.json({ limit: "50mb" }));
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
-  // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
 
-  // ─── Gateway Execution Endpoint ───────────────────────────────
-  // This endpoint does NOT require Manus OAuth. It accepts a Gateway JWT
-  // (from passphrase login) and triggers the execution pipeline server-side.
-  // The server authenticates as gateway-exec to the Gateway for execution.
-  app.post("/api/gateway/execute", async (req, res) => {
+  // ─── Multi-Channel Check Message API (Spec v1.0) ─────────────
+  registerCheckMessageRoutes(app);
+
+  // ─── Telegram Input (bidirectional) ────────────────────────────
+  registerTelegramWebhook(app);
+
+  // ─── One-Click Approval (Product Mode) ────────────────────────
+  registerOneClickApproval(app);
+
+  //  // ─── Email-Based One-Click Approval (Multi-User MVP) ──────
+  registerEmailApproval(app);
+
+  // ─── Policy Engine (Standalone API) ────────────────────
+  loadDefaultMatrix();
+  registerPolicyEndpoints(app);
+
+  // ─── HITL Proxy ──────────────────────────────────────────────
+  // Forwards requests to the HITL execution engine (Replit).
+  // ONE → this server → HITL proxy → tool execution → receipt → ledger
+  // The ONE app never calls HITL directly — this server proxies all requests.
+  app.all("/api/hitl/*", async (req, res) => {
+    const hitlBase = ENV.hitlProxyUrl;
+    if (!hitlBase) {
+      return res.status(503).json({ error: "HITL_PROXY_URL not configured" });
+    }
+
+    // Forward the full /api/hitl/* path — Replit app expects /api/hitl/* endpoints
+    const hitlPath = req.originalUrl; // e.g. /api/hitl/onboard
+    const targetUrl = `${hitlBase}${hitlPath}`;
+
     try {
-      const { intentId } = req.body;
-      if (!intentId || typeof intentId !== "string") {
-        return res.status(400).json({ success: false, error: "Missing intentId" });
-      }
-
-      // Validate that the caller has a valid Gateway JWT
-      const authHeader = req.headers.authorization || req.headers["x-gateway-token"];
-      const gwToken = typeof authHeader === "string" ? authHeader.replace(/^Bearer\s+/i, "") : null;
-      if (!gwToken) {
-        return res.status(401).json({ success: false, error: "Gateway token required" });
-      }
-
-      // Import execution function
-      const { executeGovernedAction } = await import("../gatewayProxy");
-      const { appendLedger } = await import("../db");
-      const { ENV: serverEnv } = await import("../_core/env");
-
-      // ─── Twilio SMS helper (shared by send_email and send_sms) ───
-      const sendTwilioSms = async (to: string, body: string): Promise<{ success: boolean; sid?: string; status?: string; from?: string; error?: string }> => {
-        const accountSid = serverEnv.twilioAccountSid;
-        const authToken = serverEnv.twilioAuthToken;
-        const fromNumber = serverEnv.twilioPhoneNumber === '+18337910928' ? '+18014570972' : serverEnv.twilioPhoneNumber;
-        const messagingServiceSid = serverEnv.twilioMessagingServiceSid;
-
-        if (!accountSid || !authToken) {
-          return { success: false, error: "Twilio credentials not configured" };
-        }
-
-        const url = `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`;
-        const params = new URLSearchParams();
-        params.append("To", to);
-        params.append("Body", body);
-        if (fromNumber) {
-          params.append("From", fromNumber);
-        } else if (messagingServiceSid) {
-          params.append("MessagingServiceSid", messagingServiceSid);
-        }
-
-        const resp = await fetch(url, {
-          method: "POST",
-          headers: {
-            Authorization: "Basic " + Buffer.from(`${accountSid}:${authToken}`).toString("base64"),
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: params.toString(),
-        });
-        const data = await resp.json() as Record<string, unknown>;
-        if (!resp.ok || data.error_code) {
-          return { success: false, error: String(data.message || data.error_message || JSON.stringify(data)) };
-        }
-        return { success: true, sid: String(data.sid), status: String(data.status), from: String(data.from || fromNumber) };
-      }
-
-      // Define action executors
-      const actionExecutors: Record<string, (params: Record<string, unknown>) => Promise<{ success: boolean; result: Record<string, unknown> }>> = {
-        send_email: async (params) => {
-          // For now, send_email delivers via SMS (Twilio) until Gmail OAuth is connected.
-          // The email content is formatted into the SMS body.
-          const to = String(params.to || "");
-          const subject = String(params.subject || "");
-          const body = String(params.body || params.message || "");
-          // Use the owner's phone number as the SMS recipient
-          const ownerPhone = "+18014555810"; // Brian's phone
-          const smsBody = `[RIO] Email to: ${to}\nSubject: ${subject}\n\n${body}\n\n— Governed by RIO · Intent: ${intentId.slice(0, 12)}`;
-
-          const result = await sendTwilioSms(ownerPhone, smsBody);
-          if (!result.success) {
-            return { success: false, result: { error: result.error } };
-          }
-          return {
-            success: true,
-            result: {
-              delivered: true,
-              method: "twilio_sms",
-              to,
-              subject,
-              bodyLength: body.length,
-              smsTo: ownerPhone,
-              messageSid: result.sid,
-              note: "Email content delivered via SMS. Gmail API integration coming soon.",
-            },
-          };
-        },
-        send_sms: async (params) => {
-          const to = String(params.to || params.phone || "");
-          const body = String(params.body || params.message || "");
-          if (!to.trim() || !body.trim()) {
-            return { success: false, result: { error: "SMS requires 'to' phone number and message body" } };
-          }
-          const smsBody = `${body}\n\n— Sent via RIO · Intent: ${intentId.slice(0, 12)}`;
-          const result = await sendTwilioSms(to, smsBody);
-          if (!result.success) {
-            return { success: false, result: { error: result.error } };
-          }
-          return {
-            success: true,
-            result: {
-              delivered: true,
-              method: "twilio_sms",
-              to,
-              messageSid: result.sid,
-              from: result.from,
-              bodyLength: body.length,
-              note: "Text message sent. Receipt recorded.",
-            },
-          };
-        },
-        _default: async (params) => {
-          return { success: true, result: { simulated: true, action: "unknown", params, note: "No specific executor" } };
-        },
+      const headers: Record<string, string> = {
+        "Content-Type": "application/json",
       };
+      // Forward authorization header if present
+      if (req.headers.authorization) {
+        headers["Authorization"] = req.headers.authorization as string;
+      }
+      // Forward Gateway token if present
+      if (req.headers["x-gateway-token"]) {
+        headers["X-Gateway-Token"] = req.headers["x-gateway-token"] as string;
+      }
 
-      const { execution, receipt } = await executeGovernedAction(
-        intentId,
-        async (params) => {
-          const action = String(params._action || "send_email");
-          const executor = actionExecutors[action] || actionExecutors._default;
-          return executor(params);
-        }
-      );
+      const fetchOpts: RequestInit = {
+        method: req.method,
+        headers,
+      };
+      if (req.method !== "GET" && req.method !== "HEAD" && req.body) {
+        fetchOpts.body = JSON.stringify(req.body);
+      }
 
-      // Log to local ledger
-      await appendLedger("EXECUTION", {
-        intent_id: intentId,
-        execution_hash: execution.execution_hash,
-        receipt_hash: receipt?.receipt?.receipt_hash,
-        connector: execution.connector,
-        source: "gateway-execute-endpoint",
-        timestamp: Date.now(),
-      });
+      const upstream = await fetch(targetUrl, fetchOpts);
+      const contentType = upstream.headers.get("content-type") || "";
 
-      return res.json({
-        success: true,
-        execution,
-        receipt: receipt?.receipt || null,
-      });
+      // Forward status code
+      res.status(upstream.status);
+
+      // Forward response
+      if (contentType.includes("application/json")) {
+        const data = await upstream.json();
+        return res.json(data);
+      } else {
+        const text = await upstream.text();
+        res.set("Content-Type", contentType || "text/plain");
+        return res.send(text);
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : String(err);
-      console.error(`[Gateway Execute] Error: ${msg}`);
-      return res.status(500).json({ success: false, error: msg });
+      console.error(`[HITL Proxy] ${req.method} ${hitlPath} → Error: ${msg}`);
+      return res.status(502).json({ error: `HITL proxy error: ${msg}` });
+    }
+  });
+
+  // ─── Ask Bondi REST endpoint (cross-origin) ───────────────────
+  // Standalone REST endpoint so external sites (riodemo) can call
+  // via plain fetch() without tRPC client.
+  const ALLOWED_ORIGINS = [
+    "https://riodemo-ux2sxdqo.manus.space",
+    "https://rioprotocol-q9cry3ny.manus.space",
+    "https://rio-one.manus.space",
+    "https://riodigital-cqy2ymbu.manus.space",
+    "http://localhost:3000",
+    "http://localhost:5173",
+  ];
+
+  app.options("/api/ask-bondi", (req, res) => {
+    const origin = req.headers.origin || "";
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      res.set("Access-Control-Allow-Origin", origin);
+    }
+    res.set("Access-Control-Allow-Methods", "POST, OPTIONS");
+    res.set("Access-Control-Allow-Headers", "Content-Type");
+    res.set("Access-Control-Max-Age", "86400");
+    res.status(204).end();
+  });
+
+  app.post("/api/ask-bondi", async (req, res) => {
+    const origin = req.headers.origin || "";
+    if (ALLOWED_ORIGINS.includes(origin)) {
+      res.set("Access-Control-Allow-Origin", origin);
+    }
+
+    try {
+      const { question } = req.body || {};
+      if (!question || typeof question !== "string" || question.length < 1 || question.length > 4000) {
+        return res.status(400).json({ error: "question is required (1-4000 chars)" });
+      }
+
+      const { invokeLLM } = await import("./llm");
+
+      const BONDI_SYSTEM_PROMPT = `You are Bondi, the implementation assistant for the RIO protocol.
+
+You ONLY answer with concrete, developer-ready implementation guidance.
+
+Always:
+  - Explain step-by-step
+  - Reference real flow: Intent → Governance → Approval → Execution → Receipt → Ledger
+  - Use endpoints, payloads, and sequence
+  - Be precise and technical
+
+Never:
+  - Speak philosophically
+  - Be vague
+  - Invent features not in the system
+
+Assume the user is trying to implement:
+  - Receipt protocol
+  - Gateway integration
+  - Governed action pipeline
+
+Key system facts:
+  - Gateway URL: https://rio-gateway.onrender.com
+  - Principals: I-1 (proposer, root_authority), I-2 (approver, human)
+  - Flow: POST /intent → POST /govern → POST /approvals/:id → POST /execute-action
+  - Receipts: SHA-256 hash chain, Ed25519 signed, canonical JSON
+  - Ledger: append-only, hash-linked, tamper-evident
+  - Policy: proposer ≠ approver, HIGH risk requires human approval, fail-closed
+  - Receipt Protocol repo: github.com/bkr1297-RIO/rio-receipt-protocol
+  - Connectors: Gmail SMTP (send_email), Twilio SMS (send_sms)
+
+If unclear, ask a clarifying question.`;
+
+      const response = await invokeLLM({
+        messages: [
+          { role: "system", content: BONDI_SYSTEM_PROMPT },
+          { role: "user", content: question },
+        ],
+      });
+
+      const answer = response.choices?.[0]?.message?.content || "I couldn't generate an answer. Please try again.";
+      return res.json({ answer });
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      console.error(`[Ask Bondi] Error: ${msg}`);
+      return res.status(500).json({ error: "Bondi failed", detail: msg });
     }
   });
 
@@ -207,8 +230,53 @@ async function startServer() {
     console.log(`Port ${preferredPort} is busy, using port ${port} instead`);
   }
 
+  // ─── Auto-Bootstrap Default Policy (ensures receipts always work) ──
+  // On the published site, no user has onboarded through the UI,
+  // so there's no active policy in memory. Email approval receipts
+  // require an active policy. Bootstrap a default one on startup.
+  if (!getActivePolicy()) {
+    try {
+      const BOOTSTRAP_ROOT_KEY = createHash("sha256")
+        .update(`rio-bootstrap-root-${ENV.cookieSecret || "default"}`)
+        .digest("hex");
+      registerRootAuthority(BOOTSTRAP_ROOT_KEY);
+      // Generate a deterministic signature (HMAC of policy hash with root key)
+      const policyHash = computePolicyHash("POLICY-BOOTSTRAP-v1.0.0", DEFAULT_POLICY_RULES);
+      const bootstrapSignature = createHash("sha256")
+        .update(`${policyHash}:${BOOTSTRAP_ROOT_KEY}`)
+        .digest("hex");
+      activatePolicy({
+        policyId: "POLICY-BOOTSTRAP-v1.0.0",
+        rules: DEFAULT_POLICY_RULES,
+        policySignature: bootstrapSignature,
+        rootPublicKey: BOOTSTRAP_ROOT_KEY,
+      });
+      console.log(`[Startup] Bootstrap policy activated: POLICY-BOOTSTRAP-v1.0.0`);
+    } catch (err) {
+      console.error(`[Startup] Failed to bootstrap policy:`, err);
+    }
+  }
+
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+
+    // ─── Drive State Restore (non-blocking, fail-safe) ──────────
+    // Runs after server is listening so it doesn't block startup.
+    // Reads anchor.json + ledger.json from /RIO/01_PROTOCOL/ on Drive,
+    // restores lastReceiptHash for chain continuity, verifies integrity.
+    restoreFromDrive().catch((err) => {
+      console.log(`[Startup] Drive restore failed (non-blocking): ${err}`);
+    });
+
+    // ─── Telegram Webhook Setup (non-blocking) ──────────────────
+    // Sets the Telegram webhook URL so the bot receives messages.
+    // Uses the published site URL so it works in production.
+    // Always use the published HTTPS URL for Telegram webhook
+    // (Telegram requires HTTPS, localhost won't work)
+    const telegramBaseUrl = "https://rio-one.manus.space";
+    setTelegramWebhook(telegramBaseUrl).catch((err) => {
+      console.log(`[Startup] Telegram webhook setup failed (non-blocking): ${err}`);
+    });
   });
 }
 

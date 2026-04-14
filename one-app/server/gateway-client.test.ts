@@ -21,15 +21,19 @@ describe("ONE Gateway Integration", () => {
       // Count Route components (excluding catch-all redirect)
       const routeMatches = appContent.match(/<Route\s+path="/g);
       expect(routeMatches).not.toBeNull();
-      expect(routeMatches!.length).toBe(6);
+      expect(routeMatches!.length).toBe(10);
 
-      // Verify the 6 required paths
+      // Verify the 10 required paths
       expect(appContent).toContain('path="/"');
+      expect(appContent).toContain('path="/dashboard"');
       expect(appContent).toContain('path="/intent/new"');
       expect(appContent).toContain('path="/approvals"');
       expect(appContent).toContain('path="/receipts"');
       expect(appContent).toContain('path="/ledger"');
       expect(appContent).toContain('path="/status"');
+      expect(appContent).toContain('path="/architecture"');
+      expect(appContent).toContain('path="/ask-bondi"');
+      expect(appContent).toContain('path="/email-firewall"');
     });
 
     it("should not import any old enforcement pages", () => {
@@ -213,8 +217,9 @@ describe("ONE Gateway Integration", () => {
       expect(content).toContain("getPendingApprovals");
       expect(content).toContain("submitApproval");
       expect(content).toContain('from "@/lib/gateway"');
-      // Execution pipeline uses /api/gateway/execute (no Manus OAuth required)
-      expect(content).toContain("/api/gateway/execute");
+      // Execution pipeline uses server-side approveAndExecute (not browser-side gatewayExecuteAction)
+      expect(content).toContain("approveAndExecute");
+      expect(content).not.toContain("gatewayExecuteAction");
     });
 
     it("should poll for pending approvals via setInterval", async () => {
@@ -236,8 +241,9 @@ describe("ONE Gateway Integration", () => {
         "utf-8"
       );
 
-      // Must handle the proposer ≠ approver invariant error from Gateway
-      expect(content).toContain("proposer_ne_approver");
+      // proposer_ne_approver is now handled server-side in approveAndExecute.
+      // The UI shows the error message returned by the server.
+      expect(content).toContain("toast.error");
     });
 
     it("should use useGatewayAuth for auth gating", async () => {

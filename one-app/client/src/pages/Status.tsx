@@ -16,6 +16,8 @@ import {
   CheckCircle2,
   XCircle,
   AlertTriangle,
+  Layers,
+  ChevronRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
@@ -40,6 +42,15 @@ interface HealthData {
     entries?: number;
     chain_valid?: boolean;
     chain_tip?: string;
+    hashes_verified?: number;
+    hash_mismatches?: number;
+    linkage_breaks?: number;
+    epochs?: number;
+    current_epoch?: {
+      start_index?: number;
+      entries?: number;
+      valid?: boolean;
+    };
   };
   pipeline_stats?: {
     total?: number;
@@ -223,7 +234,7 @@ export default function Status() {
               </div>
             )}
 
-            {/* Ledger */}
+            {/* Ledger — v2.9.0 enhanced chain verification */}
             {health.ledger && (
               <div className="rounded-xl border border-border/40 bg-card/50 p-4">
                 <h2 className="text-sm font-semibold mb-3 flex items-center gap-2">
@@ -236,7 +247,46 @@ export default function Status() {
                     <span className="font-medium">{health.ledger.entries}</span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-muted-foreground">Chain valid</span>
+                    <span className="text-muted-foreground">Hashes verified</span>
+                    <span className="font-medium">{health.ledger.hashes_verified ?? "—"}</span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Hash mismatches</span>
+                    <span className={`font-medium ${(health.ledger.hash_mismatches ?? 0) > 0 ? "text-red-400" : "text-emerald-400"}`}>
+                      {health.ledger.hash_mismatches ?? "—"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Linkage breaks</span>
+                    <span className={`font-medium ${(health.ledger.linkage_breaks ?? 0) > 0 ? "text-amber-400" : "text-emerald-400"}`}>
+                      {health.ledger.linkage_breaks ?? "—"}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Epochs</span>
+                    <span className="font-medium">{health.ledger.epochs ?? "—"}</span>
+                  </div>
+                  {health.ledger.current_epoch && (
+                    <div className="mt-2 rounded-lg border border-border/20 bg-background/50 p-2">
+                      <div className="text-[10px] uppercase tracking-wider text-muted-foreground mb-1">Current Epoch</div>
+                      <div className="grid grid-cols-3 gap-2">
+                        <div>
+                          <div className="text-[10px] text-muted-foreground">Start</div>
+                          <div className="text-xs font-medium">{health.ledger.current_epoch.start_index}</div>
+                        </div>
+                        <div>
+                          <div className="text-[10px] text-muted-foreground">Entries</div>
+                          <div className="text-xs font-medium">{health.ledger.current_epoch.entries}</div>
+                        </div>
+                        <div>
+                          <div className="text-[10px] text-muted-foreground">Valid</div>
+                          <StatusDot ok={!!health.ledger.current_epoch.valid} />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-muted-foreground">Overall chain</span>
                     <StatusDot ok={!!health.ledger.chain_valid} />
                   </div>
                   {health.ledger.chain_tip && (
@@ -317,6 +367,23 @@ export default function Status() {
             </div>
           </div>
         )}
+
+        {/* System Architecture link */}
+        <button
+          onClick={() => navigate("/architecture")}
+          className="w-full mt-4 rounded-xl border border-primary/20 bg-primary/5 p-4 flex items-center gap-3 hover:bg-primary/10 transition-colors text-left"
+        >
+          <div className="w-10 h-10 rounded-lg bg-primary/15 flex items-center justify-center">
+            <Layers className="h-5 w-5 text-primary" />
+          </div>
+          <div className="flex-1">
+            <div className="text-sm font-semibold">System Architecture</div>
+            <div className="text-[10px] text-muted-foreground">
+              8 Pillars, SPPAV Loop, Risk Zones, 9-Step Governance Loop
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </button>
       </div>
       <BottomNav />
     </div>

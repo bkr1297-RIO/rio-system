@@ -16,7 +16,7 @@ const ROLE_CONFIG: Record<string, { label: string; color: string; description: s
   proposer: { label: "Proposer", color: "bg-blue-500/10 text-blue-400 border-blue-500/20", description: "Can create intents" },
   approver: { label: "Approver", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", description: "Can approve/reject intents" },
   executor: { label: "Executor", color: "bg-amber-500/10 text-amber-400 border-amber-500/20", description: "Can execute approved intents" },
-  auditor: { label: "Auditor", color: "bg-violet-500/10 text-violet-400 border-violet-500/20", description: "Can audit system state" },
+  auditor: { label: "Chief of Staff", color: "bg-violet-500/10 text-violet-400 border-violet-500/20", description: "Audits the authority chain, verifies receipts, inspects the ledger, and ensures governance integrity" },
   meta: { label: "Meta", color: "bg-red-500/10 text-red-400 border-red-500/20", description: "Can manage roles and policies" },
 };
 
