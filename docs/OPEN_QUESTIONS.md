@@ -15,7 +15,13 @@ Add questions with:
 
 When answered, move the question to the Answered section with the decision and update DECISIONS.md if it is a lasting decision.
 
--## Open
+## Open
+
+_No open questions at this time._
+
+---
+
+## Answered
 
 ### 2026-04-03 — Developer Integration Gaps in RIO Verification API Guide
 **Raised by:** Damon (Developer Agent)
@@ -31,9 +37,6 @@ When answered, move the question to the Answered section with the decision and u
 **Status:** Answered
 **Decided by:** Brian (via task assignment to Damon)
 **Answer:** Damon has updated `VERIFY_API_INTEGRATION.md` to address these gaps, including SDK support, rate limiting, error codes, local development, JSON schemas, and Ed25519 verification examples.
----
-
-## Answered
 
 ### 2026-04-03 — Should we split governance into its own repo?
 **Raised by:** Romney

@@ -1,6 +1,6 @@
 # Team
 
-The RIO project team. Each member has a defined role and area of responsibility.
+The RIO project team. Each member has a defined role and area of responsibility. Bondi (ChatGPT) serves as Brian's strategist and thinking partner. Gemini handles workspace, memory, and context management.
 
 ---
 
@@ -26,3 +26,6 @@ Damon is responsible for developer experience — tutorials, quickstart guides, 
 
 ### Chief of Staff
 The Chief of Staff monitors all agent activity through the repo and Google Drive, filters out noise, and produces concise status briefs for Brian. Brian's two contact points are Manny (for building) and the Chief of Staff (for coordination and status). Other agents deliver their work to the repo and Drive — the Chief of Staff reads it and surfaces only what Brian needs to see: decisions, conflicts, milestones, and blockers.
+
+### Operator (Manus — Operator Mode)
+The Operator works directly with Brian as a thinking partner and action stager. The Operator translates Brian's strategic intent into structured task packets, coordinates between agents, and ensures the system reflects reality. The Operator does not build — the Operator directs and verifies.
