@@ -13,6 +13,11 @@
  *   - requireRole() middleware (enforces role-based access control)
  *   - Initial principal seeding (I-1, bondi, manny, gateway-exec, mantis, ledger-writer)
  *
+ * Security note (identity-cleanup, 2026-04-11):
+ *   - X-Principal-ID header fallback REMOVED. All clients must authenticate
+ *     via JWT, API key, Ed25519 signature, or X-Authenticated-Email.
+ *   - I-1 auth binding now uses email (bkr1297@gmail.com) as primary JWT sub.
+ *
  * Enforcement invariants:
  *   - Fail-closed: unknown principal → 403
  *   - Fail-closed: suspended/revoked principal → 403
@@ -314,8 +319,10 @@ async function reloadCache() {
   }
 
   // Set up known auth bindings for initial principals
-  // I-1 (Brian) authenticates via JWT as "brian.k.rasmussen"
+  // I-1 (Brian) authenticates via JWT with email as sub
   if (principalCache.has("I-1")) {
+    authBindings.jwt.set("bkr1297@gmail.com", "I-1");
+    // Legacy alias — tokens issued before this change used brian.k.rasmussen
     authBindings.jwt.set("brian.k.rasmussen", "I-1");
   }
   // Agents authenticate via their agent_id in intents
@@ -339,8 +346,10 @@ async function reloadCache() {
  * Resolution order:
  *   1. JWT subject → principal (via jwt auth binding)
  *   2. API key owner_id → principal (via api_key auth binding)
- *   3. Ed25519 signer_id → principal (via signer auth binding)
- *   4. Direct principal_id lookup (for service-to-service calls)
+ *   3. X-Authenticated-Email header → principal (via email resolution)
+ *
+ * Removed:
+ *   - X-Principal-ID header (identity-cleanup, 2026-04-11)
  *
  * Returns null if no principal can be resolved.
  *
@@ -391,15 +400,11 @@ export function resolvePrincipalFromRequest(req) {
       return principal;
     }
   }
-  // 4. Try X-Principal-ID header (for trusted service-to-service calls only)
-  //    This should only be used by trusted internal services, not client apps.
-  const headerPrincipalId = req.headers["x-principal-id"];
-  if (headerPrincipalId) {
-    const principal = principalCache.get(headerPrincipalId);
-    if (principal && principal.status === "active") {
-      return principal;
-    }
-  }
+  // X-Principal-ID header removed (PR #91 / identity-cleanup).
+  // All clients must authenticate via JWT, API key, Ed25519, or
+  // X-Authenticated-Email. Direct principal-ID injection from
+  // untrusted clients is no longer accepted.
+
   return null;
 }
 

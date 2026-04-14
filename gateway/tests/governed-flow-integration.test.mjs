@@ -57,7 +57,7 @@ describe("Full Governed Flow (Integration)", async () => {
   // Helpers
   // -------------------------------------------------------------------------
 
-  /** Login via passphrase (only works for brian.k.rasmussen) */
+  /** Login via passphrase (supports email, principal_id, or legacy alias) */
   async function login(userId) {
     const res = await fetch(`${baseUrl}/login`, {
       method: "POST",
@@ -123,11 +123,12 @@ describe("Full Governed Flow (Integration)", async () => {
     bondiToken = await createPrincipalToken("bondi", "proposer");
     assert.ok(bondiToken, "Bondi should receive a JWT token");
 
-    // Verify whoami for Brian
+    // Verify whoami for Brian — now resolves to email
     const whoami = await authFetch(`${baseUrl}/whoami`, {}, brianToken);
     const data = await whoami.json();
     assert.equal(data.authenticated, true);
-    assert.equal(data.user_id, "brian.k.rasmussen");
+    assert.equal(data.user_id, "bkr1297@gmail.com", "Passphrase login should resolve to email");
+    assert.equal(data.principal_id, "I-1", "Should include principal_id");
   });
 
   it("Step 2: Bondi submits intent (proposer role)", async () => {

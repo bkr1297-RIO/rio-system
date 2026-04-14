@@ -31,13 +31,22 @@ const JWT_SECRET = process.env.JWT_SECRET || randomBytes(32).toString("hex");
 const TOKEN_EXPIRY_HOURS = parseInt(process.env.TOKEN_EXPIRY_HOURS || "24");
 
 // Registered users (MVP — in production this comes from OAuth provider)
+// Keyed by email (canonical identity). Legacy alias "brian.k.rasmussen" is
+// mapped below so existing clients that still send the old username continue
+// to work until they migrate to email-based login.
 const REGISTERED_USERS = {
-  "brian.k.rasmussen": {
+  "bkr1297@gmail.com": {
     email: "bkr1297@gmail.com",
     display_name: "Brian K. Rasmussen",
     role: "owner",
+    principal_id: "I-1",
     emails: ["bkr1297@gmail.com", "riomethod5@gmail.com", "RasmussenBR@hotmail.com"],
   },
+};
+
+// Legacy alias — allows passphrase login with the old username
+const LEGACY_ALIASES = {
+  "brian.k.rasmussen": "bkr1297@gmail.com",
 };
 
 function base64url(str) {
@@ -64,7 +73,7 @@ function hmacSign(data) {
  * Create a JWT token for a user.
  *
  * Supports two modes:
- *   1. Legacy: createToken("brian.k.rasmussen") — looks up REGISTERED_USERS
+ *   1. Registered-user: createToken("bkr1297@gmail.com") or legacy alias — looks up REGISTERED_USERS
  *   2. Principal: createToken("I-1", { email, name, role, ... }) — direct claims
  *
  * Mode 2 is used by Google OAuth where we already have the profile info.
@@ -86,15 +95,17 @@ export function createToken(userId, claims) {
       exp: Math.floor(Date.now() / 1000) + TOKEN_EXPIRY_HOURS * 3600,
     };
   } else {
-    // Mode 1: Legacy lookup from REGISTERED_USERS
-    const user = REGISTERED_USERS[userId];
+    // Mode 1: Registered-user lookup (keyed by email; legacy aliases resolved)
+    const canonicalId = LEGACY_ALIASES[userId] || userId;
+    const user = REGISTERED_USERS[canonicalId];
     if (!user) return null;
 
     tokenPayload = {
-      sub: userId,
+      sub: user.email,
       email: user.email,
       name: user.display_name,
       role: user.role,
+      principal_id: user.principal_id || null,
       auth_method: "passphrase",
       iat: Math.floor(Date.now() / 1000),
       exp: Math.floor(Date.now() / 1000) + TOKEN_EXPIRY_HOURS * 3600,
@@ -184,12 +195,14 @@ export function optionalAuth(req, res, next) {
  * Get registered user info.
  */
 export function getRegisteredUser(userId) {
-  return REGISTERED_USERS[userId] || null;
+  const canonicalId = LEGACY_ALIASES[userId] || userId;
+  return REGISTERED_USERS[canonicalId] || null;
 }
 
 /**
  * Check if a user ID is registered.
  */
 export function isRegistered(userId) {
-  return userId in REGISTERED_USERS;
+  const canonicalId = LEGACY_ALIASES[userId] || userId;
+  return canonicalId in REGISTERED_USERS;
 }
