@@ -15,4 +15,10 @@ export const ENV = {
   telegramChatId: process.env.TELEGRAM_CHAT_ID ?? "",
   anthropicApiKey: process.env.ANTHROPIC_API_KEY ?? "",
   openaiApiKey: process.env.OPENAI_API_KEY ?? "",
+  hitlProxyUrl: process.env.HITL_PROXY_URL ?? "",
+  gatewayUrl: process.env.VITE_GATEWAY_URL ?? "https://rio-gateway.onrender.com",
+  gmailUser: process.env.GMAIL_USER ?? "",
+  gmailAppPassword: process.env.GMAIL_APP_PASSWORD ?? "",
+  notionApiToken: process.env.NOTION_API_TOKEN ?? "",
+  notionDecisionLogDbId: process.env.NOTION_DECISION_LOG_DB_ID ?? "",
 };

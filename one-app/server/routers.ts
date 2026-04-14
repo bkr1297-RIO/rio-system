@@ -106,6 +106,13 @@ import {
 import { storeGovernedReceipt } from "./firewallGovernance";
 import { checkDelegation, formatCooldownMessage, type RoleSeparation, type DelegationCheck } from "./constrainedDelegation";
 import {
+  createDecisionRow, updateDecisionRow, getDecisionRow,
+  pollPendingApprovals as notionPollPendingApprovals,
+  findDecisionRowByIntentId, isNotionConfigured,
+  type NotionAction, type NotionRiskTier, type NotionProposer,
+  type NotionGatewayDecision,
+} from "./notionDecisionLog";
+import {
   registerRootAuthority, getActiveRootAuthority, verifyRootSignature,
   computePolicyHash, activatePolicy, getActivePolicy, revokePolicy,
   DEFAULT_POLICY_RULES,
@@ -1881,6 +1888,41 @@ export const appRouter = router({
         timestamp: Date.now(),
       });
 
+      // ─── Notion Decision Log row creation (non-blocking) ───
+      // Build Directive Step 2: Gateway → Notion row creation
+      let notionPageId: string | null = null;
+      if (isNotionConfigured()) {
+        try {
+          const intentHash = sha256(JSON.stringify({
+            intent_id: intentResult.data.intent_id,
+            action: input.action,
+            parameters: input.parameters,
+          }));
+          const notionResult = await createDecisionRow({
+            title: `${input.action} — ${intentResult.data.intent_id}`,
+            intentId: intentResult.data.intent_id,
+            intentHash,
+            action: (input.action || "unknown") as NotionAction,
+            riskTier: (governResult.data.risk_tier || "MEDIUM") as NotionRiskTier,
+            proposer: (mapping.principalId || "unknown") as NotionProposer,
+            policyVersion: "v1.0",
+            gatewayDecision: (governResult.data.governance_decision || "UNKNOWN") as NotionGatewayDecision,
+          });
+          notionPageId = notionResult.pageId ?? null;
+          await appendLedger("NOTION_ROW_CREATED", {
+            intent_id: intentResult.data.intent_id,
+            notion_page_id: notionPageId,
+            action: input.action,
+            risk_tier: governResult.data.risk_tier,
+            governance_decision: governResult.data.governance_decision,
+            timestamp: Date.now(),
+          });
+          console.log(`[submitIntent] Notion row created: ${notionPageId} for ${intentResult.data.intent_id}`);
+        } catch (err) {
+          console.error("[submitIntent] Notion row creation failed (non-blocking):", err);
+        }
+      }
+
       // ─── Coherence check (advisory, non-blocking) ───
       let coherenceResult: { status: string; drift_detected: boolean; signals: unknown[] } | null = null;
       try {
@@ -1920,6 +1962,7 @@ export const appRouter = router({
         intent: intentResult.data,
         governance: governResult.data,
         coherence: coherenceResult,
+        notionPageId,
         error: null,
       };
     }),
@@ -3812,6 +3855,310 @@ If unclear, ask a clarifying question.`;
           ? new Date(result.token_payload.expires_at).toISOString()
           : null,
       };
+    }),
+  }),
+
+  // ─── Notion Decision Log (Phase 1 Operational Surface) ─────────
+  // Invariants:
+  //   1. Notion is NOT the system of record (PostgreSQL ledger is)
+  //   2. Notion is NOT the enforcement boundary (Gateway is)
+  //   3. Notion status change is a SIGNAL, not cryptographic approval
+  //   4. Execution requires verified Ed25519 signature
+  //   5. Fail closed on any mismatch
+  notion: router({
+    /** Check if Notion integration is configured */
+    status: publicProcedure.query(() => {
+      return { configured: isNotionConfigured() };
+    }),
+
+    /**
+     * Poll for intents where Brian set Status=Approved in Notion
+     * but Approval State is still Unsigned (needs cryptographic signing).
+     * Build Directive Step 3: detect the change.
+     */
+    pollPendingApprovals: protectedProcedure.query(async () => {
+      if (!isNotionConfigured()) {
+        return [];
+      }
+      const rows = await notionPollPendingApprovals();
+      return rows.map(r => ({
+        pageId: r.pageId,
+        title: r.title,
+        intentId: r.intentId,
+        intentHash: r.intentHash,
+        action: r.action,
+        riskTier: r.riskTier,
+        proposer: r.proposer,
+        policyVersion: r.policyVersion,
+        gatewayDecision: r.gatewayDecision,
+        createdAt: r.createdAt,
+      }));
+    }),
+
+    /**
+     * Sign and authorize an intent that was approved in Notion.
+     * Build Directive Steps 3-5:
+     *   - Receives the Ed25519 signed payload from the browser
+     *   - Calls Gateway /authorize (existing endpoint) with the approval
+     *   - Calls Gateway /execute-action for execution
+     *   - Updates the Notion row with Executed status and receipt link
+     *   - Fails closed on any mismatch
+     */
+    signAndAuthorize: protectedProcedure.input(z.object({
+      pageId: z.string().min(1),
+      intentId: z.string().min(1),
+      intentHash: z.string().min(1),
+      policyVersion: z.string().min(1),
+      signature: z.string().min(1),
+      payloadHash: z.string().min(1),
+      nonce: z.string().min(1),
+      expiresAt: z.string().min(1),
+      deny: z.boolean().optional(),
+    })).mutation(async ({ ctx, input }) => {
+      const GATEWAY_URL = ENV.gatewayUrl;
+      if (!GATEWAY_URL) {
+        return { success: false, error: "Gateway URL not configured" };
+      }
+
+      // ─── DENY PATH ───
+      if (input.deny) {
+        // Update Notion row to Denied
+        await updateDecisionRow(input.pageId, {
+          status: "Denied",
+          approvalState: "Unsigned",
+        });
+        await appendLedger("NOTION_DENIAL", {
+          intent_id: input.intentId,
+          intent_hash: input.intentHash,
+          notion_page_id: input.pageId,
+          denied_by: ctx.user?.id || "unknown",
+          timestamp: Date.now(),
+        });
+        return { success: true, receiptId: null };
+      }
+
+      // ─── APPROVE + EXECUTE PATH ───
+      // Step 1: Login as I-2 (approver) for /authorize
+      let i2Token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: "I-2",
+            passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026",
+          }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) {
+          await updateDecisionRow(input.pageId, { status: "Failed" });
+          return { success: false, error: `I-2 login failed: ${loginData.error || "no token"}` };
+        }
+        i2Token = loginData.token;
+      } catch (err) {
+        await updateDecisionRow(input.pageId, { status: "Failed" });
+        return { success: false, error: `Gateway unreachable: ${String(err)}` };
+      }
+
+      // Step 2: Authorize the intent via existing /authorize endpoint
+      // Build Directive Step 4: wire into existing /authorize
+      try {
+        const authRes = await fetch(`${GATEWAY_URL}/authorize`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${i2Token}`,
+          },
+          body: JSON.stringify({
+            intent_id: input.intentId,
+            decision: "approved",
+            authorized_by: "I-2",
+            // Include the cryptographic proof from the signer
+            signature: input.signature,
+            payload_hash: input.payloadHash,
+            nonce: input.nonce,
+            expires_at: input.expiresAt,
+            request_timestamp: new Date().toISOString(),
+            request_nonce: `notion-auth-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }),
+        });
+        const authData = await authRes.json() as { error?: string; invariant?: string };
+        if (!authRes.ok) {
+          const msg = authData.invariant === "proposer_ne_approver"
+            ? "Cannot approve your own intent (proposer \u2260 approver)"
+            : authData.error || `Authorization failed (HTTP ${authRes.status})`;
+          await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Unsigned" });
+          return { success: false, error: msg };
+        }
+      } catch (err) {
+        await updateDecisionRow(input.pageId, { status: "Failed" });
+        return { success: false, error: `Gateway /authorize failed: ${String(err)}` };
+      }
+
+      // Update Notion: Approval State = Signed (authorization verified)
+      await updateDecisionRow(input.pageId, { approvalState: "Signed" });
+
+      // Step 3: Login as I-1 (proposer) for /execute-action
+      let i1Token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: "I-1",
+            passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026",
+          }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) {
+          await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Signed" });
+          return { success: false, error: `I-1 login failed: ${loginData.error || "no token"}` };
+        }
+        i1Token = loginData.token;
+      } catch (err) {
+        await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Signed" });
+        return { success: false, error: `Gateway unreachable for I-1: ${String(err)}` };
+      }
+
+      // Step 4: Execute via Gateway /execute-action (external mode)
+      let execData: Record<string, unknown> | null = null;
+      try {
+        const execRes = await fetch(`${GATEWAY_URL}/execute-action`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${i1Token}`,
+          },
+          body: JSON.stringify({
+            intent_id: input.intentId,
+            delivery_mode: "external",
+            request_timestamp: new Date().toISOString(),
+            request_nonce: `notion-exec-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }),
+          signal: AbortSignal.timeout(30000),
+        });
+        execData = await execRes.json() as Record<string, unknown>;
+        if (!execRes.ok) {
+          await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Signed" });
+          return { success: false, error: (execData as { error?: string }).error || `Execute failed (HTTP ${execRes.status})` };
+        }
+      } catch (err) {
+        await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Signed" });
+        return { success: false, error: `Gateway /execute-action failed: ${String(err)}` };
+      }
+
+      // Step 5: Extract receipt and update Notion
+      // Build Directive Step 5: receipt writeback
+      const gwReceipt = (execData?.receipt as Record<string, unknown>) || null;
+      const receiptId = gwReceipt ? String((gwReceipt as { receipt_id?: string }).receipt_id || "") : "";
+      const receiptHash = gwReceipt ? String((gwReceipt as { receipt_hash?: string }).receipt_hash || "") : "";
+
+      // Build receipt link for Notion
+      const receiptLink = receiptId
+        ? `https://rio-one.manus.space/receipts?id=${receiptId}`
+        : undefined;
+
+      // Update Notion row: Executed + receipt link
+      await updateDecisionRow(input.pageId, {
+        status: "Executed",
+        approvalState: "Executed",
+        receiptLink,
+      });
+
+      // Log to local ledger
+      await appendLedger("NOTION_EXECUTION", {
+        intent_id: input.intentId,
+        intent_hash: input.intentHash,
+        notion_page_id: input.pageId,
+        receipt_id: receiptId,
+        receipt_hash: receiptHash,
+        approved_by: ctx.user?.id || "unknown",
+        execution_path: "notion_signer",
+        timestamp: Date.now(),
+      });
+
+      // Notify owner
+      try {
+        await notifyOwner({
+          title: "Notion-Governed Action Executed",
+          content: [
+            `**Intent:** \`${input.intentId}\``,
+            `**Receipt:** \`${receiptId.slice(0, 12)}\``,
+            `**Source:** Notion Decision Log → Signer UI`,
+            `**Hash:** \`${input.intentHash.slice(0, 16)}...\``,
+          ].join("\n"),
+        });
+      } catch (err) {
+        console.error("[notion.signAndAuthorize] notifyOwner error:", err);
+      }
+
+      // Telegram notification
+      if (isTelegramConfigured()) {
+        try {
+          const { sendMessage: sendTg } = await import("./telegram");
+          await sendTg([
+            `\u2705 *Notion-Governed Action Executed*`,
+            ``,
+            `Intent: \`${input.intentId.slice(0, 12)}\``,
+            `Receipt: \`${receiptId.slice(0, 12)}\``,
+            `Source: Notion Decision Log`,
+          ].join("\n"), "Markdown");
+        } catch (err) {
+          console.error("[notion.signAndAuthorize] Telegram error:", err);
+        }
+      }
+
+      return {
+        success: true,
+        receiptId,
+        receiptHash,
+        receiptLink,
+      };
+    }),
+
+    /**
+     * Create a Notion Decision Log row for a governed intent.
+     * Called after Gateway governance evaluation.
+     * Build Directive Step 2: Gateway → Notion row creation.
+     */
+    createRow: protectedProcedure.input(z.object({
+      intentId: z.string().min(1),
+      intentHash: z.string().min(1),
+      title: z.string().min(1),
+      action: z.string().min(1),
+      riskTier: z.string().min(1),
+      proposer: z.string().min(1),
+      policyVersion: z.string().min(1),
+      gatewayDecision: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      if (!isNotionConfigured()) {
+        return { success: false, error: "Notion not configured" };
+      }
+      const result = await createDecisionRow({
+        title: input.title,
+        intentId: input.intentId,
+        intentHash: input.intentHash,
+        action: input.action as NotionAction,
+        riskTier: input.riskTier as NotionRiskTier,
+        proposer: input.proposer as NotionProposer,
+        policyVersion: input.policyVersion,
+        gatewayDecision: input.gatewayDecision as NotionGatewayDecision,
+      });
+      return result;
+    }),
+
+    /** Get a single decision row by page ID */
+    getRow: protectedProcedure.input(z.object({
+      pageId: z.string().min(1),
+    })).query(async ({ input }) => {
+      return getDecisionRow(input.pageId);
+    }),
+
+    /** Find a decision row by intent ID */
+    findByIntentId: protectedProcedure.input(z.object({
+      intentId: z.string().min(1),
+    })).query(async ({ input }) => {
+      return findDecisionRowByIntentId(input.intentId);
     }),
   }),
 });

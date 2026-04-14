@@ -2301,3 +2301,16 @@
 - [x] Financial actions always require different approver
 - [x] Financial actions not learning-eligible
 - [x] Matrix integrity verified via SHA-256 hash on every evaluation
+
+## Phase 1: Notion Operational Surface (Build Directive Apr 14)
+
+- [x] Step 1: Create RIO DECISION LOG database in Notion with all 14 properties
+- [x] Step 2: Build Notion integration module (notionDecisionLog.ts) — create row, update row, poll for changes
+- [x] Step 3: Wire gateway governed intent evaluation → Notion row creation (Status=Pending, Approval State=Unsigned)
+- [x] Step 4: Build signer confirmation UI page (outside Notion) — shows intent summary, hash, policy version, produces Ed25519 signed payload
+- [x] Step 5: Wire signer payload into existing /authorize endpoint path
+- [x] Step 6: After execution + receipt, update Notion row (Status=Executed, Receipt Link)
+- [x] Step 7: On failure/denial, update Notion row (Status=Failed/Denied)
+- [x] Step 8: Notion approval watcher — detect Status=Approved + Approval State=Unsigned, trigger signer flow
+- [x] Step 9: Write tests for Notion integration and signer flow (59 tests passing: 48 structural + 7 integration + 4 connection)
+- [x] Step 10: Invariant enforcement — Notion status change alone NEVER triggers execution (requires Ed25519 signature via /notion-signer)
