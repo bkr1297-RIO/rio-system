@@ -121,7 +121,7 @@ export type Execution = typeof executions.$inferSelect;
 export const ledger = mysqlTable("ledger", {
   id: int("id").autoincrement().primaryKey(),
   entryId: varchar("entryId", { length: 64 }).notNull().unique(),
-  entryType: mysqlEnum("entryType", ["ONBOARD", "INTENT", "APPROVAL", "EXECUTION", "KILL", "SYNC", "JORDAN_CHAT", "BONDI_CHAT", "LEARNING", "ARCHITECTURE_STATE", "RE_KEY", "REVOKE", "RE_KEY_AUTHORIZED", "RE_KEY_FORCED", "TELEGRAM_NOTIFY", "POLICY_UPDATE", "NOTIFICATION", "GENESIS", "AUTHORITY_TOKEN", "EMAIL_DELIVERY", "COHERENCE_CHECK", "FIREWALL_SCAN", "ACTION_COMPLETE", "DELEGATION_BLOCKED", "DELEGATION_APPROVED", "SUBSTRATE_BLOCK"]).notNull(),
+  entryType: mysqlEnum("entryType", ["ONBOARD", "INTENT", "APPROVAL", "EXECUTION", "KILL", "SYNC", "JORDAN_CHAT", "BONDI_CHAT", "LEARNING", "ARCHITECTURE_STATE", "RE_KEY", "REVOKE", "RE_KEY_AUTHORIZED", "RE_KEY_FORCED", "TELEGRAM_NOTIFY", "POLICY_UPDATE", "NOTIFICATION", "GENESIS", "AUTHORITY_TOKEN", "EMAIL_DELIVERY", "COHERENCE_CHECK", "FIREWALL_SCAN", "ACTION_COMPLETE", "DELEGATION_BLOCKED", "DELEGATION_APPROVED", "SUBSTRATE_BLOCK", "NOTION_DENIAL", "NOTION_EXECUTION", "NOTION_ROW_CREATED"]).notNull(),
   payload: json("payload").$type<Record<string, unknown>>().notNull(),
   hash: varchar("hash", { length: 128 }).notNull(),
   prevHash: varchar("prevHash", { length: 128 }).notNull(),

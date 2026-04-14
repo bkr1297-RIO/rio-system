@@ -84,7 +84,7 @@ export async function getLastLedgerEntry() {
   return rows[0] ?? null;
 }
 
-export async function appendLedger(entryType: "ONBOARD" | "INTENT" | "APPROVAL" | "EXECUTION" | "KILL" | "SYNC" | "JORDAN_CHAT" | "BONDI_CHAT" | "LEARNING" | "ARCHITECTURE_STATE" | "RE_KEY" | "REVOKE" | "RE_KEY_AUTHORIZED" | "RE_KEY_FORCED" | "TELEGRAM_NOTIFY" | "POLICY_UPDATE" | "NOTIFICATION" | "GENESIS" | "AUTHORITY_TOKEN" | "EMAIL_DELIVERY" | "COHERENCE_CHECK" | "FIREWALL_SCAN" | "ACTION_COMPLETE" | "DELEGATION_BLOCKED" | "DELEGATION_APPROVED" | "SUBSTRATE_BLOCK", payload: Record<string, unknown>) {
+export async function appendLedger(entryType: "ONBOARD" | "INTENT" | "APPROVAL" | "EXECUTION" | "KILL" | "SYNC" | "JORDAN_CHAT" | "BONDI_CHAT" | "LEARNING" | "ARCHITECTURE_STATE" | "RE_KEY" | "REVOKE" | "RE_KEY_AUTHORIZED" | "RE_KEY_FORCED" | "TELEGRAM_NOTIFY" | "POLICY_UPDATE" | "NOTIFICATION" | "GENESIS" | "AUTHORITY_TOKEN" | "EMAIL_DELIVERY" | "COHERENCE_CHECK" | "FIREWALL_SCAN" | "ACTION_COMPLETE" | "DELEGATION_BLOCKED" | "DELEGATION_APPROVED" | "SUBSTRATE_BLOCK" | "NOTION_DENIAL" | "NOTION_EXECUTION" | "NOTION_ROW_CREATED", payload: Record<string, unknown>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const last = await getLastLedgerEntry();

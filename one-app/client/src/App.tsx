@@ -23,6 +23,7 @@ import AskBondi from "@/pages/AskBondi";
 import EmailFirewall from "@/pages/EmailFirewall";
 import RIODashboard from "@/pages/RIODashboard";
 import SendAction from "@/pages/SendAction";
+import NotionSigner from "@/pages/NotionSigner";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="/email-firewall" component={EmailFirewall} />
           <Route path="/rio" component={RIODashboard} />
           <Route path="/send" component={SendAction} />
+          <Route path="/notion-signer" component={NotionSigner} />
           {/* Catch-all: redirect to login */}
           <Route>
             <Redirect to="/" />
