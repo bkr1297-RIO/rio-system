@@ -1,6 +1,6 @@
 import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, proxyUsers, toolRegistry, intents, approvals, executions, ledger, keyBackups, conversations, learningEvents, nodeConfigs, systemComponents, policyRules, notifications, principals, type SystemRole, SYSTEM_ROLES, emailFirewallConfig, type EmailFirewallConfig, type InsertEmailFirewallConfig, pendingEmailApprovals, proposalPackets, type InsertProposalPacket, trustPolicies, type InsertTrustPolicy, sentinelEvents, type InsertSentinelEvent } from "../drizzle/schema";
+import { InsertUser, users, proxyUsers, toolRegistry, intents, approvals, executions, ledger, keyBackups, conversations, learningEvents, nodeConfigs, systemComponents, policyRules, notifications, principals, type SystemRole, SYSTEM_ROLES, emailFirewallConfig, type EmailFirewallConfig, type InsertEmailFirewallConfig, pendingEmailApprovals, proposalPackets, type InsertProposalPacket, trustPolicies, type InsertTrustPolicy, sentinelEvents, type InsertSentinelEvent, budgetPools, type InsertBudgetPool, financialTransactions, type InsertFinancialTransaction, handoffPackets, type InsertHandoffPacket } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { nanoid } from "nanoid";
 import { createHash } from "crypto";
@@ -84,7 +84,7 @@ export async function getLastLedgerEntry() {
   return rows[0] ?? null;
 }
 
-export async function appendLedger(entryType: "ONBOARD" | "INTENT" | "APPROVAL" | "EXECUTION" | "KILL" | "SYNC" | "JORDAN_CHAT" | "BONDI_CHAT" | "LEARNING" | "ARCHITECTURE_STATE" | "RE_KEY" | "REVOKE" | "RE_KEY_AUTHORIZED" | "RE_KEY_FORCED" | "TELEGRAM_NOTIFY" | "POLICY_UPDATE" | "NOTIFICATION" | "GENESIS" | "AUTHORITY_TOKEN" | "EMAIL_DELIVERY" | "COHERENCE_CHECK" | "FIREWALL_SCAN" | "ACTION_COMPLETE" | "DELEGATION_BLOCKED" | "DELEGATION_APPROVED" | "SUBSTRATE_BLOCK" | "NOTION_DENIAL" | "NOTION_EXECUTION" | "NOTION_ROW_CREATED" | "PROPOSAL_CREATED" | "PROPOSAL_APPROVED" | "PROPOSAL_REJECTED" | "PROPOSAL_EXECUTED" | "TRUST_POLICY_CREATED" | "TRUST_POLICY_UPDATED" | "TRUST_POLICY_DELETED" | "DELEGATED_AUTO_APPROVE" | "SENTINEL_EVENT", payload: Record<string, unknown>) {
+export async function appendLedger(entryType: "ONBOARD" | "INTENT" | "APPROVAL" | "EXECUTION" | "KILL" | "SYNC" | "JORDAN_CHAT" | "BONDI_CHAT" | "LEARNING" | "ARCHITECTURE_STATE" | "RE_KEY" | "REVOKE" | "RE_KEY_AUTHORIZED" | "RE_KEY_FORCED" | "TELEGRAM_NOTIFY" | "POLICY_UPDATE" | "NOTIFICATION" | "GENESIS" | "AUTHORITY_TOKEN" | "EMAIL_DELIVERY" | "COHERENCE_CHECK" | "FIREWALL_SCAN" | "ACTION_COMPLETE" | "DELEGATION_BLOCKED" | "DELEGATION_APPROVED" | "SUBSTRATE_BLOCK" | "NOTION_DENIAL" | "NOTION_EXECUTION" | "NOTION_ROW_CREATED" | "PROPOSAL_CREATED" | "PROPOSAL_APPROVED" | "PROPOSAL_REJECTED" | "PROPOSAL_EXECUTED" | "TRUST_POLICY_CREATED" | "TRUST_POLICY_UPDATED" | "TRUST_POLICY_DELETED" | "DELEGATED_AUTO_APPROVE" | "SENTINEL_EVENT" | "BUDGET_POOL_CREATED" | "BUDGET_POOL_MODIFIED" | "FINANCIAL_TRANSFER" | "HANDOFF_CREATED" | "HANDOFF_COMPLETED" | "HANDOFF_REJECTED" | "PROPOSAL_FAILED" | "TRUST_POLICY_CHANGE", payload: Record<string, unknown>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const last = await getLastLedgerEntry();
@@ -1177,4 +1177,104 @@ export async function getBaselinePattern(category: string) {
   const edit_rate = edited / rows.length;
   
   return { approval_rate_14d, avg_velocity_seconds, edit_rate };
+}
+
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2F — BUDGET POOL & FINANCIAL TRANSACTION HELPERS
+// ═══════════════════════════════════════════════════════════════════
+
+export async function createBudgetPool(data: Omit<InsertBudgetPool, "id">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(budgetPools).values(data);
+  return db.select().from(budgetPools).where(eq(budgetPools.poolId, data.poolId)).then(r => r[0]);
+}
+
+export async function getBudgetPool(poolId: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(budgetPools).where(eq(budgetPools.poolId, poolId));
+  return rows[0] ?? null;
+}
+
+export async function listBudgetPools(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(budgetPools).where(eq(budgetPools.userId, userId)).orderBy(desc(budgetPools.createdAt));
+}
+
+export async function updateBudgetPool(poolId: string, updates: Partial<Pick<InsertBudgetPool, "name" | "balanceCents" | "limitCents" | "spendingRateCentsPerDay" | "status" | "policyVersion" | "governanceReceiptId">>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(budgetPools).set(updates).where(eq(budgetPools.poolId, poolId));
+  return getBudgetPool(poolId);
+}
+
+export async function createFinancialTransaction(data: Omit<InsertFinancialTransaction, "id">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(financialTransactions).values(data);
+  return db.select().from(financialTransactions).where(eq(financialTransactions.transactionId, data.transactionId)).then(r => r[0]);
+}
+
+export async function listFinancialTransactions(budgetPoolId: string, limit = 50) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(financialTransactions)
+    .where(eq(financialTransactions.budgetPoolId, budgetPoolId))
+    .orderBy(desc(financialTransactions.createdAt))
+    .limit(limit);
+}
+
+export async function getFinancialSummary(budgetPoolId: string) {
+  const db = await getDb();
+  if (!db) return { totalIn: 0, totalOut: 0, transactionCount: 0 };
+  const rows = await db.select().from(financialTransactions)
+    .where(eq(financialTransactions.budgetPoolId, budgetPoolId));
+  let totalIn = 0, totalOut = 0;
+  for (const r of rows) {
+    if (r.amountCents > 0) totalIn += r.amountCents;
+    else totalOut += Math.abs(r.amountCents);
+  }
+  return { totalIn, totalOut, transactionCount: rows.length };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2G — HANDOFF PACKET HELPERS
+// ═══════════════════════════════════════════════════════════════════
+
+export async function createHandoffPacket(data: Omit<InsertHandoffPacket, "id">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(handoffPackets).values(data);
+  return db.select().from(handoffPackets).where(eq(handoffPackets.handoffId, data.handoffId)).then(r => r[0]);
+}
+
+export async function getHandoffPacket(handoffId: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(handoffPackets).where(eq(handoffPackets.handoffId, handoffId));
+  return rows[0] ?? null;
+}
+
+export async function listHandoffPackets(filters?: { fromAgent?: string; toAgent?: string; status?: string; workType?: string }) {
+  const db = await getDb();
+  if (!db) return [];
+  const conditions = [];
+  if (filters?.fromAgent) conditions.push(eq(handoffPackets.fromAgent, filters.fromAgent));
+  if (filters?.toAgent) conditions.push(eq(handoffPackets.toAgent, filters.toAgent));
+  if (filters?.status) conditions.push(eq(handoffPackets.status, filters.status as any));
+  if (filters?.workType) conditions.push(eq(handoffPackets.workType, filters.workType as any));
+  const query = conditions.length > 0
+    ? db.select().from(handoffPackets).where(and(...conditions))
+    : db.select().from(handoffPackets);
+  return query.orderBy(desc(handoffPackets.createdAt)).limit(100);
+}
+
+export async function updateHandoffPacket(handoffId: string, updates: Partial<Pick<InsertHandoffPacket, "status" | "result" | "receiptId">>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(handoffPackets).set(updates).where(eq(handoffPackets.handoffId, handoffId));
+  return getHandoffPacket(handoffId);
 }

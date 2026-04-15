@@ -1,16 +1,16 @@
 /**
  * ThreePowerSigil — Sacred Geometry Visualization of the Three Powers
  * ═══════════════════════════════════════════════════════════════
- * Visual representation of the Observer/Governor/Executor architecture.
+ * Visual representation of the Rio/Governor/Gate architecture (locked naming).
  * Connected to real system state — not decorative.
  *
  * States:
  *   IDLE        → Dim geometry, waiting for input
- *   OBSERVING   → Observer ring pulses (cool blue)
+ *   OBSERVING   → Rio Interceptor ring pulses (cool blue)
  *   ASSESSING   → Risk color radiates from center
  *   WAITING     → Governor rays pulse (amber/gold)
  *   APPROVED    → Governor geometry solidifies (emerald)
- *   EXECUTING   → Executor energy flows (blue-white)
+ *   EXECUTING   → Execution Gate energy flows (blue-white)
  *   LOGGED      → Chain link illuminates (gold)
  *   VIOLATED    → Visual break/dimming (red flash)
  *   EXPIRED     → Fade to dim (gray)
@@ -145,7 +145,7 @@ export function ThreePowerSigil({ stage, riskLevel = "LOW", className = "" }: Th
           </filter>
         </defs>
 
-        {/* ── OUTER RING: Observer (top) ── */}
+        {/* ── OUTER RING: Rio Interceptor (top) ── */}
         <g opacity={powers.observer.opacity} filter={powers.observer.animate ? "url(#glow-observer)" : undefined}>
           <circle
             cx="100" cy="100" r="88"
@@ -155,14 +155,14 @@ export function ThreePowerSigil({ stage, riskLevel = "LOW", className = "" }: Th
             strokeDasharray={powers.observer.pulse ? "8 4" : "none"}
             className={powers.observer.pulse ? "animate-[spin_12s_linear_infinite]" : ""}
           />
-          {/* Observer eye symbol at top */}
+          {/* Rio Interceptor eye symbol at top */}
           <g transform="translate(100, 12)">
             <circle cx="0" cy="0" r="6" fill="none" stroke={powers.observer.color} strokeWidth="1" />
             <circle cx="0" cy="0" r="2" fill={powers.observer.color} />
           </g>
-          {/* Observer label */}
+          {/* Rio Interceptor label */}
           <text x="100" y="28" textAnchor="middle" fill={powers.observer.color} fontSize="5" fontFamily="monospace" letterSpacing="0.1em" opacity="0.8">
-            OBSERVER
+            RIO
           </text>
         </g>
 
@@ -198,7 +198,7 @@ export function ThreePowerSigil({ stage, riskLevel = "LOW", className = "" }: Th
 
         {/* ── EXECUTOR: Right vertex of triangle ── */}
         <g opacity={powers.executor.opacity} filter={powers.executor.animate ? "url(#glow-executor)" : undefined}>
-          {/* Executor gear/cog symbol */}
+          {/* Execution Gate gear/cog symbol */}
           <circle cx="145" cy="140" r="12" fill="none" stroke={powers.executor.color} strokeWidth="1.5"
             className={powers.executor.pulse ? "animate-[spin_3s_linear_infinite]" : ""}
           />
@@ -220,7 +220,7 @@ export function ThreePowerSigil({ stage, riskLevel = "LOW", className = "" }: Th
             );
           })}
           <text x="145" y="162" textAnchor="middle" fill={powers.executor.color} fontSize="5" fontFamily="monospace" letterSpacing="0.1em" opacity="0.8">
-            EXECUTOR
+            GATE
           </text>
         </g>
 
@@ -246,8 +246,8 @@ export function ThreePowerSigil({ stage, riskLevel = "LOW", className = "" }: Th
           </text>
         </g>
 
-        {/* ── FLOW ARROWS: Observer → Governor → Executor ── */}
-        {/* Observer → Governor signal */}
+        {/* ── FLOW ARROWS: Rio → Governor → Gate ── */}
+        {/* Rio → Governor signal */}
         <line
           x1="80" y1="50" x2="55" y2="125"
           stroke={stage === "OBSERVING" || stage === "ASSESSING" || stage === "WAITING_APPROVAL" ? OBSERVER_COLOR : DIM_COLOR}
@@ -255,7 +255,7 @@ export function ThreePowerSigil({ stage, riskLevel = "LOW", className = "" }: Th
           strokeDasharray="4 3"
           opacity={stage === "OBSERVING" || stage === "ASSESSING" ? 0.8 : 0.15}
         />
-        {/* Governor → Executor approval */}
+        {/* Governor → Gate approval */}
         <line
           x1="70" y1="140" x2="130" y2="140"
           stroke={stage === "APPROVED" || stage === "EXECUTING" ? "#34d399" : DIM_COLOR}
@@ -263,7 +263,7 @@ export function ThreePowerSigil({ stage, riskLevel = "LOW", className = "" }: Th
           strokeDasharray="4 3"
           opacity={stage === "APPROVED" || stage === "EXECUTING" ? 0.8 : 0.15}
         />
-        {/* Executor → Ledger receipt */}
+        {/* Gate → Ledger receipt */}
         <line
           x1="145" y1="155" x2="110" y2="175"
           stroke={stage === "LOGGED" ? LEDGER_COLOR : DIM_COLOR}
@@ -290,15 +290,15 @@ interface ThreePowerPanelProps {
 export function ThreePowerPanel({ stage, riskLevel = "LOW", intentId, toolName, stageLabel }: ThreePowerPanelProps) {
   const stageLabels: Record<SigilStage, string> = {
     IDLE: "System Idle",
-    OBSERVING: "Observer Scanning",
+    OBSERVING: "Rio Intercepting",
     ASSESSING: "Risk Assessment",
-    WAITING_APPROVAL: "Awaiting Governor Approval",
-    APPROVED: "Governor Approved",
-    EXECUTING: "Executor Active",
+    WAITING_APPROVAL: "Awaiting Governor Policy",
+    APPROVED: "Governor Cleared",
+    EXECUTING: "Gate Executing",
     LOGGED: "Logged to Ledger",
     VIOLATED: "Violation Detected",
     EXPIRED: "Expired",
-    REJECTED: "Governor Rejected",
+    REJECTED: "Governor Blocked",
   };
 
   const stageColors: Record<SigilStage, string> = {
