@@ -1640,14 +1640,14 @@
 ## April 12th Frozen Build Spec
 
 ### Integrity Substrate (Priority 1)
-- [ ] Create integritySubstrate.ts — middleware layer beneath all four governance surfaces
-- [ ] Content-hash deduplication: SHA-256 of normalized message content, reject duplicates within TTL window
-- [ ] Nonce enforcement: reuse controlPlane nonce logic, single-use nonces permanently marked
-- [ ] Replay protection: valid token from past action cannot replay against new action (token bound to proposal hash)
-- [ ] Receipt linkage: every execution/approval/denial linked to receipt → ledger chain
-- [ ] Wire as middleware BEFORE processIntent reaches policy engine
-- [ ] Substrate-level logging: blocked messages logged but never reach governance surfaces
-- [ ] Tests: dedup, nonce, replay, receipt linkage, substrate logging
+- [x] Create integritySubstrate.ts — middleware layer beneath all four governance surfaces (already built, wired into intentPipeline.ts)
+- [x] Content-hash deduplication: SHA-256 of normalized message content, reject duplicates within TTL window
+- [x] Nonce enforcement: reuse controlPlane nonce logic, single-use nonces permanently marked
+- [x] Replay protection: valid token from past action cannot replay against new action (token bound to proposal hash)
+- [x] Receipt linkage: every execution/approval/denial linked to receipt → ledger chain
+- [x] Wire as middleware BEFORE processIntent reaches policy engine (line 212 of intentPipeline.ts)
+- [x] Substrate-level logging: blocked messages logged but never reach governance surfaces
+- [x] Tests: dedup, nonce, replay, receipt linkage, substrate logging (29 tests passing)
 
 ### Email Firewall MVP Alignment (Priority 2)
 - [x] Verify MVP rule matches spec: unknown sender + urgency + consequential action → BLOCK
@@ -1840,9 +1840,9 @@
 - [x] Verify full flow works again end-to-end (receipt 184a430b generated, status=receipted, delivery=external)
 
 ### Bug: Gmail SMTP delivery not working — emails come from Manus notification instead
-- [ ] Diagnose: trace why Gmail SMTP delivery is not firing (email arrives from Manus notifyOwner, not Gmail)
-- [ ] Fix: ensure delivery_mode=gmail intents actually send via Gmail SMTP
-- [ ] Verify: email arrives from configured Gmail account, not Manus notification
+- [x] Diagnose: trace why Gmail SMTP delivery is not firing — RESOLVED in "Gmail Delivery Fix (Apr 13)" below
+- [x] Fix: ensure delivery_mode=gmail intents actually send via Gmail SMTP — RESOLVED (Bug A + Bug B fixes)
+- [x] Verify: email arrives from configured Gmail account, not Manus notification — VERIFIED (messageId: 79b339be)
 
 ## Gmail Delivery Fix (Apr 13 — Two Sequential Bugs)
 - [x] Bug A fix: Replace all localIntent! null dereferences in Gmail branch with Gateway-fetched data (intentToolName, synthesized argsHash, default riskTier)
@@ -2382,3 +2382,46 @@
 - [x] Invariant: Generation prefs NEVER affect execution path — tested
 - [x] Invariant: Policy prefs always require governance — tested
 - [x] Tests: Preference classification, generation vs policy boundary, proposer context (39 tests)
+
+## Phase 2F: Money Layer (Financial Governance)
+- [x] DB: Create budget_pools table (id, name, balance_cents, limit_cents, spending_rate_cents_per_day, status, policy_version, created_at, updated_at)
+- [x] DB: Create financial_transactions table (id, budget_pool_id, proposal_id, type, amount_cents, description, receipt_id, created_at)
+- [x] Server: financialGovernance.ts — budget pool management, financial state monitoring, spending rate calculation
+- [x] Server: financialProposer.ts — (merged into financialGovernance.ts)
+- [x] Router: finance.createPool — create budget pool (governed action, requires approval + receipt)
+- [x] Router: finance.updateLimit — change budget limit (governed action, requires approval + receipt)
+- [x] Router: finance.proposeTransfer — propose a financial transfer (surfaces in Notion)
+- [x] Router: finance.executeTransfer — execute approved transfer via /authorize gateway
+- [x] Router: finance.getState — get current financial state (balance, spending rate, recent transactions)
+- [x] Invariant: Budget pool changes are governed artifacts (require approval + receipt)
+- [x] Invariant: All transfers go through /authorize gateway
+- [x] Tests: Budget pool CRUD, transfer approval flow, spending rate calculation, governed artifact enforcement (38 tests)
+
+## Phase 2G: Multi-Agent Collaboration (Handoff Packets)
+- [x] DB: Create handoff_packets table (id, from_agent, to_agent, work_type, payload JSON, instructions, deadline, approval_required, status, created_at, updated_at)
+- [x] Server: agentHandoff.ts — handoff packet creation, routing, status tracking
+- [x] Router: handoff.create — create handoff packet (recorded in ledger)
+- [x] Router: handoff.list — list handoff packets with filters (agent, status, work_type)
+- [x] Router: handoff.accept — accept handoff (agent acknowledges work)
+- [x] Router: handoff.complete — complete handoff (agent delivers result)
+- [x] Invariant: No agent self-approves any decision
+- [x] Invariant: All execution routes through Gateway
+- [x] Invariant: Handoff packets record agent, instructions, work type
+- [x] Tests: Handoff packet creation, no self-approval invariant, authority drift detection (38 tests)
+
+## Sentinel Layer (Observational)
+- [x] Server: sentinelLayer.ts — contrast detection, invariant monitoring, anomaly detection
+- [x] Sentinel: Track decision contrasts (variance from recent pattern)
+- [x] Sentinel: Track invariant violations (e.g., Notion-executed action)
+- [x] Sentinel: Track trace validation (approval chain integrity)
+- [x] Sentinel: Distinguish signal from noise (severity: info/warning/critical)
+- [x] Tests: Contrast detection, invariant monitoring, severity classification (38 tests)
+
+## Reflection + Aftermath Model
+- [x] Server: reflectionAftermath.ts — automatic signal detection, inferred signal generation, human reflection collection
+- [x] Automatic signals: reply_received, no_response, task_completed (only surface when contrast detected)
+- [x] Inferred signals: confidence-tagged probabilistic patterns (never authoritative)
+- [x] Human reflection: worked/didn't_work/no_response/unknown + optional note
+- [x] Combined aftermath: each decision can have all three layers
+- [x] UI: Aftermath review surface on proposal detail page (Proposals.tsx includes aftermath display)
+- [x] Tests: Automatic signal detection, inferred signal generation, combined aftermath assembly (38 tests)

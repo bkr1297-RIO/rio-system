@@ -119,6 +119,9 @@ import { evaluateTrustPolicy, buildDelegatedReceipt } from "./trustEvaluation";
 import { rerankProposals, getVisibleProposals, onProposalResolved, getMaxVisible } from "./flowControl";
 import { detectFollowUpCandidates, runNightBatch, isNightBatchWindow } from "./dailyLoop";
 import { getAllGenerationPrefs, getGenerationPref, setGenerationPref, getAllPolicyPrefs, classifyPreferenceChange, getProposerContext, isGenerationPreference } from "./preferenceLayer";
+import { createGovernedBudgetPool, changePoolLimit, executeTransfer, calculateSpendingRate, detectSpendingAnomaly, getPoolOverview } from "./financialGovernance";
+import { initiateHandoff, acceptHandoff, startHandoff, completeHandoff, rejectHandoff, getAgentHandoffs, getPendingHandoffs, isKnownAgent } from "./agentHandoff";
+import { listBudgetPools, listFinancialTransactions, getHandoffPacket } from "./db";
 import { checkDelegation, formatCooldownMessage, type RoleSeparation, type DelegationCheck } from "./constrainedDelegation";
 import {
   createDecisionRow, updateDecisionRow, getDecisionRow,
@@ -4751,6 +4754,144 @@ If unclear, ask a clarifying question.`;
     /** Get the proposer context (generation prefs formatted for LLM) */
     proposerContext: protectedProcedure.query(() => {
       return { context: getProposerContext() };
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // PHASE 2F — FINANCIAL GOVERNANCE (Money Layer)
+  // ═══════════════════════════════════════════════════════════════════
+  budget: router({
+    createPool: protectedProcedure.input(z.object({
+      name: z.string().min(1),
+      initialBalanceCents: z.number().int().min(0),
+      limitCents: z.number().int().min(0),
+      policyVersion: z.string().optional(),
+      governanceReceiptId: z.string().optional(),
+    })).mutation(async ({ input, ctx }) => {
+      const pool = await createGovernedBudgetPool({ ...input, userId: ctx.user!.id });
+      return { pool };
+    }),
+
+    listPools: protectedProcedure.query(async ({ ctx }) => {
+      return { pools: await listBudgetPools(ctx.user!.id) };
+    }),
+
+    getPool: protectedProcedure.input(z.object({
+      poolId: z.string().min(1),
+    })).query(async ({ input }) => {
+      const overview = await getPoolOverview(input.poolId);
+      if (!overview) throw new TRPCError({ code: "NOT_FOUND", message: "Pool not found" });
+      return overview;
+    }),
+
+    changeLimit: protectedProcedure.input(z.object({
+      poolId: z.string().min(1),
+      newLimitCents: z.number().int().min(0),
+      governanceReceiptId: z.string().min(1),
+      reason: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      const pool = await changePoolLimit(input);
+      return { pool };
+    }),
+
+    transfer: protectedProcedure.input(z.object({
+      poolId: z.string().min(1),
+      amountCents: z.number().int(),
+      description: z.string().min(1),
+      proposalId: z.string().optional(),
+      receiptId: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      return executeTransfer(input);
+    }),
+
+    transactions: protectedProcedure.input(z.object({
+      poolId: z.string().min(1),
+      limit: z.number().int().min(1).max(200).optional(),
+    })).query(async ({ input }) => {
+      return { transactions: await listFinancialTransactions(input.poolId, input.limit ?? 50) };
+    }),
+
+    checkAnomaly: protectedProcedure.input(z.object({
+      poolId: z.string().min(1),
+      baselineRateCentsPerDay: z.number().min(0),
+      thresholdMultiplier: z.number().min(1).optional(),
+    })).query(async ({ input }) => {
+      const anomaly = await detectSpendingAnomaly(input.poolId, input.baselineRateCentsPerDay, input.thresholdMultiplier ?? 2.0);
+      return { anomaly, hasAnomaly: anomaly !== null };
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // PHASE 2G — MULTI-AGENT COLLABORATION (Handoffs)
+  // ═══════════════════════════════════════════════════════════════════
+  handoff: router({
+    create: protectedProcedure.input(z.object({
+      fromAgent: z.string().min(1),
+      toAgent: z.string().min(1),
+      workType: z.enum(["proposal", "financial", "analysis", "review", "execution", "research"]),
+      payload: z.record(z.string(), z.unknown()),
+      instructions: z.string().min(1),
+      deadline: z.string().datetime().optional(),
+      approvalRequired: z.boolean().optional(),
+    })).mutation(async ({ input }) => {
+      const packet = await initiateHandoff({
+        ...input,
+        deadline: input.deadline ? new Date(input.deadline) : undefined,
+      });
+      return { handoff: packet };
+    }),
+
+    accept: protectedProcedure.input(z.object({
+      handoffId: z.string().min(1),
+      acceptedBy: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      const packet = await acceptHandoff(input);
+      return { handoff: packet };
+    }),
+
+    start: protectedProcedure.input(z.object({
+      handoffId: z.string().min(1),
+      agentName: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      const packet = await startHandoff(input.handoffId, input.agentName);
+      return { handoff: packet };
+    }),
+
+    complete: protectedProcedure.input(z.object({
+      handoffId: z.string().min(1),
+      completedBy: z.string().min(1),
+      result: z.record(z.string(), z.unknown()),
+      receiptId: z.string().optional(),
+    })).mutation(async ({ input }) => {
+      const packet = await completeHandoff(input);
+      return { handoff: packet };
+    }),
+
+    reject: protectedProcedure.input(z.object({
+      handoffId: z.string().min(1),
+      rejectedBy: z.string().min(1),
+      reason: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      const packet = await rejectHandoff(input);
+      return { handoff: packet };
+    }),
+
+    get: protectedProcedure.input(z.object({
+      handoffId: z.string().min(1),
+    })).query(async ({ input }) => {
+      const packet = await getHandoffPacket(input.handoffId);
+      if (!packet) throw new TRPCError({ code: "NOT_FOUND", message: "Handoff not found" });
+      return { handoff: packet };
+    }),
+
+    agentHandoffs: protectedProcedure.input(z.object({
+      agentName: z.string().min(1),
+    })).query(async ({ input }) => {
+      return getAgentHandoffs(input.agentName);
+    }),
+
+    pending: protectedProcedure.query(async () => {
+      return { handoffs: await getPendingHandoffs() };
     }),
   }),
 });

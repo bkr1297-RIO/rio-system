@@ -11,9 +11,11 @@ import {
   BookOpen,
   Activity,
   LogOut,
+  Send,
 } from "lucide-react";
 
 const NAV_ITEMS = [
+  { label: "Send", icon: Send, path: "/send" },
   { label: "New", icon: PlusCircle, path: "/intent/new" },
   { label: "Approvals", icon: Shield, path: "/approvals" },
   { label: "Receipts", icon: FileCheck, path: "/receipts" },

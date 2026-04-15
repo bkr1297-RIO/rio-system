@@ -50,6 +50,11 @@ async function gw<T = unknown>(
     data = {} as T;
   }
 
+  // Auto-clear stale token on auth failure
+  if ((res.status === 401 || res.status === 403) && token) {
+    clearGatewayToken();
+  }
+
   return { ok: res.ok, status: res.status, data };
 }
 
@@ -248,7 +253,7 @@ export interface PendingApproval {
   expires_at?: string;
 }
 
-export async function getPendingApprovals(): Promise<{ ok: boolean; data: { pending: PendingApproval[] } }> {
+export async function getPendingApprovals(): Promise<{ ok: boolean; status: number; data: { pending: PendingApproval[] } }> {
   return gw<{ pending: PendingApproval[] }>("/approvals");
 }
 
@@ -269,19 +274,93 @@ export async function submitApproval(intentId: string, decision: "approved" | "d
   });
 }
 
-/* ─── Ledger (read-only) ────────────────────────────────────── */
+/* ─── Ledger (Gateway — read-only) ─────────────────────────── */
 
 export interface LedgerEntry {
-  id: number;
-  entry_type: string;
+  // Gateway v2.9.0 actual field names
+  id: number;               // sequential row id
+  entry_id: string;          // UUID — the canonical entry identifier
   intent_id?: string;
-  actor: string;
   action: string;
-  payload_hash: string;
+  agent_id: string;          // Gateway uses agent_id, not actor
+  status: string;            // Gateway uses status, not entry_type
+  detail?: string;
+  intent_hash?: string | null;
+  authorization_hash?: string | null;
+  execution_hash?: string | null;
+  receipt_hash?: string | null;
+  ledger_hash: string;       // Gateway uses ledger_hash, not payload_hash / hash
   prev_hash: string;
-  created_at: string;
+  timestamp: string;         // Gateway uses timestamp, not created_at
 }
 
 export async function getLedger(limit = 50): Promise<{ ok: boolean; data: { entries: LedgerEntry[] } }> {
   return gw<{ entries: LedgerEntry[] }>(`/ledger?limit=${limit}`);
 }
+
+/* ─── Gateway Execute-Action (external_fallback) ─────────── */
+// Single-call execution: Gateway runs the full pipeline (token → execute → receipt → ledger)
+// and returns the receipt + email_payload for ONE to deliver externally.
+
+export interface ExecuteActionResult {
+  intent_id: string;
+  status: string;
+  pipeline: string;
+  execution: {
+    connector: string;
+    status: string;
+    detail: string;
+    message_id?: string | null;
+  };
+  receipt: {
+    receipt_id: string;
+    receipt_hash: string;
+    hash_chain: {
+      intent_hash: string;
+      governance_hash: string;
+      authorization_hash: string;
+      execution_hash: string;
+      receipt_hash: string;
+    };
+    proposer_id: string;
+    approver_id: string;
+    token_id: string;
+    policy_hash: string;
+    execution_hash: string;
+    execution_result: Record<string, unknown>;
+    timestamp_proposed: string;
+    timestamp_approved: string;
+    timestamp_executed: string;
+    decision_delta_ms: number;
+    previous_receipt_hash: string;
+    ledger_entry_id: string;
+    receipt_signature: string;
+    gateway_public_key: string;
+  };
+  email_payload?: {
+    to: string;
+    cc?: string[];
+    subject: string;
+    body: string;
+  };
+  delivery_mode?: string;
+  delivery_instruction?: string;
+}
+
+export async function gatewayExecuteAction(
+  intentId: string
+): Promise<{ ok: boolean; status: number; data: ExecuteActionResult & { error?: string } }> {
+  const nonce = `one-exec-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  return gw<ExecuteActionResult & { error?: string }>("/execute-action", {
+    method: "POST",
+    body: JSON.stringify({
+      intent_id: intentId,
+      request_timestamp: new Date().toISOString(),
+      request_nonce: nonce,
+    }),
+  });
+}
+
+/* ─── HITL Proxy REMOVED ──────────────────────────────────── */
+// All HITL/Replit parallel system code has been removed.
+// Gateway is the ONLY execution path. No alternate routes.
