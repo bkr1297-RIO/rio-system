@@ -34,6 +34,15 @@ import {
   assignRole, removeRole, updatePrincipalStatus, principalHasRole,
   // Email firewall config
   getEmailFirewallConfig, upsertEmailFirewallConfig,
+  // Phase 2A — Proposal packets
+  createProposalPacket, getProposalPacket, listProposalPackets,
+  updateProposalPacketStatus, updateProposalAftermath,
+  // Phase 2E — Trust policies
+  createTrustPolicy, getTrustPolicy, listActiveTrustPolicies,
+  findMatchingTrustPolicy, updateTrustPolicy, deactivateTrustPolicy,
+  // Sentinel events
+  createSentinelEvent, listSentinelEvents, acknowledgeSentinelEvent,
+  getBaselinePattern,
 } from "./db";
 import {
   isTelegramConfigured,
@@ -104,7 +113,17 @@ import {
   type StrictnessLevel, type EmailReceipt,
 } from "./emailFirewall";
 import { storeGovernedReceipt } from "./firewallGovernance";
+import { createProposalFromResearch, generateProposalFromResearch, saveProposalToDb } from "./proposalGenerator";
+import { writeProposalToNotion, updateNotionProposalExecuted, updateNotionProposalFailed, updateNotionProposalApproved, updateNotionProposalDelegated } from "./notionProposalWriter";
+import { evaluateTrustPolicy, buildDelegatedReceipt } from "./trustEvaluation";
 import { checkDelegation, formatCooldownMessage, type RoleSeparation, type DelegationCheck } from "./constrainedDelegation";
+import {
+  createDecisionRow, updateDecisionRow, getDecisionRow,
+  pollPendingApprovals as notionPollPendingApprovals,
+  findDecisionRowByIntentId, isNotionConfigured,
+  type NotionAction, type NotionRiskTier, type NotionProposer,
+  type NotionGatewayDecision,
+} from "./notionDecisionLog";
 import {
   registerRootAuthority, getActiveRootAuthority, verifyRootSignature,
   computePolicyHash, activatePolicy, getActivePolicy, revokePolicy,
@@ -1881,6 +1900,41 @@ export const appRouter = router({
         timestamp: Date.now(),
       });
 
+      // ─── Notion Decision Log row creation (non-blocking) ───
+      // Build Directive Step 2: Gateway → Notion row creation
+      let notionPageId: string | null = null;
+      if (isNotionConfigured()) {
+        try {
+          const intentHash = sha256(JSON.stringify({
+            intent_id: intentResult.data.intent_id,
+            action: input.action,
+            parameters: input.parameters,
+          }));
+          const notionResult = await createDecisionRow({
+            title: `${input.action} — ${intentResult.data.intent_id}`,
+            intentId: intentResult.data.intent_id,
+            intentHash,
+            action: (input.action || "unknown") as NotionAction,
+            riskTier: (governResult.data.risk_tier || "MEDIUM") as NotionRiskTier,
+            proposer: (mapping.principalId || "unknown") as NotionProposer,
+            policyVersion: "v1.0",
+            gatewayDecision: (governResult.data.governance_decision || "UNKNOWN") as NotionGatewayDecision,
+          });
+          notionPageId = notionResult.pageId ?? null;
+          await appendLedger("NOTION_ROW_CREATED", {
+            intent_id: intentResult.data.intent_id,
+            notion_page_id: notionPageId,
+            action: input.action,
+            risk_tier: governResult.data.risk_tier,
+            governance_decision: governResult.data.governance_decision,
+            timestamp: Date.now(),
+          });
+          console.log(`[submitIntent] Notion row created: ${notionPageId} for ${intentResult.data.intent_id}`);
+        } catch (err) {
+          console.error("[submitIntent] Notion row creation failed (non-blocking):", err);
+        }
+      }
+
       // ─── Coherence check (advisory, non-blocking) ───
       let coherenceResult: { status: string; drift_detected: boolean; signals: unknown[] } | null = null;
       try {
@@ -1920,6 +1974,7 @@ export const appRouter = router({
         intent: intentResult.data,
         governance: governResult.data,
         coherence: coherenceResult,
+        notionPageId,
         error: null,
       };
     }),
@@ -3812,6 +3867,795 @@ If unclear, ask a clarifying question.`;
           ? new Date(result.token_payload.expires_at).toISOString()
           : null,
       };
+    }),
+  }),
+
+  // ─── Notion Decision Log (Phase 1 Operational Surface) ─────────
+  // Invariants:
+  //   1. Notion is NOT the system of record (PostgreSQL ledger is)
+  //   2. Notion is NOT the enforcement boundary (Gateway is)
+  //   3. Notion status change is a SIGNAL, not cryptographic approval
+  //   4. Execution requires verified Ed25519 signature
+  //   5. Fail closed on any mismatch
+  notion: router({
+    /** Check if Notion integration is configured */
+    status: publicProcedure.query(() => {
+      return { configured: isNotionConfigured() };
+    }),
+
+    /**
+     * Poll for intents where Brian set Status=Approved in Notion
+     * but Approval State is still Unsigned (needs cryptographic signing).
+     * Build Directive Step 3: detect the change.
+     */
+    pollPendingApprovals: protectedProcedure.query(async () => {
+      if (!isNotionConfigured()) {
+        return [];
+      }
+      const rows = await notionPollPendingApprovals();
+      return rows.map(r => ({
+        pageId: r.pageId,
+        title: r.title,
+        intentId: r.intentId,
+        intentHash: r.intentHash,
+        action: r.action,
+        riskTier: r.riskTier,
+        proposer: r.proposer,
+        policyVersion: r.policyVersion,
+        gatewayDecision: r.gatewayDecision,
+        createdAt: r.createdAt,
+      }));
+    }),
+
+    /**
+     * Sign and authorize an intent that was approved in Notion.
+     * Build Directive Steps 3-5:
+     *   - Receives the Ed25519 signed payload from the browser
+     *   - Calls Gateway /authorize (existing endpoint) with the approval
+     *   - Calls Gateway /execute-action for execution
+     *   - Updates the Notion row with Executed status and receipt link
+     *   - Fails closed on any mismatch
+     */
+    signAndAuthorize: protectedProcedure.input(z.object({
+      pageId: z.string().min(1),
+      intentId: z.string().min(1),
+      intentHash: z.string().min(1),
+      policyVersion: z.string().min(1),
+      signature: z.string().min(1),
+      payloadHash: z.string().min(1),
+      nonce: z.string().min(1),
+      expiresAt: z.string().min(1),
+      deny: z.boolean().optional(),
+    })).mutation(async ({ ctx, input }) => {
+      const GATEWAY_URL = ENV.gatewayUrl;
+      if (!GATEWAY_URL) {
+        return { success: false, error: "Gateway URL not configured" };
+      }
+
+      // ─── DENY PATH ───
+      if (input.deny) {
+        // Update Notion row to Denied
+        await updateDecisionRow(input.pageId, {
+          status: "Denied",
+          approvalState: "Unsigned",
+        });
+        await appendLedger("NOTION_DENIAL", {
+          intent_id: input.intentId,
+          intent_hash: input.intentHash,
+          notion_page_id: input.pageId,
+          denied_by: ctx.user?.id || "unknown",
+          timestamp: Date.now(),
+        });
+        return { success: true, receiptId: null };
+      }
+
+      // ─── APPROVE + EXECUTE PATH ───
+      // Step 1: Login as I-2 (approver) for /authorize
+      let i2Token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: "I-2",
+            passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026",
+          }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) {
+          await updateDecisionRow(input.pageId, { status: "Failed" });
+          return { success: false, error: `I-2 login failed: ${loginData.error || "no token"}` };
+        }
+        i2Token = loginData.token;
+      } catch (err) {
+        await updateDecisionRow(input.pageId, { status: "Failed" });
+        return { success: false, error: `Gateway unreachable: ${String(err)}` };
+      }
+
+      // Step 2: Authorize the intent via existing /authorize endpoint
+      // Build Directive Step 4: wire into existing /authorize
+      try {
+        const authRes = await fetch(`${GATEWAY_URL}/authorize`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${i2Token}`,
+          },
+          body: JSON.stringify({
+            intent_id: input.intentId,
+            decision: "approved",
+            authorized_by: "I-2",
+            // Include the cryptographic proof from the signer
+            signature: input.signature,
+            payload_hash: input.payloadHash,
+            nonce: input.nonce,
+            expires_at: input.expiresAt,
+            request_timestamp: new Date().toISOString(),
+            request_nonce: `notion-auth-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }),
+        });
+        const authData = await authRes.json() as { error?: string; invariant?: string };
+        if (!authRes.ok) {
+          const msg = authData.invariant === "proposer_ne_approver"
+            ? "Cannot approve your own intent (proposer \u2260 approver)"
+            : authData.error || `Authorization failed (HTTP ${authRes.status})`;
+          await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Unsigned" });
+          return { success: false, error: msg };
+        }
+      } catch (err) {
+        await updateDecisionRow(input.pageId, { status: "Failed" });
+        return { success: false, error: `Gateway /authorize failed: ${String(err)}` };
+      }
+
+      // Update Notion: Approval State = Signed (authorization verified)
+      await updateDecisionRow(input.pageId, { approvalState: "Signed" });
+
+      // Step 3: Login as I-1 (proposer) for /execute-action
+      let i1Token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            user_id: "I-1",
+            passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026",
+          }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) {
+          await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Signed" });
+          return { success: false, error: `I-1 login failed: ${loginData.error || "no token"}` };
+        }
+        i1Token = loginData.token;
+      } catch (err) {
+        await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Signed" });
+        return { success: false, error: `Gateway unreachable for I-1: ${String(err)}` };
+      }
+
+      // Step 4: Execute via Gateway /execute-action (external mode)
+      let execData: Record<string, unknown> | null = null;
+      try {
+        const execRes = await fetch(`${GATEWAY_URL}/execute-action`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${i1Token}`,
+          },
+          body: JSON.stringify({
+            intent_id: input.intentId,
+            delivery_mode: "external",
+            request_timestamp: new Date().toISOString(),
+            request_nonce: `notion-exec-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }),
+          signal: AbortSignal.timeout(30000),
+        });
+        execData = await execRes.json() as Record<string, unknown>;
+        if (!execRes.ok) {
+          await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Signed" });
+          return { success: false, error: (execData as { error?: string }).error || `Execute failed (HTTP ${execRes.status})` };
+        }
+      } catch (err) {
+        await updateDecisionRow(input.pageId, { status: "Failed", approvalState: "Signed" });
+        return { success: false, error: `Gateway /execute-action failed: ${String(err)}` };
+      }
+
+      // Step 5: Extract receipt and update Notion
+      // Build Directive Step 5: receipt writeback
+      const gwReceipt = (execData?.receipt as Record<string, unknown>) || null;
+      const receiptId = gwReceipt ? String((gwReceipt as { receipt_id?: string }).receipt_id || "") : "";
+      const receiptHash = gwReceipt ? String((gwReceipt as { receipt_hash?: string }).receipt_hash || "") : "";
+
+      // Build receipt link for Notion
+      const receiptLink = receiptId
+        ? `https://rio-one.manus.space/receipts?id=${receiptId}`
+        : undefined;
+
+      // Update Notion row: Executed + receipt link
+      await updateDecisionRow(input.pageId, {
+        status: "Executed",
+        approvalState: "Executed",
+        receiptLink,
+      });
+
+      // Log to local ledger
+      await appendLedger("NOTION_EXECUTION", {
+        intent_id: input.intentId,
+        intent_hash: input.intentHash,
+        notion_page_id: input.pageId,
+        receipt_id: receiptId,
+        receipt_hash: receiptHash,
+        approved_by: ctx.user?.id || "unknown",
+        execution_path: "notion_signer",
+        timestamp: Date.now(),
+      });
+
+      // Notify owner
+      try {
+        await notifyOwner({
+          title: "Notion-Governed Action Executed",
+          content: [
+            `**Intent:** \`${input.intentId}\``,
+            `**Receipt:** \`${receiptId.slice(0, 12)}\``,
+            `**Source:** Notion Decision Log → Signer UI`,
+            `**Hash:** \`${input.intentHash.slice(0, 16)}...\``,
+          ].join("\n"),
+        });
+      } catch (err) {
+        console.error("[notion.signAndAuthorize] notifyOwner error:", err);
+      }
+
+      // Telegram notification
+      if (isTelegramConfigured()) {
+        try {
+          const { sendMessage: sendTg } = await import("./telegram");
+          await sendTg([
+            `\u2705 *Notion-Governed Action Executed*`,
+            ``,
+            `Intent: \`${input.intentId.slice(0, 12)}\``,
+            `Receipt: \`${receiptId.slice(0, 12)}\``,
+            `Source: Notion Decision Log`,
+          ].join("\n"), "Markdown");
+        } catch (err) {
+          console.error("[notion.signAndAuthorize] Telegram error:", err);
+        }
+      }
+
+      return {
+        success: true,
+        receiptId,
+        receiptHash,
+        receiptLink,
+      };
+    }),
+
+    /**
+     * Create a Notion Decision Log row for a governed intent.
+     * Called after Gateway governance evaluation.
+     * Build Directive Step 2: Gateway → Notion row creation.
+     */
+    createRow: protectedProcedure.input(z.object({
+      intentId: z.string().min(1),
+      intentHash: z.string().min(1),
+      title: z.string().min(1),
+      action: z.string().min(1),
+      riskTier: z.string().min(1),
+      proposer: z.string().min(1),
+      policyVersion: z.string().min(1),
+      gatewayDecision: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      if (!isNotionConfigured()) {
+        return { success: false, error: "Notion not configured" };
+      }
+      const result = await createDecisionRow({
+        title: input.title,
+        intentId: input.intentId,
+        intentHash: input.intentHash,
+        action: input.action as NotionAction,
+        riskTier: input.riskTier as NotionRiskTier,
+        proposer: input.proposer as NotionProposer,
+        policyVersion: input.policyVersion,
+        gatewayDecision: input.gatewayDecision as NotionGatewayDecision,
+      });
+      return result;
+    }),
+
+    /** Get a single decision row by page ID */
+    getRow: protectedProcedure.input(z.object({
+      pageId: z.string().min(1),
+    })).query(async ({ input }) => {
+      return getDecisionRow(input.pageId);
+    }),
+
+    /** Find a decision row by intent ID */
+    findByIntentId: protectedProcedure.input(z.object({
+      intentId: z.string().min(1),
+    })).query(async ({ input }) => {
+      return findDecisionRowByIntentId(input.intentId);
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // PHASE 2A — PROPOSAL ROUTER
+  // ═══════════════════════════════════════════════════════════════════
+  proposal: router({
+    /**
+     * Generate a proposal from research input.
+     * Flow: research → LLM structured extraction → DB → Notion Decision Log.
+     * Invariant: proposals are NEVER auto-queued for approval.
+     */
+    create: protectedProcedure.input(z.object({
+      content: z.string().min(1),
+      type: z.enum(["outreach", "task", "analysis", "financial", "follow_up"]),
+      category: z.string().min(1),
+      target: z.string().optional(),
+      context: z.string().optional(),
+    })).mutation(async ({ ctx, input }) => {
+      // Step 1: Generate proposal from research via LLM
+      const { packet, saved } = await createProposalFromResearch({
+        content: input.content,
+        type: input.type,
+        category: input.category,
+        target: input.target,
+        context: input.context,
+        createdBy: ctx.user?.name || "system",
+      });
+
+      // Step 2: Write to Notion Decision Log
+      let notionPageId: string | null = null;
+      if (isNotionConfigured()) {
+        try {
+          notionPageId = await writeProposalToNotion({
+            proposalId: packet.proposalId,
+            type: packet.type,
+            category: packet.category,
+            riskTier: packet.riskTier,
+            riskFactors: packet.riskFactors,
+            proposal: packet.proposal,
+            whyItMatters: packet.whyItMatters,
+            reasoning: packet.reasoning,
+            baselinePattern: packet.baselinePattern,
+          });
+          await updateProposalPacketStatus(packet.proposalId, "proposed", { notionPageId });
+        } catch (err) {
+          console.error("[proposal.create] Notion write failed:", err);
+        }
+      }
+
+      // Step 3: Log to ledger
+      await appendLedger("PROPOSAL_CREATED", {
+        proposal_id: packet.proposalId,
+        type: packet.type,
+        category: packet.category,
+        risk_tier: packet.riskTier,
+        notion_page_id: notionPageId,
+        created_by: ctx.user?.name || "system",
+        timestamp: Date.now(),
+      });
+
+      return {
+        success: true,
+        proposalId: packet.proposalId,
+        riskTier: packet.riskTier,
+        notionPageId,
+        proposal: packet.proposal,
+        whyItMatters: packet.whyItMatters,
+      };
+    }),
+
+    /** List proposals with optional filters */
+    list: protectedProcedure.input(z.object({
+      status: z.enum(["proposed", "approved", "rejected", "executed", "failed", "expired"]).optional(),
+      type: z.enum(["outreach", "task", "analysis", "financial", "follow_up"]).optional(),
+      riskTier: z.enum(["LOW", "MEDIUM", "HIGH"]).optional(),
+      limit: z.number().min(1).max(100).optional(),
+    }).optional()).query(async ({ input }) => {
+      return listProposalPackets(input ?? {});
+    }),
+
+    /** Get a single proposal by ID */
+    get: protectedProcedure.input(z.object({
+      proposalId: z.string().min(1),
+    })).query(async ({ input }) => {
+      return getProposalPacket(input.proposalId);
+    }),
+
+    /**
+     * Approve a proposal — triggers Gateway /authorize + /execute-action.
+     * Uses the EXISTING approval pipeline (same as gateway.approveAndExecute).
+     * Invariant: execution requires Ed25519 signature via Gateway.
+     */
+    approve: protectedProcedure.input(z.object({
+      proposalId: z.string().min(1),
+      signature: z.string().min(1),
+      payloadHash: z.string().min(1),
+      nonce: z.string().min(1),
+      expiresAt: z.string().min(1),
+    })).mutation(async ({ ctx, input }) => {
+      const proposal = await getProposalPacket(input.proposalId);
+      if (!proposal) throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
+      if (proposal.status !== "proposed") throw new TRPCError({ code: "BAD_REQUEST", message: `Proposal is ${proposal.status}, not proposed` });
+
+      const GATEWAY_URL = ENV.gatewayUrl;
+      if (!GATEWAY_URL) throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: "Gateway URL not configured" });
+
+      // Update status to approved
+      await updateProposalPacketStatus(input.proposalId, "approved");
+      if (proposal.notionPageId) {
+        try { await updateNotionProposalApproved(proposal.notionPageId); } catch (e) { console.error("[proposal.approve] Notion update failed:", e); }
+      }
+
+      // Login as I-2 (approver) for /authorize
+      let i2Token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: "I-2", passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026" }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) throw new Error(loginData.error || "no token");
+        i2Token = loginData.token;
+      } catch (err) {
+        await updateProposalPacketStatus(input.proposalId, "failed");
+        if (proposal.notionPageId) try { await updateNotionProposalFailed(proposal.notionPageId, `I-2 login failed: ${String(err)}`); } catch (_) {}
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Gateway I-2 login failed: ${String(err)}` });
+      }
+
+      // Authorize via Gateway
+      try {
+        const authRes = await fetch(`${GATEWAY_URL}/authorize`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${i2Token}` },
+          body: JSON.stringify({
+            intent_id: input.proposalId,
+            decision: "approved",
+            authorized_by: "I-2",
+            signature: input.signature,
+            payload_hash: input.payloadHash,
+            nonce: input.nonce,
+            expires_at: input.expiresAt,
+            request_timestamp: new Date().toISOString(),
+            request_nonce: `proposal-auth-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }),
+        });
+        if (!authRes.ok) {
+          const authData = await authRes.json() as { error?: string };
+          throw new Error(authData.error || `HTTP ${authRes.status}`);
+        }
+      } catch (err) {
+        await updateProposalPacketStatus(input.proposalId, "failed");
+        if (proposal.notionPageId) try { await updateNotionProposalFailed(proposal.notionPageId, `Authorization failed: ${String(err)}`); } catch (_) {}
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Gateway /authorize failed: ${String(err)}` });
+      }
+
+      // Login as I-1 (proposer) for /execute-action
+      let i1Token: string;
+      try {
+        const loginRes = await fetch(`${GATEWAY_URL}/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: "I-1", passphrase: process.env.RIO_GATEWAY_PASSPHRASE || "rio-governed-2026" }),
+        });
+        const loginData = await loginRes.json() as { token?: string; error?: string };
+        if (!loginRes.ok || !loginData.token) throw new Error(loginData.error || "no token");
+        i1Token = loginData.token;
+      } catch (err) {
+        await updateProposalPacketStatus(input.proposalId, "failed");
+        if (proposal.notionPageId) try { await updateNotionProposalFailed(proposal.notionPageId, `I-1 login failed: ${String(err)}`); } catch (_) {}
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Gateway I-1 login failed: ${String(err)}` });
+      }
+
+      // Execute via Gateway
+      let execData: Record<string, unknown> | null = null;
+      try {
+        const execRes = await fetch(`${GATEWAY_URL}/execute-action`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": `Bearer ${i1Token}` },
+          body: JSON.stringify({
+            intent_id: input.proposalId,
+            delivery_mode: "external",
+            request_timestamp: new Date().toISOString(),
+            request_nonce: `proposal-exec-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+          }),
+          signal: AbortSignal.timeout(30000),
+        });
+        execData = await execRes.json() as Record<string, unknown>;
+        if (!execRes.ok) throw new Error((execData as { error?: string }).error || `HTTP ${execRes.status}`);
+      } catch (err) {
+        await updateProposalPacketStatus(input.proposalId, "failed");
+        if (proposal.notionPageId) try { await updateNotionProposalFailed(proposal.notionPageId, `Execution failed: ${String(err)}`); } catch (_) {}
+        throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: `Gateway /execute-action failed: ${String(err)}` });
+      }
+
+      // Extract receipt
+      const gwReceipt = (execData?.receipt as Record<string, unknown>) || null;
+      const receiptId = gwReceipt ? String((gwReceipt as { receipt_id?: string }).receipt_id || "") : "";
+      const receiptHash = gwReceipt ? String((gwReceipt as { receipt_hash?: string }).receipt_hash || "") : "";
+
+      // Update DB + Notion + Ledger
+      await updateProposalPacketStatus(input.proposalId, "executed", { receiptId });
+      if (proposal.notionPageId) {
+        try { await updateNotionProposalExecuted(proposal.notionPageId, receiptId); } catch (e) { console.error("[proposal.approve] Notion receipt update failed:", e); }
+      }
+
+      await appendLedger("PROPOSAL_EXECUTED", {
+        proposal_id: input.proposalId,
+        receipt_id: receiptId,
+        receipt_hash: receiptHash,
+        approved_by: ctx.user?.id || "unknown",
+        execution_path: "proposal_approve",
+        timestamp: Date.now(),
+      });
+
+      // Notify owner
+      try {
+        await notifyOwner({
+          title: "Proposal Executed",
+          content: `**Proposal:** \`${input.proposalId}\`\n**Type:** ${proposal.type}/${proposal.category}\n**Receipt:** \`${receiptId.slice(0, 12)}\``,
+        });
+      } catch (_) {}
+
+      return { success: true, receiptId, receiptHash };
+    }),
+
+    /** Reject a proposal */
+    reject: protectedProcedure.input(z.object({
+      proposalId: z.string().min(1),
+      reason: z.string().optional(),
+    })).mutation(async ({ ctx, input }) => {
+      const proposal = await getProposalPacket(input.proposalId);
+      if (!proposal) throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
+
+      await updateProposalPacketStatus(input.proposalId, "rejected");
+      if (proposal.notionPageId) {
+        try { await updateNotionProposalFailed(proposal.notionPageId, input.reason || "Rejected by user"); } catch (e) { console.error("[proposal.reject] Notion update failed:", e); }
+      }
+
+      await appendLedger("PROPOSAL_REJECTED", {
+        proposal_id: input.proposalId,
+        reason: input.reason || "Rejected by user",
+        rejected_by: ctx.user?.id || "unknown",
+        timestamp: Date.now(),
+      });
+
+      return { success: true };
+    }),
+
+    /** Update aftermath for a proposal (human reflection) */
+    updateAftermath: protectedProcedure.input(z.object({
+      proposalId: z.string().min(1),
+      aftermath: z.object({
+        automatic: z.string().optional(),
+        inferred: z.string().optional(),
+        human: z.string().optional(),
+        note: z.string().optional(),
+      }),
+    })).mutation(async ({ input }) => {
+      await updateProposalAftermath(input.proposalId, input.aftermath);
+      return { success: true };
+    }),
+
+    /** Get baseline pattern for a category */
+    baseline: protectedProcedure.input(z.object({
+      category: z.string().min(1),
+    })).query(async ({ input }) => {
+      return getBaselinePattern(input.category);
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // PHASE 2E — TRUST POLICY ROUTER
+  // ═══════════════════════════════════════════════════════════════════
+  trust: router({
+    /**
+     * Create a trust policy.
+     * INVARIANT: Creating a trust policy is itself a governed action.
+     * It writes to the ledger with a receipt.
+     */
+    create: protectedProcedure.input(z.object({
+      category: z.string().min(1),
+      riskTier: z.enum(["LOW", "MEDIUM", "HIGH"]),
+      trustLevel: z.number().min(0).max(2),
+      conditions: z.record(z.string(), z.unknown()).optional(),
+    })).mutation(async ({ ctx, input }) => {
+      const policyId = `trust_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      const policy = await createTrustPolicy({
+        policyId,
+        userId: ctx.user!.id,
+        category: input.category,
+        riskTier: input.riskTier as any,
+        trustLevel: input.trustLevel,
+        conditions: input.conditions || null,
+        active: true,
+      });
+
+      await appendLedger("TRUST_POLICY_CREATED", {
+        policy_id: policyId,
+        category: input.category,
+        risk_tier: input.riskTier,
+        trust_level: input.trustLevel,
+        conditions: input.conditions || null,
+        created_by: ctx.user?.id || "unknown",
+        timestamp: Date.now(),
+      });
+
+      return { success: true, policy };
+    }),
+
+    /** List active trust policies for the current user */
+    list: protectedProcedure.query(async ({ ctx }) => {
+      return listActiveTrustPolicies(ctx.user!.id);
+    }),
+
+    /** Get a single trust policy */
+    get: protectedProcedure.input(z.object({
+      policyId: z.string().min(1),
+    })).query(async ({ input }) => {
+      return getTrustPolicy(input.policyId);
+    }),
+
+    /**
+     * Update a trust policy.
+     * INVARIANT: Updating a trust policy is a governed action.
+     */
+    update: protectedProcedure.input(z.object({
+      policyId: z.string().min(1),
+      trustLevel: z.number().min(0).max(2).optional(),
+      conditions: z.record(z.string(), z.unknown()).optional(),
+      active: z.boolean().optional(),
+    })).mutation(async ({ ctx, input }) => {
+      const existing = await getTrustPolicy(input.policyId);
+      if (!existing) throw new TRPCError({ code: "NOT_FOUND", message: "Trust policy not found" });
+
+      const updates: Record<string, unknown> = {};
+      if (input.trustLevel !== undefined) updates.trustLevel = input.trustLevel;
+      if (input.conditions !== undefined) updates.conditions = input.conditions;
+      if (input.active !== undefined) updates.active = input.active;
+
+      await updateTrustPolicy(input.policyId, updates as any);
+
+      await appendLedger("TRUST_POLICY_UPDATED", {
+        policy_id: input.policyId,
+        updates,
+        updated_by: ctx.user?.id || "unknown",
+        timestamp: Date.now(),
+      });
+
+      return { success: true };
+    }),
+
+    /** Deactivate a trust policy */
+    deactivate: protectedProcedure.input(z.object({
+      policyId: z.string().min(1),
+    })).mutation(async ({ ctx, input }) => {
+      await deactivateTrustPolicy(input.policyId);
+
+      await appendLedger("TRUST_POLICY_DELETED", {
+        policy_id: input.policyId,
+        deactivated_by: ctx.user?.id || "unknown",
+        timestamp: Date.now(),
+      });
+
+      return { success: true };
+    }),
+
+    /**
+     * Evaluate trust policy for a proposal.
+     * Returns whether auto-approval is permitted.
+     * Does NOT execute — just evaluates.
+     */
+    evaluate: protectedProcedure.input(z.object({
+      proposalId: z.string().min(1),
+      category: z.string().min(1),
+      riskTier: z.enum(["LOW", "MEDIUM", "HIGH"]),
+      isInternal: z.boolean(),
+      amount: z.number().optional(),
+      target: z.string().optional(),
+    })).query(async ({ ctx, input }) => {
+      const result = await evaluateTrustPolicy({
+        userId: ctx.user!.id,
+        category: input.category,
+        riskTier: input.riskTier,
+        proposalId: input.proposalId,
+        isInternal: input.isInternal,
+        amount: input.amount,
+        target: input.target,
+      });
+      return result;
+    }),
+
+    /**
+     * Auto-approve a proposal via trust policy delegation.
+     * Only works if evaluateTrustPolicy returns canAutoApprove=true.
+     * Generates a delegated receipt referencing the trust policy.
+     */
+    autoApprove: protectedProcedure.input(z.object({
+      proposalId: z.string().min(1),
+    })).mutation(async ({ ctx, input }) => {
+      const proposal = await getProposalPacket(input.proposalId);
+      if (!proposal) throw new TRPCError({ code: "NOT_FOUND", message: "Proposal not found" });
+      if (proposal.status !== "proposed") throw new TRPCError({ code: "BAD_REQUEST", message: `Proposal is ${proposal.status}, not proposed` });
+
+      // Evaluate trust policy
+      const evaluation = await evaluateTrustPolicy({
+        userId: ctx.user!.id,
+        category: proposal.category,
+        riskTier: proposal.riskTier as "LOW" | "MEDIUM" | "HIGH",
+        proposalId: input.proposalId,
+        isInternal: proposal.type === "task" || proposal.type === "analysis",
+      });
+
+      if (!evaluation.canAutoApprove) {
+        return { success: false, reason: evaluation.reason, requiresHumanApproval: true };
+      }
+
+      // Build delegated receipt
+      const baseline = await getBaselinePattern(proposal.category);
+      const delegatedReceipt = buildDelegatedReceipt(evaluation, baseline);
+
+      // Update proposal status
+      await updateProposalPacketStatus(input.proposalId, "executed", {
+        receiptId: `delegated_${Date.now()}`,
+      });
+
+      // Update Notion
+      if (proposal.notionPageId) {
+        try {
+          await updateNotionProposalDelegated(
+            proposal.notionPageId,
+            evaluation.policyId!,
+            `delegated_${Date.now()}`
+          );
+        } catch (e) { console.error("[trust.autoApprove] Notion update failed:", e); }
+      }
+
+      // Log to ledger
+      await appendLedger("DELEGATED_AUTO_APPROVE", {
+        proposal_id: input.proposalId,
+        policy_id: evaluation.policyId,
+        trust_level: evaluation.trustLevelApplied,
+        delegated_receipt: delegatedReceipt,
+        auto_approved_for: ctx.user?.id || "unknown",
+        timestamp: Date.now(),
+      });
+
+      return {
+        success: true,
+        delegatedReceipt,
+        policyId: evaluation.policyId,
+        trustLevel: evaluation.trustLevelApplied,
+      };
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════════
+  // SENTINEL ROUTER (Observational Only)
+  // ═══════════════════════════════════════════════════════════════════
+  sentinel: router({
+    /** List sentinel events with optional filters */
+    list: protectedProcedure.input(z.object({
+      type: z.string().optional(),
+      severity: z.string().optional(),
+      acknowledged: z.boolean().optional(),
+      limit: z.number().min(1).max(100).optional(),
+    }).optional()).query(async ({ input }) => {
+      return listSentinelEvents(input ?? {});
+    }),
+
+    /** Acknowledge a sentinel event */
+    acknowledge: protectedProcedure.input(z.object({
+      eventId: z.string().min(1),
+    })).mutation(async ({ ctx, input }) => {
+      await acknowledgeSentinelEvent(input.eventId);
+
+      await appendLedger("SENTINEL_EVENT", {
+        event_id: input.eventId,
+        acknowledged_by: ctx.user?.id || "unknown",
+        action: "acknowledged",
+        timestamp: Date.now(),
+      });
+
+      return { success: true };
     }),
   }),
 });

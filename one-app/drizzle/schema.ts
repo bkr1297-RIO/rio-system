@@ -121,7 +121,7 @@ export type Execution = typeof executions.$inferSelect;
 export const ledger = mysqlTable("ledger", {
   id: int("id").autoincrement().primaryKey(),
   entryId: varchar("entryId", { length: 64 }).notNull().unique(),
-  entryType: mysqlEnum("entryType", ["ONBOARD", "INTENT", "APPROVAL", "EXECUTION", "KILL", "SYNC", "JORDAN_CHAT", "BONDI_CHAT", "LEARNING", "ARCHITECTURE_STATE", "RE_KEY", "REVOKE", "RE_KEY_AUTHORIZED", "RE_KEY_FORCED", "TELEGRAM_NOTIFY", "POLICY_UPDATE", "NOTIFICATION", "GENESIS", "AUTHORITY_TOKEN", "EMAIL_DELIVERY", "COHERENCE_CHECK", "FIREWALL_SCAN", "ACTION_COMPLETE", "DELEGATION_BLOCKED", "DELEGATION_APPROVED", "SUBSTRATE_BLOCK"]).notNull(),
+  entryType: mysqlEnum("entryType", ["ONBOARD", "INTENT", "APPROVAL", "EXECUTION", "KILL", "SYNC", "JORDAN_CHAT", "BONDI_CHAT", "LEARNING", "ARCHITECTURE_STATE", "RE_KEY", "REVOKE", "RE_KEY_AUTHORIZED", "RE_KEY_FORCED", "TELEGRAM_NOTIFY", "POLICY_UPDATE", "NOTIFICATION", "GENESIS", "AUTHORITY_TOKEN", "EMAIL_DELIVERY", "COHERENCE_CHECK", "FIREWALL_SCAN", "ACTION_COMPLETE", "DELEGATION_BLOCKED", "DELEGATION_APPROVED", "SUBSTRATE_BLOCK", "NOTION_DENIAL", "NOTION_EXECUTION", "NOTION_ROW_CREATED", "PROPOSAL_CREATED", "PROPOSAL_APPROVED", "PROPOSAL_REJECTED", "PROPOSAL_EXECUTED", "TRUST_POLICY_CREATED", "TRUST_POLICY_UPDATED", "TRUST_POLICY_DELETED", "DELEGATED_AUTO_APPROVE", "SENTINEL_EVENT"]).notNull(),
   payload: json("payload").$type<Record<string, unknown>>().notNull(),
   hash: varchar("hash", { length: 128 }).notNull(),
   prevHash: varchar("prevHash", { length: 128 }).notNull(),
@@ -410,3 +410,158 @@ export const pendingEmailApprovals = mysqlTable("pending_email_approvals", {
 
 export type PendingEmailApproval = typeof pendingEmailApprovals.$inferSelect;
 export type InsertPendingEmailApproval = typeof pendingEmailApprovals.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2A — PROPOSAL PACKETS
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Proposal packets — structured proposals generated from research,
+ * written to Notion Decision Log, awaiting human approval.
+ * Each proposal is ONE row in the Decision Log.
+ * No auto-queueing: proposals surface in Notion for human decision.
+ */
+export const proposalPackets = mysqlTable("proposal_packets", {
+  id: int("id").autoincrement().primaryKey(),
+  proposalId: varchar("proposalId", { length: 64 }).notNull().unique(),
+  /** Proposal type: outreach, task, analysis, financial, follow_up */
+  type: mysqlEnum("type", ["outreach", "task", "analysis", "financial", "follow_up"]).notNull(),
+  /** Category for ranking and trust policy matching */
+  category: varchar("category", { length: 128 }).notNull(),
+  /** Risk tier — matches naming convention (risk_tier, not risk_level) */
+  riskTier: mysqlEnum("riskTier", ["LOW", "MEDIUM", "HIGH"]).notNull(),
+  /** Risk factors — array of strings explaining why this risk tier */
+  riskFactors: json("riskFactors").$type<string[]>().notNull(),
+  /** Baseline pattern — recent approval/velocity/edit stats for contrast detection */
+  baselinePattern: json("baselinePattern").$type<{
+    approval_rate_14d: number;
+    avg_velocity_seconds: number;
+    edit_rate: number;
+  }>(),
+  /** The proposal content — title, body, action_needed (or subject/body/draft_email for outreach) */
+  proposal: json("proposal").$type<{
+    title?: string;
+    subject?: string;
+    body: string;
+    action_needed?: string;
+    draft_email?: string;
+  }>().notNull(),
+  /** Why this matters — human-readable explanation */
+  whyItMatters: text("whyItMatters").notNull(),
+  /** AI reasoning for this proposal */
+  reasoning: text("reasoning").notNull(),
+  /** Current status in the governance pipeline */
+  status: mysqlEnum("status", ["proposed", "approved", "rejected", "executed", "failed", "expired"]).notNull().default("proposed"),
+  /** Notion page ID — links to the Decision Log row */
+  notionPageId: varchar("notionPageId", { length: 64 }),
+  /** Receipt ID — set after execution, links to the Gateway receipt */
+  receiptId: varchar("receiptId", { length: 64 }),
+  /** Intent ID — set when proposal is approved and converted to an intent */
+  intentId: varchar("intentId", { length: 64 }),
+  /** Aftermath — three-layer outcome tracking (auto, inferred, human) */
+  aftermath: json("aftermath").$type<{
+    automatic?: {
+      type: "automatic";
+      signal: string;
+      latency_days: number | null;
+      timestamp: string;
+    };
+    inferred?: {
+      type: "inferred";
+      signal: string;
+      confidence: number;
+      reasoning: string;
+    };
+    human?: {
+      type: "human";
+      result: "worked" | "did_not_work" | "no_response" | "unknown";
+      note: string | null;
+      timestamp: string;
+    };
+  }>(),
+  /** Who created this proposal (principal ID or agent name) */
+  createdBy: varchar("createdBy", { length: 64 }).notNull().default("system"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type ProposalPacket = typeof proposalPackets.$inferSelect;
+export type InsertProposalPacket = typeof proposalPackets.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2E — TRUST POLICIES
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Trust policies — define delegation rules per category + risk_tier.
+ * Trust levels:
+ *   0 = Propose Only (human must approve all)
+ *   1 = Safe Internal Actions (auto-approve LOW-risk internal, no external impact)
+ *   2 = Bounded Autonomy (auto-approve LOW-risk external within policy limits)
+ *
+ * Creating, updating, or deleting a trust policy is itself a governed action
+ * that requires approval and generates a receipt.
+ */
+export const trustPolicies = mysqlTable("trust_policies", {
+  id: int("id").autoincrement().primaryKey(),
+  policyId: varchar("policyId", { length: 64 }).notNull().unique(),
+  /** Category this policy applies to (e.g., "outreach", "internal_task", "financial") */
+  category: varchar("category", { length: 128 }).notNull(),
+  /** Risk tier this policy applies to */
+  riskTier: mysqlEnum("riskTier", ["LOW", "MEDIUM", "HIGH"]).notNull(),
+  /** Trust level: 0 = propose only, 1 = safe internal, 2 = bounded autonomy */
+  trustLevel: int("trustLevel").notNull().default(0),
+  /** Additional conditions for this policy (optional constraints) */
+  conditions: json("conditions").$type<{
+    max_amount?: number;
+    allowed_targets?: string[];
+    time_window?: string;
+    max_daily_count?: number;
+  }>(),
+  /** Whether this policy is currently active */
+  active: boolean("active").notNull().default(true),
+  /** Receipt ID from the governed action that created/modified this policy */
+  governanceReceiptId: varchar("governanceReceiptId", { length: 64 }),
+  /** User who owns this policy */
+  userId: int("userId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type TrustPolicy = typeof trustPolicies.$inferSelect;
+export type InsertTrustPolicy = typeof trustPolicies.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════
+// SENTINEL EVENTS
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Sentinel events — observational layer that detects drift, anomalies,
+ * invariant violations, and contrasts. Sentinel NEVER executes or approves.
+ */
+export const sentinelEvents = mysqlTable("sentinel_events", {
+  id: int("id").autoincrement().primaryKey(),
+  eventId: varchar("eventId", { length: 64 }).notNull().unique(),
+  /** Event type classification */
+  type: mysqlEnum("type", ["contrast", "invariant_violation", "trace_break", "anomaly", "system_correction"]).notNull(),
+  /** Severity level */
+  severity: mysqlEnum("severity", ["INFO", "WARN", "CRITICAL"]).notNull(),
+  /** What this event is about (e.g., 'approval_rate_variance') */
+  subject: varchar("subject", { length: 256 }).notNull(),
+  /** Baseline value (what was expected) */
+  baseline: json("baseline").$type<unknown>(),
+  /** Observed value (what actually happened) */
+  observed: json("observed").$type<unknown>(),
+  /** Delta between baseline and observed */
+  delta: json("delta").$type<unknown>(),
+  /** Additional context */
+  context: json("context").$type<Record<string, unknown>>(),
+  /** Related proposal ID (if applicable) */
+  proposalId: varchar("proposalId", { length: 64 }),
+  /** Whether this event has been acknowledged by the human */
+  acknowledged: boolean("acknowledged").notNull().default(false),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type SentinelEvent = typeof sentinelEvents.$inferSelect;
+export type InsertSentinelEvent = typeof sentinelEvents.$inferInsert;

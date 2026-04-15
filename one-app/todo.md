@@ -2301,3 +2301,52 @@
 - [x] Financial actions always require different approver
 - [x] Financial actions not learning-eligible
 - [x] Matrix integrity verified via SHA-256 hash on every evaluation
+
+## Phase 1: Notion Operational Surface (Build Directive Apr 14)
+
+- [x] Step 1: Create RIO DECISION LOG database in Notion with all 14 properties
+- [x] Step 2: Build Notion integration module (notionDecisionLog.ts) — create row, update row, poll for changes
+- [x] Step 3: Wire gateway governed intent evaluation → Notion row creation (Status=Pending, Approval State=Unsigned)
+- [x] Step 4: Build signer confirmation UI page (outside Notion) — shows intent summary, hash, policy version, produces Ed25519 signed payload
+- [x] Step 5: Wire signer payload into existing /authorize endpoint path
+- [x] Step 6: After execution + receipt, update Notion row (Status=Executed, Receipt Link)
+- [x] Step 7: On failure/denial, update Notion row (Status=Failed/Denied)
+- [x] Step 8: Notion approval watcher — detect Status=Approved + Approval State=Unsigned, trigger signer flow
+- [x] Step 9: Write tests for Notion integration and signer flow (59 tests passing: 48 structural + 7 integration + 4 connection)
+- [x] Step 10: Invariant enforcement — Notion status change alone NEVER triggers execution (requires Ed25519 signature via /notion-signer)
+
+## Phase 2A: Outreach Loop (Foundation & Revenue)
+- [x] DB: Create proposal_packets table (id, type, category, risk_tier, risk_factors, baseline_pattern, proposal JSON, why_it_matters, reasoning, status, notion_page_id, receipt_id, aftermath JSON, created_at, updated_at)
+- [ ] Notion: Add new fields to Decision Log (type, category, visible, rank, aftermath_auto, aftermath_inferred, aftermath_human, aftermath_note)
+- [x] Server: proposalPackets.ts module — create, list, get, update proposal packets in DB (helpers in db.ts)
+- [x] Server: proposalGenerator.ts — research-to-proposal transform using LLM (structured output matching packet schema)
+- [x] Server: notionProposalWriter.ts — write proposal packets to Notion Decision Log as Proposed rows
+- [x] Router: proposal.create — generate proposal packet from research input, write to DB + Notion
+- [x] Router: proposal.list — list proposals with filters (status, type, risk_tier, visible)
+- [x] Router: proposal.approve — approve proposal, trigger /authorize + execute via existing gateway flow
+- [x] Router: proposal.reject — reject proposal, update DB + Notion status
+- [ ] Router: proposal.getById — get single proposal with full details
+- [ ] Follow-up: proposalFollowUp.ts — detect outcomes, generate follow-up proposals (surfaces in Notion, NEVER auto-queues)
+- [x] Invariant: No proposal auto-queues for approval — all surface in Notion for human decision — tested
+- [x] Invariant: All execution routes through existing /authorize endpoint — tested
+
+## Phase 2E: Trust Levels (Automation & Bottleneck Reduction)
+- [x] DB: Create trust_policies table (id, category, risk_tier, trust_level 0|1|2, conditions JSON, active, created_at, updated_at)
+- [x] DB: Add approval_type and trust_policy_id fields to ledger entries for delegated approvals (via new DELEGATED_AUTO_APPROVE entry type + sentinel_events table)
+- [x] Server: trustEvaluation.ts — evaluate trust policies against proposal category + risk_tier
+- [x] Router: trust.create — create trust policy (governed action, logged to ledger)
+- [x] Router: trust.list — list active trust policies
+- [x] Router: trust.update — update trust policy (governed action, logged to ledger)
+- [x] Router: trust.delete — deactivate trust policy (governed action, logged to ledger)
+- [x] Gateway: Wire trust evaluation into /authorize path — trust.evaluate + trust.autoApprove mutations handle full flow
+- [x] Receipts: Delegated auto-approvals generate receipt with decision_type=delegated_auto_approve, policy_invoked, trust_level_applied, contrast flags
+- [x] Sentinel: Contrast detection — flag approval_rate_variance, velocity_variance when delegated approvals deviate from baseline
+- [x] Invariant: Use EXISTING /authorize endpoint only — trust.autoApprove routes through existing pipeline
+- [x] Invariant: Anomalies always surface for human approval (never auto-approved) — tested
+
+## Phase 2A+2E: Tests
+- [x] Tests: Proposal packet creation and Notion write (20 tests passing)
+- [x] Tests: Trust policy evaluation logic
+- [x] Tests: Delegated auto-approval receipt generation
+- [x] Tests: Anomaly detection blocks auto-approval
+- [x] Tests: No auto-queueing invariant enforcement

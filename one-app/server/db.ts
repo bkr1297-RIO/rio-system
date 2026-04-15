@@ -1,6 +1,6 @@
 import { eq, desc, and, sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users, proxyUsers, toolRegistry, intents, approvals, executions, ledger, keyBackups, conversations, learningEvents, nodeConfigs, systemComponents, policyRules, notifications, principals, type SystemRole, SYSTEM_ROLES, emailFirewallConfig, type EmailFirewallConfig, type InsertEmailFirewallConfig, pendingEmailApprovals } from "../drizzle/schema";
+import { InsertUser, users, proxyUsers, toolRegistry, intents, approvals, executions, ledger, keyBackups, conversations, learningEvents, nodeConfigs, systemComponents, policyRules, notifications, principals, type SystemRole, SYSTEM_ROLES, emailFirewallConfig, type EmailFirewallConfig, type InsertEmailFirewallConfig, pendingEmailApprovals, proposalPackets, type InsertProposalPacket, trustPolicies, type InsertTrustPolicy, sentinelEvents, type InsertSentinelEvent } from "../drizzle/schema";
 import { ENV } from './_core/env';
 import { nanoid } from "nanoid";
 import { createHash } from "crypto";
@@ -84,7 +84,7 @@ export async function getLastLedgerEntry() {
   return rows[0] ?? null;
 }
 
-export async function appendLedger(entryType: "ONBOARD" | "INTENT" | "APPROVAL" | "EXECUTION" | "KILL" | "SYNC" | "JORDAN_CHAT" | "BONDI_CHAT" | "LEARNING" | "ARCHITECTURE_STATE" | "RE_KEY" | "REVOKE" | "RE_KEY_AUTHORIZED" | "RE_KEY_FORCED" | "TELEGRAM_NOTIFY" | "POLICY_UPDATE" | "NOTIFICATION" | "GENESIS" | "AUTHORITY_TOKEN" | "EMAIL_DELIVERY" | "COHERENCE_CHECK" | "FIREWALL_SCAN" | "ACTION_COMPLETE" | "DELEGATION_BLOCKED" | "DELEGATION_APPROVED" | "SUBSTRATE_BLOCK", payload: Record<string, unknown>) {
+export async function appendLedger(entryType: "ONBOARD" | "INTENT" | "APPROVAL" | "EXECUTION" | "KILL" | "SYNC" | "JORDAN_CHAT" | "BONDI_CHAT" | "LEARNING" | "ARCHITECTURE_STATE" | "RE_KEY" | "REVOKE" | "RE_KEY_AUTHORIZED" | "RE_KEY_FORCED" | "TELEGRAM_NOTIFY" | "POLICY_UPDATE" | "NOTIFICATION" | "GENESIS" | "AUTHORITY_TOKEN" | "EMAIL_DELIVERY" | "COHERENCE_CHECK" | "FIREWALL_SCAN" | "ACTION_COMPLETE" | "DELEGATION_BLOCKED" | "DELEGATION_APPROVED" | "SUBSTRATE_BLOCK" | "NOTION_DENIAL" | "NOTION_EXECUTION" | "NOTION_ROW_CREATED" | "PROPOSAL_CREATED" | "PROPOSAL_APPROVED" | "PROPOSAL_REJECTED" | "PROPOSAL_EXECUTED" | "TRUST_POLICY_CREATED" | "TRUST_POLICY_UPDATED" | "TRUST_POLICY_DELETED" | "DELEGATED_AUTO_APPROVE" | "SENTINEL_EVENT", payload: Record<string, unknown>) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   const last = await getLastLedgerEntry();
@@ -1002,4 +1002,179 @@ export async function getLearningStats(actionSignature: string): Promise<{
     blockedCount,
     avgRiskScore,
   };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2A — PROPOSAL PACKET HELPERS
+// ═══════════════════════════════════════════════════════════════════
+
+export async function createProposalPacket(data: Omit<InsertProposalPacket, "id" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(proposalPackets).values(data);
+  const rows = await db.select().from(proposalPackets).where(eq(proposalPackets.proposalId, data.proposalId)).limit(1);
+  return rows[0];
+}
+
+export async function getProposalPacket(proposalId: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(proposalPackets).where(eq(proposalPackets.proposalId, proposalId)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function listProposalPackets(filters?: {
+  status?: string;
+  type?: string;
+  riskTier?: string;
+  limit?: number;
+}) {
+  const db = await getDb();
+  if (!db) return [];
+  const conditions = [];
+  if (filters?.status) conditions.push(eq(proposalPackets.status, filters.status as any));
+  if (filters?.type) conditions.push(eq(proposalPackets.type, filters.type as any));
+  if (filters?.riskTier) conditions.push(eq(proposalPackets.riskTier, filters.riskTier as any));
+  const query = conditions.length > 0
+    ? db.select().from(proposalPackets).where(and(...conditions)).orderBy(desc(proposalPackets.id)).limit(filters?.limit ?? 50)
+    : db.select().from(proposalPackets).orderBy(desc(proposalPackets.id)).limit(filters?.limit ?? 50);
+  return query;
+}
+
+export async function updateProposalPacketStatus(proposalId: string, status: "proposed" | "approved" | "rejected" | "executed" | "failed" | "expired", extra?: { receiptId?: string; intentId?: string; notionPageId?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  const updateData: Record<string, unknown> = { status };
+  if (extra?.receiptId) updateData.receiptId = extra.receiptId;
+  if (extra?.intentId) updateData.intentId = extra.intentId;
+  if (extra?.notionPageId) updateData.notionPageId = extra.notionPageId;
+  await db.update(proposalPackets).set(updateData).where(eq(proposalPackets.proposalId, proposalId));
+}
+
+export async function updateProposalAftermath(proposalId: string, aftermath: Record<string, unknown>) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(proposalPackets).set({ aftermath: aftermath as any }).where(eq(proposalPackets.proposalId, proposalId));
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2E — TRUST POLICY HELPERS
+// ═══════════════════════════════════════════════════════════════════
+
+export async function createTrustPolicy(data: Omit<InsertTrustPolicy, "id" | "createdAt" | "updatedAt">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(trustPolicies).values(data);
+  const rows = await db.select().from(trustPolicies).where(eq(trustPolicies.policyId, data.policyId)).limit(1);
+  return rows[0];
+}
+
+export async function getTrustPolicy(policyId: string) {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(trustPolicies).where(eq(trustPolicies.policyId, policyId)).limit(1);
+  return rows[0] ?? null;
+}
+
+export async function listActiveTrustPolicies(userId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  return db.select().from(trustPolicies)
+    .where(and(eq(trustPolicies.userId, userId), eq(trustPolicies.active, true)))
+    .orderBy(desc(trustPolicies.id));
+}
+
+export async function findMatchingTrustPolicy(userId: number, category: string, riskTier: "LOW" | "MEDIUM" | "HIGH") {
+  const db = await getDb();
+  if (!db) return null;
+  const rows = await db.select().from(trustPolicies)
+    .where(and(
+      eq(trustPolicies.userId, userId),
+      eq(trustPolicies.category, category),
+      eq(trustPolicies.riskTier, riskTier as any),
+      eq(trustPolicies.active, true)
+    ))
+    .limit(1);
+  return rows[0] ?? null;
+}
+
+export async function updateTrustPolicy(policyId: string, updates: { trustLevel?: number; conditions?: Record<string, unknown>; active?: boolean; governanceReceiptId?: string }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(trustPolicies).set(updates as any).where(eq(trustPolicies.policyId, policyId));
+}
+
+export async function deactivateTrustPolicy(policyId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(trustPolicies).set({ active: false }).where(eq(trustPolicies.policyId, policyId));
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// SENTINEL EVENT HELPERS
+// ═══════════════════════════════════════════════════════════════════
+
+export async function createSentinelEvent(data: Omit<InsertSentinelEvent, "id" | "createdAt">) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.insert(sentinelEvents).values(data);
+  const rows = await db.select().from(sentinelEvents).where(eq(sentinelEvents.eventId, data.eventId)).limit(1);
+  return rows[0];
+}
+
+export async function listSentinelEvents(filters?: { type?: string; severity?: string; acknowledged?: boolean; limit?: number }) {
+  const db = await getDb();
+  if (!db) return [];
+  const conditions = [];
+  if (filters?.type) conditions.push(eq(sentinelEvents.type, filters.type as any));
+  if (filters?.severity) conditions.push(eq(sentinelEvents.severity, filters.severity as any));
+  if (filters?.acknowledged !== undefined) conditions.push(eq(sentinelEvents.acknowledged, filters.acknowledged));
+  const query = conditions.length > 0
+    ? db.select().from(sentinelEvents).where(and(...conditions)).orderBy(desc(sentinelEvents.id)).limit(filters?.limit ?? 50)
+    : db.select().from(sentinelEvents).orderBy(desc(sentinelEvents.id)).limit(filters?.limit ?? 50);
+  return query;
+}
+
+export async function acknowledgeSentinelEvent(eventId: string) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  await db.update(sentinelEvents).set({ acknowledged: true }).where(eq(sentinelEvents.eventId, eventId));
+}
+
+/**
+ * Get baseline pattern for a category — computes approval_rate_14d,
+ * avg_velocity_seconds, and edit_rate from recent proposal history.
+ */
+export async function getBaselinePattern(category: string) {
+  const db = await getDb();
+  if (!db) return { approval_rate_14d: 0, avg_velocity_seconds: 0, edit_rate: 0 };
+  
+  const fourteenDaysAgo = new Date(Date.now() - 14 * 24 * 60 * 60 * 1000);
+  const rows = await db.select().from(proposalPackets)
+    .where(and(
+      eq(proposalPackets.category, category),
+      sql`${proposalPackets.createdAt} >= ${fourteenDaysAgo}`
+    ));
+  
+  if (rows.length === 0) return { approval_rate_14d: 0, avg_velocity_seconds: 0, edit_rate: 0 };
+  
+  const approved = rows.filter(r => r.status === "approved" || r.status === "executed").length;
+  const approval_rate_14d = approved / rows.length;
+  
+  // Average velocity: time from creation to approval (in seconds)
+  const approvedRows = rows.filter(r => r.status !== "proposed" && r.status !== "expired");
+  const velocities = approvedRows.map(r => {
+    const created = new Date(r.createdAt).getTime();
+    const updated = new Date(r.updatedAt).getTime();
+    return Math.floor((updated - created) / 1000);
+  }).filter(v => v > 0);
+  const avg_velocity_seconds = velocities.length > 0
+    ? Math.round(velocities.reduce((a, b) => a + b, 0) / velocities.length)
+    : 0;
+  
+  // Edit rate: proposals that were rejected or had aftermath indicating edits
+  const edited = rows.filter(r => r.status === "rejected").length;
+  const edit_rate = edited / rows.length;
+  
+  return { approval_rate_14d, avg_velocity_seconds, edit_rate };
 }
