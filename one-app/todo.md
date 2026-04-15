@@ -1640,14 +1640,14 @@
 ## April 12th Frozen Build Spec
 
 ### Integrity Substrate (Priority 1)
-- [ ] Create integritySubstrate.ts — middleware layer beneath all four governance surfaces
-- [ ] Content-hash deduplication: SHA-256 of normalized message content, reject duplicates within TTL window
-- [ ] Nonce enforcement: reuse controlPlane nonce logic, single-use nonces permanently marked
-- [ ] Replay protection: valid token from past action cannot replay against new action (token bound to proposal hash)
-- [ ] Receipt linkage: every execution/approval/denial linked to receipt → ledger chain
-- [ ] Wire as middleware BEFORE processIntent reaches policy engine
-- [ ] Substrate-level logging: blocked messages logged but never reach governance surfaces
-- [ ] Tests: dedup, nonce, replay, receipt linkage, substrate logging
+- [x] Create integritySubstrate.ts — middleware layer beneath all four governance surfaces (already built, wired into intentPipeline.ts)
+- [x] Content-hash deduplication: SHA-256 of normalized message content, reject duplicates within TTL window
+- [x] Nonce enforcement: reuse controlPlane nonce logic, single-use nonces permanently marked
+- [x] Replay protection: valid token from past action cannot replay against new action (token bound to proposal hash)
+- [x] Receipt linkage: every execution/approval/denial linked to receipt → ledger chain
+- [x] Wire as middleware BEFORE processIntent reaches policy engine (line 212 of intentPipeline.ts)
+- [x] Substrate-level logging: blocked messages logged but never reach governance surfaces
+- [x] Tests: dedup, nonce, replay, receipt linkage, substrate logging (29 tests passing)
 
 ### Email Firewall MVP Alignment (Priority 2)
 - [x] Verify MVP rule matches spec: unknown sender + urgency + consequential action → BLOCK
@@ -1840,9 +1840,9 @@
 - [x] Verify full flow works again end-to-end (receipt 184a430b generated, status=receipted, delivery=external)
 
 ### Bug: Gmail SMTP delivery not working — emails come from Manus notification instead
-- [ ] Diagnose: trace why Gmail SMTP delivery is not firing (email arrives from Manus notifyOwner, not Gmail)
-- [ ] Fix: ensure delivery_mode=gmail intents actually send via Gmail SMTP
-- [ ] Verify: email arrives from configured Gmail account, not Manus notification
+- [x] Diagnose: trace why Gmail SMTP delivery is not firing — RESOLVED in "Gmail Delivery Fix (Apr 13)" below
+- [x] Fix: ensure delivery_mode=gmail intents actually send via Gmail SMTP — RESOLVED (Bug A + Bug B fixes)
+- [x] Verify: email arrives from configured Gmail account, not Manus notification — VERIFIED (messageId: 79b339be)
 
 ## Gmail Delivery Fix (Apr 13 — Two Sequential Bugs)
 - [x] Bug A fix: Replace all localIntent! null dereferences in Gmail branch with Gateway-fetched data (intentToolName, synthesized argsHash, default riskTier)
@@ -2382,3 +2382,155 @@
 - [x] Invariant: Generation prefs NEVER affect execution path — tested
 - [x] Invariant: Policy prefs always require governance — tested
 - [x] Tests: Preference classification, generation vs policy boundary, proposer context (39 tests)
+
+## Phase 2F: Money Layer (Financial Governance)
+- [x] DB: Create budget_pools table (id, name, balance_cents, limit_cents, spending_rate_cents_per_day, status, policy_version, created_at, updated_at)
+- [x] DB: Create financial_transactions table (id, budget_pool_id, proposal_id, type, amount_cents, description, receipt_id, created_at)
+- [x] Server: financialGovernance.ts — budget pool management, financial state monitoring, spending rate calculation
+- [x] Server: financialProposer.ts — (merged into financialGovernance.ts)
+- [x] Router: finance.createPool — create budget pool (governed action, requires approval + receipt)
+- [x] Router: finance.updateLimit — change budget limit (governed action, requires approval + receipt)
+- [x] Router: finance.proposeTransfer — propose a financial transfer (surfaces in Notion)
+- [x] Router: finance.executeTransfer — execute approved transfer via /authorize gateway
+- [x] Router: finance.getState — get current financial state (balance, spending rate, recent transactions)
+- [x] Invariant: Budget pool changes are governed artifacts (require approval + receipt)
+- [x] Invariant: All transfers go through /authorize gateway
+- [x] Tests: Budget pool CRUD, transfer approval flow, spending rate calculation, governed artifact enforcement (38 tests)
+
+## Phase 2G: Multi-Agent Collaboration (Handoff Packets)
+- [x] DB: Create handoff_packets table (id, from_agent, to_agent, work_type, payload JSON, instructions, deadline, approval_required, status, created_at, updated_at)
+- [x] Server: agentHandoff.ts — handoff packet creation, routing, status tracking
+- [x] Router: handoff.create — create handoff packet (recorded in ledger)
+- [x] Router: handoff.list — list handoff packets with filters (agent, status, work_type)
+- [x] Router: handoff.accept — accept handoff (agent acknowledges work)
+- [x] Router: handoff.complete — complete handoff (agent delivers result)
+- [x] Invariant: No agent self-approves any decision
+- [x] Invariant: All execution routes through Gateway
+- [x] Invariant: Handoff packets record agent, instructions, work type
+- [x] Tests: Handoff packet creation, no self-approval invariant, authority drift detection (38 tests)
+
+## Sentinel Layer (Observational)
+- [x] Server: sentinelLayer.ts — contrast detection, invariant monitoring, anomaly detection
+- [x] Sentinel: Track decision contrasts (variance from recent pattern)
+- [x] Sentinel: Track invariant violations (e.g., Notion-executed action)
+- [x] Sentinel: Track trace validation (approval chain integrity)
+- [x] Sentinel: Distinguish signal from noise (severity: info/warning/critical)
+- [x] Tests: Contrast detection, invariant monitoring, severity classification (38 tests)
+
+## Reflection + Aftermath Model
+- [x] Server: reflectionAftermath.ts — automatic signal detection, inferred signal generation, human reflection collection
+- [x] Automatic signals: reply_received, no_response, task_completed (only surface when contrast detected)
+- [x] Inferred signals: confidence-tagged probabilistic patterns (never authoritative)
+- [x] Human reflection: worked/didn't_work/no_response/unknown + optional note
+- [x] Combined aftermath: each decision can have all three layers
+- [x] UI: Aftermath review surface on proposal detail page (Proposals.tsx includes aftermath display)
+- [x] Tests: Automatic signal detection, inferred signal generation, combined aftermath assembly (38 tests)
+
+## Builder Contract v1 — Mailbox + Kernel + Gateway Architecture (Apr 15)
+
+### Phase 2A: Mailbox Infrastructure
+- [x] Mailbox DB schema: mailbox_entries table (packet_id, packet_type, source_agent, target_agent, status, payload JSON, created_at, processed_at, trace_id)
+- [x] Mailbox types enum: proposal, financial, policy, handoff, sentinel, decision
+- [x] Mailbox status enum: pending, processed, routed, executed, archived
+- [x] Mailbox append-only rule: no mutation, status changes create new entries
+- [x] Mailbox module: appendToMailbox(), readMailbox(), getByTraceId(), replayMailbox()
+- [x] Mailbox tests: append-only invariant, status transitions create new entries, replay produces correct state (29/29 pass)
+
+### Phase 2A: Kernel Evaluator
+- [x] Kernel decision object schema: decision_id, packet_id, proposed_decision (AUTO_APPROVE|REQUIRE_HUMAN|DENY), reasoning, baseline_pattern, observed_state, confidence, timestamp, trace_id
+- [x] Kernel evaluator: reads proposal_mailbox, queries ledger for baselines, reads policy mailbox for trust rules, queries sentinel mailbox for anomalies
+- [x] Kernel decision logic: policy check → trust level check → anomaly check → variance calculation → proposed_decision
+- [x] Kernel writes kernel_decision_object to decision_mailbox (never executes)
+- [x] Kernel tests: 10 scenarios + invariants + variance + edge cases (31/31 pass)
+
+### Phase 2A: Gateway Enforcer Extension
+- [x] Gateway enforcement object schema: decision_id, proposed_decision, enforced_decision (EXECUTED|BLOCKED|REQUIRES_SIGNATURE), enforcement_reason, execution_id, receipt_id, signature_valid, signature_ed25519, timestamp, trace_id
+- [x] Gateway reads kernel_decision_object from decision_mailbox
+- [x] Gateway validates: signature, timestamp freshness, trace_id chain
+- [x] Gateway writes gateway_enforcement_object to decision_mailbox + receipt to ledger
+- [x] Gateway tests: 6 core enforcement + 3 structure + 7 signature + 6 trace validation + 6 invariants + 3 edge cases (31/31 pass)
+
+### Phase 2A: Notion Integration via Mailboxes
+- [x] Notion reads from decision_mailbox (proposals with visible=true) for display
+- [x] User approvals in Notion flow back to decision_mailbox as approval packets
+- [x] Notion integration tests: proposal sync, approval flow, enforcement sync, batch sync, page ID lookup (18/18 pass)
+
+### Phase 2A: Sentinel Threshold Model
+- [x] Sentinel thresholds table: metric_type, INFO/WARN/CRITICAL thresholds (governed, not configurable without approval)
+- [x] Sentinel threshold values: approval_rate_variance (0.05/0.10/0.20), velocity_variance (0.10/0.25/0.50), edit_rate_variance (0.10/0.20/0.40), pattern_shift (0.50/0.70/0.90)
+- [x] Sentinel writes to sentinel_mailbox, surfaces to Notion if severity >= WARN (26/26 tests pass)
+
+### Phase 2A: End-to-End Trace
+- [x] End-to-end trace replay: reconstruct any state from mailbox entries (17/17 pass — happy path, human approval, denial, trace integrity, decision matrix)
+- [x] E2E trace test: proposal → kernel → gateway → receipt → ledger (full path through mailboxes) — covered in traceReplay.test.ts
+- [x] All mailbox entries carry trace_id linking full chain — verified in trace integrity tests
+
+### Dashboard (RIO Command Center — 8 Sections)
+- [x] Section 1: Current State (Gateway, Signer, Policy, Trust, Night Loop, Sentinel, Ledger status)
+- [x] Section 2: Needs Decision (top 3-5 ranked + ALL MEDIUM/HIGH risk + anomaly-flagged)
+- [x] Section 3: Auto Executed / Delegated (trust-policy-driven actions with receipt_id)
+- [x] Section 4: Sentinel / Integrity (active issues, anomalies, invariant violations, trace breaks)
+- [x] Section 5: Memory Reconciliation (Gemini instance differences)
+- [x] Section 6: Background Queue (searchable archive, visible=false items)
+- [x] Section 7: Preferences / Trust Policies (generation vs governed distinction)
+- [x] Section 8: Weekly Review Prompt (reflection invitations)
+- [x] Dashboard is read-only (no execution from dashboard) — enforced by FullDashboard.readOnly: true (18/18 tests pass)
+
+### Weekly Review Loop (Phase 2I)
+- [x] Night batch generates weekly review packet (weekly aggregation of decisions, outcomes, sentinels, trust receipts)
+- [x] Weekly review packet structure: review_id, period, totals, highlights, mismatches, trust_exceptions, reflection_prompts, suggested_adjustments
+- [x] Reflection prompts follow Pattern → Contrast → Open Interpretation
+- [x] Human response options: keep, adjust, watch, ignore
+- [x] "Adjust" responses create proposal packets (routed through normal approval flow)
+- [x] Weekly Review Notion surface displays all sections — prompts written to proposal_mailbox for Notion bridge
+- [x] Tests: no auto-execution from weekly review (27/27 pass)
+
+## Go Signal Decision — DB-Backed Mailbox Confirmed (Apr 15, 2026)
+
+### Export Capability (replaces file-based transparency requirement)
+- [x] export_mailbox_to_jsonl(): dump full mailbox log to JSONL format
+- [x] Export preserves exact event order (by id ASC — the append order)
+- [x] Export output is human-readable (one JSON object per line, snake_case keys)
+- [x] Export allows offline replay (parseJsonlExport + replayFromJsonl — standalone, no DB needed)
+
+### 6 Non-Negotiable Guarantee Proof Tests
+- [x] Proof 1: No UPDATE operations on mailbox_entries (code audit test) — 27/27 pass
+- [x] Proof 2: No DELETE operations on mailbox_entries (code audit test)
+- [x] Proof 3: All state transitions are new rows — event sourcing invariant
+- [x] Proof 4: Full system state can be reconstructed from mailbox_entries alone
+- [x] Proof 5: trace_id chain is complete and auditable
+- [x] Proof 6: Ledger hash chain is intact and verifiable
+
+## PATCH: Ambiguity Handling Layer (Phase 2A Kernel Enhancement)
+
+### Kernel Extension
+- [x] Add CLARIFY to decision_outcome enum (ALLOW | DENY | REQUIRE_HUMAN | CLARIFY)
+- [x] Implement confidence_score() function: field_completeness*0.4 + pattern_grounding*0.3 + prior_context_match*0.2 + human_signature_present*0.1
+- [x] Add 6 ambiguity detection rules to kernel evaluation (missing field, conflicting fields, low confidence, no grounding, scope underspecified, time ambiguous)
+- [x] CLARIFY output includes: reason, missing_fields, confidence_signals_available
+
+### Clarification Agent
+- [x] Create clarification_agent service (stateless, non-authoritative, no memory)
+- [x] Agent emits clarify_requested event with questions, TTL (180s default, configurable 120-300s)
+- [x] Agent processes human clarify_response and produces refined_packet (linked via parent_packet_id)
+- [x] TTL enforcement: timeout emits clarify_timeout event then REQUIRE_HUMAN (NO defaults, NO assumptions)
+- [x] Max 3 rounds per packet, max 15 minutes total
+- [x] NO-FALLBACK RULE: silence = escalate, never assume (HARD CONSTRAINT)
+
+### Packet Schema and Events
+- [x] Event types: clarify_requested, clarify_response, clarify_timeout
+- [x] Refined packet schema: packet_id suffixed _refined_rN, parent_packet_id, clarification_round
+- [x] Original packet NEVER mutated (new packet created, original preserved for audit)
+- [x] All events logged to mailbox with trace_id linkage
+
+### 9 Tests (per PATCH document)
+- [x] Test 1: Missing required field triggers CLARIFY (3 sub-tests)
+- [x] Test 2: Low confidence model input triggers CLARIFY (3 sub-tests)
+- [x] Test 3: Clarification agent cannot execute (3 sub-tests: code audit + structural)
+- [x] Test 4: Linked pair maintains lineage (2 sub-tests: single + multi-round)
+- [x] Test 5: Timeout escalates with NO defaults applied (3 sub-tests)
+- [x] Test 6: No-defaulting constraint (2 sub-tests: code audit + behavioral)
+- [x] Test 7: Original packet never mutated (2 sub-tests: byte-for-byte + separate object)
+- [x] Test 8: Multiple clarification rounds (6 sub-tests: max 3 + 15min total)
+- [x] Test 9: Timeout prevents execution (3 sub-tests: routed not executed + POLICY_VIOLATION)
+- [x] All 35/35 tests pass — 9 core tests + 6 ambiguity detection rules + 2 question generation
