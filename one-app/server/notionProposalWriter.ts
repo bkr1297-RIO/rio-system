@@ -78,8 +78,17 @@ export async function writeProposalToNotion(proposal: ProposalForNotion): Promis
     "Proposer": {
       rich_text: [{ text: { content: "system" } }]
     },
-    "Created At": {
-      date: { start: new Date().toISOString() }
+    "Type": {
+      select: { name: proposal.type as string }
+    },
+    "Category": {
+      rich_text: [{ text: { content: proposal.category } }]
+    },
+    "Visible": {
+      checkbox: true
+    },
+    "Rank": {
+      number: 3 // Default mid-priority; ranking algorithm will adjust
     }
   };
 
@@ -364,17 +373,25 @@ export async function updateNotionProposalAftermath(
     "Updated At": { date: { start: new Date().toISOString() } }
   };
 
-  // These fields may not exist yet in Notion — they'll be added in Phase 2C/2D
-  // For now, we write what we can to the Gateway Decision field as a fallback
-  if (aftermath.automatic || aftermath.inferred || aftermath.human) {
-    const parts: string[] = [];
-    if (aftermath.automatic) parts.push(`Auto: ${aftermath.automatic}`);
-    if (aftermath.inferred) parts.push(`Inferred: ${aftermath.inferred}`);
-    if (aftermath.human) parts.push(`Human: ${aftermath.human}`);
-    if (aftermath.note) parts.push(`Note: ${aftermath.note}`);
-    
-    properties["Gateway Decision"] = {
-      rich_text: [{ text: { content: parts.join(" | ").slice(0, 200) } }]
+  // Write to dedicated aftermath fields in Notion Decision Log
+  if (aftermath.automatic) {
+    properties["Aftermath Auto"] = {
+      rich_text: [{ text: { content: aftermath.automatic.slice(0, 2000) } }]
+    };
+  }
+  if (aftermath.inferred) {
+    properties["Aftermath Inferred"] = {
+      rich_text: [{ text: { content: aftermath.inferred.slice(0, 2000) } }]
+    };
+  }
+  if (aftermath.human) {
+    properties["Aftermath Human"] = {
+      select: { name: aftermath.human }
+    };
+  }
+  if (aftermath.note) {
+    properties["Aftermath Note"] = {
+      rich_text: [{ text: { content: aftermath.note.slice(0, 2000) } }]
     };
   }
 
