@@ -116,6 +116,9 @@ import { storeGovernedReceipt } from "./firewallGovernance";
 import { createProposalFromResearch, generateProposalFromResearch, saveProposalToDb } from "./proposalGenerator";
 import { writeProposalToNotion, updateNotionProposalExecuted, updateNotionProposalFailed, updateNotionProposalApproved, updateNotionProposalDelegated } from "./notionProposalWriter";
 import { evaluateTrustPolicy, buildDelegatedReceipt } from "./trustEvaluation";
+import { rerankProposals, getVisibleProposals, onProposalResolved, getMaxVisible } from "./flowControl";
+import { detectFollowUpCandidates, runNightBatch, isNightBatchWindow } from "./dailyLoop";
+import { getAllGenerationPrefs, getGenerationPref, setGenerationPref, getAllPolicyPrefs, classifyPreferenceChange, getProposerContext, isGenerationPreference } from "./preferenceLayer";
 import { checkDelegation, formatCooldownMessage, type RoleSeparation, type DelegationCheck } from "./constrainedDelegation";
 import {
   createDecisionRow, updateDecisionRow, getDecisionRow,
@@ -4656,6 +4659,98 @@ If unclear, ask a clarifying question.`;
       });
 
       return { success: true };
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // PHASE 2C — FLOW CONTROL
+  // ═══════════════════════════════════════════════════════════════
+  flowControl: router({
+    /** Rerank all proposals and return the new visible set */
+    rerank: protectedProcedure.mutation(async () => {
+      const ranked = await rerankProposals();
+      return { ranked, maxVisible: getMaxVisible() };
+    }),
+
+    /** Get the current visible proposals (top 5) */
+    visible: protectedProcedure.query(async () => {
+      const proposals = await getVisibleProposals();
+      return { proposals, maxVisible: getMaxVisible() };
+    }),
+
+    /** Mark a proposal as resolved and promote the next one */
+    resolve: protectedProcedure.input(z.object({
+      proposalId: z.string().min(1),
+    })).mutation(async ({ input }) => {
+      await onProposalResolved(input.proposalId);
+      return { success: true };
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // PHASE 2B — DAILY LOOP
+  // ═══════════════════════════════════════════════════════════════
+  dailyLoop: router({
+    /** Detect follow-up candidates from recent executions */
+    candidates: protectedProcedure.input(z.object({
+      lookbackDays: z.number().min(1).max(30).optional(),
+    }).optional()).query(async ({ input }) => {
+      const candidates = await detectFollowUpCandidates(input?.lookbackDays);
+      return { candidates, count: candidates.length };
+    }),
+
+    /** Run the nightly batch (manual trigger for testing) */
+    runBatch: protectedProcedure.mutation(async ({ ctx }) => {
+      const result = await runNightBatch(ctx.user?.name || "manual_trigger");
+      return result;
+    }),
+
+    /** Check if we're in the night batch window */
+    isNightWindow: publicProcedure.query(() => {
+      return { isNightWindow: isNightBatchWindow(), currentHourUTC: new Date().getUTCHours() };
+    }),
+  }),
+
+  // ═══════════════════════════════════════════════════════════════
+  // PHASE 2D — PREFERENCE LAYER
+  // ═══════════════════════════════════════════════════════════════
+  preferences: router({
+    /** Get all generation preferences (NOT governed) */
+    generationPrefs: protectedProcedure.query(() => {
+      return { prefs: getAllGenerationPrefs() };
+    }),
+
+    /** Update a generation preference (NOT governed — no receipt needed) */
+    setGenerationPref: protectedProcedure.input(z.object({
+      key: z.string().min(1),
+      value: z.string().min(1),
+    })).mutation(({ input }) => {
+      // Enforce: only generation prefs can be changed without governance
+      if (!isGenerationPreference(input.key)) {
+        throw new TRPCError({
+          code: "FORBIDDEN",
+          message: `"${input.key}" is a policy preference — changing it requires governance approval`,
+        });
+      }
+      setGenerationPref(input.key, input.value);
+      return { success: true, key: input.key, value: input.value };
+    }),
+
+    /** Get all policy preferences (governed — read-only here) */
+    policyPrefs: protectedProcedure.query(async () => {
+      return { prefs: await getAllPolicyPrefs() };
+    }),
+
+    /** Classify a preference change request */
+    classify: protectedProcedure.input(z.object({
+      key: z.string().min(1),
+    })).query(({ input }) => {
+      return classifyPreferenceChange(input.key);
+    }),
+
+    /** Get the proposer context (generation prefs formatted for LLM) */
+    proposerContext: protectedProcedure.query(() => {
+      return { context: getProposerContext() };
     }),
   }),
 });

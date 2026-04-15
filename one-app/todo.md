@@ -2317,7 +2317,7 @@
 
 ## Phase 2A: Outreach Loop (Foundation & Revenue)
 - [x] DB: Create proposal_packets table (id, type, category, risk_tier, risk_factors, baseline_pattern, proposal JSON, why_it_matters, reasoning, status, notion_page_id, receipt_id, aftermath JSON, created_at, updated_at)
-- [ ] Notion: Add new fields to Decision Log (type, category, visible, rank, aftermath_auto, aftermath_inferred, aftermath_human, aftermath_note)
+- [x] Notion: Add new fields to Decision Log (type, category, visible, rank, aftermath_auto, aftermath_inferred, aftermath_human, aftermath_note)
 - [x] Server: proposalPackets.ts module — create, list, get, update proposal packets in DB (helpers in db.ts)
 - [x] Server: proposalGenerator.ts — research-to-proposal transform using LLM (structured output matching packet schema)
 - [x] Server: notionProposalWriter.ts — write proposal packets to Notion Decision Log as Proposed rows
@@ -2325,8 +2325,8 @@
 - [x] Router: proposal.list — list proposals with filters (status, type, risk_tier, visible)
 - [x] Router: proposal.approve — approve proposal, trigger /authorize + execute via existing gateway flow
 - [x] Router: proposal.reject — reject proposal, update DB + Notion status
-- [ ] Router: proposal.getById — get single proposal with full details
-- [ ] Follow-up: proposalFollowUp.ts — detect outcomes, generate follow-up proposals (surfaces in Notion, NEVER auto-queues)
+- [x] Router: proposal.getById — get single proposal with full details (proposal.get in router)
+- [x] Follow-up: dailyLoop.ts — detect outcomes, generate follow-up proposals (surfaces in Notion, NEVER auto-queues)
 - [x] Invariant: No proposal auto-queues for approval — all surface in Notion for human decision — tested
 - [x] Invariant: All execution routes through existing /authorize endpoint — tested
 
@@ -2350,3 +2350,35 @@
 - [x] Tests: Delegated auto-approval receipt generation
 - [x] Tests: Anomaly detection blocks auto-approval
 - [x] Tests: No auto-queueing invariant enforcement
+
+## Phase 2C: Flow Control (Ranking & Visibility)
+- [x] DB: Add visible (boolean) and rank (int) columns to proposal_packets
+- [x] Server: flowControl.ts — scoring algorithm (risk weight + recency + type diversity), max 5 visible items
+- [x] Server: rerankProposals() — rerank all pending proposals and update visible/rank fields
+- [x] Router: flowControl.rerank — trigger rerank, returns new visible set
+- [x] Router: flowControl.getVisible — get current visible proposals (max 5)
+- [x] Invariant: Max 5 visible items at any time
+- [x] Tests: Scoring algorithm, max visible enforcement, risk weight ordering, recency bonus (39 tests)
+
+## Phase 2B: Daily Loop (Night Batch Proposer)
+- [x] Server: dailyLoop.ts — night batch proposer, follow-up detection, no auto-queue
+- [x] Server: scanForFollowUpCandidates() — scan recent executed proposals for follow-up opportunities
+- [x] Server: generateFollowUpProposal() — create follow-up proposal from executed proposal context
+- [x] Server: runNightBatch() — orchestrate nightly scan + proposal generation
+- [x] Router: dailyLoop.runBatch — trigger nightly batch (protected, admin only)
+- [x] Router: dailyLoop.getSchedule — get batch schedule info
+- [x] Invariant: Night batch only creates proposals, NEVER executes them
+- [x] Tests: No auto-queue invariant, batch function structure (39 tests)
+
+## Phase 2D: Preference Layer (Generation vs Policy)
+- [x] Server: preferenceLayer.ts — generation prefs (config, NOT governed) vs policy prefs (governed)
+- [x] Server: DEFAULT_GENERATION_PREFS — tone, format, proposal_detail, outreach_style, follow_up_timing, research_depth
+- [x] Server: classifyPreferenceChange() — determines if a pref change is generation (free) or policy (governed)
+- [x] Server: isGenerationPreference() — boundary check for generation vs policy
+- [x] Server: getProposerContext() — assembles generation prefs for proposer LLM context
+- [x] Router: preferences.getAll — get all generation preferences
+- [x] Router: preferences.get — get single generation preference
+- [x] Router: preferences.set — update generation preference (no governance required)
+- [x] Invariant: Generation prefs NEVER affect execution path — tested
+- [x] Invariant: Policy prefs always require governance — tested
+- [x] Tests: Preference classification, generation vs policy boundary, proposer context (39 tests)

@@ -479,6 +479,10 @@ export const proposalPackets = mysqlTable("proposal_packets", {
       timestamp: string;
     };
   }>(),
+  /** Whether this proposal is visible in the attention surface (max 5) */
+  visible: boolean("visible").notNull().default(false),
+  /** Rank position (1=highest priority). Null if not ranked yet. */
+  rank: int("rank"),
   /** Who created this proposal (principal ID or agent name) */
   createdBy: varchar("createdBy", { length: 64 }).notNull().default("system"),
   createdAt: timestamp("createdAt").defaultNow().notNull(),
