@@ -1,0 +1,18 @@
+CREATE TABLE `mailbox_entries` (
+	`id` int AUTO_INCREMENT NOT NULL,
+	`packet_id` varchar(128) NOT NULL,
+	`mailbox_type` enum('proposal','financial','policy','handoff','sentinel','decision') NOT NULL,
+	`packet_type` varchar(128) NOT NULL,
+	`source_agent` varchar(128) NOT NULL,
+	`target_agent` varchar(128),
+	`status` enum('pending','processed','routed','executed','archived') NOT NULL DEFAULT 'pending',
+	`payload` json NOT NULL,
+	`trace_id` varchar(128) NOT NULL,
+	`parent_packet_id` varchar(128),
+	`created_at` timestamp NOT NULL DEFAULT (now()),
+	`processed_at` timestamp,
+	CONSTRAINT `mailbox_entries_id` PRIMARY KEY(`id`),
+	CONSTRAINT `mailbox_entries_packet_id_unique` UNIQUE(`packet_id`)
+);
+--> statement-breakpoint
+ALTER TABLE `ledger` MODIFY COLUMN `entryType` enum('ONBOARD','INTENT','APPROVAL','EXECUTION','KILL','SYNC','JORDAN_CHAT','BONDI_CHAT','LEARNING','ARCHITECTURE_STATE','RE_KEY','REVOKE','RE_KEY_AUTHORIZED','RE_KEY_FORCED','TELEGRAM_NOTIFY','POLICY_UPDATE','NOTIFICATION','GENESIS','AUTHORITY_TOKEN','EMAIL_DELIVERY','COHERENCE_CHECK','FIREWALL_SCAN','ACTION_COMPLETE','DELEGATION_BLOCKED','DELEGATION_APPROVED','SUBSTRATE_BLOCK','NOTION_DENIAL','NOTION_EXECUTION','NOTION_ROW_CREATED','PROPOSAL_CREATED','PROPOSAL_APPROVED','PROPOSAL_REJECTED','PROPOSAL_EXECUTED','TRUST_POLICY_CREATED','TRUST_POLICY_UPDATED','TRUST_POLICY_DELETED','DELEGATED_AUTO_APPROVE','SENTINEL_EVENT','BUDGET_POOL_CREATED','BUDGET_POOL_MODIFIED','FINANCIAL_TRANSFER','HANDOFF_CREATED','HANDOFF_COMPLETED','HANDOFF_REJECTED','PROPOSAL_FAILED','TRUST_POLICY_CHANGE') NOT NULL;
