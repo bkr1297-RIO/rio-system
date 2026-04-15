@@ -1,4 +1,4 @@
-import { int, bigint, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean } from "drizzle-orm/mysql-core";
+import { int, bigint, decimal, mysqlEnum, mysqlTable, text, timestamp, varchar, json, boolean } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -121,7 +121,7 @@ export type Execution = typeof executions.$inferSelect;
 export const ledger = mysqlTable("ledger", {
   id: int("id").autoincrement().primaryKey(),
   entryId: varchar("entryId", { length: 64 }).notNull().unique(),
-  entryType: mysqlEnum("entryType", ["ONBOARD", "INTENT", "APPROVAL", "EXECUTION", "KILL", "SYNC", "JORDAN_CHAT", "BONDI_CHAT", "LEARNING", "ARCHITECTURE_STATE", "RE_KEY", "REVOKE", "RE_KEY_AUTHORIZED", "RE_KEY_FORCED", "TELEGRAM_NOTIFY", "POLICY_UPDATE", "NOTIFICATION", "GENESIS", "AUTHORITY_TOKEN", "EMAIL_DELIVERY", "COHERENCE_CHECK", "FIREWALL_SCAN", "ACTION_COMPLETE", "DELEGATION_BLOCKED", "DELEGATION_APPROVED", "SUBSTRATE_BLOCK", "NOTION_DENIAL", "NOTION_EXECUTION", "NOTION_ROW_CREATED", "PROPOSAL_CREATED", "PROPOSAL_APPROVED", "PROPOSAL_REJECTED", "PROPOSAL_EXECUTED", "TRUST_POLICY_CREATED", "TRUST_POLICY_UPDATED", "TRUST_POLICY_DELETED", "DELEGATED_AUTO_APPROVE", "SENTINEL_EVENT"]).notNull(),
+  entryType: mysqlEnum("entryType", ["ONBOARD", "INTENT", "APPROVAL", "EXECUTION", "KILL", "SYNC", "JORDAN_CHAT", "BONDI_CHAT", "LEARNING", "ARCHITECTURE_STATE", "RE_KEY", "REVOKE", "RE_KEY_AUTHORIZED", "RE_KEY_FORCED", "TELEGRAM_NOTIFY", "POLICY_UPDATE", "NOTIFICATION", "GENESIS", "AUTHORITY_TOKEN", "EMAIL_DELIVERY", "COHERENCE_CHECK", "FIREWALL_SCAN", "ACTION_COMPLETE", "DELEGATION_BLOCKED", "DELEGATION_APPROVED", "SUBSTRATE_BLOCK", "NOTION_DENIAL", "NOTION_EXECUTION", "NOTION_ROW_CREATED", "PROPOSAL_CREATED", "PROPOSAL_APPROVED", "PROPOSAL_REJECTED", "PROPOSAL_EXECUTED", "TRUST_POLICY_CREATED", "TRUST_POLICY_UPDATED", "TRUST_POLICY_DELETED", "DELEGATED_AUTO_APPROVE", "SENTINEL_EVENT", "BUDGET_POOL_CREATED", "BUDGET_POOL_MODIFIED", "FINANCIAL_TRANSFER", "HANDOFF_CREATED", "HANDOFF_COMPLETED", "HANDOFF_REJECTED", "PROPOSAL_FAILED", "TRUST_POLICY_CHANGE"]).notNull(),
   payload: json("payload").$type<Record<string, unknown>>().notNull(),
   hash: varchar("hash", { length: 128 }).notNull(),
   prevHash: varchar("prevHash", { length: 128 }).notNull(),
@@ -569,3 +569,277 @@ export const sentinelEvents = mysqlTable("sentinel_events", {
 
 export type SentinelEvent = typeof sentinelEvents.$inferSelect;
 export type InsertSentinelEvent = typeof sentinelEvents.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2F — MONEY LAYER (Financial Governance)
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Budget pools — governed financial artifacts.
+ * Creating, modifying limits, or adding funds requires approval + receipt.
+ * The budget pool is NOT configuration — it is a governed decision.
+ */
+export const budgetPools = mysqlTable("budget_pools", {
+  id: int("id").autoincrement().primaryKey(),
+  poolId: varchar("poolId", { length: 64 }).notNull().unique(),
+  /** Human-readable name for this budget pool */
+  name: varchar("name", { length: 256 }).notNull(),
+  /** Current balance in cents (integer to avoid floating-point issues) */
+  balanceCents: int("balanceCents").notNull().default(0),
+  /** Spending limit in cents — changing this is a governed action */
+  limitCents: int("limitCents").notNull().default(0),
+  /** Calculated spending rate in cents per day (rolling 30-day average) */
+  spendingRateCentsPerDay: int("spendingRateCentsPerDay").notNull().default(0),
+  /** Pool status */
+  status: mysqlEnum("status", ["active", "frozen", "depleted"]).notNull().default("active"),
+  /** Policy version hash — tracks which governance policy created/modified this pool */
+  policyVersion: varchar("policyVersion", { length: 128 }),
+  /** Receipt ID from the governed action that created/modified this pool */
+  governanceReceiptId: varchar("governanceReceiptId", { length: 64 }),
+  /** User who owns this budget pool */
+  userId: int("userId").notNull(),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type BudgetPool = typeof budgetPools.$inferSelect;
+export type InsertBudgetPool = typeof budgetPools.$inferInsert;
+
+/**
+ * Financial transactions — every money movement is recorded.
+ * Each transaction links to a budget pool, an optional proposal, and a receipt.
+ */
+export const financialTransactions = mysqlTable("financial_transactions", {
+  id: int("id").autoincrement().primaryKey(),
+  transactionId: varchar("transactionId", { length: 64 }).notNull().unique(),
+  /** Which budget pool this transaction affects */
+  budgetPoolId: varchar("budgetPoolId", { length: 64 }).notNull(),
+  /** Optional link to the proposal that triggered this transaction */
+  proposalId: varchar("proposalId", { length: 64 }),
+  /** Transaction type */
+  type: mysqlEnum("type", ["deposit", "withdrawal", "transfer", "adjustment", "limit_change"]).notNull(),
+  /** Amount in cents (positive = inflow, negative = outflow) */
+  amountCents: int("amountCents").notNull(),
+  /** Human-readable description */
+  description: text("description").notNull(),
+  /** Receipt ID from the governed execution */
+  receiptId: varchar("receiptId", { length: 64 }),
+  /** Who initiated this transaction */
+  initiatedBy: varchar("initiatedBy", { length: 64 }).notNull().default("system"),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+});
+
+export type FinancialTransaction = typeof financialTransactions.$inferSelect;
+export type InsertFinancialTransaction = typeof financialTransactions.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════
+// PHASE 2G — MULTI-AGENT COLLABORATION (Handoff Packets)
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Handoff packets — explicit work transfer between agents.
+ * No agent self-approves. All execution routes through Gateway.
+ * Handoffs are recorded in the ledger for audit trail.
+ */
+export const handoffPackets = mysqlTable("handoff_packets", {
+  id: int("id").autoincrement().primaryKey(),
+  handoffId: varchar("handoffId", { length: 64 }).notNull().unique(),
+  /** Agent sending the work */
+  fromAgent: varchar("fromAgent", { length: 128 }).notNull(),
+  /** Agent receiving the work */
+  toAgent: varchar("toAgent", { length: 128 }).notNull(),
+  /** Type of work being handed off */
+  workType: mysqlEnum("workType", ["proposal", "financial", "analysis", "review", "execution", "research"]).notNull(),
+  /** The nested packet (proposal, financial, etc.) */
+  payload: json("payload").$type<Record<string, unknown>>().notNull(),
+  /** Instructions for the receiving agent */
+  instructions: text("instructions").notNull(),
+  /** Optional deadline for completion */
+  deadline: timestamp("deadline"),
+  /** Whether this handoff requires human approval before the receiving agent can act */
+  approvalRequired: boolean("approvalRequired").notNull().default(true),
+  /** Current status of the handoff */
+  status: mysqlEnum("status", ["pending", "accepted", "in_progress", "completed", "rejected", "expired"]).notNull().default("pending"),
+  /** Result payload from the receiving agent */
+  result: json("result").$type<Record<string, unknown>>(),
+  /** Receipt ID if execution was involved */
+  receiptId: varchar("receiptId", { length: 64 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type HandoffPacket = typeof handoffPackets.$inferSelect;
+export type InsertHandoffPacket = typeof handoffPackets.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════
+// BUILDER CONTRACT v1 — MAILBOX INFRASTRUCTURE
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Mailbox types — the six canonical mailbox categories.
+ * Each mailbox is a logical partition of the mailbox_entries table.
+ */
+export const MAILBOX_TYPES = ["proposal", "financial", "policy", "handoff", "sentinel", "decision"] as const;
+export type MailboxType = typeof MAILBOX_TYPES[number];
+
+/**
+ * Mailbox status flow: pending → processed → routed → executed → archived
+ * Status changes create NEW entries (append-only). Existing entries are NEVER mutated.
+ */
+export const MAILBOX_STATUSES = ["pending", "processed", "routed", "executed", "archived"] as const;
+export type MailboxStatus = typeof MAILBOX_STATUSES[number];
+
+/**
+ * Mailbox entries — the universal event-sourced log.
+ *
+ * INVARIANTS (from Builder Contract v1):
+ * 1. Append-only: no row is ever UPDATE'd or DELETE'd
+ * 2. Status transitions create NEW rows referencing the same trace_id
+ * 3. Every entry carries a trace_id linking the full decision chain
+ * 4. The entire system state can be reconstructed by replaying entries in order
+ * 5. Notion is a VIEW of mailbox state, not the source of truth
+ *
+ * Packet types written to each mailbox:
+ * - proposal:  proposal_packet, follow_up_proposal
+ * - financial: financial_proposal, budget_transfer
+ * - policy:    trust_policy_change, policy_update
+ * - handoff:   handoff_packet, handoff_result
+ * - sentinel:  sentinel_event, aftermath_event
+ * - decision:  approval_packet, kernel_decision_object, gateway_enforcement_object
+ */
+export const mailboxEntries = mysqlTable("mailbox_entries", {
+  id: int("id").autoincrement().primaryKey(),
+  /** Unique packet identifier (e.g., "pkt_abc123") */
+  packetId: varchar("packet_id", { length: 128 }).notNull().unique(),
+  /** Which mailbox this entry belongs to */
+  mailboxType: mysqlEnum("mailbox_type", ["proposal", "financial", "policy", "handoff", "sentinel", "decision"]).notNull(),
+  /** Semantic type of the packet (e.g., "proposal_packet", "kernel_decision_object", "gateway_enforcement_object") */
+  packetType: varchar("packet_type", { length: 128 }).notNull(),
+  /** Agent or system that created this entry */
+  sourceAgent: varchar("source_agent", { length: 128 }).notNull(),
+  /** Target agent (null if broadcast or system-level) */
+  targetAgent: varchar("target_agent", { length: 128 }),
+  /** Current status of this entry */
+  status: mysqlEnum("status", ["pending", "processed", "routed", "executed", "archived"]).notNull().default("pending"),
+  /** The full packet payload — schema varies by packet_type */
+  payload: json("payload").$type<Record<string, unknown>>().notNull(),
+  /** Trace ID linking all entries in the same decision chain */
+  traceId: varchar("trace_id", { length: 128 }).notNull(),
+  /** Optional reference to a parent packet (for status transitions) */
+  parentPacketId: varchar("parent_packet_id", { length: 128 }),
+  /** Immutable creation timestamp */
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  /** Set when status transitions happen (via new entry, not mutation) */
+  processedAt: timestamp("processed_at"),
+});
+
+export type MailboxEntry = typeof mailboxEntries.$inferSelect;
+export type InsertMailboxEntry = typeof mailboxEntries.$inferInsert;
+
+// ═══════════════════════════════════════════════════════════════════
+// BUILDER CONTRACT v1 — KERNEL DECISION OBJECTS
+// ═══════════════════════════════════════════════════════════════════
+
+/**
+ * Kernel proposed decisions — the three possible outcomes.
+ * AUTO_APPROVE: policy + trust allow automatic execution
+ * REQUIRE_HUMAN: human must sign before Gateway executes
+ * DENY: policy explicitly blocks this action
+ */
+export const KERNEL_DECISIONS = ["AUTO_APPROVE", "REQUIRE_HUMAN", "DENY"] as const;
+export type KernelDecision = typeof KERNEL_DECISIONS[number];
+
+/**
+ * Gateway enforced decisions — what actually happened.
+ * EXECUTED: action was performed
+ * BLOCKED: Gateway refused (invalid signature, stale timestamp, etc.)
+ * REQUIRES_SIGNATURE: waiting for human cryptographic approval
+ */
+export const GATEWAY_ENFORCED_DECISIONS = ["EXECUTED", "BLOCKED", "REQUIRES_SIGNATURE"] as const;
+export type GatewayEnforcedDecision = typeof GATEWAY_ENFORCED_DECISIONS[number];
+
+/**
+ * Type definitions for kernel and gateway objects stored in mailbox payloads.
+ */
+export interface KernelDecisionPayload {
+  decision_id: string;
+  packet_id: string;
+  proposed_decision: KernelDecision;
+  reasoning: {
+    policy_match: boolean;
+    policy_name: string | null;
+    trust_level_ok: boolean;
+    trust_level_applied: number;
+    constraints_ok: boolean;
+    anomaly_flag: boolean;
+    anomaly_type?: string;
+  };
+  baseline_pattern: {
+    approval_rate_14d: number;
+    recent_velocity_seconds: number;
+    edit_rate: number;
+  } | null;
+  observed_state: {
+    approval_rate_delta: number;
+    velocity_delta_seconds: number;
+    edit_rate_delta: number;
+  } | null;
+  confidence: number;
+  timestamp: string;
+  trace_id: string;
+}
+
+export interface GatewayEnforcementPayload {
+  decision_id: string;
+  proposed_decision: KernelDecision;
+  enforced_decision: GatewayEnforcedDecision;
+  enforcement_reason: string;
+  execution_id: string | null;
+  receipt_id: string | null;
+  signature_valid: boolean;
+  signature_ed25519: string | null;
+  timestamp: string;
+  trace_id: string;
+}
+
+/**
+ * Sentinel threshold model — governed thresholds for anomaly detection.
+ * These thresholds are NOT configurable without human approval.
+ * Changes to thresholds create proposal packets routed through normal approval flow.
+ */
+export const DEFAULT_SENTINEL_THRESHOLDS = {
+  approval_rate_variance: { INFO: 0.05, WARN: 0.10, CRITICAL: 0.20 },
+  velocity_variance:      { INFO: 0.10, WARN: 0.25, CRITICAL: 0.50 },
+  edit_rate_variance:     { INFO: 0.10, WARN: 0.20, CRITICAL: 0.40 },
+  pattern_shift:          { INFO: 0.50, WARN: 0.70, CRITICAL: 0.90 },
+} as const;
+
+/** Backward compat alias */
+export const SENTINEL_THRESHOLDS = DEFAULT_SENTINEL_THRESHOLDS;
+
+export type SentinelMetricType = keyof typeof DEFAULT_SENTINEL_THRESHOLDS;
+export type SentinelSeverityLevel = "INFO" | "WARN" | "CRITICAL";
+
+/**
+ * Governed sentinel thresholds table.
+ * Threshold changes require human approval — they create proposal packets
+ * routed through the normal mailbox → kernel → gateway flow.
+ */
+export const sentinelThresholds = mysqlTable("sentinel_thresholds", {
+  id: int("id").autoincrement().primaryKey(),
+  metricType: varchar("metric_type", { length: 64 }).notNull(),
+  infoThreshold: decimal("info_threshold", { precision: 10, scale: 6 }).notNull(),
+  warnThreshold: decimal("warn_threshold", { precision: 10, scale: 6 }).notNull(),
+  criticalThreshold: decimal("critical_threshold", { precision: 10, scale: 6 }).notNull(),
+  /** Whether this threshold is active */
+  active: boolean("active").notNull().default(true),
+  /** trace_id of the approval that authorized this threshold */
+  approvalTraceId: varchar("approval_trace_id", { length: 128 }),
+  /** Who last modified this threshold */
+  lastModifiedBy: varchar("last_modified_by", { length: 128 }),
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+});
+
+export type SentinelThreshold = typeof sentinelThresholds.$inferSelect;
+export type InsertSentinelThreshold = typeof sentinelThresholds.$inferInsert;
