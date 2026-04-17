@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rio:01_commit_chain",
+  "title": "RIO Commit Chain — Ledger + Integrity Substrate",
+  "description": "Extracted from controlPlane.ts (A7: FormalLedgerEntry), kernelExecutor.ts (WAL discipline), integritySubstrate.ts (substrate checks), and db.ts (appendLedger, verifyHashChain).",
+
+  "definitions": {
+
+    "FormalLedgerEntry": {
+      "description": "controlPlane.ts — A7: FORMALIZED LEDGER ENTRY. The canonical ledger block format. Each entry links to the previous via hash chain.",
+      "type": "object",
+      "required": ["block_index", "receipt_hash", "previous_ledger_hash", "current_hash", "timestamp", "entry_type", "payload"],
+      "properties": {
+        "block_index": { "type": "integer", "minimum": 0, "description": "Monotonically increasing block index. Genesis = 0." },
+        "receipt_hash": { "type": "string", "description": "SHA-256 hash of the witness receipt that produced this entry." },
+        "previous_ledger_hash": { "type": "string", "description": "Hash of the previous ledger entry. Genesis uses 'GENESIS'." },
+        "current_hash": { "type": "string", "description": "SHA-256(canonical_json({block_index, receipt_hash, previous_ledger_hash, timestamp, payload}))" },
+        "timestamp": { "type": "integer", "description": "Unix epoch milliseconds." },
+        "entry_type": {
+          "type": "string",
+          "enum": [
+            "INTENT", "APPROVAL", "REJECTION", "EXECUTION",
+            "DELEGATION_BLOCKED", "DELEGATION_APPROVED",
+            "WAL_PREPARED", "WAL_COMMITTED", "WAL_FAILED",
+            "NONCE_CONSUMED", "SUBSTRATE_BLOCK",
+            "KILL_SWITCH", "SYSTEM"
+          ],
+          "description": "Discriminator for the ledger entry type."
+        },
+        "payload": { "type": "object", "description": "Type-specific payload. Schema varies by entry_type." }
+      },
+      "additionalProperties": false
+    },
+
+    "WALEntry": {
+      "description": "kernelExecutor.ts — WAL discipline entries. Three phases: PREPARED (before execution), COMMITTED (after success), FAILED (after failure).",
+      "type": "object",
+      "required": ["entryId", "hash", "intentId", "timestamp"],
+      "properties": {
+        "entryId": { "type": "string", "description": "Unique WAL entry ID." },
+        "hash": { "type": "string", "description": "SHA-256 hash of the WAL entry." },
+        "intentId": { "type": "string", "description": "The intent this WAL entry belongs to." },
+        "timestamp": { "type": "integer", "description": "Unix epoch milliseconds." }
+      },
+      "additionalProperties": false
+    },
+
+    "WALPreparedPayload": {
+      "description": "Payload written to ledger as WAL_PREPARED before execution starts.",
+      "type": "object",
+      "required": ["intent_id", "intent_hash", "token_id", "decision", "risk_level", "action_type", "target", "kernel_version", "prepared_at"],
+      "properties": {
+        "intent_id": { "type": "string" },
+        "intent_hash": { "type": "string" },
+        "token_id": { "type": "string" },
+        "decision": { "type": "string", "enum": ["APPROVE", "DENY", "REQUIRE_HUMAN_APPROVAL"] },
+        "risk_level": { "type": "string", "enum": ["LOW", "MEDIUM", "HIGH"] },
+        "action_type": { "type": "string" },
+        "target": { "type": "string" },
+        "kernel_version": { "type": "string", "const": "K2.0.0" },
+        "prepared_at": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+
+    "WALCommittedPayload": {
+      "description": "Payload written to ledger as WAL_COMMITTED after successful execution.",
+      "type": "object",
+      "required": ["prepared_entry_id", "prepared_hash", "intent_id", "receipt_hash", "success", "kernel_version", "committed_at"],
+      "properties": {
+        "prepared_entry_id": { "type": "string" },
+        "prepared_hash": { "type": "string" },
+        "intent_id": { "type": "string" },
+        "receipt_hash": { "type": "string" },
+        "success": { "type": "boolean" },
+        "kernel_version": { "type": "string", "const": "K2.0.0" },
+        "committed_at": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+
+    "WALFailedPayload": {
+      "description": "Payload written to ledger as WAL_FAILED after failed execution.",
+      "type": "object",
+      "required": ["prepared_entry_id", "prepared_hash", "intent_id", "error", "kernel_version", "failed_at"],
+      "properties": {
+        "prepared_entry_id": { "type": "string" },
+        "prepared_hash": { "type": "string" },
+        "intent_id": { "type": "string" },
+        "error": { "type": "string" },
+        "kernel_version": { "type": "string", "const": "K2.0.0" },
+        "failed_at": { "type": "integer" }
+      },
+      "additionalProperties": false
+    },
+
+    "SubstrateCheck": {
+      "description": "integritySubstrate.ts — Individual substrate check result.",
+      "type": "object",
+      "required": ["check_id", "check_type", "passed", "detail", "timestamp"],
+      "properties": {
+        "check_id": { "type": "string", "pattern": "^CHK-[NDRL]-" },
+        "check_type": { "type": "string", "enum": ["nonce", "dedup", "replay", "receipt_linkage"] },
+        "passed": { "type": "boolean" },
+        "detail": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+
+    "SubstrateResult": {
+      "description": "integritySubstrate.ts — Aggregate result of all four substrate checks.",
+      "type": "object",
+      "required": ["passed", "checks", "content_hash", "nonce", "block_reason", "timestamp"],
+      "properties": {
+        "passed": { "type": "boolean" },
+        "checks": { "type": "array", "items": { "$ref": "#/definitions/SubstrateCheck" }, "minItems": 4, "maxItems": 4 },
+        "content_hash": { "type": "string", "description": "SHA-256 of normalized message content." },
+        "nonce": { "type": "string" },
+        "block_reason": { "type": ["string", "null"] },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+
+    "SubstrateLogEntry": {
+      "description": "integritySubstrate.ts — Substrate event log entry.",
+      "type": "object",
+      "required": ["log_id", "event", "content_hash", "nonce", "source", "channel", "detail", "timestamp"],
+      "properties": {
+        "log_id": { "type": "string", "pattern": "^SUB-" },
+        "event": { "type": "string", "enum": ["PASSED", "BLOCKED_DEDUP", "BLOCKED_NONCE", "BLOCKED_REPLAY"] },
+        "content_hash": { "type": "string" },
+        "nonce": { "type": "string" },
+        "source": { "type": "string" },
+        "channel": { "type": "string" },
+        "detail": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "additionalProperties": false
+    },
+
+    "SubstrateInput": {
+      "description": "integritySubstrate.ts — Input to validateAtSubstrate(). The FIRST gate before any governance surface.",
+      "type": "object",
+      "required": ["content", "nonce", "source", "action", "channel"],
+      "properties": {
+        "content": { "type": "string", "description": "Message content (for dedup hashing)." },
+        "nonce": { "type": "string", "description": "Unique nonce for this message." },
+        "source": { "type": "string", "description": "Who sent this." },
+        "action": { "type": "string", "description": "What action." },
+        "channel": { "type": "string", "description": "Channel." },
+        "token_id": { "type": "string", "description": "Optional execution token ID (for replay check)." }
+      },
+      "additionalProperties": false
+    },
+
+    "GenesisRecord": {
+      "description": "authorityLayer.ts — Genesis record. Ledger block 0. Anchors the entire system.",
+      "type": "object",
+      "required": ["record_type", "system_id", "root_public_key", "policy_hash", "created_at", "previous_hash", "signature", "genesis_hash"],
+      "properties": {
+        "record_type": { "type": "string", "const": "GENESIS" },
+        "system_id": { "type": "string", "const": "RIO" },
+        "root_public_key": { "type": "string", "description": "Ed25519 public key hex." },
+        "policy_hash": { "type": "string", "description": "SHA-256 of the initial governance policy." },
+        "created_at": { "type": "string", "format": "date-time" },
+        "previous_hash": { "type": "string", "const": "0000000000000000" },
+        "signature": { "type": "string", "description": "Root authority signature." },
+        "genesis_hash": { "type": "string", "description": "SHA-256(canonical_json(this record minus genesis_hash))." }
+      },
+      "additionalProperties": false
+    }
+  },
+
+  "validation_rules": {
+    "hash_chain_integrity": {
+      "description": "db.ts verifyHashChain(). For every entry[i] where i > 0: entry[i].previous_ledger_hash === entry[i-1].current_hash. Violation = SYSTEM CORRUPTION.",
+      "source": "db.ts"
+    },
+    "wal_ordering": {
+      "description": "kernelExecutor.ts. WAL_PREPARED MUST be written before connector call. WAL_COMMITTED or WAL_FAILED MUST be written after. If PREPARED fails, execution MUST NOT proceed. If connector succeeds but COMMITTED fails, caller MUST NOT return success.",
+      "source": "kernelExecutor.ts"
+    },
+    "nonce_persistence": {
+      "description": "kernelExecutor.ts. Nonces are persisted to ledger as NONCE_CONSUMED entries. On restart, rebuildNonceCache() reads all NONCE_CONSUMED entries from ledger and repopulates the in-memory cache. Nonces survive restart.",
+      "source": "kernelExecutor.ts"
+    },
+    "substrate_gate_ordering": {
+      "description": "integritySubstrate.ts. validateAtSubstrate() runs BEFORE any governance surface sees the message. If any check fails, the message is BLOCKED and LOGGED at the substrate level. Governance surfaces never see it.",
+      "source": "integritySubstrate.ts"
+    },
+    "substrate_block_ledger_write": {
+      "description": "integritySubstrate.ts. Every blocked message writes a SUBSTRATE_BLOCK entry to the ledger with: event, content_hash, nonce, source, action, channel, block_reason, checks_failed[], timestamp.",
+      "source": "integritySubstrate.ts"
+    },
+    "dedup_ttl": {
+      "description": "integritySubstrate.ts. DEDUP_TTL_MS = 300000 (5 minutes). Same content hash within 5 minutes is a duplicate.",
+      "value_ms": 300000,
+      "source": "integritySubstrate.ts"
+    },
+    "nonce_ttl": {
+      "description": "integritySubstrate.ts. NONCE_TTL_MS = 600000 (10 minutes). Nonces expire after 10 minutes in the in-memory store.",
+      "value_ms": 600000,
+      "source": "integritySubstrate.ts"
+    },
+    "canonical_json": {
+      "description": "controlPlane.ts canonicalJsonStringify(). Keys sorted recursively. Used for all deterministic hashing.",
+      "source": "controlPlane.ts"
+    },
+    "hash_algorithm": {
+      "description": "SHA-256 via crypto.createHash('sha256'). Used for all hashes: envelope, receipt, ledger, action, policy.",
+      "source": "controlPlane.ts"
+    }
+  },
+
+  "failure_conditions": {
+    "hash_chain_break": "If entry[i].previous_ledger_hash !== entry[i-1].current_hash → SYSTEM CORRUPTION. Startup verification halts.",
+    "wal_prepared_failure": "If WAL PREPARED write fails → execution MUST NOT proceed. Return error immediately.",
+    "wal_committed_failure": "If execution succeeds but WAL COMMITTED write fails → caller MUST NOT return success.",
+    "substrate_block": "If any of the 4 substrate checks fail → message is BLOCKED. Governance never sees it.",
+    "nonce_replay": "If nonce has been used → BLOCKED_NONCE. Message rejected at substrate level.",
+    "content_dedup": "If content hash seen within DEDUP_TTL_MS → BLOCKED_DEDUP. Message rejected at substrate level.",
+    "token_replay": "If token bound to different content hash → BLOCKED_REPLAY. Message rejected at substrate level.",
+    "receipt_linkage_missing": "If source or action fields missing → receipt_linkage check fails. Message blocked."
+  }
+}
