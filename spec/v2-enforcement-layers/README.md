@@ -33,9 +33,10 @@ specs/
 flows/
 └── cross_substrate_flow.md       ← NEW
 docs/
+├── EXECUTIVE_OVERVIEW.md          ← START HERE
 ├── SYSTEM_OVERVIEW.md
-├── INVARIANT.md                  ← NEW
-├── TWO_QUESTION_PATTERN.md       ← NEW
+├── INVARIANT.md
+├── TWO_QUESTION_PATTERN.md
 ├── BREAK_TESTS.md
 └── IMPLEMENTATION_GUIDE.md
 ```
@@ -84,6 +85,7 @@ The `flows/` directory provides execution flow documentation:
 
 The `docs/` directory provides cross-cutting documentation:
 
+- **`EXECUTIVE_OVERVIEW.md`** — **Start here.** One-page explanation of what RIO is, why it matters, and how it works. For anyone new, engineers needing context, or partners needing explanation without overload.
 - **`SYSTEM_OVERVIEW.md`** — Full pipeline flow, design principles, execution surface, constants summary, final refinement.
 - **`INVARIANT.md`** — The core invariant: no action without valid receipt + fresh authorization. Authority properties.
 - **`TWO_QUESTION_PATTERN.md`** — The two-question pattern applied at every execution boundary.
