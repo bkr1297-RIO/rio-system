@@ -176,7 +176,7 @@ The 7 invariants and 9-stage pipeline are implemented through 8 concrete compone
 - **Why it matters:** You don't trust the holder. Math proves authenticity.
 
 ### Component 4: Signature
-- **What it is:** Cryptographic mark only you can make (RSA-2048 or Ed25519).
+- **What it is:** Cryptographic mark only you can make (Ed25519).
 - **What it does:** Proves you approved it. Tied to content—change one word, signature becomes invalid.
 - **Why it matters:** Nobody can forge your approval. Computationally impossible.
 
@@ -207,7 +207,7 @@ The 7 invariants and 9-stage pipeline are implemented through 8 concrete compone
 | Guarantee | Mechanism | Result |
 | :--- | :--- | :--- |
 | **Tamper-proof** | Merkle hash chain (SHA-256) | Chain breaks if any entry altered |
-| **Unforgeable** | RSA-2048 / Ed25519 signatures | Requires private key (computationally infeasible to fake) |
+| **Unforgeable** | Ed25519 signatures | Requires private key (computationally infeasible to fake) |
 | **Non-repudiable** | Cryptographic signatures | Proves who authorized (cannot deny) |
 | **Multi-authority** | Multi-signature requirement | No single key sufficient for execution |
 | **Verifiable** | Public key verification | Anyone can verify independently |

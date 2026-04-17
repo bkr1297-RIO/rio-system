@@ -14,7 +14,7 @@ She doesn't know what Manus has already built in Node.js. Here's the overlap:
 - GET /ledger — exists
 - GET /verify — exists (Claude calls this "receipt verifier")
 - GET /health — exists
-- Ed25519 crypto — exists (Claude has RSA from v0.2, we upgraded)
+- Ed25519 crypto — exists (Claude had RSA from v0.2, we upgraded)
 - PostgreSQL ledger — exists (Claude has Merkle in-memory, we upgraded)
 - JWT auth — exists
 - Docker deployment — exists
