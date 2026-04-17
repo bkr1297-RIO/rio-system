@@ -223,5 +223,10 @@
     "content_dedup": "If content hash seen within DEDUP_TTL_MS → BLOCKED_DEDUP. Message rejected at substrate level.",
     "token_replay": "If token bound to different content hash → BLOCKED_REPLAY. Message rejected at substrate level.",
     "receipt_linkage_missing": "If source or action fields missing → receipt_linkage check fails. Message blocked."
+  },
+
+  "authority_boundary_rule": {
+    "rule": "Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.",
+    "applies_to": "Every ledger entry is a receipt. The next entry requires its own hash-link authorization (previous_ledger_hash binding). The chain does not grant write permission — the append operation does."
   }
 }

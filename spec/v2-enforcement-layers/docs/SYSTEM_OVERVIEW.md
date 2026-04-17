@@ -152,3 +152,30 @@ No other file in the codebase has a path to side-effecting execution.
 | Substrate checks | 4 | integritySubstrate.ts |
 | Genesis previous_hash | `"0000000000000000"` | authorityLayer.ts |
 | First receipt previous_hash | 64 hex zeros | authorityLayer.ts |
+
+---
+
+## Final Refinement: Receipt ≠ Authorization
+
+The system separates two concepts that must never be conflated:
+
+| Concept | Definition |
+|---|---|
+| **Truth (Receipts)** | Proof of what happened. A signed, hash-bound witness artifact. Evidence. |
+| **Permission (Authorization)** | Permission for what happens next. A bounded, locally issued credential (DTT). |
+
+This separation prevents:
+
+| Threat | How it is prevented |
+|---|---|
+| **Authority drift** | Authority is local to each step. Cannot accumulate across steps. |
+| **Replay attacks** | Each authorization is single-use and time-bounded. Receipts cannot substitute for authorization. |
+| **Implicit escalation** | No receipt grants permission. Every step requires fresh evaluation and fresh authorization. |
+| **Cross-system leakage** | Receipts from one substrate cannot authorize actions in another. New DTT required at every boundary. |
+
+At every execution boundary, two questions must be answered:
+
+1. **Is the upstream output trustworthy?** — Validate the receipt (signature, timing, identity, measurement).
+2. **What is allowed to happen next?** — Issue a new authorization (DTT).
+
+See `docs/TWO_QUESTION_PATTERN.md` and `docs/INVARIANT.md` for the full specification.

@@ -2,6 +2,8 @@
 
 > No change to the world or system state can occur unless it passes through the RIO pipeline and is recorded in the ledger.
 
+> Receipts never grant authority. Authority must always be explicitly re-issued.
+
 This repository contains the canonical specification for the RIO governed execution system, extracted directly from the implementation with zero interpretation. Every schema, constant, validation rule, and failure condition is traced to its source file.
 
 ---
@@ -9,33 +11,38 @@ This repository contains the canonical specification for the RIO governed execut
 ## Repository Structure
 
 ```
-rio-spec/
-├── README.md                          ← This file
-├── specs/
-│   ├── 01_commit_chain/
-│   │   ├── README.md                  ← Enforcement layer spec
-│   │   └── schema.json                ← JSON Schema + validation rules + failure conditions
-│   ├── 02_governance_decision/
-│   │   ├── README.md
-│   │   └── schema.json
-│   ├── 03_execution_token/
-│   │   ├── README.md
-│   │   └── schema.json
-│   ├── 04_witness_receipt/
-│   │   ├── README.md
-│   │   └── schema.json
-│   └── 05_delegation_boundary/
-│       ├── README.md
-│       └── schema.json
-└── docs/
-    ├── SYSTEM_OVERVIEW.md             ← Full system description
-    ├── BREAK_TESTS.md                 ← 7 attack vectors, 140 tests, 0 bypasses
-    └── IMPLEMENTATION_GUIDE.md        ← Build order + acceptance criteria
+specs/
+├── 01_commit_chain/
+│   ├── README.md                  ← Enforcement layer spec
+│   └── schema.json                ← JSON Schema + validation rules + failure conditions
+├── 02_governance_decision/
+│   ├── README.md
+│   └── schema.json
+├── 03_execution_token/
+│   ├── README.md
+│   └── schema.json
+├── 04_witness_receipt/
+│   ├── README.md
+│   └── schema.json
+├── 05_delegation_boundary/
+│   ├── README.md
+│   └── schema.json
+└── 06_cross_substrate/           ← NEW
+    ├── README.md
+    └── CROSS_SUBSTRATE_SPEC.json
+flows/
+└── cross_substrate_flow.md       ← NEW
+docs/
+├── SYSTEM_OVERVIEW.md
+├── INVARIANT.md                  ← NEW
+├── TWO_QUESTION_PATTERN.md       ← NEW
+├── BREAK_TESTS.md
+└── IMPLEMENTATION_GUIDE.md
 ```
 
 ---
 
-## Five Enforcement Layers
+## Six Enforcement Layers
 
 | # | Layer | What It Enforces |
 |---|---|---|
@@ -44,6 +51,22 @@ rio-spec/
 | 03 | **Execution Token** | Single-use token (5s TTL). 6-check preflight gate. Tool sandbox. Kernel execution order. |
 | 04 | **Witness Receipt** | Chain-of-custody artifact. Hash binding. Receipt chaining (64-zero genesis). |
 | 05 | **Delegation Boundary** | Constrained delegation (120s cooldown). Gateway identity evaluation. Authority model labels. Role enforcement. |
+| 06 | **Cross-Substrate Handoff** | Receipt validation + fresh authorization at every substrate boundary. No implicit authority flow. |
+
+---
+
+## Critical Refinement: Receipt ≠ Authorization
+
+Every spec in this repo enforces the same rule:
+
+> Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.
+
+At every execution boundary, two questions must be answered:
+
+1. **Is the upstream output trustworthy?** — Validate the receipt (signature, timing, identity, measurement).
+2. **What is allowed to happen next?** — Issue a new authorization (DTT).
+
+See `docs/TWO_QUESTION_PATTERN.md` and `docs/INVARIANT.md` for the full specification.
 
 ---
 
@@ -51,14 +74,20 @@ rio-spec/
 
 Each enforcement layer has two files:
 
-- **`README.md`** — Human-readable spec. Describes purpose, schemas, validation rules, constants, and failure conditions. Includes tables mapping every check, every constant, and every failure mode.
+- **`README.md`** — Human-readable spec. Describes purpose, schemas, validation rules, constants, and failure conditions.
 
-- **`schema.json`** — Machine-readable spec. JSON Schema definitions for every type, plus `validation_rules` and `failure_conditions` sections with source file attribution.
+- **`schema.json`** (or `CROSS_SUBSTRATE_SPEC.json`) — Machine-readable spec. JSON Schema definitions for every type, plus `validation_rules` and `failure_conditions` sections with source file attribution. Every spec includes an `authority_boundary_rule` section enforcing the receipt ≠ authorization invariant.
+
+The `flows/` directory provides execution flow documentation:
+
+- **`cross_substrate_flow.md`** — Step-by-step cross-substrate handoff: validate receipt, issue new DTT, execute, generate receipt, repeat.
 
 The `docs/` directory provides cross-cutting documentation:
 
-- **`SYSTEM_OVERVIEW.md`** — Full pipeline flow, design principles, execution surface, constants summary.
-- **`BREAK_TESTS.md`** — All 7 attack vectors, 140 tests, 0 bypasses. Extracted from the red-team audit.
+- **`SYSTEM_OVERVIEW.md`** — Full pipeline flow, design principles, execution surface, constants summary, final refinement.
+- **`INVARIANT.md`** — The core invariant: no action without valid receipt + fresh authorization. Authority properties.
+- **`TWO_QUESTION_PATTERN.md`** — The two-question pattern applied at every execution boundary.
+- **`BREAK_TESTS.md`** — 8 attack vectors (including cross-substrate authority leak), 140+ tests, 0 bypasses.
 - **`IMPLEMENTATION_GUIDE.md`** — Build order (5 phases), acceptance criteria from all test suites, source file map.
 
 ---
@@ -87,6 +116,7 @@ Every schema, rule, and constant traces to its source file:
 | No implicit authority | Every action requires explicit authorization. |
 | No dual role | No component may both approve and execute the same action. |
 | Learning is advisory | Never mutates live policy until human promotes it. |
+| Receipt ≠ Authorization | Receipts are proof. Authorization is permission. They are never the same thing. |
 
 ---
 

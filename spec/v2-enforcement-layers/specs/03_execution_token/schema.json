@@ -194,5 +194,10 @@
     "nonce_replay": "Nonce already consumed → NONCE_REPLAY. Stage: EXECUTION_GATE.",
     "connector_failure": "Connector throws or returns success:false → stage: EXECUTION.",
     "wal_committed_failure": "Execution succeeded but WAL COMMITTED write fails → caller MUST NOT return success. Stage: WAL_COMMITTED."
+  },
+
+  "authority_boundary_rule": {
+    "rule": "Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.",
+    "applies_to": "The execution token is the authorization. It is local (5s TTL), explicit (6 gate checks), and single-use. The approval receipt informed the token issuance, but the receipt itself is not the token."
   }
 }

@@ -143,5 +143,10 @@
     "chain_break": "If receipt[i].previous_receipt_hash !== receipt[i-1].receipt_hash → chain integrity violation.",
     "missing_chain_of_custody": "If any required chain_of_custody field is missing → receipt is invalid.",
     "execution_hash_mismatch": "If recomputed execution_hash !== stored → connector result was modified."
+  },
+
+  "authority_boundary_rule": {
+    "rule": "Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.",
+    "applies_to": "The receipt is the proof. It records what happened. It does not authorize what happens next. The next action in the pipeline requires its own authorization."
   }
 }

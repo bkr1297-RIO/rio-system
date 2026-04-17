@@ -191,5 +191,10 @@
     "revoked_authority": "Root authority with status 'revoked' cannot sign policies or issue tokens.",
     "no_active_policy": "Authorization token cannot be issued if no active policy exists.",
     "policy_hash_mismatch": "If token.policy_hash !== active_policy.policy_hash → policy_hash_match FAIL."
+  },
+
+  "authority_boundary_rule": {
+    "rule": "Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.",
+    "applies_to": "The delegation check is a receipt of identity evaluation. It does not authorize execution. A separate authorization must be issued after the delegation check passes."
   }
 }

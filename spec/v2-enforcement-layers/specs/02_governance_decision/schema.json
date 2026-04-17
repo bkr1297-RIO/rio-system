@@ -255,5 +255,10 @@
     "approval_hash_mismatch": "If approval.intent_hash !== governance.intent_hash → approval invalid.",
     "expression_isolation_violation": "If ExpressionOutput enters rio_process_intent() → EXPRESSION_ISOLATION_VIOLATION error. If expression_to_intent() called with approvedByHuman=false → EXPRESSION_ISOLATION_VIOLATION error.",
     "replay_detected": "If nonce already in usedNonces → replay_check=false → verification fails."
+  },
+
+  "authority_boundary_rule": {
+    "rule": "Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.",
+    "applies_to": "The verification result is a receipt of intent validation. It does not authorize execution. A separate governance decision must be issued. The governance decision does not authorize execution either — a separate execution token must be issued."
   }
 }

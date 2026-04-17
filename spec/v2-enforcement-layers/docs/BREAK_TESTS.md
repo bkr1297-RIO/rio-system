@@ -185,3 +185,17 @@ These are not bypasses. They are architectural observations:
 2. **Pre-existing ledger hash mismatches.** Development-era entries have hash mismatches. Logged but do not halt. In production, any new mismatch = SYSTEM CORRUPTION.
 
 3. **MVP firewall mode is permissive.** Only blocks the specific 3-condition AND rule. By design for current phase.
+
+---
+
+## Attack Vector 8: Cross-Substrate Authority Leak
+
+**Attempt:** Use a valid receipt from Substrate A to trigger downstream execution in Substrate B without issuing a new authorization (DTT).
+
+**Expected result:** BLOCK.
+
+**Reason:** Receipt does not grant permission. A receipt is proof of what happened. It is not authorization for what happens next. Every cross-substrate handoff requires a new, locally issued DTT. The gate must validate the upstream receipt (signature, timing, identity, measurement) and then issue a fresh authorization. If the gate accepts the receipt as permission and skips DTT issuance, the system has an authority leak.
+
+**Rule under test:** Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.
+
+**See also:** `specs/06_cross_substrate/CROSS_SUBSTRATE_SPEC.json`, `docs/TWO_QUESTION_PATTERN.md`, `docs/INVARIANT.md`
