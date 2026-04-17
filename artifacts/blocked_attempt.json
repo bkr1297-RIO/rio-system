@@ -1,0 +1,88 @@
+{
+  "artifact_type": "BLOCKED_ATTEMPT",
+  "attempt": {
+    "action": "send_email",
+    "target": "unauthorized@example.com",
+    "timestamp": "2026-04-17T18:48:19.725Z",
+    "actor": "PRI-ART-1"
+  },
+  "authorization_check": {
+    "dtt_id": null,
+    "approval_exists": false,
+    "authorization_token_exists": false,
+    "token_status": "missing_or_invalid",
+    "args_hash_match": false,
+    "execution_limit_valid": true,
+    "approval_not_expired": false
+  },
+  "result": {
+    "status": "BLOCKED",
+    "reason": "Preflight failed: approval_exists, approval_not_expired, execution_limit, args_hash_match, authorization_token_exists",
+    "failed_checks": [
+      "approval_exists",
+      "approval_not_expired",
+      "execution_limit",
+      "args_hash_match",
+      "authorization_token_exists"
+    ]
+  },
+  "lineage": {
+    "lineage_id": null,
+    "note": "No lineage created — attempt did not pass authorization boundary"
+  },
+  "_system_evidence": {
+    "intent_id": "INT-ART-3",
+    "intent_status": "PENDING_APPROVAL",
+    "preflight_results": [
+      {
+        "check": "proxy_active",
+        "status": "PASS",
+        "detail": "Proxy status: ACTIVE"
+      },
+      {
+        "check": "not_already_executed",
+        "status": "PASS",
+        "detail": "Intent not yet executed"
+      },
+      {
+        "check": "tool_registered",
+        "status": "PASS",
+        "detail": "Tool 'send_email' found"
+      },
+      {
+        "check": "risk_tier_check",
+        "status": "PASS",
+        "detail": "Risk tier: HIGH, approval required"
+      },
+      {
+        "check": "approval_exists",
+        "status": "FAIL",
+        "detail": "No valid approval found"
+      },
+      {
+        "check": "approval_not_expired",
+        "status": "FAIL",
+        "detail": "Approval expired"
+      },
+      {
+        "check": "execution_limit",
+        "status": "FAIL",
+        "detail": "Max executions reached"
+      },
+      {
+        "check": "args_hash_match",
+        "status": "FAIL",
+        "detail": "Args hash mismatch — possible tampering"
+      },
+      {
+        "check": "authorization_token_exists",
+        "status": "FAIL",
+        "detail": "No authorization token provided — execution requires token"
+      }
+    ],
+    "total_checks": 9,
+    "passed_checks": 4,
+    "failed_checks_count": 5,
+    "error_raw": "Preflight failed: approval_exists, approval_not_expired, execution_limit, args_hash_match, authorization_token_exists"
+  }
+}
