@@ -23,6 +23,16 @@
 
 ---
 
+## Canonical Specification
+
+The system is formally defined here:
+
+[`/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md`](specs/canonical/RIO_CANONICAL_SPEC_v1.0.md)
+
+All components, tests, and artifacts derive from this specification.
+
+---
+
 ## What RIO Is
 
 > **RIO converts AI actions into human-authorized, policy-controlled, cryptographically verifiable transactions.**
