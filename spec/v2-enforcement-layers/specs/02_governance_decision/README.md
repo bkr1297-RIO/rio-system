@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # 02 — Governance Decision
 
 **Source files:** `controlPlane.ts` (A1: IntentEnvelope, A2: VerificationResult, A3: GovernanceDecision, A4: ApprovalRecord, A8: LearningAnalysis, §2.E: ExpressionOutput)

@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # 04 — Witness Receipt
 
 **Source files:** `controlPlane.ts` (A6: WitnessReceipt, generateWitnessReceipt), `authorityLayer.ts` (CanonicalReceipt, generateCanonicalReceipt, receipt hash chaining)

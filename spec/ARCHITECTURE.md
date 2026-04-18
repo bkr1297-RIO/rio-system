@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO System Architecture
 
 **Version:** 3.0

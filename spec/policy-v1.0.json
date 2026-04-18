@@ -1,7 +1,8 @@
 {
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
   "policy_version": "1.0",
   "owner": "Brian Kent Rasmussen",
-  "digital_fingerprint": "[PRIVATE — stored separately in protected Drive file]",
+  "digital_fingerprint": "[PRIVATE \u2014 stored separately in protected Drive file]",
   "core_invariants": [
     {
       "id": "Agency",
@@ -22,7 +23,11 @@
   ],
   "operational_protocols": {
     "policy_object": {
-      "states": ["AUTO_APPROVE", "AUTO_DENY", "REQUIRE_HUMAN"],
+      "states": [
+        "AUTO_APPROVE",
+        "AUTO_DENY",
+        "REQUIRE_HUMAN"
+      ],
       "learning_loop": "Scan receipt history and suggest policy improvements for owner review."
     },
     "informed_consent_gate": {
@@ -34,7 +39,7 @@
     },
     "ambiguity_scoring": {
       "scale": "0-100 (match to policy + history)",
-      "high_ambiguity": "High-ambiguity context → REQUIRE_HUMAN"
+      "high_ambiguity": "High-ambiguity context \u2192 REQUIRE_HUMAN"
     },
     "quantum_routing_rules": {
       "description": "Quantum engine (infinite explorer) may run 24/7 ambient reasoning but execution is always gated.",

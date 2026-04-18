@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # 05 — Delegation Boundary
 
 **Source files:** `constrainedDelegation.ts` (checkDelegation, classifyRoleSeparation, validateRoleTransition, formatCooldownMessage), `gatewayProxy.ts` (evaluateIdentityAtGatewayBoundary, resolveAuthorityModel, GatewayIdentityEvaluation), `authorityLayer.ts` (RootAuthority, SignedPolicy)

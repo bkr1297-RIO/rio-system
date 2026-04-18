@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # Two-Question Pattern
 
 At every execution boundary, two questions must be answered in order. No execution may proceed until both are resolved.

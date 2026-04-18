@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # 03 — Execution Token
 
 **Source files:** `controlPlane.ts` (A5: ExecutionToken, issueExecutionToken, executeGatePreflight), `kernelExecutor.ts` (kernelExecute, enforceToolSandbox, consumeNonce, KERNEL_TOKEN_TTL_MS), `authorityLayer.ts` (AuthorizationToken, validateAuthorizationToken)

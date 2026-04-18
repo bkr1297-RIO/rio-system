@@ -1,45 +1,41 @@
 {
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
   "component": "Executor",
   "version": "1.0",
   "status": "draft",
   "created": "2026-04-01T02:30:00Z",
   "author": "Jordan (Proxy Interface Agent)",
   "approved_by": null,
-
-  "description": "The Executor is the action and recording layer of the RIO system. It receives signed approval tokens from the Governor, performs preflight verification (the Gatekeeper), executes the authorized tool, generates cryptographic receipts, and writes them to the tamper-evident ledger. The Executor acts but cannot decide — it requires a valid, unexpired, signature-verified approval before any tool runs. It also controls the kill switch and manages the hash-chained ledger.",
-
+  "description": "The Executor is the action and recording layer of the RIO system. It receives signed approval tokens from the Governor, performs preflight verification (the Gatekeeper), executes the authorized tool, generates cryptographic receipts, and writes them to the tamper-evident ledger. The Executor acts but cannot decide \u2014 it requires a valid, unexpired, signature-verified approval before any tool runs. It also controls the kill switch and manages the hash-chained ledger.",
   "role_in_three_power_separation": {
     "power": "Executor",
     "principle": "The Executor is the action authority in the Three-Power Separation architecture. It can execute tools and write receipts to the ledger, but cannot observe raw signals (that is Mantis) and cannot render governance decisions (that is the Governor). The Executor only acts when presented with a valid approval token.",
     "boundary": "The Executor operates downstream of the Governor. It receives signed approvals and executes the authorized action. It cannot ingest intents, evaluate policy, issue approvals, or modify governance rules. It writes to the ledger but cannot alter existing entries."
   },
-
   "capabilities": [
     "Perform preflight verification (preflightToolExecution) before any tool runs",
     "Execute authorized tools against external systems (Gmail, Drive, GitHub, etc.)",
     "Generate cryptographic execution receipts with SHA-256 hash chains",
     "Write execution records and receipts to the tamper-evident ledger",
     "Maintain the hash chain (each entry links to the previous via previous_hash)",
-    "Enforce the kill switch — immediately halt all execution when activated",
+    "Enforce the kill switch \u2014 immediately halt all execution when activated",
     "Atomically increment executionsUsed on approval tokens after each use",
     "Verify Ed25519 signatures on approval tokens before execution",
     "Verify toolArgsHash matches the actual execution arguments",
     "Record execution outcomes (SUCCESS, FAILED, PARTIAL) with timestamps"
   ],
-
   "prohibitions": [
     "Cannot execute any tool without a valid, unexpired, signed Approval",
     "Cannot observe or ingest raw signals (that is the Observer's role)",
     "Cannot evaluate policy or render governance decisions (that is the Governor's role)",
     "Cannot issue or modify approval tokens",
     "Cannot alter existing ledger entries (append-only)",
-    "Cannot self-authorize — the Executor never generates its own approvals",
+    "Cannot self-authorize \u2014 the Executor never generates its own approvals",
     "Cannot bypass the preflight check (preflightToolExecution is mandatory)",
     "Cannot execute if the kill switch is active (fail-closed: PROXY_KILLED)",
     "Cannot execute if toolArgsHash does not match actual arguments",
     "Cannot execute if approval has expired or maxExecutions reached"
   ],
-
   "gatekeeper": {
     "description": "The Gatekeeper (preflightToolExecution) is the most critical function in the Executor. It enforces all invariants at runtime before any tool is actually executed. This is the fail-closed boundary.",
     "function_name": "preflightToolExecution",
@@ -49,69 +45,68 @@
         "check": "KILL_SWITCH_GATE",
         "description": "Is the proxy in killed state?",
         "fail_response": "{ ok: false, reason: 'PROXY_KILLED' }",
-        "fail_mode": "CLOSED — all execution blocked immediately"
+        "fail_mode": "CLOSED \u2014 all execution blocked immediately"
       },
       {
         "order": 2,
         "check": "APPROVAL_EXISTS_GATE",
         "description": "Does a valid Approval record exist for this intent?",
         "fail_response": "{ ok: false, reason: 'NO_APPROVAL' }",
-        "fail_mode": "CLOSED — no execution without approval"
+        "fail_mode": "CLOSED \u2014 no execution without approval"
       },
       {
         "order": 3,
         "check": "APPROVAL_STATUS_GATE",
         "description": "Is the Approval status APPROVED (not REJECTED, EXPIRED, or CONSUMED)?",
         "fail_response": "{ ok: false, reason: 'INVALID_APPROVAL_STATUS' }",
-        "fail_mode": "CLOSED — only APPROVED status allows execution"
+        "fail_mode": "CLOSED \u2014 only APPROVED status allows execution"
       },
       {
         "order": 4,
         "check": "SEED_POLICY_GATE",
         "description": "Do the seedId and policyId on the Approval match the current active versions?",
         "fail_response": "{ ok: false, reason: 'STALE_SEED_OR_POLICY' }",
-        "fail_mode": "CLOSED — stale approvals cannot authorize execution"
+        "fail_mode": "CLOSED \u2014 stale approvals cannot authorize execution"
       },
       {
         "order": 5,
         "check": "TOOL_NAME_GATE",
         "description": "Does the toolName on the Approval match the requested tool?",
         "fail_response": "{ ok: false, reason: 'TOOL_MISMATCH' }",
-        "fail_mode": "CLOSED — approval is scoped to a specific tool"
+        "fail_mode": "CLOSED \u2014 approval is scoped to a specific tool"
       },
       {
         "order": 6,
         "check": "HASH_GATE",
         "description": "Does the toolArgsHash on the Approval match the SHA-256 hash of the actual execution arguments?",
         "fail_response": "{ ok: false, reason: 'ARGS_HASH_MISMATCH' }",
-        "fail_mode": "CLOSED — prevents argument tampering between approval and execution"
+        "fail_mode": "CLOSED \u2014 prevents argument tampering between approval and execution"
       },
       {
         "order": 7,
         "check": "EXPIRY_GATE",
         "description": "Is the current time before the Approval's expiresAt timestamp?",
         "fail_response": "{ ok: false, reason: 'APPROVAL_EXPIRED' }",
-        "fail_mode": "CLOSED — expired approvals cannot authorize execution"
+        "fail_mode": "CLOSED \u2014 expired approvals cannot authorize execution"
       },
       {
         "order": 8,
         "check": "EXECUTION_LIMIT_GATE",
         "description": "Is executionsUsed < maxExecutions?",
         "fail_response": "{ ok: false, reason: 'EXECUTION_LIMIT_REACHED' }",
-        "fail_mode": "CLOSED — single-use approvals cannot be reused"
+        "fail_mode": "CLOSED \u2014 single-use approvals cannot be reused"
       },
       {
         "order": 9,
         "check": "SIGNATURE_GATE",
         "description": "Is the Ed25519 signature on the Approval valid against the registered SignerId?",
         "fail_response": "{ ok: false, reason: 'INVALID_SIGNATURE' }",
-        "fail_mode": "CLOSED — unsigned or tampered approvals are rejected"
+        "fail_mode": "CLOSED \u2014 unsigned or tampered approvals are rejected"
       }
     ],
     "pass_response": "{ ok: true, approval: <verified_approval_object> }",
     "invariant": "If any check fails, execution is blocked. There is no override. This is the fail-closed guarantee."
   },
-
   "execution_flow": {
     "description": "The complete execution flow from approved intent to ledger entry.",
     "steps": [
@@ -123,7 +118,7 @@
       {
         "step": 2,
         "name": "Preflight Check",
-        "description": "Run preflightToolExecution — all 9 gates must pass"
+        "description": "Run preflightToolExecution \u2014 all 9 gates must pass"
       },
       {
         "step": 3,
@@ -157,23 +152,22 @@
       }
     ]
   },
-
   "receipt_specification": {
-    "description": "The Executor generates cryptographic receipts that bind the full chain of custody: ActionRequest → AIRecommendation → ApprovalRecord → ExecutionRecord → Receipt.",
+    "description": "The Executor generates cryptographic receipts that bind the full chain of custody: ActionRequest \u2192 AIRecommendation \u2192 ApprovalRecord \u2192 ExecutionRecord \u2192 Receipt.",
     "receipt_fields": {
-      "receipt_id": "UUID — unique identifier for this receipt",
-      "request_id": "UUID — the original ActionRequest",
-      "recommendation_id": "UUID — the AIRecommendation (if applicable)",
-      "approval_id": "UUID — the ApprovalRecord that authorized execution",
-      "execution_id": "UUID — the ExecutionRecord of what was done",
-      "action_type": "string — the action type from the original request",
-      "requested_by": "string — the requesting identity",
-      "approver_id": "string — the approver identity",
-      "executed_by": "string — the executor identity",
+      "receipt_id": "UUID \u2014 unique identifier for this receipt",
+      "request_id": "UUID \u2014 the original ActionRequest",
+      "recommendation_id": "UUID \u2014 the AIRecommendation (if applicable)",
+      "approval_id": "UUID \u2014 the ApprovalRecord that authorized execution",
+      "execution_id": "UUID \u2014 the ExecutionRecord of what was done",
+      "action_type": "string \u2014 the action type from the original request",
+      "requested_by": "string \u2014 the requesting identity",
+      "approver_id": "string \u2014 the approver identity",
+      "executed_by": "string \u2014 the executor identity",
       "created_at": "ISO 8601 UTC timestamp",
       "ledger_hash": "SHA-256 hash of the canonical JSON (excluding ledger_hash and signature)",
       "previous_hash": "SHA-256 hash of the preceding receipt (GENESIS for first)",
-      "chain_index": "integer — zero-based position in the ledger chain",
+      "chain_index": "integer \u2014 zero-based position in the ledger chain",
       "signature": "Ed25519 signature over the canonical form including ledger_hash",
       "verification_method": "ed25519 | hmac_sha256 | ecdsa_secp256k1 | rsa_pss_sha256",
       "status": "valid | invalidated | under_review"
@@ -184,41 +178,42 @@
       "chain_genesis": "GENESIS"
     }
   },
-
   "ledger": {
-    "description": "The Executor maintains the tamper-evident ledger — a hash-chained append-only log of all system events.",
+    "description": "The Executor maintains the tamper-evident ledger \u2014 a hash-chained append-only log of all system events.",
     "entry_types": [
-      "INTENT_CREATED — written by Governor when a new intent is received",
-      "APPROVAL_CREATED — written by Governor when an approval is issued or denied",
-      "TOOL_EXECUTION — written by Executor after tool execution (SUCCESS or FAILED)",
-      "ONBOARD — written when a new proxy user completes onboarding",
-      "KILL_PROXY — written when the kill switch is activated",
-      "POLICY_UPDATED — written by Governor when policy is modified"
+      "INTENT_CREATED \u2014 written by Governor when a new intent is received",
+      "APPROVAL_CREATED \u2014 written by Governor when an approval is issued or denied",
+      "TOOL_EXECUTION \u2014 written by Executor after tool execution (SUCCESS or FAILED)",
+      "ONBOARD \u2014 written when a new proxy user completes onboarding",
+      "KILL_PROXY \u2014 written when the kill switch is activated",
+      "POLICY_UPDATED \u2014 written by Governor when policy is modified"
     ],
     "integrity": {
       "hash_chain": "Each entry's hash is computed from its payload + the previous entry's hash",
       "minimum_links": "5-link minimum per receipt chain",
       "verification": "Any auditor can verify the full chain by recomputing hashes from GENESIS",
-      "tamper_detection": "If any entry is modified, all subsequent hashes break — making tampering detectable"
+      "tamper_detection": "If any entry is modified, all subsequent hashes break \u2014 making tampering detectable"
     }
   },
-
   "kill_switch": {
-    "description": "The Executor controls the global kill switch — an emergency mechanism that immediately halts all proxy execution.",
+    "description": "The Executor controls the global kill switch \u2014 an emergency mechanism that immediately halts all proxy execution.",
     "endpoint": "POST /api/kill",
     "behavior": [
       "Flip proxy_users.status to KILLED",
       "Write KILL_PROXY entry to the ledger with timestamp and reason",
       "All subsequent preflightToolExecution calls return { ok: false, reason: 'PROXY_KILLED' }",
       "All pending approvals are effectively frozen (cannot be used while killed)",
-      "Kill is instant — no confirmation dialog, no delay"
+      "Kill is instant \u2014 no confirmation dialog, no delay"
     ],
     "reactivation": {
       "description": "Reactivation requires explicit human action through a separate flow",
-      "requirements": ["Human must authenticate with Ed25519 signature", "New MasterSeed or PolicyBundle may be required", "Reactivation is logged in the ledger"]
+      "requirements": [
+        "Human must authenticate with Ed25519 signature",
+        "New MasterSeed or PolicyBundle may be required",
+        "Reactivation is logged in the ledger"
+      ]
     }
   },
-
   "supported_tools": {
     "description": "The Executor can execute actions against any registered external system. Each tool has a defined interface and risk profile.",
     "tools": [
@@ -266,7 +261,6 @@
       }
     ]
   },
-
   "api_contracts": [
     {
       "method": "POST",
@@ -320,23 +314,21 @@
       "response": "{ valid: boolean, chain_length, first_invalid_index: number | null, verification_time_ms }"
     }
   ],
-
   "relationship_to_other_components": {
-    "observer_mantis": "The Executor has no direct relationship to Mantis. Intents flow Observer → Governor → Executor. The Executor never communicates with the Observer.",
+    "observer_mantis": "The Executor has no direct relationship to Mantis. Intents flow Observer \u2192 Governor \u2192 Executor. The Executor never communicates with the Observer.",
     "governor": "The Executor receives signed approval tokens from the Governor. It verifies every approval before execution. The Executor cannot influence governance decisions.",
     "ledger": "The Executor is the primary writer to the ledger. It writes TOOL_EXECUTION entries after each execution and maintains the hash chain integrity. The Governor also writes INTENT_CREATED and APPROVAL_CREATED entries.",
     "learning_loop": "The Executor does not directly participate in the Learning Loop. Its receipts and ledger entries are read by the Learning Loop (via the Governor) to propose policy improvements.",
     "kill_switch": "The Executor owns the kill switch endpoint. When activated, the Gatekeeper blocks all execution. The kill switch state is checked as the first gate in preflightToolExecution."
   },
-
   "invariants": [
     "No tool executes without a valid, unexpired, signature-verified Approval (fail-closed)",
     "Every execution produces a cryptographic receipt written to the tamper-evident ledger",
-    "The hash chain is append-only — no entry can be modified or deleted",
+    "The hash chain is append-only \u2014 no entry can be modified or deleted",
     "The kill switch immediately halts all execution with no override",
-    "toolArgsHash must match the actual execution arguments — prevents argument tampering",
+    "toolArgsHash must match the actual execution arguments \u2014 prevents argument tampering",
     "Single-use approvals (maxExecutions = 1) cannot be reused after consumption",
-    "The Executor cannot self-authorize — it only acts on Governor-issued approvals",
+    "The Executor cannot self-authorize \u2014 it only acts on Governor-issued approvals",
     "Failed executions are recorded in the ledger with the same rigor as successful ones",
     "Any auditor can independently verify the full chain from GENESIS"
   ]

@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO Reference Architecture
 Canonical Specification for Governed AI Execution
 

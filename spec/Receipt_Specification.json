@@ -1,8 +1,9 @@
 {
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/bkr1297-RIO/rio-system/rio-receipt-protocol/Receipt_Specification.json",
-  "title": "RIO Receipt Protocol — Consolidated Specification",
-  "description": "Defines the complete chain of custody for governed AI actions: ActionRequest → AIRecommendation → ApprovalRecord → ExecutionRecord → Receipt. Each schema is self-contained. The Receipt binds all preceding artifacts into a single cryptographically signed, hash-chained proof.",
+  "title": "RIO Receipt Protocol \u2014 Consolidated Specification",
+  "description": "Defines the complete chain of custody for governed AI actions: ActionRequest \u2192 AIRecommendation \u2192 ApprovalRecord \u2192 ExecutionRecord \u2192 Receipt. Each schema is self-contained. The Receipt binds all preceding artifacts into a single cryptographically signed, hash-chained proof.",
   "version": "1.0.0",
   "protocol_chain": [
     "ActionRequest",
@@ -32,7 +33,12 @@
         "action_type": {
           "type": "string",
           "description": "The type of action being requested.",
-          "examples": ["send_email", "create_file", "transfer_funds", "create_issue"]
+          "examples": [
+            "send_email",
+            "create_file",
+            "transfer_funds",
+            "create_issue"
+          ]
         },
         "requested_by": {
           "type": "string",
@@ -41,7 +47,12 @@
         "target": {
           "type": "string",
           "description": "The target system or resource the action will affect.",
-          "examples": ["gmail", "google_drive", "github", "payment_processor"]
+          "examples": [
+            "gmail",
+            "google_drive",
+            "github",
+            "payment_processor"
+          ]
         },
         "parameters": {
           "type": "object",
@@ -50,7 +61,12 @@
         },
         "risk_level": {
           "type": "string",
-          "enum": ["low", "medium", "high", "critical"],
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ],
           "description": "Assessed risk level of the proposed action."
         },
         "created_at": {
@@ -87,7 +103,11 @@
         },
         "recommended_action": {
           "type": "string",
-          "enum": ["proceed", "block", "escalate"],
+          "enum": [
+            "proceed",
+            "block",
+            "escalate"
+          ],
           "description": "The AI's recommendation for how to handle this request."
         },
         "confidence": {
@@ -102,7 +122,9 @@
         },
         "unknowns": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Explicit declaration of assumptions or unknowns that affect confidence."
         },
         "created_at": {
@@ -143,11 +165,21 @@
         "approver_role": {
           "type": "string",
           "description": "The organizational role of the approver at the time of approval.",
-          "examples": ["finance_manager", "system_admin", "compliance_officer", "account_owner"]
+          "examples": [
+            "finance_manager",
+            "system_admin",
+            "compliance_officer",
+            "account_owner"
+          ]
         },
         "approval_status": {
           "type": "string",
-          "enum": ["approved", "denied", "revoked", "expired"],
+          "enum": [
+            "approved",
+            "denied",
+            "revoked",
+            "expired"
+          ],
           "description": "The outcome of the human authorization decision."
         },
         "approved_at": {
@@ -166,7 +198,14 @@
         },
         "auth_method": {
           "type": "string",
-          "enum": ["password", "mfa_totp", "mfa_hardware_key", "biometric", "oauth2", "api_key_signed"],
+          "enum": [
+            "password",
+            "mfa_totp",
+            "mfa_hardware_key",
+            "biometric",
+            "oauth2",
+            "api_key_signed"
+          ],
           "description": "The authentication method used to verify the approver's identity."
         },
         "notes": {
@@ -205,7 +244,11 @@
         "executed_by": {
           "type": "string",
           "description": "Identifier of the agent or system that performed the execution.",
-          "examples": ["rio-executor-v0.1", "payment-service-prod", "manus-executor"]
+          "examples": [
+            "rio-executor-v0.1",
+            "payment-service-prod",
+            "manus-executor"
+          ]
         },
         "executed_at": {
           "type": "string",
@@ -214,7 +257,12 @@
         },
         "execution_status": {
           "type": "string",
-          "enum": ["success", "failed", "partial", "rolled_back"],
+          "enum": [
+            "success",
+            "failed",
+            "partial",
+            "rolled_back"
+          ],
           "description": "The outcome of the execution attempt."
         },
         "target_result": {
@@ -317,12 +365,21 @@
         },
         "verification_method": {
           "type": "string",
-          "enum": ["hmac_sha256", "ecdsa_secp256k1", "rsa_pss_sha256", "ed25519"],
+          "enum": [
+            "hmac_sha256",
+            "ecdsa_secp256k1",
+            "rsa_pss_sha256",
+            "ed25519"
+          ],
           "description": "The cryptographic method used to produce and verify the signature."
         },
         "status": {
           "type": "string",
-          "enum": ["valid", "invalidated", "under_review"],
+          "enum": [
+            "valid",
+            "invalidated",
+            "under_review"
+          ],
           "description": "Current status of this receipt."
         }
       }

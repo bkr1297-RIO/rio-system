@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO System Invariants
 
 This document defines the non-negotiable architectural and operational rules of the RIO system. These invariants must always be true, regardless of deployment, feature, or use case. They form the foundation of the product, the architecture, and the trust story.

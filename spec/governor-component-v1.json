@@ -1,19 +1,17 @@
 {
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
   "component": "Governor",
   "version": "1.0",
   "status": "draft",
   "created": "2026-04-01T02:00:00Z",
   "author": "Jordan (Proxy Interface Agent)",
   "approved_by": null,
-
   "description": "The Governor is the policy evaluation and approval authority of the RIO system. It receives structured intents from the Observer (Mantis), evaluates them against the active PolicyBundle, computes risk tiers and blast radius, and renders governance decisions (AUTO_APPROVE, AUTO_DENY, REQUIRE_HUMAN). The Governor holds the approval authority but cannot execute any action. It enforces the four core invariants: Agency, Sovereignty, Truth, and Precision.",
-
   "role_in_three_power_separation": {
     "power": "Governor",
-    "principle": "The Governor is the decision authority in the Three-Power Separation architecture. It evaluates policy and renders governance decisions but cannot observe raw signals (that is Mantis) and cannot execute actions (that is the Executor). The Governor holds OAuth tokens and approval signatures but can only authorize — never act.",
+    "principle": "The Governor is the decision authority in the Three-Power Separation architecture. It evaluates policy and renders governance decisions but cannot observe raw signals (that is Mantis) and cannot execute actions (that is the Executor). The Governor holds OAuth tokens and approval signatures but can only authorize \u2014 never act.",
     "boundary": "The Governor operates between the Observer and the Executor. It receives validated intents from Mantis and issues signed approvals to the Executor. It cannot ingest raw signals, cannot execute tools, and cannot write execution receipts to the ledger."
   },
-
   "core_invariants": [
     {
       "id": "Agency",
@@ -32,7 +30,6 @@
       "rule": "Apply exact friction needed (never more, never less) via policy object and informed consent."
     }
   ],
-
   "capabilities": [
     "Evaluate intents against the active PolicyBundle",
     "Compute risk tiers (LOW, MEDIUM, HIGH, CRITICAL) based on action type and tool policies",
@@ -46,128 +43,199 @@
     "Score ambiguity on 0-100 scale to determine governance routing",
     "Feed governance decision patterns to the Learning Loop for policy improvement proposals"
   ],
-
   "prohibitions": [
     "Cannot execute any external action or tool",
     "Cannot observe or ingest raw signals (that is the Observer's role)",
     "Cannot write execution receipts to the ledger (that is the Executor's role)",
-    "Cannot self-authorize — no agent can declare its own action approved",
+    "Cannot self-authorize \u2014 no agent can declare its own action approved",
     "Cannot bypass the informed consent gate for REQUIRE_HUMAN decisions",
     "Cannot modify invariants (Agency, Sovereignty, Truth, Precision are immutable)",
     "Cannot issue approvals without a valid Ed25519 signature from an authorized signer",
     "Cannot extend approval expiry or increase maxExecutions after issuance"
   ],
-
   "governance_states": [
     {
       "state": "AUTO_APPROVE",
       "description": "Action matches a pre-approved policy rule. No human intervention required.",
-      "examples": ["Draft emails/documents", "Summarize receipts/conversations", "Organize files", "Suggest policy improvements"],
+      "examples": [
+        "Draft emails/documents",
+        "Summarize receipts/conversations",
+        "Organize files",
+        "Suggest policy improvements"
+      ],
       "constraints": "Only applies to actions explicitly listed in the PolicyBundle's AUTO_APPROVE category. Risk tier must be LOW."
     },
     {
       "state": "REQUIRE_HUMAN",
       "description": "Action requires explicit human approval before execution can proceed.",
-      "examples": ["Send external email", "Modify GitHub repo", "Any execution with spend or external impact", "High-ambiguity context actions"],
+      "examples": [
+        "Send external email",
+        "Modify GitHub repo",
+        "Any execution with spend or external impact",
+        "High-ambiguity context actions"
+      ],
       "constraints": "Triggered when risk tier is MEDIUM or above, or ambiguity_score > 70. Human must sign approval with Ed25519."
     },
     {
       "state": "AUTO_DENY",
       "description": "Action violates core invariants or is explicitly prohibited. Rejected immediately.",
-      "examples": ["Break any of the 4 invariants", "Self-authorization by any agent", "Actions outside policy scope"],
+      "examples": [
+        "Break any of the 4 invariants",
+        "Self-authorization by any agent",
+        "Actions outside policy scope"
+      ],
       "constraints": "Cannot be overridden. Denial is logged in the ledger with reason code."
     }
   ],
-
   "policy_engine": {
     "description": "The Policy Engine is the Governor's core evaluation mechanism. It loads the active MasterSeed and PolicyBundle, then evaluates each intent against the defined rules.",
     "components": [
       {
         "name": "Policy Loader",
         "function": "Load the active MasterSeed and PolicyBundle into memory or fast cache",
-        "inputs": ["seedId", "policyId"],
-        "outputs": ["MasterSeed object", "PolicyBundle object"]
+        "inputs": [
+          "seedId",
+          "policyId"
+        ],
+        "outputs": [
+          "MasterSeed object",
+          "PolicyBundle object"
+        ]
       },
       {
         "name": "Risk Computation (computeRisk)",
         "function": "Match the requested toolName against ToolPolicy entries. If no explicit policy exists, default to HIGH (fail-closed).",
-        "inputs": ["toolName", "PolicyBundle.toolPolicies"],
-        "outputs": ["riskTier: LOW | MEDIUM | HIGH | CRITICAL"]
+        "inputs": [
+          "toolName",
+          "PolicyBundle.toolPolicies"
+        ],
+        "outputs": [
+          "riskTier: LOW | MEDIUM | HIGH | CRITICAL"
+        ]
       },
       {
         "name": "Blast Radius Computation (computeBlastRadius)",
         "function": "Analyze toolArgs to estimate financial impact, data domains affected, and reversibility.",
-        "inputs": ["toolName", "toolArgs"],
-        "outputs": ["{ financialImpact, dataDomainsAffected, reversibility: HIGH | LOW | NONE }"]
+        "inputs": [
+          "toolName",
+          "toolArgs"
+        ],
+        "outputs": [
+          "{ financialImpact, dataDomainsAffected, reversibility: HIGH | LOW | NONE }"
+        ]
       },
       {
         "name": "Ambiguity Scorer",
         "function": "Score the intent on a 0-100 scale based on match to policy and historical patterns. High ambiguity routes to REQUIRE_HUMAN.",
-        "inputs": ["intent", "PolicyBundle", "receipt_history"],
-        "outputs": ["ambiguity_score: 0-100"]
+        "inputs": [
+          "intent",
+          "PolicyBundle",
+          "receipt_history"
+        ],
+        "outputs": [
+          "ambiguity_score: 0-100"
+        ]
       }
     ]
   },
-
   "role_based_access_control": {
     "description": "The Governor enforces RBAC for all governance operations. Each role has specific capabilities and constraints.",
     "roles": [
       {
         "role": "admin",
-        "capabilities": ["register_signer", "modify_policy", "approve_any_action", "revoke_access", "view_ledger", "view_receipts", "override_approval", "emergency_halt", "audit_system"],
-        "constraints": { "cannot_self_audit": true, "policy_changes_logged": true, "ed25519_required": true }
+        "capabilities": [
+          "register_signer",
+          "modify_policy",
+          "approve_any_action",
+          "revoke_access",
+          "view_ledger",
+          "view_receipts",
+          "override_approval",
+          "emergency_halt",
+          "audit_system"
+        ],
+        "constraints": {
+          "cannot_self_audit": true,
+          "policy_changes_logged": true,
+          "ed25519_required": true
+        }
       },
       {
         "role": "approver",
-        "capabilities": ["approve_intent", "deny_intent", "view_scoped_ledger", "comment_on_intent"],
-        "constraints": { "scoped_to_action_types": true, "scoped_to_risk_levels": true, "max_daily_approvals": true }
+        "capabilities": [
+          "approve_intent",
+          "deny_intent",
+          "view_scoped_ledger",
+          "comment_on_intent"
+        ],
+        "constraints": {
+          "scoped_to_action_types": true,
+          "scoped_to_risk_levels": true,
+          "max_daily_approvals": true
+        }
       },
       {
         "role": "auditor",
-        "capabilities": ["view_ledger", "view_receipts", "verify_chain", "generate_audit_report", "comment_findings"],
-        "constraints": { "read_only": true }
+        "capabilities": [
+          "view_ledger",
+          "view_receipts",
+          "verify_chain",
+          "generate_audit_report",
+          "comment_findings"
+        ],
+        "constraints": {
+          "read_only": true
+        }
       },
       {
         "role": "policy_manager",
-        "capabilities": ["create_policy", "modify_policy", "define_scope", "set_thresholds", "view_policy_history"],
-        "constraints": { "cannot_modify_invariants": true, "cannot_modify_fail_closed_gates": true, "requires_admin_signature": true }
+        "capabilities": [
+          "create_policy",
+          "modify_policy",
+          "define_scope",
+          "set_thresholds",
+          "view_policy_history"
+        ],
+        "constraints": {
+          "cannot_modify_invariants": true,
+          "cannot_modify_fail_closed_gates": true,
+          "requires_admin_signature": true
+        }
       }
     ]
   },
-
   "enforcement_gates": [
     {
       "gate": "POLICY_GATE",
       "check": "Does the intent match an allowed action category in the active PolicyBundle?",
-      "fail_mode": "CLOSED — if no matching policy, default to REQUIRE_HUMAN (not AUTO_DENY, to preserve Agency)"
+      "fail_mode": "CLOSED \u2014 if no matching policy, default to REQUIRE_HUMAN (not AUTO_DENY, to preserve Agency)"
     },
     {
       "gate": "RISK_GATE",
       "check": "What risk tier does this action fall into? Match toolName against ToolPolicy.",
-      "fail_mode": "CLOSED — if no explicit policy exists, default to HIGH risk"
+      "fail_mode": "CLOSED \u2014 if no explicit policy exists, default to HIGH risk"
     },
     {
       "gate": "APPROVAL_GATE",
       "check": "Does this risk tier require human approval? MEDIUM and above require REQUIRE_HUMAN.",
-      "fail_mode": "CLOSED — cannot proceed to execution without governance decision"
+      "fail_mode": "CLOSED \u2014 cannot proceed to execution without governance decision"
     },
     {
       "gate": "SIGNATURE_GATE",
       "check": "Is the approval cryptographically signed by an authorized signer (Ed25519)?",
-      "fail_mode": "CLOSED — unsigned or invalid signatures are rejected"
+      "fail_mode": "CLOSED \u2014 unsigned or invalid signatures are rejected"
     },
     {
       "gate": "EXPIRY_GATE",
       "check": "Is the approval still within its time window (expiresAt)?",
-      "fail_mode": "CLOSED — expired approvals cannot authorize execution"
+      "fail_mode": "CLOSED \u2014 expired approvals cannot authorize execution"
     },
     {
       "gate": "AMBIGUITY_GATE",
       "check": "Is the ambiguity score above the threshold (default 70)?",
-      "fail_mode": "ESCALATE — route to REQUIRE_HUMAN regardless of policy match"
+      "fail_mode": "ESCALATE \u2014 route to REQUIRE_HUMAN regardless of policy match"
     }
   ],
-
   "api_contracts": [
     {
       "method": "POST",
@@ -224,29 +292,27 @@
       "response": "Array of pending intent objects with risk assessment and blast radius"
     }
   ],
-
   "approval_token_spec": {
     "description": "When the Governor issues an approval, it creates a time-bound, execution-limited token that the Executor must present to proceed.",
     "fields": {
-      "approval_id": "UUID — unique identifier for this approval",
-      "intent_id": "UUID — the intent this approval authorizes",
-      "signer_id": "string — the Ed25519 public key fingerprint of the approver",
-      "toolName": "string — the specific tool authorized for execution",
+      "approval_id": "UUID \u2014 unique identifier for this approval",
+      "intent_id": "UUID \u2014 the intent this approval authorizes",
+      "signer_id": "string \u2014 the Ed25519 public key fingerprint of the approver",
+      "toolName": "string \u2014 the specific tool authorized for execution",
       "toolArgsHash": "SHA-256 hash of the normalized tool arguments",
-      "maxExecutions": "integer — maximum number of times this approval can be used (typically 1)",
-      "executionsUsed": "integer — counter incremented by Executor on each use",
-      "expiresAt": "ISO 8601 timestamp — approval expires after this time",
+      "maxExecutions": "integer \u2014 maximum number of times this approval can be used (typically 1)",
+      "executionsUsed": "integer \u2014 counter incremented by Executor on each use",
+      "expiresAt": "ISO 8601 timestamp \u2014 approval expires after this time",
       "signature": "Ed25519 signature over the canonical form of this approval",
       "status": "APPROVED | REJECTED | EXPIRED | CONSUMED"
     },
     "invariants": [
       "Single-use by default for HIGH risk (maxExecutions = 1)",
-      "Cannot be extended or renewed — new approval required",
+      "Cannot be extended or renewed \u2014 new approval required",
       "Executor must verify signature before accepting",
       "Executor must verify toolArgsHash matches actual execution arguments"
     ]
   },
-
   "informed_consent_screen": {
     "description": "When the Governor renders a REQUIRE_HUMAN decision, it presents an informed consent screen to the human approver.",
     "displayed_information": [
@@ -264,18 +330,16 @@
       "First-time action type with no policy precedent"
     ]
   },
-
   "relationship_to_other_components": {
     "observer_mantis": "The Governor receives validated intents from Mantis. Mantis translates raw signals into structured envelopes; the Governor evaluates them against policy. The Governor has no influence on how Mantis observes or translates.",
     "executor": "The Governor issues signed approval tokens to the Executor. The Executor must present a valid, unexpired, signature-verified approval before executing any action. The Governor cannot execute actions directly.",
     "ledger": "The Governor writes INTENT_CREATED and APPROVAL_CREATED entries to the ledger. It does not write execution receipts (that is the Executor's responsibility). The Governor reads ledger entries for policy improvement via the Learning Loop.",
-    "learning_loop": "The Governor feeds governance decision patterns to the Learning Loop, which proposes policy updates. Proposed updates must go through governance (Admin signature) before activation — the Learning Loop cannot self-modify policy.",
+    "learning_loop": "The Governor feeds governance decision patterns to the Learning Loop, which proposes policy updates. Proposed updates must go through governance (Admin signature) before activation \u2014 the Learning Loop cannot self-modify policy.",
     "kill_switch": "The Governor respects the kill switch state. If the proxy is killed, the Governor rejects all new intents with reason PROXY_KILLED. The kill switch is activated via the Executor's /api/kill endpoint."
   },
-
   "invariants": [
     "No action proceeds without a governance decision (fail-closed)",
-    "No agent can self-authorize — approval requires a different identity than the requester",
+    "No agent can self-authorize \u2014 approval requires a different identity than the requester",
     "All governance decisions are logged in the tamper-evident ledger",
     "Policy changes require Admin role and Ed25519 signature",
     "Core invariants (Agency, Sovereignty, Truth, Precision) are immutable",

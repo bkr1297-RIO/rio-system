@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # Meta-Governance Specification — Layer 5 Operational Manual
 
 **Version:** 1.0

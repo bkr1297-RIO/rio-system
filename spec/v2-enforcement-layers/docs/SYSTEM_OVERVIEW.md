@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO System Overview
 
 **Extracted from:** `controlPlane.ts`, `kernelExecutor.ts`, `constrainedDelegation.ts`, `gatewayProxy.ts`, `integritySubstrate.ts`, `authorityLayer.ts`, `RED-TEAM-REPORT.md`

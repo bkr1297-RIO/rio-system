@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO Intake Specification v1
 
 **Author:** Brian K. Rasmussen  

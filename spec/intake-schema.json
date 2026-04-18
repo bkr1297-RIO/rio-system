@@ -1,15 +1,23 @@
 {
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://rio-protocol.org/spec/intake/v1",
   "title": "RIO Intake Schema v1",
-  "description": "Standard intake structure for all RIO governed actions. Every request entering the system MUST conform to this schema. Defined by Brian K. Rasmussen. Flow: Identity → Intent → Context → Authorization → Execution → Receipt → Ledger.",
+  "description": "Standard intake structure for all RIO governed actions. Every request entering the system MUST conform to this schema. Defined by Brian K. Rasmussen. Flow: Identity \u2192 Intent \u2192 Context \u2192 Authorization \u2192 Execution \u2192 Receipt \u2192 Ledger.",
   "type": "object",
-  "required": ["identity", "intent", "context"],
+  "required": [
+    "identity",
+    "intent",
+    "context"
+  ],
   "properties": {
     "identity": {
       "type": "object",
       "description": "WHO is requesting. Establishes the human or agent identity behind this action.",
-      "required": ["subject", "auth_method"],
+      "required": [
+        "subject",
+        "auth_method"
+      ],
       "properties": {
         "subject": {
           "type": "string",
@@ -17,7 +25,13 @@
         },
         "auth_method": {
           "type": "string",
-          "enum": ["google_oauth", "microsoft_oauth", "jwt_session", "ed25519_signature", "api_key"],
+          "enum": [
+            "google_oauth",
+            "microsoft_oauth",
+            "jwt_session",
+            "ed25519_signature",
+            "api_key"
+          ],
           "description": "How identity was verified"
         },
         "email": {
@@ -27,19 +41,26 @@
         },
         "role": {
           "type": "string",
-          "enum": ["owner", "agent", "delegate", "viewer"],
+          "enum": [
+            "owner",
+            "agent",
+            "delegate",
+            "viewer"
+          ],
           "description": "Role in the RIO system. Owner has full authority. Agent acts on behalf of owner. Delegate has limited authority. Viewer is read-only."
         },
         "on_behalf_of": {
           "type": "string",
-          "description": "If an agent is acting on behalf of a human, the human's subject ID goes here. Creates the chain: Human → Agent → Action."
+          "description": "If an agent is acting on behalf of a human, the human's subject ID goes here. Creates the chain: Human \u2192 Agent \u2192 Action."
         }
       }
     },
     "intent": {
       "type": "object",
       "description": "WHAT action is being requested. The specific operation the system should perform.",
-      "required": ["action"],
+      "required": [
+        "action"
+      ],
       "properties": {
         "action": {
           "type": "string",
@@ -59,7 +80,9 @@
     "context": {
       "type": "object",
       "description": "WHY this action is being requested. Provides the governance layer with information to evaluate risk and apply policy.",
-      "required": ["reason"],
+      "required": [
+        "reason"
+      ],
       "properties": {
         "reason": {
           "type": "string",
@@ -67,12 +90,23 @@
         },
         "risk_scope": {
           "type": "string",
-          "enum": ["internal", "external", "financial", "destructive", "irreversible"],
+          "enum": [
+            "internal",
+            "external",
+            "financial",
+            "destructive",
+            "irreversible"
+          ],
           "description": "Category of risk this action falls under"
         },
         "urgency": {
           "type": "string",
-          "enum": ["low", "normal", "high", "critical"],
+          "enum": [
+            "low",
+            "normal",
+            "high",
+            "critical"
+          ],
           "default": "normal",
           "description": "How time-sensitive this action is"
         },
@@ -82,18 +116,28 @@
         },
         "related_intents": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "IDs of related previous intents (for multi-step workflows)"
         }
       }
     },
     "authorization": {
-      "type": ["object", "null"],
+      "type": [
+        "object",
+        "null"
+      ],
       "description": "APPROVAL decision. Null until a human or delegation policy approves/denies. Filled by the governance pipeline, not by the requester.",
       "properties": {
         "decision": {
           "type": "string",
-          "enum": ["approved", "denied", "auto_approved", "pending"],
+          "enum": [
+            "approved",
+            "denied",
+            "auto_approved",
+            "pending"
+          ],
           "description": "The authorization decision"
         },
         "decided_by": {

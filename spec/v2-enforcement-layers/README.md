@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO System Specification
 
 > No change to the world or system state can occur unless it passes through the RIO pipeline and is recorded in the ledger.

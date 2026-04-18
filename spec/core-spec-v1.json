@@ -1,6 +1,7 @@
 {
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
   "system_name": "One",
-  "description": "A single governed AI execution system (RIO gate + LLM planner + agent executor + cryptographic ledger) that turns any human intent into verifiable, sovereign actions across tools (Gmail, Drive, GitHub, etc.). It is the 'one' foundational loop: intent → governance → execution → receipt.",
+  "description": "A single governed AI execution system (RIO gate + LLM planner + agent executor + cryptographic ledger) that turns any human intent into verifiable, sovereign actions across tools (Gmail, Drive, GitHub, etc.). It is the 'one' foundational loop: intent \u2192 governance \u2192 execution \u2192 receipt.",
   "core_components": [
     {
       "name": "Intent Layer",
@@ -38,28 +39,28 @@
       "3. Embed receipt in email body (verifiable by anyone)",
       "4. Send via Gmail (MCP connector)",
       "5. Save receipt + email copy to One/root/receipts/",
-      "6. Recipient (or you) recomputes hashes to verify — no website needed"
+      "6. Recipient (or you) recomputes hashes to verify \u2014 no website needed"
     ],
     "proof_value": "The email itself is the product. It carries mathematical proof of authorization, integrity, and governance."
   },
   "how_to_build_it_minimum_viable": {
-    "status": "Open-source ready tomorrow — repo exists (private for now)",
+    "status": "Open-source ready tomorrow \u2014 repo exists (private for now)",
     "next_3_steps": [
       "Step 1: Manny ingests this JSON + PDF into One/ root folder and creates policy-v1.json",
       "Step 2: Run one full governed loop (self-proving email) to generate first receipt",
       "Step 3: Push root folder to public GitHub (RIO-approved) or share private link with Todd/Google/schools"
     ],
-    "dependencies": "Existing Manus VM + Gmail/Drive OAuth (already connected). No new server needed — RIO is the thin control layer on top."
+    "dependencies": "Existing Manus VM + Gmail/Drive OAuth (already connected). No new server needed \u2014 RIO is the thin control layer on top."
   },
   "outreach_targets_and_strategy": {
-    "family": "Send self-proving email to Todd first (structural language). Offer: 'You as inventor, me as author — partners if you choose.' Attach this JSON + PDF.",
-    "schools": "Forward same email + this JSON to CS/AI departments (Stanford HAI, MIT Media Lab, University of Utah, BYU). Subject: 'Verifiable governed AI action — live demo in your inbox'.",
+    "family": "Send self-proving email to Todd first (structural language). Offer: 'You as inventor, me as author \u2014 partners if you choose.' Attach this JSON + PDF.",
+    "schools": "Forward same email + this JSON to CS/AI departments (Stanford HAI, MIT Media Lab, University of Utah, BYU). Subject: 'Verifiable governed AI action \u2014 live demo in your inbox'.",
     "google_xai_perplexity": "Send to public AI-policy aliases or known contacts. Pitch: 'RIO fills the exact gap in your agent stack (see PDF dependency trail). Self-proving receipt attached.'",
-    "convergence_note": "Every outreach email is itself a governed action with receipt — proves the system by existing."
+    "convergence_note": "Every outreach email is itself a governed action with receipt \u2014 proves the system by existing."
   },
   "implications_and_nuances": {
     "ready_state": "You can literally open-source tomorrow by flipping the repo public after one receipt.",
-    "your_role": "Author / sovereign owner — provide the intent and invariants; system handles the rest.",
-    "trade_off": "Start small (personal loop) → scale to foundation/fund model. No grift — receipts ensure transparency."
+    "your_role": "Author / sovereign owner \u2014 provide the intent and invariants; system handles the rest.",
+    "trade_off": "Start small (personal loop) \u2192 scale to foundation/fund model. No grift \u2014 receipts ensure transparency."
   }
 }

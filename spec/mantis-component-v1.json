@@ -1,19 +1,17 @@
 {
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
   "component": "Mantis",
   "version": "1.0",
   "status": "draft",
   "created": "2026-03-31T20:00:00Z",
   "author": "Jordan (Proxy Interface Agent)",
   "approved_by": null,
-
   "description": "Mantis is the observation and ingestion layer of the RIO system. It watches all intent sources (UI, email, API, voice, webhooks), translates raw signals into structured intent envelopes conforming to intake-schema.json, and routes them to the Governor for evaluation. Mantis sees everything but controls nothing.",
-
   "role_in_three_power_separation": {
     "power": "Observer",
-    "principle": "Mantis is the Observer in the Three-Power Separation architecture. It translates goals into structured intents but cannot approve, deny, or execute any action. The authorization field is always null on intake — only the Governor can fill it.",
+    "principle": "Mantis is the Observer in the Three-Power Separation architecture. It translates goals into structured intents but cannot approve, deny, or execute any action. The authorization field is always null on intake \u2014 only the Governor can fill it.",
     "boundary": "Mantis operates upstream of the Governor. It has no access to execution tokens, approval signatures, or the kill switch. It cannot modify policies or alter ledger entries."
   },
-
   "capabilities": [
     "Receive raw goals from any registered intent source",
     "Translate natural language into structured intent envelopes",
@@ -23,7 +21,6 @@
     "Monitor signal patterns for the Learning Loop (read-only)",
     "Detect duplicate or conflicting intents before submission"
   ],
-
   "prohibitions": [
     "Cannot approve or deny any action",
     "Cannot execute any external action",
@@ -33,17 +30,16 @@
     "Cannot access execution tokens or approval signatures",
     "Cannot write to the ledger directly"
   ],
-
   "intent_sources": [
     {
       "source": "ui",
-      "description": "ONE App interface — user submits intent through the proxy dashboard or approval screen",
-      "protocol": "tRPC → POST /intent"
+      "description": "ONE App interface \u2014 user submits intent through the proxy dashboard or approval screen",
+      "protocol": "tRPC \u2192 POST /intent"
     },
     {
       "source": "email",
-      "description": "Outlook/Gmail with subject 'RIO Intent' — email body contains JSON intent envelope",
-      "protocol": "Power Automate → Azure Service Bus → Observer → POST /intent"
+      "description": "Outlook/Gmail with subject 'RIO Intent' \u2014 email body contains JSON intent envelope",
+      "protocol": "Power Automate \u2192 Azure Service Bus \u2192 Observer \u2192 POST /intent"
     },
     {
       "source": "api",
@@ -53,50 +49,47 @@
     {
       "source": "webhook",
       "description": "Incoming webhooks from connected services (GitHub, Slack, Calendar events)",
-      "protocol": "Webhook receiver → intent translation → POST /intent"
+      "protocol": "Webhook receiver \u2192 intent translation \u2192 POST /intent"
     },
     {
       "source": "voice",
       "description": "Voice-to-intent via speech transcription and natural language parsing",
-      "protocol": "Audio → Whisper transcription → intent extraction → POST /intent"
+      "protocol": "Audio \u2192 Whisper transcription \u2192 intent extraction \u2192 POST /intent"
     }
   ],
-
   "intake_envelope_schema": {
     "reference": "spec/intake-schema.json",
     "required_fields": {
       "identity": {
-        "subject": "string (required) — unique ID of requester",
-        "auth_method": "string (required) — how identity was verified"
+        "subject": "string (required) \u2014 unique ID of requester",
+        "auth_method": "string (required) \u2014 how identity was verified"
       },
       "intent": {
-        "action": "string (required) — the action to perform"
+        "action": "string (required) \u2014 the action to perform"
       },
       "context": {
-        "reason": "string (required) — human-readable explanation"
+        "reason": "string (required) \u2014 human-readable explanation"
       },
-      "authorization": "null (always null on intake — filled by Governor)"
+      "authorization": "null (always null on intake \u2014 filled by Governor)"
     }
   },
-
   "enforcement_gates": [
     {
       "gate": "IDENTITY_GATE",
       "check": "Is the agent or human recognized in the registered_agents list?",
-      "fail_mode": "CLOSED — reject unknown identity"
+      "fail_mode": "CLOSED \u2014 reject unknown identity"
     },
     {
       "gate": "SCHEMA_GATE",
       "check": "Does the intake conform to intake-schema.json?",
-      "fail_mode": "CLOSED — reject malformed request"
+      "fail_mode": "CLOSED \u2014 reject malformed request"
     },
     {
       "gate": "DUPLICATE_GATE",
       "check": "Has an identical intent been submitted within the dedup window?",
-      "fail_mode": "WARN — flag as potential duplicate, allow with annotation"
+      "fail_mode": "WARN \u2014 flag as potential duplicate, allow with annotation"
     }
   ],
-
   "api_contracts": [
     {
       "method": "POST",
@@ -118,9 +111,8 @@
       "response": "Complete intent object including governance decision, receipt (if executed), and ledger position"
     }
   ],
-
   "pattern_monitoring": {
-    "description": "Mantis passively monitors intent patterns to feed the Learning Loop. This is read-only observation — Mantis cannot modify policies based on patterns.",
+    "description": "Mantis passively monitors intent patterns to feed the Learning Loop. This is read-only observation \u2014 Mantis cannot modify policies based on patterns.",
     "signals": [
       "Intent frequency by action type",
       "Approval/denial ratios per action category",
@@ -130,20 +122,18 @@
     ],
     "output": "Pattern reports available via GET /api/sync for the ProxyDashboard"
   },
-
   "relationship_to_other_components": {
     "governor": "Mantis routes validated intents to the Governor. The Governor evaluates policy and returns a governance decision. Mantis has no influence on the decision.",
-    "executor": "Mantis has no direct relationship to the Executor. Intents flow Observer → Governor → Executor. Mantis never communicates with the Executor.",
+    "executor": "Mantis has no direct relationship to the Executor. Intents flow Observer \u2192 Governor \u2192 Executor. Mantis never communicates with the Executor.",
     "ledger": "Mantis does not write to the ledger. The Executor writes receipts after execution. Mantis can read ledger entries for pattern monitoring (read-only).",
     "learning_loop": "Mantis feeds pattern data to the Learning Loop, which proposes policy updates. Proposed updates go through governance before activation."
   },
-
   "invariants": [
     "Every intent must have Identity, Intent, and Context before routing to Governor",
-    "Authorization is always null on intake — Mantis cannot pre-approve",
+    "Authorization is always null on intake \u2014 Mantis cannot pre-approve",
     "Mantis cannot execute any external action",
     "All rejected intents are logged with reason codes",
-    "Pattern monitoring is read-only — Mantis cannot modify policies",
+    "Pattern monitoring is read-only \u2014 Mantis cannot modify policies",
     "Mantis cannot communicate directly with the Executor"
   ]
 }

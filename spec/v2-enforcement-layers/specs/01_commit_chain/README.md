@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # 01 — Commit Chain
 
 **Source files:** `controlPlane.ts` (A7: FormalLedgerEntry, buildFormalLedgerEntry), `kernelExecutor.ts` (WAL discipline, rebuildNonceCache, startupLedgerVerification), `integritySubstrate.ts` (validateAtSubstrate, 4-check gate), `db.ts` (appendLedger, verifyHashChain, getAllLedgerEntries), `authorityLayer.ts` (GenesisRecord)

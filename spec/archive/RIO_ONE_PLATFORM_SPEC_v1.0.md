@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO / ONE Platform Specification v1.0
 
 **Spec ID:** RIO-SPEC-PLATFORM-001

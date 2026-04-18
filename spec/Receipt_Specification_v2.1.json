@@ -1,4 +1,5 @@
 {
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "title": "RIO Receipt Protocol Specification",
   "version": "2.1.0",
@@ -30,7 +31,15 @@
         "action_type": {
           "type": "string",
           "description": "The type of action being requested.",
-          "examples": ["send_email", "send_sms", "create_pr", "transfer_funds", "create_event", "write_file", "KILL_PROXY"]
+          "examples": [
+            "send_email",
+            "send_sms",
+            "create_pr",
+            "transfer_funds",
+            "create_event",
+            "write_file",
+            "KILL_PROXY"
+          ]
         },
         "requested_by": {
           "type": "string",
@@ -39,7 +48,15 @@
         "target": {
           "type": "string",
           "description": "The target system or resource the action will affect.",
-          "examples": ["gmail", "github", "google_drive", "slack", "outlook", "twilio", "payment_processor"]
+          "examples": [
+            "gmail",
+            "github",
+            "google_drive",
+            "slack",
+            "outlook",
+            "twilio",
+            "payment_processor"
+          ]
         },
         "parameters": {
           "type": "object",
@@ -48,7 +65,12 @@
         },
         "risk_level": {
           "type": "string",
-          "enum": ["low", "medium", "high", "critical"],
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ],
           "description": "Assessed risk level of the proposed action."
         },
         "context": {
@@ -61,13 +83,29 @@
           "properties": {
             "source": {
               "type": "string",
-              "enum": ["api", "email", "sms", "webhook", "frontend", "service_bus", "onboard", "kill_switch", "internal"],
+              "enum": [
+                "api",
+                "email",
+                "sms",
+                "webhook",
+                "frontend",
+                "service_bus",
+                "onboard",
+                "kill_switch",
+                "internal"
+              ],
               "description": "The channel through which this intent was received."
             },
             "channel": {
               "type": "string",
               "description": "Specific endpoint or integration path.",
-              "examples": ["POST /intent", "POST /api/v1/intents", "outlook-power-automate", "twilio-webhook", "POST /api/onboard"]
+              "examples": [
+                "POST /intent",
+                "POST /api/v1/intents",
+                "outlook-power-automate",
+                "twilio-webhook",
+                "POST /api/onboard"
+              ]
             },
             "source_message_id": {
               "type": "string",
@@ -79,7 +117,11 @@
               "description": "ISO 8601 UTC timestamp of when the intent was received by the gateway."
             }
           },
-          "required": ["source", "channel", "timestamp"]
+          "required": [
+            "source",
+            "channel",
+            "timestamp"
+          ]
         },
         "created_at": {
           "type": "string",
@@ -87,7 +129,15 @@
           "description": "ISO 8601 UTC timestamp of when this request was created."
         }
       },
-      "required": ["request_id", "action_type", "requested_by", "target", "parameters", "risk_level", "created_at"]
+      "required": [
+        "request_id",
+        "action_type",
+        "requested_by",
+        "target",
+        "parameters",
+        "risk_level",
+        "created_at"
+      ]
     },
     "AIRecommendation": {
       "description": "The AI system's evaluation of an ActionRequest against the active policy context.",
@@ -105,7 +155,11 @@
         },
         "recommended_action": {
           "type": "string",
-          "enum": ["proceed", "block", "escalate"],
+          "enum": [
+            "proceed",
+            "block",
+            "escalate"
+          ],
           "description": "The AI's recommendation for how to handle this request."
         },
         "confidence": {
@@ -120,7 +174,9 @@
         },
         "unknowns": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Explicit declaration of assumptions or unknowns that affect confidence."
         },
         "created_at": {
@@ -129,7 +185,14 @@
           "description": "ISO 8601 UTC timestamp of when this recommendation was generated."
         }
       },
-      "required": ["recommendation_id", "request_id", "recommended_action", "confidence", "reasoning", "created_at"]
+      "required": [
+        "recommendation_id",
+        "request_id",
+        "recommended_action",
+        "confidence",
+        "reasoning",
+        "created_at"
+      ]
     },
     "ApprovalRecord": {
       "description": "A cryptographically signed, time-limited authorization from a human authority. Each approval is bound to a specific request_id and can only be used once.",
@@ -152,7 +215,11 @@
         "approver_role": {
           "type": "string",
           "description": "The organizational role of the approver at the time of approval.",
-          "examples": ["account_owner", "system_admin", "compliance_officer"]
+          "examples": [
+            "account_owner",
+            "system_admin",
+            "compliance_officer"
+          ]
         },
         "signer_id": {
           "type": "string",
@@ -160,7 +227,12 @@
         },
         "approval_status": {
           "type": "string",
-          "enum": ["approved", "denied", "revoked", "expired"],
+          "enum": [
+            "approved",
+            "denied",
+            "revoked",
+            "expired"
+          ],
           "description": "The outcome of the human authorization decision."
         },
         "approved_at": {
@@ -175,12 +247,22 @@
         },
         "auth_method": {
           "type": "string",
-          "enum": ["password", "mfa_totp", "mfa_hardware_key", "biometric", "oauth2", "api_key_signed", "ed25519"],
+          "enum": [
+            "password",
+            "mfa_totp",
+            "mfa_hardware_key",
+            "biometric",
+            "oauth2",
+            "api_key_signed",
+            "ed25519"
+          ],
           "description": "The authentication method used to verify the approver's identity."
         },
         "conditions": {
           "type": "array",
-          "items": { "type": "string" },
+          "items": {
+            "type": "string"
+          },
           "description": "Optional conditions or constraints attached to the approval."
         },
         "signature": {
@@ -189,11 +271,25 @@
         },
         "signature_algorithm": {
           "type": "string",
-          "enum": ["hmac_sha256", "ecdsa_secp256k1", "rsa_pss_sha256", "ed25519"],
+          "enum": [
+            "hmac_sha256",
+            "ecdsa_secp256k1",
+            "rsa_pss_sha256",
+            "ed25519"
+          ],
           "description": "The algorithm used to generate the signature."
         }
       },
-      "required": ["approval_id", "request_id", "approver_id", "approval_status", "approved_at", "auth_method", "signature", "signature_algorithm"]
+      "required": [
+        "approval_id",
+        "request_id",
+        "approver_id",
+        "approval_status",
+        "approved_at",
+        "auth_method",
+        "signature",
+        "signature_algorithm"
+      ]
     },
     "ExecutionRecord": {
       "description": "The record of what was actually executed against the target system.",
@@ -225,7 +321,13 @@
         },
         "execution_status": {
           "type": "string",
-          "enum": ["success", "failed", "partial", "rolled_back", "blocked"],
+          "enum": [
+            "success",
+            "failed",
+            "partial",
+            "rolled_back",
+            "blocked"
+          ],
           "description": "The outcome of the execution attempt."
         },
         "execution_token_id": {
@@ -240,10 +342,25 @@
         "connector": {
           "type": "string",
           "description": "The connector used to dispatch the action.",
-          "examples": ["gmail", "github", "google_drive", "slack", "outlook", "twilio"]
+          "examples": [
+            "gmail",
+            "github",
+            "google_drive",
+            "slack",
+            "outlook",
+            "twilio"
+          ]
         }
       },
-      "required": ["execution_id", "request_id", "approval_id", "executed_by", "executed_at", "execution_status", "execution_token_id"]
+      "required": [
+        "execution_id",
+        "request_id",
+        "approval_id",
+        "executed_by",
+        "executed_at",
+        "execution_status",
+        "execution_token_id"
+      ]
     },
     "Receipt": {
       "description": "The final, immutable record binding all preceding artifacts into a single signed document. Receipts form a hash-chained ledger. v2.1 adds identity_binding for Ed25519 signer proof.",
@@ -256,7 +373,12 @@
         },
         "receipt_type": {
           "type": "string",
-          "enum": ["governed_action", "kill_switch", "onboard", "system"],
+          "enum": [
+            "governed_action",
+            "kill_switch",
+            "onboard",
+            "system"
+          ],
           "description": "The type of receipt. Added in v2.1. 'governed_action' is the standard pipeline receipt. 'kill_switch' records emergency proxy shutdown. 'onboard' records new user welcome. 'system' records system-level events.",
           "default": "governed_action"
         },
@@ -305,9 +427,15 @@
           "type": "object",
           "description": "Provenance metadata from the original ActionRequest. Added in v2.1.",
           "properties": {
-            "source": { "type": "string" },
-            "channel": { "type": "string" },
-            "source_message_id": { "type": "string" }
+            "source": {
+              "type": "string"
+            },
+            "channel": {
+              "type": "string"
+            },
+            "source_message_id": {
+              "type": "string"
+            }
           }
         },
         "identity_binding": {
@@ -328,22 +456,50 @@
             },
             "verification_method": {
               "type": "string",
-              "enum": ["ed25519"],
+              "enum": [
+                "ed25519"
+              ],
               "description": "The signature verification method used."
             }
           },
-          "required": ["signer_id", "public_key_hex", "signature_payload_hash", "verification_method"]
+          "required": [
+            "signer_id",
+            "public_key_hex",
+            "signature_payload_hash",
+            "verification_method"
+          ]
         },
         "hash_chain": {
           "type": "object",
           "properties": {
-            "intent_hash": { "type": "string", "description": "SHA-256 hash of the ActionRequest." },
-            "governance_hash": { "type": "string", "description": "SHA-256 hash of the governance decision." },
-            "authorization_hash": { "type": "string", "description": "SHA-256 hash of the ApprovalRecord." },
-            "execution_hash": { "type": "string", "description": "SHA-256 hash of the ExecutionRecord." },
-            "receipt_hash": { "type": "string", "description": "SHA-256 hash of this receipt (covers all preceding hashes)." }
+            "intent_hash": {
+              "type": "string",
+              "description": "SHA-256 hash of the ActionRequest."
+            },
+            "governance_hash": {
+              "type": "string",
+              "description": "SHA-256 hash of the governance decision."
+            },
+            "authorization_hash": {
+              "type": "string",
+              "description": "SHA-256 hash of the ApprovalRecord."
+            },
+            "execution_hash": {
+              "type": "string",
+              "description": "SHA-256 hash of the ExecutionRecord."
+            },
+            "receipt_hash": {
+              "type": "string",
+              "description": "SHA-256 hash of this receipt (covers all preceding hashes)."
+            }
           },
-          "required": ["intent_hash", "governance_hash", "authorization_hash", "execution_hash", "receipt_hash"]
+          "required": [
+            "intent_hash",
+            "governance_hash",
+            "authorization_hash",
+            "execution_hash",
+            "receipt_hash"
+          ]
         },
         "ledger_hash": {
           "type": "string",
@@ -359,23 +515,47 @@
         },
         "verification_method": {
           "type": "string",
-          "enum": ["hmac_sha256", "ecdsa_secp256k1", "rsa_pss_sha256", "ed25519"],
+          "enum": [
+            "hmac_sha256",
+            "ecdsa_secp256k1",
+            "rsa_pss_sha256",
+            "ed25519"
+          ],
           "description": "The signature algorithm used."
         },
         "status": {
           "type": "string",
-          "enum": ["valid", "tampered", "unverified"],
+          "enum": [
+            "valid",
+            "tampered",
+            "unverified"
+          ],
           "description": "The verification status of this receipt."
         }
       },
-      "required": ["receipt_id", "request_id", "action_type", "requested_by", "created_at", "ledger_hash", "previous_hash", "status"]
+      "required": [
+        "receipt_id",
+        "request_id",
+        "action_type",
+        "requested_by",
+        "created_at",
+        "ledger_hash",
+        "previous_hash",
+        "status"
+      ]
     }
   },
   "hash_specification": {
     "algorithm": "SHA-256",
     "serialization": "Deterministic JSON (keys sorted alphabetically, no whitespace, UTF-8 encoding)",
     "genesis_value": "GENESIS",
-    "chain_order": ["intent_hash", "governance_hash", "authorization_hash", "execution_hash", "receipt_hash"]
+    "chain_order": [
+      "intent_hash",
+      "governance_hash",
+      "authorization_hash",
+      "execution_hash",
+      "receipt_hash"
+    ]
   },
   "supported_signature_methods": [
     "hmac_sha256",
@@ -386,15 +566,42 @@
   "ingestion_sources": {
     "description": "Canonical list of ingestion source identifiers. Each intent entering the system must declare its source.",
     "sources": [
-      { "id": "api", "description": "Direct API call via POST /intent or POST /api/v1/intents" },
-      { "id": "email", "description": "Email-originated intent via Outlook → Power Automate → Service Bus" },
-      { "id": "sms", "description": "SMS-originated intent via Twilio webhook" },
-      { "id": "webhook", "description": "Generic webhook ingestion" },
-      { "id": "frontend", "description": "Intent submitted from the Jordan dashboard UI" },
-      { "id": "service_bus", "description": "Azure Service Bus message" },
-      { "id": "onboard", "description": "User onboarding welcome receipt" },
-      { "id": "kill_switch", "description": "Emergency proxy shutdown" },
-      { "id": "internal", "description": "System-generated internal event" }
+      {
+        "id": "api",
+        "description": "Direct API call via POST /intent or POST /api/v1/intents"
+      },
+      {
+        "id": "email",
+        "description": "Email-originated intent via Outlook \u2192 Power Automate \u2192 Service Bus"
+      },
+      {
+        "id": "sms",
+        "description": "SMS-originated intent via Twilio webhook"
+      },
+      {
+        "id": "webhook",
+        "description": "Generic webhook ingestion"
+      },
+      {
+        "id": "frontend",
+        "description": "Intent submitted from the Jordan dashboard UI"
+      },
+      {
+        "id": "service_bus",
+        "description": "Azure Service Bus message"
+      },
+      {
+        "id": "onboard",
+        "description": "User onboarding welcome receipt"
+      },
+      {
+        "id": "kill_switch",
+        "description": "Emergency proxy shutdown"
+      },
+      {
+        "id": "internal",
+        "description": "System-generated internal event"
+      }
     ]
   }
 }

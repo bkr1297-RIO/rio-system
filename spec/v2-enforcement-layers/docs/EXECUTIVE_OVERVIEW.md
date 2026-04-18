@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO — EXECUTIVE OVERVIEW (ONE PAGE)
 
 ## What This Is

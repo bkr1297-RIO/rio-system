@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 Internet-Draft               RIO Protocol                    April 2026
 Intended status: Standards Track
 Expires: October 3, 2026

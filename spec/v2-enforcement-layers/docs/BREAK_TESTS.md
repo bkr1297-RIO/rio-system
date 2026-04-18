@@ -1,3 +1,5 @@
+> Derived from: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # Break Tests
 
 **Extracted from:** `RED-TEAM-REPORT.md`, `redteam.break.test.ts`, `kernelV2.acceptance.test.ts`, `gateway-identity-eval.test.ts`, `authorityLayer.test.ts`
