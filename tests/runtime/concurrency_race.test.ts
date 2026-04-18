@@ -1,3 +1,5 @@
+// All tests validate: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 import { describe, expect, it, vi, beforeAll } from "vitest";
 import { appRouter } from "./routers";
 import type { TrpcContext } from "./_core/context";

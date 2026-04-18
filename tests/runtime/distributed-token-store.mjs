@@ -1,3 +1,5 @@
+// All tests validate: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 /**
  * Distributed Token Store — File-Backed (Simulates Shared Database)
  * ═══════════════════════════════════════════════════════════════════

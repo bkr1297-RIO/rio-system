@@ -1,3 +1,5 @@
+> All tests validate: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # Test: Concurrency Race Condition
 
 ## Invariant Under Test

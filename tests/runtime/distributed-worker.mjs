@@ -1,3 +1,5 @@
+// All tests validate: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 /**
  * Distributed Worker — Spawned as a child process.
  * Each worker independently attempts to validate and execute against the shared token.
