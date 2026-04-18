@@ -1,3 +1,5 @@
+> This document explains the system defined in: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # If You're New — Read This First
 
 You only need to understand one thing:

@@ -1,3 +1,5 @@
+> This document explains the system defined in: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO System Architecture — v2.7.0
 
 **Date:** 2026-03-31
