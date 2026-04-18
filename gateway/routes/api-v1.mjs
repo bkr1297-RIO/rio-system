@@ -51,7 +51,9 @@ import {
   buildSignaturePayload,
   verifySignature,
   hashPayload,
+  signPayload,
 } from "../security/ed25519.mjs";
+import { getGatewayKeypair } from "../routes/index.mjs";
 import { getSignerPublicKey } from "../security/identity-binding.mjs";
 import {
   validateIntake,
@@ -61,6 +63,7 @@ import {
 import {
   issueExecutionToken,
   validateAndBurnToken,
+  computeArgsHash,
 } from "../security/token-manager.mjs";
 import { requireScope, requireAnyAuth } from "../security/api-auth.mjs";
 import { createApiKey, listApiKeys, revokeApiKey, getApiKey } from "../security/api-keys.mjs";
@@ -442,7 +445,17 @@ router.post("/intents/:id/execute", requireScope("admin"), requireRole("executor
     }
 
     const timestamp = new Date().toISOString();
-    const { token: burnableToken, expires_at: tokenExpiresAt } = issueExecutionToken(intent_id);
+    // HARDENED v2: Issue bound execution token with binding fields
+    const gatewayKp = getGatewayKeypair();
+    const tokenArgsHash = computeArgsHash(intent.parameters || {});
+    const { token: burnableToken, token_id: tokenId_v1, payload: tokenPayload, signature: tokenSig, expires_at: tokenExpiresAt } = issueExecutionToken({
+      intent_id,
+      approval_id: intent.authorization?.approval_id || null,
+      tool_name: intent.action,
+      args_hash: tokenArgsHash,
+      max_executions: 1,
+      signFn: (payload) => signPayload(payload, gatewayKp.secretKey),
+    });
 
     const executionToken = {
       intent_id,
@@ -455,6 +468,10 @@ router.post("/intents/:id/execute", requireScope("admin"), requireRole("executor
       status: "execute_now",
       execution_token: burnableToken,
       token_expires_at: tokenExpiresAt,
+      token_id: tokenId_v1,
+      token_signature: tokenSig,
+      tool_name: intent.action,
+      args_hash: tokenArgsHash,
     };
 
     updateIntent(intent_id, {
@@ -509,7 +526,12 @@ router.post("/intents/:id/confirm", requireScope("write"), requireRole("executor
     }
 
     const tokenToValidate = execution_token || intent.execution_token?.execution_token;
-    const burnResult = validateAndBurnToken(intent_id, tokenToValidate);
+    // HARDENED v2: Validate with binding checks
+    const burnResult = validateAndBurnToken(intent_id, tokenToValidate, {
+      tool_name: intent.action,
+      args_hash: computeArgsHash(intent.parameters || {}),
+      environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+    });
     if (!burnResult.valid) {
       appendEntry({
         intent_id,

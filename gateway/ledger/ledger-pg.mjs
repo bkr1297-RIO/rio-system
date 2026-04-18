@@ -112,8 +112,34 @@ async function autoMigrate(pool) {
     );
     CREATE INDEX IF NOT EXISTS idx_approvals_intent_id ON approvals(intent_id);
     CREATE INDEX IF NOT EXISTS idx_approvals_approver_id ON approvals(approver_id);
+
+    -- Authorization tokens: DB-backed single-use execution tokens
+    -- Lifecycle: ACTIVE → USED → EXPIRED
+    CREATE TABLE IF NOT EXISTS authorization_tokens (
+      id              SERIAL PRIMARY KEY,
+      token_id        UUID UNIQUE NOT NULL,
+      intent_id       UUID NOT NULL,
+      approval_id     UUID,
+      tool_name       VARCHAR(255) NOT NULL,
+      args_hash       VARCHAR(64) NOT NULL,
+      environment     VARCHAR(100) NOT NULL DEFAULT 'production',
+      nonce           VARCHAR(64) NOT NULL,
+      max_executions  INTEGER NOT NULL DEFAULT 1,
+      execution_count INTEGER NOT NULL DEFAULT 0,
+      status          VARCHAR(20) NOT NULL DEFAULT 'ACTIVE',
+      signature       TEXT,
+      issued_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+      expires_at      TIMESTAMPTZ NOT NULL,
+      burned_at       TIMESTAMPTZ,
+      created_at      TIMESTAMPTZ DEFAULT NOW(),
+      CONSTRAINT valid_token_status CHECK (
+        status IN ('ACTIVE', 'USED', 'EXPIRED')
+      )
+    );
+    CREATE INDEX IF NOT EXISTS idx_auth_tokens_intent_id ON authorization_tokens(intent_id);
+    CREATE INDEX IF NOT EXISTS idx_auth_tokens_status ON authorization_tokens(status);
   `);
-  console.log("[RIO Ledger-PG] Auto-migration complete — tables verified.");
+  console.log("[RIO Ledger-PG] Auto-migration complete — tables verified (incl. authorization_tokens).");
 }
 
 /**

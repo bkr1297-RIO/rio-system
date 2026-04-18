@@ -54,6 +54,7 @@ import {
   issueExecutionToken,
   validateAndBurnToken,
   getActiveTokenCount,
+  computeArgsHash,
 } from "../security/token-manager.mjs";
 import {
   getReplayPreventionStats,
@@ -823,10 +824,20 @@ router.post("/execute", requireRole("executor"), (req, res) => {
     }
 
     // ---------------------------------------------------------------
-    // HARDENED: Issue single-use execution token (Fix #1: Token Burn)
-    // The token is a cryptographic UUID that can be used EXACTLY ONCE.
+    // HARDENED v2: Issue bound execution token with full binding fields
+    // Token is bound to: intent_id, tool_name, args_hash, environment
+    // Signed by gateway Ed25519 key. Single-use. Fail-closed.
     // ---------------------------------------------------------------
-    const { token: burnableToken, expires_at: tokenExpiresAt } = issueExecutionToken(intent_id);
+    const gatewayKp = getGatewayKeypair();
+    const tokenArgsHash = computeArgsHash(intent.parameters || {});
+    const { token: burnableToken, token_id: tokenId_exec, payload: tokenPayload, signature: tokenSig, expires_at: tokenExpiresAt } = issueExecutionToken({
+      intent_id,
+      approval_id: intent.authorization?.approval_id || null,
+      tool_name: intent.action,
+      args_hash: tokenArgsHash,
+      max_executions: 1,
+      signFn: (payload) => signPayload(payload, gatewayKp.secretKey),
+    });
 
     // Build the execution token — this is what the agent uses to prove
     // the gateway authorized this specific action
@@ -901,11 +912,15 @@ router.post("/execute-confirm", requireRole("executor"), (req, res) => {
     }
 
     // ---------------------------------------------------------------
-    // HARDENED: Validate and burn execution token (Fix #1: Token Burn)
-    // Token can only be used ONCE. Replay attempts are rejected.
+    // HARDENED v2: Validate and burn execution token with binding checks
+    // Token can only be used ONCE. Tool/args/env must match. Fail-closed.
     // ---------------------------------------------------------------
     const tokenToValidate = execution_token || intent.execution_token?.execution_token;
-    const burnResult = validateAndBurnToken(intent_id, tokenToValidate);
+    const burnResult = validateAndBurnToken(intent_id, tokenToValidate, {
+      tool_name: intent.action,
+      args_hash: computeArgsHash(intent.parameters || {}),
+      environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+    });
     if (!burnResult.valid) {
       appendEntry({
         intent_id,
@@ -1118,9 +1133,17 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       });
     }
 
-    // ——— ITEM 1: Issue authorization token after verifying approval ————
-    const { token: executionToken, expires_at: tokenExpiresAt } = issueExecutionToken(intent_id);
-    const tokenId = executionToken; // UUID token string serves as token_id
+    // ——— ITEM 1: Issue bound authorization token after verifying approval ————
+    const gatewayKp = getGatewayKeypair();
+    const tokenArgsHash = computeArgsHash(intent.parameters || {});
+    const { token: executionToken, token_id: tokenId, payload: tokenPayload, signature: tokenSig, expires_at: tokenExpiresAt } = issueExecutionToken({
+      intent_id,
+      approval_id: intent.authorization?.approval_id || null,
+      tool_name: intent.action,
+      args_hash: tokenArgsHash,
+      max_executions: 1,
+      signFn: (payload) => signPayload(payload, gatewayKp.secretKey),
+    });
 
     console.log(`[RIO Gateway] Token issued for ${intent_id} — expires ${tokenExpiresAt}`);
 
@@ -1132,11 +1155,16 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       detail: `Authorization token issued (single-use, expires ${tokenExpiresAt}).`,
     });
 
-    // ——— ITEM 2 + 3: Validate and burn token before execution ——————————
-    // validateAndBurnToken is single-use: it marks the token as burned on
-    // first call. If the same token is presented again, it returns
-    // { valid: false, reason: "...already been used..." }.
-    const burnResult = validateAndBurnToken(intent_id, executionToken);
+    // ——— ITEM 2 + 3: Validate and burn token with full binding checks ——————
+    // Token is validated against: intent, tool, args hash, environment.
+    // Single-use: burned on first call. Replay/mismatch = DENY.
+    const burnResult = validateAndBurnToken(intent_id, executionToken, {
+      tool_name: intent.action,
+      args_hash: tokenArgsHash,
+      environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+      signature: tokenSig,
+      verifyFn: (payload, sig) => verifySignature(payload, sig, gatewayKp.publicKey),
+    });
     if (!burnResult.valid) {
       // FAIL CLOSED: token validation failed — do not execute
       appendEntry({
@@ -1577,4 +1605,5 @@ router.get("/intent/:id", requirePrincipal, (req, res) => {
   }
 });
 
+export { getGatewayKeypair };
 export default router;

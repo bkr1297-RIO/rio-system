@@ -140,6 +140,13 @@
       "description": "Changes to governance rules. Requires Meta-Governance quorum."
     },
     {
+      "class_id": "gemini_query",
+      "pattern": "gemini_query|gemini_*",
+      "risk_tier": "HIGH",
+      "governance_decision": "REQUIRE_HUMAN",
+      "description": "Gemini AI model queries. External API call with data exposure risk. Requires human approval."
+    },
+    {
       "class_id": "invariant_violations",
       "pattern": "self_authorize|bypass_governance|execute_without_approval",
       "risk_tier": "CRITICAL",
