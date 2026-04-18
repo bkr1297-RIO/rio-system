@@ -1,3 +1,5 @@
+> This implementation enforces: /specs/canonical/RIO_CANONICAL_SPEC_v1.0.md
+
 # RIO Governance Gateway — Architecture
 
 [Back to README.md](../../README.md)
