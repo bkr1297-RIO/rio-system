@@ -35,7 +35,7 @@ All components, tests, and artifacts derive from this specification.
 
 ## Enforcement Proof (April 2026)
 
-**100/100 tests pass** across the live system. The governance boundary has been verified through:
+**148/148 governance tests PASS** across the live system. The governance boundary has been verified through:
 
 - **5-step hardening sequence** — credential audit, adapter pattern proof, 25 red-team attacks (all blocked), import/reachability audit, real governed email execution
 - **7-scenario live compliance runner** — zero mocks, all PASS/FAIL from real Gate decisions and real execution outcomes
@@ -66,6 +66,17 @@ All components, tests, and artifacts derive from this specification.
 | `TOKEN_ALREADY_CONSUMED` | Token already burned (replay attempt) |
 
 See [`docs/VERIFICATION-PACKET.md`](docs/VERIFICATION-PACKET.md) for the formal 7-claim verification artifact with evidence and pass/fail criteria.
+
+### Canonical Publish Claim
+
+```
+PGTC Core 1.0
+Test Suite: TS-01
+Compliance: 20/20 PASS
+Governance Tests: 148/148 PASS
+Reference Implementation: RIO
+Checkpoint: 2e193690
+```
 
 ---
 
@@ -264,6 +275,10 @@ See [VERIFICATION_RESULTS.md](VERIFICATION_RESULTS.md) for detailed results and 
 | [Gateway Architecture](gateway/ARCHITECTURE.md) | Gateway internals, route map, and middleware chain |
 | [Mantis Component](spec/MANTIS_COMPONENT.md) | Observer/ingestion layer component definition |
 | [Demo Walkthrough](DEMO_WALKTHROUGH.md) | Step-by-step demo with curl commands |
+| [PGTC Core Spec](pgtc/spec/core.md) | Provable Governance Test Criteria — core specification |
+| [PGTC Processing Model](pgtc/spec/processing-model.md) | 14-step processing pipeline with RFC 2119 keywords |
+| [PGTC Compliance Report](pgtc/PGTC-COMPLIANCE-REPORT.md) | 20/20 PASS compliance verdict |
+| [FAQ](docs/FAQ.md) | Frequently asked questions about RIO |
 
 ---
 
@@ -298,14 +313,43 @@ rio-system/
 │   ├── generate_compliance_report.py
 │   └── report_schema.json          #   Report JSON schema
 │
-├── tests/                          # Conformance tests
+├── pgtc/                           # Provable Governance Test Criteria
+│   ├── PGTC-COMPLIANCE-REPORT.md   #   20/20 PASS compliance verdict
+│   ├── spec/                       #   PGTC specification documents
+│   │   ├── core.md                 #     Core spec (15 formal constraints)
+│   │   ├── terminology.md          #     Normative terminology
+│   │   ├── processing-model.md     #     14-step processing pipeline
+│   │   ├── compliance.md           #     Compliance requirements
+│   │   └── security-considerations.md  # Security considerations
+│   ├── schemas/                    #   JSON schemas (5 schemas)
+│   │   ├── authorization.schema.json
+│   │   ├── intent-packet.schema.json
+│   │   ├── ledger-entry.schema.json
+│   │   ├── receipt.schema.json
+│   │   └── tes-config.schema.json
+│   ├── test-suite/                 #   PGTC conformance test suite
+│   │   └── pgtc.test.ts            #     20 tests (AUTH/PGE/TES/GATE/LEDGER)
+│   └── harness/                    #   Test harness infrastructure
+│       ├── assertions.ts
+│       ├── runner.ts
+│       ├── system.ts
+│       └── test-utils.ts
+│
+├── tests/                          # Conformance & adversarial tests
 │   ├── authority/                  #   Authority chain tests
-│   └── runtime/                    #   Concurrency + race condition tests
+│   ├── runtime/                    #   Concurrency + race condition tests
+│   └── rio_adversarial_test_suite_v0.1/  # 10 adversarial test files
+│       ├── build-mode-tests.test.ts
+│       ├── credential-audit.test.ts
+│       ├── drive-adapter-redteam.test.ts
+│       ├── red-team.test.ts
+│       └── ... (10 files total)
 │
 ├── docs/                           # Documentation (50+ design documents)
 │   ├── VERIFICATION-PACKET.md      #   7-claim verification artifact
 │   ├── 5-STEP-HARDENING-REPORT.md  #   Hardening evidence
-│   └── white_paper/                #   RIO whitepaper
+│   ├── FAQ.md                      #   Frequently asked questions
+│   └── whitepapers/                #   RIO whitepapers
 │
 ├── one-app/                        # ONE Command Center (PWA)
 ├── gateway/                        # Gateway service
@@ -463,7 +507,8 @@ This separation is deliberate and enforced.
 - ONE Command Center: Human control surface (PWA) at [rio-one.manus.space](https://rio-one.manus.space)
 - Formal specifications: Master Seed v1.1, receipt protocol v2.1, component schemas, policy definitions
 - Open standard: [RIO Receipt Protocol](https://github.com/bkr1297-RIO/rio-receipt-protocol) extracted as standalone repo
-- Enforcement proof: 100/100 tests, 5-step hardening, 7-scenario live compliance runner, 8 inventoried execution surfaces
+- Enforcement proof: 148/148 governance tests, 20/20 PGTC compliance, 5-step hardening, 7-scenario live compliance runner, 8 inventoried execution surfaces
+- PGTC: Provable Governance Test Criteria — formal compliance standard with spec, schemas, test suite, and harness
 - Reference implementations: Python adapters, token system, orchestrator, compliance runner
 - Governing corpus: Policy definitions, agent roles, witness records
 
