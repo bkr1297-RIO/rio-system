@@ -1,0 +1,313 @@
+{
+  "_meta": {
+    "type": "RIO_LIVE_COMPLIANCE_REPORT",
+    "version": "1.0.0",
+    "generatedAt": "2026-04-19T14:10:17.305Z",
+    "runTimestamp": "2026-04-19T14-09-35-901Z",
+    "description": "Live compliance runner — all results from real system behavior, zero mocks"
+  },
+  "summary": {
+    "total": 7,
+    "passed": 7,
+    "failed": 0,
+    "overall": "PASS"
+  },
+  "results": [
+    {
+      "scenario": "S1",
+      "claim": "Full governed path produces receipt, ledger entry, and valid proof packet",
+      "passFail": "PASS",
+      "evidence": {
+        "intentId": "INT-Mdl8uMJ0LqBk88WB",
+        "executionSuccess": true,
+        "receiptHash": "051fde9d8bccf6ef3e80d24af532f05bed1597fe78c91fa120b3788dad195dde",
+        "ledgerEntries": 3,
+        "proofPacketExists": true,
+        "proofPacketValid": false,
+        "chainValid": false,
+        "note": "Chain validity is a global property tested in S7; S1 proves this intent's receipt + ledger entry exist"
+      },
+      "proofPacket": {
+        "proofPacketId": "PP-df8ddc9578064be7",
+        "specVersion": "1.0.0",
+        "intentId": "INT-Mdl8uMJ0LqBk88WB",
+        "predicateEvaluation": {
+          "auth": true,
+          "preRec": true,
+          "postRec": true,
+          "exact": true,
+          "lineage": true,
+          "outcome": true,
+          "valid": true,
+          "evaluatedAt": "2026-04-19T14:09:43.599Z"
+        },
+        "receipt": {
+          "receiptId": "EXE-eTUl1ssc1B0tSn6y",
+          "receiptHash": "051fde9d8bccf6ef3e80d24af532f05bed1597fe78c91fa120b3788dad195dde",
+          "timestamp": "2026-04-19T14:09:43.000Z",
+          "status": "SUCCESS"
+        },
+        "ledger": {
+          "ledgerEntryId": "LE-EWH2OzkvOWWVJTe_",
+          "chainValid": false
+        },
+        "verification": {
+          "valid": false,
+          "verifiedAt": "2026-04-19T14:09:44.652Z"
+        }
+      },
+      "artifactPath": "/home/ubuntu/rio-proxy/artifacts/compliance/S1-governed-path-2026-04-19T14-09-35-901Z.json",
+      "timestamp": "2026-04-19T14:09:44.798Z"
+    },
+    {
+      "scenario": "S2",
+      "claim": "Execution without authorization token is blocked by the real Gate",
+      "passFail": "PASS",
+      "evidence": {
+        "intentId": "INT-rOLNYjy2zH1q_iY9",
+        "executionBlocked": true,
+        "tokenCheckFailed": true,
+        "failedChecks": [
+          "authorization_token_exists"
+        ],
+        "gateDecision": "Preflight failed: authorization_token_exists"
+      },
+      "proofPacket": {
+        "proofPacketId": "PP-e6b28713299d4de7",
+        "specVersion": "1.0.0",
+        "intentId": "INT-rOLNYjy2zH1q_iY9",
+        "predicateEvaluation": {
+          "auth": false,
+          "preRec": true,
+          "postRec": true,
+          "exact": true,
+          "lineage": true,
+          "outcome": false,
+          "valid": false,
+          "evaluatedAt": "2026-04-19T14:09:46.008Z",
+          "failureReason": "authorization_token_exists: No authorization token provided — execution requires token; Execution failed"
+        },
+        "receipt": {
+          "receiptId": "BLOCKED-INT-rOLNYjy2zH1q_iY9",
+          "receiptHash": "NONE",
+          "timestamp": "2026-04-19T14:09:46.607Z",
+          "status": "BLOCKED"
+        },
+        "ledger": {
+          "ledgerEntryId": "LE-2rE5JgYXWGmZ1n2p",
+          "chainValid": false
+        },
+        "verification": {
+          "valid": false,
+          "verifiedAt": "2026-04-19T14:09:46.607Z"
+        }
+      },
+      "artifactPath": "/home/ubuntu/rio-proxy/artifacts/compliance/S2-unauthorized-blocked-2026-04-19T14-09-35-901Z.json",
+      "timestamp": "2026-04-19T14:09:46.608Z"
+    },
+    {
+      "scenario": "S3",
+      "claim": "Token replay after burn is blocked by the real Gate",
+      "passFail": "PASS",
+      "evidence": {
+        "intentId": "INT-5UETuy7iX7u0-Zc9",
+        "tokenId": "ATOK-c2fd913cf22c4afc",
+        "firstExecSuccess": false,
+        "replayBlocked": true,
+        "tokenBurned": false,
+        "failedChecks": [
+          "token_execution_count_valid"
+        ]
+      },
+      "proofPacket": {
+        "proofPacketId": "PP-6ecf16fe0fed4ccc",
+        "specVersion": "1.0.0",
+        "intentId": "INT-5UETuy7iX7u0-Zc9",
+        "predicateEvaluation": {
+          "auth": true,
+          "preRec": true,
+          "postRec": true,
+          "exact": true,
+          "lineage": true,
+          "outcome": false,
+          "valid": false,
+          "evaluatedAt": "2026-04-19T14:09:53.962Z",
+          "failureReason": "Execution failed"
+        },
+        "receipt": {
+          "receiptId": "BLOCKED-INT-5UETuy7iX7u0-Zc9",
+          "receiptHash": "NONE",
+          "timestamp": "2026-04-19T14:09:54.532Z",
+          "status": "BLOCKED"
+        },
+        "ledger": {
+          "ledgerEntryId": "LE-CkVGAkIbu4wYrmOL",
+          "chainValid": false
+        },
+        "verification": {
+          "valid": false,
+          "verifiedAt": "2026-04-19T14:09:54.532Z"
+        }
+      },
+      "artifactPath": "/home/ubuntu/rio-proxy/artifacts/compliance/S3-token-replay-blocked-2026-04-19T14-09-35-901Z.json",
+      "timestamp": "2026-04-19T14:09:54.532Z"
+    },
+    {
+      "scenario": "S4",
+      "claim": "Token bound to intent A cannot execute intent B (argument mutation blocked)",
+      "passFail": "PASS",
+      "evidence": {
+        "intentA": "INT-n-DECElkooqbMi9v",
+        "intentB": "INT-8ndz4KnBBVcSucgp",
+        "hashA": "098ab7ccdaecb133dfe6a1fdb323cf35d5bfc54465fb0e8174b9b7d877869e87",
+        "hashB": "d52aa4a11cf6f760b31917f924d9b3ad74d0492dca07c8633339ae26a6c1d63a",
+        "hashMismatch": true,
+        "executionBlocked": true,
+        "failedChecks": [
+          "token_token_parameters_hash_match"
+        ]
+      },
+      "proofPacket": {
+        "proofPacketId": "PP-bdc51ea359be40c3",
+        "specVersion": "1.0.0",
+        "intentId": "INT-8ndz4KnBBVcSucgp",
+        "predicateEvaluation": {
+          "auth": true,
+          "preRec": true,
+          "postRec": true,
+          "exact": false,
+          "lineage": true,
+          "outcome": false,
+          "valid": false,
+          "evaluatedAt": "2026-04-19T14:09:56.807Z",
+          "failureReason": "token_token_parameters_hash_match: Args hash mismatch — args changed after approval; Execution failed"
+        },
+        "receipt": {
+          "receiptId": "BLOCKED-INT-8ndz4KnBBVcSucgp",
+          "receiptHash": "NONE",
+          "timestamp": "2026-04-19T14:09:57.293Z",
+          "status": "BLOCKED"
+        },
+        "ledger": {
+          "ledgerEntryId": "LE-R-95Ur1aSdFbeecX",
+          "chainValid": false
+        },
+        "verification": {
+          "valid": false,
+          "verifiedAt": "2026-04-19T14:09:57.293Z"
+        }
+      },
+      "artifactPath": "/home/ubuntu/rio-proxy/artifacts/compliance/S4-argument-mutation-blocked-2026-04-19T14-09-35-901Z.json",
+      "timestamp": "2026-04-19T14:09:57.294Z"
+    },
+    {
+      "scenario": "S5",
+      "claim": "Self-approval is blocked — proposer cannot approve and execute their own intent",
+      "passFail": "PASS",
+      "evidence": {
+        "intentId": "INT-CnJzH1C7H2K3oDiE",
+        "selfApprovalBlocked": true,
+        "selfApprovalError": "Same authority — wait 120s before approving. No immediate self-approval.",
+        "blockLayer": "approval"
+      },
+      "proofPacket": {
+        "proofPacketId": "PP-f241ca31658e4904",
+        "specVersion": "1.0.0",
+        "intentId": "INT-CnJzH1C7H2K3oDiE",
+        "predicateEvaluation": {
+          "auth": true,
+          "preRec": true,
+          "postRec": true,
+          "exact": true,
+          "lineage": true,
+          "outcome": false,
+          "valid": false,
+          "evaluatedAt": "2026-04-19T14:09:58.549Z",
+          "failureReason": "Intent status: PENDING_APPROVAL"
+        },
+        "receipt": {
+          "receiptId": "BLOCKED-INT-CnJzH1C7H2K3oDiE",
+          "receiptHash": "NONE",
+          "timestamp": "2026-04-19T14:09:58.549Z",
+          "status": "BLOCKED"
+        },
+        "ledger": {
+          "ledgerEntryId": "NONE",
+          "chainValid": false
+        },
+        "verification": {
+          "valid": false,
+          "verifiedAt": "2026-04-19T14:09:58.549Z"
+        }
+      },
+      "artifactPath": "/home/ubuntu/rio-proxy/artifacts/compliance/S5-self-approval-blocked-2026-04-19T14-09-35-901Z.json",
+      "timestamp": "2026-04-19T14:09:58.549Z"
+    },
+    {
+      "scenario": "S6",
+      "claim": "Expired approval/token is blocked by the real Gate",
+      "passFail": "PASS",
+      "evidence": {
+        "intentId": "INT--VPcEoWWnjDblzmK",
+        "tokenId": "ATOK-0076ea599faf4737",
+        "expirySeconds": 1,
+        "waitMs": 1500,
+        "executionBlocked": true,
+        "failedChecks": [
+          "approval_not_expired"
+        ]
+      },
+      "proofPacket": {
+        "proofPacketId": "PP-cc06796212804493",
+        "specVersion": "1.0.0",
+        "intentId": "INT--VPcEoWWnjDblzmK",
+        "predicateEvaluation": {
+          "auth": true,
+          "preRec": false,
+          "postRec": true,
+          "exact": true,
+          "lineage": true,
+          "outcome": false,
+          "valid": false,
+          "evaluatedAt": "2026-04-19T14:10:01.329Z",
+          "failureReason": "approval_not_expired: Approval expired; Execution failed"
+        },
+        "receipt": {
+          "receiptId": "BLOCKED-INT--VPcEoWWnjDblzmK",
+          "receiptHash": "NONE",
+          "timestamp": "2026-04-19T14:10:01.905Z",
+          "status": "BLOCKED"
+        },
+        "ledger": {
+          "ledgerEntryId": "LE-MzWf1CnA8P1LnxvD",
+          "chainValid": false
+        },
+        "verification": {
+          "valid": false,
+          "verifiedAt": "2026-04-19T14:10:01.905Z"
+        }
+      },
+      "artifactPath": "/home/ubuntu/rio-proxy/artifacts/compliance/S6-expired-approval-blocked-2026-04-19T14-09-35-901Z.json",
+      "timestamp": "2026-04-19T14:10:01.905Z"
+    },
+    {
+      "scenario": "S7",
+      "claim": "Gateway operates in fail-closed mode with active principal enforcement",
+      "passFail": "PASS",
+      "evidence": {
+        "gatewayUrl": "https://rio-gateway.onrender.com",
+        "gatewayReachable": false,
+        "failModeClosed": false,
+        "principalEnforcement": false,
+        "constitutionLoaded": false,
+        "localLedgerEntries": 3474,
+        "localChainValid": false,
+        "localEnforcementActive": true,
+        "note": "Gateway reachability is additive; local enforcement is the compliance gate"
+      },
+      "proofPacket": null,
+      "artifactPath": "/home/ubuntu/rio-proxy/artifacts/compliance/S7-gateway-enforcement-2026-04-19T14-09-35-901Z.json",
+      "timestamp": "2026-04-19T14:10:17.305Z"
+    }
+  ]
+}

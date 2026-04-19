@@ -1,0 +1,46 @@
+{
+  "intent": {
+    "intentId": "INT-rOLNYjy2zH1q_iY9",
+    "riskTier": "HIGH"
+  },
+  "execution": {
+    "success": false,
+    "error": "Preflight failed: authorization_token_exists"
+  },
+  "failedChecks": [
+    {
+      "check": "authorization_token_exists",
+      "detail": "No authorization token provided — execution requires token"
+    }
+  ],
+  "proofPacket": {
+    "proofPacketId": "PP-e6b28713299d4de7",
+    "specVersion": "1.0.0",
+    "intentId": "INT-rOLNYjy2zH1q_iY9",
+    "predicateEvaluation": {
+      "auth": false,
+      "preRec": true,
+      "postRec": true,
+      "exact": true,
+      "lineage": true,
+      "outcome": false,
+      "valid": false,
+      "evaluatedAt": "2026-04-19T14:09:46.008Z",
+      "failureReason": "authorization_token_exists: No authorization token provided — execution requires token; Execution failed"
+    },
+    "receipt": {
+      "receiptId": "BLOCKED-INT-rOLNYjy2zH1q_iY9",
+      "receiptHash": "NONE",
+      "timestamp": "2026-04-19T14:09:46.607Z",
+      "status": "BLOCKED"
+    },
+    "ledger": {
+      "ledgerEntryId": "LE-2rE5JgYXWGmZ1n2p",
+      "chainValid": false
+    },
+    "verification": {
+      "valid": false,
+      "verifiedAt": "2026-04-19T14:09:46.607Z"
+    }
+  }
+}
