@@ -25,11 +25,47 @@
 
 ## Canonical Specification
 
-The system is formally defined here:
+The system is formally defined in the Master Seed:
 
-[`/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md`](specs/canonical/RIO_CANONICAL_SPEC_v1.0.md)
+[`spec/MASTER_SEED_v1.1.json`](spec/MASTER_SEED_v1.1.json)
 
 All components, tests, and artifacts derive from this specification.
+
+---
+
+## Enforcement Proof (April 2026)
+
+**100/100 tests pass** across the live system. The governance boundary has been verified through:
+
+- **5-step hardening sequence** — credential audit, adapter pattern proof, 25 red-team attacks (all blocked), import/reachability audit, real governed email execution
+- **7-scenario live compliance runner** — zero mocks, all PASS/FAIL from real Gate decisions and real execution outcomes
+- **11 permanent denial tests** — 6 token denial reasons + 5 file-write denial paths
+
+**8 Inventoried Execution Surfaces** (all gated, zero ungated paths):
+
+| # | Surface | Gate |
+|---|---------|------|
+| 1 | `_sendViaGmail` | Module-private, not exported |
+| 2 | `GmailTransportGate.send()` | HMAC-signed, single-use, 30s TTL |
+| 3 | `FakeEmailAdapter.sendEmail()` | PhaseTracker + Gate preflight |
+| 4 | `FakeFileAdapter.executeFileOp()` | PhaseTracker + Gate preflight |
+| 5 | `DriveAdapter.executeDriveOp()` | PhaseTracker + Gate preflight |
+| 6 | `dispatchExecution()` | Requires `_gatewayExecution` flag |
+| 7 | `invokeLLM()` | Read-only (no side effects) |
+| 8 | External `fetch()` | All behind gated connectors |
+
+**Denial Reasons** (machine-readable, returned by Gate):
+
+| Reason | Trigger |
+|--------|--------|
+| `NO_TOKEN` | No authorization token provided |
+| `TOKEN_PROPOSAL_MISMATCH` | Token tool_name does not match request |
+| `TOKEN_HASH_MISMATCH` | Token args_hash does not match (mutation detected) |
+| `TOKEN_EXPIRED` | Token TTL exceeded |
+| `TOKEN_BAD_SIGNATURE` | Token signature verification failed |
+| `TOKEN_ALREADY_CONSUMED` | Token already burned (replay attempt) |
+
+See [`docs/VERIFICATION-PACKET.md`](docs/VERIFICATION-PACKET.md) for the formal 7-claim verification artifact with evidence and pass/fail criteria.
 
 ---
 
@@ -166,13 +202,13 @@ For the complete architecture document, see [Architecture v2.7](docs/ARCHITECTUR
 
 ## Quick Start
 
-### Try the Live Demo
+### Live System
 
-The interactive demo site demonstrates the complete RIO governance flow:
-
-**[riodemo-ux2sxdqo.manus.space](https://riodemo-ux2sxdqo.manus.space)**
-
-The demo shows three perspectives: the AI agent proposing actions, the human approving or denying, and the system recording cryptographic proof.
+| System | URL | Description |
+|--------|-----|-------------|
+| **RIO Digital Proxy** | [riodigital-cqy2ymbu.manus.space](https://riodigital-cqy2ymbu.manus.space) | Live governed execution system |
+| **ONE Command Center** | [rio-one.manus.space](https://rio-one.manus.space) | Human control surface (PWA) |
+| **Legacy Demo** | [riodemo-ux2sxdqo.manus.space](https://riodemo-ux2sxdqo.manus.space) | Interactive 3-perspective walkthrough |
 
 ### Verify the Live Gateway
 
@@ -235,35 +271,47 @@ See [VERIFICATION_RESULTS.md](VERIFICATION_RESULTS.md) for detailed results and 
 
 ```
 rio-system/
-├── gateway/                 # Production governance gateway (Node.js, deployed on Render)
-│   ├── config/              #   Policy and constitution configuration
-│   ├── execution/           #   Execution gate and token validation
-│   ├── governance/          #   Policy evaluation, approval logic, kill switch
-│   ├── ledger/              #   PostgreSQL-backed append-only hash-chained ledger
-│   ├── receipts/            #   Cryptographic receipt generation (Ed25519)
-│   ├── routes/              #   API routes (intake, signers, sync, proxy)
-│   ├── security/            #   Signature verification, replay prevention
-│   └── tests/               #   Gateway integration tests
-├── demo-site/               # Interactive demo site (3-perspective walkthrough)
-├── corpus/                  # Governing corpus (policies, directives, agent definitions)
-├── docs/                    # Documentation
-│   ├── architecture/        #   Architecture diagrams and wiring docs
-│   ├── whitepapers/         #   White papers (v1, v2, Formal, The Structural Read)
-│   ├── guides/              #   Deployment, verification, and handoff guides
-│   ├── enterprise/          #   Enterprise positioning and FAQ
-│   ├── security/            #   Security policies, invariants, roles spec
-│   └── reference/           #   System overview, master document, code audit
-├── spec/                    # Formal specifications
-│   ├── THREE_POWER_SEPARATION.md
-│   ├── MANTIS_COMPONENT.md
-│   ├── Receipt_Specification_v2.1.json
-│   └── [component schemas]
-├── internal/                # Working notes and development artifacts
-├── archive/                 # Historical code iterations (preserved for reference)
-├── CONTRIBUTING.md
-├── THREAT_MODEL.md
-├── VERIFICATION_RESULTS.md
-└── DEMO_WALKTHROUGH.md
+├── spec/                           # Canonical specifications
+│   ├── MASTER_SEED_v1.1.json       #   Master governance seed
+│   ├── ARCHITECTURE.md             #   System architecture
+│   ├── CONSTITUTION.md             #   Governance constitution
+│   ├── RECEIPT_SPEC.md             #   Receipt specification
+│   ├── LEDGER_SPEC.md              #   Ledger specification
+│   ├── IDENTITY_AND_ROLES_SPEC.md  #   Identity and roles
+│   ├── intent_template_spec.md     #   Intent template
+│   ├── intent_packet_spec.md       #   Intent packet format
+│   ├── appendix/                   #   Extended specs (CCE, SCIS, LMS/LLS, etc.)
+│   ├── audits/                     #   Integration boundary audits
+│   ├── examples/                   #   Sample passing/failing artifacts
+│   └── archive/                    #   Superseded specs (preserved)
+│
+├── server/                         # Reference implementations (Python)
+│   ├── orchestrator.py             #   Governed execution orchestration
+│   ├── security/tokens.py          #   Single-use token system (6 denial reasons)
+│   ├── adapters/emailAdapter.py    #   Email adapter (Gate → Receipt)
+│   ├── adapters/drive_adapter.py   #   Drive adapter (Gate → Receipt)
+│   ├── utils/canonical.py          #   Canonical JSON + hash utilities
+│   └── rde/runtimeDiagnostics.ts   #   Runtime Diagnostic Engine (stub)
+│
+├── runner/                         # Compliance verification
+│   ├── run_tests.py                #   7-scenario compliance runner
+│   ├── generate_compliance_report.py
+│   └── report_schema.json          #   Report JSON schema
+│
+├── tests/                          # Conformance tests
+│   ├── authority/                  #   Authority chain tests
+│   └── runtime/                    #   Concurrency + race condition tests
+│
+├── docs/                           # Documentation (50+ design documents)
+│   ├── VERIFICATION-PACKET.md      #   7-claim verification artifact
+│   ├── 5-STEP-HARDENING-REPORT.md  #   Hardening evidence
+│   └── white_paper/                #   RIO whitepaper
+│
+├── one-app/                        # ONE Command Center (PWA)
+├── gateway/                        # Gateway service
+├── artifacts/                      # Execution artifacts
+├── archive/                        # Archived implementations
+└── legacy/                         # Legacy code (preserved)
 ```
 
 ---
@@ -411,10 +459,12 @@ This separation is deliberate and enforced.
 - Gateway: Node.js reference implementation on Render with PostgreSQL
 - Cryptography: Ed25519 signatures, SHA-256 hash chains, single-use tokens
 - Three-Power Separation: Rio Interceptor, Governor, Execution Gate with enforced boundaries
-- Demo site: Interactive 3-perspective walkthrough at [riodemo-ux2sxdqo.manus.space](https://riodemo-ux2sxdqo.manus.space)
-- Formal specifications: Receipt protocol v2.1, component schemas, policy definitions
+- Live system: RIO Digital Proxy at [riodigital-cqy2ymbu.manus.space](https://riodigital-cqy2ymbu.manus.space)
+- ONE Command Center: Human control surface (PWA) at [rio-one.manus.space](https://rio-one.manus.space)
+- Formal specifications: Master Seed v1.1, receipt protocol v2.1, component schemas, policy definitions
 - Open standard: [RIO Receipt Protocol](https://github.com/bkr1297-RIO/rio-receipt-protocol) extracted as standalone repo
-- Security: 100+ verification tests, threat model with 12 vectors, 11/12 passing
+- Enforcement proof: 100/100 tests, 5-step hardening, 7-scenario live compliance runner, 8 inventoried execution surfaces
+- Reference implementations: Python adapters, token system, orchestrator, compliance runner
 - Governing corpus: Policy definitions, agent roles, witness records
 
 ### What's Next
