@@ -99,6 +99,27 @@ async function start() {
     await initIdentityBinding();
     console.log("[RIO Gateway] Identity binding initialized (PostgreSQL).");
 
+    // ─── Ed25519 Compliance Check ────────────────────────────────
+    const ED25519_STARTUP_MODE = process.env.ED25519_MODE || "required";
+    if (ED25519_STARTUP_MODE !== "required") {
+      console.log();
+      console.log("╔══════════════════════════════════════════════════════════════╗");
+      console.log("║  ⚠  WARNING: ED25519 SIGNATURE ENFORCEMENT IS NOT ACTIVE    ║");
+      console.log("╠══════════════════════════════════════════════════════════════╣");
+      console.log(`║  Current ED25519_MODE: ${ED25519_STARTUP_MODE.padEnd(37)}║`);
+      console.log("║  Expected:            required                              ║");
+      console.log("║                                                              ║");
+      console.log("║  System is running in non-compliant mode.                    ║");
+      console.log("║  Unsigned approvals are allowed.                             ║");
+      console.log("║  This violates PGTC CS-03 (Authorization Protocol).          ║");
+      console.log("║                                                              ║");
+      console.log("║  To fix: remove ED25519_MODE env var or set to \"required\"   ║");
+      console.log("╚══════════════════════════════════════════════════════════════╝");
+      console.log();
+    } else {
+      console.log("[RIO Gateway] Ed25519 mode: REQUIRED ✓ (all approvals must be signed)");
+    }
+
     // Initialize API keys (WS-012: Public API)
     await initApiKeys();
     console.log("[RIO Gateway] API key store initialized (PostgreSQL).");
@@ -365,6 +386,7 @@ async function start() {
     console.log(`[RIO Gateway] Fail mode: CLOSED`);
     console.log(`[RIO Gateway] Ledger: PostgreSQL (persistent, append-only)`);
     console.log(`[RIO Gateway] Auth: JWT sessions + Ed25519 signatures`);
+    console.log(`[RIO Gateway] Ed25519 enforcement: ${process.env.ED25519_MODE || "required"}`);
     console.log();
   });
   return server;
