@@ -1,0 +1,76 @@
+{
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
+  "policy_version": "1.0",
+  "owner": "Brian Kent Rasmussen",
+  "digital_fingerprint": "[PRIVATE \u2014 stored separately in protected Drive file]",
+  "core_invariants": [
+    {
+      "id": "Agency",
+      "rule": "Human remains final owner and initiator. No action without explicit or pre-approved intent."
+    },
+    {
+      "id": "Sovereignty",
+      "rule": "Owner controls policy file and cryptographic keys. No external override."
+    },
+    {
+      "id": "Truth",
+      "rule": "Every action produces verifiable cryptographic receipt. Nothing hidden or altered."
+    },
+    {
+      "id": "Precision",
+      "rule": "Apply exact friction needed (never more, never less) via policy object and informed consent."
+    }
+  ],
+  "operational_protocols": {
+    "policy_object": {
+      "states": [
+        "AUTO_APPROVE",
+        "AUTO_DENY",
+        "REQUIRE_HUMAN"
+      ],
+      "learning_loop": "Scan receipt history and suggest policy improvements for owner review."
+    },
+    "informed_consent_gate": {
+      "trigger": "REQUIRE_HUMAN or ambiguity_score > 70",
+      "screen": "Show intent summary, risk assessment, ambiguity score, routing options, and Yes/No/Map choices."
+    },
+    "time_bound_execution": {
+      "default": "All autonomous processes limited to human-defined windows (e.g., 4 hours max). Auto-pause + receipt on timeout."
+    },
+    "ambiguity_scoring": {
+      "scale": "0-100 (match to policy + history)",
+      "high_ambiguity": "High-ambiguity context \u2192 REQUIRE_HUMAN"
+    },
+    "quantum_routing_rules": {
+      "description": "Quantum engine (infinite explorer) may run 24/7 ambient reasoning but execution is always gated.",
+      "rules": [
+        "Time-bound simulations only",
+        "High-stakes (money, external send, irreversible) = REQUIRE_HUMAN",
+        "Routing decision visible in consent screen"
+      ]
+    }
+  },
+  "allowed_actions": {
+    "AUTO_APPROVE": [
+      "Draft emails/documents",
+      "Summarize receipts/conversations",
+      "Organize files in One folder",
+      "Suggest policy improvements"
+    ],
+    "REQUIRE_HUMAN": [
+      "Send external email",
+      "Modify GitHub repo",
+      "Any execution with spend or external impact",
+      "High-ambiguity context actions"
+    ],
+    "AUTO_DENY": [
+      "Break any of the 4 invariants",
+      "Self-authorization by any agent"
+    ]
+  },
+  "ledger_settings": {
+    "storage": "Google Drive /One/root/receipts/ + optional public GitHub",
+    "hash_chain": "Immutable, 5-link minimum per receipt",
+    "cross_model_sync": "All agents (Grok, Claude, Manus, etc.) reference same ledger"
+  }
+}

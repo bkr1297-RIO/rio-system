@@ -1,0 +1,18 @@
+export const ENV = {
+  appId: process.env.VITE_APP_ID ?? "",
+  cookieSecret: process.env.JWT_SECRET ?? "",
+  databaseUrl: process.env.DATABASE_URL ?? "",
+  oAuthServerUrl: process.env.OAUTH_SERVER_URL ?? "",
+  ownerOpenId: process.env.OWNER_OPEN_ID ?? "",
+  isProduction: process.env.NODE_ENV === "production",
+  forgeApiUrl: process.env.BUILT_IN_FORGE_API_URL ?? "",
+  forgeApiKey: process.env.BUILT_IN_FORGE_API_KEY ?? "",
+  googleOAuthClientId: process.env.GOOGLE_OAUTH_CLIENT_ID ?? "",
+  googleOAuthClientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET ?? "",
+  githubOAuthClientId: process.env.GITHUB_OAUTH_CLIENT_ID ?? "",
+  githubOAuthClientSecret: process.env.GITHUB_OAUTH_CLIENT_SECRET ?? "",
+  slackSigningSecret: process.env.SLACK_SIGNING_SECRET ?? "",
+  microsoftOAuthClientId: process.env.MICROSOFT_OAUTH_CLIENT_ID ?? "",
+  microsoftOAuthClientSecret: process.env.MICROSOFT_OAUTH_CLIENT_SECRET ?? "",
+  microsoftOAuthTenantId: process.env.MICROSOFT_OAUTH_TENANT_ID ?? "common",
+};

@@ -1,1 +1,0 @@
-ALTER TABLE `executions` ADD `receiptPayload` text;

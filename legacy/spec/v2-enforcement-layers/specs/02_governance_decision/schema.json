@@ -1,0 +1,608 @@
+{
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rio:02_governance_decision",
+  "title": "RIO Governance Decision \u2014 Intent Envelope + Verification + Governance + Approval",
+  "description": "Extracted from controlPlane.ts sections A1 (IntentEnvelope), A2 (VerificationResult), A3 (GovernanceDecision), A4 (ApprovalRecord), and A8 (LearningAnalysis).",
+  "definitions": {
+    "IntentEnvelope": {
+      "description": "controlPlane.ts \u2014 A1: CANONICAL INTENT ENVELOPE. The atomic unit of proposed action. Every action in the system starts here.",
+      "type": "object",
+      "required": [
+        "intent_id",
+        "request_id",
+        "source_type",
+        "source_id",
+        "actor_id",
+        "timestamp",
+        "nonce",
+        "action_type",
+        "target",
+        "parameters",
+        "context",
+        "correlation_id",
+        "policy_version_target",
+        "signature",
+        "metadata"
+      ],
+      "properties": {
+        "intent_id": {
+          "type": "string",
+          "description": "Unique intent identifier."
+        },
+        "request_id": {
+          "type": "string",
+          "pattern": "^REQ-",
+          "description": "Request correlation ID."
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "HUMAN",
+            "AI_AGENT",
+            "SYSTEM",
+            "API"
+          ]
+        },
+        "source_id": {
+          "type": "string",
+          "description": "Format: 'user:{id}' for HUMAN, 'agent:{id}' for AI_AGENT."
+        },
+        "actor_id": {
+          "type": "string",
+          "description": "The human or system that initiated the action."
+        },
+        "timestamp": {
+          "type": "integer",
+          "description": "Unix epoch milliseconds. Must be within INTENT_TTL_MS (300000ms = 5 minutes) of current time."
+        },
+        "nonce": {
+          "type": "string",
+          "minLength": 1,
+          "description": "UUID. Must be unique. Replay protection."
+        },
+        "action_type": {
+          "type": "string",
+          "description": "Tool name (e.g., 'send_email', 'send_sms', 'web_search')."
+        },
+        "target": {
+          "type": "string",
+          "description": "Target of the action (same as action_type in current implementation)."
+        },
+        "parameters": {
+          "type": "object",
+          "description": "Tool arguments. Must be a non-null object."
+        },
+        "context": {
+          "type": "object",
+          "description": "Additional context for governance evaluation."
+        },
+        "correlation_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Links related intents."
+        },
+        "policy_version_target": {
+          "type": "string",
+          "description": "Policy version this intent was created against (e.g., 'POLICY-v0.3')."
+        },
+        "signature": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Ed25519 signature. Required when requireSignature=true."
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Arbitrary metadata."
+        }
+      },
+      "additionalProperties": false
+    },
+    "VerificationResult": {
+      "description": "controlPlane.ts \u2014 A2: VERIFICATION LAYER. Runs BEFORE governance. Six checks in order: schema, auth, signature, TTL, nonce, replay.",
+      "type": "object",
+      "required": [
+        "verification_id",
+        "intent_hash",
+        "schema_valid",
+        "auth_valid",
+        "signature_valid",
+        "ttl_valid",
+        "nonce_valid",
+        "replay_check",
+        "verified",
+        "failure_reasons",
+        "timestamp"
+      ],
+      "properties": {
+        "verification_id": {
+          "type": "string",
+          "pattern": "^VER-"
+        },
+        "intent_hash": {
+          "type": "string",
+          "description": "SHA-256(canonical_json(envelope))"
+        },
+        "schema_valid": {
+          "type": "boolean",
+          "description": "All required fields present and non-empty. source_type in enum. parameters is non-null object."
+        },
+        "auth_valid": {
+          "type": "boolean",
+          "description": "actor_id is in knownActorIds (if provided)."
+        },
+        "signature_valid": {
+          "type": "boolean",
+          "description": "Signature present and >= 10 chars (if requireSignature=true)."
+        },
+        "ttl_valid": {
+          "type": "boolean",
+          "description": "age >= 0 AND age <= 300000ms (5 minutes)."
+        },
+        "nonce_valid": {
+          "type": "boolean",
+          "description": "Nonce is a non-empty string."
+        },
+        "replay_check": {
+          "type": "boolean",
+          "description": "Nonce not already in usedNonces set."
+        },
+        "verified": {
+          "type": "boolean",
+          "description": "ALL six checks must pass. verified = schema_valid AND auth_valid AND signature_valid AND ttl_valid AND nonce_valid AND replay_check."
+        },
+        "failure_reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "timestamp": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "GovernanceDecision": {
+      "description": "controlPlane.ts \u2014 A3: GOVERNANCE DECISION OBJECT. Produced ONLY after verification passes.",
+      "type": "object",
+      "required": [
+        "decision_id",
+        "intent_hash",
+        "verification_id",
+        "policy_version",
+        "risk_score",
+        "risk_level",
+        "decision",
+        "required_approvals",
+        "reasons",
+        "blocking_conditions",
+        "timestamp"
+      ],
+      "properties": {
+        "decision_id": {
+          "type": "string",
+          "pattern": "^GOV-"
+        },
+        "intent_hash": {
+          "type": "string"
+        },
+        "verification_id": {
+          "type": "string"
+        },
+        "policy_version": {
+          "type": "string"
+        },
+        "risk_score": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 10,
+          "description": "min(10, blastRadiusBase + floor(argCount / 2))"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": [
+            "LOW",
+            "MEDIUM",
+            "HIGH"
+          ]
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "APPROVE",
+            "DENY",
+            "REQUIRE_HUMAN_APPROVAL"
+          ],
+          "description": "LOW \u2192 APPROVE. MEDIUM \u2192 REQUIRE_HUMAN_APPROVAL (1 approval). HIGH \u2192 REQUIRE_HUMAN_APPROVAL (1 approval)."
+        },
+        "required_approvals": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "reasons": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "blocking_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "timestamp": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ApprovalRecord": {
+      "description": "controlPlane.ts \u2014 A4: HUMAN AUTHORIZATION BOUNDARY. Silence equals refusal \u2014 no implied approval.",
+      "type": "object",
+      "required": [
+        "approval_id",
+        "decision_id",
+        "intent_hash",
+        "approver_id",
+        "approval_status",
+        "auth_method",
+        "approval_artifact",
+        "timestamp",
+        "notes"
+      ],
+      "properties": {
+        "approval_id": {
+          "type": "string"
+        },
+        "decision_id": {
+          "type": "string"
+        },
+        "intent_hash": {
+          "type": "string",
+          "description": "Must match governance.intent_hash."
+        },
+        "approver_id": {
+          "type": "string"
+        },
+        "approval_status": {
+          "type": "string",
+          "enum": [
+            "APPROVED",
+            "REJECTED"
+          ]
+        },
+        "auth_method": {
+          "type": "string",
+          "enum": [
+            "SIGNATURE",
+            "SESSION",
+            "TOKEN"
+          ]
+        },
+        "approval_artifact": {
+          "type": "string",
+          "minLength": 10,
+          "description": "The signature or token proving authorization."
+        },
+        "timestamp": {
+          "type": "integer"
+        },
+        "notes": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ExpressionOutput": {
+      "description": "controlPlane.ts \u2014 \u00a72.E EXPRESSION ISOLATION. Non-authoritative AI output. CANNOT be passed to rio_process_intent() or rio_approve_intent(). Conversion to IntentEnvelope requires explicit human approval via expression_to_intent().",
+      "type": "object",
+      "required": [
+        "__expression_output",
+        "message",
+        "proposedIntents",
+        "mode",
+        "nodeUsed",
+        "generatedAt"
+      ],
+      "properties": {
+        "__expression_output": {
+          "type": "boolean",
+          "const": true,
+          "description": "Discriminator. Prevents structural compatibility with IntentEnvelope."
+        },
+        "message": {
+          "type": "string"
+        },
+        "proposedIntents": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "toolName",
+              "toolArgs",
+              "reasoning",
+              "confidence"
+            ],
+            "properties": {
+              "toolName": {
+                "type": "string"
+              },
+              "toolArgs": {
+                "type": "object"
+              },
+              "reasoning": {
+                "type": "string"
+              },
+              "breakAnalysis": {
+                "type": "string"
+              },
+              "confidence": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          }
+        },
+        "mode": {
+          "type": "string"
+        },
+        "nodeUsed": {
+          "type": "string"
+        },
+        "tokensUsed": {
+          "type": "integer"
+        },
+        "generatedAt": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "LearningAnalysis": {
+      "description": "controlPlane.ts \u2014 A8: LEARNING LOOP ANALYSIS. Advisory only. mutates_live_policy is ALWAYS false.",
+      "type": "object",
+      "required": [
+        "analysis_id",
+        "period_start",
+        "period_end",
+        "total_intents",
+        "total_executions",
+        "total_approvals",
+        "total_rejections",
+        "metrics",
+        "recommendations",
+        "replay_inputs",
+        "mutates_live_policy",
+        "timestamp"
+      ],
+      "properties": {
+        "analysis_id": {
+          "type": "string",
+          "pattern": "^LEARN-"
+        },
+        "period_start": {
+          "type": "integer"
+        },
+        "period_end": {
+          "type": "integer"
+        },
+        "total_intents": {
+          "type": "integer"
+        },
+        "total_executions": {
+          "type": "integer"
+        },
+        "total_approvals": {
+          "type": "integer"
+        },
+        "total_rejections": {
+          "type": "integer"
+        },
+        "metrics": {
+          "type": "object",
+          "required": [
+            "false_positives",
+            "false_negatives",
+            "approval_bottlenecks",
+            "execution_failures",
+            "policy_misses",
+            "repeated_overrides"
+          ],
+          "properties": {
+            "false_positives": {
+              "type": "integer",
+              "description": "LOW risk that should have been flagged."
+            },
+            "false_negatives": {
+              "type": "integer",
+              "description": "HIGH risk that was auto-approved. Should be 0 by design."
+            },
+            "approval_bottlenecks": {
+              "type": "integer",
+              "description": "Intents stuck in PENDING > 5 min."
+            },
+            "execution_failures": {
+              "type": "integer",
+              "description": "Connector failures."
+            },
+            "policy_misses": {
+              "type": "integer",
+              "description": "Actions that passed policy but failed."
+            },
+            "repeated_overrides": {
+              "type": "integer",
+              "description": "Same tool+args approved multiple times (>2)."
+            }
+          }
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PolicyRecommendation"
+          }
+        },
+        "replay_inputs": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ReplayInput"
+          }
+        },
+        "mutates_live_policy": {
+          "type": "boolean",
+          "const": false,
+          "description": "ALWAYS false. Learning is advisory only."
+        },
+        "timestamp": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "PolicyRecommendation": {
+      "description": "controlPlane.ts \u2014 Learning loop recommendation. Status is ALWAYS PENDING_REVIEW. Never auto-applied.",
+      "type": "object",
+      "required": [
+        "recommendation_id",
+        "type",
+        "tool_name",
+        "current_value",
+        "suggested_value",
+        "confidence",
+        "evidence",
+        "status"
+      ],
+      "properties": {
+        "recommendation_id": {
+          "type": "string",
+          "pattern": "^PREC-"
+        },
+        "type": {
+          "type": "string",
+          "enum": [
+            "RISK_ADJUSTMENT",
+            "THRESHOLD_CHANGE",
+            "NEW_RULE",
+            "REMOVE_RULE",
+            "DRIFT_ALERT"
+          ]
+        },
+        "tool_name": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "current_value": {
+          "type": "string"
+        },
+        "suggested_value": {
+          "type": "string"
+        },
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "evidence": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "const": "PENDING_REVIEW"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ReplayInput": {
+      "description": "controlPlane.ts \u2014 Suggested replay for failed executions.",
+      "type": "object",
+      "required": [
+        "intent_id",
+        "action_type",
+        "original_decision",
+        "original_outcome",
+        "suggested_replay_decision",
+        "reason"
+      ],
+      "properties": {
+        "intent_id": {
+          "type": "string"
+        },
+        "action_type": {
+          "type": "string"
+        },
+        "original_decision": {
+          "type": "string"
+        },
+        "original_outcome": {
+          "type": "string"
+        },
+        "suggested_replay_decision": {
+          "type": "string"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "validation_rules": {
+    "verification_before_governance": {
+      "description": "controlPlane.ts evaluateGovernance(). Throws GOVERNANCE_ERROR if verification.verified is false. Governance ONLY runs after verification passes.",
+      "source": "controlPlane.ts"
+    },
+    "silence_equals_refusal": {
+      "description": "controlPlane.ts. If governance.decision === 'REQUIRE_HUMAN_APPROVAL' and no approval is provided, the system returns 'Human approval required but not provided. Silence equals refusal.'",
+      "source": "controlPlane.ts"
+    },
+    "approval_binding": {
+      "description": "controlPlane.ts validateApproval(). approval.intent_hash must match governance.intent_hash. approval.decision_id must match governance.decision_id. approval_status must be 'APPROVED'. approval_artifact must be >= 10 chars.",
+      "source": "controlPlane.ts"
+    },
+    "expression_isolation": {
+      "description": "controlPlane.ts \u00a72.E. ExpressionOutput CANNOT be passed to rio_process_intent() or rio_approve_intent(). isExpressionOutput() type guard checks __expression_output === true. kernelExecutor.ts rejects at entry. expression_to_intent() requires approvedByHuman === true.",
+      "source": "controlPlane.ts, kernelExecutor.ts"
+    },
+    "intent_ttl": {
+      "description": "controlPlane.ts. INTENT_TTL_MS = 300000 (5 minutes). Intents older than this fail TTL check.",
+      "value_ms": 300000,
+      "source": "controlPlane.ts"
+    },
+    "nonce_ttl": {
+      "description": "controlPlane.ts. NONCE_TTL_MS = 600000 (10 minutes). Nonces expire after 10 minutes.",
+      "value_ms": 600000,
+      "source": "controlPlane.ts"
+    },
+    "risk_decision_matrix": {
+      "description": "controlPlane.ts evaluateGovernance(). LOW \u2192 APPROVE (0 approvals). MEDIUM \u2192 REQUIRE_HUMAN_APPROVAL (1 approval). HIGH \u2192 REQUIRE_HUMAN_APPROVAL (1 approval).",
+      "source": "controlPlane.ts"
+    },
+    "learning_never_mutates": {
+      "description": "controlPlane.ts. LearningAnalysis.mutates_live_policy is ALWAYS false. Recommendations have status PENDING_REVIEW. Learning is advisory until explicitly promoted by a human.",
+      "source": "controlPlane.ts"
+    }
+  },
+  "failure_conditions": {
+    "verification_failure": "Any of the 6 checks fails \u2192 verified=false \u2192 governance cannot run \u2192 intent rejected.",
+    "governance_deny": "If governance.decision === 'DENY' \u2192 intent rejected. No execution.",
+    "missing_approval": "If REQUIRE_HUMAN_APPROVAL and no approval \u2192 'Silence equals refusal.' Intent rejected.",
+    "approval_hash_mismatch": "If approval.intent_hash !== governance.intent_hash \u2192 approval invalid.",
+    "expression_isolation_violation": "If ExpressionOutput enters rio_process_intent() \u2192 EXPRESSION_ISOLATION_VIOLATION error. If expression_to_intent() called with approvedByHuman=false \u2192 EXPRESSION_ISOLATION_VIOLATION error.",
+    "replay_detected": "If nonce already in usedNonces \u2192 replay_check=false \u2192 verification fails."
+  },
+  "authority_boundary_rule": {
+    "rule": "Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.",
+    "applies_to": "The verification result is a receipt of intent validation. It does not authorize execution. A separate governance decision must be issued. The governance decision does not authorize execution either \u2014 a separate execution token must be issued."
+  }
+}

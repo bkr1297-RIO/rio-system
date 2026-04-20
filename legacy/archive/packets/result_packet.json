@@ -1,0 +1,19 @@
+{
+  "packet_type": "RESULT",
+  "task_id": "UUID",
+  "completed_at": "ISO8601",
+  "completed_by": "MANNY | CLAUDE | GEMINI | BONDI",
+  "status": "SUCCESS | PARTIAL | BLOCKED",
+  "summary": "what was done",
+  "artifacts": {
+    "repo_commit": "commit hash or null",
+    "drive_files": ["paths or null"],
+    "docs_created": ["paths or null"]
+  },
+  "verification": {
+    "tests": "PASS | FAIL | NOT_RUN",
+    "notes": "brief verification note"
+  },
+  "blockers": [],
+  "next_recommended_action": "one clear next move"
+}

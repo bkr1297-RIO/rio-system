@@ -1,0 +1,29 @@
+{
+  "receipt_id": "17177007-7535-464d-86a2-123e6c2d5ac4",
+  "timestamp": "2026-04-11T08:56:47.033Z",
+  "event_type": "WARN",
+  "email_context": {
+    "subject": "Quick thought",
+    "hash": "ee5bdd56af79203e94031aa92876e18fff1d12035326ac796897057998bc997f",
+    "to": "partner@company.com"
+  },
+  "policy": {
+    "rule_id": "INDUCEMENT_002",
+    "category": "INDUCEMENT",
+    "confidence": "medium"
+  },
+  "decision": {
+    "action": "WARN",
+    "reason": "[WARN] INDUCEMENT: Implied or ambiguous inducement language"
+  },
+  "human": {
+    "approved": false,
+    "approved_by": null,
+    "approval_text": null
+  },
+  "system": {
+    "engine_version": "v1",
+    "policy_mode": "standard",
+    "strictness": "standard"
+  }
+}

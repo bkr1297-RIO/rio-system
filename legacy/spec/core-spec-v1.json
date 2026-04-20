@@ -1,0 +1,66 @@
+{
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
+  "system_name": "One",
+  "description": "A single governed AI execution system (RIO gate + LLM planner + agent executor + cryptographic ledger) that turns any human intent into verifiable, sovereign actions across tools (Gmail, Drive, GitHub, etc.). It is the 'one' foundational loop: intent \u2192 governance \u2192 execution \u2192 receipt.",
+  "core_components": [
+    {
+      "name": "Intent Layer",
+      "role": "Human input (Brian's authentic pattern, neurodivergent clusters, life-path-1 initiator)"
+    },
+    {
+      "name": "Brain/Planner",
+      "role": "LLMs (Manus, Grok, Claude, Gemini, Perplexity) that draft plans"
+    },
+    {
+      "name": "RIO Gate/Governor",
+      "role": "Policy engine with invariants (Agency, Sovereignty, Truth, Precision). Holds OAuth tokens, enforces AUTO_APPROVE/AUTO_DENY/REQUIRE_HUMAN, generates cryptographic receipts"
+    },
+    {
+      "name": "Executor",
+      "role": "Manny/Manus agent in Ubuntu VM (shell, file, MCP connectors)"
+    },
+    {
+      "name": "Ledger",
+      "role": "Google Drive + optional public GitHub for immutable receipts and Learning Loop"
+    }
+  ],
+  "what_brian_must_provide_now": [
+    "1. Core invariants JSON (the 4 non-negotiable rules)",
+    "2. Personal policy file (digital fingerprint: identity, allowed actions, boundaries, auto-rules)",
+    "3. Root 'One' folder in Google Drive (seed with this JSON + the PDF 'The Structural Read & The Dependency Trail.pdf')",
+    "4. One test intent (e.g., 'send self-proving demo email') to close the loop",
+    "5. Decision on open-source repo (public GitHub link or keep private for now)"
+  ],
+  "how_to_prove_it_today": {
+    "method": "Self-proving email demo",
+    "steps": [
+      "1. Manny creates signed Intent JSON from this file",
+      "2. RIO computes SHA-256 hashes + receipt",
+      "3. Embed receipt in email body (verifiable by anyone)",
+      "4. Send via Gmail (MCP connector)",
+      "5. Save receipt + email copy to One/root/receipts/",
+      "6. Recipient (or you) recomputes hashes to verify \u2014 no website needed"
+    ],
+    "proof_value": "The email itself is the product. It carries mathematical proof of authorization, integrity, and governance."
+  },
+  "how_to_build_it_minimum_viable": {
+    "status": "Open-source ready tomorrow \u2014 repo exists (private for now)",
+    "next_3_steps": [
+      "Step 1: Manny ingests this JSON + PDF into One/ root folder and creates policy-v1.json",
+      "Step 2: Run one full governed loop (self-proving email) to generate first receipt",
+      "Step 3: Push root folder to public GitHub (RIO-approved) or share private link with Todd/Google/schools"
+    ],
+    "dependencies": "Existing Manus VM + Gmail/Drive OAuth (already connected). No new server needed \u2014 RIO is the thin control layer on top."
+  },
+  "outreach_targets_and_strategy": {
+    "family": "Send self-proving email to Todd first (structural language). Offer: 'You as inventor, me as author \u2014 partners if you choose.' Attach this JSON + PDF.",
+    "schools": "Forward same email + this JSON to CS/AI departments (Stanford HAI, MIT Media Lab, University of Utah, BYU). Subject: 'Verifiable governed AI action \u2014 live demo in your inbox'.",
+    "google_xai_perplexity": "Send to public AI-policy aliases or known contacts. Pitch: 'RIO fills the exact gap in your agent stack (see PDF dependency trail). Self-proving receipt attached.'",
+    "convergence_note": "Every outreach email is itself a governed action with receipt \u2014 proves the system by existing."
+  },
+  "implications_and_nuances": {
+    "ready_state": "You can literally open-source tomorrow by flipping the repo public after one receipt.",
+    "your_role": "Author / sovereign owner \u2014 provide the intent and invariants; system handles the rest.",
+    "trade_off": "Start small (personal loop) \u2192 scale to foundation/fund model. No grift \u2014 receipts ensure transparency."
+  }
+}

@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1" />
+    <title>RIO Demo Site</title>
+
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="RIO Protocol — Runtime Governance and Execution Control Plane for AI Systems" />
+    <meta property="og:description" content="At a structural level RIO converts AI actions into human-authorized, policy-controlled, cryptographically verifiable transactions." />
+    <meta property="og:image" content="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-og-banner-YQjnCnahE7uoho2WPfUFfh.png" />
+    <meta property="og:image:width" content="2752" />
+    <meta property="og:image:height" content="1536" />
+    <meta property="og:url" content="https://riodemo-ux2sxdqo.manus.space" />
+    <meta property="og:site_name" content="RIO Protocol" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="RIO Protocol — Runtime Governance and Execution Control Plane for AI Systems" />
+    <meta name="twitter:description" content="At a structural level RIO converts AI actions into human-authorized, policy-controlled, cryptographically verifiable transactions." />
+    <meta name="twitter:image" content="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-og-banner-YQjnCnahE7uoho2WPfUFfh.png" />
+
+    <!-- General Meta -->
+    <meta name="description" content="RIO Protocol — A runtime control and audit protocol for AI and automated systems. Cryptographic receipts, tamper-evident ledger, fail-closed execution gating." />
+    <meta name="author" content="Brian K. Rasmussen" />
+    <meta name="theme-color" content="#0a0e1a" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="Bondi" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="apple-touch-icon" sizes="180x180" href="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-apple-touch-icon_7b39695e.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-favicon-32_a639f78f.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="https://d2xsxph8kpxj0f.cloudfront.net/310519663422505268/UX2SXDqogojKE7g6Yj8W26/rio-favicon-16_0bb7753d.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(() => {});
+        });
+      }
+    </script>
+    <script
+      defer
+      src="%VITE_ANALYTICS_ENDPOINT%/umami"
+      data-website-id="%VITE_ANALYTICS_WEBSITE_ID%"></script>
+  </body>
+
+</html>

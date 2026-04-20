@@ -1,0 +1,86 @@
+{
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rio:06_cross_substrate",
+  "title": "RIO Cross-Substrate Handoff",
+  "description": "Defines the boundary protocol when execution crosses from one substrate to another. Receipt validation does not grant execution permission.",
+  "name": "Cross-Substrate Handoff",
+  "rule": "Receipt validation does not grant execution permission",
+  "process": [
+    "validate_upstream_receipt",
+    "validate_compatibility",
+    "issue_new_dtt",
+    "execute",
+    "generate_receipt"
+  ],
+  "process_detail": {
+    "validate_upstream_receipt": {
+      "description": "Validate the receipt from the upstream substrate. Four checks: signature, timing, identity, measurement.",
+      "checks": [
+        "signature",
+        "timing",
+        "identity",
+        "measurement"
+      ],
+      "on_failure": "BLOCK. No downstream action occurs."
+    },
+    "validate_compatibility": {
+      "description": "Verify that the upstream receipt's action, target, and parameters are compatible with the downstream substrate's capabilities and policy.",
+      "on_failure": "BLOCK. Incompatible substrates cannot hand off."
+    },
+    "issue_new_dtt": {
+      "description": "Issue a NEW Delegation Trust Token (DTT) for the downstream substrate. This is a fresh authorization \u2014 not derived from the upstream receipt.",
+      "properties": {
+        "scope": "Local to the downstream substrate only.",
+        "ttl": "Bounded. Same TTL rules as any execution token.",
+        "single_use": true,
+        "source": "Issued by the gate, not by the upstream substrate."
+      }
+    },
+    "execute": {
+      "description": "Execute the action in the downstream substrate under the newly issued DTT. Standard kernel execution rules apply.",
+      "requires": "Valid DTT from the previous step."
+    },
+    "generate_receipt": {
+      "description": "Generate a receipt for the downstream execution. This receipt can be validated by the next boundary in the chain.",
+      "links_to": "upstream_receipt_hash for chain-of-custody traceability."
+    }
+  },
+  "constraints": {
+    "no_implicit_authority_flow": {
+      "value": true,
+      "description": "Authority does not flow implicitly from one substrate to another. A valid upstream receipt is necessary but not sufficient for downstream execution."
+    },
+    "receipt_not_permission": {
+      "value": true,
+      "description": "A receipt is proof of what happened. It is not permission for what happens next. Receipts never grant authority."
+    },
+    "new_authorization_required": {
+      "value": true,
+      "description": "Every cross-substrate handoff requires a new, locally issued authorization (DTT). No exceptions."
+    }
+  },
+  "validation_rules": {
+    "upstream_receipt_signature": {
+      "description": "The upstream receipt must have a valid signature from the issuing authority."
+    },
+    "upstream_receipt_timing": {
+      "description": "The upstream receipt must be within the expected time window. Not expired. Not future-dated."
+    },
+    "upstream_receipt_identity": {
+      "description": "The identity that produced the upstream receipt must match the expected actor."
+    },
+    "upstream_receipt_measurement": {
+      "description": "The receipt hash must cover the actual execution output. Recomputation must match."
+    },
+    "new_dtt_independence": {
+      "description": "The new DTT is issued by the gate. It is not derived from, signed by, or dependent on the upstream receipt beyond the validation check."
+    }
+  },
+  "failure_conditions": {
+    "upstream_receipt_invalid": "Any of the 4 receipt checks fail \u2192 BLOCK. No downstream action.",
+    "compatibility_check_fails": "Upstream action incompatible with downstream substrate \u2192 BLOCK.",
+    "no_new_dtt_issued": "Execution attempted without a fresh DTT \u2192 BLOCK.",
+    "upstream_receipt_used_as_authorization": "Receipt treated as permission instead of evidence \u2192 VIOLATION. This is the core anti-pattern this spec prevents."
+  }
+}

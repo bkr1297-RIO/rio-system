@@ -1,0 +1,34 @@
+{
+  "constitution_id": "RIO-CONST-001",
+  "version": "1.0",
+  "name": "RIO Governance Constitution",
+  "purpose": "Define the immutable governance rules that all agents, systems, and actions must follow within the RIO execution environment.",
+  "invariants": {
+    "identity": "Every action must have a known origin (agent_id) and a known target (human authority).",
+    "consent": "No action with external effect may execute without explicit human authorization.",
+    "persistence": "Every authorized action must produce a receipt, and every receipt must be written to the ledger.",
+    "confidence": "Every AI recommendation must carry a confidence score. Actions below threshold require human escalation."
+  },
+  "governance_rules": [
+    "Human is final authority.",
+    "AI may think and plan freely.",
+    "AI cannot execute without authorization.",
+    "All executions must generate receipts.",
+    "All receipts must be stored in ledger.",
+    "System fails closed on uncertainty.",
+    "If authorization is missing, execution is denied.",
+    "If authorization is expired, execution is denied.",
+    "If scope is ambiguous, execution is denied."
+  ],
+  "pipeline": [
+    "intent",
+    "governance",
+    "risk_evaluation",
+    "authorization",
+    "execution",
+    "receipt",
+    "ledger",
+    "verification"
+  ],
+  "fail_mode": "closed"
+}

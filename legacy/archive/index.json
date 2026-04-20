@@ -1,0 +1,100 @@
+{
+  "corpus": "ONE",
+  "version": "1.0",
+  "created": "2026-03-30T08:45:00Z",
+  "updated": "2026-03-31T20:00:00Z",
+  "owner": "Brian Kent Rasmussen",
+  "description": "RIO Governed Corpus — single source of truth for policies, invariants, receipts, and governance journals",
+  "structure": {
+    "root": {
+      "drive_id": "18mHbNPD8OZ1gzWGxKIkRcNehQdBEgWxk",
+      "description": "Active, canonical documents — the governed truth",
+      "children": {
+        "policies": {
+          "drive_id": "1y8rc1Z5ShumFO3HmRTG41oN1Dwg5ZaHv",
+          "description": "Active governance policies (JSON). Versioned. Only promoted files live here.",
+          "contents": [
+            { "name": "policy-v1.0.json", "drive_id": "178OlSz_8pfAYb2pFP2kpQ3Yl8EI-wCZs", "type": "policy", "status": "active" },
+            { "name": "policy-v1.0-PRIVATE.json", "drive_id": "1IB2Zet7faCi4b7IAtnDsNDnCUD18y7Tl", "type": "policy", "status": "active", "visibility": "private" }
+          ]
+        },
+        "invariants": {
+          "drive_id": "1c-Mnoyl3Grq3hvNuPyYDZH9IDaoOyrIP",
+          "description": "Mathematical and constitutional invariants (Markdown). These do not change without explicit governance action.",
+          "contents": [
+            { "name": "INVARIANT-001.md", "drive_id": "1d-MvLfIv1Z48zmwbr2o1N2j7iNeu4Hri", "type": "invariant", "title": "No Action Without a Receipt", "status": "active" }
+          ]
+        },
+        "receipts": {
+          "drive_id": "1IcBbMGlXMfw7tV_4VtdVaBk2sGLRwTxg",
+          "description": "Cryptographic governance receipts (machine-readable JSON or human-readable Markdown)",
+          "contents": [
+            { "name": "2026-03-29-demo.md", "drive_id": "1dFGYfsLOqHvWUa-eyXJRCuMjfoBOl0Yp", "type": "receipt" },
+            { "name": "2026-03-30-agent-to-agent-mvp.md", "drive_id": "1xovDHhlWiGBpD0Dt8wnOlkFaLVCDiF99", "type": "receipt" },
+            { "name": "2026-03-30-policy-v1.0.md", "drive_id": "14v8XGdEPuTPB6VPNG21kNTwgElE5V71Y", "type": "receipt" },
+            { "name": "2026-03-30-outreach-receipt3.md", "drive_id": "12Uckl0u43cHdh3D9HD8YflE-yWwveO7N", "type": "receipt", "title": "Receipt #3 — First External Outreach", "chain_position": 3, "receipt_id": "a07f681b-0f61-418c-9cd0-412203aa9ab0" }
+          ]
+        },
+        "journals": {
+          "drive_id": "1YrexABDZCuRMYYfNoUt0rOcGms56YpGv",
+          "description": "Human-readable governance logs. Chronological. One file per day or per significant event.",
+          "contents": [
+            { "name": "2026-03-30-corpus-setup.md", "drive_id": "1gTLrH5PBfJ4N1smvkJBN_lzlexCB0Neb", "type": "journal" }
+          ]
+        },
+        "hardening": {
+          "drive_id": "1DavNTrqqAwdkD-W9YqhIT2uhve5RX8zu",
+          "description": "Security hardening documentation and audit materials",
+          "contents": [
+            { "name": "INDEX.md", "drive_id": "1rDpuPwccC7pz3bhzOZxYjlV6Z3Yy4Frg", "type": "index" },
+            { "name": "RIO_Gateway_Hardening_MasterDocument_2026-03-30.txt", "drive_id": "1eQM8jlFlWgAxF77p9bka5RbK_aygQ3pH", "type": "document" },
+            { "name": "RIO_Gateway_Hardening_MasterDocument_2026-03-30.pdf", "drive_id": "1cJjgxu74eIb_I3pYGECO2FBsj3y3DZ6Q", "type": "document" }
+          ]
+        }
+      },
+      "loose_files": [
+        { "name": "index.json", "drive_id": "1sp-oV3JQFzxQEv1Da2hd22LolWXPCLtg", "type": "index" },
+        { "name": "EMAIL_PROTOCOL.md", "drive_id": "1RNOb6D1Rs5CA03nXBZQyhBFclRgJRLnB", "type": "spec" },
+        { "name": "Receipt_Specification.json", "drive_id": "1-iKmpNf9kh1orSTDApdtekbAah2DGO3Q", "type": "spec" },
+        { "name": "core-spec-v1.json", "drive_id": "1C26UvWIBla2F1f7tydKdpCg6x76UV-A3", "type": "spec" },
+        { "name": "RIO_System_Diagram.png", "drive_id": "1Oe7qjfd5fMVifsxNwX-H4eEemutG0MlR", "type": "diagram" },
+        { "name": "Governed_Action_Flow.png", "drive_id": "17Cy_D3ep2so81X5rPaLOjzwYO2PvoeoA", "type": "diagram" },
+        { "name": "RIO_Permanent_Deployment_Spec.md", "drive_id": "1nD2hxS5xvz6iiM2S7rFN2ZRqJMIiiauJ", "type": "spec" },
+        { "name": "Sovereign Inversion v4.0 — Plain English", "drive_id": "11_YVzL93ytXbsdMOrE_QBBlLlOsEFruTolWhqYME_KY", "type": "document", "format": "google_doc" },
+        { "name": "The Structural Read & The Dependency Trail.pdf", "drive_id": "1ToGvpvXl0wcXMjoSa-Z1ItYXOsjH7iL4", "type": "document" },
+        { "name": "mantis-component-v1.json", "type": "component_spec", "status": "draft", "title": "Mantis — Observer/Ingestion Layer Component Definition" },
+        { "name": "governor-component-v1.json", "type": "component_spec", "status": "draft", "title": "Governor — Policy Evaluation and Approval Authority Component Definition" },
+        { "name": "executor-component-v1.json", "type": "component_spec", "status": "draft", "title": "Executor — Action and Recording Layer Component Definition" }
+      ]
+    },
+    "inbox": {
+      "drive_id": "1iRgoBh1AsIJuEP7B77Lfywoz8TIFb0yY",
+      "description": "Landing zone for new items from Brian, Perplexity, Gemini, or other agents. Nothing here is canonical until promoted to root/.",
+      "semantics": "Agents propose to inbox; RIO/Manus promotes to root after validation and optional human approval.",
+      "contents": []
+    },
+    "archive": {
+      "drive_id": "1STRsdDh9KbmUqVW2KuZChXcic5XHfOn9",
+      "description": "Old versions, deprecated policies, superseded documents. Preserved for audit trail.",
+      "contents": [
+        { "name": "RIO_White_Paper_v1.md", "drive_id": "1o63BM5VyGpo93BCodj8q1BwbR7epGHfu", "type": "document", "status": "archived" },
+        { "name": "RIO_White_Paper_v1.pdf", "drive_id": "1Ko7KXZiHTmTtHmiNGAn8eOh_s4GxbuUN", "type": "document", "status": "archived" },
+        { "name": "RIO_CODE_AUDIT_PACKAGE.txt", "drive_id": "1xhFosBQzXhobCxmyLGPAGg8PjrBHjHe-", "type": "audit", "status": "archived" }
+      ]
+    }
+  },
+  "email_protocol": {
+    "subject_pattern": "[RIO-UPDATE] <short description>",
+    "envelope_version": 1,
+    "types": ["policy", "invariant", "receipt", "journal"],
+    "default_target": "drive",
+    "default_drive_path": "ONE/inbox/",
+    "spec_file": "ONE/root/EMAIL_PROTOCOL.md"
+  },
+  "rules": {
+    "write_access": "Perplexity and other agents write ONLY to ONE/inbox/. RIO/Manus promotes to ONE/root/** after validation.",
+    "canonical_truth": "Only files in ONE/root/** are canonical. Inbox is staging. Archive is history.",
+    "promotion": "Promotion from inbox to root requires human approval or policy-based auto-approval via RIO governance.",
+    "deletion": "No permanent deletion. Deprecated items move to archive/."
+  }
+}

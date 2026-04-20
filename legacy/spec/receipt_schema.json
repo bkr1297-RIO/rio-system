@@ -1,0 +1,12 @@
+{
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
+  "receipt": {
+    "intent_hash": "...",
+    "decision": "...",
+    "state_snapshot": {},
+    "risk_snapshot": {},
+    "timestamp": "...",
+    "signature": "...",
+    "ledger_hash": "..."
+  }
+}

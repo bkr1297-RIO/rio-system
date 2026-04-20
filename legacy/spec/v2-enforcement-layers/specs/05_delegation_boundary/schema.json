@@ -1,0 +1,346 @@
+{
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rio:05_delegation_boundary",
+  "title": "RIO Delegation Boundary \u2014 Constrained Delegation + Gateway Identity Evaluation",
+  "description": "Extracted from constrainedDelegation.ts (checkDelegation, classifyRoleSeparation, validateRoleTransition) and gatewayProxy.ts (evaluateIdentityAtGatewayBoundary, resolveAuthorityModel, GatewayIdentityEvaluation).",
+  "definitions": {
+    "DelegationCheck": {
+      "description": "constrainedDelegation.ts \u2014 Result of checkDelegation(). Three outcomes based on identity comparison and cooldown.",
+      "type": "object",
+      "required": [
+        "allowed",
+        "role_separation",
+        "reason",
+        "cooldown_remaining_ms",
+        "cooldown_required_ms",
+        "proposer_identity",
+        "approver_identity",
+        "intent_created_at",
+        "approval_attempted_at"
+      ],
+      "properties": {
+        "allowed": {
+          "type": "boolean"
+        },
+        "role_separation": {
+          "type": "string",
+          "enum": [
+            "separated",
+            "constrained",
+            "self"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "cooldown_remaining_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "cooldown_required_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "proposer_identity": {
+          "type": "string"
+        },
+        "approver_identity": {
+          "type": "string"
+        },
+        "intent_created_at": {
+          "type": "integer"
+        },
+        "approval_attempted_at": {
+          "type": "integer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "DelegationContext": {
+      "description": "constrainedDelegation.ts \u2014 Input to checkDelegation().",
+      "type": "object",
+      "required": [
+        "proposerIdentity",
+        "approverIdentity",
+        "intentCreatedAt"
+      ],
+      "properties": {
+        "proposerIdentity": {
+          "type": "string",
+          "description": "The identity (principalId or userId) that proposed the intent."
+        },
+        "approverIdentity": {
+          "type": "string",
+          "description": "The identity (principalId or userId) attempting to approve."
+        },
+        "intentCreatedAt": {
+          "type": "integer",
+          "description": "Timestamp when the intent was created (ms since epoch)."
+        },
+        "approvalAttemptedAt": {
+          "type": "integer",
+          "description": "Timestamp when approval is attempted (defaults to Date.now())."
+        },
+        "cooldownOverrideMs": {
+          "type": "integer",
+          "description": "Override cooldown for testing."
+        }
+      },
+      "additionalProperties": false
+    },
+    "GatewayIdentityEvaluation": {
+      "description": "gatewayProxy.ts \u2014 Gateway-level identity evaluation. Rule 3 enforcement: IF proposer_identity_id == approver_identity_id, THEN the transaction is INVALID unless the Self-Authorization sub-policy is met.",
+      "type": "object",
+      "required": [
+        "allowed",
+        "proposer_identity_id",
+        "approver_identity_id",
+        "authority_model",
+        "role_separation",
+        "reason",
+        "cooldown_remaining_ms",
+        "delegation_check"
+      ],
+      "properties": {
+        "allowed": {
+          "type": "boolean"
+        },
+        "proposer_identity_id": {
+          "type": "string",
+          "description": "Explicit proposer identity ID for the receipt."
+        },
+        "approver_identity_id": {
+          "type": "string",
+          "description": "Explicit approver identity ID for the receipt."
+        },
+        "authority_model": {
+          "type": "string",
+          "enum": [
+            "Separated Authority",
+            "Constrained Single-Actor Execution",
+            "BLOCKED \u2014 Self-Authorization Sub-Policy Not Met"
+          ],
+          "description": "Canonical audit trail label. Appears in receipts, ledger entries, and governance reports."
+        },
+        "role_separation": {
+          "type": "string",
+          "enum": [
+            "separated",
+            "constrained",
+            "self"
+          ]
+        },
+        "reason": {
+          "type": "string"
+        },
+        "cooldown_remaining_ms": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "delegation_check": {
+          "$ref": "#/definitions/DelegationCheck"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RoleTransitionCheck": {
+      "description": "constrainedDelegation.ts validateRoleTransition(). Proposer role cannot directly invoke approver actions without explicit role switch.",
+      "type": "object",
+      "required": [
+        "allowed",
+        "reason"
+      ],
+      "properties": {
+        "allowed": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false
+    },
+    "RootAuthority": {
+      "description": "authorityLayer.ts \u2014 Root authority record. Ed25519 key pair holder.",
+      "type": "object",
+      "required": [
+        "authority_id",
+        "name",
+        "public_key",
+        "status",
+        "registered_at"
+      ],
+      "properties": {
+        "authority_id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "public_key": {
+          "type": "string",
+          "description": "Ed25519 public key hex."
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "revoked"
+          ]
+        },
+        "registered_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "revoked_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        }
+      },
+      "additionalProperties": false
+    },
+    "SignedPolicy": {
+      "description": "authorityLayer.ts \u2014 Signed governance policy. Deterministic hash. Activation/supersession/revocation lifecycle.",
+      "type": "object",
+      "required": [
+        "policy_id",
+        "policy_hash",
+        "rules",
+        "signed_by",
+        "signature",
+        "status",
+        "created_at"
+      ],
+      "properties": {
+        "policy_id": {
+          "type": "string"
+        },
+        "policy_hash": {
+          "type": "string",
+          "description": "SHA-256(canonical_json(rules)). Deterministic \u2014 same rules always produce same hash."
+        },
+        "rules": {
+          "type": "object",
+          "description": "The governance rules."
+        },
+        "signed_by": {
+          "type": "string",
+          "description": "Authority ID that signed this policy."
+        },
+        "signature": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "active",
+            "superseded",
+            "revoked"
+          ]
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "superseded_at": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "superseded_by": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "constants": {
+    "DELEGATION_COOLDOWN_MS": {
+      "value": 120000,
+      "description": "constrainedDelegation.ts. Minimum cooldown in milliseconds before same-identity approval is allowed. 2 minutes.",
+      "source": "constrainedDelegation.ts"
+    }
+  },
+  "decision_matrix": {
+    "case_1_different_identities": {
+      "condition": "proposerIdentity !== approverIdentity",
+      "allowed": true,
+      "role_separation": "separated",
+      "authority_model": "Separated Authority",
+      "cooldown_remaining_ms": 0,
+      "cooldown_required_ms": 0,
+      "description": "True authority separation. Approved immediately."
+    },
+    "case_2_same_identity_cooldown_elapsed": {
+      "condition": "proposerIdentity === approverIdentity AND (now - intentCreatedAt) >= DELEGATION_COOLDOWN_MS",
+      "allowed": true,
+      "role_separation": "constrained",
+      "authority_model": "Constrained Single-Actor Execution",
+      "cooldown_remaining_ms": 0,
+      "description": "Same identity but cooldown satisfied. Constrained delegation approved."
+    },
+    "case_3_same_identity_cooldown_not_elapsed": {
+      "condition": "proposerIdentity === approverIdentity AND (now - intentCreatedAt) < DELEGATION_COOLDOWN_MS",
+      "allowed": false,
+      "role_separation": "self",
+      "authority_model": "BLOCKED \u2014 Self-Authorization Sub-Policy Not Met",
+      "description": "BLOCKED. No immediate self-approval. Must wait for cooldown."
+    }
+  },
+  "validation_rules": {
+    "gateway_evaluation_required": {
+      "description": "gatewayProxy.ts. evaluateIdentityAtGatewayBoundary() MUST be called before any Gateway /authorize call. It is the single source of truth for identity verification at the Gateway evaluation level.",
+      "source": "gatewayProxy.ts"
+    },
+    "role_permissions": {
+      "description": "constrainedDelegation.ts. proposer role can only create_intent. approver role can only authorize_action. Cross-role actions require explicit role switch.",
+      "proposer": [
+        "create_intent"
+      ],
+      "approver": [
+        "authorize_action"
+      ],
+      "source": "constrainedDelegation.ts"
+    },
+    "ledger_identity_fields": {
+      "description": "gateway-identity-eval.test.ts. DELEGATION_BLOCKED, DELEGATION_APPROVED, and EXECUTION ledger entries MUST include proposer_identity_id, approver_identity_id, and authority_model.",
+      "source": "gateway-identity-eval.test.ts"
+    },
+    "boundary_semantics": {
+      "description": "gateway-identity-eval.test.ts. At cooldown - 1ms: BLOCKED. At exactly cooldown elapsed: ALLOWED (constrained). Boundary is inclusive.",
+      "source": "gateway-identity-eval.test.ts"
+    },
+    "one_is_untrusted_client": {
+      "description": "gatewayProxy.ts. Per Decision 2: ONE is an untrusted client. It NEVER sends raw principal IDs. The Gateway resolves email to principal via resolvePrincipalByEmail(). ONE only bridges identity via email.",
+      "source": "gatewayProxy.ts"
+    },
+    "policy_hash_determinism": {
+      "description": "authorityLayer.ts. Same rules always produce the same policy_hash. SHA-256(canonical_json(rules)).",
+      "source": "authorityLayer.ts"
+    },
+    "policy_lifecycle": {
+      "description": "authorityLayer.ts. Policies go through: active \u2192 superseded (when a new policy is activated) or active \u2192 revoked. Only one policy can be active at a time.",
+      "source": "authorityLayer.ts"
+    }
+  },
+  "failure_conditions": {
+    "self_authorization_blocked": "Same identity attempts approval before cooldown \u2192 BLOCKED. authority_model = 'BLOCKED \u2014 Self-Authorization Sub-Policy Not Met'.",
+    "role_transition_denied": "Proposer role attempts authorize_action \u2192 denied. Must explicitly switch to approver role.",
+    "revoked_authority": "Root authority with status 'revoked' cannot sign policies or issue tokens.",
+    "no_active_policy": "Authorization token cannot be issued if no active policy exists.",
+    "policy_hash_mismatch": "If token.policy_hash !== active_policy.policy_hash \u2192 policy_hash_match FAIL."
+  },
+  "authority_boundary_rule": {
+    "rule": "Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.",
+    "applies_to": "The delegation check is a receipt of identity evaluation. It does not authorize execution. A separate authorization must be issued after the delegation check passes."
+  }
+}

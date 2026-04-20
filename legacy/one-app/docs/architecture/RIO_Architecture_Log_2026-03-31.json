@@ -1,0 +1,374 @@
+{
+  "task_name": "close_the_loop_control_plane",
+  "recipient": "Manny",
+  "priority": "critical",
+  "mode": "execute",
+  "objective": "Close the loop on the control-plane architecture so the system is not just a diagram or mapping, but a complete governed runtime: proposal -> packaging -> verification -> governance -> human authorization when required -> execution gate -> external action -> receipt/witness -> immutable ledger -> learning loop feedback into future policy and intent handling.",
+  "core_instruction": "Do not explain the architecture back. Build the missing closure points so the loop is operational end to end.",
+  "what_close_the_loop_means": [
+    "Every intent must enter as a structured envelope.",
+    "Every envelope must be verified before policy evaluation.",
+    "Every verified intent must receive a governance decision.",
+    "If risk/policy requires human approval, execution must halt until explicit approval is recorded.",
+    "No external action can occur without passing the execution gate.",
+    "Every executed action must generate a receipt/witness artifact.",
+    "Every receipt must be written to the immutable ledger.",
+    "Ledger records must feed a learning loop that updates policy suggestions, thresholds, or replay analytics without silently mutating production policy.",
+    "The system must prove chain-of-custody from intent through outcome."
+  ],
+  "architecture_mapping": {
+    "formal_to_rio": [
+      {
+        "formal_term": "Intent Source",
+        "rio_term": "Generator",
+        "required_behavior": "Generate proposal only. No approval authority. No execution authority."
+      },
+      {
+        "formal_term": "Intent Envelope",
+        "rio_term": "Structured Intent / Intent Envelope",
+        "required_behavior": "Wrap proposal with request_id, source, actor, timestamp, nonce, target, action_type, parameters, context, and integrity metadata."
+      },
+      {
+        "formal_term": "Verification Layer",
+        "rio_term": "Gate - Integrity Verification",
+        "required_behavior": "Validate schema, signature if present, nonce freshness, timestamp TTL, source authenticity, required fields, and replay protection before governance."
+      },
+      {
+        "formal_term": "Governance Engine",
+        "rio_term": "Governor / Policy Engine",
+        "required_behavior": "Apply policy rules, risk scoring, compliance checks, and decision tiering: approve, deny, or require human authorization."
+      },
+      {
+        "formal_term": "Human Authorization Boundary",
+        "rio_term": "Explicit Human Approval Boundary",
+        "required_behavior": "Record approver identity, decision, timestamp, and approval artifact. No implied approval. Silence equals refusal."
+      },
+      {
+        "formal_term": "Execution Gate",
+        "rio_term": "Sovereign Gate",
+        "required_behavior": "Re-check that approvals, policy state, token validity, TTL, and preconditions still hold immediately before execution."
+      },
+      {
+        "formal_term": "External Action",
+        "rio_term": "Connector / Tool Execution",
+        "required_behavior": "Perform the real-world action only after successful gate clearance."
+      },
+      {
+        "formal_term": "Receipt / Witness",
+        "rio_term": "Witness / Receipt",
+        "required_behavior": "Capture proof of actual execution: action result, external response, status code, timestamps, hashes, verification status."
+      },
+      {
+        "formal_term": "Immutable Ledger",
+        "rio_term": "Hash-Chained Ledger",
+        "required_behavior": "Append tamper-evident record linking intent, governance decision, approval record, execution record, and receipt."
+      },
+      {
+        "formal_term": "Learning Loop",
+        "rio_term": "Replay / Analytics / Policy Feedback",
+        "required_behavior": "Analyze outcomes from ledger data and produce policy recommendations, drift detection, threshold suggestions, and replay simulation inputs. No automatic policy mutation in production unless explicitly approved."
+      }
+    ]
+  },
+  "required_build_actions": [
+    {
+      "id": "A1",
+      "title": "Make intent envelope first-class",
+      "required_for_the_work": true,
+      "why": "Without a canonical intent envelope, there is no stable chain-of-custody.",
+      "implementation": [
+        "Define a canonical intent envelope schema.",
+        "Include: intent_id, request_id, source_type, source_id, actor_id, timestamp, nonce, action_type, target, parameters, context, correlation_id, policy_version_target, signature_optional, metadata.",
+        "Canonicalize for hashing."
+      ]
+    },
+    {
+      "id": "A2",
+      "title": "Separate verification from governance",
+      "required_for_the_work": true,
+      "why": "Validity and policy are not the same thing. Broken or spoofed requests must fail before governance.",
+      "implementation": [
+        "Create a verification step that runs before policy.",
+        "Reject malformed, expired, replayed, unsigned-when-required, or unauthorized requests.",
+        "Emit explicit verification result object."
+      ]
+    },
+    {
+      "id": "A3",
+      "title": "Formalize governance decision object",
+      "required_for_the_work": true,
+      "why": "The system needs a deterministic policy decision artifact before any action can continue.",
+      "implementation": [
+        "Decision object must include: decision_id, intent_hash, policy_version, risk_score, risk_level, decision, reasons, required_approvals, blocking_conditions, timestamp."
+      ]
+    },
+    {
+      "id": "A4",
+      "title": "Enforce explicit human authorization boundary",
+      "required_for_the_work": true,
+      "why": "High-risk actions must not drift into execution through implied permission.",
+      "implementation": [
+        "If governance says human approval required, halt execution.",
+        "Capture approver identity, approval payload, signed or authenticated approval artifact, timestamp, and decision rationale.",
+        "No approval artifact means no execution."
+      ]
+    },
+    {
+      "id": "A5",
+      "title": "Add execution token and final preflight gate",
+      "required_for_the_work": true,
+      "why": "Approval must be bound to the exact action being executed and must expire.",
+      "implementation": [
+        "Issue single-use execution token after successful approval or auto-approval.",
+        "Bind token to intent hash, action hash, policy version, TTL, nonce, and target.",
+        "Execution gate must verify token before connector call."
+      ]
+    },
+    {
+      "id": "A6",
+      "title": "Produce receipt/witness artifact",
+      "required_for_the_work": true,
+      "why": "The loop is not closed until execution proof exists.",
+      "implementation": [
+        "Create receipt with links to intent, governance, approval, execution, and verification artifacts.",
+        "Include timestamps, outcome, external response IDs, verification status, and hashes.",
+        "Prefer signed receipt if available."
+      ]
+    },
+    {
+      "id": "A7",
+      "title": "Append full chain to immutable ledger",
+      "required_for_the_work": true,
+      "why": "Proof must be tamper-evident and replayable.",
+      "implementation": [
+        "Ledger entry should store receipt_hash, previous_ledger_hash, current_hash, block_index, timestamp.",
+        "Append only. No overwrite.",
+        "Recompute chain validation in tests."
+      ]
+    },
+    {
+      "id": "A8",
+      "title": "Close learning loop safely",
+      "required_for_the_work": true,
+      "why": "The system must improve from outcomes without silently changing policy.",
+      "implementation": [
+        "Build analytics job over ledger and receipts.",
+        "Generate reports for false positives, false negatives, approval bottlenecks, execution failures, policy misses, and repeated override patterns.",
+        "Output policy recommendations or replay inputs.",
+        "Do not auto-change live policy unless explicit approved promotion path exists."
+      ]
+    }
+  ],
+  "minimum_schemas_to_create_or_update": {
+    "intent_envelope": {
+      "fields": [
+        "intent_id",
+        "request_id",
+        "source_type",
+        "source_id",
+        "actor_id",
+        "timestamp",
+        "nonce",
+        "action_type",
+        "target",
+        "parameters",
+        "context",
+        "correlation_id",
+        "policy_version_target",
+        "metadata"
+      ]
+    },
+    "verification_result": {
+      "fields": [
+        "verification_id",
+        "intent_hash",
+        "schema_valid",
+        "auth_valid",
+        "signature_valid",
+        "ttl_valid",
+        "nonce_valid",
+        "replay_check",
+        "verified",
+        "failure_reasons",
+        "timestamp"
+      ]
+    },
+    "governance_decision": {
+      "fields": [
+        "decision_id",
+        "intent_hash",
+        "verification_id",
+        "policy_version",
+        "risk_score",
+        "risk_level",
+        "decision",
+        "required_approvals",
+        "reasons",
+        "blocking_conditions",
+        "timestamp"
+      ]
+    },
+    "approval_record": {
+      "fields": [
+        "approval_id",
+        "decision_id",
+        "intent_hash",
+        "approver_id",
+        "approval_status",
+        "auth_method",
+        "approval_artifact",
+        "timestamp",
+        "notes"
+      ]
+    },
+    "execution_record": {
+      "fields": [
+        "execution_id",
+        "intent_hash",
+        "decision_id",
+        "approval_id_optional",
+        "execution_token_id",
+        "connector",
+        "target",
+        "action_hash",
+        "started_at",
+        "completed_at",
+        "status",
+        "external_response_id",
+        "result_summary"
+      ]
+    },
+    "receipt": {
+      "fields": [
+        "receipt_id",
+        "intent_hash",
+        "verification_hash",
+        "decision_hash",
+        "approval_hash_optional",
+        "execution_hash",
+        "receipt_hash",
+        "verification_status",
+        "outcome_status",
+        "timestamp",
+        "signature_optional"
+      ]
+    },
+    "ledger_entry": {
+      "fields": [
+        "block_index",
+        "receipt_hash",
+        "previous_ledger_hash",
+        "current_hash",
+        "timestamp"
+      ]
+    }
+  },
+  "required_runtime_rules": [
+    "Generator can propose only.",
+    "Verification failure stops flow immediately.",
+    "Governance cannot execute actions.",
+    "High-risk or policy-flagged actions require explicit human approval.",
+    "Execution token must be single-use and time-bound.",
+    "Execution must be denied if token, policy version, or preconditions do not match.",
+    "Every external action must emit receipt data.",
+    "Every receipt must be appended to ledger.",
+    "Learning loop may recommend changes but cannot silently mutate production policy."
+  ],
+  "required_endpoints_or_functions": [
+    "create_intent_envelope",
+    "verify_intent",
+    "evaluate_governance",
+    "request_human_approval_if_needed",
+    "issue_execution_token",
+    "execute_action_through_gate",
+    "generate_receipt",
+    "append_ledger_entry",
+    "run_learning_loop_analysis",
+    "replay_historical_decision"
+  ],
+  "required_tests": [
+    {
+      "name": "malformed_intent_fails_before_governance",
+      "required_for_the_work": true
+    },
+    {
+      "name": "expired_or_replayed_intent_fails_verification",
+      "required_for_the_work": true
+    },
+    {
+      "name": "low_risk_intent_auto_approves_and_executes_through_gate",
+      "required_for_the_work": true
+    },
+    {
+      "name": "high_risk_intent_blocks_without_human_approval",
+      "required_for_the_work": true
+    },
+    {
+      "name": "approval_for_one_intent_cannot_be_reused_for_another",
+      "required_for_the_work": true
+    },
+    {
+      "name": "execution_without_valid_token_is_denied",
+      "required_for_the_work": true
+    },
+    {
+      "name": "successful_execution_generates_receipt_and_ledger_entry",
+      "required_for_the_work": true
+    },
+    {
+      "name": "ledger_chain_validation_detects_tampering",
+      "required_for_the_work": true
+    },
+    {
+      "name": "learning_loop_reads_ledger_and_emits_recommendations_without_mutating_live_policy",
+      "required_for_the_work": true
+    }
+  ],
+  "definition_of_done": [
+    "A single intent can be traced end to end from proposal to receipt.",
+    "The system blocks execution when verification fails.",
+    "The system blocks execution when policy requires approval and no approval exists.",
+    "The system binds approval to the exact intended action.",
+    "The system emits a verifiable receipt after execution.",
+    "The system appends a tamper-evident ledger entry.",
+    "The system runs a learning analysis over completed records.",
+    "A demo or test proves the full closed loop in one flow."
+  ],
+  "implementation_guidance": {
+    "design_principles": [
+      "Fail closed.",
+      "Silence equals refusal.",
+      "No implicit authority.",
+      "No component may both approve and execute the same action.",
+      "Learning is advisory until explicitly promoted."
+    ],
+    "order_of_operations": [
+      "Intent creation",
+      "Envelope packaging",
+      "Verification",
+      "Governance decision",
+      "Human authorization if required",
+      "Execution token issuance",
+      "Execution gate preflight",
+      "External action",
+      "Receipt generation",
+      "Ledger append",
+      "Learning loop analysis"
+    ]
+  },
+  "deliverables": [
+    "Updated JSON schemas for all core artifacts",
+    "Implementation of missing runtime boundary checks",
+    "End-to-end test covering full closed loop",
+    "One demo flow proving proposal -> approval -> execution -> receipt -> ledger -> learning output",
+    "Short build note stating exactly what was added to close the loop"
+  ],
+  "do_not_do": [
+    "Do not collapse verification and governance into one step.",
+    "Do not let execution happen before explicit approval when approval is required.",
+    "Do not let learning loop auto-edit production policy without a separate approval path.",
+    "Do not describe this abstractly without implementing the missing closure points.",
+    "Do not rely on UI-only approval; bind approval cryptographically or with authenticated backend record."
+  ],
+  "single_sentence_summary": "Close the loop by making every action provably traverse structured intent, verification, governance, authorization, gated execution, receipt generation, immutable ledger storage, and safe learning feedback."
+}

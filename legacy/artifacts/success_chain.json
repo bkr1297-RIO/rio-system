@@ -1,0 +1,142 @@
+{
+  "artifact_type": "SUCCESS_CHAIN",
+  "lineage_id": "lin_4121852b1e9e4e5e",
+  "step": 1,
+  "authorization": {
+    "dtt_id": "ATOK-9fb7d4e9990f4de3",
+    "intent": "send_email",
+    "scope": {
+      "max_execution": 1
+    },
+    "issued_at": "2026-04-17T18:48:19.702Z",
+    "expires_at": "2026-04-17T18:53:19.702Z"
+  },
+  "truth_entry": {
+    "status": "PENDING",
+    "timestamp": "2026-04-17T18:48:19.620Z",
+    "input_hash": "8bf5c4fb8a0cb8a433498114172f53b64392dc52735d152dc8a7b3f9ed686e87",
+    "actor": "PRI-ART-1"
+  },
+  "execution": {
+    "action": "send_email",
+    "target": "brian@example.com",
+    "started_at": "2026-04-17T18:48:19.704Z",
+    "completed_at": "2026-04-17T18:48:19.712Z"
+  },
+  "truth_resolution": {
+    "status": "SUCCESS",
+    "timestamp": "2026-04-17T18:48:19.712Z",
+    "output_hash": "e0b600334524854d109493e66b54117570f7e38de1858f97c10b391a00e79d11"
+  },
+  "lineage_state": {
+    "state": "RESOLVED",
+    "final_status": "SUCCESS"
+  },
+  "_system_evidence": {
+    "intent_id": "INT-ART-1",
+    "approval_id": "APR-ART-1",
+    "execution_id": "EXE-ART-1",
+    "receipt_hash": "9c58a285b0123439a899ad08d978e33e584605dcd7107e940e06f9868a3d2cdd",
+    "token_id": "ATOK-9fb7d4e9990f4de3",
+    "policy_hash": "019a1eacd425b7cf8bf20a314a0704fca4cf8856fbf6d3cc44f70ccd3871b036",
+    "preflight_results": [
+      {
+        "check": "proxy_active",
+        "status": "PASS",
+        "detail": "Proxy status: ACTIVE"
+      },
+      {
+        "check": "not_already_executed",
+        "status": "PASS",
+        "detail": "Intent not yet executed"
+      },
+      {
+        "check": "tool_registered",
+        "status": "PASS",
+        "detail": "Tool 'send_email' found"
+      },
+      {
+        "check": "risk_tier_check",
+        "status": "PASS",
+        "detail": "Risk tier: HIGH, approval required"
+      },
+      {
+        "check": "approval_exists",
+        "status": "PASS",
+        "detail": "Approval APR-ART-1"
+      },
+      {
+        "check": "approval_not_expired",
+        "status": "PASS",
+        "detail": "Approval valid"
+      },
+      {
+        "check": "execution_limit",
+        "status": "PASS",
+        "detail": "0/1 used"
+      },
+      {
+        "check": "args_hash_match",
+        "status": "PASS",
+        "detail": "Args hash verified"
+      },
+      {
+        "check": "authorization_token_exists",
+        "status": "PASS",
+        "detail": "Token ATOK-9fb7d4e9990f4de3 found"
+      },
+      {
+        "check": "token_token_exists",
+        "status": "PASS",
+        "detail": "Token ATOK-9fb7d4e9990f4de3 found"
+      },
+      {
+        "check": "token_token_signature_valid",
+        "status": "PASS",
+        "detail": "Signature present and well-formed"
+      },
+      {
+        "check": "token_token_not_expired",
+        "status": "PASS",
+        "detail": "Expires at 2026-04-17T18:53:19.702Z"
+      },
+      {
+        "check": "token_execution_count_valid",
+        "status": "PASS",
+        "detail": "0/1 executions used"
+      },
+      {
+        "check": "token_parameters_hash_match",
+        "status": "PASS",
+        "detail": "Parameters hash verified"
+      },
+      {
+        "check": "token_kill_switch_off",
+        "status": "PASS",
+        "detail": "Kill switch off"
+      },
+      {
+        "check": "token_policy_hash_match",
+        "status": "PASS",
+        "detail": "Policy hash verified: 019a1eacd425b7cf..."
+      },
+      {
+        "check": "proposer_not_approver",
+        "status": "PASS",
+        "detail": "Proposer (PRI-ART-1) ≠ Approver (PRI-ART-2)"
+      }
+    ],
+    "connector_result": {
+      "success": true,
+      "metadata": {
+        "connector": "send_email",
+        "transport": "gmail_smtp",
+        "protocol_version": "2.3.0"
+      }
+    },
+    "ledger_entry_type": "EXECUTION",
+    "proposer_principal": "PRI-ART-1",
+    "approver_principal": "PRI-ART-2",
+    "proposer_ne_approver": true
+  }
+}

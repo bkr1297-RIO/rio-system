@@ -1,0 +1,288 @@
+{
+  "_derived_from": "/specs/canonical/RIO_CANONICAL_SPEC_v1.0.md",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "rio:04_witness_receipt",
+  "title": "RIO Witness Receipt \u2014 Chain-of-Custody Artifact",
+  "description": "Extracted from controlPlane.ts (A6: WitnessReceipt, generateWitnessReceipt) and authorityLayer.ts (CanonicalReceipt with hash chaining).",
+  "definitions": {
+    "WitnessReceipt": {
+      "description": "controlPlane.ts \u2014 A6: RECEIPT / WITNESS ARTIFACT. Links all chain-of-custody artifacts into a single tamper-evident record.",
+      "type": "object",
+      "required": [
+        "receipt_id",
+        "intent_hash",
+        "verification_hash",
+        "decision_hash",
+        "approval_hash",
+        "execution_hash",
+        "receipt_hash",
+        "verification_status",
+        "outcome_status",
+        "chain_of_custody",
+        "timestamp",
+        "signature"
+      ],
+      "properties": {
+        "receipt_id": {
+          "type": "string",
+          "pattern": "^REC-",
+          "description": "Unique receipt ID."
+        },
+        "intent_hash": {
+          "type": "string",
+          "description": "SHA-256(canonical_json(envelope)). From verification."
+        },
+        "verification_hash": {
+          "type": "string",
+          "description": "SHA-256(canonical_json(verification))."
+        },
+        "decision_hash": {
+          "type": "string",
+          "description": "SHA-256(canonical_json(governance))."
+        },
+        "approval_hash": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "SHA-256(canonical_json(approval)) or null if auto-approved."
+        },
+        "execution_hash": {
+          "type": "string",
+          "description": "SHA-256(canonical_json({token_id, result: connectorResult}))."
+        },
+        "receipt_hash": {
+          "type": "string",
+          "description": "SHA-256(canonical_json({receipt_id, intent_hash, verification_hash, decision_hash, approval_hash, execution_hash})). Covers the entire chain."
+        },
+        "verification_status": {
+          "type": "string",
+          "enum": [
+            "VERIFIED",
+            "FAILED"
+          ]
+        },
+        "outcome_status": {
+          "type": "string",
+          "enum": [
+            "SUCCESS",
+            "FAILURE",
+            "PARTIAL"
+          ]
+        },
+        "chain_of_custody": {
+          "$ref": "#/definitions/ChainOfCustody"
+        },
+        "timestamp": {
+          "type": "integer"
+        },
+        "signature": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Ed25519 signature. Null until Ed25519 is available."
+        }
+      },
+      "additionalProperties": false
+    },
+    "ChainOfCustody": {
+      "description": "controlPlane.ts \u2014 The full chain of artifacts that produced this receipt.",
+      "type": "object",
+      "required": [
+        "envelope",
+        "verification",
+        "governance",
+        "approval",
+        "execution_token",
+        "connector_result"
+      ],
+      "properties": {
+        "envelope": {
+          "$ref": "rio:02_governance_decision#/definitions/IntentEnvelope"
+        },
+        "verification": {
+          "$ref": "rio:02_governance_decision#/definitions/VerificationResult"
+        },
+        "governance": {
+          "$ref": "rio:02_governance_decision#/definitions/GovernanceDecision"
+        },
+        "approval": {
+          "oneOf": [
+            {
+              "$ref": "rio:02_governance_decision#/definitions/ApprovalRecord"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "execution_token": {
+          "$ref": "rio:03_execution_token#/definitions/ExecutionToken"
+        },
+        "connector_result": {
+          "$ref": "#/definitions/ConnectorResult"
+        }
+      },
+      "additionalProperties": false
+    },
+    "ConnectorResult": {
+      "description": "controlPlane.ts \u2014 The result of the connector (tool) execution.",
+      "type": "object",
+      "required": [
+        "success",
+        "output",
+        "executedAt"
+      ],
+      "properties": {
+        "success": {
+          "type": "boolean"
+        },
+        "output": {
+          "description": "Arbitrary connector output."
+        },
+        "metadata": {
+          "type": "object"
+        },
+        "executedAt": {
+          "type": "integer",
+          "description": "Unix epoch milliseconds."
+        }
+      },
+      "additionalProperties": false
+    },
+    "CanonicalReceipt": {
+      "description": "authorityLayer.ts \u2014 Canonical receipt with hash chaining. First receipt uses all-zero previous_receipt_hash. Subsequent receipts chain to the previous.",
+      "type": "object",
+      "required": [
+        "receipt_id",
+        "intent_id",
+        "proposer_id",
+        "approver_id",
+        "token_id",
+        "action",
+        "status",
+        "executor",
+        "execution_hash",
+        "policy_hash",
+        "ledger_entry_id",
+        "receipt_hash",
+        "gateway_signature",
+        "timestamp_proposed",
+        "timestamp_approved",
+        "timestamp_executed",
+        "decision_delta_ms",
+        "previous_receipt_hash"
+      ],
+      "properties": {
+        "receipt_id": {
+          "type": "string"
+        },
+        "intent_id": {
+          "type": "string"
+        },
+        "proposer_id": {
+          "type": "string"
+        },
+        "approver_id": {
+          "type": "string"
+        },
+        "token_id": {
+          "type": "string"
+        },
+        "action": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "EXECUTED",
+            "FAILED",
+            "REJECTED"
+          ]
+        },
+        "executor": {
+          "type": "string"
+        },
+        "execution_hash": {
+          "type": "string"
+        },
+        "policy_hash": {
+          "type": "string"
+        },
+        "ledger_entry_id": {
+          "type": "string"
+        },
+        "receipt_hash": {
+          "type": "string",
+          "description": "SHA-256 of this receipt's canonical fields."
+        },
+        "gateway_signature": {
+          "type": "string"
+        },
+        "timestamp_proposed": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timestamp_approved": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "timestamp_executed": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "decision_delta_ms": {
+          "type": "integer",
+          "description": "timestamp_approved - timestamp_proposed in milliseconds."
+        },
+        "previous_receipt_hash": {
+          "type": "string",
+          "description": "Hash of the previous receipt. First receipt in chain uses '0000000000000000000000000000000000000000000000000000000000000000' (64 zeros)."
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "validation_rules": {
+    "receipt_hash_covers_chain": {
+      "description": "controlPlane.ts generateWitnessReceipt(). receipt_hash = SHA-256(canonical_json({receipt_id, intent_hash, verification_hash, decision_hash, approval_hash, execution_hash})). Covers the entire chain of custody.",
+      "source": "controlPlane.ts"
+    },
+    "receipt_chaining": {
+      "description": "authorityLayer.ts. Each CanonicalReceipt.previous_receipt_hash links to the prior receipt's receipt_hash. First receipt uses 64 zeros. This creates an append-only receipt chain.",
+      "source": "authorityLayer.ts"
+    },
+    "first_receipt_previous_hash": {
+      "description": "authorityLayer.ts. The first receipt in the chain MUST have previous_receipt_hash = '0000000000000000000000000000000000000000000000000000000000000000' (64 hex zeros).",
+      "value": "0000000000000000000000000000000000000000000000000000000000000000",
+      "source": "authorityLayer.ts"
+    },
+    "outcome_status_mapping": {
+      "description": "controlPlane.ts. outcome_status = connectorResult.success ? 'SUCCESS' : 'FAILURE'. PARTIAL is reserved for future use.",
+      "source": "controlPlane.ts"
+    },
+    "verification_status_mapping": {
+      "description": "controlPlane.ts. verification_status = verification.verified ? 'VERIFIED' : 'FAILED'.",
+      "source": "controlPlane.ts"
+    },
+    "approval_hash_nullable": {
+      "description": "controlPlane.ts. approval_hash is null when the intent was auto-approved (LOW risk). Non-null when human approval was provided.",
+      "source": "controlPlane.ts"
+    },
+    "decision_delta_ms": {
+      "description": "authorityLayer.ts. decision_delta_ms = timestamp_approved - timestamp_proposed. Measures human decision latency.",
+      "source": "authorityLayer.ts"
+    }
+  },
+  "failure_conditions": {
+    "receipt_hash_mismatch": "If recomputed receipt_hash !== stored receipt_hash \u2192 tamper detected.",
+    "chain_break": "If receipt[i].previous_receipt_hash !== receipt[i-1].receipt_hash \u2192 chain integrity violation.",
+    "missing_chain_of_custody": "If any required chain_of_custody field is missing \u2192 receipt is invalid.",
+    "execution_hash_mismatch": "If recomputed execution_hash !== stored \u2192 connector result was modified."
+  },
+  "authority_boundary_rule": {
+    "rule": "Execution requires a locally issued authorization. Upstream receipts may be consumed but never grant permission.",
+    "applies_to": "The receipt is the proof. It records what happened. It does not authorize what happens next. The next action in the pipeline requires its own authorization."
+  }
+}

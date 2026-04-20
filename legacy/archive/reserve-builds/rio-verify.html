@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RIO Receipt Verifier</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background: #020617; }
+    .mono { font-variant-ligatures: none; }
+  </style>
+</head>
+<body class="min-h-screen text-slate-100 selection:bg-cyan-500/30">
+  <div class="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
+    <header class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+      <div>
+        <div class="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs uppercase tracking-[0.2em] text-cyan-300">🔐 RIO verifier</div>
+        <h1 class="mt-4 text-3xl font-semibold tracking-tight md:text-5xl">Receipt Verifier</h1>
+        <p class="mt-3 max-w-3xl text-sm text-slate-300 md:text-base">Verify a single RIO receipt or a full chain by recomputing SHA-256 over the canonical receipt fields, checking <span class="mono">prev_hash</span> links, and validating the Ed25519 approval signature against a supplied public key.</p>
+      </div>
+      <div class="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-slate-300">Intent → Policy → Approval → Execution → Receipt → Ledger</div>
+    </header>
+
+    <main class="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+      <section class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-cyan-950/20 backdrop-blur md:p-6">
+        <div class="flex flex-wrap items-center gap-3">
+          <button id="tab-single" class="rounded-xl bg-cyan-400 px-4 py-2 font-medium text-slate-950">Single Receipt</button>
+          <button id="tab-chain" class="rounded-xl border border-white/10 px-4 py-2 font-medium text-slate-200">Verify Chain</button>
+          <button id="sampleBtn" class="ml-auto rounded-xl border border-emerald-400/20 bg-emerald-400/10 px-4 py-2 font-medium text-emerald-300">Load Sample</button>
+        </div>
+
+        <div class="mt-6 space-y-5">
+          <div>
+            <label class="mb-2 block text-sm font-medium text-slate-200">Ed25519 Public Key (base64)</label>
+            <textarea id="publicKey" rows="3" class="w-full rounded-2xl border border-white/10 bg-slate-950/70 p-3 text-sm outline-none focus:border-cyan-400" placeholder="Paste Ed25519 public key here"></textarea>
+          </div>
+
+          <div>
+            <div class="mb-2 flex items-center justify-between">
+              <label class="block text-sm font-medium text-slate-200">Receipt JSON</label>
+              <label class="cursor-pointer rounded-xl border border-white/10 px-3 py-2 text-sm hover:bg-white/5">
+                📤 Upload JSON
+                <input id="fileInput" type="file" accept="application/json,.json" class="hidden" />
+              </label>
+            </div>
+            <textarea id="receiptInput" rows="18" class="mono w-full rounded-2xl border border-white/10 bg-slate-950/70 p-3 text-sm outline-none focus:border-cyan-400" placeholder="Paste one receipt JSON object here, or switch to Verify Chain and paste an array of receipts."></textarea>
+            <p id="modeHint" class="mt-2 text-xs text-slate-400">Single Receipt mode expects one JSON object.</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <button id="verifyBtn" class="rounded-2xl bg-cyan-400 px-5 py-3 font-semibold text-slate-950 hover:bg-cyan-300">🔍 Verify Receipt / Chain</button>
+            <label class="inline-flex items-center gap-2 text-sm text-slate-300"><input id="showParsed" type="checkbox" class="rounded" /> Show parsed data</label>
+          </div>
+        </div>
+      </section>
+
+      <section class="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-2xl shadow-cyan-950/20 backdrop-blur md:p-6">
+        <div class="rounded-2xl border border-white/10 bg-slate-950/50 p-4">
+          <div class="flex items-center gap-3">
+            <div id="statusDot" class="h-4 w-4 rounded-full bg-slate-500"></div>
+            <div>
+              <div id="statusText" class="text-lg font-semibold">Awaiting verification</div>
+              <div id="statusSubtext" class="text-sm text-slate-400">Run a verification to inspect receipt integrity.</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mt-5 grid gap-4 md:grid-cols-3">
+          <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+            <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Hash</div>
+            <div id="hashMetric" class="mt-2 text-sm font-medium">—</div>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+            <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Chain</div>
+            <div id="chainMetric" class="mt-2 text-sm font-medium">—</div>
+          </div>
+          <div class="rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+            <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Signature</div>
+            <div id="sigMetric" class="mt-2 text-sm font-medium">—</div>
+          </div>
+        </div>
+
+        <div class="mt-5 rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+          <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Verification Log</div>
+          <pre id="logOutput" class="mono mt-3 max-h-[340px] overflow-auto whitespace-pre-wrap text-sm text-slate-200">No verification run yet.</pre>
+        </div>
+
+        <div id="parsedWrap" class="mt-5 hidden rounded-2xl border border-white/10 bg-slate-950/40 p-4">
+          <div class="text-xs uppercase tracking-[0.2em] text-slate-400">Parsed Data</div>
+          <pre id="parsedOutput" class="mono mt-3 max-h-[320px] overflow-auto whitespace-pre-wrap text-sm text-slate-200"></pre>
+        </div>
+      </section>
+    </main>
+  </div>
+
+<script>
+let mode = 'single';
+const tabSingle = document.getElementById('tab-single');
+const tabChain = document.getElementById('tab-chain');
+const modeHint = document.getElementById('modeHint');
+const receiptInput = document.getElementById('receiptInput');
+const publicKeyInput = document.getElementById('publicKey');
+const logOutput = document.getElementById('logOutput');
+const parsedWrap = document.getElementById('parsedWrap');
+const parsedOutput = document.getElementById('parsedOutput');
+const showParsed = document.getElementById('showParsed');
+
+function setMode(next) {
+  mode = next;
+  const single = next === 'single';
+  tabSingle.className = single ? 'rounded-xl bg-cyan-400 px-4 py-2 font-medium text-slate-950' : 'rounded-xl border border-white/10 px-4 py-2 font-medium text-slate-200';
+  tabChain.className = !single ? 'rounded-xl bg-cyan-400 px-4 py-2 font-medium text-slate-950' : 'rounded-xl border border-white/10 px-4 py-2 font-medium text-slate-200';
+  modeHint.textContent = single ? 'Single Receipt mode expects one JSON object.' : 'Verify Chain mode accepts a JSON array of receipts.';
+}
+
+function canonicalize(value) {
+  if (Array.isArray(value)) return '[' + value.map(canonicalize).join(',') + ']';
+  if (value && typeof value === 'object') {
+    return '{' + Object.keys(value).sort().map(k => JSON.stringify(k) + ':' + canonicalize(value[k])).join(',') + '}';
+  }
+  return JSON.stringify(value);
+}
+
+async function sha256Hex(text) {
+  const digest = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text));
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
+
+function bytesFromBase64(base64) {
+  const binary = atob(base64.replace(/\s+/g, ''));
+  return Uint8Array.from(binary, c => c.charCodeAt(0));
+}
+
+async function importEd25519PublicKey(base64) {
+  return crypto.subtle.importKey('raw', bytesFromBase64(base64), { name: 'Ed25519' }, false, ['verify']);
+}
+
+async function verifyEd25519(publicKeyBase64, signatureBase64, message) {
+  const key = await importEd25519PublicKey(publicKeyBase64);
+  return crypto.subtle.verify(
+    { name: 'Ed25519' },
+    key,
+    bytesFromBase64(signatureBase64),
+    new TextEncoder().encode(message)
+  );
+}
+
+function computeReceiptString(receipt) {
+  const intent = canonicalize(receipt.intent ?? null);
+  const approval = canonicalize(receipt.approval ?? null);
+  const execution = canonicalize(receipt.execution ?? null);
+  const prevHash = receipt.prev_hash ?? '';
+  return [
+    receipt.receipt_id ?? '',
+    receipt.timestamp ?? '',
+    intent,
+    String(receipt.policy_result ?? ''),
+    approval,
+    execution,
+    prevHash
+  ].join('|');
+}
+
+async function computeReceiptHash(receipt) {
+  return sha256Hex(computeReceiptString(receipt));
+}
+
+function parseInput(raw) {
+  const trimmed = raw.trim();
+  if (!trimmed) throw new Error('No receipt JSON provided.');
+  const parsed = JSON.parse(trimmed);
+  return mode === 'single' ? (Array.isArray(parsed) ? (() => { throw new Error('Single Receipt mode expects one JSON object.'); })() : [parsed]) : (Array.isArray(parsed) ? parsed : (() => { throw new Error('Verify Chain mode expects a JSON array.'); })());
+}
+
+function setMetric(id, value, ok) {
+  const el = document.getElementById(id);
+  el.textContent = value;
+  el.className = 'mt-2 text-sm font-medium ' + (ok ? 'text-emerald-300' : 'text-rose-300');
+}
+
+function setStatus(type, text, subtext) {
+  const dot = document.getElementById('statusDot');
+  document.getElementById('statusText').textContent = text;
+  document.getElementById('statusSubtext').textContent = subtext;
+  dot.className = 'h-4 w-4 rounded-full ' + ({ idle: 'bg-slate-500', valid: 'bg-emerald-400', invalid: 'bg-amber-400', tampered: 'bg-rose-500' }[type]);
+}
+
+async function verifyAll() {
+  const receipts = parseInput(receiptInput.value);
+  const pubKey = publicKeyInput.value.trim();
+  const logs = [];
+  let hashOk = true;
+  let chainOk = true;
+  let sigOk = true;
+  let previousStoredHash = null;
+
+  for (let i = 0; i < receipts.length; i++) {
+    const r = receipts[i];
+    const computedHash = await computeReceiptHash(r);
+    const storedHash = r.hash ?? '';
+    const currentHashOk = computedHash === storedHash;
+    hashOk = hashOk && currentHashOk;
+
+    const currentChainOk = i === 0 ? true : (r.prev_hash === previousStoredHash);
+    chainOk = chainOk && currentChainOk;
+
+    let currentSigOk = false;
+    if (pubKey && r.approval?.signature) {
+      try {
+        currentSigOk = await verifyEd25519(pubKey, r.approval.signature, storedHash);
+      } catch (e) {
+        currentSigOk = false;
+      }
+    }
+    sigOk = sigOk && currentSigOk;
+
+    logs.push([
+      `Receipt #${i + 1} (${r.receipt_id ?? 'unknown'})`,
+      `  stored hash:    ${storedHash || '(missing)'}`,
+      `  computed hash:  ${computedHash}`,
+      `  hash valid:     ${currentHashOk}`,
+      `  prev_hash:      ${r.prev_hash ?? '(null)'}`,
+      `  chain valid:    ${currentChainOk}`,
+      `  signature valid:${currentSigOk}`,
+      `  ledger position:${r.ledger_position ?? '(missing)'}`
+    ].join('\n'));
+
+    previousStoredHash = storedHash;
+  }
+
+  logOutput.textContent = logs.join('\n\n');
+  parsedOutput.textContent = JSON.stringify(receipts, null, 2);
+  parsedWrap.classList.toggle('hidden', !showParsed.checked);
+
+  setMetric('hashMetric', hashOk ? 'VALID' : 'INVALID', hashOk);
+  setMetric('chainMetric', chainOk ? 'VALID' : 'INVALID', chainOk);
+  setMetric('sigMetric', sigOk ? 'VALID' : 'INVALID / MISSING', sigOk);
+
+  if (hashOk && chainOk && sigOk) {
+    setStatus('valid', 'VALID', 'Hash, chain, and signature verification passed.');
+  } else if (!hashOk || !chainOk) {
+    setStatus('tampered', 'TAMPERED', 'Receipt data or chain linkage does not match the stored record.');
+  } else {
+    setStatus('invalid', 'INVALID', 'Receipt structure passed, but signature verification failed or was missing.');
+  }
+}
+
+function loadSample() {
+  const sample = {
+    receipt_id: 'RIO-003',
+    timestamp: '2025-03-28T10:00:00Z',
+    intent: {
+      action: 'send_email',
+      target: 'recipient@example.com',
+      summary: 'Status update to team'
+    },
+    policy_result: 'REQUIRE_HUMAN',
+    approval: {
+      approved_by: 'brian.k.rasmussen@gmail.com',
+      signature: '<Ed25519 base64 signature>',
+      timestamp: '2025-03-28T10:01:00Z'
+    },
+    execution: {
+      status: 'completed',
+      connector: 'gmail',
+      result: 'Message sent successfully'
+    },
+    hash: '<SHA-256 of receipt fields>',
+    prev_hash: '<hash of previous receipt>',
+    ledger_position: 3
+  };
+  receiptInput.value = JSON.stringify(sample, null, 2);
+}
+
+document.getElementById('verifyBtn').addEventListener('click', async () => {
+  try {
+    await verifyAll();
+  } catch (err) {
+    setStatus('invalid', 'INVALID', err.message);
+    logOutput.textContent = 'Error: ' + err.message;
+    setMetric('hashMetric', '—', false);
+    setMetric('chainMetric', '—', false);
+    setMetric('sigMetric', '—', false);
+  }
+});
+
+document.getElementById('fileInput').addEventListener('change', async (e) => {
+  const file = e.target.files?.[0];
+  if (!file) return;
+  receiptInput.value = await file.text();
+});
+
+document.getElementById('sampleBtn').addEventListener('click', loadSample);
+showParsed.addEventListener('change', () => parsedWrap.classList.toggle('hidden', !showParsed.checked));
+tabSingle.addEventListener('click', () => setMode('single'));
+tabChain.addEventListener('click', () => setMode('chain'));
+setMode('single');
+</script>
+</body>
+</html>

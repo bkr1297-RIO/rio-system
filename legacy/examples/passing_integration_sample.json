@@ -1,0 +1,50 @@
+{
+  "intent": {
+    "intentId": "INT-Mdl8uMJ0LqBk88WB",
+    "riskTier": "LOW",
+    "argsHash": "3f70bfe63c2b603d577c247be2d7b34e6b3bc55207daa57d5a2c07ed25a1ff6f"
+  },
+  "execution": {
+    "success": true,
+    "receiptHash": "051fde9d8bccf6ef3e80d24af532f05bed1597fe78c91fa120b3788dad195dde"
+  },
+  "receipt": null,
+  "ledger": {
+    "entryCount": 3,
+    "entryIds": [
+      "LE-mbmijrYJECvqWB4r",
+      "LE-EWH2OzkvOWWVJTe_",
+      "LE-6cVCgBjS0WWcbt7p"
+    ]
+  },
+  "proofPacket": {
+    "proofPacketId": "PP-df8ddc9578064be7",
+    "specVersion": "1.0.0",
+    "intentId": "INT-Mdl8uMJ0LqBk88WB",
+    "predicateEvaluation": {
+      "auth": true,
+      "preRec": true,
+      "postRec": true,
+      "exact": true,
+      "lineage": true,
+      "outcome": true,
+      "valid": true,
+      "evaluatedAt": "2026-04-19T14:09:43.599Z"
+    },
+    "receipt": {
+      "receiptId": "EXE-eTUl1ssc1B0tSn6y",
+      "receiptHash": "051fde9d8bccf6ef3e80d24af532f05bed1597fe78c91fa120b3788dad195dde",
+      "timestamp": "2026-04-19T14:09:43.000Z",
+      "status": "SUCCESS"
+    },
+    "ledger": {
+      "ledgerEntryId": "LE-EWH2OzkvOWWVJTe_",
+      "chainValid": false
+    },
+    "verification": {
+      "valid": false,
+      "verifiedAt": "2026-04-19T14:09:44.652Z"
+    }
+  },
+  "chainValid": false
+}
