@@ -1,151 +1,149 @@
-# RIO — Governed Execution Standard
+# RIO — Governed Execution
 
-RIO is a governed execution system. It sits between AI agents, humans, and real-world actions. Every action with real-world consequences passes through a fixed sequence: governance, authorization, execution, receipt, ledger. The system enforces the rules — not the AI.
+## What this is
 
----
+RIO is a control plane for how software takes real-world actions — giving you confidence that nothing happens without you knowing, approving it, and a clear record of who approved it and when.
 
-## System Definition
+It does not generate output.
+It does not make decisions.
+It does not act on its own.
 
-RIO converts AI-proposed actions into human-authorized, policy-controlled, cryptographically verifiable transactions.
+It sits between your systems and the real world, watching and enforcing what is allowed to happen.
 
-```
-Intent → Governance → Authorization → Execution → Receipt → Ledger
-```
+It is built on one rule that does not change:
 
-No action with real-world consequences occurs without:
+> **Authority stays with the human. Always.**
 
-1. **Governance** — policy evaluation and risk classification.
-2. **Authorization** — human approval when required by policy.
-3. **Proof** — cryptographic receipt written to a hash-chained ledger.
-
-If any condition cannot be met, the action does not execute. The system fails closed.
+If something is not explicitly approved, it cannot happen.
 
 ---
 
-## Core Flow
+## The problem it solves
 
-| Step | What Happens | Enforcement |
-|------|-------------|-------------|
-| 1 | Intent proposed | Structured envelope with identity, nonce, parameters. |
-| 2 | Verification | Six-check gate: schema, auth, signature, TTL, nonce, replay. |
-| 3 | Governance | Risk assessment. APPROVE, DENY, or REQUIRE_HUMAN_APPROVAL. |
-| 4 | Authorization | Token issued after approval. Single-use, time-limited, hash-bound. |
-| 5 | Execution | Gate validates token. Adapter performs side effect. |
-| 6 | Receipt | SHA-256 hash over full chain of custody. Gateway-signed. |
-| 7 | Ledger | Hash-chained entry. Append-only. Independently verifiable. |
+AI systems are no longer just suggesting. They are acting.
 
----
+They can:
 
-## Three-Power Separation
+- send emails
+- trigger workflows
+- move files
+- call APIs
+- change systems
 
-No single component can both decide and act.
+The problem is simple:
 
-| Power | Role | Can Do | Cannot Do |
-|-------|------|--------|-----------|
-| **Governor** | Decide | Evaluate policy, classify risk, issue approval | Execute |
-| **Gate** | Enforce | Validate token, dispatch to adapter | Approve |
-| **Ledger** | Record | Write receipts, chain hashes, prove history | Decide or execute |
+It's easy for something to happen that you didn't fully intend, didn't clearly define, or can't clearly account for afterward.
 
----
+You approve something quickly.
+The system interprets it slightly differently.
+Something happens.
 
-## Compliance
+Or worse — something happens without clear, traceable approval.
 
-```
-PGTC Core 1.0
-Test Suite: TS-01
-Compliance: 20/20 PASS
-Governance Tests: 148/148 PASS
-Reference Implementation: RIO
-Checkpoint: 2e193690
-```
+Most systems try to reduce mistakes or log what happened after the fact.
 
-Full compliance report: [`compliance/PGTC-COMPLIANCE-REPORT.md`](compliance/PGTC-COMPLIANCE-REPORT.md)
+RIO takes a different approach.
+
+**It makes unapproved or unverifiable action not possible within the system.**
 
 ---
 
-## Protocols
+## How it works
 
-| Protocol | Scope | Document |
-|----------|-------|----------|
-| **CS-03** | Authorization | [`protocols/rio-cs-03-authorization.md`](protocols/rio-cs-03-authorization.md) |
-| **CS-04** | Execution Boundary | [`protocols/rio-cs-04-execution-boundary.md`](protocols/rio-cs-04-execution-boundary.md) |
-| **CS-05** | Receipt and Ledger | [`protocols/rio-cs-05-receipt-ledger.md`](protocols/rio-cs-05-receipt-ledger.md) |
+There is only one way an action can happen.
 
----
+Your system attempts to take a real-world action — for example, updating a record or sending data to another system.
+RIO intercepts it and checks it against your rules.
 
-## Repository Structure
+If it falls outside what's already allowed, it's stopped and surfaced to you as a clear, reviewable request.
 
-```
-/
-  README.md                              ← This file
-  RIO-CONSTITUTION.md                    ← System constitution (highest authority)
+You approve it. That approval applies only to that specific action.
 
-  protocols/
-    rio-cs-03-authorization.md           ← Token issuance, binding, validation
-    rio-cs-04-execution-boundary.md      ← Gate enforcement, adapter pattern
-    rio-cs-05-receipt-ledger.md          ← Receipts, hash-chained ledger
+RIO verifies nothing has changed and keeps execution within what you approved.
 
-  spec/
-    RIO-STANDARD-v1.0.md                ← System architecture standard
-    UNIFIED_ARCHITECTURE.md              ← Unified architecture reference
+Only then does the action run.
 
-  compliance/
-    PGTC-COMPLIANCE-REPORT.md            ← Full compliance report
-    CONFORMANCE.md                       ← Conformance surface
-    spec/                                ← PGTC specification (5 files)
-    schemas/                             ← JSON schemas (5 files)
-    test-suite/                          ← Core test suite
-    harness/                             ← Test harness
-    rio_adversarial_test_suite_v0.1/     ← Adversarial tests (10 files)
-    runtime/                             ← Runtime concurrency tests
-    authority/                           ← Authority chain tests
-    evidence/                            ← Test evidence artifacts
+A record is written before it runs, and a durable receipt is created after.
 
-  demo/
-    demo.html                            ← Redirect → rio-one.manus.space
-    timeline.html                        ← Redirect → riodigital-cqy2ymbu.manus.space
-    DEMO_WALKTHROUGH.md                  ← Demo walkthrough guide
+If anything is unclear, incomplete, or doesn't match:
 
-  docs/
-    white_paper.md                       ← White paper
-    one_pager.md                         ← One-page summary
-    FAQ.md                               ← Frequently asked questions
+**the system stops.**
 
-  verifier/
-    verify.py                            ← Independent compliance verifier
-
-  assets/
-    (architecture diagrams)
-
-  legacy/
-    (all prior work — preserved, not part of release surface)
-```
+RIO enforces whatever rules you define — and as those rules evolve, the system applies them in real time.
 
 ---
 
-## Live Demo
+## What this means
 
-| Demo | URL |
-|------|-----|
-| RIO ONE (command center) | [rio-one.manus.space](https://rio-one.manus.space) |
-| RIO Timeline | [riodigital-cqy2ymbu.manus.space](https://riodigital-cqy2ymbu.manus.space) |
+You don't have to constantly watch your systems.
+
+Because they are structurally constrained from acting without your approval.
+
+- No accidental actions
+- No hidden behavior
+- No silent interpretation
+- No "close enough" execution
+
+Every action is:
+
+- explicit
+- approved
+- verified
+- recorded
+
+Not just logs.
+
+**Verifiable records.**
 
 ---
 
-## Quick Links
+## Who this is for
 
-| Resource | Path |
-|----------|------|
-| Constitution | [`RIO-CONSTITUTION.md`](RIO-CONSTITUTION.md) |
-| System Standard | [`spec/RIO-STANDARD-v1.0.md`](spec/RIO-STANDARD-v1.0.md) |
-| White Paper | [`docs/white_paper.md`](docs/white_paper.md) |
-| One Pager | [`docs/one_pager.md`](docs/one_pager.md) |
-| FAQ | [`docs/FAQ.md`](docs/FAQ.md) |
-| Compliance Report | [`compliance/PGTC-COMPLIANCE-REPORT.md`](compliance/PGTC-COMPLIANCE-REPORT.md) |
-| Verifier | [`verifier/verify.py`](verifier/verify.py) |
+- Teams using AI or automation to take real-world actions
+- Organizations that need to demonstrate that actions were explicitly authorized
+- Compliance and audit functions that require more than "we think it was approved"
+- Anyone who wants powerful systems without giving up control
+- Anyone who worries a system might act in a way they didn't intend — and create real-world consequences
 
 ---
 
-## License
+## Why it matters
 
-All rights reserved. Contact the author for licensing inquiries.
+As software moves from "helping" to "doing," the risk changes.
+
+It's no longer about bad outputs.
+
+It's about real-world consequences.
+
+RIO addresses a core problem:
+
+**How to use powerful systems while staying in control of what they actually do.**
+
+---
+
+## What comes next
+
+Systems built with RIO can get better at helping you.
+
+They can learn patterns, suggest better options, and reduce friction over time.
+
+But that learning never expands what the system is allowed to do.
+
+It can improve how decisions are prepared.
+It cannot act outside defined and approved boundaries.
+
+---
+
+## Final principle
+
+**You stay in control.**
+
+Nothing happens without your approval, and everything that does is accounted for.
+
+---
+
+## Where to go next
+
+- [Run the demo](demo/)
+- [Read the spec](spec/)
+- [Use it with your own systems](docs/)
