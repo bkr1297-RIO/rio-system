@@ -1,0 +1,5 @@
+{
+  "operation": "send_email",
+  "to": "user@example.com",
+  "body": "We guarantee delivery by Friday"
+}

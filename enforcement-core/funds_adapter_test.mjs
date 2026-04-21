@@ -1,18 +1,16 @@
 /**
- * RIO Enforcement Core — Email Adapter Integration Tests
- *
- * Standardized output. System vocabulary only.
+ * RIO Enforcement Core — Funds Transfer Integration Tests
  *
  * Tests:
- *   Valid Email    → EXECUTED, adapter called, receipt generated
- *   Payload Drift  → DENIED (ACT_BINDING_MISMATCH), adapter NOT called
- *   No Token       → DENIED (MISSING_TOKEN), adapter NOT called
- *   Token Replay   → DENIED (TOKEN_USED), adapter NOT called
+ *   Valid Transfer   → EXECUTED, adapter called, receipt generated
+ *   Exceeds Limit    → DENIED (SCOPE_VIOLATION), adapter NOT called
+ *   No Token         → DENIED (MISSING_TOKEN), adapter NOT called
+ *   Token Replay     → DENIED (TOKEN_USED), adapter NOT called
  */
 import { issueToken, canonicalHash, clearStore } from "./dtt.mjs";
 import { executeGate, Decision } from "./gate.mjs";
 import { getEntryCount, verifyChain, clearLedger } from "./ledger.mjs";
-import { executeEmail, getCallLog, clearCallLog } from "./email_adapter.mjs";
+import { executeFunds, getCallLog, clearCallLog } from "./funds_adapter.mjs";
 
 // ---------------------------------------------------------------------------
 // Counters
@@ -97,20 +95,17 @@ function printSummary() {
 // ---------------------------------------------------------------------------
 // Fixtures
 // ---------------------------------------------------------------------------
-const TRACE_ID = "trace-email-phase2";
+const TRACE_ID = "trace-funds-phase2";
 
-function makeEmailIntent() {
-  return { action: "send_email", target: "brian@example.com", subject: "RIO Governed Email" };
-}
+const VALID_INTENT = { action: "transfer_funds", target: "vendor_001", amount: 500 };
+const VALID_PAYLOAD = { amount: 500, to: "vendor_001", trace_id: TRACE_ID };
 
-function makeEmailPayload() {
-  return {
-    to: "brian@example.com",
-    subject: "RIO Governed Email",
-    body: "This email was sent through the RIO Execution Gate.",
-    trace_id: TRACE_ID,
-  };
-}
+const OVER_LIMIT_INTENT = { action: "transfer_funds", target: "vendor_001", amount: 100000 };
+const OVER_LIMIT_PAYLOAD = { amount: 100000, to: "vendor_001", trace_id: TRACE_ID };
+
+const CONSTRAINTS = [
+  { field: "amount", op: "max", limit: 1000 },
+];
 
 function resetAll() {
   clearStore();
@@ -123,108 +118,99 @@ function resetAll() {
 // ---------------------------------------------------------------------------
 async function runTests() {
   console.log("══════════════════════════════════════════════════════════");
-  console.log("  RIO Email Adapter — Integration Tests");
+  console.log("  RIO Funds Transfer — Integration Tests");
   console.log("══════════════════════════════════════════════════════════");
 
-  // ── Valid Email ──────────────────────────────────────────────────────
+  // ── Valid Transfer ──────────────────────────────────────────────────
   resetAll();
 
-  const intent1 = makeEmailIntent();
-  const payload1 = makeEmailPayload();
-  const intentHash1 = canonicalHash({ intent: intent1, payload: payload1 });
+  const intentHash1 = canonicalHash({ intent: VALID_INTENT, payload: VALID_PAYLOAD });
   const token1 = issueToken({ trace_id: TRACE_ID, intent_hash: intentHash1 });
 
   const result1 = await executeGate({
     token_id: token1.token_id,
     trace_id: TRACE_ID,
-    intent: intent1,
-    payload: payload1,
-    executeFn: executeEmail,
+    intent: VALID_INTENT,
+    payload: VALID_PAYLOAD,
+    constraints: CONSTRAINTS,
+    executeFn: executeFunds,
   });
 
   check(result1.decision === "EXECUTE", "Valid-decision");
   check(getCallLog().length === 1, "Valid-adapter");
   check(result1.execution_result?.status === "SUCCESS", "Valid-status");
-  check(result1.execution_result?.echo_payload_hash != null, "Valid-echo");
   check(result1.receipt != null, "Valid-receipt");
 
-  printResult({ testName: "Valid Email", result: result1, adapterCalled: true, receiptGenerated: true });
+  printResult({ testName: "Valid Transfer ($500)", result: result1, adapterCalled: true, receiptGenerated: true });
   printReceiptClean(result1.receipt);
   printReceiptJSON(result1.receipt);
 
-  // ── Payload Drift ───────────────────────────────────────────────────
+  // ── Exceeds Limit ──────────────────────────────────────────────────
   resetAll();
 
-  const intent2 = { action: "send_email", target: "brian@example.com", subject: "Approved Subject" };
-  const originalPayload = {
-    to: "brian@example.com",
-    subject: "Approved Subject",
-    body: "Approved body text.",
-    trace_id: TRACE_ID,
-  };
-  const intentHash2 = canonicalHash({ intent: intent2, payload: originalPayload });
+  const intentHash2 = canonicalHash({ intent: OVER_LIMIT_INTENT, payload: OVER_LIMIT_PAYLOAD });
   const token2 = issueToken({ trace_id: TRACE_ID, intent_hash: intentHash2 });
-
-  const tamperedPayload = { ...originalPayload, body: "TAMPERED — changed after approval!" };
 
   const result2 = await executeGate({
     token_id: token2.token_id,
     trace_id: TRACE_ID,
-    intent: intent2,
-    payload: tamperedPayload,
-    executeFn: executeEmail,
+    intent: OVER_LIMIT_INTENT,
+    payload: OVER_LIMIT_PAYLOAD,
+    constraints: CONSTRAINTS,
+    executeFn: executeFunds,
   });
 
-  check(result2.decision === "DENY", "Drift-decision");
-  check(result2.reason_code === "ACT_BINDING_MISMATCH", "Drift-code");
-  check(getCallLog().length === 0, "Drift-adapter");
+  check(result2.decision === "DENY", "Limit-decision");
+  check(result2.reason_code === "SCOPE_VIOLATION", "Limit-code");
+  check(getCallLog().length === 0, "Limit-adapter");
 
-  printResult({ testName: "Payload Drift", result: result2, adapterCalled: false, receiptGenerated: false });
+  printResult({ testName: "Exceeds Limit ($100,000)", result: result2, adapterCalled: false, receiptGenerated: false });
 
-  // ── No Token ────────────────────────────────────────────────────────
+  // ── No Token ───────────────────────────────────────────────────────
   resetAll();
 
   const result3 = await executeGate({
     token_id: null,
     trace_id: TRACE_ID,
-    intent: makeEmailIntent(),
-    payload: makeEmailPayload(),
-    executeFn: executeEmail,
+    intent: VALID_INTENT,
+    payload: VALID_PAYLOAD,
+    constraints: CONSTRAINTS,
+    executeFn: executeFunds,
   });
 
   check(result3.decision === "DENY", "NoToken-decision");
   check(result3.reason_code === "MISSING_TOKEN", "NoToken-code");
   check(getCallLog().length === 0, "NoToken-adapter");
 
-  printResult({ testName: "No Token", result: result3, adapterCalled: false, receiptGenerated: false });
+  printResult({ testName: "Missing Token", result: result3, adapterCalled: false, receiptGenerated: false });
 
-  // ── Token Replay ────────────────────────────────────────────────────
+  // ── Token Replay ───────────────────────────────────────────────────
   resetAll();
 
-  const intent4 = makeEmailIntent();
-  const payload4 = makeEmailPayload();
-  const intentHash4 = canonicalHash({ intent: intent4, payload: payload4 });
+  const intentHash4 = canonicalHash({ intent: VALID_INTENT, payload: VALID_PAYLOAD });
   const token4 = issueToken({ trace_id: TRACE_ID, intent_hash: intentHash4 });
 
   const first = await executeGate({
     token_id: token4.token_id,
     trace_id: TRACE_ID,
-    intent: intent4,
-    payload: payload4,
-    executeFn: executeEmail,
+    intent: VALID_INTENT,
+    payload: VALID_PAYLOAD,
+    constraints: CONSTRAINTS,
+    executeFn: executeFunds,
   });
 
   check(first.decision === "EXECUTE", "Replay-first");
-  printResult({ testName: "Valid Email (setup for replay)", result: first, adapterCalled: true, receiptGenerated: true });
+  printResult({ testName: "Valid Transfer (setup for replay)", result: first, adapterCalled: true, receiptGenerated: true });
 
   const callsAfterFirst = getCallLog().length;
 
   const replay = await executeGate({
     token_id: token4.token_id,
     trace_id: TRACE_ID,
-    intent: intent4,
-    payload: payload4,
-    executeFn: executeEmail,
+    intent: VALID_INTENT,
+    payload: VALID_PAYLOAD,
+    constraints: CONSTRAINTS,
+    executeFn: executeFunds,
   });
 
   check(replay.decision === "DENY", "Replay-decision");

@@ -1,0 +1,5 @@
+{
+  "operation": "transfer_funds",
+  "amount": 100000,
+  "to": "vendor_001"
+}
