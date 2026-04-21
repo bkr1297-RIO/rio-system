@@ -1,0 +1,107 @@
+{
+  "profile_id": "brian-profile-v0.1",
+  "version": "0.1.0",
+  "status": "draft",
+  "owner": {
+    "display_name": "Brian K. Rasmussen",
+    "sovereign_id": "did:rio:brian",
+    "roles": ["architect", "spec-author", "governance-designer"]
+  },
+  "interaction_style": {
+    "verbosity": "medium",
+    "prefers_structured_outputs": true,
+    "prefers_examples": true,
+    "prefers_repo_ready_artifacts": true,
+    "tone_notes": [
+      "clear and direct",
+      "some metaphors but not always",
+      "move from concept to structure quickly"
+    ]
+  },
+  "working_style": {
+    "thinking_patterns": [
+      "triadic and fractal pattern recognition",
+      "architecture-first reasoning",
+      "moves from abstract concept to executable structure",
+      "treats AI systems as collaborators and pattern mappers"
+    ],
+    "default_sequence": [
+      "explore pattern",
+      "name pattern",
+      "write spec",
+      "define schema or interface",
+      "create examples or harness"
+    ],
+    "strengths": [
+      "vision across domains",
+      "rapid synthesis",
+      "connecting governance with implementation",
+      "seeing reusable patterns early"
+    ],
+    "drift_risks": [
+      "opening too many branches at once",
+      "switching to a new thread before the current one is locked",
+      "letting important ideas remain implicit instead of captured"
+    ],
+    "recovery_patterns": [
+      "propose a concrete next artifact",
+      "summarize branch options and recommend one",
+      "close loops with repo-ready output"
+    ]
+  },
+  "collaboration_preferences": {
+    "do_more_of": [
+      "produce spec-ready documents",
+      "name patterns explicitly",
+      "offer implementation paths",
+      "show where an idea fits in the RIO stack"
+    ],
+    "avoid": [
+      "generic motivational language",
+      "overly broad brainstorming without closure",
+      "repeating the same idea in multiple forms"
+    ],
+    "decision_support_style": [
+      "present 2-3 good options",
+      "recommend one default path",
+      "flag where drift or overexpansion may occur"
+    ]
+  },
+  "agent_directives": {
+    "session_start": [
+      "assume continuity with RIO, PI Fabric, ONE, and MANTIS unless redirected",
+      "optimize for structured collaboration",
+      "ask clarifying questions only when they materially change the artifact"
+    ],
+    "during_exploration": [
+      "help surface patterns and candidate frames",
+      "connect new ideas to existing architecture",
+      "capture promising ideas in reusable language"
+    ],
+    "during_convergence": [
+      "shift from ideation to artifact generation",
+      "favor schemas, interfaces, and examples",
+      "recommend closure when enough structure exists"
+    ],
+    "when_stuck": [
+      "propose the smallest next shippable artifact",
+      "reduce active branches",
+      "return to invariants and core purpose"
+    ]
+  },
+  "governance": {
+    "storage_tier": "governed-artifact",
+    "canonical_locations": [
+      "profiles/brian-profile-v0.1.json",
+      "schemas/sovereign-interaction-profile.schema.json",
+      "personal-corpus://profiles/brian-profile-v0.1"
+    ],
+    "update_policy": "Profile changes should be versioned and confirmed by the sovereign before activation.",
+    "requires_confirmation_for_updates": true,
+    "consumable_by_agents": true
+  },
+  "notes": [
+    "This profile is a collaboration calibration artifact, not a psychological diagnosis.",
+    "It should evolve with actual usage and explicit confirmation."
+  ]
+}

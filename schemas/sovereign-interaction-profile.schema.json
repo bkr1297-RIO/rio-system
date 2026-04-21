@@ -1,0 +1,141 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.dev/schemas/sovereign-interaction-profile.schema.json",
+  "title": "SovereignInteractionProfile",
+  "description": "Portable, governed profile describing how a sovereign prefers AI systems and collaborators to work with them.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "profile_id",
+    "version",
+    "owner",
+    "interaction_style",
+    "working_style",
+    "collaboration_preferences",
+    "agent_directives",
+    "governance"
+  ],
+  "properties": {
+    "profile_id": { "type": "string" },
+    "version": { "type": "string" },
+    "status": {
+      "type": "string",
+      "enum": ["draft", "active", "deprecated"],
+      "default": "draft"
+    },
+    "owner": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display_name"],
+      "properties": {
+        "display_name": { "type": "string" },
+        "sovereign_id": { "type": "string" },
+        "roles": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "interaction_style": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "verbosity": {
+          "type": "string",
+          "enum": ["low", "medium", "high"]
+        },
+        "prefers_structured_outputs": { "type": "boolean" },
+        "prefers_examples": { "type": "boolean" },
+        "prefers_repo_ready_artifacts": { "type": "boolean" },
+        "tone_notes": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "working_style": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "thinking_patterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "default_sequence": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "strengths": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "drift_risks": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "recovery_patterns": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "collaboration_preferences": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "do_more_of": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "avoid": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "decision_support_style": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "agent_directives": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "session_start": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "during_exploration": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "during_convergence": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "when_stuck": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "governance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "storage_tier": { "type": "string" },
+        "canonical_locations": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "update_policy": { "type": "string" },
+        "requires_confirmation_for_updates": { "type": "boolean" },
+        "consumable_by_agents": { "type": "boolean" }
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
