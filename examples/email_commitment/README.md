@@ -2,6 +2,8 @@
 
 This example demonstrates the execution boundary. It shows what executes and what is blocked.
 
+> **Note:** This example simulates sending an email. No real email is sent. This demonstrates the execution boundary only.
+
 > What you approve is exactly what happens—and nothing else.
 
 ---

@@ -1,8 +1,6 @@
-# RIO Enforcement Core — Phase 1
+# RIO Enforcement Core
 
-**Execution Boundary Implementation**
-
-This module is the minimal enforcement core that proves the RIO invariant holds:
+This repository demonstrates the execution boundary and receipt protocol — the core enforcement layer of the RIO system.
 
 > An action is authorized only when:
 > 1. a valid, single-use token exists
@@ -18,9 +16,11 @@ This module is the minimal enforcement core that proves the RIO invariant holds:
 | File | Purpose |
 |------|---------|
 | `dtt.mjs` | Delegated Trust Token — issue, validate, consume (single-use, time-bound, trace-bound, payload-bound) |
-| `gate.mjs` | Execution Gate — 5-check pipeline, fail-closed. No bypass, no fallback. |
+| `gate.mjs` | Execution Gate — 6-check pipeline, fail-closed. No bypass, no fallback. |
 | `ledger.mjs` | Receipt generation + append-only hash-chained ledger |
-| `test_harness.mjs` | 7 required tests + ledger integrity verification |
+| `email_adapter.mjs` | Email adapter — executes only what the gate passes (simulated) |
+| `funds_adapter.mjs` | Funds transfer adapter — executes only what the gate passes (simulated) |
+| `test_harness.mjs` | Phase 1 invariant tests + email/funds integration tests |
 
 ---
 
@@ -31,6 +31,7 @@ This module is the minimal enforcement core that proves the RIO invariant holds:
 3. **TRACE_MATCH** → wrong session → DENY (`TRACE_MISMATCH`)
 4. **INTENT_BINDING** → payload tampered → DENY (`ACT_BINDING_MISMATCH`)
 5. **LINEAGE_RESOLVED** → pending/failed deps → BLOCK (`LINEAGE_UNRESOLVED`)
+6. **SCOPE_CHECK** → constraint violation → DENY (`SCOPE_VIOLATION`)
 
 If all pass → **EXECUTE**
 
@@ -40,10 +41,12 @@ If all pass → **EXECUTE**
 
 ```bash
 cd enforcement-core
-node test_harness.mjs
+node test_harness.mjs              # Phase 1 invariant suite (21 assertions)
+node test_harness.mjs --case=email  # Email adapter integration (15 assertions)
+node test_harness.mjs --case=funds  # Funds transfer integration (14 assertions)
 ```
 
-Expected: 18/18 PASS, 0 FAIL, ledger chain valid.
+All adapters are simulated. No real emails are sent, no real funds are moved.
 
 ---
 

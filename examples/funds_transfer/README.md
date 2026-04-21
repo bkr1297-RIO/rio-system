@@ -2,6 +2,8 @@
 
 This example demonstrates the execution boundary. It shows what executes and what is blocked.
 
+> **Note:** This example simulates a funds transfer. No real money is moved. This demonstrates the execution boundary only.
+
 > Nothing moves unless it is explicitly authorized and within limits.
 
 ---

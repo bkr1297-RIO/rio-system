@@ -98,7 +98,7 @@ Run the gateway locally or via deployed instance.
 ---
 ### Step 2 — Execute Demo Scenarios
 Reference:
-`demo/DEMO_WALKTHROUGH.md` (NOTE: requires updating to match current endpoints)
+`demo/DEMO_WALKTHROUGH.md`
 ---
 ### Step 3 — Validate Outcomes
 For each action, verify:
@@ -117,12 +117,12 @@ Attempt:
 - missing ledger → execution must halt
 ---
 ## 8. Known Gaps (From Audit)
-The following gaps exist and are tracked:
-- Demo walkthrough uses outdated endpoints and crypto references
-- Verifier script references legacy modules
-- No CI/CD pipeline enforcing tests
-- Multiple overlapping architecture documents without a reading map
-- No LICENSE file
+The following gaps were identified during audit. Status as of v2.9.0:
+- ~~Demo walkthrough uses outdated endpoints and crypto references~~ — Fixed
+- ~~Verifier script references legacy modules~~ — Fixed (HTTP-based verifier)
+- No CI/CD pipeline enforcing tests — Open
+- ~~Multiple overlapping architecture documents without a reading map~~ — Fixed (SYSTEM_RUNTIME_MAP.md)
+- ~~No LICENSE file~~ — Fixed (MIT)
 ---
 ## 9. Canonical Reading Order
 To understand the system correctly:
