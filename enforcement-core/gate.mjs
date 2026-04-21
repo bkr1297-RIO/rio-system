@@ -1,13 +1,14 @@
 /**
  * RIO Enforcement Core — Execution Gate
  *
- * Five checks, in order. If any fails → DENY (fail-closed).
+ * Six checks, in order. If any fails → DENY or BLOCK (fail-closed).
  *
  *   1. TOKEN_PRESENT     → MISSING_TOKEN
  *   2. TOKEN_VALID        → INVALID_TOKEN | TOKEN_USED
  *   3. TRACE_MATCH        → TRACE_MISMATCH
  *   4. INTENT_BINDING     → ACT_BINDING_MISMATCH
  *   5. LINEAGE_RESOLVED   → LINEAGE_UNRESOLVED
+ *   6. SCOPE_VALID         → SCOPE_VIOLATION
  *
  * If all pass → EXECUTE
  *
@@ -47,6 +48,53 @@ function checkLineage(dependencies) {
 }
 
 // ---------------------------------------------------------------------------
+// Scope / constraint checker
+// ---------------------------------------------------------------------------
+/**
+ * Check that the payload satisfies all scope constraints.
+ * @param {object} payload
+ * @param {Array<{field: string, op: string, limit: *}>} constraints
+ * @returns {string|null} violation description, or null if all pass
+ */
+function checkScope(payload, constraints) {
+  if (!constraints || constraints.length === 0) return null;
+
+  for (const c of constraints) {
+    const value = payload[c.field];
+    if (value === undefined) {
+      return `Constraint field "${c.field}" not found in payload`;
+    }
+
+    switch (c.op) {
+      case "max":
+        if (typeof value === "number" && value > c.limit) {
+          return `${c.field} = ${value} exceeds max ${c.limit}`;
+        }
+        break;
+      case "min":
+        if (typeof value === "number" && value < c.limit) {
+          return `${c.field} = ${value} below min ${c.limit}`;
+        }
+        break;
+      case "in":
+        if (Array.isArray(c.limit) && !c.limit.includes(value)) {
+          return `${c.field} = "${value}" not in allowed list [${c.limit.join(", ")}]`;
+        }
+        break;
+      case "eq":
+        if (value !== c.limit) {
+          return `${c.field} = "${value}" does not equal required "${c.limit}"`;
+        }
+        break;
+      default:
+        return `Unknown constraint operator: ${c.op}`;
+    }
+  }
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
 // Execution Gate
 // ---------------------------------------------------------------------------
 /**
@@ -56,6 +104,7 @@ function checkLineage(dependencies) {
  * @param {object}  request.intent        — the intent object
  * @param {object}  request.payload       — the execution payload
  * @param {Array}   [request.dependencies] — [{id, status}] lineage deps
+ * @param {Array}   [request.constraints]  — [{field, op, limit}] scope constraints
  * @param {function} [request.executeFn]  — the function to run if authorized
  * @returns {object} gate result with decision, reason_code, receipt
  */
@@ -66,6 +115,7 @@ export async function executeGate(request) {
     intent,
     payload,
     dependencies = [],
+    constraints = [],
     executeFn = null,
   } = request;
 
@@ -115,6 +165,22 @@ export async function executeGate(request) {
       decision: Decision.BLOCK,
       reason_code: "LINEAGE_UNRESOLVED",
       detail: `Blocking dependencies: ${lineage.blocking.map((d) => `${d.id}(${d.status})`).join(", ")}`,
+      trace_id,
+      timestamp,
+    };
+    writeReceipt({ ...result, intent, payload_hash: intent_hash });
+    return result;
+  }
+
+  // -----------------------------------------------------------------------
+  // CHECK 6: SCOPE_VALID (constraint enforcement)
+  // -----------------------------------------------------------------------
+  const scopeViolation = checkScope(payload, constraints);
+  if (scopeViolation) {
+    const result = {
+      decision: Decision.DENY,
+      reason_code: "SCOPE_VIOLATION",
+      detail: scopeViolation,
       trace_id,
       timestamp,
     };
