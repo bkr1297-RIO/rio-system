@@ -131,6 +131,8 @@ RIO addresses a core problem:
 
 **How to use powerful systems while staying in control of what they actually do.**
 
+In a landscape where AI systems can act but cannot be verified, RIO provides a way to prove exactly what was authorized and what actually happened.
+
 ---
 
 ## What comes next
@@ -191,6 +193,8 @@ Examples (published as separate documents):
   All real execution still flows through the RIO boundary.
 
 - Future application specs may define other roles, such as observers, explainers, or domain-specific copilots. These also remain above the RIO Standard and depend on it, but do not modify it.
+
+Application-layer specifications (e.g., Interaction Monitor) extend the system by improving interaction clarity, but do not modify execution authority or enforcement.
 
 ### 3. Operating Environments (other repos)
 
