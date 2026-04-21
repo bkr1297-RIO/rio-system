@@ -60,20 +60,29 @@ def http_get(url, timeout=15):
         return 0, {"error": str(e)}
 
 
+VOCABULARY_VERSION = "1.0"
+
+
 class ComplianceResult:
     def __init__(self, scenario_id, claim):
         self.scenario = scenario_id
         self.claim = claim
         self.pass_fail = "PENDING"
+        self.error_code = None
+        self.message = ""
         self.evidence = {}
 
     def mark_pass(self, evidence=None):
         self.pass_fail = "PASS"
+        self.error_code = None
+        self.message = self.claim + " — verified"
         if evidence:
             self.evidence = evidence
 
-    def mark_fail(self, evidence=None):
+    def mark_fail(self, error_code, message, evidence=None):
         self.pass_fail = "FAIL"
+        self.error_code = error_code
+        self.message = message
         if evidence:
             self.evidence = evidence
 
@@ -81,8 +90,11 @@ class ComplianceResult:
         return {
             "scenario": self.scenario,
             "claim": self.claim,
-            "pass_fail": self.pass_fail,
-            "evidence": self.evidence,
+            "valid": self.pass_fail == "PASS",
+            "vocabulary_version": VOCABULARY_VERSION,
+            "error_code": self.error_code,
+            "message": self.message,
+            "details": self.evidence,
         }
 
 
@@ -101,7 +113,7 @@ def check_health(gateway):
             "status": data.get("status"),
         })
     else:
-        r.mark_fail({
+        r.mark_fail("UNAUTHORIZED", "Gateway is not operational or unreachable", {
             "http_status": status,
             "response": data,
         })
@@ -128,7 +140,7 @@ def check_verify(gateway):
             "note": "Endpoint requires auditor role (403) — access control enforced",
         })
     else:
-        r.mark_fail({
+        r.mark_fail("CHAIN_BROKEN", "Ledger chain verification endpoint did not respond correctly", {
             "http_status": status,
             "response": data,
         })
@@ -155,7 +167,7 @@ def check_ledger(gateway):
             "note": "Endpoint requires auditor role (403) — access control enforced",
         })
     else:
-        r.mark_fail({
+        r.mark_fail("MISSING_FIELD", "Ledger endpoint did not return entries", {
             "http_status": status,
             "response": data,
         })
@@ -181,7 +193,7 @@ def check_unauthenticated_execute(gateway):
     try:
         with urlopen(req, timeout=15) as resp:
             # If we get 200, execution was NOT blocked — fail
-            r.mark_fail({
+            r.mark_fail("UNAUTHORIZED", "Unauthenticated execution was allowed", {
                 "http_status": resp.status,
                 "error": "Unauthenticated execution was allowed",
             })
@@ -192,12 +204,12 @@ def check_unauthenticated_execute(gateway):
                 "blocked": True,
             })
         else:
-            r.mark_fail({
+            r.mark_fail("UNAUTHORIZED", "Unexpected error code from execution endpoint", {
                 "http_status": e.code,
                 "error": "Unexpected error code",
             })
     except Exception as e:
-        r.mark_fail({"error": str(e)})
+        r.mark_fail("UNAUTHORIZED", f"Execution endpoint error: {e}", {"error": str(e)})
     return r
 
 
@@ -218,7 +230,7 @@ def check_unauthenticated_intent(gateway):
     req.add_header("Content-Type", "application/json")
     try:
         with urlopen(req, timeout=15) as resp:
-            r.mark_fail({
+            r.mark_fail("UNAUTHORIZED", "Unauthenticated intent was accepted", {
                 "http_status": resp.status,
                 "error": "Unauthenticated intent was accepted",
             })
@@ -229,12 +241,12 @@ def check_unauthenticated_intent(gateway):
                 "blocked": True,
             })
         else:
-            r.mark_fail({
+            r.mark_fail("UNAUTHORIZED", "Unexpected error code from intent endpoint", {
                 "http_status": e.code,
                 "error": "Unexpected error code",
             })
     except Exception as e:
-        r.mark_fail({"error": str(e)})
+        r.mark_fail("UNAUTHORIZED", f"Intent endpoint error: {e}", {"error": str(e)})
     return r
 
 
@@ -262,11 +274,16 @@ def run_compliance_suite(gateway):
         "_meta": {
             "type": "compliance_report",
             "version": "2.0.0",
+            "vocabulary_version": VOCABULARY_VERSION,
             "generated_at": datetime.now(timezone.utc).isoformat(),
             "gateway": gateway,
             "runner": "verifier/verify.py",
         },
         "summary": {
+            "valid": failed == 0,
+            "vocabulary_version": VOCABULARY_VERSION,
+            "error_code": None if failed == 0 else results[next(i for i, r in enumerate(results) if r.pass_fail == "FAIL")].error_code,
+            "message": "All checks passed" if failed == 0 else f"{failed} check(s) failed",
             "total": len(results),
             "passed": passed,
             "failed": failed,
