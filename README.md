@@ -8,6 +8,8 @@ It does not generate output.
 It does not make decisions.
 It does not act on its own.
 
+Authorization tokens are issued by upstream systems or interfaces and are intentionally out of scope for this repository.
+
 It sits between your systems and the real world, watching and enforcing what is allowed to happen.
 
 RIO is both a governed execution architecture and a published governance standard — the specifications in `/docs/` define the rules the code enforces.
