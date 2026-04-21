@@ -7,6 +7,17 @@ Verifies the live RIO gateway by calling its public HTTP endpoints:
   GET /verify    — check ledger chain integrity
   GET /ledger    — retrieve ledger entries
 
+Conformance mapping (see spec/RIO_CONFORMANCE_v1.0.md in rio-protocol):
+  C-001 → T-04  Gate enforcement is active
+  C-002 → T-06  Ledger records are created
+  C-003 → T-06  Ledger records are created
+  C-004 → T-01  Unauthorized execution blocked
+  C-005 → T-01  Unauthorized execution blocked
+
+Tests T-02 (parameter mutation), T-03 (replay), and T-05 (receipt generation)
+require authenticated pipeline execution and are verified through the demo
+walkthrough (demo/DEMO_WALKTHROUGH.md).
+
 Usage:
   python3 verify.py                                    # default: https://rio-gateway.onrender.com
   python3 verify.py --gateway https://localhost:3000   # custom gateway URL
@@ -76,7 +87,10 @@ class ComplianceResult:
 
 
 def check_health(gateway):
-    """C-001: Gateway is operational and reports its version."""
+    """C-001: Gateway is operational and reports its version.
+    Conformance mapping: T-04 (Gate enforcement is active)
+    Invariant: INV-01, INV-06
+    """
     r = ComplianceResult("C-001", "Gateway is operational")
     status, data = http_get(f"{gateway}/health")
     if status == 200 and data.get("status") == "operational":
@@ -95,7 +109,10 @@ def check_health(gateway):
 
 
 def check_verify(gateway):
-    """C-002: Ledger chain verification endpoint responds."""
+    """C-002: Ledger chain verification endpoint responds.
+    Conformance mapping: T-06 (Ledger records are created)
+    Invariant: INV-02, INV-08
+    """
     r = ComplianceResult("C-002", "Ledger chain verification is available")
     status, data = http_get(f"{gateway}/verify")
     if status == 200:
@@ -119,7 +136,10 @@ def check_verify(gateway):
 
 
 def check_ledger(gateway):
-    """C-003: Ledger endpoint responds and returns entries."""
+    """C-003: Ledger endpoint responds and returns entries.
+    Conformance mapping: T-06 (Ledger records are created)
+    Invariant: INV-02, INV-08
+    """
     r = ComplianceResult("C-003", "Ledger is accessible and contains entries")
     status, data = http_get(f"{gateway}/ledger")
     if status == 200:
@@ -143,7 +163,10 @@ def check_ledger(gateway):
 
 
 def check_unauthenticated_execute(gateway):
-    """C-004: Unauthenticated execution is blocked."""
+    """C-004: Unauthenticated execution is blocked.
+    Conformance mapping: T-01 (Unauthorized execution blocked)
+    Invariant: INV-06 (Fail-closed)
+    """
     r = ComplianceResult("C-004", "Unauthenticated execution is blocked")
     req = Request(
         f"{gateway}/execute",
@@ -179,7 +202,10 @@ def check_unauthenticated_execute(gateway):
 
 
 def check_unauthenticated_intent(gateway):
-    """C-005: Unauthenticated intent submission is blocked."""
+    """C-005: Unauthenticated intent submission is blocked.
+    Conformance mapping: T-01 (Unauthorized execution blocked)
+    Invariant: INV-06 (Fail-closed)
+    """
     r = ComplianceResult("C-005", "Unauthenticated intent submission is blocked")
     req = Request(
         f"{gateway}/intent",

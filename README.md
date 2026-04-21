@@ -20,6 +20,16 @@ If something is not explicitly approved, it cannot happen.
 
 ---
 
+## Standard and Verification
+
+| Document | Location | Role |
+|----------|----------|------|
+| RIO Standard | [spec/RIO-STANDARD-v1.0.md](spec/RIO-STANDARD-v1.0.md) | Authoritative specification |
+| Conformance Spec | [rio-protocol: spec/RIO_CONFORMANCE_v1.0.md](https://github.com/bkr1297-RIO/rio-protocol/blob/main/spec/RIO_CONFORMANCE_v1.0.md) | How compliance is verified |
+| Runtime Map | [SYSTEM_RUNTIME_MAP.md](SYSTEM_RUNTIME_MAP.md) | What is running, what is planned, how to verify |
+
+---
+
 ## The problem it solves
 
 AI systems are no longer just suggesting. They are acting.
