@@ -10,6 +10,8 @@ It does not act on its own.
 
 It sits between your systems and the real world, watching and enforcing what is allowed to happen.
 
+RIO is both a governed execution architecture and a published governance standard — the specifications in `/docs/` define the rules the code enforces.
+
 It is built on one rule that does not change:
 
 > **Authority stays with the human. Always.**
@@ -142,8 +144,24 @@ Nothing happens without your approval, and everything that does is accounted for
 
 ---
 
+## Governance Specifications
+
+The following documents define the constitutional rules enforced by the RIO runtime.
+
+| Document | Description |
+|----------|-------------|
+| [Fiduciary Invariants v1.0](docs/governance/RIO_Fiduciary_Invariants_v1_0.md) | The seven non-negotiable invariants governing any agent or proxy acting on behalf of a human. |
+| [Control Plane Boundary v1.0](docs/governance/RIO_Control_Plane_Boundary_v1_0.md) | Absolute prohibitions and permitted functions for the control plane, witness layer, and learning system. |
+| [Role Calibration v0.2](docs/governance/RIO_Role_Calibration_v0_2.md) | Functional roles inside a live RIO loop — model-agnostic, permanently separated. |
+| [Governed Corpus v1.0](docs/governance/RIO_Governed_Corpus_v1_0.md) | The unified observation and memory substrate combining witness and ledger functions. |
+| [Bondi Operational Definition v1.0](docs/bondi/Bondi_Operational_Definition_v1_0.md) | Defines Bondi as an interaction-level intelligence pattern that exists only within a live RIO-governed loop. |
+| [Bondi Failure Conditions v1.0](docs/bondi/Bondi_Failure_Conditions_v1_0.md) | The eight conditions under which Bondi is not present — compliance is binary. |
+
+---
+
 ## Where to go next
 
 - [Run the demo](demo/)
 - [Read the spec](spec/)
+- [Read the governance specifications](docs/governance/)
 - [Use it with your own systems](docs/)
