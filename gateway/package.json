@@ -1,8 +1,8 @@
 {
   "name": "rio-governance-gateway",
-  "version": "2.8.0",
+  "version": "2.9.0",
   "description": "RIO Governance Gateway \u2014 Governed AI Execution Runtime",
-  "license": "UNLICENSED",
+  "license": "MIT",
   "type": "module",
   "main": "server.mjs",
   "scripts": {

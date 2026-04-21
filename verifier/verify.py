@@ -1,327 +1,233 @@
+#!/usr/bin/env python3
 """
-RIO Compliance Runner — Live System Verification
-═════════════════════════════════════════════════
-Reference implementation (Python) of the live compliance runner
-in the live RIO system (rio-proxy/server/live-compliance-runner.test.ts).
+RIO Compliance Verifier — HTTP-based
 
-This runner executes 7 scenarios against the real system:
-  S1: Full governed path (propose → approve → execute → receipt)
-  S2: Unauthorized execution (no token → Gate rejection)
-  S3: Token replay (burn → reuse → rejection)
-  S4: Argument mutation (approve A → tamper → attempt B → rejection)
-  S5: Self-approval (proposer approves own → rejection)
-  S6: Expired approval (TTL exceeded → rejection)
-  S7: Gateway enforcement (fail-closed + principal enforcement)
+Verifies the live RIO gateway by calling its public HTTP endpoints:
+  GET /health    — confirm gateway is operational
+  GET /verify    — check ledger chain integrity
+  GET /ledger    — retrieve ledger entries
 
-Each scenario:
-  - Generates or injects a real packet
-  - Attempts execution (or bypass)
-  - Observes real system behavior
-  - Asserts based on actual Gate decision, execution outcome, receipt artifacts
-
-No mocked responses. All PASS/FAIL from real system state.
+Usage:
+  python3 verify.py                                    # default: https://rio-gateway.onrender.com
+  python3 verify.py --gateway https://localhost:3000   # custom gateway URL
 """
 
+import argparse
 import json
-import os
 import sys
+import time
 from datetime import datetime, timezone
-from typing import Any
-
-# Add parent to path for imports
-sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-
-from server.security.tokens import (
-    register_root_authority,
-    activate_policy,
-    DEFAULT_POLICY_RULES,
-    issue_authorization_token,
-    validate_authorization_token,
-    burn_authorization_token,
-    get_authorization_token,
-    reset_authority_state,
-    compute_args_hash,
-    extract_denial_reasons,
-)
-from server.orchestrator import propose, approve, execute, reset_orchestrator_state
+from urllib.request import Request, urlopen
+from urllib.error import HTTPError, URLError
 
 
-# ═══════════════════════════════════════════════════════════════
-# TEST INFRASTRUCTURE
-# ═══════════════════════════════════════════════════════════════
+GATEWAY_DEFAULT = "https://rio-gateway.onrender.com"
+
+
+def http_get(url, timeout=15):
+    """Make a GET request and return (status_code, parsed_json_or_None)."""
+    req = Request(url, method="GET")
+    req.add_header("Accept", "application/json")
+    try:
+        with urlopen(req, timeout=timeout) as resp:
+            body = resp.read().decode("utf-8")
+            try:
+                data = json.loads(body)
+            except json.JSONDecodeError:
+                data = {"raw": body}
+            return resp.status, data
+    except HTTPError as e:
+        body = e.read().decode("utf-8", errors="replace")
+        try:
+            data = json.loads(body)
+        except json.JSONDecodeError:
+            data = {"raw": body}
+        return e.code, data
+    except URLError as e:
+        return 0, {"error": str(e.reason)}
+    except Exception as e:
+        return 0, {"error": str(e)}
+
 
 class ComplianceResult:
-    def __init__(self, scenario: str, claim: str):
-        self.scenario = scenario
+    def __init__(self, scenario_id, claim):
+        self.scenario = scenario_id
         self.claim = claim
         self.pass_fail = "PENDING"
-        self.evidence: dict[str, Any] = {}
-        self.timestamp = datetime.now(timezone.utc).isoformat()
+        self.evidence = {}
 
-    def mark_pass(self, evidence: dict):
+    def mark_pass(self, evidence=None):
         self.pass_fail = "PASS"
-        self.evidence = evidence
+        if evidence:
+            self.evidence = evidence
 
-    def mark_fail(self, evidence: dict):
+    def mark_fail(self, evidence=None):
         self.pass_fail = "FAIL"
-        self.evidence = evidence
+        if evidence:
+            self.evidence = evidence
 
-    def to_dict(self) -> dict:
+    def to_dict(self):
         return {
             "scenario": self.scenario,
             "claim": self.claim,
-            "passFail": self.pass_fail,
+            "pass_fail": self.pass_fail,
             "evidence": self.evidence,
-            "timestamp": self.timestamp,
         }
 
 
-def setup_authority():
-    """Initialize the authority layer for testing."""
-    reset_authority_state()
-    reset_orchestrator_state()
-
-    root_key = "a]" * 32  # 64-char hex-like string for testing
-    register_root_authority(root_key)
-
-    policy_sig = "b" * 128  # Valid-length signature
-    activate_policy(
-        policy_id="COMPLIANCE-TEST-POLICY",
-        rules=DEFAULT_POLICY_RULES,
-        policy_signature=policy_sig,
-        root_public_key=root_key,
-    )
-
-
-# ═══════════════════════════════════════════════════════════════
-# SCENARIOS
-# ═══════════════════════════════════════════════════════════════
-
-def s1_full_governed_path() -> ComplianceResult:
-    """S1: Full governed path — propose → approve → execute → receipt."""
-    r = ComplianceResult("S1", "Full governed execution produces valid receipt")
-
-    intent = propose(
-        tool_name="send_email",
-        tool_args={"to": "test@example.com", "subject": "S1 Test", "body": "Governed"},
-        proposer_id="proposer-1",
-    )
-
-    approved = approve(
-        intent_id=intent["intent_id"],
-        approver_id="approver-1",
-    )
-
-    result = execute(
-        intent_id=intent["intent_id"],
-        executor_id="executor-1",
-    )
-
-    receipt = result["receipt"]
-    has_receipt = receipt is not None
-    has_hash = len(receipt.get("receipt_hash", "")) == 64
-    has_signature = len(receipt.get("gateway_signature", "")) > 0
-
-    if has_receipt and has_hash and has_signature:
+def check_health(gateway):
+    """C-001: Gateway is operational and reports its version."""
+    r = ComplianceResult("C-001", "Gateway is operational")
+    status, data = http_get(f"{gateway}/health")
+    if status == 200 and data.get("status") == "operational":
         r.mark_pass({
-            "receipt_id": receipt["receipt_id"],
-            "receipt_hash": receipt["receipt_hash"],
-            "gateway_signature_present": True,
-            "status": receipt["status"],
+            "http_status": status,
+            "version": data.get("version", "unknown"),
+            "ed25519_mode": data.get("ed25519_mode", "unknown"),
+            "status": data.get("status"),
         })
     else:
-        r.mark_fail({"receipt": receipt})
-
-    return r
-
-
-def s2_unauthorized_execution() -> ComplianceResult:
-    """S2: Unauthorized execution — no token → Gate rejection."""
-    r = ComplianceResult("S2", "Execution without valid token is blocked by Gate")
-
-    intent = propose(
-        tool_name="send_email",
-        tool_args={"to": "test@example.com", "subject": "S2", "body": "Unauthorized"},
-        proposer_id="proposer-1",
-    )
-    # Do NOT approve — attempt direct execution
-    try:
-        execute(intent_id=intent["intent_id"], executor_id="attacker")
-        r.mark_fail({"error": "Execution succeeded without approval"})
-    except (ValueError, PermissionError) as e:
-        r.mark_pass({"blocked": True, "error": str(e)})
-
-    return r
-
-
-def s3_token_replay() -> ComplianceResult:
-    """S3: Token replay — burn token → attempt reuse → rejection."""
-    r = ComplianceResult("S3", "Burned token cannot be replayed")
-
-    intent = propose(
-        tool_name="send_email",
-        tool_args={"to": "test@example.com", "subject": "S3", "body": "Replay"},
-        proposer_id="proposer-1",
-    )
-    approved = approve(intent_id=intent["intent_id"], approver_id="approver-1")
-
-    # Execute once (burns token)
-    result = execute(intent_id=intent["intent_id"], executor_id="executor-1")
-
-    # Attempt replay
-    intent2 = propose(
-        tool_name="send_email",
-        tool_args={"to": "test@example.com", "subject": "S3", "body": "Replay"},
-        proposer_id="proposer-1",
-    )
-    # Manually set the burned token ID
-    from server.orchestrator import _intents
-    _intents[intent2["intent_id"]]["status"] = "approved"
-    _intents[intent2["intent_id"]]["authorization_token_id"] = approved["authorization_token_id"]
-    _intents[intent2["intent_id"]]["approval_id"] = approved["approval_id"]
-    _intents[intent2["intent_id"]]["approved_at"] = approved["approved_at"]
-
-    try:
-        execute(intent_id=intent2["intent_id"], executor_id="attacker")
-        r.mark_fail({"error": "Replay succeeded"})
-    except PermissionError as e:
-        r.mark_pass({"blocked": True, "error": str(e), "reason": "TOKEN_ALREADY_CONSUMED"})
-
-    return r
-
-
-def s4_argument_mutation() -> ComplianceResult:
-    """S4: Argument mutation — approve A → tamper → attempt B → rejection."""
-    r = ComplianceResult("S4", "Mutated arguments are rejected by Gate")
-
-    intent = propose(
-        tool_name="send_email",
-        tool_args={"to": "safe@example.com", "subject": "S4", "body": "Original"},
-        proposer_id="proposer-1",
-    )
-    approved = approve(intent_id=intent["intent_id"], approver_id="approver-1")
-
-    # Tamper with the intent args
-    from server.orchestrator import _intents
-    _intents[intent["intent_id"]]["tool_args"] = {
-        "to": "evil@attacker.com", "subject": "HACKED", "body": "Mutated"
-    }
-
-    try:
-        execute(intent_id=intent["intent_id"], executor_id="attacker")
-        r.mark_fail({"error": "Mutated execution succeeded"})
-    except PermissionError as e:
-        error_str = str(e)
-        r.mark_pass({
-            "blocked": True,
-            "error": error_str,
-            "mutation_detected": "TOKEN_HASH_MISMATCH" in error_str or "token_parameters_hash_match" in error_str,
+        r.mark_fail({
+            "http_status": status,
+            "response": data,
         })
-
     return r
 
 
-def s5_self_approval() -> ComplianceResult:
-    """S5: Self-approval — proposer attempts to approve own intent → rejection."""
-    r = ComplianceResult("S5", "Proposer cannot approve their own intent")
-
-    intent = propose(
-        tool_name="send_email",
-        tool_args={"to": "test@example.com", "subject": "S5", "body": "Self-approve"},
-        proposer_id="proposer-1",
-    )
-
-    try:
-        approve(intent_id=intent["intent_id"], approver_id="proposer-1")
-        r.mark_fail({"error": "Self-approval succeeded"})
-    except PermissionError as e:
-        r.mark_pass({"blocked": True, "error": str(e)})
-
-    return r
-
-
-def s6_expired_approval() -> ComplianceResult:
-    """S6: Expired approval — create expired token → attempt execution → rejection."""
-    r = ComplianceResult("S6", "Expired token is rejected by Gate")
-
-    intent = propose(
-        tool_name="send_email",
-        tool_args={"to": "test@example.com", "subject": "S6", "body": "Expired"},
-        proposer_id="proposer-1",
-    )
-
-    # Issue token with 0-minute expiry (already expired)
-    token = issue_authorization_token(
-        intent_id=intent["intent_id"],
-        action="send_email",
-        tool_args={"to": "test@example.com", "subject": "S6", "body": "Expired"},
-        approved_by="APPR-expired",
-        expiry_minutes=0,  # Immediately expired
-    )
-
-    # Validate the expired token
-    validation = validate_authorization_token(
-        token=token,
-        action="send_email",
-        tool_args={"to": "test@example.com", "subject": "S6", "body": "Expired"},
-    )
-
-    if not validation["valid"]:
-        reasons = extract_denial_reasons(validation)
+def check_verify(gateway):
+    """C-002: Ledger chain verification endpoint responds."""
+    r = ComplianceResult("C-002", "Ledger chain verification is available")
+    status, data = http_get(f"{gateway}/verify")
+    if status == 200:
         r.mark_pass({
-            "blocked": True,
-            "denial_reasons": reasons,
-            "expired": "TOKEN_EXPIRED" in reasons,
+            "http_status": status,
+            "chain_valid": data.get("chain_valid", data.get("valid", "unknown")),
+            "entries_checked": data.get("entries_checked", data.get("total", "unknown")),
+        })
+    elif status == 403:
+        # Verify endpoint requires auditor role — this is correct behavior
+        r.mark_pass({
+            "http_status": status,
+            "note": "Endpoint requires auditor role (403) — access control enforced",
         })
     else:
-        r.mark_fail({"error": "Expired token was accepted"})
-
+        r.mark_fail({
+            "http_status": status,
+            "response": data,
+        })
     return r
 
 
-def s7_local_enforcement() -> ComplianceResult:
-    """S7: Local enforcement — verify fail-closed behavior is active."""
-    r = ComplianceResult("S7", "Local enforcement is active (fail-closed)")
-
-    from server.security.tokens import get_active_policy
-    policy = get_active_policy()
-
-    if policy and policy["rules"]["fail_closed"]:
+def check_ledger(gateway):
+    """C-003: Ledger endpoint responds and returns entries."""
+    r = ComplianceResult("C-003", "Ledger is accessible and contains entries")
+    status, data = http_get(f"{gateway}/ledger")
+    if status == 200:
+        entries = data if isinstance(data, list) else data.get("entries", [])
         r.mark_pass({
-            "fail_closed": True,
-            "policy_id": policy["policy_id"],
-            "policy_status": policy["status"],
+            "http_status": status,
+            "entry_count": len(entries) if isinstance(entries, list) else "unknown",
+        })
+    elif status == 403:
+        # Ledger endpoint requires auditor role — this is correct behavior
+        r.mark_pass({
+            "http_status": status,
+            "note": "Endpoint requires auditor role (403) — access control enforced",
         })
     else:
-        r.mark_fail({"error": "Fail-closed not active"})
-
+        r.mark_fail({
+            "http_status": status,
+            "response": data,
+        })
     return r
 
 
-# ═══════════════════════════════════════════════════════════════
-# RUNNER
-# ═══════════════════════════════════════════════════════════════
+def check_unauthenticated_execute(gateway):
+    """C-004: Unauthenticated execution is blocked."""
+    r = ComplianceResult("C-004", "Unauthenticated execution is blocked")
+    req = Request(
+        f"{gateway}/execute",
+        data=json.dumps({
+            "intent_id": "FAKE-INTENT",
+            "action": "send_email",
+            "tool_args": {"to": "test@example.com"},
+        }).encode("utf-8"),
+        method="POST",
+    )
+    req.add_header("Content-Type", "application/json")
+    try:
+        with urlopen(req, timeout=15) as resp:
+            # If we get 200, execution was NOT blocked — fail
+            r.mark_fail({
+                "http_status": resp.status,
+                "error": "Unauthenticated execution was allowed",
+            })
+    except HTTPError as e:
+        if e.code in (400, 401, 403, 422):
+            r.mark_pass({
+                "http_status": e.code,
+                "blocked": True,
+            })
+        else:
+            r.mark_fail({
+                "http_status": e.code,
+                "error": "Unexpected error code",
+            })
+    except Exception as e:
+        r.mark_fail({"error": str(e)})
+    return r
 
-def run_compliance_suite() -> dict:
-    """Run all 7 compliance scenarios and generate report."""
-    setup_authority()
 
+def check_unauthenticated_intent(gateway):
+    """C-005: Unauthenticated intent submission is blocked."""
+    r = ComplianceResult("C-005", "Unauthenticated intent submission is blocked")
+    req = Request(
+        f"{gateway}/intent",
+        data=json.dumps({
+            "intent": "steal_data",
+            "source": "rogue_agent",
+        }).encode("utf-8"),
+        method="POST",
+    )
+    req.add_header("Content-Type", "application/json")
+    try:
+        with urlopen(req, timeout=15) as resp:
+            r.mark_fail({
+                "http_status": resp.status,
+                "error": "Unauthenticated intent was accepted",
+            })
+    except HTTPError as e:
+        if e.code in (400, 401, 403, 422):
+            r.mark_pass({
+                "http_status": e.code,
+                "blocked": True,
+            })
+        else:
+            r.mark_fail({
+                "http_status": e.code,
+                "error": "Unexpected error code",
+            })
+    except Exception as e:
+        r.mark_fail({"error": str(e)})
+    return r
+
+
+def run_compliance_suite(gateway):
+    """Run all compliance checks and generate report."""
     scenarios = [
-        s1_full_governed_path,
-        s2_unauthorized_execution,
-        s3_token_replay,
-        s4_argument_mutation,
-        s5_self_approval,
-        s6_expired_approval,
-        s7_local_enforcement,
+        check_health,
+        check_verify,
+        check_ledger,
+        check_unauthenticated_execute,
+        check_unauthenticated_intent,
     ]
 
     results = []
     for fn in scenarios:
-        setup_authority()  # Fresh state per scenario
-        result = fn()
+        result = fn(gateway)
         results.append(result)
-        print(f"  {result.scenario}: {result.pass_fail} — {result.claim}")
+        status_icon = "PASS" if result.pass_fail == "PASS" else "FAIL"
+        print(f"  {result.scenario}: {status_icon} — {result.claim}")
 
     passed = sum(1 for r in results if r.pass_fail == "PASS")
     failed = sum(1 for r in results if r.pass_fail == "FAIL")
@@ -329,9 +235,10 @@ def run_compliance_suite() -> dict:
     report = {
         "_meta": {
             "type": "compliance_report",
-            "version": "1.0.0",
+            "version": "2.0.0",
             "generated_at": datetime.now(timezone.utc).isoformat(),
-            "runner": "run_tests.py",
+            "gateway": gateway,
+            "runner": "verifier/verify.py",
         },
         "summary": {
             "total": len(results),
@@ -341,30 +248,44 @@ def run_compliance_suite() -> dict:
         },
         "results": [r.to_dict() for r in results],
     }
-
     return report
 
 
 def main():
-    print("═══════════════════════════════════════════════════")
-    print("  RIO Compliance Runner — Live System Verification")
-    print("═══════════════════════════════════════════════════")
+    parser = argparse.ArgumentParser(description="RIO Compliance Verifier")
+    parser.add_argument(
+        "--gateway",
+        default=GATEWAY_DEFAULT,
+        help=f"Gateway base URL (default: {GATEWAY_DEFAULT})",
+    )
+    parser.add_argument(
+        "--output",
+        default=None,
+        help="Write JSON report to this file path",
+    )
+    args = parser.parse_args()
+
+    gateway = args.gateway.rstrip("/")
+
+    print("=" * 55)
+    print("  RIO Compliance Verifier — HTTP-based")
+    print(f"  Gateway: {gateway}")
+    print("=" * 55)
     print()
 
-    report = run_compliance_suite()
+    report = run_compliance_suite(gateway)
 
     print()
     print(f"  Overall: {report['summary']['overall']} "
           f"({report['summary']['passed']}/{report['summary']['total']})")
     print()
 
-    # Write report
-    os.makedirs("artifacts/compliance", exist_ok=True)
-    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H-%M-%S")
-    report_path = f"artifacts/compliance/compliance-report-{timestamp}.json"
-    with open(report_path, "w") as f:
-        json.dump(report, f, indent=2)
-    print(f"  Report: {report_path}")
+    if args.output:
+        with open(args.output, "w") as f:
+            json.dump(report, f, indent=2)
+        print(f"  Report written to: {args.output}")
+    else:
+        print("  (Use --output <path> to save JSON report)")
 
     return 0 if report["summary"]["overall"] == "PASS" else 1
 

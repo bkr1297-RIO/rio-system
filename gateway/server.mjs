@@ -70,7 +70,7 @@ app.use((req, res, next) => {
 // Initialize
 // ---------------------------------------------------------------------------
 console.log("=".repeat(60));
-console.log("  RIO GOVERNANCE GATEWAY v3.1.0-oauth");
+console.log("  RIO GOVERNANCE GATEWAY v2.9.0");
 console.log("  Governed AI Execution Runtime");
 console.log("  Ledger: PostgreSQL (persistent)");
 console.log("  Auth: JWT + Ed25519 + API Keys + Google OAuth (PostgreSQL-backed)");
@@ -307,7 +307,7 @@ async function start() {
   app.get("/", (req, res) => {
     res.json({
       name: "RIO Governance Gateway",
-      version: "3.1.0-oauth",
+      version: "2.9.0",
       description: "Governed AI Execution Runtime — No Authorization, No Execution.",
       ledger: "PostgreSQL (persistent)",
       auth: "JWT + Ed25519 + Google OAuth",

@@ -5,7 +5,7 @@ The RIO Gateway is a standalone Node.js Express service that sits between AI sys
 **Fail Mode: CLOSED.** No authorization = no execution.
 
 **Production URL:** `https://rio-gateway.onrender.com`
-**Version:** 2.7.0
+**Version:** 2.9.0
 
 ---
 
@@ -95,7 +95,7 @@ npm test         # Run test suite
 |--------|------|------|-------------|
 | All v1 routes | `/api/v1/*` | API Key | Rate-limited public API access |
 
-For the complete 43-endpoint catalog with request/response examples, see [API Catalog v2.7](../docs/API_CATALOG_v2.7.md).
+For the complete endpoint catalog, see the tables above and the gateway source in `routes/index.mjs`.
 
 ---
 

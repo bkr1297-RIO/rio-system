@@ -161,6 +161,7 @@ The following documents define the constitutional rules enforced by the RIO runt
 
 ## Where to go next
 
+- [System Runtime Map](SYSTEM_RUNTIME_MAP.md) — what is running, what is planned, how to verify
 - [Run the demo](demo/)
 - [Read the spec](spec/)
 - [Read the governance specifications](docs/governance/)
