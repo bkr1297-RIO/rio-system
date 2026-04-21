@@ -154,6 +154,59 @@ Nothing happens without your approval, and everything that does is accounted for
 
 ---
 
+## Architecture Layers
+
+### 1. RIO Standard (this repository)
+
+**Scope:** Execution Boundary + Receipt Protocol
+
+This layer defines:
+
+- how digital actions become eligible for execution
+- how authorization is bound to exact intent (no payload drift)
+- how outcomes are recorded as verifiable receipts and ledger entries
+
+It proves that:
+
+- invalid actions are blocked before execution
+- valid actions execute exactly as approved
+- all outcomes are recorded and verifiable
+- no execution path bypasses the gate
+
+> This repo is the enforcement and proof layer: it makes unauthorized consequences impossible—and proves it.
+
+### 2. Application Layer (separate specifications)
+
+Above the RIO Standard, application-layer systems interpret intent, model patterns, and assist decision-making. They do not have direct execution authority.
+
+Examples (published as separate documents):
+
+- **Digital Fiduciary Specification (v1.0)**  
+  `applications/DIGITAL_FIDUCIARY_SPEC_v1.0.md`  
+  Defines how a "Digital Fiduciary" acts as a pattern-aware, governance-bound assistant that:
+  - models a principal's behavior and preferences
+  - detects deviations from expected patterns
+  - emits structured recommendations and signals
+  - never issues authorization or executes actions directly
+  All real execution still flows through the RIO boundary.
+
+- Future application specs may define other roles, such as observers, explainers, or domain-specific copilots. These also remain above the RIO Standard and depend on it, but do not modify it.
+
+### 3. Operating Environments (other repos)
+
+Systems like **ONE** and **MANTIS** are higher-level environments and ecosystems that:
+
+- host application-layer agents (including Digital Fiduciaries)
+- provide interfaces for humans and other systems
+- consume the RIO Standard as the underlying execution boundary and receipt protocol
+
+They are intentionally not part of this repository. This keeps:
+
+- the RIO Standard small, testable, and implementation-independent
+- the application and environment layers free to evolve without changing the enforcement core
+
+---
+
 ## Governance Specifications
 
 The following documents define the constitutional rules enforced by the RIO runtime.
