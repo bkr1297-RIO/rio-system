@@ -12,6 +12,7 @@ import express from "express";
 import cors from "cors";
 import { loadConfig } from "./governance/config.mjs";
 import { initLedger } from "./ledger/ledger-pg.mjs";
+import { initIntentStore } from "./governance/intents.mjs";
 import routes from "./routes/index.mjs";
 import { createToken, verifyToken, optionalAuth, isRegistered, getRegisteredUser } from "./security/oauth.mjs";
 import { replayPreventionMiddleware } from "./security/replay-prevention.mjs";
@@ -94,6 +95,10 @@ async function start() {
   try {
     await initLedger();
     console.log("[RIO Gateway] Ledger initialized (PostgreSQL).");
+
+    // Initialize intent store (PostgreSQL-backed, shares ledger pool)
+    await initIntentStore();
+    console.log("[RIO Gateway] Intent store initialized (PostgreSQL).");
 
     // Initialize identity binding (WS-010: Ed25519 signers from PostgreSQL)
     await initIdentityBinding();

@@ -417,6 +417,14 @@ export async function getRecentReceipts(limit = 20) {
   }
 }
 
+/**
+ * Expose the PostgreSQL pool for shared use by other modules (e.g., intent store).
+ * Returns null if initLedger() has not been called yet.
+ */
+export function getPool() {
+  return pool;
+}
+
 export function verifyChain() {
   if (_cache.length === 0) {
     return { valid: true, entries_checked: 0, first_invalid: null, epochs: 1 };

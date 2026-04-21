@@ -1542,6 +1542,10 @@ router.get("/health", (req, res) => {
         epochs: chainStatus.epochs || 1,
         current_epoch: chainStatus.current_epoch || null,
       },
+      intent_store: {
+        backing: "postgresql",
+        cached_intents: stats.total,
+      },
       pipeline_stats: stats,
       hardening: {
         ed25519_mode: ED25519_MODE,
