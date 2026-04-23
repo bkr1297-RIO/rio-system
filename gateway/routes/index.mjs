@@ -64,6 +64,7 @@ import {
   requirePrincipal,
   getAllRoles,
 } from "../security/principals.mjs";
+import { evaluateUserPolicy, buildPolicyBlock } from "../governance/user-policy.mjs";
 
 const router = Router();
 
@@ -807,6 +808,17 @@ router.post("/execute", requireRole("executor"), (req, res) => {
     }
 
     // ---------------------------------------------------------------
+    // POLICY LAYER HOOK — evaluate user-defined policy (placeholder)
+    // Currently always returns ALLOW. Does not change behavior.
+    // ---------------------------------------------------------------
+    const policyResult = evaluateUserPolicy(intent, {
+      principal: req.principal,
+      environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+    });
+    // Policy result is logged but not enforced (placeholder)
+    console.log(`[RIO Gateway] Policy evaluation: ${intent_id} — decision=${policyResult.decision}`);
+
+    // ---------------------------------------------------------------
     // EXECUTION — Issue execution token for the authorized agent
     // The agent must execute externally (e.g., via MCP) and then
     // call /execute-confirm with the result.
@@ -1183,7 +1195,15 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
 
     console.log(`[RIO Gateway] Token validated and burned for ${intent_id}`);
 
-    // ——— STEP 1: Execute the action ———————————————————————————————
+    // ——— POLICY LAYER HOOK — evaluate user-defined policy (placeholder) ———
+    // Currently always returns ALLOW. Does not change behavior.
+    const policyResult = evaluateUserPolicy(intent, {
+      principal: req.principal,
+      environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+    });
+    console.log(`[RIO Gateway] Policy evaluation: ${intent_id} — decision=${policyResult.decision}`);
+
+    // ——— STEP 1: Execute the action ———————————————————————————————————————
     const timestamp = new Date().toISOString();
     let executionResult;
 
@@ -1305,6 +1325,7 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
         source: "one_pwa",
         channel: "POST /execute-action",
       }),
+      policy: buildPolicyBlock(policyResult),
     });
 
     // ——— POLICY-COMPLIANT RECEIPT FIELDS (Governance Policy v1, Section 6) ——

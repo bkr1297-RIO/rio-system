@@ -200,6 +200,16 @@ export function generateReceipt(data) {
     };
   }
 
+  // v2.2: Policy Layer (non-breaking — placeholder, always present)
+  // When the Policy Layer is activated, this block will reflect
+  // actual user-defined policy evaluation results.
+  receipt.policy = data.policy || {
+    evaluated: true,
+    decision: "ALLOW",
+    rules: [],
+    policy_pack: null,
+  };
+
   return receipt;
 }
 

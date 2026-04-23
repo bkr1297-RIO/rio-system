@@ -72,6 +72,7 @@ import {
   requirePrincipal,
 } from "../security/principals.mjs";
 import { getOpenApiSpec } from "./openapi.mjs";
+import { evaluateUserPolicy, buildPolicyBlock } from "../governance/user-policy.mjs";
 
 const router = Router();
 
@@ -443,6 +444,14 @@ router.post("/intents/:id/execute", requireScope("admin"), requireRole("executor
         });
       }
     }
+
+    // ——— POLICY LAYER HOOK — evaluate user-defined policy (placeholder) ———
+    // Currently always returns ALLOW. Does not change behavior.
+    const policyResult = evaluateUserPolicy(intent, {
+      principal: req.principal,
+      environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+    });
+    console.log(`[RIO API v1] Policy evaluation: ${intent_id} — decision=${policyResult.decision}`);
 
     const timestamp = new Date().toISOString();
     // HARDENED v2: Issue bound execution token with binding fields
