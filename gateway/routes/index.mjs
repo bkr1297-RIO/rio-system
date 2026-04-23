@@ -808,15 +808,36 @@ router.post("/execute", requireRole("executor"), (req, res) => {
     }
 
     // ---------------------------------------------------------------
-    // POLICY LAYER HOOK — evaluate user-defined policy (placeholder)
-    // Currently always returns ALLOW. Does not change behavior.
+    // POLICY LAYER — evaluate user-defined policy constraints
+    // Runs AFTER RIO validation, BEFORE execution.
+    // DENY → block execution. REQUIRE_CONFIRMATION → return to approval.
     // ---------------------------------------------------------------
     const policyResult = evaluateUserPolicy(intent, {
       principal: req.principal,
       environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
     });
-    // Policy result is logged but not enforced (placeholder)
-    console.log(`[RIO Gateway] Policy evaluation: ${intent_id} — decision=${policyResult.decision}`);
+    console.log(`[RIO Gateway] Policy evaluation: ${intent_id} — decision=${policyResult.decision}`, 
+      policyResult.rules_triggered?.length ? `rules: ${policyResult.rules_triggered.map(r => r.id).join(", ")}` : "");
+
+    if (policyResult.decision === "DENY") {
+      return res.status(403).json({
+        intent_id,
+        status: "policy_denied",
+        decision: "DENIED",
+        policy: buildPolicyBlock(policyResult),
+        reason: policyResult.rules_triggered?.[0]?.reason || "Policy denied execution",
+      });
+    }
+
+    if (policyResult.decision === "REQUIRE_CONFIRMATION") {
+      return res.status(409).json({
+        intent_id,
+        status: "policy_confirmation_required",
+        decision: "REQUIRE_CONFIRMATION",
+        policy: buildPolicyBlock(policyResult),
+        reason: policyResult.rules_triggered?.[0]?.reason || "Policy requires additional confirmation",
+      });
+    }
 
     // ---------------------------------------------------------------
     // EXECUTION — Issue execution token for the authorized agent
@@ -1195,13 +1216,35 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
 
     console.log(`[RIO Gateway] Token validated and burned for ${intent_id}`);
 
-    // ——— POLICY LAYER HOOK — evaluate user-defined policy (placeholder) ———
-    // Currently always returns ALLOW. Does not change behavior.
+    // ——— POLICY LAYER — evaluate user-defined policy constraints ———
+    // Runs AFTER token burn, BEFORE execution.
+    // DENY → block execution. REQUIRE_CONFIRMATION → return to approval.
     const policyResult = evaluateUserPolicy(intent, {
       principal: req.principal,
       environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
     });
-    console.log(`[RIO Gateway] Policy evaluation: ${intent_id} — decision=${policyResult.decision}`);
+    console.log(`[RIO Gateway] Policy evaluation: ${intent_id} — decision=${policyResult.decision}`,
+      policyResult.rules_triggered?.length ? `rules: ${policyResult.rules_triggered.map(r => r.id).join(", ")}` : "");
+
+    if (policyResult.decision === "DENY") {
+      return res.status(403).json({
+        intent_id,
+        status: "policy_denied",
+        decision: "DENIED",
+        policy: buildPolicyBlock(policyResult),
+        reason: policyResult.rules_triggered?.[0]?.reason || "Policy denied execution",
+      });
+    }
+
+    if (policyResult.decision === "REQUIRE_CONFIRMATION") {
+      return res.status(409).json({
+        intent_id,
+        status: "policy_confirmation_required",
+        decision: "REQUIRE_CONFIRMATION",
+        policy: buildPolicyBlock(policyResult),
+        reason: policyResult.rules_triggered?.[0]?.reason || "Policy requires additional confirmation",
+      });
+    }
 
     // ——— STEP 1: Execute the action ———————————————————————————————————————
     const timestamp = new Date().toISOString();

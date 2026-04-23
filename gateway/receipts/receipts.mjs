@@ -200,13 +200,12 @@ export function generateReceipt(data) {
     };
   }
 
-  // v2.2: Policy Layer (non-breaking — placeholder, always present)
-  // When the Policy Layer is activated, this block will reflect
-  // actual user-defined policy evaluation results.
+  // v2.2: Policy Layer (Phase 2 — real constraint evaluation)
+  // Records the policy decision and any rules that were triggered.
   receipt.policy = data.policy || {
     evaluated: true,
     decision: "ALLOW",
-    rules: [],
+    rules_triggered: [],
     policy_pack: null,
   };
 

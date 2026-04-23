@@ -1,41 +1,178 @@
 /**
- * RIO User Policy Layer — Placeholder (v0.0)
+ * RIO User Policy Layer — Phase 2 (v1.0)
  *
- * This module provides the integration point for user-defined policy
- * evaluation. It is called BEFORE execution, AFTER authorization checks pass.
+ * Minimal constraint layer that evaluates deterministic rules
+ * AFTER RIO validation, BEFORE execution.
  *
- * Current behavior: always returns { decision: "ALLOW" }.
- * No logic. No rules. No blocking. No delay.
+ * Decisions:
+ *   ALLOW                — continue execution (no constraint triggered)
+ *   DENY                 — block execution immediately
+ *   REQUIRE_CONFIRMATION — return intent to approval flow for re-confirmation
  *
- * When the Policy Layer is activated, this function will evaluate
- * the intent against user-defined policy packs and return a decision
- * that may restrict (but never expand) the authorization already granted.
- *
- * Invariant: Context can only restrict; it must never grant or expand permission.
+ * Invariant: Policy can only restrict; it never grants or expands permission.
+ * Invariant: All rules are deterministic and explicit — no inference.
  *
  * @module governance/user-policy
- * @version 0.0.0 — placeholder only
+ * @version 1.0.0 — Phase 2 minimal constraint rules
  */
 
+// ─────────────────────────────────────────────────────────────────────
+// Rule Definitions
+// ─────────────────────────────────────────────────────────────────────
+
 /**
- * Evaluate an intent against user-defined policy.
+ * Each rule is an object with:
+ *   id       — unique identifier for audit trail
+ *   name     — human-readable description
+ *   evaluate — (intent, context) => { triggered: boolean, decision: string }
+ *
+ * Rules are evaluated in order. First DENY wins. If no DENY,
+ * first REQUIRE_CONFIRMATION wins. Otherwise ALLOW.
+ */
+const POLICY_RULES = [
+  {
+    id: "POLICY-001",
+    name: "Deny emails containing financial keywords",
+    description: "Block send_email if body contains wire transfer / payment language",
+    evaluate: (intent) => {
+      if (intent.action !== "send_email") return { triggered: false };
+      const params = intent.parameters || {};
+      const body = (params.body || params.content || params.message || "").toLowerCase();
+      const subject = (params.subject || "").toLowerCase();
+      const text = body + " " + subject;
+      const FINANCIAL_KEYWORDS = [
+        "wire transfer",
+        "wire funds",
+        "send wire",
+        "bank transfer",
+        "routing number",
+        "account number",
+        "swift code",
+        "iban",
+      ];
+      const matched = FINANCIAL_KEYWORDS.find((kw) => text.includes(kw));
+      if (matched) {
+        return {
+          triggered: true,
+          decision: "DENY",
+          reason: `Email contains financial keyword: "${matched}"`,
+        };
+      }
+      return { triggered: false };
+    },
+  },
+  {
+    id: "POLICY-002",
+    name: "External email requires confirmation",
+    description: "send_email to non-owner domain requires additional confirmation",
+    evaluate: (intent, context) => {
+      if (intent.action !== "send_email") return { triggered: false };
+      const params = intent.parameters || {};
+      const to = (params.to || params.recipient || "").toLowerCase();
+      if (!to || !to.includes("@")) return { triggered: false };
+      // Extract domain from the recipient
+      const recipientDomain = to.split("@")[1];
+      // Known internal/owner domains — emails to these are ALLOW
+      const INTERNAL_DOMAINS = [
+        "gmail.com",       // Owner's primary domain
+        "hotmail.com",     // Owner's secondary domain
+      ];
+      if (INTERNAL_DOMAINS.includes(recipientDomain)) {
+        return { triggered: false };
+      }
+      return {
+        triggered: true,
+        decision: "REQUIRE_CONFIRMATION",
+        reason: `External recipient domain: ${recipientDomain}`,
+      };
+    },
+  },
+  {
+    id: "POLICY-003",
+    name: "High-risk action without break analysis requires confirmation",
+    description: "HIGH risk intents must include a break analysis or be re-confirmed",
+    evaluate: (intent) => {
+      const riskTier = intent.governance?.risk_tier || intent.risk_tier || "low";
+      if (riskTier.toLowerCase() !== "high") return { triggered: false };
+      // Check if break analysis was provided
+      const hasBreakAnalysis =
+        intent.parameters?.breakAnalysis ||
+        intent.parameters?.break_analysis ||
+        intent.governance?.break_analysis;
+      if (hasBreakAnalysis) return { triggered: false };
+      return {
+        triggered: true,
+        decision: "REQUIRE_CONFIRMATION",
+        reason: "HIGH risk action submitted without break analysis",
+      };
+    },
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────────
+// Evaluation Engine
+// ─────────────────────────────────────────────────────────────────────
+
+/**
+ * Evaluate an intent against user-defined policy rules.
+ *
+ * Rules are evaluated in order. Precedence:
+ *   1. First DENY wins → execution blocked
+ *   2. First REQUIRE_CONFIRMATION wins → return to approval
+ *   3. No rules triggered → ALLOW
  *
  * @param {object} intent - The authorized intent about to be executed
  * @param {object} context - Execution context (principal, environment, etc.)
- * @returns {{ decision: "ALLOW" | "DENY", rules: string[], policy_pack: string | null }}
+ * @returns {{
+ *   decision: "ALLOW" | "DENY" | "REQUIRE_CONFIRMATION",
+ *   rules_triggered: Array<{ id: string, name: string, decision: string, reason: string }>,
+ *   policy_pack: string | null
+ * }}
  */
 export function evaluateUserPolicy(intent, context) {
-  // ──────────────────────────────────────────────────────────────────
-  // PLACEHOLDER — always ALLOW, no evaluation logic.
-  // This function exists solely as a stable integration point.
-  // When the Policy Layer is activated, real evaluation will happen here.
-  // ──────────────────────────────────────────────────────────────────
+  const triggered = [];
+  let finalDecision = "ALLOW";
+
+  for (const rule of POLICY_RULES) {
+    try {
+      const result = rule.evaluate(intent, context);
+      if (result.triggered) {
+        triggered.push({
+          id: rule.id,
+          name: rule.name,
+          decision: result.decision,
+          reason: result.reason || "",
+        });
+
+        // DENY takes highest precedence
+        if (result.decision === "DENY") {
+          finalDecision = "DENY";
+          break; // First DENY wins — stop evaluation
+        }
+
+        // REQUIRE_CONFIRMATION is next precedence
+        if (result.decision === "REQUIRE_CONFIRMATION" && finalDecision !== "DENY") {
+          finalDecision = "REQUIRE_CONFIRMATION";
+          // Continue evaluating — a later rule may DENY
+        }
+      }
+    } catch (err) {
+      // Rule evaluation errors are logged but do not block execution.
+      // Fail-open on individual rule errors to avoid false denials.
+      console.error(`[RIO Policy] Rule ${rule.id} threw error: ${err.message}`);
+    }
+  }
+
   return {
-    decision: "ALLOW",
-    rules: [],
-    policy_pack: null,
+    decision: finalDecision,
+    rules_triggered: triggered,
+    policy_pack: "rio-base-v1",
   };
 }
+
+// ─────────────────────────────────────────────────────────────────────
+// Receipt Builder
+// ─────────────────────────────────────────────────────────────────────
 
 /**
  * Build the policy block for inclusion in receipts.
@@ -47,7 +184,25 @@ export function buildPolicyBlock(policyResult) {
   return {
     evaluated: true,
     decision: policyResult?.decision || "ALLOW",
-    rules: policyResult?.rules || [],
+    rules_triggered: (policyResult?.rules_triggered || []).map((r) => ({
+      id: r.id,
+      name: r.name,
+      decision: r.decision,
+      reason: r.reason,
+    })),
     policy_pack: policyResult?.policy_pack || null,
   };
+}
+
+/**
+ * Get the current policy rule definitions (for introspection/debugging).
+ *
+ * @returns {Array<{ id: string, name: string, description: string }>}
+ */
+export function getPolicyRules() {
+  return POLICY_RULES.map((r) => ({
+    id: r.id,
+    name: r.name,
+    description: r.description,
+  }));
 }
