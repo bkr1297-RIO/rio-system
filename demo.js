@@ -55,11 +55,11 @@ async function run() {
   const chain1 = verifyChain();
 
   if (result.decision === "EXECUTE" && chain1.valid) {
-    console.log("Decision: EXECUTED");
+    console.log("Decision: ALLOW");
     console.log("Receipt:  GENERATED");
     console.log("Chain:    VALID");
     console.log("");
-    console.log("PASS");
+    console.log("ALLOW");
   } else {
     console.log("UNEXPECTED — decision:", result.decision, "chain:", chain1.valid);
   }
@@ -93,11 +93,11 @@ async function run() {
   });
 
   if (driftResult.decision !== "EXECUTE") {
-    console.log("Decision: " + driftResult.decision);
+    console.log("Decision: BLOCK");
     console.log("Reason:   " + driftResult.reason_code);
     console.log("Adapter:  NOT CALLED");
     console.log("");
-    console.log("BLOCKED");
+    console.log("BLOCK");
   } else {
     console.log("UNEXPECTED — drift was not caught");
   }
