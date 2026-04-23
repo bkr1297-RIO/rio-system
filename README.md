@@ -5,7 +5,7 @@ A minimal system that ensures AI actions execute exactly as approved—and prove
 ## Run it in 30 seconds
 
 ```bash
-node scripts/run_email_demo.js
+node demo.js
 ```
 
 ---
