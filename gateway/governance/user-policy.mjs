@@ -13,8 +13,15 @@
  * Invariant: All rules are deterministic and explicit — no inference.
  *
  * @module governance/user-policy
- * @version 1.0.0 — Phase 2 minimal constraint rules
+ * @version 1.1.0 — Phase 2 rules defined, PILOT_MODE bypass active
  */
+
+// ───────────────────────────────────────────────────────────────────
+// Pilot Mode
+// When true: rules are evaluated for logging only, decision is always ALLOW.
+// Set to false to activate real enforcement.
+// ───────────────────────────────────────────────────────────────────
+const PILOT_MODE = true;
 
 // ─────────────────────────────────────────────────────────────────────
 // Rule Definitions
@@ -131,8 +138,9 @@ const POLICY_RULES = [
  */
 export function evaluateUserPolicy(intent, context) {
   const triggered = [];
-  let finalDecision = "ALLOW";
+  let wouldDecide = "ALLOW";
 
+  // Always evaluate rules for logging — even in pilot mode
   for (const rule of POLICY_RULES) {
     try {
       const result = rule.evaluate(intent, context);
@@ -144,27 +152,36 @@ export function evaluateUserPolicy(intent, context) {
           reason: result.reason || "",
         });
 
-        // DENY takes highest precedence
         if (result.decision === "DENY") {
-          finalDecision = "DENY";
-          break; // First DENY wins — stop evaluation
+          wouldDecide = "DENY";
+          break;
         }
 
-        // REQUIRE_CONFIRMATION is next precedence
-        if (result.decision === "REQUIRE_CONFIRMATION" && finalDecision !== "DENY") {
-          finalDecision = "REQUIRE_CONFIRMATION";
-          // Continue evaluating — a later rule may DENY
+        if (result.decision === "REQUIRE_CONFIRMATION" && wouldDecide !== "DENY") {
+          wouldDecide = "REQUIRE_CONFIRMATION";
         }
       }
     } catch (err) {
-      // Rule evaluation errors are logged but do not block execution.
-      // Fail-open on individual rule errors to avoid false denials.
       console.error(`[RIO Policy] Rule ${rule.id} threw error: ${err.message}`);
     }
   }
 
+  // PILOT MODE: log what would have happened, but always return ALLOW
+  if (PILOT_MODE) {
+    if (triggered.length > 0) {
+      console.log(`[RIO Policy] PILOT_MODE: would have decided ${wouldDecide} (rules: ${triggered.map(r => r.id).join(", ")}) — returning ALLOW`);
+    }
+    return {
+      decision: "ALLOW",
+      rules_triggered: triggered,
+      policy_pack: "rio-base-v1",
+      pilot_mode: true,
+      would_have_decided: wouldDecide,
+    };
+  }
+
   return {
-    decision: finalDecision,
+    decision: wouldDecide,
     rules_triggered: triggered,
     policy_pack: "rio-base-v1",
   };
