@@ -224,3 +224,42 @@ The following documents define the constitutional rules enforced by the RIO runt
 - [Read the spec](spec/)
 - [Read the governance specifications](docs/governance/)
 - [Use it with your own systems](docs/)
+
+---
+
+## How to Use This in Your System
+
+This repository demonstrates the execution and proof layer.
+
+To use this in your own system:
+
+1. Structure intent into explicit, machine-readable form
+2. Require explicit approval before execution
+3. Validate that execution exactly matches approved intent
+4. Execute only if validation passes
+5. Generate a cryptographic receipt after execution
+6. Verify receipts independently
+
+The pattern:
+
+```text
+intent → approval → validation → execution → receipt → verification
+```
+
+### See a Simple Integration Example
+
+A minimal example showing how to apply this pattern is available here:
+
+/examples/integration/
+
+### Next Step — Beyond This Repo
+
+This repository demonstrates the execution and proof layer.
+
+To build a complete system, you will need:
+
+- an approval layer (human-in-the-loop)
+- a gateway to enforce execution boundaries
+- a policy layer for constraints and risk
+
+This repository intentionally stops at execution and verification.
