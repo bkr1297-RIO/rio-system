@@ -1,24 +1,12 @@
-# RIO — Governed Execution
+# RIO — Receipt Protocol for Verifiable AI Actions
 
-## What this is
+A minimal system that ensures AI actions execute exactly as approved—and proves it.
 
-RIO is a control plane for how software takes real-world actions — giving you confidence that nothing happens without you knowing, approving it, and a clear record of who approved it and when.
+## Run it in 30 seconds
 
-It does not generate output.
-It does not make decisions.
-It does not act on its own.
-
-Authorization tokens are issued by upstream systems or interfaces and are intentionally out of scope for this repository.
-
-It sits between your systems and the real world, watching and enforcing what is allowed to happen.
-
-RIO is both a governed execution architecture and a published governance standard — the specifications in `/docs/` define the rules the code enforces.
-
-It is built on one rule that does not change:
-
-> **Authority stays with the human. Always.**
-
-If something is not explicitly approved, it cannot happen.
+```bash
+node scripts/run_email_demo.js
+```
 
 ---
 
