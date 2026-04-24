@@ -135,26 +135,38 @@ def select_patterns(task: dict, corpus: list = None) -> list:
     # Sort by final_score descending
     scored.sort(key=lambda x: x["final_score"], reverse=True)
 
-    # Drop conflicts: if two patterns of the same type, keep higher score
-    seen_types = {}
+    # Deduplicate by pattern_id — keep highest-scoring instance of each
+    seen_ids = set()
     deduped = []
     for entry in scored:
-        ptype = entry["pattern"]["pattern_type"]
-        if ptype not in seen_types:
-            seen_types[ptype] = True
+        pid = entry["pattern"]["pattern_id"]
+        if pid not in seen_ids:
+            seen_ids.add(pid)
             deduped.append(entry)
-        else:
-            # Allow up to 2 of the same type before dropping
-            type_count = sum(1 for e in deduped if e["pattern"]["pattern_type"] == ptype)
-            if type_count < 2:
-                deduped.append(entry)
 
-    # Ensure at least 1 workflow + 1 constraint if possible
-    selected = deduped[:5]  # max 5
+    # Take top 5
+    selected = deduped[:5]
 
+    # ── Guarantee rule: constraint + risk must be present if they exist ──
+    # Check which critical types are missing from the selected set
+    CRITICAL_TYPES = ["constraint", "risk"]
+    for ctype in CRITICAL_TYPES:
+        has_type = any(e["pattern"]["pattern_type"] == ctype for e in selected)
+        if not has_type:
+            # Find highest-scoring pattern of this type in deduped pool
+            candidate = None
+            for entry in deduped:
+                if entry["pattern"]["pattern_type"] == ctype and entry not in selected:
+                    candidate = entry
+                    break
+            if candidate:
+                if len(selected) >= 5:
+                    selected[-1] = candidate  # replace lowest-ranked
+                else:
+                    selected.append(candidate)
+
+    # Also ensure workflow if possible (existing behavior)
     has_workflow = any(e["pattern"]["pattern_type"] == "workflow" for e in selected)
-    has_constraint = any(e["pattern"]["pattern_type"] == "constraint" for e in selected)
-
     if not has_workflow:
         for entry in deduped:
             if entry["pattern"]["pattern_type"] == "workflow" and entry not in selected:
@@ -164,18 +176,9 @@ def select_patterns(task: dict, corpus: list = None) -> list:
                     selected.append(entry)
                 break
 
-    if not has_constraint:
-        for entry in deduped:
-            if entry["pattern"]["pattern_type"] == "constraint" and entry not in selected:
-                if len(selected) >= 5:
-                    selected[-1] = entry  # replace lowest
-                else:
-                    selected.append(entry)
-                break
-
     # Enforce min 3 if available
     if len(selected) < 3:
-        for entry in scored:
+        for entry in deduped:
             if entry not in selected:
                 selected.append(entry)
             if len(selected) >= 3:

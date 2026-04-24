@@ -70,10 +70,23 @@ SYSTEM_RULE_INDICATORS = [
     r"\bvalidation\s+rule\b",
 ]
 
-CORPUS_DIR = os.path.join(os.path.dirname(__file__), "..", "corpus")
-PATTERNS_FILE = os.path.join(CORPUS_DIR, "patterns.jsonl")
-INDEX_FILE = os.path.join(CORPUS_DIR, "pattern_index.json")
-REJECTED_FILE = os.path.join(CORPUS_DIR, "rejected.jsonl")
+# ── File paths (resolved at call time, not import time) ────────────────
+_DEFAULT_CORPUS_DIR = os.path.join(os.path.dirname(__file__), "..", "corpus")
+
+
+def _get_patterns_file():
+    return os.environ.get("MANTIS_CORPUS_PATH",
+                          os.path.join(_DEFAULT_CORPUS_DIR, "patterns.jsonl"))
+
+
+def _get_index_file():
+    return os.environ.get("MANTIS_INDEX_PATH",
+                          os.path.join(_DEFAULT_CORPUS_DIR, "pattern_index.json"))
+
+
+def _get_rejected_file():
+    return os.environ.get("MANTIS_REJECTED_PATH",
+                          os.path.join(_DEFAULT_CORPUS_DIR, "rejected.jsonl"))
 
 
 def validate_pattern(p: dict) -> dict:
@@ -150,6 +163,10 @@ def append_pattern(p: dict) -> dict:
     """
     result = validate_pattern(p)
 
+    patterns_file = _get_patterns_file()
+    index_file = _get_index_file()
+    rejected_file = _get_rejected_file()
+
     if result["status"] == "FAIL":
         # Write to rejected.jsonl
         rejection = {
@@ -157,30 +174,30 @@ def append_pattern(p: dict) -> dict:
             "failed_checks": result["failed_checks"],
             "rejected_at": datetime.now(timezone.utc).isoformat(),
         }
-        with open(REJECTED_FILE, "a") as f:
+        with open(rejected_file, "a") as f:
             f.write(json.dumps(rejection) + "\n")
         result["line"] = None
         return result
 
     # PASS — append to patterns.jsonl
-    with open(PATTERNS_FILE, "a") as f:
+    with open(patterns_file, "a") as f:
         f.write(json.dumps(p) + "\n")
 
     # Count current line number
-    with open(PATTERNS_FILE, "r") as f:
+    with open(patterns_file, "r") as f:
         line_count = sum(1 for line in f if line.strip())
 
     # Update index
     index = {}
-    if os.path.exists(INDEX_FILE):
-        with open(INDEX_FILE, "r") as f:
+    if os.path.exists(index_file):
+        with open(index_file, "r") as f:
             content = f.read().strip()
             if content:
                 index = json.loads(content)
 
     index[p["pattern_id"]] = {"line": line_count, "type": p["pattern_type"]}
 
-    with open(INDEX_FILE, "w") as f:
+    with open(index_file, "w") as f:
         json.dump(index, f, indent=2)
 
     result["line"] = line_count
@@ -188,11 +205,12 @@ def append_pattern(p: dict) -> dict:
 
 
 def load_corpus() -> list:
-    """Load all patterns from the corpus file."""
+    """Load all patterns from the corpus file. Always reads fresh — no caching."""
+    patterns_file = _get_patterns_file()
     patterns = []
-    if not os.path.exists(PATTERNS_FILE):
+    if not os.path.exists(patterns_file):
         return patterns
-    with open(PATTERNS_FILE, "r") as f:
+    with open(patterns_file, "r") as f:
         for line in f:
             line = line.strip()
             if line:
