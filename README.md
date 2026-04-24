@@ -4,6 +4,13 @@ A modular system for observing, shaping, and governing AI-driven actions before 
 
 ---
 
+## Docs
+
+- [Overview](/docs/OVERVIEW.md)
+- [Architecture](/docs/ARCHITECTURE.md)
+
+---
+
 ## What This Is
 
 This repository contains the runtime layers that sit between a task and real-world execution.
