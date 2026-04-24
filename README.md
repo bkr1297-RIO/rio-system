@@ -1,156 +1,218 @@
-# RIO — Receipt Protocol for Verifiable AI Actions
+# RIO System — Governed Intelligence Runtime
 
-A minimal protocol that ensures AI actions execute exactly as approved—and produces proof that can be independently verified.
-
----
-
-## Run it in 30 seconds
-
-bash node demo.js 
-
-You will see:
-
-- valid action → ALLOW  
-- modified action → BLOCK  
-- tampered receipt → FAIL  
-
----
-
-## Core Invariant
-
-Nothing executes unless it exactly matches what was approved at the moment of execution—and that fact is provable.
+A modular system for observing, shaping, and governing AI-driven actions before execution, while preserving human authority.
 
 ---
 
 ## What This Is
 
-This repository provides:
+This repository contains the runtime layers that sit between a task and real-world execution.
 
-- a minimal reference implementation  
-- a deterministic validation step before execution  
-- a receipt format and verification mechanism  
+It provides:
 
-It demonstrates how to:
+- pattern-based reference (what tends to happen)
+- real-time contrast (what’s happening now)
+- controlled surfacing (when to show it)
+- observation logging (what happened)
+- trend analysis (what repeats over time)
 
-- enforce exact-match execution  
-- prevent silent or altered actions  
-- generate proof that can be verified independently  
+All layers are non-authoritative.
+
+Execution and enforcement are handled separately by the RIO receipt protocol.
 
 ---
 
 ## System Flow
 
-Language → Intent → Approval → Validation → Execution → Receipt → Verification
-
-Validation is the control point.
-
-If the approved intent and execution input do not match exactly:
-
-→ execution is blocked
+text id="flow1" Task → Pattern Selection → Draft / Proposal → MANTIS Contrast → Trigger Engine → Surface (optional) → Logging → Trend Analysis → Human Decision → RIO Governance → Execution 
 
 ---
 
-## Example — Controlled Action (Email)
+## Core Layers
 
-### Intent submitted for approval
+### Pattern Corpus (Reference Layer)
 
-json {   "action": "send_email",   "target": "finance@company.com",   "parameters": {     "subject": "Q2 Report",     "body": "See attached report."   } } 
+Stores validated patterns in an append-only format.
 
-### Behavior
-
-| Condition | Result |
-|----------|--------|
-| No approval | Blocked |
-| Approved + exact match | Executes |
-| Any change after approval | Blocked |
-
-### Outcome
-
-Only the approved action runs, and the result can be verified.
+- source: /corpus/patterns.jsonl
+- contains: workflow, constraint, risk, language patterns
+- used to provide context for comparison
+- does not execute or decide
 
 ---
 
-## How to Use This Pattern
+### Selector
 
-To apply this in your system:
+Selects the most relevant patterns per task.
 
-1. Represent intent in structured form  
-2. Require explicit approval  
-3. Validate execution against the approved intent  
-4. Execute only if validation passes  
-5. Generate a receipt  
-6. Verify the receipt independently  
-
-Pattern:
-
-intent → approval → validation → execution → receipt → verification
+- max 5 patterns
+- guarantees inclusion of:
+  - at least one constraint (if present)
+  - at least one risk (if present)
+- deduplicates by pattern_id
+- deterministic scoring
 
 ---
 
-## Integration
+### MANTIS (Contrast Engine)
 
-A minimal integration example is available:
+Compares current draft or action against selected patterns.
 
-/examples/integration/
+Outputs:
 
-Replace the execute step with your system:
+- ALIGNED
+- PARTIAL
+- DEVIATES
 
-- API calls  
-- workflows  
-- external actions  
-- agent commands  
+Also computes:
 
-RIO sits between approval and execution.
+- alignment score
+- risk flags
+- severity level
 
----
-
-## Receipt Model
-
-RIO constructs a deterministic hash chain:
-
-Intent Hash → Execution Hash → Receipt
-
-Any change breaks verification.
+MANTIS observes only. It does not act.
 
 ---
 
-## What This Repository Covers
+### Trigger Engine
 
-This repository focuses on:
+Determines when contrast should be surfaced.
 
-- validation before execution  
-- receipt generation  
-- verification  
+Trigger types:
 
-It does not include:
+- T1 — Pre-action
+- T2 — Pre-commit
+- T3 — Risk detected
+- T4 — Constraint violation
+- T5 — Manual request
 
-- approval systems  
-- policy engines  
-- orchestration layers  
+Includes:
 
-Those can be added independently.
+- threshold filtering (avoid noise)
+- quiet mode (no surface when high alignment)
+- deduplication (no repeated alerts)
+
+---
+
+### Surface Layer
+
+Formats contrast into human-readable output.
+
+- non-blocking
+- non-authoritative
+- provides A/B/C options
+- user always decides
+
+---
+
+### Logging (Observation Memory)
+
+Append-only record of all contrast events.
+
+- file: /mantis/logs/observations.jsonl
+- records:
+  - task
+  - severity
+  - pattern_ids
+  - trigger type
+  - surface shown or not
+
+Logging does not affect system behavior.
+
+---
+
+### Trend Detection (Behavior Over Time)
+
+Analyzes logs to identify:
+
+- drift (how often deviations occur)
+- recurring patterns
+- risk frequency
+- severity distribution
+
+Manual invocation:
+
+python id="trend_call" analyze_trends(window_size=20) 
+
+Read-only. Does not modify system state.
+
+---
+
+## Design Principles
+
+### 1. Non-Authority
+
+No component in this repository:
+- executes actions
+- approves actions
+- blocks actions
+
+All outputs are advisory.
+
+---
+
+### 2. Separation of Concerns
+
+| Layer | Role |
+|------|------|
+| Pattern Corpus | memory of behavior |
+| MANTIS | observation |
+| Trigger | timing |
+| Logging | event history |
+| Trends | behavior analysis |
+| RIO Protocol | execution + proof |
+
+---
+
+### 3. Fail-Closed Execution (External)
+
+Actual execution control is enforced by the RIO receipt protocol.
+
+This repository does not execute actions.
+
+---
+
+### 4. Append-Only Memory
+
+- patterns are append-only
+- logs are append-only
+- no mutation of history
+
+---
+
+## What This Repository Does NOT Do
+
+- no execution of real-world actions
+- no approval workflows
+- no policy engine
+- no UI
+- no automation of decisions
 
 ---
 
 ## Repository Structure
 
-demo.js generate_receipt.js verify_receipt.js test_tamper.js  examples/   valid_receipt.json   denied_receipt.json  examples/integration/   send_email_example.md  verifier/   index.html   verify.js  spec/   rio-overview.md   execution-validation-layer.md   rasmussen-construction.md  docs/   SECURITY_SUMMARY.md
+text id="repo_tree" pattern-corpus/   corpus/     patterns.jsonl     pattern_index.json     rejected.jsonl    validator/     validate_pattern.py    selector/     select_patterns.py    generator/     generate_context.py    mantis/     mantis_contrast.py     trigger_engine.py     mantis_logger.py     trend_analyzer.py    mantis/logs/     observations.jsonl  examples/   example_usage.md   mantis_example.md   mantis_logging_example.md   mantis_trends_example.md 
 
 ---
 
-## Dependencies
+## How This Fits
 
-None. Uses Node.js built-in crypto.
+This system provides pre-execution awareness.
 
----
+It answers:
 
-## License
+- “Does this match expected behavior?”
+- “What is missing?”
+- “Is there risk?”
+- “Is this a pattern or a one-off?”
 
-MIT
+It does not answer:
+
+- “Should this execute?”
 
 ---
 
 ## One Line
 
-If it changes, it doesn’t run.  
-If it runs, you can prove it.
+Observe before action. Decide before execution. Prove after.
