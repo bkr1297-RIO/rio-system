@@ -1,7 +1,14 @@
 """
-MANTIS Contrast Layer v0.1
+MANTIS Contrast Layer v0.2 — Calibrated
 Read-only observer — compares drafts/actions against the pattern corpus.
-Detects alignment vs deviation. NEVER executes, blocks, or decides.
+Detects alignment, partial alignment, or deviation. NEVER executes, blocks, or decides.
+
+v0.2 changes:
+- Added PARTIAL status for graded alignment
+- Added alignment_score (0–100) to contrast packet
+- Improved severity logic (constraint/risk=HIGH, score<50=MEDIUM, else=LOW)
+- Improved deviation messaging (less harsh, more descriptive)
+- Constraint and risk patterns remain binary (no PARTIAL)
 
 Output is advisory only. Fails silent on insufficient signal.
 Deterministic — no guessing, no inference.
@@ -23,14 +30,32 @@ def _tokenize(text: str) -> set:
     return set(re.findall(r"[a-z0-9]+", text.lower()))
 
 
+def calculate_alignment_score(observations: list) -> int:
+    """
+    Calculate a 0–100 alignment score from observations.
+    ALIGNED=1.0, PARTIAL=0.5, DEVIATES=0.0
+    """
+    weights = {
+        "ALIGNED": 1.0,
+        "PARTIAL": 0.5,
+        "DEVIATES": 0.0,
+    }
+
+    total = len(observations)
+    if total == 0:
+        return 0
+
+    score = sum(weights.get(o["status"], 0) for o in observations) / total
+    return round(score * 100)
+
+
 def _check_workflow(draft: str, pattern: dict) -> dict:
     """
-    Workflow / preference / design patterns:
+    Workflow / design patterns:
     Check if expected structure is present in the draft.
-    Missing → DEVIATES, Present → ALIGNED.
+    Graded: ALIGNED (>=60% coverage), PARTIAL (>=20%), DEVIATES (<20%).
     """
     draft_tokens = _tokenize(draft)
-    # Use signals and inputs as indicators of expected structure
     conditions = pattern.get("conditions", {})
     expected_tokens = (
         _tokenize(" ".join(conditions.get("signals", [])))
@@ -43,10 +68,17 @@ def _check_workflow(draft: str, pattern: dict) -> dict:
     overlap = draft_tokens & expected_tokens
     coverage = len(overlap) / len(expected_tokens) if expected_tokens else 0
 
-    if coverage >= 0.3:
+    if coverage >= 0.6:
         return {
             "status": "ALIGNED",
             "note": f"Expected structure present ({', '.join(sorted(overlap))})",
+        }
+    elif coverage >= 0.2:
+        missing = expected_tokens - draft_tokens
+        present = sorted(overlap)
+        return {
+            "status": "PARTIAL",
+            "note": f"Partially aligned: mentions {', '.join(present)} but lacks {', '.join(sorted(missing)[:3])}",
         }
     else:
         missing = expected_tokens - draft_tokens
@@ -59,15 +91,10 @@ def _check_workflow(draft: str, pattern: dict) -> dict:
 def _check_constraint(draft: str, pattern: dict) -> dict:
     """
     Constraint patterns:
+    Binary only — NO PARTIAL.
     If violated → DEVIATES (HIGH). If respected → ALIGNED.
     """
     draft_tokens = _tokenize(draft)
-    desc_tokens = _tokenize(pattern.get("description", ""))
-
-    # Look for negation patterns in the constraint description
-    desc_lower = pattern.get("description", "").lower()
-
-    # Constraints with "do not" / "without" — check if the draft respects them
     conditions = pattern.get("conditions", {})
     constraint_signals = _tokenize(" ".join(conditions.get("signals", [])))
 
@@ -82,7 +109,7 @@ def _check_constraint(draft: str, pattern: dict) -> dict:
         else:
             return {
                 "status": "DEVIATES",
-                "note": "Constraint requires approval/review — not referenced in draft",
+                "note": "Constraint: approval/review step missing",
             }
 
     # General constraint: check if constraint signals are acknowledged
@@ -92,19 +119,19 @@ def _check_constraint(draft: str, pattern: dict) -> dict:
     else:
         return {
             "status": "DEVIATES",
-            "note": f"Constraint signals not addressed: {', '.join(sorted(constraint_signals)[:5])}",
+            "note": f"Constraint: signals not addressed ({', '.join(sorted(constraint_signals)[:5])})",
         }
 
 
 def _check_risk(draft: str, pattern: dict) -> dict:
     """
     Risk patterns:
+    Binary only — NO PARTIAL.
     If trigger condition detected → DEVIATES + risk_flag.
-    Check signals, inputs, AND description keywords for risk context.
+    Check signals, inputs, AND context for risk detection.
     """
     draft_tokens = _tokenize(draft)
     conditions = pattern.get("conditions", {})
-    # Combine signals + inputs + description keywords for broader risk detection
     risk_tokens = (
         _tokenize(" ".join(conditions.get("signals", [])))
         | _tokenize(" ".join(conditions.get("inputs", [])))
@@ -124,22 +151,36 @@ def _check_risk(draft: str, pattern: dict) -> dict:
 
 def _check_communication(draft: str, pattern: dict) -> dict:
     """
-    Communication patterns: check if expected communication elements are present.
+    Communication patterns:
+    Graded: ALIGNED (>=60% coverage), PARTIAL (>=20%), DEVIATES (<20%).
     """
     draft_tokens = _tokenize(draft)
     conditions = pattern.get("conditions", {})
     expected = _tokenize(" ".join(conditions.get("signals", [])))
 
+    if not expected:
+        return {"status": "ALIGNED", "note": "No specific communication elements expected"}
+
     overlap = draft_tokens & expected
-    if overlap:
+    coverage = len(overlap) / len(expected) if expected else 0
+
+    if coverage >= 0.6:
         return {
             "status": "ALIGNED",
             "note": f"Communication elements present ({', '.join(sorted(overlap))})",
         }
+    elif coverage >= 0.2:
+        missing = expected - draft_tokens
+        present = sorted(overlap)
+        return {
+            "status": "PARTIAL",
+            "note": f"Partially aligned: mentions {', '.join(present)} but lacks {', '.join(sorted(missing)[:3])}",
+        }
     else:
+        missing = expected - draft_tokens
         return {
             "status": "DEVIATES",
-            "note": f"Missing communication elements: {', '.join(sorted(expected)[:5])}",
+            "note": f"Missing communication elements: {', '.join(sorted(missing)[:5])}",
         }
 
 
@@ -165,7 +206,7 @@ def mantis_contrast(task: str, draft: str, patterns: list) -> dict:
         patterns: list of pattern dicts (from selector)
 
     Returns:
-        Contrast Packet dict
+        Contrast Packet dict with alignment_score (0–100)
     """
     observations = []
     risk_flags = []
@@ -187,11 +228,18 @@ def mantis_contrast(task: str, draft: str, patterns: list) -> dict:
         if "risk_flag" in result:
             risk_flags.append(result["risk_flag"])
 
-    # Count aligned vs deviates
+    # Count by status
     aligned = sum(1 for o in observations if o["status"] == "ALIGNED")
+    partial = sum(1 for o in observations if o["status"] == "PARTIAL")
     deviates = sum(1 for o in observations if o["status"] == "DEVIATES")
 
-    # Severity rules
+    # Alignment score (0–100)
+    alignment_score = calculate_alignment_score(observations)
+
+    # Severity rules (v0.2):
+    # constraint violation or risk flag → HIGH
+    # alignment_score < 50 → MEDIUM
+    # else → LOW
     has_constraint_deviation = any(
         o["status"] == "DEVIATES"
         for o, p in zip(observations, patterns)
@@ -201,7 +249,7 @@ def mantis_contrast(task: str, draft: str, patterns: list) -> dict:
 
     if has_constraint_deviation or has_risk_flag:
         severity = "high"
-    elif deviates > 0:
+    elif alignment_score < 50:
         severity = "medium"
     else:
         severity = "low"
@@ -212,9 +260,11 @@ def mantis_contrast(task: str, draft: str, patterns: list) -> dict:
         "observations": observations,
         "summary": {
             "aligned": aligned,
+            "partial": partial,
             "deviates": deviates,
             "risk_flags": risk_flags,
         },
+        "alignment_score": alignment_score,
         "severity": severity,
         "non_authoritative": True,
     }
