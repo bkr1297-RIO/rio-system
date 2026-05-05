@@ -1,6 +1,19 @@
-# RIO System — Governed Intelligence Runtime
+# RIO System — Non-Authoritative Pattern Awareness Runtime
 
-A modular system for observing, shaping, and governing AI-driven actions before execution, while preserving human authority.
+> **This repository is not the canonical RIO protocol and is not the full RIO execution runtime.** It is the non-authoritative observation and pattern-awareness subsystem that supports RIO-governed action. The canonical protocol source of truth lives in [bkr1297-RIO/rio-protocol](https://github.com/bkr1297-RIO/rio-protocol).
+
+A modular system for observing, shaping, and surfacing patterns before execution, while preserving human authority.
+
+---
+
+## Canonical Source of Truth
+
+| Repository | Role |
+|------------|------|
+| [bkr1297-RIO/rio-protocol](https://github.com/bkr1297-RIO/rio-protocol) | Canonical protocol source of truth |
+| **bkr1297-RIO/rio-system** (this repo) | Observation / MANTIS / pattern-awareness runtime |
+| [bkr1297-RIO/rio-receipt-protocol](https://github.com/bkr1297-RIO/rio-receipt-protocol) | Local receipt/proof engine |
+| bkr1297-RIO/rio-proxy | Governed execution runtime implementation |
 
 ---
 
@@ -18,14 +31,14 @@ This repository contains the runtime layers that sit between a task and real-wor
 It provides:
 
 - pattern-based reference (what tends to happen)
-- real-time contrast (what’s happening now)
+- real-time contrast (what's happening now)
 - controlled surfacing (when to show it)
 - observation logging (what happened)
 - trend analysis (what repeats over time)
 
 All layers are non-authoritative.
 
-Execution and enforcement are handled separately by the RIO receipt protocol.
+This system does not approve, block, execute, or govern consequences. Execution and enforcement are handled separately by the RIO governed execution runtime.
 
 ---
 
@@ -194,6 +207,7 @@ This repository does not execute actions.
 - no policy engine
 - no UI
 - no automation of decisions
+- no governance consequence enforcement
 
 ---
 
