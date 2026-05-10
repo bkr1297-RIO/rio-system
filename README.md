@@ -1,19 +1,191 @@
-# RIO System — Non-Authoritative Pattern Awareness Runtime
+# RIO System
 
-> **This repository is not the canonical RIO protocol and is not the full RIO execution runtime.** It is the non-authoritative observation and pattern-awareness subsystem that supports RIO-governed action. The canonical protocol source of truth lives in [bkr1297-RIO/rio-protocol](https://github.com/bkr1297-RIO/rio-protocol).
+**Observation and monitoring layer for governed AI execution.**
 
-A modular system for observing, shaping, and surfacing patterns before execution, while preserving human authority.
+This repository contains the pattern-awareness subsystem that helps surface relevant context before actions execute. It observes, compares, and surfaces — but it does not approve, block, or execute anything.
+
+> This is **part of the RIO system**, not the entire system. It handles observation. Other repositories handle governance, proof, and interface.
 
 ---
 
-## Canonical Source of Truth
+## What RIO Is
+
+RIO is a governed execution layer for AI systems. It sits between intelligent systems and real-world actions, ensuring that important actions cannot execute without authorization, policy checks, verification, and proof. Different repositories implement different parts of the system, including governance, receipts, observation, and interface layers.
+
+**The short version:**
+
+- AI proposes.
+- Humans approve when required.
+- RIO governs execution.
+- Receipts prove what happened.
+
+---
+
+## What This Repository Contains
+
+The pre-execution awareness layer. Before an action reaches the governance gate, this system answers:
+
+- "Does this match expected behavior?"
+- "What patterns are relevant here?"
+- "Is there risk that should be surfaced?"
+- "Is this a recurring pattern or a one-off?"
+
+It does **not** answer: "Should this execute?" — that decision belongs to the governance layer.
+
+All outputs are advisory. No component in this repository executes, approves, or blocks actions.
+
+---
+
+## How This Repo Fits Into the Larger System
 
 | Repository | Role |
 |------------|------|
-| [bkr1297-RIO/rio-protocol](https://github.com/bkr1297-RIO/rio-protocol) | Canonical protocol source of truth |
-| **bkr1297-RIO/rio-system** (this repo) | Observation / MANTIS / pattern-awareness runtime |
-| [bkr1297-RIO/rio-receipt-protocol](https://github.com/bkr1297-RIO/rio-receipt-protocol) | Local receipt/proof engine |
-| bkr1297-RIO/rio-proxy | Governed execution runtime implementation |
+| [rio-protocol](https://github.com/bkr1297-RIO/rio-protocol) | Canonical protocol specification |
+| [rio-receipt-protocol](https://github.com/bkr1297-RIO/rio-receipt-protocol) | Proof layer — local receipt engine |
+| **[rio-system](https://github.com/bkr1297-RIO/rio-system)** (this repo) | Observation and monitoring layer |
+| [language-intake-mvp](https://github.com/bkr1297-RIO/language-intake-mvp) | Language governance — crossing detection |
+
+---
+
+## System Flow
+
+```
+Task → Pattern Selection → Draft / Proposal → Contrast Check → Trigger Engine → Surface (optional) → Logging → Trend Analysis → Human Decision → RIO Governance → Execution
+```
+
+---
+
+## Core Layers
+
+### Pattern Corpus (Reference Layer)
+
+Stores validated patterns in an append-only format. Used to provide context for comparison — does not execute or decide.
+
+- Source: `/corpus/patterns.jsonl`
+- Contains: workflow, constraint, risk, and language patterns
+
+---
+
+### Selector
+
+Selects the most relevant patterns for a given task (max 5). Guarantees inclusion of at least one constraint and one risk pattern when available. Deterministic scoring.
+
+---
+
+### MANTIS (Contrast Engine)
+
+Compares current draft or action against selected patterns.
+
+Outputs:
+- ALIGNED
+- PARTIAL
+- DEVIATES
+
+Also computes alignment score, risk flags, and severity level.
+
+**MANTIS observes only. It does not act.**
+
+---
+
+### Trigger Engine
+
+Determines when contrast should be surfaced to the human.
+
+Trigger types:
+- T1 — Pre-action
+- T2 — Pre-commit
+- T3 — Risk detected
+- T4 — Constraint violation
+- T5 — Manual request
+
+Includes threshold filtering (avoids noise), quiet mode (no surface when high alignment), and deduplication.
+
+---
+
+### Surface Layer
+
+Formats contrast into human-readable output. Non-blocking, non-authoritative. Provides options — the user always decides.
+
+---
+
+### Logging (Observation Memory)
+
+Append-only record of all contrast events. Records task, severity, pattern IDs, trigger type, and whether surface was shown. Logging does not affect system behavior.
+
+---
+
+### Trend Detection (Behavior Over Time)
+
+Analyzes logs to identify drift, recurring patterns, risk frequency, and severity distribution. Read-only — does not modify system state.
+
+---
+
+## Design Principles
+
+### 1. Non-Authority
+
+No component in this repository executes, approves, or blocks actions. All outputs are advisory.
+
+### 2. Separation of Concerns
+
+| Layer | Role |
+|------|------|
+| Pattern Corpus | Memory of behavior |
+| MANTIS | Observation and contrast |
+| Trigger | Timing and surfacing decisions |
+| Logging | Event history |
+| Trends | Behavior analysis over time |
+| RIO Protocol (external) | Execution + proof |
+
+### 3. Fail-Closed Execution (External)
+
+Actual execution control is enforced by the RIO protocol. This repository does not execute actions.
+
+### 4. Append-Only Memory
+
+Patterns are append-only. Logs are append-only. No mutation of history.
+
+---
+
+## What This Repository Does NOT Do
+
+- No execution of real-world actions
+- No approval workflows
+- No policy engine
+- No user interface
+- No automation of decisions
+- No governance consequence enforcement
+
+---
+
+## Repository Structure
+
+```
+pattern-corpus/
+  corpus/
+    patterns.jsonl
+    pattern_index.json
+    rejected.jsonl
+  validator/
+    validate_pattern.py
+  selector/
+    select_patterns.py
+  generator/
+    generate_context.py
+  mantis/
+    mantis_contrast.py
+    trigger_engine.py
+    mantis_logger.py
+    trend_analyzer.py
+  mantis/logs/
+    observations.jsonl
+
+examples/
+  example_usage.md
+  mantis_example.md
+  mantis_logging_example.md
+  mantis_trends_example.md
+```
 
 ---
 
@@ -24,216 +196,6 @@ A modular system for observing, shaping, and surfacing patterns before execution
 
 ---
 
-## What This Is
-
-This repository contains the runtime layers that sit between a task and real-world execution.
-
-It provides:
-
-- pattern-based reference (what tends to happen)
-- real-time contrast (what's happening now)
-- controlled surfacing (when to show it)
-- observation logging (what happened)
-- trend analysis (what repeats over time)
-
-All layers are non-authoritative.
-
-This system does not approve, block, execute, or govern consequences. Execution and enforcement are handled separately by the RIO governed execution runtime.
-
----
-
-## System Flow
-
-text id="flow1" Task → Pattern Selection → Draft / Proposal → MANTIS Contrast → Trigger Engine → Surface (optional) → Logging → Trend Analysis → Human Decision → RIO Governance → Execution 
-
----
-
-## Core Layers
-
-### Pattern Corpus (Reference Layer)
-
-Stores validated patterns in an append-only format.
-
-- source: /corpus/patterns.jsonl
-- contains: workflow, constraint, risk, language patterns
-- used to provide context for comparison
-- does not execute or decide
-
----
-
-### Selector
-
-Selects the most relevant patterns per task.
-
-- max 5 patterns
-- guarantees inclusion of:
-  - at least one constraint (if present)
-  - at least one risk (if present)
-- deduplicates by pattern_id
-- deterministic scoring
-
----
-
-### MANTIS (Contrast Engine)
-
-Compares current draft or action against selected patterns.
-
-Outputs:
-
-- ALIGNED
-- PARTIAL
-- DEVIATES
-
-Also computes:
-
-- alignment score
-- risk flags
-- severity level
-
-MANTIS observes only. It does not act.
-
----
-
-### Trigger Engine
-
-Determines when contrast should be surfaced.
-
-Trigger types:
-
-- T1 — Pre-action
-- T2 — Pre-commit
-- T3 — Risk detected
-- T4 — Constraint violation
-- T5 — Manual request
-
-Includes:
-
-- threshold filtering (avoid noise)
-- quiet mode (no surface when high alignment)
-- deduplication (no repeated alerts)
-
----
-
-### Surface Layer
-
-Formats contrast into human-readable output.
-
-- non-blocking
-- non-authoritative
-- provides A/B/C options
-- user always decides
-
----
-
-### Logging (Observation Memory)
-
-Append-only record of all contrast events.
-
-- file: /mantis/logs/observations.jsonl
-- records:
-  - task
-  - severity
-  - pattern_ids
-  - trigger type
-  - surface shown or not
-
-Logging does not affect system behavior.
-
----
-
-### Trend Detection (Behavior Over Time)
-
-Analyzes logs to identify:
-
-- drift (how often deviations occur)
-- recurring patterns
-- risk frequency
-- severity distribution
-
-Manual invocation:
-
-python id="trend_call" analyze_trends(window_size=20) 
-
-Read-only. Does not modify system state.
-
----
-
-## Design Principles
-
-### 1. Non-Authority
-
-No component in this repository:
-- executes actions
-- approves actions
-- blocks actions
-
-All outputs are advisory.
-
----
-
-### 2. Separation of Concerns
-
-| Layer | Role |
-|------|------|
-| Pattern Corpus | memory of behavior |
-| MANTIS | observation |
-| Trigger | timing |
-| Logging | event history |
-| Trends | behavior analysis |
-| RIO Protocol | execution + proof |
-
----
-
-### 3. Fail-Closed Execution (External)
-
-Actual execution control is enforced by the RIO receipt protocol.
-
-This repository does not execute actions.
-
----
-
-### 4. Append-Only Memory
-
-- patterns are append-only
-- logs are append-only
-- no mutation of history
-
----
-
-## What This Repository Does NOT Do
-
-- no execution of real-world actions
-- no approval workflows
-- no policy engine
-- no UI
-- no automation of decisions
-- no governance consequence enforcement
-
----
-
-## Repository Structure
-
-text id="repo_tree" pattern-corpus/   corpus/     patterns.jsonl     pattern_index.json     rejected.jsonl    validator/     validate_pattern.py    selector/     select_patterns.py    generator/     generate_context.py    mantis/     mantis_contrast.py     trigger_engine.py     mantis_logger.py     trend_analyzer.py    mantis/logs/     observations.jsonl  examples/   example_usage.md   mantis_example.md   mantis_logging_example.md   mantis_trends_example.md 
-
----
-
-## How This Fits
-
-This system provides pre-execution awareness.
-
-It answers:
-
-- “Does this match expected behavior?”
-- “What is missing?”
-- “Is there risk?”
-- “Is this a pattern or a one-off?”
-
-It does not answer:
-
-- “Should this execute?”
-
----
-
-## One Line
+## One-Line Summary
 
 Observe before action. Decide before execution. Prove after.
