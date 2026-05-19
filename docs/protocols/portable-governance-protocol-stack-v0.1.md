@@ -12,9 +12,7 @@ This artifact candidate does **not** claim:
 
 - formal doctrine lock
 - source-of-truth lock
-- repo proof
-- repo commit
-- repo file creation
+- merge to `main`
 - runtime proof
 - cryptographic attestation
 - legal proof
@@ -24,7 +22,7 @@ This artifact candidate does **not** claim:
 - authority transfer
 - machine sovereignty
 
-This document is a repo-ready Markdown draft compiled from the clean Formal Artifact Candidate. It is reviewable and suitable for later repo preparation only if Brian explicitly authorizes that crossing.
+This file exists on a draft PR branch for review. Its presence in a draft PR is repo-visible preparation only. It does not mean the artifact is merged, source-of-truth, released, implemented, externally proven, or handed off.
 
 ## Purpose
 
@@ -49,7 +47,7 @@ MANTIS watches.
 
 Doctrine supplies the invariants. This stack translates them into protocol grammar, operational gates, receipt structure, promotion discipline, and role boundaries.
 
-Implementation, runtime proof, repo proof, attestation, and formal source-of-truth promotion are not claimed here.
+Implementation, runtime proof, merge to `main`, release, attestation, and formal source-of-truth promotion are not claimed here.
 
 ---
 
@@ -550,11 +548,12 @@ A conflict between active artifacts triggers `HOLD`.
 ### Repository File Destination Candidate
 
 - **Repository:** `bkr1297-RIO/rio-system`
-- **Branch:** `main`
+- **Base branch:** `main`
+- **Draft PR branch:** `docs/portable-governance-protocol-stack-v0.1`
 - **Path:** `docs/protocols/portable-governance-protocol-stack-v0.1.md`
-- **Status:** declared for future repo review only
-- **Repo commit:** false
-- **Repo file created:** false
+- **Status:** present on draft PR branch for review only
+- **Merged to `main`:** false
+- **Source-of-truth promoted:** false
 
 ### Release Bundle Destination Candidate
 
@@ -579,7 +578,7 @@ It does not cross it.
 
 ```text
 A repository path points the build lane.
-It does not create the file, commit the file, or prove the file exists.
+Presence on a draft PR branch does not merge the file, promote it to source-of-truth, or prove runtime implementation.
 ```
 
 ## Release Keeper
@@ -635,14 +634,14 @@ ONE/RIO/MUSS produces oriented, governed, receiptable output.
 
 # Close State
 
-This Markdown draft is prepared for the declared future path:
+This Markdown file has been prepared at the declared repository path on a draft PR branch:
 
 ```text
 docs/protocols/portable-governance-protocol-stack-v0.1.md
 ```
 
-This draft does not create or modify that path. It is not committed, not promoted, not published, not runtime-implemented, and not handed to Manny.
+This PR does not merge the file into `main`, promote it to source-of-truth, publish a release, implement runtime behavior, create cryptographic attestation, create legal proof, or hand the artifact to Manny.
 
 Next recommended action:
 
-> Review this repo-ready Markdown draft, then decide whether to authorize creation of a GitHub branch and PR preparation.
+> Review this draft PR, apply claim-boundary corrections if needed, then decide whether to mark the PR ready for review.
