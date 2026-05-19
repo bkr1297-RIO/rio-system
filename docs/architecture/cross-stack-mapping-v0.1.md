@@ -174,19 +174,145 @@ This mapping connects directly to:
 - MANTIS / Relationship Coherence Monitor — witness-only pattern observation.
 - MUS Quantum Adapter — substrate capability made governable and receiptable.
 
+## Second Mapping: Foundation 9 to Five Engines
+
+This second mapping connects the foundation stack to the operational engine stack.
+
+Foundation 9:
+
+```text
+Human Authority
+Pause
+Sovereignty
+Protocols
+SOPs
+Agency
+Learning
+Receipts
+Ancient Pattern
+```
+
+Five Engines:
+
+```text
+Generating
+Governing
+Proof
+Witness
+Oddity
+```
+
+The Foundation 9 is a mixed stack. Its items are not all the same kind of object.
+
+| Foundation item | Type | Primary engine relation | Secondary relation | Mapping note |
+|---|---|---|---|---|
+| **Human Authority** | Source | Above all engines | Governing | The engines serve the human. No engine becomes authority. |
+| **Pause** | Operating principle | Governing | All engines | Pause creates the space where form, action, and consequence become governable. |
+| **Sovereignty** | Constitutional constraint | Governing | Proof | Sovereignty prevents substitution of model output, memory, access, or convergence for human authority. |
+| **Protocols** | Exchange mechanism | Generating + Governing | Proof | Protocols structure how signal becomes packet, how packet becomes governable, and how events become receiptable. |
+| **SOPs** | Repeatable handling | Governing | Witness | SOPs make repeated handling predictable, reviewable, and observable. |
+| **Agency** | Source of motion | Generating | Governing | Agency supplies human-initiated motion; governance ensures motion remains bounded. |
+| **Learning** | Evolution / refinement | Witness | Oddity + Generating | Learning emerges through observed turns, anomalies, feedback, and refinement. |
+| **Receipts** | Proof discipline | Proof | Witness | Receipts prove what happened and provide trace for review, memory, and pattern observation. |
+| **Ancient Pattern** | Lineage / context | Oddity | Witness | Ancient Pattern is not an engine command; it is context for recognizing recurring structure without overclaiming proof. |
+
+## Engine-Centered View
+
+The same mapping can be read from the engine side.
+
+| Engine | Foundation supports |
+|---|---|
+| **Generating** | Agency, Protocols, Learning |
+| **Governing** | Pause, Sovereignty, Protocols, SOPs, Human Authority |
+| **Proof** | Receipts, Protocols, Sovereignty |
+| **Witness** | Learning, SOPs, Receipts, Ancient Pattern |
+| **Oddity** | Ancient Pattern, Learning, anomaly detection, emergence without collapse |
+
+## What This Mapping Reveals
+
+The Foundation 9 contains multiple types of architectural information.
+
+```text
+Source: Human Authority, Agency
+Operating principle: Pause
+Constraint: Sovereignty
+Mechanism: Protocols, SOPs
+Evolution: Learning
+Proof: Receipts
+Lineage / context: Ancient Pattern
+```
+
+This means the Foundation 9 should not be treated as nine peer modules. It is a foundation stack with mixed roles.
+
+The Five Engines are closer to runtime surfaces. They receive, govern, prove, witness, and detect emergence.
+
+Important structural observations:
+
+- **Human Authority** sits above all engines. It is the source, not an engine.
+- **Pause** concentrates in the Governing Engine but distributes across all engines.
+- **Protocols** bridge Generating, Governing, and Proof.
+- **SOPs** bridge Governing and Witness.
+- **Receipts** are the cleanest Foundation 9 to engine mapping: Receipts map directly to the Proof Engine.
+- **Learning** belongs primarily to Witness but feeds back into Generating and Oddity.
+- **Ancient Pattern** belongs in lineage/context and helps Oddity notice recurrence without turning recurrence into proof.
+
+Keeper:
+
+> Foundation names what must be preserved. Engines name how the system operates.
+
+## Non-Collapse Implications for Foundation 9 and Five Engines
+
+This mapping prevents several collapses.
+
+```text
+Human Authority is not an engine.
+Ancient Pattern is not proof.
+Learning is not permission.
+Protocols are not consent.
+SOPs are not authority.
+Receipts are not future authorization.
+Pause is not paralysis.
+Oddity is not doctrine.
+```
+
+The mapping also clarifies why no single engine can hold the whole architecture.
+
+```text
+Generating without Governing = unbounded production.
+Governing without Pause = brittle control.
+Proof without Receipts = assertion without evidence.
+Witness without Sovereignty = observation drift.
+Oddity without Formation-to-Proof discipline = pattern inflation.
+```
+
+## Updated Runtime Compression
+
+```text
+Human Authority initiates.
+Pause orients.
+Agency moves.
+Protocols packetize.
+SOPs stabilize.
+RIO governs.
+MUS proves.
+MANTIS witnesses.
+Learning refines.
+Ancient Pattern contextualizes.
+The human returns.
+```
+
 ## Candidate Next Mappings
 
 Do not map every stack at once. Next mapping candidates:
 
-1. **Foundation 9 ↔ Five Engines** — best for architecture clarification.
-2. **Sovereign Turn ↔ Mirror / Gate / Proof** — best for runtime explanation.
-3. **Foundation 9 ↔ Core Primitives** — best for foundation consolidation.
-4. **Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh** — best for memory and authority discipline.
-5. **Tier 1A–1D ↔ Triadic Registers** — best for sovereignty / topology / proof / collective pattern mapping.
+1. **Sovereign Turn ↔ Mirror / Gate / Proof** — best for runtime explanation.
+2. **Foundation 9 ↔ Core Primitives** — best for foundation consolidation.
+3. **Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh** — best for memory and authority discipline.
+4. **Tier 1A–1D ↔ Triadic Registers** — best for sovereignty / topology / proof / collective pattern mapping.
 
 Recommended next mapping:
 
-> Foundation 9 ↔ Five Engines
+> Sovereign Turn ↔ Mirror / Gate / Proof
 
 ## Keeper Lines
 
@@ -195,3 +321,4 @@ Recommended next mapping:
 - Concepts that recur across stacks are architectural evidence, not automatic proof.
 - The architecture is one in purpose, many in view, and governed by the connections between views.
 - Body brings signal. Mirror reflects it. Mind structures meaning. Gate governs it. Field contextualizes. Proof / Witness preserves it. The human returns.
+- Foundation names what must be preserved. Engines name how the system operates.
