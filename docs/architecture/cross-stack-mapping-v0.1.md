@@ -404,18 +404,153 @@ Short keeper:
 
 > A Sovereign Turn is complete only when the human returns with proof of what crossed.
 
+## Fourth Mapping: Foundation 9 to Core Primitives
+
+This fourth mapping connects the foundation stack to the candidate core primitive set.
+
+The goal is foundation consolidation: identify which primitives instantiate which foundational commitments.
+
+Foundation 9:
+
+```text
+Human Authority
+Pause
+Sovereignty
+Protocols
+SOPs
+Agency
+Learning
+Receipts
+Ancient Pattern
+```
+
+Candidate core primitives:
+
+```text
+Human Authority
+Personal Constitution
+Mirror
+Formation Pause
+Grammar
+Packet / Envelope
+Scope
+RIO Gate
+Sentinel / Match Check
+Receipt / MUS
+Witness / MANTIS
+Revocation
+Return
+Sovereign Turn
+```
+
+This is a candidate set, not a final count. Some items may consolidate later. For example, Sentinel / Match Check may remain under RIO, and Sovereign Turn may be treated as a unit of movement rather than a primitive.
+
+| Foundation item | Primary primitive relation | Secondary primitive relation | Mapping note |
+|---|---|---|---|
+| **Human Authority** | Human Authority | Personal Constitution, Scope, Return | Human Authority is both a foundation source and a primitive that must be preserved at runtime. |
+| **Pause** | Formation Pause | RIO Gate, Return, Sovereign Turn | Pause appears as operating principle, formation primitive, consequence gate, and turn-completion discipline. |
+| **Sovereignty** | Personal Constitution | Scope, Revocation, RIO Gate | Sovereignty becomes runtime-governable through declared user rules, bounded scope, and revocable authority. |
+| **Protocols** | Packet / Envelope | Grammar, Receipt / MUS, Sentinel | Protocols become executable through bounded packets, non-collapse semantics, proof shape, and match checking. |
+| **SOPs** | RIO Gate | Sentinel / Match Check, Receipt / MUS, Witness / MANTIS | SOPs make governance repeatable, execution checkable, and outcomes reviewable. |
+| **Agency** | Human Authority | Packet / Envelope, Return, Formation Pause | Agency initiates movement; packetization and return keep movement human-led. |
+| **Learning** | Witness / MANTIS | Receipt / MUS, Sovereign Turn, Grammar | Learning emerges from witnessed turns, receipted events, and refined non-collapse semantics. |
+| **Receipts** | Receipt / MUS | Witness / MANTIS, RIO Gate, Revocation | Receipts prove events, support review, and help future governance without granting future authority. |
+| **Ancient Pattern** | Grammar | Witness / MANTIS, Mirror, Formation Pause | Ancient Pattern provides lineage/context and recurring topology, but does not become proof or authority. |
+
+## Primitive-Centered View
+
+The same mapping can be read from the candidate primitive side.
+
+| Core primitive | Foundation support |
+|---|---|
+| **Human Authority** | Human Authority, Agency, Sovereignty |
+| **Personal Constitution** | Sovereignty, Human Authority, Protocols |
+| **Mirror** | Agency, Ancient Pattern, Learning |
+| **Formation Pause** | Pause, Sovereignty, Learning |
+| **Grammar** | Protocols, Ancient Pattern, Learning |
+| **Packet / Envelope** | Protocols, Agency, SOPs |
+| **Scope** | Sovereignty, Human Authority, SOPs |
+| **RIO Gate** | Pause, Sovereignty, SOPs |
+| **Sentinel / Match Check** | SOPs, Protocols, Receipts |
+| **Receipt / MUS** | Receipts, Protocols, Sovereignty |
+| **Witness / MANTIS** | Learning, Receipts, Ancient Pattern |
+| **Revocation** | Sovereignty, Receipts, Human Authority |
+| **Return** | Human Authority, Agency, Learning |
+| **Sovereign Turn** | Pause, Agency, Learning, Receipts |
+
+## What This Mapping Reveals
+
+The Foundation 9 contains commitments. Core primitives are how those commitments become operational.
+
+```text
+Foundation = what must be preserved.
+Primitive = what performs the preservation.
+```
+
+This mapping also shows why the primitive count should not be locked too early.
+
+- Some primitives are clearly independent: Human Authority, Mirror, RIO Gate, Receipt, Return.
+- Some may be nested: Sentinel may be part of RIO or a distinct match-check primitive.
+- Some may be units rather than primitives: Sovereign Turn may be the unit of movement rather than an atomic primitive.
+- Some are constitutional containers: Personal Constitution and Scope may remain distinct or partially merge depending on runtime design.
+
+Recommended stance:
+
+> Treat the core primitive set as candidate-stable, not count-locked.
+
+## Non-Collapse Implications for Foundation 9 and Core Primitives
+
+```text
+Foundation is not runtime by itself.
+Primitive is not authority by itself.
+Human Authority is not interchangeable with Personal Constitution.
+Personal Constitution is not current execution consent unless scope says so.
+Scope is not permanent permission.
+Packet is not action.
+Grammar is not proof.
+Receipt is not future authorization.
+Witness is not judgment.
+Sovereign Turn is not complete without return.
+Ancient Pattern is not doctrine.
+```
+
+This mapping preserves the difference between source, rule, motion, proof, and memory.
+
+## Foundation-to-Primitive Compression
+
+```text
+Human Authority sources.
+Personal Constitution declares.
+Mirror reflects.
+Formation Pause orients.
+Grammar differentiates.
+Packet bounds.
+Scope limits.
+RIO governs.
+Sentinel matches.
+MUS receipts.
+MANTIS witnesses.
+Revocation withdraws.
+Return completes.
+Sovereign Turn measures.
+```
+
+Short keeper:
+
+> Foundation names the commitments. Primitives perform them. The turn proves whether they held.
+
 ## Candidate Next Mappings
 
 Do not map every stack at once. Next mapping candidates:
 
-1. **Foundation 9 ↔ Core Primitives** — best for foundation consolidation.
-2. **Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh** — best for memory and authority discipline.
-3. **Tier 1A–1D ↔ Triadic Registers** — best for sovereignty / topology / proof / collective pattern mapping.
-4. **Sovereign Turn ↔ Five Engines** — best for operational distribution.
+1. **Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh** — best for memory and authority discipline.
+2. **Tier 1A–1D ↔ Triadic Registers** — best for sovereignty / topology / proof / collective pattern mapping.
+3. **Sovereign Turn ↔ Five Engines** — best for operational distribution.
+4. **Core Primitives ↔ Governance Starter Harness** — best for implementation alignment.
 
 Recommended next mapping:
 
-> Foundation 9 ↔ Core Primitives
+> Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh
 
 ## Keeper Lines
 
@@ -427,3 +562,4 @@ Recommended next mapping:
 - Foundation names what must be preserved. Engines name how the system operates.
 - Most of the turn is not action. Most of the turn is reflection, orientation, governance, proof, and return.
 - A Sovereign Turn is complete only when the human returns with proof of what crossed.
+- Foundation names the commitments. Primitives perform them. The turn proves whether they held.
