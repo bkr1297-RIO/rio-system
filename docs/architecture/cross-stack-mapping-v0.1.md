@@ -301,18 +301,121 @@ Ancient Pattern contextualizes.
 The human returns.
 ```
 
+## Third Mapping: Sovereign Turn to Mirror / Gate / Proof
+
+This third mapping connects the runtime unit of movement to the three primary governance functions.
+
+Sovereign Turn:
+
+```text
+1. Human signal
+2. Mirror reflection
+3. Personal Constitution check
+4. Packet / Envelope
+5. Pause / Commit
+6. RIO decision
+7. Action / Hold / Block
+8. MUS receipt
+9. Ledger / MANTIS memory
+10. Return to human
+```
+
+Mirror / Gate / Proof:
+
+```text
+Mirror = continuous reflection
+Gate = discrete governance of consequence
+Proof = verification, memory, and return
+```
+
+| Sovereign Turn step | Primary function | Mirror / Gate / Proof mapping | Note |
+|---|---|---|---|
+| 1. Human signal | Source | Before Mirror | The human initiates. Signal does not originate as machine authority. |
+| 2. Mirror reflection | Reflection | Mirror | Signal is reflected, clarified, and made visible. |
+| 3. Personal Constitution check | Boundary/context | Mirror -> Gate bridge | User-declared rules, values, and scope begin constraining interpretation. |
+| 4. Packet / Envelope | Bounded form | Mirror -> Gate bridge | The signal becomes bounded enough to evaluate without becoming action. |
+| 5. Pause / Commit | Orientation | Gate | Pause determines whether form may harden and whether commitment is present. |
+| 6. RIO decision | Governance | Gate | RIO determines admissibility and consequence permissions. |
+| 7. Action / Hold / Block | Outcome routing | Gate -> Proof bridge | The governed outcome either acts, holds, blocks, or returns. |
+| 8. MUS receipt | Verification | Proof | The meaningful event/crossing is proved. |
+| 9. Ledger / MANTIS memory | Witness memory | Proof / Witness | The event is preserved for review, pattern detection, and learning. |
+| 10. Return to human | Completion | Proof -> Source | The turn completes only when authority returns to the human. |
+
+## Distribution Pattern
+
+The ten-step Sovereign Turn distributes across Mirror / Gate / Proof as an approximate `4-3-3` pattern.
+
+```text
+Mirror: 1-4
+Gate:   5-7
+Proof:  8-10
+```
+
+This distribution is not a rigid law. It is an architectural reading.
+
+It suggests that most of the work happens before consequence:
+
+- Mirror receives, reflects, checks declared user context, and forms the packet.
+- Gate orients, decides, and routes.
+- Proof verifies, preserves, and returns.
+
+Keeper:
+
+> Most of the turn is not action. Most of the turn is reflection, orientation, governance, proof, and return.
+
+## Non-Collapse Implications for the Sovereign Turn
+
+```text
+Human signal is not machine authority.
+Reflection is not approval.
+Personal Constitution is not current execution consent unless scope says so.
+Packet is not action.
+Pause is not paralysis.
+RIO decision is not proof.
+Action is not valid without match and receipt where required.
+Receipt is not future authorization.
+Ledger memory is not current scope.
+Return is not optional.
+```
+
+This mapping clarifies why the turn must complete.
+
+If the system acts without proof, the turn breaks.
+If the system proves without returning, authority does not re-ground.
+If the system reflects without gating, interpretation becomes unbounded.
+If the system gates without reflection, control becomes blind.
+
+## Sovereign Turn Compression
+
+```text
+Signal enters.
+Mirror clarifies.
+Constitution bounds.
+Packet forms.
+Pause orients.
+RIO governs.
+Outcome routes.
+MUS proves.
+MANTIS remembers.
+Human returns.
+```
+
+Short keeper:
+
+> A Sovereign Turn is complete only when the human returns with proof of what crossed.
+
 ## Candidate Next Mappings
 
 Do not map every stack at once. Next mapping candidates:
 
-1. **Sovereign Turn ↔ Mirror / Gate / Proof** — best for runtime explanation.
-2. **Foundation 9 ↔ Core Primitives** — best for foundation consolidation.
-3. **Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh** — best for memory and authority discipline.
-4. **Tier 1A–1D ↔ Triadic Registers** — best for sovereignty / topology / proof / collective pattern mapping.
+1. **Foundation 9 ↔ Core Primitives** — best for foundation consolidation.
+2. **Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh** — best for memory and authority discipline.
+3. **Tier 1A–1D ↔ Triadic Registers** — best for sovereignty / topology / proof / collective pattern mapping.
+4. **Sovereign Turn ↔ Five Engines** — best for operational distribution.
 
 Recommended next mapping:
 
-> Sovereign Turn ↔ Mirror / Gate / Proof
+> Foundation 9 ↔ Core Primitives
 
 ## Keeper Lines
 
@@ -322,3 +425,5 @@ Recommended next mapping:
 - The architecture is one in purpose, many in view, and governed by the connections between views.
 - Body brings signal. Mirror reflects it. Mind structures meaning. Gate governs it. Field contextualizes. Proof / Witness preserves it. The human returns.
 - Foundation names what must be preserved. Engines name how the system operates.
+- Most of the turn is not action. Most of the turn is reflection, orientation, governance, proof, and return.
+- A Sovereign Turn is complete only when the human returns with proof of what crossed.
