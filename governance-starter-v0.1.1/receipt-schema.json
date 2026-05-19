@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://one-rio-muss.dev/schemas/receipt.schema.json",
+  "title": "ONE/RIO/MUSS Receipt",
+  "type": "object",
+  "required": [
+    "receipt_id",
+    "timestamp",
+    "principal",
+    "session_id",
+    "request_hash",
+    "tool",
+    "backend",
+    "policy_verdict",
+    "consequence_class",
+    "data_class",
+    "approval_satisfied",
+    "governance_state",
+    "receipt_hash",
+    "signature"
+  ],
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "principal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "session_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "request_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "layer": {
+      "type": "string",
+      "default": "governance_boundary"
+    },
+    "requested_action": {
+      "type": "string"
+    },
+    "tool": {
+      "type": "string"
+    },
+    "backend": {
+      "type": "string"
+    },
+    "backend_mode": {
+      "type": "string",
+      "enum": [
+        "classical_only",
+        "simulator",
+        "least_busy_qpu",
+        "named_backend"
+      ]
+    },
+    "policy_verdict": {
+      "type": "string",
+      "enum": [
+        "ALLOW_INTERNAL",
+        "ALLOW_WITH_RECEIPT",
+        "PREAUTHORIZED_EXTERNAL",
+        "REQUIRE_HUMAN_APPROVAL",
+        "DENY"
+      ]
+    },
+    "execution_allowed": {
+      "type": "boolean"
+    },
+    "approval_satisfied": {
+      "type": "boolean"
+    },
+    "governance_state": {
+      "type": "string",
+      "enum": [
+        "INTERNAL_ONLY_EXECUTION",
+        "APPROVED_WITH_RECEIPT",
+        "APPROVED_BY_PREAUTH",
+        "AWAITING_HUMAN_APPROVAL",
+        "APPROVED_AFTER_HUMAN_REVIEW",
+        "DENIED"
+      ]
+    },
+    "execution_token_id": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "result_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "data_class": {
+      "type": "string",
+      "enum": [
+        "public",
+        "internal",
+        "sensitive",
+        "regulated"
+      ]
+    },
+    "consequence_class": {
+      "type": "string",
+      "enum": [
+        "none",
+        "low",
+        "medium",
+        "high"
+      ]
+    },
+    "approved_by": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "reason": {
+      "type": "string"
+    },
+    "receipt_hash": {
+      "type": "string",
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "previous_receipt_hash": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[A-Fa-f0-9]{64}$"
+    },
+    "signature": {
+      "type": "string"
+    },
+    "public_key": {
+      "type": [
+        "string",
+        "null"
+      ]
+    }
+  },
+  "additionalProperties": false
+}
