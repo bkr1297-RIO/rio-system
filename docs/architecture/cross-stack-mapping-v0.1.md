@@ -539,18 +539,167 @@ Short keeper:
 
 > Foundation names the commitments. Primitives perform them. The turn proves whether they held.
 
+## Fifth Mapping: Six Source-of-Truth Layers to Personal Constitution to Mirror Mesh
+
+This fifth mapping connects memory and authority discipline.
+
+Six Source-of-Truth Layers:
+
+```text
+1. Core Constitution
+2. Personal Constitution
+3. Receipt Ground Truth
+4. Governed Corpus
+5. Live Context
+6. Model Reasoning / Reasoning-as-Signal
+```
+
+Personal Constitution is the user-authored, revocable layer declaring values, boundaries, preferences, consent scope, memory boundaries, and revocation rights. It sits in the user layer of the source-of-truth stack. It outranks model reasoning but remains subordinate to the Core Constitution.
+
+Mirror Mesh is the configurable set of role-mirrors that may reflect body, mind, field, governance, architecture, meaning, reasoning, or other functions. Mirror roles are configurable. Models may occupy roles, but no model or mirror becomes authority.
+
+## Source-of-Truth Precedence
+
+| Layer | Role | Authority weight | Mirror Mesh relation |
+|---|---|---|---|
+| **1. Core Constitution** | Non-negotiable invariants | Highest | All mirrors must respect it. No mirror can override it. |
+| **2. Personal Constitution** | User-declared rules, values, boundaries, consent scope, memory boundaries, revocation rights | User-specific authority layer | Mirrors reflect within it and check against it before shaping meaning. |
+| **3. Receipt Ground Truth** | What actually happened and was proved | Event/proof layer | Mirrors may reference receipts as evidence of events, not future authorization. |
+| **4. Governed Corpus** | Approved docs, doctrine, policies, specs, test cases, and known architecture artifacts | Curated knowledge layer | Mirrors may cite and compare against it, but must preserve version/status. |
+| **5. Live Context** | Current session, present request, environment, timing, and immediate human signal | Situational layer | Mirrors use it to orient the current turn, but it does not override higher layers. |
+| **6. Model Reasoning / Reasoning-as-Signal** | Model inference, synthesis, prediction, uncertainty, and recommendation | Lowest weight | Mirrors may use it as signal only; it is never authority, proof, or scope. |
+
+## Personal Constitution as User Layer
+
+Personal Constitution is the point where system-wide governance becomes user-specific without becoming arbitrary.
+
+It declares:
+
+- user values,
+- boundaries,
+- preferences,
+- consent scope,
+- memory boundaries,
+- revocation rights,
+- preferred register / meaning grammar,
+- and session-specific sovereignty rules.
+
+It does not override the Core Constitution.
+
+It does override:
+
+- model reasoning,
+- stale memory claims,
+- inferred preferences,
+- unverified mirror synthesis,
+- and unsupported corpus interpretation.
+
+Keeper:
+
+> Personal Constitution localizes sovereignty without replacing the Core Constitution.
+
+## Mirror Mesh as Reflection Layer
+
+Mirror Mesh does not create source-of-truth. It routes reflection through source-of-truth precedence.
+
+A role-mirror may help with:
+
+- body / somatic reflection,
+- mind / architecture reflection,
+- field / meaning reflection,
+- governance review,
+- proof review,
+- contradiction detection,
+- or oddity / anomaly surfacing.
+
+But every mirror remains bounded:
+
+```text
+Mirror output is signal.
+Mirror output is not authority.
+Mirror output is not proof.
+Mirror output is not current scope.
+Mirror output is not consent.
+```
+
+## Mapping Table
+
+| Source-of-truth layer | Personal Constitution relationship | Mirror Mesh relationship | Non-collapse rule |
+|---|---|---|---|
+| **Core Constitution** | Constrains Personal Constitution | Mirrors must obey | Core Constitution is not user preference. |
+| **Personal Constitution** | Defines current user's declared rules | Mirrors reflect through it | Personal Constitution is not execution consent unless scope says so. |
+| **Receipt Ground Truth** | Provides verified event history for the user/session/system | Mirrors may reference as evidence | Receipt is not future authorization. |
+| **Governed Corpus** | Provides approved doctrine/spec/policy context | Mirrors may compare and cite | Corpus is not current consent. |
+| **Live Context** | Supplies current signal and session facts | Mirrors orient to the present turn | Live context is not durable authority by itself. |
+| **Model Reasoning** | Must defer to Personal Constitution and higher layers | Mirrors generate it, compare it, and label it as signal | Reasoning is signal, not source-of-truth. |
+
+## What This Mapping Reveals
+
+This mapping clarifies the difference between source, reflection, and authority.
+
+- Source-of-truth layers define precedence.
+- Personal Constitution localizes sovereignty.
+- Mirror Mesh reflects across configured roles.
+- Model reasoning remains signal.
+- Receipts prove events.
+- Live context situates the turn.
+
+Mirror Mesh makes the source-of-truth stack usable in interaction, but does not change the stack.
+
+Important structural observations:
+
+- **Personal Constitution** is the current user's sovereignty layer.
+- **Mirror Mesh** is a reflection topology, not an authority topology.
+- **Model Reasoning** is the lowest source-of-truth layer and must remain labeled as signal.
+- **Receipt Ground Truth** can prove what happened but cannot create future authority.
+- **Live Context** can clarify the present turn but cannot override constitutional or user-declared limits.
+- **Governed Corpus** can inform reflection but cannot substitute for current scope.
+
+## Non-Collapse Implications for Source-of-Truth and Mirror Mesh
+
+```text
+Core Constitution is not personal preference.
+Personal Constitution is not current execution consent unless scope says so.
+Receipt Ground Truth is not future authorization.
+Governed Corpus is not current consent.
+Live Context is not permanent authority.
+Model Reasoning is not source-of-truth.
+Mirror Mesh is not authority.
+Role mirror is not identity.
+Memory is not scope.
+Reflection is not approval.
+```
+
+## Source-to-Mirror Compression
+
+```text
+Core Constitution anchors.
+Personal Constitution declares.
+Receipts prove.
+Corpus informs.
+Live Context situates.
+Model Reasoning signals.
+Mirror Mesh reflects.
+RIO governs.
+Human authority remains primary.
+```
+
+Short keeper:
+
+> Source-of-truth orders what may be trusted. Personal Constitution localizes sovereignty. Mirror Mesh reflects without becoming authority.
+
 ## Candidate Next Mappings
 
 Do not map every stack at once. Next mapping candidates:
 
-1. **Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh** — best for memory and authority discipline.
-2. **Tier 1A–1D ↔ Triadic Registers** — best for sovereignty / topology / proof / collective pattern mapping.
-3. **Sovereign Turn ↔ Five Engines** — best for operational distribution.
-4. **Core Primitives ↔ Governance Starter Harness** — best for implementation alignment.
+1. **Tier 1A–1D ↔ Triadic Registers** — best for sovereignty / topology / proof / collective pattern mapping.
+2. **Sovereign Turn ↔ Five Engines** — best for operational distribution.
+3. **Core Primitives ↔ Governance Starter Harness** — best for implementation alignment.
+4. **Source-of-Truth Layers ↔ RIO Shield Rules** — best for user-policy enforcement alignment.
 
 Recommended next mapping:
 
-> Six Source-of-Truth Layers ↔ Personal Constitution ↔ Mirror Mesh
+> Tier 1A–1D ↔ Triadic Registers
 
 ## Keeper Lines
 
@@ -563,3 +712,4 @@ Recommended next mapping:
 - Most of the turn is not action. Most of the turn is reflection, orientation, governance, proof, and return.
 - A Sovereign Turn is complete only when the human returns with proof of what crossed.
 - Foundation names the commitments. Primitives perform them. The turn proves whether they held.
+- Source-of-truth orders what may be trusted. Personal Constitution localizes sovereignty. Mirror Mesh reflects without becoming authority.
