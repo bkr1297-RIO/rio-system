@@ -1,0 +1,294 @@
+[
+  {
+    "name": "internal research stays internal",
+    "invariant": "internal cognition may proceed without external consequence",
+    "request": {
+      "principal": "brian",
+      "requested_action": "research",
+      "tool_scope": "search",
+      "consequence_class": "none",
+      "data_class": "internal",
+      "approval_mode": "auto",
+      "scope": {
+        "workspace": "overnight"
+      }
+    },
+    "expected": {
+      "policy_verdict": "ALLOW_INTERNAL",
+      "execution_allowed": true,
+      "approval_satisfied": true,
+      "governance_state": "INTERNAL_ONLY_EXECUTION",
+      "receipt_required": false,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "language output is not authority",
+    "invariant": "language output is not authority",
+    "request": {
+      "principal": "brian",
+      "requested_action": "send_email",
+      "tool_scope": "email",
+      "consequence_class": "medium",
+      "data_class": "internal",
+      "approval_mode": "auto",
+      "authority_basis": "language_output",
+      "scope": {
+        "recipient": "external"
+      }
+    },
+    "expected": {
+      "policy_verdict": "REQUIRE_HUMAN_APPROVAL",
+      "execution_allowed": false,
+      "approval_satisfied": false,
+      "governance_state": "AWAITING_HUMAN_APPROVAL",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "confidence is not consent",
+    "invariant": "confidence is not consent",
+    "request": {
+      "principal": "brian",
+      "requested_action": "send_email",
+      "tool_scope": "email",
+      "consequence_class": "medium",
+      "data_class": "internal",
+      "approval_mode": "auto",
+      "confidence": 0.99,
+      "scope": {
+        "recipient": "external"
+      }
+    },
+    "expected": {
+      "policy_verdict": "REQUIRE_HUMAN_APPROVAL",
+      "execution_allowed": false,
+      "approval_satisfied": false,
+      "governance_state": "AWAITING_HUMAN_APPROVAL",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "memory is not scope",
+    "invariant": "memory is not scope",
+    "request": {
+      "principal": "brian",
+      "requested_action": "create_pr",
+      "tool_scope": "github",
+      "consequence_class": "low",
+      "data_class": "internal",
+      "approval_mode": "preauthorized",
+      "memory_claimed_scope": true
+    },
+    "expected": {
+      "policy_verdict": "DENY",
+      "execution_allowed": false,
+      "approval_satisfied": false,
+      "governance_state": "DENIED",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "receipt is not future authorization",
+    "invariant": "receipt is not future authorization",
+    "request": {
+      "principal": "brian",
+      "requested_action": "publish_post",
+      "tool_scope": "email",
+      "consequence_class": "high",
+      "data_class": "public",
+      "approval_mode": "auto",
+      "prior_receipt_present": true,
+      "scope": {
+        "channel": "public"
+      }
+    },
+    "expected": {
+      "policy_verdict": "REQUIRE_HUMAN_APPROVAL",
+      "execution_allowed": false,
+      "approval_satisfied": false,
+      "governance_state": "AWAITING_HUMAN_APPROVAL",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "quantum result is not execution permission",
+    "invariant": "quantum result is not execution permission",
+    "request": {
+      "principal": "brian",
+      "requested_action": "move_money",
+      "tool_scope": "crm",
+      "consequence_class": "high",
+      "data_class": "internal",
+      "approval_mode": "auto",
+      "quantum_result_present": true,
+      "scope": {
+        "amount": "1000"
+      }
+    },
+    "expected": {
+      "policy_verdict": "DENY",
+      "execution_allowed": false,
+      "approval_satisfied": false,
+      "governance_state": "DENIED",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "simulator quantum advisory with receipt",
+    "invariant": "simulator quantum task may be advisory-only with receipt",
+    "request": {
+      "principal": "brian",
+      "requested_action": "run_quantum_task",
+      "tool_scope": "qiskit_runtime",
+      "backend_mode": "simulator",
+      "consequence_class": "low",
+      "data_class": "internal",
+      "approval_mode": "auto",
+      "scope": {
+        "problem_type": "optimization",
+        "result_mode": "advisory"
+      }
+    },
+    "expected": {
+      "policy_verdict": "ALLOW_WITH_RECEIPT",
+      "execution_allowed": true,
+      "approval_satisfied": true,
+      "governance_state": "APPROVED_WITH_RECEIPT",
+      "receipt_required": true,
+      "advisory_only": true
+    }
+  },
+  {
+    "name": "hardware quantum requires explicit human approval",
+    "invariant": "hardware quantum task requires explicit human approval",
+    "request": {
+      "principal": "brian",
+      "requested_action": "run_quantum_task",
+      "tool_scope": "qiskit_runtime",
+      "backend_mode": "least_busy_qpu",
+      "consequence_class": "low",
+      "data_class": "internal",
+      "approval_mode": "auto",
+      "live_token_present": true,
+      "cost_limit": "medium",
+      "backend_selector": "least_busy",
+      "scope": {
+        "problem_type": "optimization"
+      }
+    },
+    "expected": {
+      "policy_verdict": "REQUIRE_HUMAN_APPROVAL",
+      "execution_allowed": false,
+      "approval_satisfied": false,
+      "governance_state": "AWAITING_HUMAN_APPROVAL",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "hardware quantum proceeds only with explicit human approval",
+    "invariant": "hardware quantum task requires explicit human approval",
+    "request": {
+      "principal": "brian",
+      "requested_action": "run_quantum_task",
+      "tool_scope": "qiskit_runtime",
+      "backend_mode": "least_busy_qpu",
+      "consequence_class": "low",
+      "data_class": "internal",
+      "approval_mode": "human_required",
+      "explicit_human_approval": true,
+      "live_token_present": true,
+      "cost_limit": "medium",
+      "backend_selector": "least_busy",
+      "scope": {
+        "problem_type": "optimization"
+      }
+    },
+    "expected": {
+      "policy_verdict": "REQUIRE_HUMAN_APPROVAL",
+      "execution_allowed": true,
+      "approval_satisfied": true,
+      "governance_state": "APPROVED_AFTER_HUMAN_REVIEW",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "credential use deny by default",
+    "invariant": "credential use and money movement deny by default",
+    "request": {
+      "principal": "brian",
+      "requested_action": "use_secret",
+      "tool_scope": "filesystem",
+      "consequence_class": "high",
+      "data_class": "sensitive",
+      "approval_mode": "auto",
+      "scope": {
+        "secret_name": "prod_api_key"
+      }
+    },
+    "expected": {
+      "policy_verdict": "DENY",
+      "execution_allowed": false,
+      "approval_satisfied": false,
+      "governance_state": "DENIED",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "money movement deny by default",
+    "invariant": "credential use and money movement deny by default",
+    "request": {
+      "principal": "brian",
+      "requested_action": "move_money",
+      "tool_scope": "crm",
+      "consequence_class": "high",
+      "data_class": "internal",
+      "approval_mode": "auto",
+      "scope": {
+        "amount": "500"
+      }
+    },
+    "expected": {
+      "policy_verdict": "DENY",
+      "execution_allowed": false,
+      "approval_satisfied": false,
+      "governance_state": "DENIED",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  },
+  {
+    "name": "preauthorized github low risk in allowlisted repo",
+    "invariant": "approved narrow external scope may be preauthorized",
+    "request": {
+      "principal": "brian",
+      "requested_action": "update_docs",
+      "tool_scope": "github",
+      "consequence_class": "low",
+      "data_class": "internal",
+      "approval_mode": "preauthorized",
+      "scope": {
+        "repo": "bkr1297-RIO/rio-system",
+        "path": "docs/overview.md",
+        "branch": "feature/governance-docs",
+        "default_branch": "main"
+      }
+    },
+    "expected": {
+      "policy_verdict": "PREAUTHORIZED_EXTERNAL",
+      "execution_allowed": true,
+      "approval_satisfied": true,
+      "governance_state": "APPROVED_BY_PREAUTH",
+      "receipt_required": true,
+      "advisory_only": false
+    }
+  }
+]
