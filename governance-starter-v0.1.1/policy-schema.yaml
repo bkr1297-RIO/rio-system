@@ -1,0 +1,180 @@
+version: 0.1.1
+system: one-rio-muss
+rule_precedence:
+  - DENY
+  - REQUIRE_HUMAN_APPROVAL
+  - PREAUTHORIZED_EXTERNAL
+  - ALLOW_WITH_RECEIPT
+  - ALLOW_INTERNAL
+
+policy_model:
+  principal_types:
+    - human
+    - service
+    - reviewer
+  approval_modes:
+    - auto
+    - preauthorized
+    - human_required
+  verdicts:
+    - ALLOW_INTERNAL
+    - ALLOW_WITH_RECEIPT
+    - PREAUTHORIZED_EXTERNAL
+    - REQUIRE_HUMAN_APPROVAL
+    - DENY
+  data_classes:
+    - public
+    - internal
+    - sensitive
+    - regulated
+  consequence_classes:
+    - none
+    - low
+    - medium
+    - high
+  backend_modes:
+    - simulator
+    - least_busy_qpu
+    - named_backend
+    - classical_only
+  tools:
+    - github
+    - email
+    - filesystem
+    - code_runner
+    - search
+    - qiskit_runtime
+    - crm
+    - calendar
+
+defaults:
+  missing_scope: DENY
+  missing_identity: DENY
+  missing_receipt_requirement: ALLOW_WITH_RECEIPT
+  quantum_default_backend: simulator
+  external_default: REQUIRE_HUMAN_APPROVAL
+
+policies:
+  - id: internal-research
+    description: Allow internal research and drafting with no external consequence.
+    when:
+      requested_action:
+        - research
+        - summarize
+        - draft
+        - compare
+        - simulate
+      tool_scope:
+        - search
+        - filesystem
+        - code_runner
+      consequence_class:
+        - none
+    verdict: ALLOW_INTERNAL
+    receipt_required: false
+
+  - id: stage-artifacts
+    description: Allow staging artifacts for later review.
+    when:
+      requested_action:
+        - create_draft
+        - generate_report
+        - prepare_commit
+        - export_bundle
+      consequence_class:
+        - low
+      data_class:
+        - public
+        - internal
+    verdict: ALLOW_WITH_RECEIPT
+    receipt_required: true
+
+  - id: github-preauth-low-risk
+    description: Allow low-risk GitHub writes in approved repos and paths.
+    when:
+      requested_action:
+        - create_pr
+        - update_docs
+        - create_issue_comment
+      tool_scope:
+        - github
+      consequence_class:
+        - low
+      data_class:
+        - public
+        - internal
+      approval_mode:
+        - preauthorized
+    conditions:
+      repo_allowlist:
+        - bkr1297-RIO/rio-system
+      path_prefix_allowlist:
+        - docs/
+        - architecture/
+        - examples/
+      branch_strategy:
+        - feature_branch_only
+    verdict: PREAUTHORIZED_EXTERNAL
+    receipt_required: true
+
+  - id: outbound-communication
+    description: Require a human before anything goes out to customers or the public.
+    when:
+      requested_action:
+        - send_email
+        - publish_post
+        - submit_form
+        - message_external_party
+      tool_scope:
+        - email
+        - crm
+      consequence_class:
+        - medium
+        - high
+    verdict: REQUIRE_HUMAN_APPROVAL
+    receipt_required: true
+
+  - id: quantum-simulator
+    description: Allow simulator-first quantum experimentation.
+    when:
+      requested_action:
+        - run_quantum_task
+      tool_scope:
+        - qiskit_runtime
+      backend_mode:
+        - simulator
+      consequence_class:
+        - none
+        - low
+    verdict: ALLOW_WITH_RECEIPT
+    receipt_required: true
+
+  - id: quantum-hardware-gated
+    description: Require explicit approval for hardware quantum jobs.
+    when:
+      requested_action:
+        - run_quantum_task
+      tool_scope:
+        - qiskit_runtime
+      backend_mode:
+        - least_busy_qpu
+        - named_backend
+    conditions:
+      require_live_token: true
+      require_cost_limit: true
+      require_backend_name_or_selector: true
+    verdict: REQUIRE_HUMAN_APPROVAL
+    receipt_required: true
+
+  - id: deny-credentials-and-money
+    description: Never allow unreviewed use of secrets or financial actions.
+    when:
+      requested_action:
+        - use_secret
+        - move_money
+        - purchase
+        - change_billing
+      consequence_class:
+        - high
+    verdict: DENY
+    receipt_required: true
