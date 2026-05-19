@@ -1,9 +1,9 @@
 # ONE/RIO/MUSS — Portable Governance Protocol Stack v0.1
 
-**Status:** Formal Artifact Candidate  
+**Status:** Formal Artifact Candidate / Repo Documentation Candidate  
 **Claim level:** Protocol / source-of-truth candidate preparation  
 **Human authority holder:** Brian Kent Rasmussen  
-**Declared repo destination candidate:** `bkr1297-RIO/rio-system / main / docs/protocols/portable-governance-protocol-stack-v0.1.md`  
+**Repository path:** `bkr1297-RIO/rio-system / main / docs/protocols/portable-governance-protocol-stack-v0.1.md`  
 **Declared release bundle candidate:** `portable-governance-protocol-stack-v0.1 / v0.1`
 
 ## Non-Claims
@@ -12,7 +12,6 @@ This artifact candidate does **not** claim:
 
 - formal doctrine lock
 - source-of-truth lock
-- merge to `main`
 - runtime proof
 - cryptographic attestation
 - legal proof
@@ -22,7 +21,7 @@ This artifact candidate does **not** claim:
 - authority transfer
 - machine sovereignty
 
-This file exists on a draft PR branch for review. Its presence in a draft PR is repo-visible preparation only. It does not mean the artifact is merged, source-of-truth, released, implemented, externally proven, or handed off.
+This file is present on `main` as repo documentation / protocol candidate material. Its presence in the repository is repo proof of file placement only. It does not make the artifact source-of-truth, released, implemented, externally proven, legally operative, cryptographically attested, or handed off.
 
 ## Purpose
 
@@ -47,7 +46,7 @@ MANTIS watches.
 
 Doctrine supplies the invariants. This stack translates them into protocol grammar, operational gates, receipt structure, promotion discipline, and role boundaries.
 
-Implementation, runtime proof, merge to `main`, release, attestation, and formal source-of-truth promotion are not claimed here.
+Implementation, runtime proof, release, attestation, and formal source-of-truth promotion are not claimed here.
 
 ---
 
@@ -548,11 +547,10 @@ A conflict between active artifacts triggers `HOLD`.
 ### Repository File Destination Candidate
 
 - **Repository:** `bkr1297-RIO/rio-system`
-- **Base branch:** `main`
-- **Draft PR branch:** `docs/portable-governance-protocol-stack-v0.1`
+- **Branch:** `main`
 - **Path:** `docs/protocols/portable-governance-protocol-stack-v0.1.md`
-- **Status:** present on draft PR branch for review only
-- **Merged to `main`:** false
+- **Status:** present on `main` as repo documentation / protocol candidate material
+- **Repo proof:** file placement on `main` only
 - **Source-of-truth promoted:** false
 
 ### Release Bundle Destination Candidate
@@ -578,7 +576,8 @@ It does not cross it.
 
 ```text
 A repository path points the build lane.
-Presence on a draft PR branch does not merge the file, promote it to source-of-truth, or prove runtime implementation.
+Presence on `main` proves file placement only.
+It does not make the file source-of-truth, runtime proof, release proof, or implementation proof.
 ```
 
 ## Release Keeper
@@ -634,14 +633,14 @@ ONE/RIO/MUSS produces oriented, governed, receiptable output.
 
 # Close State
 
-This Markdown file has been prepared at the declared repository path on a draft PR branch:
+This Markdown file is present at the declared repository path on `main` as repo documentation / protocol candidate material:
 
 ```text
 docs/protocols/portable-governance-protocol-stack-v0.1.md
 ```
 
-This PR does not merge the file into `main`, promote it to source-of-truth, publish a release, implement runtime behavior, create cryptographic attestation, create legal proof, or hand the artifact to Manny.
+Its presence on `main` proves file placement only. It does not promote the artifact to source-of-truth, publish a release, implement runtime behavior, create cryptographic attestation, create legal proof, or hand the artifact to Manny.
 
 Next recommended action:
 
-> Review this draft PR, apply claim-boundary corrections if needed, then decide whether to mark the PR ready for review.
+> Review this repo-visible documentation candidate, then decide whether to declare source-of-truth status, publish a release bundle, create a ledger record, or hand off to Manny in a separate authorized crossing.
