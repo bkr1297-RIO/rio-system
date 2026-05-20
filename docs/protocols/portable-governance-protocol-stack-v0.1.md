@@ -1,17 +1,36 @@
 # ONE/RIO/MUSS — Portable Governance Protocol Stack v0.1
 
-**Status:** Formal Artifact Candidate / Repo Documentation Candidate  
-**Claim level:** Protocol / source-of-truth candidate preparation  
+**Status:** Active Source-of-Truth — Protocol/Spec Bridge Layer  
+**Claim level:** Source-of-truth reference for protocol/spec bridge only  
 **Human authority holder:** Brian Kent Rasmussen  
 **Repository path:** `bkr1297-RIO/rio-system / main / docs/protocols/portable-governance-protocol-stack-v0.1.md`  
 **Declared release bundle candidate:** `portable-governance-protocol-stack-v0.1 / v0.1`
 
+## Source-of-Truth Scope
+
+This artifact is locked as the active source-of-truth for the **protocol/spec bridge layer** of the Portable Governance Protocol Stack v0.1.
+
+This source-of-truth scope covers:
+
+- Grounding Rule
+- Bondi/MANTIS role extraction
+- RIO admissibility boundary
+- MUS receipt boundary
+- Consent / Mode / Standing Delegation posture
+- Turn Kernel / Governed Turn Protocol
+- Action Consequence Levels
+- Test Harness
+- Promotion / Supersession posture
+- Matrix-to-Clearance Fence
+- MANTIS Baseline Non-Adjustment Fence
+
+Source-of-truth status governs reference. It does not prove runtime enforcement.
+
 ## Non-Claims
 
-This artifact candidate does **not** claim:
+This source-of-truth artifact does **not** claim:
 
-- formal doctrine lock
-- source-of-truth lock
+- formal doctrine lock beyond this protocol/spec bridge artifact
 - runtime proof
 - cryptographic attestation
 - legal proof
@@ -21,7 +40,7 @@ This artifact candidate does **not** claim:
 - authority transfer
 - machine sovereignty
 
-This file is present on `main` as repo documentation / protocol candidate material. Its presence in the repository is repo proof of file placement only. It does not make the artifact source-of-truth, released, implemented, externally proven, legally operative, cryptographically attested, or handed off.
+This file is present on `main` as the active protocol/spec bridge source-of-truth. Its presence in the repository is repo proof of file placement and source-of-truth designation for this artifact only. It does not mean the artifact is released, implemented, externally proven, legally operative, cryptographically attested, or handed off.
 
 ## Purpose
 
