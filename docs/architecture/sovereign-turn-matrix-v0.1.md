@@ -361,6 +361,45 @@ matrix_path:
 
 This gives the architecture a coordinate trace without requiring every low-stakes interaction to produce heavy receipt overhead.
 
+## Orientation Function
+
+The matrix orients intelligence before it becomes action.
+
+Orientation identifies:
+
+- context,
+- ambiguity,
+- knowns,
+- unknowns,
+- register,
+- scope,
+- consequence class,
+- authority state,
+- proof requirements,
+- and the relevant matrix coordinates.
+
+Orientation is not authority. It is the preparation that makes regulation, integration, operation, proof, and return proportionate.
+
+A system cannot regulate intelligently if it has not oriented. Without orientation, regulation becomes blind suppression and operation becomes ungrounded motion.
+
+Compression:
+
+```text
+Orient -> Regulate -> Integrate -> Operate -> Prove -> Return
+```
+
+RIO may still be expressed as:
+
+```text
+Regulate -> Integrate -> Operate
+```
+
+The matrix supplies the upstream orientation that lets RIO regulate, integrate, and operate under human authority.
+
+Keeper:
+
+> Orientation is not authority. Orientation makes governance proportionate.
+
 ## What the Matrix Produces
 
 Generic AI produces output.
@@ -391,6 +430,7 @@ Somatic data is not authority.
 Decision rationale is not hidden chain-of-thought.
 Contextual record is not interpretation.
 Matrix coordinate is not permission.
+Orientation is not authority.
 ```
 
 ## Public / Private Register Discipline
@@ -435,6 +475,7 @@ This document connects:
 Topology gives motion.
 Triad gives stability.
 Matrix gives coordinates.
+Orientation gives context.
 Sovereign Turn gives path.
 Receipt gives proof.
 Human return completes the turn.
@@ -446,6 +487,8 @@ Human return completes the turn.
 - The Sovereign Turn gives it motion.
 - The receipt proves what crossed.
 - The human returns.
+- The matrix orients intelligence before it becomes action.
+- Orientation is not authority. Orientation makes governance proportionate.
 - Generic AI produces output. ONE/RIO/MUSS produces oriented, governed, receiptable output.
 - Three registers x three functions = nine operational cells.
 - A Sovereign Turn is a path through the matrix.
