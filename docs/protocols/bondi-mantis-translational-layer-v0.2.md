@@ -1,17 +1,38 @@
 # Bondi/MANTIS Translational Layer v0.2
 
-**Status:** Companion Protocol Artifact Candidate  
-**Claim level:** Mapping / translation layer candidate  
+**Status:** Active Companion Source-of-Truth — Bondi/MANTIS Translational Layer  
+**Claim level:** Source-of-truth reference for Bondi/MANTIS translational layer under Portable Governance Protocol Stack v0.1  
 **Parent source-of-truth:** `docs/protocols/portable-governance-protocol-stack-v0.1.md`  
 **Architecture dependency:** `docs/architecture/sovereign-turn-matrix-v0.1.md`  
-**Intended repo path:** `docs/protocols/bondi-mantis-translational-layer-v0.2.md`  
+**Repository path:** `docs/protocols/bondi-mantis-translational-layer-v0.2.md`  
 **Human authority holder:** Brian Kent Rasmussen  
+
+## Source-of-Truth Scope
+
+This artifact is locked as the active companion source-of-truth for the **Bondi/MANTIS translational layer** under Portable Governance Protocol Stack v0.1.
+
+This source-of-truth scope covers:
+
+- Bondi translation and packetization role
+- Bondi orientation support
+- Bondi matrix-coordinate proposal rules
+- Bondi packet fields
+- MANTIS witness and recurrence role
+- MANTIS orientation drift observation
+- MANTIS matrix-path observation
+- MANTIS witness fields
+- Bondi/MANTIS non-collapse rules
+- Mapping to the 3x3 Sovereign Turn Matrix
+- Mapping to the Orientation Function
+- Mapping to the Sovereign Turn flow
+
+Companion source-of-truth status governs the translational layer. It does not create independent machine authority, runtime behavior, implementation proof, public release, legal proof, cryptographic attestation, or Manny handoff.
 
 ## Non-Claims
 
-This companion artifact candidate does **not** claim:
+This active companion source-of-truth artifact does **not** claim:
 
-- independent source-of-truth status
+- independent source-of-truth status outside the parent protocol stack
 - runtime implementation
 - runtime proof
 - cryptographic attestation
@@ -709,7 +730,7 @@ ONE/RIO/MUSS produces oriented, governed, receiptable output.
 
 # Close State
 
-This artifact is prepared as a repo-ready companion protocol draft for:
+This Markdown file is present at the declared repository path on `main` as the active companion source-of-truth for the Bondi/MANTIS translational layer:
 
 ```text
 docs/protocols/bondi-mantis-translational-layer-v0.2.md
@@ -722,8 +743,8 @@ docs/protocols/portable-governance-protocol-stack-v0.1.md
 docs/architecture/sovereign-turn-matrix-v0.1.md
 ```
 
-This draft does not create a repo file, publish a release, claim runtime implementation, claim cryptographic or legal proof, or hand anything to Manny.
+Its companion source-of-truth status governs Bondi/MANTIS translational-layer reference under Portable Governance Protocol Stack v0.1. It does not publish a release, implement runtime behavior, create cryptographic attestation, create legal proof, or hand the artifact to Manny.
 
 Next recommended action:
 
-> Review this draft once, then authorize repo placement if clean.
+> Record the Source-of-Truth Lock Receipt, then decide the next architecture lane.
