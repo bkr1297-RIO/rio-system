@@ -49,6 +49,7 @@ Keeper:
 | Layer | Status | File | Scope |
 |---|---|---|---|
 | Session orientation / mode loading | Protocol Artifact Candidate | `docs/protocols/mode-orientation-packet-v0.1.md` | Defines how sessions may load doctrine, source-of-truth, current context, and interaction calibration before reflection, routing, or action |
+| Personal interaction calibration | Personal Calibration Candidate | `docs/protocols/b-rass-interaction-calibration-v0.1.md` | Defines B-Rass-specific collaboration and mirror calibration as a companion to Mode Orientation Packet v0.1 |
 
 ## Current Architecture Context
 
@@ -95,6 +96,7 @@ Human Authority
               -> Doctrine
               -> Source of Truth
               -> Current Context
+              -> B-Rass Interaction Calibration v0.1 candidate, when personally invoked
           -> RIO admissibility
           -> Sentinel match check
           -> MUS receipt structure
@@ -114,6 +116,7 @@ The matrix gives coordinates.
 Orientation is not authority.
 Orientation makes governance proportionate.
 Mode orients the machine to the human before the machine reflects, routes, or acts.
+Personal calibration shapes the mirror; it does not open the gate.
 RIO gates admissibility.
 Sentinel verifies execution match.
 MUS provides receipt structure.
@@ -140,7 +143,8 @@ Possible next steps, each requiring separate authorization:
 3. Create an implementation roadmap from active sources to runtime tasks.
 4. Create a visual architecture deck or diagram set from current sources.
 5. Review Mode Orientation Packet v0.1 and decide whether to keep it as candidate, revise it, or promote it later.
-6. Hold and review before any release/public/Manny crossing.
+6. Review B-Rass Interaction Calibration v0.1 and decide whether to keep it as candidate or revise it.
+7. Hold and review before any release/public/Manny crossing.
 
 Recommended posture:
 
@@ -153,5 +157,6 @@ Recommended posture:
 - Source-of-truth status governs reference, not implementation proof.
 - Companion source-of-truth status is bounded to its declared companion layer.
 - Protocol candidates are reviewable proposals until separately promoted.
+- Personal calibration shapes the mirror; it does not authorize consequence.
 - Architecture artifacts clarify coordinates and relationships; they do not authorize consequence.
 - Human authority remains primary.
