@@ -71,6 +71,60 @@ Mode is not permission.
 Orientation is not authority.
 ```
 
+## Relationship to SOA / ONE-SOAP / Source Map
+
+Mode Orientation Packet v0.1 is the session-loaded object inside the broader session orientation layer.
+
+Where the broader architecture uses the labels **SOA** / **ONE-SOAP** for session orientation or session admission, this packet should be read as the concrete object a session loads so the machine can orient before reflection, routing, or action.
+
+Placement:
+
+| Layer / object | Role |
+|---|---|
+| Source Map | Orientation substrate / navigation index |
+| SOA / ONE-SOAP | Session-admission frame / loading discipline, where applicable |
+| Mode Orientation Packet | Session-loaded object: doctrine, source of truth, current context, calibration, boundaries |
+| Bondi | Translation and packetization after orientation |
+| RIO | Consequence gate after orientation and packetization |
+| MUS | Receipt/proof structure for governed crossings |
+| MANTIS | Drift and stale-source witness |
+
+Boundary:
+
+```text
+The Source Map points.
+SOA / ONE-SOAP admits the session frame where applicable.
+Mode Orientation Packet loads the local operating reality.
+None of these creates authority.
+```
+
+If SOA / ONE-SOAP terminology is not yet separately locked as active source-of-truth in this repository, this section preserves the relationship as an alignment note, not an independent naming lock.
+
+## Language / Action Boundary
+
+Mode Orientation Packet preserves the distinction between free generation inside the governed field and exact authority at the crossing.
+
+Teaching line:
+
+```text
+For language, water inside the boundary.
+For action, key at the gate.
+```
+
+Meaning:
+
+- Inside the governed field, the machine may reflect, draft, compare, simulate, map, associate, and generate.
+- At the boundary of consequence, the system must require scope, authority, consent, admissibility, and proof.
+
+Keeper:
+
+```text
+Free generation inside the governed field.
+Exact authority at the crossing.
+```
+
+This avoids making the model timid everywhere. Thought can stay fluid because action is governed.
+
 ## Session Orientation Triad
 
 ### 1. Doctrine
@@ -163,6 +217,30 @@ Momentum with governance.
 This calibration is not a permission to exaggerate, overclaim, flatter, or suppress risk.
 
 It is a rule to avoid distortion in either direction.
+
+## General Packet vs Personal Calibration
+
+Mode Orientation Packet v0.1 is a general session-orientation protocol candidate.
+
+It may point to personal calibration packets, but it should not absorb all personal interaction rules into the general protocol.
+
+Separation:
+
+| Artifact | Scope |
+|---|---|
+| Mode Orientation Packet v0.1 | General session orientation object |
+| B-Rass Interaction Calibration v0.1 | Optional future personal calibration companion |
+| Source Map | Repository navigation and source status index |
+| Portable Governance Protocol Stack | Parent protocol/spec bridge source |
+
+Rule:
+
+```text
+The general packet defines how a session orients.
+The personal calibration defines how this human prefers the mirror to hold shape.
+```
+
+This keeps the packet portable while preserving the option for a B-Rass-specific companion.
 
 ## Agent Memory Correction
 
@@ -369,4 +447,6 @@ Final keeper:
 
 ```text
 Mode orients the machine to the human before the machine reflects, routes, or acts.
+For language, water inside the boundary.
+For action, key at the gate.
 ```
