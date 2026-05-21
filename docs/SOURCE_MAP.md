@@ -44,6 +44,12 @@ Keeper:
 | Protocol/spec bridge layer | Active Source-of-Truth | `docs/protocols/portable-governance-protocol-stack-v0.1.md` | Portable protocol/spec bridge: grounding, Bondi/MANTIS role extraction, RIO boundary, MUS receipt boundary, consent/mode/delegation posture, governed turn protocol, consequence levels, test harness, promotion/supersession posture, Matrix-to-Clearance Fence, MANTIS Baseline Non-Adjustment Fence |
 | Bondi/MANTIS translational layer | Active Companion Source-of-Truth | `docs/protocols/bondi-mantis-translational-layer-v0.2.md` | Bondi translation/packetization, orientation support, matrix-coordinate proposal rules, packet fields, MANTIS witness/recurrence, orientation drift, matrix-path observation, witness fields, non-collapse rules, mapping to Matrix, Orientation Function, and Sovereign Turn flow |
 
+## Current Protocol Candidates
+
+| Layer | Status | File | Scope |
+|---|---|---|---|
+| Session orientation / mode loading | Protocol Artifact Candidate | `docs/protocols/mode-orientation-packet-v0.1.md` | Defines how sessions may load doctrine, source-of-truth, current context, and interaction calibration before reflection, routing, or action |
+
 ## Current Architecture Context
 
 | Layer | Status | File | Scope |
@@ -85,6 +91,10 @@ Human Authority
           -> 3x3 Sovereign Turn Matrix v0.1
               -> Orientation Function
               -> Matrix Coordinates
+          -> Mode Orientation Packet v0.1 candidate
+              -> Doctrine
+              -> Source of Truth
+              -> Current Context
           -> RIO admissibility
           -> Sentinel match check
           -> MUS receipt structure
@@ -103,6 +113,7 @@ Neither becomes authority.
 The matrix gives coordinates.
 Orientation is not authority.
 Orientation makes governance proportionate.
+Mode orients the machine to the human before the machine reflects, routes, or acts.
 RIO gates admissibility.
 Sentinel verifies execution match.
 MUS provides receipt structure.
@@ -115,9 +126,10 @@ When navigating this repository:
 
 1. Use the declared active source artifact for its declared layer.
 2. Use companion source artifacts only within their declared companion scope.
-3. Use architecture artifacts to understand structure and relationships.
-4. Use starter/harness artifacts as implementation seeds or conformance examples, not as complete runtime.
-5. Treat Drive records, thread summaries, and generated diagrams as context unless promoted or mirrored into an explicit source artifact.
+3. Use protocol candidates as reviewable proposals, not active source-of-truth, until explicitly promoted.
+4. Use architecture artifacts to understand structure and relationships.
+5. Use starter/harness artifacts as implementation seeds or conformance examples, not as complete runtime.
+6. Treat Drive records, thread summaries, and generated diagrams as context unless promoted or mirrored into an explicit source artifact.
 
 ## Current Recommended Next Moves
 
@@ -127,11 +139,12 @@ Possible next steps, each requiring separate authorization:
 2. Build schema/test artifacts for Adaptive Formation Pause or Matrix coordinates.
 3. Create an implementation roadmap from active sources to runtime tasks.
 4. Create a visual architecture deck or diagram set from current sources.
-5. Hold and review before any release/public/Manny crossing.
+5. Review Mode Orientation Packet v0.1 and decide whether to keep it as candidate, revise it, or promote it later.
+6. Hold and review before any release/public/Manny crossing.
 
 Recommended posture:
 
-> Hold release/public/Manny lanes. Continue with implementation planning or source-map maintenance only.
+> Hold release/public/Manny lanes. Continue with implementation planning, source-map maintenance, or reviewable protocol candidates only.
 
 ## Keeper Lines
 
@@ -139,5 +152,6 @@ Recommended posture:
 - Repo presence proves file placement, not runtime enforcement.
 - Source-of-truth status governs reference, not implementation proof.
 - Companion source-of-truth status is bounded to its declared companion layer.
+- Protocol candidates are reviewable proposals until separately promoted.
 - Architecture artifacts clarify coordinates and relationships; they do not authorize consequence.
 - Human authority remains primary.
