@@ -18,7 +18,7 @@ It does not create a runtime implementation, source-of-truth lock, public releas
 
 ```text
 Emergence is allowed. Promotion is governed.
-Words flag. Intent routes. Scope gates. MUSS proves. Drift teaches. Human governs.
+Words flag. Intent routes. Scope gates. MUS receipts. Ledger preserves. MUSS contains sovereignty state. Drift teaches. Human governs.
 Mirror. Gate. Prove. Return.
 ```
 
@@ -84,6 +84,8 @@ Mirror → Gate → Proof → Return
 
 Triadic Governance Topology is the motion pattern by which signals, symbols, model outputs, intuitions, and recurring patterns may appear freely, while only human-authorized and RIO-admitted crossings become doctrine, memory, action, representation, or consequence.
 
+Triadic Governance Topology compresses the motion of the Sovereign Turn Matrix; it does not replace the Matrix.
+
 ## Keeper
 
 ```text
@@ -132,7 +134,7 @@ Locked = stable within scope.
 | Make this a draft | Create editable artifact |
 | Promote this to doctrine | Move toward doctrine review |
 | Commit this to repo | External technical commit |
-| Issue a MUSS receipt | Record proof |
+| Issue a MUS receipt | Record proof |
 | Authorize this action | Permit bounded execution |
 | Represent this externally | Allow outward use |
 
@@ -370,9 +372,9 @@ Reasoning Witness
 
 ## Doctrine
 
-Reasoning reports are evidence, not ground truth.
+Visible reasoning or rationale reports are evidence, not ground truth. They are not hidden chain-of-thought and should not be treated as direct access to a model's private reasoning.
 
-A model may explain how it got somewhere, but that explanation can still be polished rationalization. Reasoning reports must be checked against:
+A model may provide a visible explanation for how it got somewhere, but that explanation can still be polished rationalization. Visible rationales must be checked against:
 
 - behavior
 - context
@@ -384,7 +386,7 @@ A model may explain how it got somewhere, but that explanation can still be poli
 ## Keeper
 
 ```text
-Reasoning reports inform.
+Visible rationales inform.
 Behavior verifies.
 Witness reviews.
 Human governs.
@@ -393,7 +395,7 @@ Human governs.
 Shortest:
 
 ```text
-Witness the reasoning. Don’t worship it.
+Witness the rationale. Don’t worship it.
 ```
 
 ---
@@ -584,6 +586,8 @@ Canonical stack remains:
 Human → ONE → Genesis → Interface → RIO → MUSS
 ```
 
+Architecture stack alignment is required before this section can be promoted to source-of-truth. This addendum preserves the rule that offices are not layers; it does not itself lock the canonical stack.
+
 Example offices:
 
 | Office | Function |
@@ -675,7 +679,7 @@ Human-Led Quantum Governance
 
 ## Definition
 
-Open patterns, drafts, symbols, and machine outputs remain in possibility until human-scoped authority, RIO admissibility, and MUSS proof determine whether they may cross into consequence.
+Open patterns, drafts, symbols, and machine outputs remain in possibility until human-scoped authority, RIO admissibility, MUS receipt structure, and Ledger preservation determine whether they may cross into consequence.
 
 ## Translation table
 
@@ -685,7 +689,7 @@ Open patterns, drafts, symbols, and machine outputs remain in possibility until 
 | Observation | Mirror / MANTIS notice |
 | Measurement | RIO gate / classification |
 | Collapse | Authorized crossing |
-| Record | MUSS receipt |
+| Record | MUS receipt / Ledger record |
 | Re-coherence | Return to human authority |
 
 ## Keeper
@@ -753,6 +757,7 @@ It preserves:
 Emergence is allowed. Promotion is governed.
 Language flags. Intent routes. Pressure cannot promote.
 Lock is containment. Authorization is crossing. Receipt is proof.
+MUS receipts. Ledger preserves. MUSS contains sovereignty state.
 Scope it. Promise it. Produce it. Compare it. Learn from drift. Return to human.
 Mirror. Gate. Prove. Return.
 ```
