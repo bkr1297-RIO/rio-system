@@ -9,7 +9,7 @@
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
     "test": "node --test tests/gateway.test.mjs",
-    "test:spgm": "node --test tests/spgm-intake.test.mjs"
+    "test:spgm": "node --test tests/spgm-intake.test.mjs tests/spgm-schema.test.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",
