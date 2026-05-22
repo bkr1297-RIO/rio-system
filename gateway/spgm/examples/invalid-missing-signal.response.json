@@ -1,0 +1,25 @@
+{
+  "status": "hold",
+  "mode": "non_executing",
+  "error": "SPGM_INTAKE_VALIDATION_FAILED",
+  "errors": [
+    "signal must be an object"
+  ],
+  "spgm_result": {
+    "status": "hold",
+    "consequence_class": 0,
+    "fact_symbol_separated": false,
+    "interpretation_provisional": true,
+    "signal_not_command": true,
+    "machine_boundary_preserved": true,
+    "validation_errors": [
+      "signal must be an object"
+    ]
+  },
+  "routing": {
+    "rio_required": false,
+    "muss_required": false,
+    "reason": "SPG-M intake schema validation failed; no action may proceed."
+  },
+  "next_step": "containment"
+}

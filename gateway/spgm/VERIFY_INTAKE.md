@@ -28,11 +28,17 @@ Example request packets live in:
 gateway/spgm/examples/
 ```
 
-Available examples:
+Available request examples:
 
 - `private-reflection.json` — expected Class 1, non-executing record/private reflection
 - `relational-routing.json` — expected Class 3, RIO/MUSS routing required before action
 - `invalid-missing-signal.json` — expected validation hold, no action
+
+Available expected response fixtures:
+
+- `private-reflection.response.json` — no receipt handoff by default
+- `relational-routing.response.json` — receipt event recommended, `BLOCK` decision hint, RIO/MUSS required
+- `invalid-missing-signal.response.json` — validation hold, containment next step
 
 ## Manual Verification
 
@@ -55,6 +61,28 @@ Expected properties:
 - no ledger entry is written by this route
 - result includes `spgm_result`
 - result includes routing markers
+- consequential/contained/refused/held events may include `receipt_event` and `receipt_handoff`
+
+## Receipt Handoff Boundary
+
+`receipt_handoff` is metadata only.
+
+It may recommend that a later receipt-compatible proof event be created through `rio-receipt-protocol`, but it does not:
+
+- generate a receipt,
+- sign a payload,
+- write a ledger entry,
+- authorize an action,
+- dispatch a connector,
+- create persistent memory.
+
+Expected handoff behavior:
+
+| Case | `receipt_event.recommended` | `receipt_handoff` |
+|---|---:|---|
+| Private reflection | `false` | `null` |
+| Relational / Class 3+ | `true` | handoff packet with `BLOCK` decision hint |
+| Invalid intake | validation hold | no execution; containment next step |
 
 ## Boundary Checks
 
@@ -65,8 +93,9 @@ The route must preserve these boundaries:
 - actual or potential impact determines consequence class,
 - Class 3+ requires routing before action,
 - invalid packets fail closed into hold/containment,
-- machine assistance is metadata/context only.
+- machine assistance is metadata/context only,
+- receipt handoff is proof metadata, not proof creation.
 
 ## Summary
 
-SPG-M intake is safe to expose only as a non-executing classification and routing surface. Any consequential output must pass through the existing RIO governance pipeline before action.
+SPG-M intake is safe to expose only as a non-executing classification and routing surface. Any consequential output must pass through the existing RIO governance pipeline before action. Any proof event must be produced by the receipt layer, not by the intake route itself.
