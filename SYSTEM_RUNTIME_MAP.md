@@ -63,6 +63,15 @@ The following protocols and specifications define behavior that is **implemented
   - Determines approval requirement
   - Does NOT execute actions
 ---
+### SPG-M Pattern Governance Placement
+- Spec Location: `docs/SPG_M_RUNTIME_PLACEMENT.md`
+- Module Map: `docs/ONE_RIO_MUSS_MODULE_MAP.md`
+- Runtime Implementation: Not implemented in gateway
+- Function:
+  - Defines where SPG-M belongs as pre-execution pattern governance
+  - Clarifies that SPG-M does not approve, execute, or create authority
+  - Points to receipt-compatible SPG-M proof support in `rio-receipt-protocol`
+---
 ## 4. System Invariants (Enforced)
 At runtime, the system guarantees:
 1. No execution without valid authorization
@@ -77,6 +86,7 @@ The following components exist in specs but are NOT part of the current runtime 
 | Component | Status |
 |----------|--------|
 | Mantis (pattern detection) | Not implemented |
+| SPG-M (pattern governance layer) | Placement documented; not implemented in gateway |
 | Bondi (AI orchestration layer) | Not part of runtime |
 | ONE (PWA interface) | Not deployed |
 | Meta-Governance quorum system | Not implemented |
@@ -123,6 +133,7 @@ The following gaps were identified during audit. Status as of v2.9.0:
 - No CI/CD pipeline enforcing tests — Open
 - ~~Multiple overlapping architecture documents without a reading map~~ — Fixed (SYSTEM_RUNTIME_MAP.md)
 - ~~No LICENSE file~~ — Fixed (MIT)
+- SPG-M gateway integration is not implemented — Open
 ---
 ## 9. Canonical Reading Order
 To understand the system correctly:
@@ -131,13 +142,16 @@ To understand the system correctly:
 3. `gateway/README.md`
 4. `protocols/` (execution, authorization, receipt)
 5. `spec/RIO-STANDARD-v1.0.md`
-6. `demo/DEMO_WALKTHROUGH.md`
+6. `docs/SPG_M_RUNTIME_PLACEMENT.md`
+7. `docs/ONE_RIO_MUSS_MODULE_MAP.md`
+8. `demo/DEMO_WALKTHROUGH.md`
 ---
 ## 10. Summary
 This is a **single governed execution system**, not multiple systems.
 - All actions pass through one enforcement boundary (Execution Gate)
 - All preconditions prepare valid inputs to that boundary
 - All postconditions prove what happened
+- SPG-M is documented as a future pre-execution pattern-governance layer, not a parallel execution path
 There is no parallel execution path.
 There is no dual authority.
 There is one system.
