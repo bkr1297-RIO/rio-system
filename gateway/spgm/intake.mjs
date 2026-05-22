@@ -6,6 +6,7 @@
  * This module does not approve actions, issue authorization tokens, dispatch
  * connectors, write ledger entries, or create persistent memory.
  */
+import { maybeBuildSpgmReceiptHandoff } from "./receipt-event.mjs";
 
 const MATERIAL_DOMAINS = new Set([
   "money",
@@ -159,8 +160,7 @@ export function processSpgmIntake(packet = {}) {
   const consequenceClass = classifySpgmConsequence(packet);
   const gates = buildSpgmGateStatus(packet, consequenceClass);
   const status = decideSpgmStatus(packet, consequenceClass, gates);
-
-  return {
+  const result = {
     spgm_result: {
       status,
       consequence_class: consequenceClass,
@@ -186,5 +186,10 @@ export function processSpgmIntake(packet = {}) {
           ? "containment"
           : "private_reflection",
     authority_boundary: "SPG-M intake is non-executing context. It does not approve, execute, issue tokens, or write ledger entries.",
+  };
+
+  return {
+    ...result,
+    receipt_handoff: maybeBuildSpgmReceiptHandoff(packet, result),
   };
 }
