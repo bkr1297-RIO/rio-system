@@ -8,11 +8,23 @@
 import { Router } from "express";
 import { requireRole } from "../security/principals.mjs";
 import { processSpgmIntake } from "../spgm/intake.mjs";
+import { validateSpgmIntake, buildInvalidSpgmIntakeResponse } from "../spgm/schema.mjs";
 
 const router = Router();
 
 router.post("/intake", requireRole("proposer", "approver", "auditor", "root_authority"), (req, res) => {
   try {
+    const validation = validateSpgmIntake(req.body || {});
+    if (!validation.valid) {
+      return res.status(400).json({
+        status: "hold",
+        mode: "non_executing",
+        error: "SPGM_INTAKE_VALIDATION_FAILED",
+        errors: validation.errors,
+        ...buildInvalidSpgmIntakeResponse(validation.errors),
+      });
+    }
+
     const result = processSpgmIntake(req.body || {});
 
     return res.status(200).json({
