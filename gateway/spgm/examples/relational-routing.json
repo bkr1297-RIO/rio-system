@@ -1,0 +1,18 @@
+{
+  "signal": {
+    "literal_description": "Human reports a recurring relational pattern involving another person.",
+    "signal_type": "relational",
+    "source_context": "conversation planning",
+    "recurrence_claimed": true
+  },
+  "proposed_use": {
+    "use_type": "propose",
+    "proposed_action": "start_conversation",
+    "affected_parties": ["other_person"],
+    "known_domains": ["relationship"]
+  },
+  "machine_assistance": {
+    "used": true,
+    "role": "classification"
+  }
+}

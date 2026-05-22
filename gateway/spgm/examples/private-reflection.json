@@ -1,0 +1,18 @@
+{
+  "signal": {
+    "literal_description": "Human reports a recurring symbol during private journaling.",
+    "signal_type": "pattern",
+    "source_context": "private journal",
+    "recurrence_claimed": true
+  },
+  "proposed_use": {
+    "use_type": "reflect",
+    "proposed_action": null,
+    "affected_parties": [],
+    "known_domains": ["journal"]
+  },
+  "machine_assistance": {
+    "used": false,
+    "role": null
+  }
+}
