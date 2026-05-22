@@ -28,6 +28,7 @@ Signal → Proposal → Policy → Authorization → Execution Gate → Execute 
 |----------|--------|----------|
 | PostgreSQL Database | Running | External (Render) |
 | Render Deployment | Running | Production gateway instance |
+| SPG-M Intake | Running, non-executing | `POST /spgm/intake`, `gateway/spgm/` |
 ---
 ## 3. Specification vs Runtime Mapping
 The following protocols and specifications define behavior that is **implemented in the gateway**:
@@ -63,14 +64,17 @@ The following protocols and specifications define behavior that is **implemented
   - Determines approval requirement
   - Does NOT execute actions
 ---
-### SPG-M Pattern Governance Placement
+### SPG-M Pattern Governance Intake
 - Spec Location: `docs/SPG_M_RUNTIME_PLACEMENT.md`
-- Module Map: `docs/ONE_RIO_MUSS_MODULE_MAP.md`
-- Runtime Implementation: Not implemented in gateway
+- Intake Contract: `docs/SPG_M_GATEWAY_INTAKE_CONTRACT.md`
+- Verification: `gateway/spgm/VERIFY_INTAKE.md`
+- Runtime Implementation: `POST /spgm/intake`, `gateway/spgm/`
 - Function:
-  - Defines where SPG-M belongs as pre-execution pattern governance
-  - Clarifies that SPG-M does not approve, execute, or create authority
-  - Points to receipt-compatible SPG-M proof support in `rio-receipt-protocol`
+  - Accepts ambiguous pattern-governance signals
+  - Validates SPG-M intake packets fail-closed
+  - Classifies consequence class
+  - Returns gate, routing, receipt-event, and handoff metadata
+  - Does NOT approve, execute, issue tokens, dispatch connectors, write ledger entries, or create memory
 ---
 ## 4. System Invariants (Enforced)
 At runtime, the system guarantees:
@@ -80,13 +84,14 @@ At runtime, the system guarantees:
 4. No execution without receipt
 5. No receipt without ledger entry
 6. All actions produce verifiable lineage
+7. SPG-M intake is non-executing and cannot bypass the Execution Gate
 ---
 ## 5. What Is NOT Running (Important)
 The following components exist in specs but are NOT part of the current runtime system:
 | Component | Status |
 |----------|--------|
 | Mantis (pattern detection) | Not implemented |
-| SPG-M (pattern governance layer) | Placement documented; not implemented in gateway |
+| SPG-M full pattern-governance runtime | Intake implemented; active policy/memory/receipt generation not implemented |
 | Bondi (AI orchestration layer) | Not part of runtime |
 | ONE (PWA interface) | Not deployed |
 | Meta-Governance quorum system | Not implemented |
@@ -126,6 +131,14 @@ Attempt:
 - parameter mismatch → must fail
 - missing ledger → execution must halt
 ---
+### Step 5 — Validate SPG-M Intake
+From `gateway/`:
+```bash
+npm run test:spgm
+```
+For manual verification, see:
+`gateway/spgm/VERIFY_INTAKE.md`
+---
 ## 8. Known Gaps (From Audit)
 The following gaps were identified during audit. Status as of v2.9.0:
 - ~~Demo walkthrough uses outdated endpoints and crypto references~~ — Fixed
@@ -133,7 +146,9 @@ The following gaps were identified during audit. Status as of v2.9.0:
 - No CI/CD pipeline enforcing tests — Open
 - ~~Multiple overlapping architecture documents without a reading map~~ — Fixed (SYSTEM_RUNTIME_MAP.md)
 - ~~No LICENSE file~~ — Fixed (MIT)
-- SPG-M gateway integration is not implemented — Open
+- SPG-M active policy integration is not implemented — Open
+- SPG-M receipt generation / ledger write is not implemented — Open
+- SPG-M memory or pattern-log persistence is not implemented — Open
 ---
 ## 9. Canonical Reading Order
 To understand the system correctly:
@@ -144,14 +159,17 @@ To understand the system correctly:
 5. `spec/RIO-STANDARD-v1.0.md`
 6. `docs/SPG_M_RUNTIME_PLACEMENT.md`
 7. `docs/ONE_RIO_MUSS_MODULE_MAP.md`
-8. `demo/DEMO_WALKTHROUGH.md`
+8. `docs/SPG_M_GATEWAY_INTAKE_CONTRACT.md`
+9. `gateway/spgm/VERIFY_INTAKE.md`
+10. `demo/DEMO_WALKTHROUGH.md`
 ---
 ## 10. Summary
 This is a **single governed execution system**, not multiple systems.
 - All actions pass through one enforcement boundary (Execution Gate)
 - All preconditions prepare valid inputs to that boundary
 - All postconditions prove what happened
-- SPG-M is documented as a future pre-execution pattern-governance layer, not a parallel execution path
+- SPG-M intake is now implemented as a non-executing pre-policy signal classification and routing surface
+- SPG-M remains non-authorizing and non-executing
 There is no parallel execution path.
 There is no dual authority.
 There is one system.
