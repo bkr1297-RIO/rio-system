@@ -1,0 +1,41 @@
+{
+  "status": "ok",
+  "mode": "non_executing",
+  "spgm_result": {
+    "status": "record",
+    "consequence_class": 1,
+    "fact_symbol_separated": true,
+    "interpretation_provisional": true,
+    "signal_not_command": true,
+    "machine_boundary_preserved": true,
+    "gates": {
+      "sovereignty": "pass",
+      "fact_symbol_separation": "pass",
+      "interpretation_provisionality": "pass",
+      "consent": "na",
+      "scope": "pass",
+      "consequence": "pass",
+      "shadow_inflation": "na",
+      "evidence_recurrence": "hold",
+      "reversibility": "na",
+      "machine_boundary": "na",
+      "receipt": "na",
+      "memory_muss": "na",
+      "rio_routing": "na"
+    }
+  },
+  "routing": {
+    "rio_required": false,
+    "muss_required": false,
+    "reason": null
+  },
+  "receipt_event": {
+    "recommended": false,
+    "profile": "SPG-M",
+    "decision_hint": null,
+    "non_executing": true,
+    "proof_layer": "rio-receipt-protocol"
+  },
+  "receipt_handoff": null,
+  "next_step": "private_reflection"
+}
