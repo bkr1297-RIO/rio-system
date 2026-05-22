@@ -22,6 +22,7 @@ import apiV1Routes from "./routes/api-v1.mjs";
 import keyBackupRoutes from "./routes/key-backup.mjs";
 import syncRoutes from "./routes/sync.mjs";
 import proxyRoutes from "./routes/proxy.mjs";
+import spgmRoutes from "./routes/spgm.mjs";
 import { initApiKeys } from "./security/api-keys.mjs";
 import { apiKeyAuth } from "./security/api-auth.mjs";
 import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
@@ -293,6 +294,11 @@ async function start() {
   app.use("/api", proxyRoutes);
 
   // ---------------------------------------------------------------------------
+  // SPG-M Pattern Governance Routes (non-executing)
+  // ---------------------------------------------------------------------------
+  app.use("/spgm", spgmRoutes);
+
+  // ---------------------------------------------------------------------------
   // Public API v1 Routes (WS-012)
   // API key auth + rate limiting applied to all /api/v1/* routes
   // ---------------------------------------------------------------------------
@@ -319,6 +325,8 @@ async function start() {
         "GET /auth/google/callback": "Handle Google OAuth callback (issues JWT)",
         "GET /auth/status": "Check OAuth configuration status",
         "GET /whoami": "Return current authenticated user",
+        "--- SPG-M Pattern Governance ---": "---",
+        "POST /spgm/intake": "Non-executing SPG-M pattern-governance intake",
         "--- Governance Pipeline ---": "---",
         "POST /intent": "Submit an intent from any AI agent",
         "POST /govern": "Run policy + risk evaluation on an intent",
