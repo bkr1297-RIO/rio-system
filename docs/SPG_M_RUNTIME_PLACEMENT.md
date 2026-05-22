@@ -2,9 +2,17 @@
 
 ## Status
 
-Draft placement note for the ONE/RIO/MUSS system.
+Runtime placement note for the ONE/RIO/MUSS system.
 
-SPG-M is not added here as an active runtime component. This note defines where SPG-M belongs when implemented and how it relates to the current RIO gateway, pattern corpus, and receipt layer.
+SPG-M now has a non-executing gateway intake stub in `rio-system`.
+
+The implemented gateway surface is:
+
+```text
+POST /spgm/intake
+```
+
+This route classifies and routes ambiguous pattern signals. It does not approve, execute, issue tokens, dispatch connectors, write ledger entries, create receipts, or create persistent memory.
 
 ## Purpose
 
@@ -28,12 +36,14 @@ SPG-M belongs before execution authority is granted. Its role is to prepare, cla
 
 ```text
 Human / System Signal
-  → SPG-M Pattern Governance
+  → SPG-M Intake / Pattern Governance
       → Signal capture
-      → Fact / interpretation separation
+      → Packet validation
+      → Fact / interpretation separation marker
       → Consequence classification
-      → Governance gates
-      → Containment / refusal / routing
+      → Governance gate markers
+      → Containment / refusal / routing markers
+      → Optional receipt handoff metadata
   → RIO Proposal / Policy / Authorization
   → Execution Gate
   → Receipt + Ledger
@@ -43,10 +53,10 @@ Human / System Signal
 
 | Component | SPG-M Relationship |
 |---|---|
-| Gateway | SPG-M may prepare or block pattern-derived inputs before they become gateway intents. |
+| Gateway | SPG-M has a non-executing intake route at `POST /spgm/intake`. |
 | Governor / Policy | SPG-M may provide consequence classification and gate results as context. It does not decide policy outcome. |
 | Execution Gate | SPG-M does not execute actions and does not bypass the gate. |
-| Receipt System | SPG-M outcomes can be expressed as receipt-compatible events in `rio-receipt-protocol`. |
+| Receipt System | SPG-M intake may recommend receipt-compatible proof through `receipt_event` and `receipt_handoff` metadata. It does not create receipts. |
 | Pattern Corpus | SPG-M aligns with non-authoritative pattern handling. Patterns may orient attention but do not decide. |
 | Ledger | SPG-M does not write ledger entries directly in this repo. Receipt-compatible events are proved by the receipt layer. |
 
@@ -56,9 +66,15 @@ Human / System Signal
 |---|---|
 | Doctrine | External/conceptual kernel exists |
 | Receipt-compatible profile | Implemented in `rio-receipt-protocol` |
-| Gateway integration | Not implemented |
+| Gateway intake | Implemented, non-executing |
+| Intake schema validation | Implemented, fail-closed |
+| Consequence classification | Implemented, lightweight |
+| Gate status markers | Implemented |
+| Receipt-event recommendation | Implemented as metadata only |
+| Receipt handoff packet | Implemented as metadata only |
 | Active policy evaluation | Not implemented |
 | Pattern memory integration | Not implemented |
+| Receipt generation / ledger write | Not implemented in SPG-M intake |
 | Execution authority | Not allowed |
 
 ## Non-Authority Rules
@@ -72,17 +88,32 @@ SPG-M must preserve these boundaries:
 - Pattern promotion does not authorize action.
 - Consequence class determines routing weight.
 - Class 3+ action must route to the appropriate RIO/MUSS governance path.
+- Receipt handoff is metadata only until the receipt layer produces proof.
 
 ## Integration Path
 
-A future implementation should proceed in this order:
+Implementation should proceed in this order:
 
-1. Add a gateway-side SPG-M intake route or middleware in non-executing mode.
-2. Produce SPG-M gate results as structured context.
+1. ~~Add a gateway-side SPG-M intake route or middleware in non-executing mode.~~ Complete.
+2. ~~Produce SPG-M gate results as structured context.~~ Complete.
 3. Route consequential outputs into existing RIO policy and authorization flow.
 4. Generate receipt-compatible SPG-M events through the receipt layer.
 5. Keep pattern storage separate from the ledger unless a receipt event is produced.
 
+## Verification
+
+From `gateway/`:
+
+```bash
+npm run test:spgm
+```
+
+Manual examples and expected responses are documented in:
+
+```text
+gateway/spgm/VERIFY_INTAKE.md
+```
+
 ## Summary
 
-SPG-M is a pre-execution pattern-governance layer. It may classify and contain ambiguous signals, but it cannot approve, execute, or create authority. Execution remains governed by the existing RIO pipeline and proven through receipts.
+SPG-M is now present as a non-executing pre-policy pattern-governance intake surface. It may classify and contain ambiguous signals, but it cannot approve, execute, create receipts, write ledger entries, or create authority. Execution remains governed by the existing RIO pipeline and proven through receipts.
