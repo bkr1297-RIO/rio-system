@@ -1,0 +1,11 @@
+{
+  "proposed_use": {
+    "use_type": "reflect",
+    "proposed_action": null,
+    "affected_parties": []
+  },
+  "machine_assistance": {
+    "used": false,
+    "role": null
+  }
+}
