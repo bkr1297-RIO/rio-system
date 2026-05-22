@@ -8,6 +8,7 @@ import assert from "node:assert/strict";
 import {
   classifySpgmConsequence,
   processSpgmIntake,
+  buildSpgmReceiptEventRecommendation,
 } from "../spgm/intake.mjs";
 
 describe("SPG-M Intake Processor", () => {
@@ -28,6 +29,7 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.routing.rio_required, false);
     assert.equal(result.routing.muss_required, false);
     assert.equal(result.next_step, "private_reflection");
+    assert.equal(result.receipt_event.recommended, false);
   });
 
   it("routes relational action as Class 3", () => {
@@ -47,6 +49,8 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.routing.rio_required, true);
     assert.equal(result.routing.muss_required, true);
     assert.equal(result.next_step, "policy_review");
+    assert.equal(result.receipt_event.recommended, true);
+    assert.equal(result.receipt_event.decision_hint, "BLOCK");
   });
 
   it("classifies material domains as Class 4", () => {
@@ -84,6 +88,8 @@ describe("SPG-M Intake Processor", () => {
 
     assert.equal(result.spgm_result.status, "refuse");
     assert.equal(result.next_step, "containment");
+    assert.equal(result.receipt_event.recommended, true);
+    assert.equal(result.receipt_event.decision_hint, "BLOCK");
   });
 
   it("holds when no literal signal is present", () => {
@@ -95,6 +101,8 @@ describe("SPG-M Intake Processor", () => {
 
     assert.equal(result.spgm_result.status, "hold");
     assert.equal(result.spgm_result.fact_symbol_separated, false);
+    assert.equal(result.receipt_event.recommended, true);
+    assert.equal(result.receipt_event.decision_hint, "BLOCK");
   });
 
   it("returns a non-executing authority boundary", () => {
@@ -105,5 +113,19 @@ describe("SPG-M Intake Processor", () => {
 
     assert.match(result.authority_boundary, /non-executing/);
     assert.match(result.authority_boundary, /does not approve/);
+  });
+
+  it("builds receipt event recommendation without writing receipts", () => {
+    const recommendation = buildSpgmReceiptEventRecommendation({
+      signal: { literal_description: "Signal.", signal_type: "relational" },
+      proposed_use: { use_type: "propose", affected_parties: ["other_person"] },
+      machine_assistance: { used: true, role: "classification" },
+    }, "route", 3);
+
+    assert.equal(recommendation.recommended, true);
+    assert.equal(recommendation.decision_hint, "BLOCK");
+    assert.equal(recommendation.non_executing, true);
+    assert.equal(recommendation.proof_layer, "rio-receipt-protocol");
+    assert.equal(recommendation.event_context.machine_assistance_used, true);
   });
 });
