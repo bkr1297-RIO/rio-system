@@ -1,0 +1,49 @@
+{
+  "status": "ok",
+  "mode": "non_executing",
+  "spgm_result": {
+    "status": "route",
+    "consequence_class": 3,
+    "fact_symbol_separated": true,
+    "interpretation_provisional": true,
+    "signal_not_command": true,
+    "machine_boundary_preserved": true,
+    "gates": {
+      "sovereignty": "pass",
+      "fact_symbol_separation": "pass",
+      "interpretation_provisionality": "pass",
+      "consent": "hold",
+      "scope": "pass",
+      "consequence": "pass",
+      "shadow_inflation": "hold",
+      "evidence_recurrence": "hold",
+      "reversibility": "hold",
+      "machine_boundary": "pass",
+      "receipt": "hold",
+      "memory_muss": "na",
+      "rio_routing": "hold"
+    }
+  },
+  "routing": {
+    "rio_required": true,
+    "muss_required": true,
+    "reason": "Consequence class requires routing before action."
+  },
+  "receipt_event": {
+    "recommended": true,
+    "profile": "SPG-M",
+    "decision_hint": "BLOCK",
+    "non_executing": true,
+    "proof_layer": "rio-receipt-protocol"
+  },
+  "receipt_handoff": {
+    "handoff_type": "spgm_receipt_event",
+    "status": "recommended",
+    "profile": "SPG-M",
+    "profile_version": "0.1",
+    "proof_layer": "rio-receipt-protocol",
+    "non_executing": true,
+    "receipt_decision_hint": "BLOCK"
+  },
+  "next_step": "policy_review"
+}
