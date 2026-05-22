@@ -78,6 +78,7 @@ describe("SPG-M Intake Route", () => {
     assert.equal(data.spgm_result.consequence_class, 1);
     assert.equal(data.spgm_result.status, "record");
     assert.equal(data.routing.rio_required, false);
+    assert.equal(data.receipt_event.recommended, false);
   });
 
   it("routes relational output without execution authority", async () => {
@@ -104,6 +105,8 @@ describe("SPG-M Intake Route", () => {
     assert.equal(data.spgm_result.status, "route");
     assert.equal(data.routing.rio_required, true);
     assert.equal(data.routing.muss_required, true);
+    assert.equal(data.receipt_event.recommended, true);
+    assert.equal(data.receipt_event.decision_hint, "BLOCK");
     assert.match(data.authority_boundary, /does not approve/);
   });
 

@@ -123,6 +123,38 @@ export function decideSpgmStatus(packet = {}, consequenceClass = classifySpgmCon
   return "record";
 }
 
+export function buildSpgmReceiptEventRecommendation(packet = {}, status = "record", consequenceClass = classifySpgmConsequence(packet)) {
+  const proposedUse = packet.proposed_use || {};
+  const signal = packet.signal || {};
+  const machineAssistance = packet.machine_assistance || {};
+
+  const recommended =
+    consequenceClass >= 3 ||
+    status === "route" ||
+    status === "contain" ||
+    status === "refuse" ||
+    status === "hold" ||
+    proposedUse.memory_requested === true ||
+    proposedUse.pattern_log_requested === true;
+
+  return {
+    recommended,
+    profile: "SPG-M",
+    decision_hint: recommended ? "BLOCK" : null,
+    reason: recommended
+      ? "SPG-M event may require receipt-compatible proof before any consequential movement."
+      : "Private, non-consequential SPG-M event does not require a receipt event by default.",
+    non_executing: true,
+    proof_layer: "rio-receipt-protocol",
+    event_context: {
+      status,
+      consequence_class: consequenceClass,
+      signal_type: signal.signal_type || null,
+      machine_assistance_used: machineAssistance.used === true,
+    },
+  };
+}
+
 export function processSpgmIntake(packet = {}) {
   const consequenceClass = classifySpgmConsequence(packet);
   const gates = buildSpgmGateStatus(packet, consequenceClass);
@@ -145,6 +177,7 @@ export function processSpgmIntake(packet = {}) {
         ? "Consequence class requires routing before action."
         : null,
     },
+    receipt_event: buildSpgmReceiptEventRecommendation(packet, status, consequenceClass),
     next_step: status === "route"
       ? "policy_review"
       : status === "refuse"
