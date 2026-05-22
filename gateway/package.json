@@ -1,14 +1,15 @@
 {
   "name": "rio-governance-gateway",
   "version": "2.9.0",
-  "description": "RIO Governance Gateway \u2014 Governed AI Execution Runtime",
+  "description": "RIO Governance Gateway — Governed AI Execution Runtime",
   "license": "MIT",
   "type": "module",
   "main": "server.mjs",
   "scripts": {
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
-    "test": "node --test tests/gateway.test.mjs"
+    "test": "node --test tests/gateway.test.mjs",
+    "test:spgm": "node --test tests/spgm-intake.test.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",
