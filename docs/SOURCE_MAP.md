@@ -59,6 +59,7 @@ Keeper:
 | Cross-Stack Mapping | Architecture clarification method | `docs/architecture/cross-stack-mapping-v0.1.md` | Maps architecture stacks across valid resolutions and identifies structural recurrence without treating recurrence as proof |
 | Tier 1A-1D to Triadic Registers | Cross-stack companion | `docs/architecture/tier1-triadic-registers-v0.1.md` | Maps Runtime Sovereignty, Mirror Topology, Proof Discipline, and Collective Pattern to Body/Somatic, Mind/Cognitive, and Field/Experiential registers |
 | 3x3 Sovereign Turn Matrix | Architecture coordinate system | `docs/architecture/sovereign-turn-matrix-v0.1.md` | Coordinates Body/Mind/Field across Mirror/Gate/Proof cells; defines orientation, matrix paths, and receipt-coordinate concepts |
+| ONE Architecture Migration Index | Migration / placement index | `docs/architecture/one-architecture-migration-index-v0.1.md` | Tracks what already exists in GitHub, what appears Drive/chat-only, and what still needs migration or standalone treatment |
 
 ## Current Starter / Harness Artifacts
 
@@ -97,6 +98,10 @@ Human Authority
               -> Source of Truth
               -> Current Context
               -> B-Rass Interaction Calibration v0.1 candidate, when personally invoked
+          -> ONE Architecture Migration Index v0.1
+              -> GitHub-visible artifacts
+              -> Drive/chat-only candidates
+              -> migration queue
           -> RIO admissibility
           -> Sentinel match check
           -> MUS receipt structure
@@ -133,6 +138,7 @@ When navigating this repository:
 4. Use architecture artifacts to understand structure and relationships.
 5. Use starter/harness artifacts as implementation seeds or conformance examples, not as complete runtime.
 6. Treat Drive records, thread summaries, and generated diagrams as context unless promoted or mirrored into an explicit source artifact.
+7. Use migration indexes to prevent duplication and identify missing repo-visible artifacts.
 
 ## Current Recommended Next Moves
 
@@ -144,7 +150,8 @@ Possible next steps, each requiring separate authorization:
 4. Create a visual architecture deck or diagram set from current sources.
 5. Review Mode Orientation Packet v0.1 and decide whether to keep it as candidate, revise it, or promote it later.
 6. Review B-Rass Interaction Calibration v0.1 and decide whether to keep it as candidate or revise it.
-7. Hold and review before any release/public/Manny crossing.
+7. Review ONE Architecture Migration Index v0.1 and decide which Drive/chat-only artifact should be migrated next.
+8. Hold and review before any release/public/Manny crossing.
 
 Recommended posture:
 
@@ -159,4 +166,5 @@ Recommended posture:
 - Protocol candidates are reviewable proposals until separately promoted.
 - Personal calibration shapes the mirror; it does not authorize consequence.
 - Architecture artifacts clarify coordinates and relationships; they do not authorize consequence.
+- Migration indexes prevent loss and duplication; they do not promote artifacts by themselves.
 - Human authority remains primary.
