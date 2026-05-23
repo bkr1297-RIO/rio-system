@@ -52,8 +52,8 @@ Available request examples:
 
 Available expected response fixtures:
 
-- `private-reflection.response.json` — no receipt handoff by default; includes non-authorizing policy context
-- `relational-routing.response.json` — receipt event recommended, `BLOCK` decision hint, RIO/MUSS required, policy context prepared
+- `private-reflection.response.json` — no receipt handoff by default; includes non-authorizing policy context and policy review metadata
+- `relational-routing.response.json` — receipt event recommended, `BLOCK` decision hint, RIO/MUSS required, policy context prepared, policy review metadata prepared
 - `invalid-missing-signal.response.json` — validation hold, containment next step
 
 ## Manual Intake Verification
@@ -78,7 +78,34 @@ Expected properties:
 - result includes `spgm_result`
 - result includes routing markers
 - result includes `policy_context`
+- result includes `policy_review`
 - consequential/contained/refused/held events may include `receipt_event` and `receipt_handoff`
+
+## Policy Review Boundary
+
+`policy_review` is derived review metadata only.
+
+It is produced by the SPG-M policy adapter from `policy_context`.
+
+It may be passed to later RIO policy review, but it does not:
+
+- evaluate policy,
+- approve an intent,
+- deny an intent by itself,
+- authorize an action,
+- execute an action,
+- issue an execution token,
+- write a ledger entry,
+- generate a receipt,
+- create persistent memory.
+
+Expected policy-review behavior:
+
+| Case | `policy_review.accepted` | Required action |
+|---|---:|---|
+| Private reflection | `true` | context only |
+| Relational / Class 3+ | `true` | RIO review required |
+| Invalid intake | validation hold | reject or contain context |
 
 ## Policy Context Boundary
 
@@ -134,6 +161,7 @@ The route must preserve these boundaries:
 - invalid packets fail closed into hold/containment,
 - machine assistance is metadata/context only,
 - policy context is review metadata, not authorization,
+- policy review is adapter metadata, not policy evaluation,
 - receipt handoff is proof metadata, not proof creation.
 
 ## Summary
