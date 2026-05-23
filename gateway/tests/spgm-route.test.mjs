@@ -99,6 +99,9 @@ describe("SPG-M Routes", () => {
     assert.equal(data.spgm_result.status, "record");
     assert.equal(data.routing.rio_required, false);
     assert.equal(data.receipt_event.recommended, false);
+    assert.equal(data.policy_review.accepted, true);
+    assert.equal(data.policy_review.policy_effect.may_authorize, false);
+    assert.equal(data.policy_review.policy_effect.may_execute, false);
   });
 
   it("routes relational output without execution authority", async () => {
@@ -127,6 +130,9 @@ describe("SPG-M Routes", () => {
     assert.equal(data.routing.muss_required, true);
     assert.equal(data.receipt_event.recommended, true);
     assert.equal(data.receipt_event.decision_hint, "BLOCK");
+    assert.equal(data.policy_review.accepted, true);
+    assert.equal(data.policy_review.required_action, "rio_review_required");
+    assert.equal(data.policy_review.policy_effect.may_authorize, false);
     assert.match(data.authority_boundary, /does not approve/);
   });
 
