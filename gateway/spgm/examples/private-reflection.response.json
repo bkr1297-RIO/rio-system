@@ -75,5 +75,24 @@
       "may_create_memory": false
     }
   },
+  "policy_review": {
+    "accepted": true,
+    "context_type": "spgm_policy_review_metadata",
+    "mode": "non_executing",
+    "consequence_class": 1,
+    "spgm_status": "record",
+    "rio_required": false,
+    "muss_required": false,
+    "receipt_event_recommended": false,
+    "receipt_decision_hint": null,
+    "policy_effect": {
+      "may_inform_policy_review": true,
+      "may_authorize": false,
+      "may_execute": false,
+      "may_write_ledger": false,
+      "may_create_memory": false
+    },
+    "required_action": "available_as_context_only"
+  },
   "next_step": "private_reflection"
 }
