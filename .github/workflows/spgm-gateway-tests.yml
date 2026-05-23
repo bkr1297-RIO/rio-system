@@ -1,0 +1,45 @@
+name: SPG-M Gateway Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+  push:
+    branches:
+      - main
+
+jobs:
+  spgm-gateway-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gateway
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run SPG-M core tests
+        run: npm run test:spgm
+        env:
+          NODE_TEST_CONTEXT: "1"
+          ED25519_MODE: required
+
+      - name: Run SPG-M policy review tests
+        run: npm run test:spgm:policy-review
+        env:
+          NODE_TEST_CONTEXT: "1"
+          ED25519_MODE: required
+
+      - name: Run SPG-M govern bridge tests
+        run: npm run test:spgm:govern
+        env:
+          NODE_TEST_CONTEXT: "1"
+          ED25519_MODE: required
