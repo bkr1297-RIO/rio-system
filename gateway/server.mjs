@@ -23,6 +23,7 @@ import keyBackupRoutes from "./routes/key-backup.mjs";
 import syncRoutes from "./routes/sync.mjs";
 import proxyRoutes from "./routes/proxy.mjs";
 import spgmRoutes from "./routes/spgm.mjs";
+import spgmGovernRoutes from "./routes/spgm-govern.mjs";
 import { initApiKeys } from "./security/api-keys.mjs";
 import { apiKeyAuth } from "./security/api-auth.mjs";
 import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
@@ -303,6 +304,11 @@ async function start() {
   // API key auth + rate limiting applied to all /api/v1/* routes
   // ---------------------------------------------------------------------------
   app.use("/api/v1", apiKeyAuth, rateLimitMiddleware, apiV1Routes);
+
+  // ---------------------------------------------------------------------------
+  // SPG-M Govern Bridge Routes (conservative context only)
+  // ---------------------------------------------------------------------------
+  app.use("/", spgmGovernRoutes);
 
   // ---------------------------------------------------------------------------
   // Pipeline Routes

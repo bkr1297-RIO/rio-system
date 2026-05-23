@@ -2,13 +2,21 @@
 
 ## Purpose
 
-This bridge prepares `/govern` requests to carry optional SPG-M review metadata into RIO's pure policy engine.
+This bridge allows live `/govern` requests to carry optional SPG-M review metadata into RIO's pure policy engine.
 
-The helper is non-executing. It does not create intents, approve actions, issue tokens, write ledger entries, generate receipts, or create memory.
+The bridge is conservative. It may increase review requirements, but it may not reduce review requirements or create authority.
+
+## Runtime Placement
+
+`gateway/routes/spgm-govern.mjs` is mounted before the standard pipeline routes.
+
+When SPG-M review metadata is present, the bridge handles `POST /govern` and passes the metadata into `evaluatePolicy` as context.
+
+When SPG-M review metadata is absent, the bridge passes through to the standard `/govern` route.
 
 ## Accepted Request Fields
 
-The helper can read SPG-M review metadata from any of these fields:
+The bridge can read SPG-M review metadata from any of these fields:
 
 ```text
 spgmPolicyReview
@@ -17,17 +25,9 @@ policy_review
 spgm.policy_review
 ```
 
-## Intended Use
-
-A future `/govern` route update may pass the extracted metadata into:
-
-```text
-evaluatePolicy(intent, activePolicy, context)
-```
-
-RIO may then use SPG-M metadata only as conservative review context.
-
 ## Boundary
+
+The bridge does not approve actions, issue tokens, execute actions, dispatch connectors, generate receipts, write ledger entries beyond the normal governance ledger entry, or create memory.
 
 SPG-M metadata may increase review requirements.
 
