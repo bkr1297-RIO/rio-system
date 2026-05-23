@@ -51,6 +51,12 @@ Keeper:
 | Session orientation / mode loading | Protocol Artifact Candidate | `docs/protocols/mode-orientation-packet-v0.1.md` | Defines how sessions may load doctrine, source-of-truth, current context, and interaction calibration before reflection, routing, or action |
 | Personal interaction calibration | Personal Calibration Candidate | `docs/protocols/b-rass-interaction-calibration-v0.1.md` | Defines B-Rass-specific collaboration and mirror calibration as a companion to Mode Orientation Packet v0.1 |
 
+## Current Method Artifacts
+
+| Layer | Status | File | Scope |
+|---|---|---|---|
+| Master runtime method | Master Method Candidate | `docs/method/master-runtime-method-v0.1.md` | Defines how ONE/RIO/MUSS moves from session orientation through proposal, MUSS envelope, RIO gates, coherence routing, Genesis coordination, MUS operation, tool boundary, receipt closure, correction, standing scope, and return to human authority |
+
 ## Current Architecture Context
 
 | Layer | Status | File | Scope |
@@ -102,6 +108,14 @@ Human Authority
               -> GitHub-visible artifacts
               -> Drive/chat-only candidates
               -> migration queue
+          -> Master Runtime Method v0.1 candidate
+              -> session orientation
+              -> proposal formation
+              -> MUSS envelope
+              -> RIO four-gate movement
+              -> Adaptive Coherence routing
+              -> Genesis coordination
+              -> receipt closure
           -> RIO admissibility
           -> Sentinel match check
           -> MUS receipt structure
@@ -122,6 +136,9 @@ Orientation is not authority.
 Orientation makes governance proportionate.
 Mode orients the machine to the human before the machine reflects, routes, or acts.
 Personal calibration shapes the mirror; it does not open the gate.
+Master Doctrine governs.
+Master Operating Map orients.
+Master Runtime Method moves.
 RIO gates admissibility.
 Sentinel verifies execution match.
 MUS provides receipt structure.
@@ -134,7 +151,7 @@ When navigating this repository:
 
 1. Use the declared active source artifact for its declared layer.
 2. Use companion source artifacts only within their declared companion scope.
-3. Use protocol candidates as reviewable proposals, not active source-of-truth, until explicitly promoted.
+3. Use protocol candidates and method candidates as reviewable proposals, not active source-of-truth, until explicitly promoted.
 4. Use architecture artifacts to understand structure and relationships.
 5. Use starter/harness artifacts as implementation seeds or conformance examples, not as complete runtime.
 6. Treat Drive records, thread summaries, and generated diagrams as context unless promoted or mirrored into an explicit source artifact.
@@ -151,7 +168,8 @@ Possible next steps, each requiring separate authorization:
 5. Review Mode Orientation Packet v0.1 and decide whether to keep it as candidate, revise it, or promote it later.
 6. Review B-Rass Interaction Calibration v0.1 and decide whether to keep it as candidate or revise it.
 7. Review ONE Architecture Migration Index v0.1 and decide which Drive/chat-only artifact should be migrated next.
-8. Hold and review before any release/public/Manny crossing.
+8. Review Master Runtime Method v0.1 and decide whether to keep it as method candidate, revise it, or later promote selected parts through a separate authorized crossing.
+9. Hold and review before any release/public/Manny crossing.
 
 Recommended posture:
 
@@ -163,8 +181,9 @@ Recommended posture:
 - Repo presence proves file placement, not runtime enforcement.
 - Source-of-truth status governs reference, not implementation proof.
 - Companion source-of-truth status is bounded to its declared companion layer.
-- Protocol candidates are reviewable proposals until separately promoted.
+- Protocol candidates and method candidates are reviewable proposals until separately promoted.
 - Personal calibration shapes the mirror; it does not authorize consequence.
 - Architecture artifacts clarify coordinates and relationships; they do not authorize consequence.
+- Method artifacts define movement; they do not prove implementation.
 - Migration indexes prevent loss and duplication; they do not promote artifacts by themselves.
 - Human authority remains primary.
