@@ -4,13 +4,14 @@
 
 This guide verifies the non-executing SPG-M gateway intake route.
 
-The route is:
+The routes are:
 
 ```text
+GET /spgm/status
 POST /spgm/intake
 ```
 
-It classifies and routes ambiguous pattern signals. It does not approve, execute, issue tokens, write ledger entries, dispatch connectors, or create memory.
+SPG-M classifies and routes ambiguous pattern signals. It does not approve, execute, issue tokens, write ledger entries, dispatch connectors, generate receipts, or create memory.
 
 ## Run Unit Tests
 
@@ -19,6 +20,21 @@ From `gateway/`:
 ```bash
 npm run test:spgm
 ```
+
+## Verify Status Endpoint
+
+Start the gateway, then run:
+
+```bash
+curl http://localhost:4400/spgm/status
+```
+
+Expected properties:
+
+- `module` is `SPG-M`
+- `mode` is `non_executing`
+- capabilities include intake validation, consequence classification, routing markers, receipt event recommendation, and receipt handoff metadata
+- `not_capable_of` includes approval, execution, token issuance, connector dispatch, ledger write, receipt generation, and persistent memory
 
 ## Example Packets
 
@@ -40,7 +56,7 @@ Available expected response fixtures:
 - `relational-routing.response.json` — receipt event recommended, `BLOCK` decision hint, RIO/MUSS required
 - `invalid-missing-signal.response.json` — validation hold, containment next step
 
-## Manual Verification
+## Manual Intake Verification
 
 Start the gateway with local configuration as usual, then send a request with an authenticated principal.
 
