@@ -160,11 +160,42 @@ export function getOpenApiSpec() {
         post: {
           tags: ["Pipeline"],
           summary: "Run governance evaluation",
-          description: "Evaluate an intent against policy rules. Returns risk level, approval requirements, and policy check results.",
+          description: "Evaluate an intent against policy rules. Optional SPG-M review metadata may be supplied as conservative review context. SPG-M metadata may increase review requirements but may not authorize action, execute action, issue tokens, generate receipts, or create memory.",
           operationId: "governIntent",
           parameters: [
             { name: "intent_id", in: "path", required: true, schema: { type: "string", format: "uuid" } },
           ],
+          requestBody: {
+            required: false,
+            content: {
+              "application/json": {
+                schema: { $ref: "#/components/schemas/SpgmGovernRequest" },
+                examples: {
+                  empty: {
+                    summary: "Standard governance",
+                    value: {},
+                  },
+                  spgm_review: {
+                    summary: "Governance with SPG-M review metadata",
+                    value: {
+                      policy_review: {
+                        accepted: true,
+                        context_type: "spgm_policy_review_metadata",
+                        mode: "non_executing",
+                        consequence_class: 3,
+                        spgm_status: "route",
+                        rio_required: true,
+                        muss_required: true,
+                        receipt_event_recommended: true,
+                        receipt_decision_hint: "BLOCK",
+                        required_action: "rio_review_required",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
           responses: {
             200: { description: "Governance evaluation result", content: { "application/json": { schema: { $ref: "#/components/schemas/GovernanceResult" } } } },
             404: { description: "Intent not found" },
@@ -488,16 +519,67 @@ export function getOpenApiSpec() {
             timestamp: { type: "string", format: "date-time" },
           },
         },
+        SpgmPolicyReviewMetadata: {
+          type: "object",
+          description: "Optional SPG-M review metadata. This is review context only; it cannot authorize or execute action.",
+          properties: {
+            accepted: { type: "boolean" },
+            context_type: { type: "string", enum: ["spgm_policy_review_metadata"] },
+            mode: { type: "string", enum: ["non_executing"] },
+            consequence_class: { type: "integer", minimum: 0, maximum: 5 },
+            spgm_status: { type: "string" },
+            rio_required: { type: "boolean" },
+            muss_required: { type: "boolean" },
+            receipt_event_recommended: { type: "boolean" },
+            receipt_decision_hint: { type: "string", nullable: true },
+            required_action: { type: "string" },
+            policy_effect: {
+              type: "object",
+              properties: {
+                may_inform_policy_review: { type: "boolean" },
+                may_authorize: { type: "boolean" },
+                may_execute: { type: "boolean" },
+                may_write_ledger: { type: "boolean" },
+                may_create_memory: { type: "boolean" },
+              },
+            },
+          },
+        },
+        SpgmGovernRequest: {
+          type: "object",
+          description: "Optional request body for passing SPG-M review metadata into governance.",
+          properties: {
+            spgmPolicyReview: { $ref: "#/components/schemas/SpgmPolicyReviewMetadata" },
+            spgm_policy_review: { $ref: "#/components/schemas/SpgmPolicyReviewMetadata" },
+            policy_review: { $ref: "#/components/schemas/SpgmPolicyReviewMetadata" },
+            spgm: {
+              type: "object",
+              properties: {
+                policy_review: { $ref: "#/components/schemas/SpgmPolicyReviewMetadata" },
+              },
+            },
+          },
+        },
         GovernanceResult: {
           type: "object",
           properties: {
             intent_id: { type: "string", format: "uuid" },
-            governance_status: { type: "string", enum: ["allowed", "blocked"] },
+            governance_decision: { type: "string" },
+            governance_status: { type: "string" },
+            risk_tier: { type: "string" },
             risk_level: { type: "string", enum: ["low", "medium", "high", "critical"] },
+            matched_class: { type: "string", nullable: true },
             requires_approval: { type: "boolean" },
+            approval_requirement: { type: "object", nullable: true },
+            approval_ttl: { type: "integer", nullable: true },
             reason: { type: "string" },
-            checks: { type: "object" },
+            checks: { type: "array", items: { type: "object" } },
+            policy_version: { type: "string", nullable: true },
+            policy_hash: { type: "string", nullable: true },
             governance_hash: { type: "string" },
+            system_mode: { type: "string" },
+            spgm_policy_context_status: { type: "string", nullable: true },
+            spgm_policy_review_applied: { type: "boolean", nullable: true },
             api_version: { type: "string" },
           },
         },
