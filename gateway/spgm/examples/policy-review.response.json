@@ -1,0 +1,24 @@
+{
+  "status": "ok",
+  "mode": "non_executing",
+  "review_type": "spgm_policy_review_preview",
+  "spgm_policy_review_present": true,
+  "governance": {
+    "governance_decision": "REQUIRE_HUMAN",
+    "status": "requires_approval",
+    "risk_tier": "MEDIUM",
+    "risk_level": "medium",
+    "requires_approval": true,
+    "spgm_policy_context_status": "escalated_to_review"
+  },
+  "policy_effect": {
+    "may_inform_policy_review": true,
+    "may_create_intent": false,
+    "may_authorize": false,
+    "may_execute": false,
+    "may_issue_token": false,
+    "may_write_ledger": false,
+    "may_generate_receipt": false,
+    "may_create_memory": false
+  }
+}
