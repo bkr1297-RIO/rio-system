@@ -13,6 +13,7 @@
  */
 
 import { createHash } from "node:crypto";
+import { applySpgmPolicyBridge } from "./spgm-policy-bridge.mjs";
 
 // ─── Pattern Matching ───────────────────────────────────────────────
 
@@ -123,6 +124,13 @@ export function evaluateConditions(intent, conditions) {
   return true;
 }
 
+function extractSpgmPolicyReview(context = {}) {
+  return context.spgmPolicyReview
+    || context.spgm_policy_review
+    || context.policy_review
+    || null;
+}
+
 // ─── Core Evaluation ────────────────────────────────────────────────
 
 /**
@@ -136,12 +144,14 @@ export function evaluateConditions(intent, conditions) {
  * @param {object} context - Additional context
  * @param {string} context.systemMode - Current system mode (NORMAL, ELEVATED, LOCKDOWN, MAINTENANCE)
  * @param {object} context.principal - The requesting principal (for delegation checks)
+ * @param {object} context.spgmPolicyReview - Optional SPG-M review metadata
  * @returns {object} GovernanceDecision
  */
 export function evaluatePolicy(intent, policy, context = {}) {
   const checks = [];
   const systemMode = context.systemMode || "NORMAL";
   const principal = context.principal || null;
+  const spgmPolicyReview = extractSpgmPolicyReview(context);
 
   // ─── Step 1: Verify policy is active ─────────────────────────────
   if (!policy) {
@@ -234,7 +244,7 @@ export function evaluatePolicy(intent, policy, context = {}) {
   // ─── Step 6: System mode overrides ───────────────────────────────
   if (systemMode === "MAINTENANCE") {
     checks.push({ check: "system_mode", mode: "MAINTENANCE", effect: "execution_paused" });
-    return {
+    return applySpgmPolicyBridge({
       governance_decision: "MAINTENANCE_PAUSED",
       risk_tier: riskTier,
       matched_class: matchedClass?.class_id || "default",
@@ -245,7 +255,7 @@ export function evaluatePolicy(intent, policy, context = {}) {
       checks,
       policy_version: policy.policy_version,
       policy_hash: policy.policy_hash,
-    };
+    }, spgmPolicyReview);
   }
 
   if (systemMode === "ELEVATED" && governanceDecision !== "AUTO_DENY") {
@@ -319,9 +329,6 @@ export function evaluatePolicy(intent, policy, context = {}) {
   }
 
   // ─── Step 9: Build result ────────────────────────────────────────
-  const approvalRequirement = policy.approval_requirements?.[governanceDecision] || null;
-  const approvalTtl = policy.expiration_rules?.[riskTier] || null;
-
   // Determine status for backward compatibility
   let status;
   let reason;
@@ -339,39 +346,56 @@ export function evaluatePolicy(intent, policy, context = {}) {
       status = "requires_approval";
       reason = "Action requires explicit human authorization before execution.";
       break;
-    case "REQUIRE_QUORUM":
+    case "REQUIRE_QUORUM": {
+      const approvalRequirement = policy.approval_requirements?.[governanceDecision] || null;
       status = "requires_approval";
       reason = `Action requires ${approvalRequirement?.approvals_required || 2}-of-${approvalRequirement?.quorum_size || 3} Meta-Governance quorum.`;
       break;
-    case "REQUIRE_UNANIMOUS":
+    }
+    case "REQUIRE_UNANIMOUS": {
+      const approvalRequirement = policy.approval_requirements?.[governanceDecision] || null;
       status = "requires_approval";
       reason = `Action requires unanimous ${approvalRequirement?.quorum_size || 3}-of-${approvalRequirement?.quorum_size || 3} Meta-Governance quorum.`;
       break;
+    }
     default:
       status = "requires_approval";
       reason = "Unknown governance decision. Defaulting to require approval.";
   }
 
-  // Lockdown override: only root_authority can approve
-  let requiredRoles = approvalRequirement?.required_roles || null;
-  if (systemMode === "LOCKDOWN" && governanceDecision !== "AUTO_DENY") {
-    requiredRoles = ["root_authority"];
-  }
-
-  return {
+  const bridgedDecision = applySpgmPolicyBridge({
     governance_decision: governanceDecision,
     risk_tier: riskTier,
     matched_class: matchedClass?.class_id || "default",
     status,
     reason,
     requires_approval: governanceDecision !== "AUTO_APPROVE" && governanceDecision !== "AUTO_DENY",
-    risk_level: riskTier.toLowerCase(), // backward compat
+    risk_level: riskTier.toLowerCase(),
+    checks,
+    policy_version: policy.policy_version,
+    policy_hash: policy.policy_hash,
+  }, spgmPolicyReview);
+
+  const finalGovernanceDecision = bridgedDecision.governance_decision;
+  const finalRiskTier = bridgedDecision.risk_tier;
+  const approvalRequirement = policy.approval_requirements?.[finalGovernanceDecision] || null;
+  const approvalTtl = policy.expiration_rules?.[finalRiskTier] || null;
+
+  // Lockdown override: only root_authority can approve
+  let requiredRoles = approvalRequirement?.required_roles || null;
+  if (systemMode === "LOCKDOWN" && finalGovernanceDecision !== "AUTO_DENY") {
+    requiredRoles = ["root_authority"];
+  }
+
+  return {
+    ...bridgedDecision,
+    requires_approval: finalGovernanceDecision !== "AUTO_APPROVE" && finalGovernanceDecision !== "AUTO_DENY",
+    risk_level: finalRiskTier.toLowerCase(),
     approval_requirement: {
       ...approvalRequirement,
       required_roles: requiredRoles,
     },
     approval_ttl: approvalTtl,
-    checks,
     policy_version: policy.policy_version,
     policy_hash: policy.policy_hash,
   };
