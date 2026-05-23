@@ -1,14 +1,16 @@
 /**
  * SPG-M Routes
  *
- * Non-executing intake route for ambiguous pattern-governance signals.
- * This route does not approve actions, issue execution tokens, dispatch
- * connectors, write ledger entries, or create persistent memory.
+ * Non-executing intake and review routes for ambiguous pattern-governance signals.
+ * These routes do not approve actions, issue execution tokens, dispatch
+ * connectors, write ledger entries, generate receipts, or create persistent memory.
  */
 import { Router } from "express";
 import { requireRole } from "../security/principals.mjs";
+import { getActivePolicy, getSystemMode } from "../governance/policy-store.mjs";
 import { processSpgmIntake } from "../spgm/intake.mjs";
 import { validateSpgmIntake, buildInvalidSpgmIntakeResponse } from "../spgm/schema.mjs";
+import { buildSpgmPolicyReviewPreview } from "../spgm/policy-review.mjs";
 
 const router = Router();
 
@@ -20,6 +22,7 @@ router.get("/status", (req, res) => {
     version: "0.1",
     routes: {
       "POST /spgm/intake": "Non-executing pattern-governance intake",
+      "POST /spgm/policy-review": "Non-executing RIO policy review preview with SPG-M metadata",
       "GET /spgm/status": "SPG-M capability/status report",
     },
     capabilities: {
@@ -29,6 +32,8 @@ router.get("/status", (req, res) => {
       routing_markers: true,
       receipt_event_recommendation: true,
       receipt_handoff_metadata: true,
+      policy_context_metadata: true,
+      policy_review_preview: true,
     },
     not_capable_of: [
       "approval",
@@ -39,7 +44,7 @@ router.get("/status", (req, res) => {
       "receipt_generation",
       "persistent_memory",
     ],
-    authority_boundary: "SPG-M is a non-executing intake and routing surface. It cannot approve, execute, issue tokens, write ledger entries, generate receipts, or create memory.",
+    authority_boundary: "SPG-M is a non-executing intake, routing, and review surface. It cannot approve, execute, issue tokens, write ledger entries, generate receipts, or create memory.",
   });
 });
 
@@ -68,6 +73,29 @@ router.post("/intake", requireRole("proposer", "approver", "auditor", "root_auth
     return res.status(500).json({
       error: "SPGM_INTAKE_ERROR",
       message: "Internal error processing SPG-M intake.",
+      fail_mode: "closed",
+    });
+  }
+});
+
+router.post("/policy-review", requireRole("proposer", "auditor", "root_authority"), (req, res) => {
+  try {
+    const { intent, policy, policy_review, spgm_policy_review, spgmPolicyReview, system_mode } = req.body || {};
+    const preview = buildSpgmPolicyReviewPreview({
+      intent,
+      policy: policy || getActivePolicy(),
+      policyReview: spgmPolicyReview || spgm_policy_review || policy_review || null,
+      systemMode: system_mode || getSystemMode(),
+      principal: req.principal || null,
+    });
+
+    const statusCode = preview.status === "ok" ? 200 : 400;
+    return res.status(statusCode).json(preview);
+  } catch (err) {
+    console.error(`[RIO Gateway] SPG-M policy-review error: ${err.message}`);
+    return res.status(500).json({
+      error: "SPGM_POLICY_REVIEW_ERROR",
+      message: "Internal error processing SPG-M policy-review preview.",
       fail_mode: "closed",
     });
   }
