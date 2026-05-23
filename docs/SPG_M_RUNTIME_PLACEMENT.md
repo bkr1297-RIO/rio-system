@@ -4,11 +4,12 @@
 
 Runtime placement note for the ONE/RIO/MUSS system.
 
-SPG-M now has a non-executing gateway intake stub in `rio-system`.
+SPG-M has a non-executing gateway intake surface in `rio-system` and a conservative bridge into the pure RIO policy engine.
 
 The implemented gateway surface is:
 
 ```text
+GET /spgm/status
 POST /spgm/intake
 ```
 
@@ -44,7 +45,10 @@ Human / System Signal
       → Governance gate markers
       → Containment / refusal / routing markers
       → Optional receipt handoff metadata
-  → RIO Proposal / Policy / Authorization
+      → Policy context and review metadata
+  → RIO Policy Review
+      → Conservative review escalation only
+  → Authorization
   → Execution Gate
   → Receipt + Ledger
 ```
@@ -54,7 +58,7 @@ Human / System Signal
 | Component | SPG-M Relationship |
 |---|---|
 | Gateway | SPG-M has a non-executing intake route at `POST /spgm/intake`. |
-| Governor / Policy | SPG-M may provide consequence classification and gate results as context. It does not decide policy outcome. |
+| Governor / Policy | SPG-M review metadata may conservatively escalate `AUTO_APPROVE` to `REQUIRE_HUMAN`. It cannot approve. |
 | Execution Gate | SPG-M does not execute actions and does not bypass the gate. |
 | Receipt System | SPG-M intake may recommend receipt-compatible proof through `receipt_event` and `receipt_handoff` metadata. It does not create receipts. |
 | Pattern Corpus | SPG-M aligns with non-authoritative pattern handling. Patterns may orient attention but do not decide. |
@@ -66,13 +70,16 @@ Human / System Signal
 |---|---|
 | Doctrine | External/conceptual kernel exists |
 | Receipt-compatible profile | Implemented in `rio-receipt-protocol` |
+| Gateway status endpoint | Implemented |
 | Gateway intake | Implemented, non-executing |
 | Intake schema validation | Implemented, fail-closed |
 | Consequence classification | Implemented, lightweight |
 | Gate status markers | Implemented |
 | Receipt-event recommendation | Implemented as metadata only |
 | Receipt handoff packet | Implemented as metadata only |
-| Active policy evaluation | Not implemented |
+| Policy context | Implemented as metadata only |
+| Policy review metadata | Implemented as metadata only |
+| Pure policy-engine bridge | Implemented as conservative escalation only |
 | Pattern memory integration | Not implemented |
 | Receipt generation / ledger write | Not implemented in SPG-M intake |
 | Execution authority | Not allowed |
@@ -88,6 +95,7 @@ SPG-M must preserve these boundaries:
 - Pattern promotion does not authorize action.
 - Consequence class determines routing weight.
 - Class 3+ action must route to the appropriate RIO/MUSS governance path.
+- Policy review metadata may increase governance weight only.
 - Receipt handoff is metadata only until the receipt layer produces proof.
 
 ## Integration Path
@@ -96,7 +104,7 @@ Implementation should proceed in this order:
 
 1. ~~Add a gateway-side SPG-M intake route or middleware in non-executing mode.~~ Complete.
 2. ~~Produce SPG-M gate results as structured context.~~ Complete.
-3. Route consequential outputs into existing RIO policy and authorization flow.
+3. ~~Route consequential outputs into existing RIO policy review as conservative context.~~ Initial pure bridge complete.
 4. Generate receipt-compatible SPG-M events through the receipt layer.
 5. Keep pattern storage separate from the ledger unless a receipt event is produced.
 
@@ -116,4 +124,4 @@ gateway/spgm/VERIFY_INTAKE.md
 
 ## Summary
 
-SPG-M is now present as a non-executing pre-policy pattern-governance intake surface. It may classify and contain ambiguous signals, but it cannot approve, execute, create receipts, write ledger entries, or create authority. Execution remains governed by the existing RIO pipeline and proven through receipts.
+SPG-M is present as a non-executing pre-policy pattern-governance intake surface, with a conservative RIO policy-engine bridge. It may classify and contain ambiguous signals, and it may increase review requirements. It cannot approve, execute, create receipts, write ledger entries, create memory, or create authority. Execution remains governed by the existing RIO pipeline and proven through receipts.
