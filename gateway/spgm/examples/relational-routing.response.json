@@ -45,5 +45,43 @@
     "non_executing": true,
     "receipt_decision_hint": "BLOCK"
   },
+  "policy_context": {
+    "context_type": "spgm_policy_context",
+    "status": "prepared",
+    "mode": "non_executing",
+    "source": {
+      "module": "SPG-M",
+      "route": "/spgm/intake",
+      "system": "rio-system"
+    },
+    "spgm": {
+      "status": "route",
+      "consequence_class": 3
+    },
+    "routing": {
+      "rio_required": true,
+      "muss_required": true,
+      "reason": "Consequence class requires routing before action."
+    },
+    "receipt_handoff_present": true,
+    "boundary_flags": {
+      "non_executing": true,
+      "signal_not_command": true,
+      "interpretation_provisional": true,
+      "fact_symbol_separated": true,
+      "machine_boundary_preserved": true,
+      "rio_required": true,
+      "muss_required": true,
+      "receipt_event_recommended": true,
+      "receipt_decision_hint": "BLOCK"
+    },
+    "policy_use": {
+      "may_inform_policy_review": true,
+      "may_create_authorization": false,
+      "may_create_execution": false,
+      "may_write_ledger": false,
+      "may_create_memory": false
+    }
+  },
   "next_step": "policy_review"
 }
