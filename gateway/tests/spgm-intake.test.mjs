@@ -30,6 +30,9 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.routing.muss_required, false);
     assert.equal(result.next_step, "private_reflection");
     assert.equal(result.receipt_event.recommended, false);
+    assert.equal(result.policy_review.accepted, true);
+    assert.equal(result.policy_review.policy_effect.may_authorize, false);
+    assert.equal(result.policy_review.policy_effect.may_execute, false);
   });
 
   it("routes relational action as Class 3", () => {
@@ -51,6 +54,9 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.next_step, "policy_review");
     assert.equal(result.receipt_event.recommended, true);
     assert.equal(result.receipt_event.decision_hint, "BLOCK");
+    assert.equal(result.policy_review.accepted, true);
+    assert.equal(result.policy_review.required_action, "rio_review_required");
+    assert.equal(result.policy_review.policy_effect.may_authorize, false);
   });
 
   it("classifies material domains as Class 4", () => {
@@ -90,6 +96,8 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.next_step, "containment");
     assert.equal(result.receipt_event.recommended, true);
     assert.equal(result.receipt_event.decision_hint, "BLOCK");
+    assert.equal(result.policy_review.accepted, true);
+    assert.equal(result.policy_review.policy_effect.may_authorize, false);
   });
 
   it("holds when no literal signal is present", () => {
@@ -103,6 +111,8 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.spgm_result.fact_symbol_separated, false);
     assert.equal(result.receipt_event.recommended, true);
     assert.equal(result.receipt_event.decision_hint, "BLOCK");
+    assert.equal(result.policy_review.accepted, false);
+    assert.equal(result.policy_review.required_action, "reject_or_contain_context");
   });
 
   it("returns a non-executing authority boundary", () => {
