@@ -12,6 +12,37 @@ import { validateSpgmIntake, buildInvalidSpgmIntakeResponse } from "../spgm/sche
 
 const router = Router();
 
+router.get("/status", (req, res) => {
+  return res.status(200).json({
+    module: "SPG-M",
+    status: "available",
+    mode: "non_executing",
+    version: "0.1",
+    routes: {
+      "POST /spgm/intake": "Non-executing pattern-governance intake",
+      "GET /spgm/status": "SPG-M capability/status report",
+    },
+    capabilities: {
+      intake_validation: true,
+      consequence_classification: true,
+      gate_markers: true,
+      routing_markers: true,
+      receipt_event_recommendation: true,
+      receipt_handoff_metadata: true,
+    },
+    not_capable_of: [
+      "approval",
+      "execution",
+      "token_issuance",
+      "connector_dispatch",
+      "ledger_write",
+      "receipt_generation",
+      "persistent_memory",
+    ],
+    authority_boundary: "SPG-M is a non-executing intake and routing surface. It cannot approve, execute, issue tokens, write ledger entries, generate receipts, or create memory.",
+  });
+});
+
 router.post("/intake", requireRole("proposer", "approver", "auditor", "root_authority"), (req, res) => {
   try {
     const validation = validateSpgmIntake(req.body || {});
