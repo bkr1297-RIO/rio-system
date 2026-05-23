@@ -1,0 +1,65 @@
+{
+  "context_type": "spgm_policy_context",
+  "status": "prepared",
+  "mode": "non_executing",
+  "source": {
+    "module": "SPG-M",
+    "route": "/spgm/intake",
+    "system": "rio-system"
+  },
+  "signal_summary": {
+    "literal_description": "Human reports a recurring relational pattern involving another person.",
+    "signal_type": "relational",
+    "recurrence_claimed": true
+  },
+  "proposed_use": {
+    "use_type": "propose",
+    "proposed_action": "start_conversation",
+    "affected_parties_count": 1,
+    "known_domains": ["relationship"]
+  },
+  "spgm": {
+    "status": "route",
+    "consequence_class": 3,
+    "gates": {
+      "sovereignty": "pass",
+      "fact_symbol_separation": "pass",
+      "interpretation_provisionality": "pass",
+      "consent": "hold",
+      "scope": "pass",
+      "consequence": "pass",
+      "shadow_inflation": "hold",
+      "evidence_recurrence": "hold",
+      "reversibility": "hold",
+      "machine_boundary": "pass",
+      "receipt": "hold",
+      "memory_muss": "na",
+      "rio_routing": "hold"
+    }
+  },
+  "routing": {
+    "rio_required": true,
+    "muss_required": true,
+    "reason": "Consequence class requires routing before action."
+  },
+  "receipt_handoff_present": true,
+  "boundary_flags": {
+    "non_executing": true,
+    "signal_not_command": true,
+    "interpretation_provisional": true,
+    "fact_symbol_separated": true,
+    "machine_boundary_preserved": true,
+    "rio_required": true,
+    "muss_required": true,
+    "receipt_event_recommended": true,
+    "receipt_decision_hint": "BLOCK"
+  },
+  "policy_use": {
+    "may_inform_policy_review": true,
+    "may_create_authorization": false,
+    "may_create_execution": false,
+    "may_write_ledger": false,
+    "may_create_memory": false
+  },
+  "authority_boundary": "SPG-M policy context may inform RIO review, but it cannot approve, execute, issue tokens, write ledger entries, generate receipts, or create memory."
+}
