@@ -8,6 +8,7 @@
  */
 import { maybeBuildSpgmReceiptHandoff } from "./receipt-event.mjs";
 import { maybeBuildSpgmPolicyContext } from "./policy-context.mjs";
+import { buildSpgmPolicyReviewFromIntakeResult } from "./policy-adapter.mjs";
 
 const MATERIAL_DOMAINS = new Set([
   "money",
@@ -194,8 +195,13 @@ export function processSpgmIntake(packet = {}) {
     receipt_handoff: maybeBuildSpgmReceiptHandoff(packet, result),
   };
 
-  return {
+  const withPolicyContext = {
     ...withReceiptHandoff,
     policy_context: maybeBuildSpgmPolicyContext(packet, withReceiptHandoff),
+  };
+
+  return {
+    ...withPolicyContext,
+    policy_review: buildSpgmPolicyReviewFromIntakeResult(withPolicyContext),
   };
 }
