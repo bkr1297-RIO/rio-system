@@ -37,5 +37,43 @@
     "proof_layer": "rio-receipt-protocol"
   },
   "receipt_handoff": null,
+  "policy_context": {
+    "context_type": "spgm_policy_context",
+    "status": "prepared",
+    "mode": "non_executing",
+    "source": {
+      "module": "SPG-M",
+      "route": "/spgm/intake",
+      "system": "rio-system"
+    },
+    "spgm": {
+      "status": "record",
+      "consequence_class": 1
+    },
+    "routing": {
+      "rio_required": false,
+      "muss_required": false,
+      "reason": null
+    },
+    "receipt_handoff_present": false,
+    "boundary_flags": {
+      "non_executing": true,
+      "signal_not_command": true,
+      "interpretation_provisional": true,
+      "fact_symbol_separated": true,
+      "machine_boundary_preserved": true,
+      "rio_required": false,
+      "muss_required": false,
+      "receipt_event_recommended": false,
+      "receipt_decision_hint": null
+    },
+    "policy_use": {
+      "may_inform_policy_review": true,
+      "may_create_authorization": false,
+      "may_create_execution": false,
+      "may_write_ledger": false,
+      "may_create_memory": false
+    }
+  },
   "next_step": "private_reflection"
 }

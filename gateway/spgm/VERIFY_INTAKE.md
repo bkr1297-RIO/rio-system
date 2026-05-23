@@ -52,8 +52,8 @@ Available request examples:
 
 Available expected response fixtures:
 
-- `private-reflection.response.json` — no receipt handoff by default
-- `relational-routing.response.json` — receipt event recommended, `BLOCK` decision hint, RIO/MUSS required
+- `private-reflection.response.json` — no receipt handoff by default; includes non-authorizing policy context
+- `relational-routing.response.json` — receipt event recommended, `BLOCK` decision hint, RIO/MUSS required, policy context prepared
 - `invalid-missing-signal.response.json` — validation hold, containment next step
 
 ## Manual Intake Verification
@@ -77,7 +77,30 @@ Expected properties:
 - no ledger entry is written by this route
 - result includes `spgm_result`
 - result includes routing markers
+- result includes `policy_context`
 - consequential/contained/refused/held events may include `receipt_event` and `receipt_handoff`
+
+## Policy Context Boundary
+
+`policy_context` is review metadata only.
+
+It may inform later RIO policy review, but it does not:
+
+- create an intent,
+- authorize an action,
+- execute an action,
+- issue an execution token,
+- write a ledger entry,
+- generate a receipt,
+- create persistent memory.
+
+Expected policy-context behavior:
+
+| Case | `policy_context.status` | Authority effect |
+|---|---|---|
+| Private reflection | `prepared` | May inform review only; no authorization |
+| Relational / Class 3+ | `prepared` | Marks RIO/MUSS need; no authorization |
+| Invalid intake | validation hold | no policy context from intake processing |
 
 ## Receipt Handoff Boundary
 
@@ -110,6 +133,7 @@ The route must preserve these boundaries:
 - Class 3+ requires routing before action,
 - invalid packets fail closed into hold/containment,
 - machine assistance is metadata/context only,
+- policy context is review metadata, not authorization,
 - receipt handoff is proof metadata, not proof creation.
 
 ## Summary
