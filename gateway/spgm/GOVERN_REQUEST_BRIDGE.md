@@ -2,17 +2,24 @@
 
 ## Purpose
 
-This bridge allows live `/govern` requests to carry optional SPG-M review metadata into RIO's pure policy engine.
+This bridge allows live governance requests to carry optional SPG-M review metadata into RIO's pure policy engine.
 
 The bridge is conservative. It may increase review requirements, but it may not reduce review requirements or create authority.
 
 ## Runtime Placement
 
-`gateway/routes/spgm-govern.mjs` is mounted before the standard pipeline routes.
+The bridge is mounted before standard governance routes.
 
-When SPG-M review metadata is present, the bridge handles `POST /govern` and passes the metadata into `evaluatePolicy` as context.
+Covered paths:
 
-When SPG-M review metadata is absent, the bridge passes through to the standard `/govern` route.
+```text
+POST /govern
+POST /api/v1/intents/:id/govern
+```
+
+When SPG-M review metadata is present, the bridge handles the request and passes the metadata into `evaluatePolicy` as context.
+
+When SPG-M review metadata is absent, the request passes through to the standard governance route.
 
 ## Accepted Request Fields
 

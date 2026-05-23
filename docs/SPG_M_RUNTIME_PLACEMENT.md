@@ -2,15 +2,19 @@
 
 ## Status
 
-SPG-M now has three implemented surfaces in `rio-system`:
+SPG-M now has five implemented surfaces in `rio-system`:
 
 ```text
 GET /spgm/status
 POST /spgm/intake
 POST /spgm/policy-review
+POST /govern
+POST /api/v1/intents/:id/govern
 ```
 
-These surfaces are non-executing. They classify, route, and preview review outcomes. They do not grant permission, dispatch tools, write ledger entries, generate receipts, or create memory.
+The first three are SPG-M-specific non-executing surfaces. The two governance paths accept optional SPG-M review metadata as conservative context.
+
+SPG-M may increase review requirements. It may not grant permission, dispatch tools, write execution ledger entries, generate receipts, or create memory.
 
 ## Purpose
 
@@ -34,13 +38,13 @@ SPG-M does not replace this pipeline.
 Human / System Signal
   → SPG-M Intake
   → SPG-M Policy Review Preview
-  → RIO Policy Review
+  → RIO Policy Review / Govern Bridge
   → Authorization
   → Execution Gate
   → Receipt + Ledger
 ```
 
-SPG-M prepares context before RIO review. It does not become a parallel action path.
+SPG-M prepares context before and during RIO review. It does not become a parallel action path.
 
 ## Runtime Status
 
@@ -50,6 +54,8 @@ SPG-M prepares context before RIO review. It does not become a parallel action p
 | Gateway status endpoint | Implemented |
 | Gateway intake | Implemented, non-executing |
 | Gateway policy review preview | Implemented, non-executing |
+| `/govern` bridge | Implemented |
+| API v1 govern bridge | Implemented |
 | Intake schema validation | Implemented |
 | Consequence classification | Implemented |
 | Gate markers | Implemented |
@@ -74,6 +80,7 @@ SPG-M must preserve these boundaries:
 - Consequence class determines routing weight.
 - Policy review metadata may increase review weight only.
 - Policy review preview does not create an intent or grant permission.
+- Govern bridge metadata does not bypass authorization.
 - Receipt handoff is metadata only until the receipt layer produces proof.
 
 ## Verification
@@ -83,6 +90,7 @@ From `gateway/`:
 ```bash
 npm run test:spgm
 npm run test:spgm:policy-review
+npm run test:spgm:govern
 ```
 
 Manual checks:
@@ -90,8 +98,9 @@ Manual checks:
 ```text
 gateway/spgm/VERIFY_INTAKE.md
 gateway/spgm/VERIFY_POLICY_REVIEW.md
+gateway/spgm/GOVERN_REQUEST_BRIDGE.md
 ```
 
 ## Summary
 
-SPG-M is present as a non-executing pre-policy pattern-governance intake and review-preview surface. It may classify ambiguous signals, preview RIO review, and increase review requirements. It cannot grant permission, run tools, write ledger entries, create receipts, create memory, or create authority.
+SPG-M is present as a non-executing pre-policy intake and review-preview surface, with live conservative bridges into both internal and API v1 governance paths. It may classify ambiguous signals, preview RIO review, and increase review requirements. It cannot grant permission, run tools, create receipts, create memory, or create authority.
