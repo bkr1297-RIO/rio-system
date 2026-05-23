@@ -29,6 +29,7 @@ Signal → Proposal → Policy → Authorization → Execution Gate → Execute 
 | PostgreSQL Database | Running | External (Render) |
 | Render Deployment | Running | Production gateway instance |
 | SPG-M Intake | Running, non-executing | `POST /spgm/intake`, `gateway/spgm/` |
+| SPG-M Policy Bridge | Running in pure policy engine | `gateway/governance/spgm-policy-bridge.mjs` |
 ---
 ## 3. Specification vs Runtime Mapping
 The following protocols and specifications define behavior that is **implemented in the gateway**:
@@ -58,23 +59,26 @@ The following protocols and specifications define behavior that is **implemented
 ---
 ### Policy & Risk Layer
 - Spec Location: `spec/RIO-STANDARD-v1.0.md`
-- Runtime Implementation: Gateway risk classification logic
+- Runtime Implementation: Gateway risk classification logic and pure policy engine
 - Function:
   - Classifies intent risk
   - Determines approval requirement
+  - May consume SPG-M review metadata as conservative context
   - Does NOT execute actions
 ---
 ### SPG-M Pattern Governance Intake
 - Spec Location: `docs/SPG_M_RUNTIME_PLACEMENT.md`
 - Intake Contract: `docs/SPG_M_GATEWAY_INTAKE_CONTRACT.md`
+- Policy Bridge: `docs/SPG_M_POLICY_CONTEXT_BRIDGE.md`
 - Verification: `gateway/spgm/VERIFY_INTAKE.md`
-- Runtime Implementation: `POST /spgm/intake`, `gateway/spgm/`
+- Runtime Implementation: `POST /spgm/intake`, `gateway/spgm/`, `gateway/governance/spgm-policy-bridge.mjs`
 - Function:
   - Accepts ambiguous pattern-governance signals
   - Validates SPG-M intake packets fail-closed
   - Classifies consequence class
-  - Returns gate, routing, receipt-event, and handoff metadata
-  - Does NOT approve, execute, issue tokens, dispatch connectors, write ledger entries, or create memory
+  - Returns gate, routing, receipt-event, handoff, policy-context, and policy-review metadata
+  - Allows the pure policy engine to escalate `AUTO_APPROVE` to `REQUIRE_HUMAN` when SPG-M review is required
+  - Does NOT approve, execute, issue tokens, dispatch connectors, write ledger entries, generate receipts, or create memory
 ---
 ## 4. System Invariants (Enforced)
 At runtime, the system guarantees:
@@ -85,13 +89,14 @@ At runtime, the system guarantees:
 5. No receipt without ledger entry
 6. All actions produce verifiable lineage
 7. SPG-M intake is non-executing and cannot bypass the Execution Gate
+8. SPG-M policy context can only preserve or increase governance weight
 ---
 ## 5. What Is NOT Running (Important)
 The following components exist in specs but are NOT part of the current runtime system:
 | Component | Status |
 |----------|--------|
 | Mantis (pattern detection) | Not implemented |
-| SPG-M full pattern-governance runtime | Intake implemented; active policy/memory/receipt generation not implemented |
+| SPG-M full pattern-governance runtime | Intake and policy bridge implemented; memory/receipt generation not implemented |
 | Bondi (AI orchestration layer) | Not part of runtime |
 | ONE (PWA interface) | Not deployed |
 | Meta-Governance quorum system | Not implemented |
@@ -131,7 +136,7 @@ Attempt:
 - parameter mismatch → must fail
 - missing ledger → execution must halt
 ---
-### Step 5 — Validate SPG-M Intake
+### Step 5 — Validate SPG-M Intake and Policy Bridge
 From `gateway/`:
 ```bash
 npm run test:spgm
@@ -146,7 +151,7 @@ The following gaps were identified during audit. Status as of v2.9.0:
 - No CI/CD pipeline enforcing tests — Open
 - ~~Multiple overlapping architecture documents without a reading map~~ — Fixed (SYSTEM_RUNTIME_MAP.md)
 - ~~No LICENSE file~~ — Fixed (MIT)
-- SPG-M active policy integration is not implemented — Open
+- ~~SPG-M active policy integration is not implemented~~ — Initial pure policy bridge implemented
 - SPG-M receipt generation / ledger write is not implemented — Open
 - SPG-M memory or pattern-log persistence is not implemented — Open
 ---
@@ -160,15 +165,17 @@ To understand the system correctly:
 6. `docs/SPG_M_RUNTIME_PLACEMENT.md`
 7. `docs/ONE_RIO_MUSS_MODULE_MAP.md`
 8. `docs/SPG_M_GATEWAY_INTAKE_CONTRACT.md`
-9. `gateway/spgm/VERIFY_INTAKE.md`
-10. `demo/DEMO_WALKTHROUGH.md`
+9. `docs/SPG_M_POLICY_CONTEXT_BRIDGE.md`
+10. `gateway/spgm/VERIFY_INTAKE.md`
+11. `demo/DEMO_WALKTHROUGH.md`
 ---
 ## 10. Summary
 This is a **single governed execution system**, not multiple systems.
 - All actions pass through one enforcement boundary (Execution Gate)
 - All preconditions prepare valid inputs to that boundary
 - All postconditions prove what happened
-- SPG-M intake is now implemented as a non-executing pre-policy signal classification and routing surface
+- SPG-M intake is implemented as a non-executing pre-policy signal classification and routing surface
+- SPG-M policy bridge is implemented as a conservative review-escalation path in the pure policy engine
 - SPG-M remains non-authorizing and non-executing
 There is no parallel execution path.
 There is no dual authority.
