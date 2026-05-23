@@ -1,0 +1,11 @@
+{
+  "intent_id": "intent-example-id",
+  "governance_decision": "REQUIRE_HUMAN",
+  "governance_status": "requires_approval",
+  "risk_tier": "MEDIUM",
+  "risk_level": "medium",
+  "requires_approval": true,
+  "spgm_policy_context_status": "escalated_to_review",
+  "spgm_policy_review_applied": true,
+  "api_version": "v1"
+}
