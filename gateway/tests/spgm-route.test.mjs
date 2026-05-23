@@ -1,7 +1,7 @@
 /**
  * SPG-M Route Tests
  *
- * Tests the non-executing /spgm/intake route in isolation with a mock principal.
+ * Tests the non-executing /spgm routes in isolation with a mock principal.
  */
 import { describe, it, before, after } from "node:test";
 import assert from "node:assert/strict";
@@ -30,6 +30,12 @@ function buildTestApp() {
   return app;
 }
 
+async function get(path) {
+  const res = await fetch(`${baseUrl}${path}`);
+  const data = await res.json();
+  return { status: res.status, data };
+}
+
 async function post(path, body) {
   const res = await fetch(`${baseUrl}${path}`, {
     method: "POST",
@@ -40,7 +46,7 @@ async function post(path, body) {
   return { status: res.status, data };
 }
 
-describe("SPG-M Intake Route", () => {
+describe("SPG-M Routes", () => {
   before(async () => {
     const app = buildTestApp();
     await new Promise((resolve) => {
@@ -54,6 +60,20 @@ describe("SPG-M Intake Route", () => {
     if (server) {
       await new Promise((resolve) => server.close(resolve));
     }
+  });
+
+  it("reports non-executing SPG-M status", async () => {
+    const { status, data } = await get("/spgm/status");
+
+    assert.equal(status, 200);
+    assert.equal(data.module, "SPG-M");
+    assert.equal(data.status, "available");
+    assert.equal(data.mode, "non_executing");
+    assert.equal(data.capabilities.intake_validation, true);
+    assert.equal(data.capabilities.receipt_handoff_metadata, true);
+    assert.ok(data.not_capable_of.includes("execution"));
+    assert.ok(data.not_capable_of.includes("ledger_write"));
+    assert.match(data.authority_boundary, /cannot approve/);
   });
 
   it("returns non-executing private reflection result", async () => {
