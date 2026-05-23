@@ -1,0 +1,14 @@
+{
+  "policy_review": {
+    "accepted": true,
+    "context_type": "spgm_policy_review_metadata",
+    "mode": "non_executing",
+    "consequence_class": 3,
+    "spgm_status": "route",
+    "rio_required": true,
+    "muss_required": true,
+    "receipt_event_recommended": true,
+    "receipt_decision_hint": "BLOCK",
+    "required_action": "rio_review_required"
+  }
+}
