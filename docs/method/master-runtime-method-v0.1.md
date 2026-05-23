@@ -7,7 +7,7 @@ Status: v0.1 working master method
 Parent doctrine: ONE RIO MUSS — Master Doctrine v0.1  
 Parent map: ONE/RIO/MUSS Master Operating Map v0.2  
 Source map: MUS Source Map and Routing Index v0.1  
-Commit status: no repo commit  
+Repo status: repo-visible on main via PR #170 / merge commit 902e5f489bf65877a34f0bbe4905842dbaafa9ba  
 Receipt status: no external MUSS receipt  
 
 ## Control Statement
@@ -758,7 +758,9 @@ The human remains authority.
 
 ## Lock Note
 
-Locked.
+Method-language lock only.
+
+This means the v0.1 method language is stable for review and build planning. It does not promote the method to source-of-truth and does not prove runtime implementation.
 
 Master Doctrine governs.  
 Master Operating Map orients.  
