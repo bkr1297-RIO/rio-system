@@ -24,6 +24,7 @@ import syncRoutes from "./routes/sync.mjs";
 import proxyRoutes from "./routes/proxy.mjs";
 import spgmRoutes from "./routes/spgm.mjs";
 import spgmGovernRoutes from "./routes/spgm-govern.mjs";
+import spgmApiV1GovernRoutes from "./routes/spgm-api-v1-govern.mjs";
 import { initApiKeys } from "./security/api-keys.mjs";
 import { apiKeyAuth } from "./security/api-auth.mjs";
 import { rateLimitMiddleware } from "./security/rate-limiter.mjs";
@@ -298,6 +299,11 @@ async function start() {
   // SPG-M Pattern Governance Routes (non-executing)
   // ---------------------------------------------------------------------------
   app.use("/spgm", spgmRoutes);
+
+  // ---------------------------------------------------------------------------
+  // SPG-M API v1 Govern Bridge Routes (conservative context only)
+  // ---------------------------------------------------------------------------
+  app.use("/api/v1", apiKeyAuth, rateLimitMiddleware, spgmApiV1GovernRoutes);
 
   // ---------------------------------------------------------------------------
   // Public API v1 Routes (WS-012)
