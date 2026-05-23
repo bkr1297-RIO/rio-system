@@ -7,6 +7,7 @@
  * connectors, write ledger entries, or create persistent memory.
  */
 import { maybeBuildSpgmReceiptHandoff } from "./receipt-event.mjs";
+import { maybeBuildSpgmPolicyContext } from "./policy-context.mjs";
 
 const MATERIAL_DOMAINS = new Set([
   "money",
@@ -188,8 +189,13 @@ export function processSpgmIntake(packet = {}) {
     authority_boundary: "SPG-M intake is non-executing context. It does not approve, execute, issue tokens, or write ledger entries.",
   };
 
-  return {
+  const withReceiptHandoff = {
     ...result,
     receipt_handoff: maybeBuildSpgmReceiptHandoff(packet, result),
+  };
+
+  return {
+    ...withReceiptHandoff,
+    policy_context: maybeBuildSpgmPolicyContext(packet, withReceiptHandoff),
   };
 }
