@@ -9,7 +9,7 @@
     "start": "node server.mjs",
     "dev": "node --watch server.mjs",
     "test": "node --test tests/gateway.test.mjs",
-    "test:c2c": "node --test tests/office-integrity-validator.test.mjs",
+    "test:c2c": "node --test tests/office-integrity-validator.test.mjs tests/office-integrity-execution-precheck.test.mjs",
     "test:spgm": "node --test tests/spgm-intake.test.mjs tests/spgm-schema.test.mjs tests/spgm-route.test.mjs tests/spgm-receipt-event.test.mjs tests/spgm-policy-context.test.mjs tests/spgm-policy-adapter.test.mjs tests/spgm-policy-bridge.test.mjs tests/spgm-policy-engine-integration.test.mjs",
     "test:spgm:policy-review": "node --test tests/spgm-policy-review.test.mjs",
     "test:spgm:govern": "node --test tests/spgm-govern-request.test.mjs tests/spgm-govern-route.test.mjs",
