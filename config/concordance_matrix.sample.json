@@ -1,0 +1,79 @@
+[
+  {
+    "primitive_id": "P-CONV-001",
+    "primitive_name": "Triadic Convergence Check",
+    "aliases": [
+      "Triadic Convergence Gate",
+      "Threefold Continuity Check",
+      "Constraint-Driven Convergence"
+    ],
+    "active_office": "validation_methodology",
+    "office_function": "Checks whether authority, meaning, and execution remain aligned; broken convergence triggers HOLD.",
+    "allowed_actions": [
+      "classify_convergence_state",
+      "surface_failed_pin",
+      "recommend_hold"
+    ],
+    "prohibited_actions": [
+      "authorize_action",
+      "issue_execution_token",
+      "override_rio",
+      "override_sentinel",
+      "treat_model_agreement_as_permission"
+    ],
+    "required_authority_level": "none_observational",
+    "consequence_classes": [
+      "private_reflection",
+      "internal_architecture",
+      "repo_documentation"
+    ],
+    "required_receipt_type": "hold_receipt",
+    "inversion_or_sibling": "RIO admissibility gate; Sentinel fidelity gate; human authority event",
+    "failure_mode": "authority_substitution",
+    "repair_path": "ROUTE_TO_CONCORDANCE_REVIEW",
+    "evidence_level": "TARGET_STATE_SPEC",
+    "status": "DO_NOT_CANONIZE_AS_GATE",
+    "source_anchor": "00_PATTERN_CONCORDANCE — Name Office Function Map v0.1",
+    "notes": "Convergence is signal, not permission. Broken convergence can require HOLD; convergence cannot authorize movement."
+  },
+  {
+    "primitive_id": "P-GRAMMAR-001",
+    "primitive_name": "Grammar / Translation Office",
+    "aliases": [
+      "Bondi",
+      "Scribe",
+      "Translator",
+      "Pattern Router"
+    ],
+    "active_office": "formation_layer",
+    "office_function": "Structures human signal into candidate packets and detects register/category errors.",
+    "allowed_actions": [
+      "mirror_intent",
+      "structure_packet",
+      "classify_register",
+      "surface_uncertainty",
+      "route_for_review"
+    ],
+    "prohibited_actions": [
+      "authorize_action",
+      "self_certify_output",
+      "issue_receipt",
+      "claim_runtime_proof",
+      "publish_without_approval"
+    ],
+    "required_authority_level": "policy_profile",
+    "consequence_classes": [
+      "private_reflection",
+      "internal_architecture",
+      "repo_documentation"
+    ],
+    "required_receipt_type": "classification_receipt",
+    "inversion_or_sibling": "Witness office; MUS receipt layer; Human SourcePoint",
+    "failure_mode": "witness_authorizer_collapse",
+    "repair_path": "HOLD_AND_RETURN",
+    "evidence_level": "TARGET_STATE_SPEC",
+    "status": "PENDING_REVIEW",
+    "source_anchor": "C2C-001 Concordance Control Registry v0.1",
+    "notes": "Grammar may form. Grammar may not authorize."
+  }
+]
