@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://one-rio-muss.local/schemas/concordance/concordance-entry.schema.json",
+  "title": "C2C-001 Concordance Entry",
+  "description": "Target-state schema for mapping a primitive pattern to its allowed office, actions, boundaries, inversions, evidence status, and repair path.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "primitive_id",
+    "primitive_name",
+    "active_office",
+    "office_function",
+    "allowed_actions",
+    "prohibited_actions",
+    "required_authority_level",
+    "required_receipt_type",
+    "failure_mode",
+    "repair_path",
+    "evidence_level",
+    "status"
+  ],
+  "properties": {
+    "primitive_id": {
+      "type": "string",
+      "pattern": "^[A-Z0-9_-]+$"
+    },
+    "primitive_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "aliases": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "active_office": {
+      "type": "string",
+      "minLength": 1
+    },
+    "office_function": {
+      "type": "string",
+      "minLength": 1
+    },
+    "allowed_actions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "prohibited_actions": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "required_authority_level": {
+      "type": "string",
+      "enum": [
+        "none_observational",
+        "policy_profile",
+        "human_confirmation",
+        "human_signature",
+        "fresh_scoped_authority_event"
+      ]
+    },
+    "consequence_classes": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "private_reflection",
+          "internal_architecture",
+          "repo_documentation",
+          "runtime_action",
+          "external_communication",
+          "public_claim",
+          "financial_action",
+          "legal_or_compliance",
+          "physical_world_action"
+        ]
+      },
+      "default": []
+    },
+    "required_receipt_type": {
+      "type": "string",
+      "enum": [
+        "none",
+        "classification_receipt",
+        "hold_receipt",
+        "refusal_receipt",
+        "authority_receipt",
+        "execution_receipt",
+        "outcome_receipt",
+        "delta_receipt"
+      ]
+    },
+    "inversion_or_sibling": {
+      "type": "string"
+    },
+    "failure_mode": {
+      "type": "string",
+      "enum": [
+        "role_collapse",
+        "office_overreach",
+        "primitive_inversion_violation",
+        "authority_substitution",
+        "receipt_permission_collapse",
+        "context_authority_collapse",
+        "model_executor_collapse",
+        "witness_authorizer_collapse",
+        "tool_sovereignty_collapse"
+      ]
+    },
+    "repair_path": {
+      "type": "string",
+      "enum": [
+        "HOLD_AND_RETURN",
+        "DENY_AND_RECEIPT",
+        "REQUEST_HUMAN_CLARIFICATION",
+        "REQUIRE_FRESH_AUTHORITY",
+        "ROUTE_TO_CANONIZATION_GATE",
+        "ROUTE_TO_CONCORDANCE_REVIEW"
+      ]
+    },
+    "evidence_level": {
+      "type": "string",
+      "enum": [
+        "DRIVE_VERIFIED",
+        "DRIVE_VERIFIED_PARTIAL",
+        "REPO_VERIFIED",
+        "THREAD_SUPPORTED",
+        "THREAD_SUPPORTED_PENDING_DOC_READ",
+        "PENDING_DOC_READ",
+        "TARGET_STATE_SPEC"
+      ]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "LOCKED_COMPONENT",
+        "TARGET_STATE_SPEC",
+        "ACTIVE_ALIAS",
+        "HOLD_AS_ALIAS",
+        "MERGE_ALIAS",
+        "RETIRE_ALIAS",
+        "DO_NOT_CANONIZE_AS_GATE",
+        "PENDING_REVIEW"
+      ]
+    },
+    "source_anchor": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
