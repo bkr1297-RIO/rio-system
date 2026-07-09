@@ -1,0 +1,20 @@
+{
+  "name": "rio-system-middleware-scaffold",
+  "version": "0.1.0",
+  "description": "RIO middleware scaffold v0.1 — structural law-freeze from Drive Chronicle staging.",
+  "private": true,
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "build": "tsc -p tsconfig.json"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "typescript": "^5.7.0"
+  }
+}
