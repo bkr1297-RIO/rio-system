@@ -1,16 +1,19 @@
 /**
- * SPG-M API v1 Govern Bridge Route
+ * API v1 pre-route bridges.
  *
- * Intercepts POST /api/v1/intents/:id/govern only when SPG-M review
- * metadata is present. Otherwise it passes through to the standard API v1
- * govern route.
+ * SPG-M intercepts governed intents only when review metadata is present.
+ * Prime exposes a bounded authenticated execution route backed by the
+ * verified Prime runtime bridge.
  */
 import { Router } from "express";
 import { requireScope } from "../security/api-auth.mjs";
 import { requireRole } from "../security/principals.mjs";
 import { handleSpgmGovernRequest } from "./spgm-govern.mjs";
+import primeApiV1Routes from "./prime-api-v1.mjs";
 
 const router = Router();
+
+router.use(primeApiV1Routes);
 
 router.post("/intents/:id/govern", requireScope("write"), requireRole("proposer", "executor"), (req, res, next) => {
   try {
