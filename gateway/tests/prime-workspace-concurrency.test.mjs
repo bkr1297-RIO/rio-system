@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { mkdtempSync, rmSync } from "node:fs";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { spawn } from "node:child_process";
@@ -63,14 +63,13 @@ test("two processes racing one rollback token produce exactly one winner", async
 test("an active lock fails closed instead of overwriting state", () => {
   const root = mkdtempSync(join(tmpdir(), "prime-lock-"));
   try {
-    const storeA = new PrimeWorkspaceStore({ root, lockTimeoutMs: 30, staleLockMs: 60_000 });
-    const lock = join(root, "prime-workspace-state.lock");
-    const { writeFileSync } = await import("node:fs");
-    writeFileSync(lock, "held", { flag: "wx" });
+    const store = new PrimeWorkspaceStore({ root, lockTimeoutMs: 30, staleLockMs: 60_000 });
+    writeFileSync(join(root, "prime-workspace-state.lock"), "held", { flag: "wx" });
     assert.throws(
-      () => storeA.atomicSetWithRollback({ key: "x", value: "y", token: "t", expectedHash: sha256("y"), createdAt: new Date().toISOString() }),
+      () => store.atomicSetWithRollback({ key: "x", value: "y", token: "t", expectedHash: sha256("y"), createdAt: new Date().toISOString() }),
       /workspace is busy/,
     );
+    assert.equal(store.get("x"), undefined);
   } finally {
     rmSync(root, { recursive: true, force: true });
   }
