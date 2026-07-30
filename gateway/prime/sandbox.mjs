@@ -8,6 +8,7 @@ import {
   verifyReceipt,
 } from "../receipts/receipts.mjs";
 import { validatePrimeIr } from "./bridge.mjs";
+import { PrimeWorkspaceStore } from "./workspace-store.mjs";
 
 const SET_ACTION = "prime.sandbox.set";
 const ROLLBACK_ACTION = "prime.sandbox.rollback";
@@ -46,7 +47,7 @@ function receiptFor({ action, ir, authorization, execution, rules }) {
     status: "allowed",
     risk_level: "LOW",
     requires_approval: true,
-    checks: { prime_ir_valid: true, bounded_action: action, reversible: true },
+    checks: { prime_ir_valid: true, bounded_action: action, reversible: true, persistent_workspace: true },
   };
   const authorizationRecord = {
     intent_id: intent.intent_id,
@@ -58,7 +59,7 @@ function receiptFor({ action, ir, authorization, execution, rules }) {
   const executionRecord = {
     intent_id: intent.intent_id,
     action,
-    connector: "prime-sandbox",
+    connector: "prime-workspace",
     timestamp,
     result: execution,
   };
@@ -71,8 +72,8 @@ function receiptFor({ action, ir, authorization, execution, rules }) {
     action,
     agent_id: intent.agent_id,
     authorized_by: authorization.authorized_by,
-    ingestion: { source: "prime", channel: "prime-sandbox", source_message_id: ir.source_expression, timestamp },
-    policy: { evaluated: true, decision: "ALLOW", rules_triggered: rules, policy_pack: "prime-sandbox-v0.2" },
+    ingestion: { source: "prime", channel: "prime-workspace", source_message_id: ir.source_expression, timestamp },
+    policy: { evaluated: true, decision: "ALLOW", rules_triggered: rules, policy_pack: "prime-workspace-v0.4" },
   });
   const verification = verifyReceipt(receipt);
   if (!verification.valid) throw new Error("Generated RIO receipt failed verification");
@@ -96,13 +97,12 @@ function responseFor({ status, operation, execution, artifacts }) {
 }
 
 export class PrimeSandbox {
-  constructor() {
-    this.values = new Map();
-    this.rollbacks = new Map();
+  constructor({ store = new PrimeWorkspaceStore() } = {}) {
+    this.store = store;
   }
 
   get(key) {
-    return this.values.get(key);
+    return this.store.get(key);
   }
 
   set({ ir, authorization, key, value }) {
@@ -114,44 +114,53 @@ export class PrimeSandbox {
     if (typeof value !== "string" || value.length > 4096) {
       throw new Error("Sandbox value must be a string up to 4096 characters");
     }
-    const hadPrevious = this.values.has(key);
-    const previousValue = this.values.get(key);
-    this.values.set(key, value);
+    const hadPrevious = this.store.has(key);
+    const previousValue = this.store.get(key);
+    this.store.setValue(key, value);
     const rollbackToken = randomUUID();
-    this.rollbacks.set(rollbackToken, { key, hadPrevious, previousValue, expectedHash: sha256(value), used: false });
+    this.store.createRollback(rollbackToken, {
+      key,
+      hadPrevious,
+      previousValue,
+      expectedHash: sha256(value),
+      used: false,
+      created_at: new Date().toISOString(),
+    });
     const execution = {
       status: "EXECUTED",
-      effect: "SANDBOX_SET",
+      effect: "WORKSPACE_SET",
       key,
       value_hash: sha256(value),
       reversible: true,
       rollback_token: rollbackToken,
+      persistent: true,
       external_side_effects: false,
     };
-    const artifacts = receiptFor({ action: SET_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "SANDBOX_ONLY", "ROLLBACK_AVAILABLE"] });
+    const artifacts = receiptFor({ action: SET_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ISOLATED_WORKSPACE", "PERSISTED", "ROLLBACK_AVAILABLE"] });
     return responseFor({ status: "RETURNED", operation: SET_ACTION, execution, artifacts });
   }
 
   rollback({ ir, authorization, rollback_token }) {
     validatePrimeIr(ir);
     validateAuthorization(authorization, ROLLBACK_ACTION);
-    const record = this.rollbacks.get(rollback_token);
+    const record = this.store.getRollback(rollback_token);
     if (!record || record.used) throw new Error("Rollback token is invalid or already used");
-    if (sha256(this.values.get(record.key)) !== record.expectedHash) {
+    if (sha256(this.store.get(record.key)) !== record.expectedHash) {
       throw new Error("Sandbox state changed after the receipted mutation");
     }
-    if (record.hadPrevious) this.values.set(record.key, record.previousValue);
-    else this.values.delete(record.key);
-    record.used = true;
+    if (record.hadPrevious) this.store.setValue(record.key, record.previousValue);
+    else this.store.deleteValue(record.key);
+    this.store.markRollbackUsed(rollback_token);
     const execution = {
       status: "EXECUTED",
-      effect: "SANDBOX_ROLLBACK",
+      effect: "WORKSPACE_ROLLBACK",
       key: record.key,
       restored_previous_state: true,
       rollback_token,
+      persistent: true,
       external_side_effects: false,
     };
-    const artifacts = receiptFor({ action: ROLLBACK_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ROLLBACK_TOKEN_VALID", "STATE_RESTORED"] });
+    const artifacts = receiptFor({ action: ROLLBACK_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ROLLBACK_TOKEN_VALID", "PERSISTENT_STATE_VERIFIED", "STATE_RESTORED"] });
     return responseFor({ status: "RETURNED", operation: ROLLBACK_ACTION, execution, artifacts });
   }
 }
