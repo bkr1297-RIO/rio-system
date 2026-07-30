@@ -18,62 +18,24 @@ function sha256(value) {
 }
 
 function validateAuthorization(authorization, action, now = new Date()) {
-  if (!authorization || authorization.decision !== "approved") {
-    throw new Error("Explicit approved authorization is required");
-  }
-  if (authorization.action !== action) {
-    throw new Error(`Authorization action must be ${action}`);
-  }
-  if (!authorization.authorized_by) {
-    throw new Error("Authorization requires authorized_by");
-  }
+  if (!authorization || authorization.decision !== "approved") throw new Error("Explicit approved authorization is required");
+  if (authorization.action !== action) throw new Error(`Authorization action must be ${action}`);
+  if (!authorization.authorized_by) throw new Error("Authorization requires authorized_by");
   const expiry = new Date(authorization.expires_at);
-  if (!authorization.expires_at || Number.isNaN(expiry.getTime()) || expiry <= now) {
-    throw new Error("Authorization is expired or invalid");
-  }
+  if (!authorization.expires_at || Number.isNaN(expiry.getTime()) || expiry <= now) throw new Error("Authorization is expired or invalid");
 }
 
 function receiptFor({ action, ir, authorization, execution, rules }) {
   const timestamp = new Date().toISOString();
-  const intent = {
-    intent_id: randomUUID(),
-    action,
-    agent_id: "prime-compiler",
-    parameters: { source_expression: ir.source_expression, symbols: ir.symbols },
-    timestamp,
-  };
-  const governance = {
-    intent_id: intent.intent_id,
-    status: "allowed",
-    risk_level: "LOW",
-    requires_approval: true,
-    checks: { prime_ir_valid: true, bounded_action: action, reversible: true, persistent_workspace: true },
-  };
-  const authorizationRecord = {
-    intent_id: intent.intent_id,
-    decision: "approved",
-    authorized_by: authorization.authorized_by,
-    timestamp: authorization.timestamp || timestamp,
-    conditions: { action, expires_at: authorization.expires_at },
-  };
-  const executionRecord = {
-    intent_id: intent.intent_id,
-    action,
-    connector: "prime-workspace",
-    timestamp,
-    result: execution,
-  };
+  const intent = { intent_id: randomUUID(), action, agent_id: "prime-compiler", parameters: { source_expression: ir.source_expression, symbols: ir.symbols }, timestamp };
+  const governance = { intent_id: intent.intent_id, status: "allowed", risk_level: "LOW", requires_approval: true, checks: { prime_ir_valid: true, bounded_action: action, reversible: true, persistent_workspace: true, single_writer: true } };
+  const authorizationRecord = { intent_id: intent.intent_id, decision: "approved", authorized_by: authorization.authorized_by, timestamp: authorization.timestamp || timestamp, conditions: { action, expires_at: authorization.expires_at } };
+  const executionRecord = { intent_id: intent.intent_id, action, connector: "prime-workspace", timestamp, result: execution };
   const receipt = generateReceipt({
-    intent_hash: hashIntent(intent),
-    governance_hash: hashGovernance(governance),
-    authorization_hash: hashAuthorization(authorizationRecord),
-    execution_hash: hashExecution(executionRecord),
-    intent_id: intent.intent_id,
-    action,
-    agent_id: intent.agent_id,
-    authorized_by: authorization.authorized_by,
+    intent_hash: hashIntent(intent), governance_hash: hashGovernance(governance), authorization_hash: hashAuthorization(authorizationRecord), execution_hash: hashExecution(executionRecord),
+    intent_id: intent.intent_id, action, agent_id: intent.agent_id, authorized_by: authorization.authorized_by,
     ingestion: { source: "prime", channel: "prime-workspace", source_message_id: ir.source_expression, timestamp },
-    policy: { evaluated: true, decision: "ALLOW", rules_triggered: rules, policy_pack: "prime-workspace-v0.4" },
+    policy: { evaluated: true, decision: "ALLOW", rules_triggered: rules, policy_pack: "prime-workspace-v0.5" },
   });
   const verification = verifyReceipt(receipt);
   if (!verification.valid) throw new Error("Generated RIO receipt failed verification");
@@ -81,86 +43,31 @@ function receiptFor({ action, ir, authorization, execution, rules }) {
 }
 
 function responseFor({ status, operation, execution, artifacts }) {
-  return {
-    status,
-    operation,
-    execution,
-    runtime: {
-      intent: artifacts.intent,
-      governance: artifacts.governance,
-      authorization: artifacts.authorization,
-      execution: artifacts.execution,
-    },
-    receipt: artifacts.receipt,
-    verification: artifacts.verification,
-  };
+  return { status, operation, execution, runtime: { intent: artifacts.intent, governance: artifacts.governance, authorization: artifacts.authorization, execution: artifacts.execution }, receipt: artifacts.receipt, verification: artifacts.verification };
 }
 
 export class PrimeSandbox {
-  constructor({ store = new PrimeWorkspaceStore() } = {}) {
-    this.store = store;
-  }
-
-  get(key) {
-    return this.store.get(key);
-  }
+  constructor({ store = new PrimeWorkspaceStore() } = {}) { this.store = store; }
+  get(key) { return this.store.get(key); }
 
   set({ ir, authorization, key, value }) {
     validatePrimeIr(ir);
     validateAuthorization(authorization, SET_ACTION);
-    if (typeof key !== "string" || !/^[a-zA-Z0-9._-]{1,64}$/.test(key)) {
-      throw new Error("Sandbox key is invalid");
-    }
-    if (typeof value !== "string" || value.length > 4096) {
-      throw new Error("Sandbox value must be a string up to 4096 characters");
-    }
-    const hadPrevious = this.store.has(key);
-    const previousValue = this.store.get(key);
-    this.store.setValue(key, value);
+    if (typeof key !== "string" || !/^[a-zA-Z0-9._-]{1,64}$/.test(key)) throw new Error("Sandbox key is invalid");
+    if (typeof value !== "string" || value.length > 4096) throw new Error("Sandbox value must be a string up to 4096 characters");
     const rollbackToken = randomUUID();
-    this.store.createRollback(rollbackToken, {
-      key,
-      hadPrevious,
-      previousValue,
-      expectedHash: sha256(value),
-      used: false,
-      created_at: new Date().toISOString(),
-    });
-    const execution = {
-      status: "EXECUTED",
-      effect: "WORKSPACE_SET",
-      key,
-      value_hash: sha256(value),
-      reversible: true,
-      rollback_token: rollbackToken,
-      persistent: true,
-      external_side_effects: false,
-    };
-    const artifacts = receiptFor({ action: SET_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ISOLATED_WORKSPACE", "PERSISTED", "ROLLBACK_AVAILABLE"] });
+    this.store.atomicSetWithRollback({ key, value, token: rollbackToken, expectedHash: sha256(value), createdAt: new Date().toISOString() });
+    const execution = { status: "EXECUTED", effect: "WORKSPACE_SET", key, value_hash: sha256(value), reversible: true, rollback_token: rollbackToken, persistent: true, concurrency_control: "SINGLE_WRITER_LOCK", external_side_effects: false };
+    const artifacts = receiptFor({ action: SET_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ISOLATED_WORKSPACE", "SINGLE_WRITER_LOCK", "PERSISTED", "ROLLBACK_AVAILABLE"] });
     return responseFor({ status: "RETURNED", operation: SET_ACTION, execution, artifacts });
   }
 
   rollback({ ir, authorization, rollback_token }) {
     validatePrimeIr(ir);
     validateAuthorization(authorization, ROLLBACK_ACTION);
-    const record = this.store.getRollback(rollback_token);
-    if (!record || record.used) throw new Error("Rollback token is invalid or already used");
-    if (sha256(this.store.get(record.key)) !== record.expectedHash) {
-      throw new Error("Sandbox state changed after the receipted mutation");
-    }
-    if (record.hadPrevious) this.store.setValue(record.key, record.previousValue);
-    else this.store.deleteValue(record.key);
-    this.store.markRollbackUsed(rollback_token);
-    const execution = {
-      status: "EXECUTED",
-      effect: "WORKSPACE_ROLLBACK",
-      key: record.key,
-      restored_previous_state: true,
-      rollback_token,
-      persistent: true,
-      external_side_effects: false,
-    };
-    const artifacts = receiptFor({ action: ROLLBACK_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ROLLBACK_TOKEN_VALID", "PERSISTENT_STATE_VERIFIED", "STATE_RESTORED"] });
+    const record = this.store.atomicRollback({ token: rollback_token, hashValue: sha256 });
+    const execution = { status: "EXECUTED", effect: "WORKSPACE_ROLLBACK", key: record.key, restored_previous_state: true, rollback_token, persistent: true, concurrency_control: "SINGLE_WRITER_LOCK", external_side_effects: false };
+    const artifacts = receiptFor({ action: ROLLBACK_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "SINGLE_WRITER_LOCK", "ROLLBACK_TOKEN_VALID", "PERSISTENT_STATE_VERIFIED", "STATE_RESTORED", "TOKEN_BURNED"] });
     return responseFor({ status: "RETURNED", operation: ROLLBACK_ACTION, execution, artifacts });
   }
 }
