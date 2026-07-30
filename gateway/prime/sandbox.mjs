@@ -79,6 +79,22 @@ function receiptFor({ action, ir, authorization, execution, rules }) {
   return { intent, governance, authorization: authorizationRecord, execution: executionRecord, receipt, verification };
 }
 
+function responseFor({ status, operation, execution, artifacts }) {
+  return {
+    status,
+    operation,
+    execution,
+    runtime: {
+      intent: artifacts.intent,
+      governance: artifacts.governance,
+      authorization: artifacts.authorization,
+      execution: artifacts.execution,
+    },
+    receipt: artifacts.receipt,
+    verification: artifacts.verification,
+  };
+}
+
 export class PrimeSandbox {
   constructor() {
     this.values = new Map();
@@ -112,7 +128,8 @@ export class PrimeSandbox {
       rollback_token: rollbackToken,
       external_side_effects: false,
     };
-    return { status: "RETURNED", operation: SET_ACTION, execution, ...receiptFor({ action: SET_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "SANDBOX_ONLY", "ROLLBACK_AVAILABLE"] }) };
+    const artifacts = receiptFor({ action: SET_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "SANDBOX_ONLY", "ROLLBACK_AVAILABLE"] });
+    return responseFor({ status: "RETURNED", operation: SET_ACTION, execution, artifacts });
   }
 
   rollback({ ir, authorization, rollback_token }) {
@@ -134,7 +151,8 @@ export class PrimeSandbox {
       rollback_token,
       external_side_effects: false,
     };
-    return { status: "RETURNED", operation: ROLLBACK_ACTION, execution, ...receiptFor({ action: ROLLBACK_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ROLLBACK_TOKEN_VALID", "STATE_RESTORED"] }) };
+    const artifacts = receiptFor({ action: ROLLBACK_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ROLLBACK_TOKEN_VALID", "STATE_RESTORED"] });
+    return responseFor({ status: "RETURNED", operation: ROLLBACK_ACTION, execution, artifacts });
   }
 }
 
