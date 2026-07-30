@@ -1,0 +1,32 @@
+name: Prime Runtime Bridge
+
+on:
+  pull_request:
+    paths:
+      - "gateway/prime/**"
+      - "gateway/tests/prime-runtime-bridge.test.mjs"
+      - "gateway/package.json"
+      - ".github/workflows/prime-runtime-bridge.yml"
+  push:
+    branches: [main]
+    paths:
+      - "gateway/prime/**"
+      - "gateway/tests/prime-runtime-bridge.test.mjs"
+      - "gateway/package.json"
+      - ".github/workflows/prime-runtime-bridge.yml"
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gateway
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: gateway/package-lock.json
+      - run: npm ci
+      - run: npm run test:prime
