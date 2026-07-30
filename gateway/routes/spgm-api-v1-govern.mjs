@@ -1,16 +1,23 @@
 /**
- * SPG-M API v1 Govern Bridge Route
+ * API v1 pre-route bridge composition.
  *
- * Intercepts POST /api/v1/intents/:id/govern only when SPG-M review
- * metadata is present. Otherwise it passes through to the standard API v1
- * govern route.
+ * This router is mounted by gateway/server.mjs behind API-key/JWT auth and
+ * rate limiting, before the general API v1 router. It hosts narrow bridge
+ * surfaces that must run before the standard routes.
  */
 import { Router } from "express";
 import { requireScope } from "../security/api-auth.mjs";
 import { requireRole } from "../security/principals.mjs";
+import primeRuntimeRoutes from "./prime-runtime.mjs";
 import { handleSpgmGovernRequest } from "./spgm-govern.mjs";
 
 const router = Router();
+
+// Prime reversible runtime is therefore live at:
+// POST /api/v1/prime/execute
+// POST /api/v1/prime/rollback
+// Its own router applies requireScope("write") and action-specific approval.
+router.use(primeRuntimeRoutes);
 
 router.post("/intents/:id/govern", requireScope("write"), requireRole("proposer", "executor"), (req, res, next) => {
   try {
