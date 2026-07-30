@@ -4,14 +4,18 @@ on:
   pull_request:
     paths:
       - "gateway/prime/**"
-      - "gateway/tests/prime-runtime-bridge.test.mjs"
+      - "gateway/routes/prime-api-v1.mjs"
+      - "gateway/routes/spgm-api-v1-govern.mjs"
+      - "gateway/tests/prime-*.test.mjs"
       - "gateway/package.json"
       - ".github/workflows/prime-runtime-bridge.yml"
   push:
     branches: [main]
     paths:
       - "gateway/prime/**"
-      - "gateway/tests/prime-runtime-bridge.test.mjs"
+      - "gateway/routes/prime-api-v1.mjs"
+      - "gateway/routes/spgm-api-v1-govern.mjs"
+      - "gateway/tests/prime-*.test.mjs"
       - "gateway/package.json"
       - ".github/workflows/prime-runtime-bridge.yml"
 
