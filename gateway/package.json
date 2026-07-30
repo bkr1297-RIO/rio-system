@@ -14,7 +14,7 @@
     "test:spgm:policy-review": "node --test tests/spgm-policy-review.test.mjs",
     "test:spgm:govern": "node --test tests/spgm-govern-request.test.mjs tests/spgm-govern-route.test.mjs",
     "test:spgm:openapi": "node --test tests/openapi-spgm.test.mjs",
-    "test:prime": "node --test tests/prime-runtime-bridge.test.mjs"
+    "test:prime": "node --test tests/prime-runtime-bridge.test.mjs tests/prime-api-v1.test.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",
