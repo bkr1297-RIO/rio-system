@@ -106,6 +106,12 @@ export class PrimeWorkspaceStore {
     return Object.prototype.hasOwnProperty.call(state.values, key) ? state.values[key] : undefined;
   }
 
+  setValue(key, value) {
+    this.transact((state) => {
+      state.values[key] = value;
+    });
+  }
+
   atomicSetWithRollback({ key, value, token, expectedHash, createdAt }) {
     return this.transact((state) => {
       const hadPrevious = Object.prototype.hasOwnProperty.call(state.values, key);
