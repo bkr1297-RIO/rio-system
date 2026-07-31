@@ -12,7 +12,11 @@ function sha256(value) {
   return createHash("sha256").update(JSON.stringify(value)).digest("hex");
 }
 
-function runRollback(root, token) {
+function proof(id, operation = "test") {
+  return { proof_id: id, operation, receipt: { receipt_id: id }, verification: { valid: true }, runtime: {} };
+}
+
+function runRollback(root, token, proofId) {
   const moduleUrl = new URL("../prime/workspace-store.mjs", import.meta.url).href;
   const code = `
     import { createHash } from "node:crypto";
@@ -20,14 +24,18 @@ function runRollback(root, token) {
     const hash = value => createHash("sha256").update(JSON.stringify(value)).digest("hex");
     try {
       const store = new PrimeWorkspaceStore({ root: process.argv[1], lockTimeoutMs: 3000 });
-      store.atomicRollback({ token: process.argv[2], hashValue: hash });
+      store.atomicRollback({
+        token: process.argv[2],
+        hashValue: hash,
+        proofFactory: () => ({ proof_id: process.argv[3], operation: "rollback", receipt: { receipt_id: process.argv[3] }, verification: { valid: true }, runtime: {} }),
+      });
       process.stdout.write("SUCCESS");
     } catch (error) {
       process.stdout.write("BLOCKED:" + error.message);
     }
   `;
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, ["--input-type=module", "-e", code, root, token], { stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(process.execPath, ["--input-type=module", "-e", code, root, token, proofId], { stdio: ["ignore", "pipe", "pipe"] });
     let out = "";
     let err = "";
     child.stdout.on("data", chunk => { out += chunk; });
@@ -43,21 +51,16 @@ test("two processes racing one rollback token produce exactly one winner", async
 
   const token = "race-token";
   const store = new PrimeWorkspaceStore({ root });
-  store.atomicSetWithRollback({
-    key: "race.signal",
-    value: "current",
-    token,
-    expectedHash: sha256("current"),
-    createdAt: new Date().toISOString(),
-  });
+  store.atomicSetWithRollback({ key: "race.signal", value: "current", token, expectedHash: sha256("current"), createdAt: new Date().toISOString(), proof: proof("set-proof", "set") });
 
-  const results = await Promise.all([runRollback(root, token), runRollback(root, token)]);
+  const results = await Promise.all([runRollback(root, token, "rollback-proof-a"), runRollback(root, token, "rollback-proof-b")]);
   assert.equal(results.filter(result => result === "SUCCESS").length, 1);
   assert.equal(results.filter(result => /invalid or already used/.test(result)).length, 1);
 
   const recovered = new PrimeWorkspaceStore({ root });
   assert.equal(recovered.get("race.signal"), undefined);
   assert.equal(recovered.snapshot().rollbacks[token].used, true);
+  assert.equal(recovered.snapshot().revision, 2);
 });
 
 test("an active lock fails closed instead of overwriting state", () => {
@@ -66,7 +69,7 @@ test("an active lock fails closed instead of overwriting state", () => {
     const store = new PrimeWorkspaceStore({ root, lockTimeoutMs: 30, staleLockMs: 60_000 });
     writeFileSync(join(root, "prime-workspace-state.lock"), "held", { flag: "wx" });
     assert.throws(
-      () => store.atomicSetWithRollback({ key: "x", value: "y", token: "t", expectedHash: sha256("y"), createdAt: new Date().toISOString() }),
+      () => store.atomicSetWithRollback({ key: "x", value: "y", token: "t", expectedHash: sha256("y"), createdAt: new Date().toISOString(), proof: proof("blocked-proof") }),
       /workspace is busy/,
     );
     assert.equal(store.get("x"), undefined);
