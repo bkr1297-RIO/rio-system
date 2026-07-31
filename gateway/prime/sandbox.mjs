@@ -28,22 +28,44 @@ function validateAuthorization(authorization, action, now = new Date()) {
 function receiptFor({ action, ir, authorization, execution, rules }) {
   const timestamp = new Date().toISOString();
   const intent = { intent_id: randomUUID(), action, agent_id: "prime-compiler", parameters: { source_expression: ir.source_expression, symbols: ir.symbols }, timestamp };
-  const governance = { intent_id: intent.intent_id, status: "allowed", risk_level: "LOW", requires_approval: true, checks: { prime_ir_valid: true, bounded_action: action, reversible: true, persistent_workspace: true, single_writer: true } };
+  const governance = { intent_id: intent.intent_id, status: "allowed", risk_level: "LOW", requires_approval: true, checks: { prime_ir_valid: true, bounded_action: action, reversible: true, persistent_workspace: true, single_writer: true, durable_proof_coupled: true } };
   const authorizationRecord = { intent_id: intent.intent_id, decision: "approved", authorized_by: authorization.authorized_by, timestamp: authorization.timestamp || timestamp, conditions: { action, expires_at: authorization.expires_at } };
   const executionRecord = { intent_id: intent.intent_id, action, connector: "prime-workspace", timestamp, result: execution };
   const receipt = generateReceipt({
     intent_hash: hashIntent(intent), governance_hash: hashGovernance(governance), authorization_hash: hashAuthorization(authorizationRecord), execution_hash: hashExecution(executionRecord),
     intent_id: intent.intent_id, action, agent_id: intent.agent_id, authorized_by: authorization.authorized_by,
     ingestion: { source: "prime", channel: "prime-workspace", source_message_id: ir.source_expression, timestamp },
-    policy: { evaluated: true, decision: "ALLOW", rules_triggered: rules, policy_pack: "prime-workspace-v0.5" },
+    policy: { evaluated: true, decision: "ALLOW", rules_triggered: rules, policy_pack: "prime-workspace-v0.7" },
   });
   const verification = verifyReceipt(receipt);
   if (!verification.valid) throw new Error("Generated RIO receipt failed verification");
   return { intent, governance, authorization: authorizationRecord, execution: executionRecord, receipt, verification };
 }
 
-function responseFor({ status, operation, execution, artifacts }) {
-  return { status, operation, execution, runtime: { intent: artifacts.intent, governance: artifacts.governance, authorization: artifacts.authorization, execution: artifacts.execution }, receipt: artifacts.receipt, verification: artifacts.verification };
+function durableProof(artifacts, operation) {
+  return {
+    proof_id: artifacts.intent.intent_id,
+    operation,
+    receipt: artifacts.receipt,
+    verification: artifacts.verification,
+    runtime: {
+      intent: artifacts.intent,
+      governance: artifacts.governance,
+      authorization: artifacts.authorization,
+      execution: artifacts.execution,
+    },
+  };
+}
+
+function responseFor({ status, operation, execution, artifacts, revision }) {
+  return {
+    status,
+    operation,
+    execution: { ...execution, workspace_revision: revision, durable_proof_id: artifacts.intent.intent_id },
+    runtime: { intent: artifacts.intent, governance: artifacts.governance, authorization: artifacts.authorization, execution: artifacts.execution },
+    receipt: artifacts.receipt,
+    verification: artifacts.verification,
+  };
 }
 
 export class PrimeSandbox {
@@ -55,20 +77,37 @@ export class PrimeSandbox {
     validateAuthorization(authorization, SET_ACTION);
     if (typeof key !== "string" || !/^[a-zA-Z0-9._-]{1,64}$/.test(key)) throw new Error("Sandbox key is invalid");
     if (typeof value !== "string" || value.length > 4096) throw new Error("Sandbox value must be a string up to 4096 characters");
+
     const rollbackToken = randomUUID();
-    this.store.atomicSetWithRollback({ key, value, token: rollbackToken, expectedHash: sha256(value), createdAt: new Date().toISOString() });
-    const execution = { status: "EXECUTED", effect: "WORKSPACE_SET", key, value_hash: sha256(value), reversible: true, rollback_token: rollbackToken, persistent: true, concurrency_control: "SINGLE_WRITER_LOCK", external_side_effects: false };
-    const artifacts = receiptFor({ action: SET_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ISOLATED_WORKSPACE", "SINGLE_WRITER_LOCK", "PERSISTED", "ROLLBACK_AVAILABLE"] });
-    return responseFor({ status: "RETURNED", operation: SET_ACTION, execution, artifacts });
+    const execution = { status: "EXECUTED", effect: "WORKSPACE_SET", key, value_hash: sha256(value), reversible: true, rollback_token: rollbackToken, persistent: true, concurrency_control: "SINGLE_WRITER_LOCK", proof_persistence: "ATOMIC_WITH_STATE", external_side_effects: false };
+    const artifacts = receiptFor({ action: SET_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "ISOLATED_WORKSPACE", "SINGLE_WRITER_LOCK", "DURABLE_PROOF_COUPLED", "PERSISTED", "ROLLBACK_AVAILABLE"] });
+    const committed = this.store.atomicSetWithRollback({
+      key,
+      value,
+      token: rollbackToken,
+      expectedHash: sha256(value),
+      createdAt: new Date().toISOString(),
+      proof: durableProof(artifacts, SET_ACTION),
+    });
+    return responseFor({ status: "RETURNED", operation: SET_ACTION, execution, artifacts, revision: committed.revision });
   }
 
   rollback({ ir, authorization, rollback_token }) {
     validatePrimeIr(ir);
     validateAuthorization(authorization, ROLLBACK_ACTION);
-    const record = this.store.atomicRollback({ token: rollback_token, hashValue: sha256 });
-    const execution = { status: "EXECUTED", effect: "WORKSPACE_ROLLBACK", key: record.key, restored_previous_state: true, rollback_token, persistent: true, concurrency_control: "SINGLE_WRITER_LOCK", external_side_effects: false };
-    const artifacts = receiptFor({ action: ROLLBACK_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "SINGLE_WRITER_LOCK", "ROLLBACK_TOKEN_VALID", "PERSISTENT_STATE_VERIFIED", "STATE_RESTORED", "TOKEN_BURNED"] });
-    return responseFor({ status: "RETURNED", operation: ROLLBACK_ACTION, execution, artifacts });
+
+    let execution;
+    let artifacts;
+    const committed = this.store.atomicRollback({
+      token: rollback_token,
+      hashValue: sha256,
+      proofFactory: (record) => {
+        execution = { status: "EXECUTED", effect: "WORKSPACE_ROLLBACK", key: record.key, restored_previous_state: true, rollback_token, persistent: true, concurrency_control: "SINGLE_WRITER_LOCK", proof_persistence: "ATOMIC_WITH_STATE", external_side_effects: false };
+        artifacts = receiptFor({ action: ROLLBACK_ACTION, ir, authorization, execution, rules: ["PRIME_IR_VALID", "EXPLICIT_AUTHORIZATION", "SINGLE_WRITER_LOCK", "ROLLBACK_TOKEN_VALID", "DURABLE_PROOF_COUPLED", "PERSISTENT_STATE_VERIFIED", "STATE_RESTORED", "TOKEN_BURNED"] });
+        return durableProof(artifacts, ROLLBACK_ACTION);
+      },
+    });
+    return responseFor({ status: "RETURNED", operation: ROLLBACK_ACTION, execution, artifacts, revision: committed.revision });
   }
 }
 
