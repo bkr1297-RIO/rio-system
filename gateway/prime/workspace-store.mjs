@@ -20,7 +20,7 @@ const TEMP_SUFFIX = ".tmp";
 const SLEEP_ARRAY = new Int32Array(new SharedArrayBuffer(4));
 
 function emptyState() {
-  return { version: 1, values: {}, rollbacks: {} };
+  return { version: 2, revision: 0, latest_proof_id: null, values: {}, rollbacks: {}, proofs: {} };
 }
 
 function sleep(ms) {
@@ -35,6 +35,28 @@ function processIsAlive(pid) {
   } catch (error) {
     return error.code === "EPERM";
   }
+}
+
+function validateState(parsed) {
+  if (
+    parsed?.version !== 2 ||
+    !Number.isInteger(parsed.revision) || parsed.revision < 0 ||
+    !parsed.values || typeof parsed.values !== "object" || Array.isArray(parsed.values) ||
+    !parsed.rollbacks || typeof parsed.rollbacks !== "object" || Array.isArray(parsed.rollbacks) ||
+    !parsed.proofs || typeof parsed.proofs !== "object" || Array.isArray(parsed.proofs)
+  ) {
+    throw new Error("Prime workspace state is invalid");
+  }
+  if (parsed.revision === 0 && parsed.latest_proof_id !== null) {
+    throw new Error("Prime workspace proof linkage is invalid");
+  }
+  if (parsed.revision > 0) {
+    const latest = parsed.proofs[parsed.latest_proof_id];
+    if (!latest || latest.revision !== parsed.revision || latest.proof_id !== parsed.latest_proof_id) {
+      throw new Error("Prime workspace committed state is missing durable proof");
+    }
+  }
+  return parsed;
 }
 
 export class PrimeWorkspaceStore {
@@ -55,15 +77,7 @@ export class PrimeWorkspaceStore {
   }
 
   #read() {
-    const parsed = JSON.parse(readFileSync(this.statePath, "utf8"));
-    if (
-      parsed?.version !== 1 ||
-      !parsed.values || typeof parsed.values !== "object" || Array.isArray(parsed.values) ||
-      !parsed.rollbacks || typeof parsed.rollbacks !== "object" || Array.isArray(parsed.rollbacks)
-    ) {
-      throw new Error("Prime workspace state is invalid");
-    }
-    return parsed;
+    return validateState(JSON.parse(readFileSync(this.statePath, "utf8")));
   }
 
   #write(state) {
@@ -83,10 +97,7 @@ export class PrimeWorkspaceStore {
   #readLockOwner() {
     try {
       const parsed = JSON.parse(readFileSync(this.lockPath, "utf8"));
-      return {
-        pid: Number(parsed?.pid),
-        acquiredAt: parsed?.acquired_at || null,
-      };
+      return { pid: Number(parsed?.pid), acquiredAt: parsed?.acquired_at || null };
     } catch {
       return { pid: null, acquiredAt: null };
     }
@@ -134,8 +145,7 @@ export class PrimeWorkspaceStore {
 
   #discardOrphanTemps() {
     for (const name of readdirSync(this.root)) {
-      if (!name.startsWith(TEMP_PREFIX) || !name.endsWith(TEMP_SUFFIX)) continue;
-      unlinkSync(resolve(this.root, name));
+      if (name.startsWith(TEMP_PREFIX) && name.endsWith(TEMP_SUFFIX)) unlinkSync(resolve(this.root, name));
     }
   }
 
@@ -162,18 +172,37 @@ export class PrimeWorkspaceStore {
     }
   }
 
+  #attachProof(state, proof) {
+    if (!proof?.proof_id || !proof?.receipt || proof.verification?.valid !== true) {
+      throw new Error("A verified durable proof is required for workspace commit");
+    }
+    if (state.proofs[proof.proof_id]) throw new Error("Durable proof identifier already exists");
+    const revision = state.revision + 1;
+    state.proofs[proof.proof_id] = { ...structuredClone(proof), revision };
+    state.revision = revision;
+    state.latest_proof_id = proof.proof_id;
+    return revision;
+  }
+
   get(key) {
     const state = this.#read();
     return Object.prototype.hasOwnProperty.call(state.values, key) ? state.values[key] : undefined;
   }
 
+  getProof(proofId) {
+    const proof = this.#read().proofs[proofId];
+    return proof ? structuredClone(proof) : null;
+  }
+
   setValue(key, value) {
     this.transact((state) => {
       state.values[key] = value;
+      state.revision += 1;
+      state.latest_proof_id = "UNRECEIPTED_MUTATION";
     });
   }
 
-  atomicSetWithRollback({ key, value, token, expectedHash, createdAt }) {
+  atomicSetWithRollback({ key, value, token, expectedHash, createdAt, proof }) {
     return this.transact((state) => {
       const hadPrevious = Object.prototype.hasOwnProperty.call(state.values, key);
       const previousValue = state.values[key];
@@ -185,23 +214,28 @@ export class PrimeWorkspaceStore {
         expectedHash,
         used: false,
         created_at: createdAt,
+        set_proof_id: proof.proof_id,
       };
-      return { hadPrevious, previousValue };
+      const revision = this.#attachProof(state, proof);
+      return { hadPrevious, previousValue, revision };
     });
   }
 
-  atomicRollback({ token, hashValue }) {
+  atomicRollback({ token, hashValue, proofFactory }) {
     return this.transact((state) => {
       const record = state.rollbacks[token];
       if (!record || record.used) throw new Error("Rollback token is invalid or already used");
       if (hashValue(state.values[record.key]) !== record.expectedHash) {
         throw new Error("Sandbox state changed after the receipted mutation");
       }
+      const proof = proofFactory(structuredClone(record));
       if (record.hadPrevious) state.values[record.key] = record.previousValue;
       else delete state.values[record.key];
       record.used = true;
       record.used_at = new Date().toISOString();
-      return structuredClone(record);
+      record.rollback_proof_id = proof.proof_id;
+      const revision = this.#attachProof(state, proof);
+      return { record: structuredClone(record), proof: structuredClone(proof), revision };
     });
   }
 
