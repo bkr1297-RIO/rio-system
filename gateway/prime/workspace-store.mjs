@@ -1,9 +1,11 @@
 import {
   closeSync,
   existsSync,
+  fsyncSync,
   mkdirSync,
   openSync,
   readFileSync,
+  readdirSync,
   renameSync,
   statSync,
   unlinkSync,
@@ -13,6 +15,8 @@ import { resolve } from "node:path";
 
 const STATE_FILE = "prime-workspace-state.json";
 const LOCK_FILE = "prime-workspace-state.lock";
+const TEMP_PREFIX = `${STATE_FILE}.`;
+const TEMP_SUFFIX = ".tmp";
 const SLEEP_ARRAY = new Int32Array(new SharedArrayBuffer(4));
 
 function emptyState() {
@@ -23,20 +27,31 @@ function sleep(ms) {
   Atomics.wait(SLEEP_ARRAY, 0, 0, ms);
 }
 
+function processIsAlive(pid) {
+  if (!Number.isInteger(pid) || pid <= 0) return false;
+  try {
+    process.kill(pid, 0);
+    return true;
+  } catch (error) {
+    return error.code === "EPERM";
+  }
+}
+
 export class PrimeWorkspaceStore {
   constructor({
     root = process.env.PRIME_WORKSPACE_ROOT || ".rio-prime-workspace",
     lockTimeoutMs = 2000,
     staleLockMs = 10000,
+    faultInjector = null,
   } = {}) {
     this.root = resolve(root);
     this.statePath = resolve(this.root, STATE_FILE);
     this.lockPath = resolve(this.root, LOCK_FILE);
     this.lockTimeoutMs = lockTimeoutMs;
     this.staleLockMs = staleLockMs;
+    this.faultInjector = faultInjector;
     mkdirSync(this.root, { recursive: true, mode: 0o700 });
-    if (!existsSync(this.statePath)) this.#write(emptyState());
-    this.#read();
+    this.#recover();
   }
 
   #read() {
@@ -53,8 +68,35 @@ export class PrimeWorkspaceStore {
 
   #write(state) {
     const tempPath = `${this.statePath}.${process.pid}.tmp`;
-    writeFileSync(tempPath, `${JSON.stringify(state, null, 2)}\n`, { encoding: "utf8", mode: 0o600 });
+    let fd;
+    try {
+      fd = openSync(tempPath, "w", 0o600);
+      writeFileSync(fd, `${JSON.stringify(state, null, 2)}\n`, { encoding: "utf8" });
+      fsyncSync(fd);
+    } finally {
+      if (fd !== undefined) closeSync(fd);
+    }
+    this.faultInjector?.("after_temp_fsync", { tempPath, statePath: this.statePath });
     renameSync(tempPath, this.statePath);
+  }
+
+  #readLockOwner() {
+    try {
+      const parsed = JSON.parse(readFileSync(this.lockPath, "utf8"));
+      return {
+        pid: Number(parsed?.pid),
+        acquiredAt: parsed?.acquired_at || null,
+      };
+    } catch {
+      return { pid: null, acquiredAt: null };
+    }
+  }
+
+  #lockCanBeReclaimed() {
+    const owner = this.#readLockOwner();
+    if (owner.pid && !processIsAlive(owner.pid)) return true;
+    if (owner.pid && processIsAlive(owner.pid)) return false;
+    return Date.now() - statSync(this.lockPath).mtimeMs > this.staleLockMs;
   }
 
   #acquireLock() {
@@ -63,17 +105,18 @@ export class PrimeWorkspaceStore {
       try {
         const fd = openSync(this.lockPath, "wx", 0o600);
         writeFileSync(fd, JSON.stringify({ pid: process.pid, acquired_at: new Date().toISOString() }));
+        fsyncSync(fd);
         return fd;
       } catch (error) {
         if (error.code !== "EEXIST") throw error;
         try {
-          if (Date.now() - statSync(this.lockPath).mtimeMs > this.staleLockMs) {
+          if (this.#lockCanBeReclaimed()) {
             unlinkSync(this.lockPath);
             continue;
           }
-        } catch (statError) {
-          if (statError.code === "ENOENT") continue;
-          throw statError;
+        } catch (lockError) {
+          if (lockError.code === "ENOENT") continue;
+          throw lockError;
         }
         sleep(10);
       }
@@ -86,6 +129,24 @@ export class PrimeWorkspaceStore {
       try { unlinkSync(this.lockPath); } catch (error) {
         if (error.code !== "ENOENT") throw error;
       }
+    }
+  }
+
+  #discardOrphanTemps() {
+    for (const name of readdirSync(this.root)) {
+      if (!name.startsWith(TEMP_PREFIX) || !name.endsWith(TEMP_SUFFIX)) continue;
+      unlinkSync(resolve(this.root, name));
+    }
+  }
+
+  #recover() {
+    const fd = this.#acquireLock();
+    try {
+      this.#discardOrphanTemps();
+      if (!existsSync(this.statePath)) this.#write(emptyState());
+      this.#read();
+    } finally {
+      this.#releaseLock(fd);
     }
   }
 
