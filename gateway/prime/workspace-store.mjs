@@ -44,12 +44,9 @@ function validateState(parsed) {
     !parsed.values || typeof parsed.values !== "object" || Array.isArray(parsed.values) ||
     !parsed.rollbacks || typeof parsed.rollbacks !== "object" || Array.isArray(parsed.rollbacks) ||
     !parsed.proofs || typeof parsed.proofs !== "object" || Array.isArray(parsed.proofs)
-  ) {
-    throw new Error("Prime workspace state is invalid");
-  }
-  if (parsed.revision === 0 && parsed.latest_proof_id !== null) {
-    throw new Error("Prime workspace proof linkage is invalid");
-  }
+  ) throw new Error("Prime workspace state is invalid");
+
+  if (parsed.revision === 0 && parsed.latest_proof_id !== null) throw new Error("Prime workspace proof linkage is invalid");
   if (parsed.revision > 0) {
     const latest = parsed.proofs[parsed.latest_proof_id];
     if (!latest || latest.revision !== parsed.revision || latest.proof_id !== parsed.latest_proof_id) {
@@ -60,12 +57,7 @@ function validateState(parsed) {
 }
 
 export class PrimeWorkspaceStore {
-  constructor({
-    root = process.env.PRIME_WORKSPACE_ROOT || ".rio-prime-workspace",
-    lockTimeoutMs = 2000,
-    staleLockMs = 10000,
-    faultInjector = null,
-  } = {}) {
+  constructor({ root = process.env.PRIME_WORKSPACE_ROOT || ".rio-prime-workspace", lockTimeoutMs = 2000, staleLockMs = 10000, faultInjector = null } = {}) {
     this.root = resolve(root);
     this.statePath = resolve(this.root, STATE_FILE);
     this.lockPath = resolve(this.root, LOCK_FILE);
@@ -121,10 +113,7 @@ export class PrimeWorkspaceStore {
       } catch (error) {
         if (error.code !== "EEXIST") throw error;
         try {
-          if (this.#lockCanBeReclaimed()) {
-            unlinkSync(this.lockPath);
-            continue;
-          }
+          if (this.#lockCanBeReclaimed()) { unlinkSync(this.lockPath); continue; }
         } catch (lockError) {
           if (lockError.code === "ENOENT") continue;
           throw lockError;
@@ -173,9 +162,7 @@ export class PrimeWorkspaceStore {
   }
 
   #attachProof(state, proof) {
-    if (!proof?.proof_id || !proof?.receipt || proof.verification?.valid !== true) {
-      throw new Error("A verified durable proof is required for workspace commit");
-    }
+    if (!proof?.proof_id || !proof?.receipt || proof.verification?.valid !== true) throw new Error("A verified durable proof is required for workspace commit");
     if (state.proofs[proof.proof_id]) throw new Error("Durable proof identifier already exists");
     const revision = state.revision + 1;
     state.proofs[proof.proof_id] = { ...structuredClone(proof), revision };
@@ -194,12 +181,9 @@ export class PrimeWorkspaceStore {
     return proof ? structuredClone(proof) : null;
   }
 
+  // Explicit test/tamper seam: bypasses governed revision/proof creation so rollback mismatch checks can be exercised.
   setValue(key, value) {
-    this.transact((state) => {
-      state.values[key] = value;
-      state.revision += 1;
-      state.latest_proof_id = "UNRECEIPTED_MUTATION";
-    });
+    this.transact((state) => { state.values[key] = value; });
   }
 
   atomicSetWithRollback({ key, value, token, expectedHash, createdAt, proof }) {
@@ -207,15 +191,7 @@ export class PrimeWorkspaceStore {
       const hadPrevious = Object.prototype.hasOwnProperty.call(state.values, key);
       const previousValue = state.values[key];
       state.values[key] = value;
-      state.rollbacks[token] = {
-        key,
-        hadPrevious,
-        previousValue,
-        expectedHash,
-        used: false,
-        created_at: createdAt,
-        set_proof_id: proof.proof_id,
-      };
+      state.rollbacks[token] = { key, hadPrevious, previousValue, expectedHash, used: false, created_at: createdAt, set_proof_id: proof.proof_id };
       const revision = this.#attachProof(state, proof);
       return { hadPrevious, previousValue, revision };
     });
@@ -225,9 +201,7 @@ export class PrimeWorkspaceStore {
     return this.transact((state) => {
       const record = state.rollbacks[token];
       if (!record || record.used) throw new Error("Rollback token is invalid or already used");
-      if (hashValue(state.values[record.key]) !== record.expectedHash) {
-        throw new Error("Sandbox state changed after the receipted mutation");
-      }
+      if (hashValue(state.values[record.key]) !== record.expectedHash) throw new Error("Sandbox state changed after the receipted mutation");
       const proof = proofFactory(structuredClone(record));
       if (record.hadPrevious) state.values[record.key] = record.previousValue;
       else delete state.values[record.key];
