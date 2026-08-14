@@ -1,0 +1,14 @@
+{
+  "contract_id": "relational.v1",
+  "view_type": "relational",
+  "epistemic_status": "OBSERVATION",
+  "claims": [
+    {
+      "claim_type": "AUTHORITY_PROMOTION",
+      "subject": "I-1",
+      "authorized": true,
+      "permission": "granted"
+    }
+  ],
+  "deltas": []
+}

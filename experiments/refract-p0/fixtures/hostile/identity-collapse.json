@@ -1,0 +1,15 @@
+{
+  "contract_id": "relational.v1",
+  "view_type": "relational",
+  "epistemic_status": "OBSERVATION",
+  "claims": [
+    {
+      "claim_type": "IDENTITY_EQUIVALENCE",
+      "left": "brian.k.rasmussen",
+      "right": "I-1",
+      "standing": "CANONICAL",
+      "value": "same principal"
+    }
+  ],
+  "deltas": []
+}

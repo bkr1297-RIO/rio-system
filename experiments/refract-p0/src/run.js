@@ -10,14 +10,20 @@ const CONTRACT_FILES = [
   "relational.v1.yaml"
 ];
 
-export function runHistoricalProof({
+export function runFixtureProof({
+  fixtureFilename,
+  proofId,
   experimentRoot = process.cwd(),
   repositoryRoot = path.resolve(experimentRoot, "../..")
-} = {}) {
+}) {
+  if (!fixtureFilename || !proofId) {
+    throw new Error("INVALID_PROOF_REQUEST: fixtureFilename and proofId are required");
+  }
+
   const fixturePath = path.join(
     experimentRoot,
     "fixtures",
-    "march-30-receipt.fixture.json"
+    fixtureFilename
   );
   const { descriptor, source } = loadHistoricalFixture(
     fixturePath,
@@ -30,7 +36,7 @@ export function runHistoricalProof({
   const comparison = compareViews(source, contracts, views);
 
   return {
-    proof_id: "REFRACT-P0-MARCH-30",
+    proof_id: proofId,
     fixture: descriptor,
     source: {
       source_id: source.source_id,
@@ -42,4 +48,20 @@ export function runHistoricalProof({
     views,
     comparison
   };
+}
+
+export function runHistoricalProof(options = {}) {
+  return runFixtureProof({
+    ...options,
+    fixtureFilename: "march-30-receipt.fixture.json",
+    proofId: "REFRACT-P0-MARCH-30"
+  });
+}
+
+export function runAprilFalsificationProof(options = {}) {
+  return runFixtureProof({
+    ...options,
+    fixtureFilename: "april-identity-resolution.fixture.json",
+    proofId: "REFRACT-P0-APRIL-IDENTITY-RESOLUTION"
+  });
 }

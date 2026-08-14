@@ -3,8 +3,12 @@ import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
 import { assertNoForbiddenInference, assertNoPromotion } from "../src/guards.js";
+import { runFalsificationPack } from "../src/falsify.js";
 import { sha256 } from "../src/hash.js";
-import { runHistoricalProof } from "../src/run.js";
+import {
+  runAprilFalsificationProof,
+  runHistoricalProof
+} from "../src/run.js";
 
 const root = process.cwd();
 
@@ -159,4 +163,111 @@ test("hostile fixture blocks PatternCandidate to CausalClaim promotion", () => {
     () => assertNoForbiddenInference(hostile, contract),
     /HOSTILE_INFERENCE_BLOCKED/
   );
+});
+
+test("April specimen is bound to the canonical source blob and raw SHA-256", () => {
+  const proof = runAprilFalsificationProof();
+  assert.equal(
+    proof.source.provenance.source_blob_sha,
+    "74dcae45fc3fcdc5ea97cc7592a60272e9d7539e"
+  );
+  assert.equal(
+    proof.source.provenance.raw_sha256,
+    "614072527bcfec78cdf636ab0ca6b810c343ce5082c27bb87c1bfb13c50c1e2f"
+  );
+});
+
+test("April specimen uses the same three contracts without source mutation", () => {
+  const proof = runAprilFalsificationProof();
+  assert.deepEqual(
+    proof.views.map((view) => view.contract_id),
+    ["structural.v1", "temporal.v1", "relational.v1"]
+  );
+  assert.ok(
+    proof.views.every((view) => view.source_hash === proof.source.source_hash)
+  );
+  assert.equal(proof.comparison.source_mutated, false);
+  assert.equal(proof.comparison.canonical_view_selected, false);
+});
+
+test("April structural projection holds", () => {
+  const proof = runAprilFalsificationProof();
+  const view = proof.views.find((item) => item.view_type === "structural");
+  const fields = view.claims.find(
+    (item) => item.dimension === "field_names"
+  ).value;
+  const nesting = view.claims.find(
+    (item) => item.dimension === "nesting"
+  ).value;
+  assert.ok(fields.length > 0);
+  assert.ok(nesting.length > 0);
+});
+
+test("April temporal projection reproduces the weakened sequence account", () => {
+  const proof = runAprilFalsificationProof();
+  const view = proof.views.find((item) => item.view_type === "temporal");
+  const timestamps = view.claims.find(
+    (item) => item.dimension === "explicit_timestamps"
+  );
+  const sequence = view.claims.find(
+    (item) => item.dimension === "declared_sequence"
+  );
+  assert.ok(timestamps.value.length > 0);
+  assert.deepEqual(sequence.value, []);
+  assert.equal(sequence.standing, "OBSERVED");
+});
+
+test("April relational projection reproduces the identity-visibility break", () => {
+  const proof = runAprilFalsificationProof();
+  const view = proof.views.find((item) => item.view_type === "relational");
+  const entities = view.claims.find(
+    (item) => item.dimension === "explicit_entities"
+  );
+  const roles = view.claims.find(
+    (item) => item.dimension === "declared_roles"
+  );
+  assert.deepEqual(entities.value, []);
+  assert.deepEqual(roles.value, []);
+});
+
+test("expected April differences remain explicitly unresolved", () => {
+  const pack = runFalsificationPack();
+  assert.deepEqual(
+    pack.expected_unresolved_differences.map((item) => item.id),
+    [
+      "canonical-identity-equivalence",
+      "proxy-resolution-evidence",
+      "cooldown-versus-separation",
+      "downstream-consequence",
+      "artifact-versus-live-state"
+    ]
+  );
+});
+
+test("hostile identity collapse reproduces the known guard break", () => {
+  const hostile = loadHostile("identity-collapse.json");
+  const contract = {
+    must_not_infer: ["unstated_relationship", "authority", "permission"]
+  };
+  assert.doesNotThrow(() => assertNoForbiddenInference(hostile, contract));
+  assert.equal(runFalsificationPack().hostile_fixture_results.identity_collapse.blocked, false);
+});
+
+test("hostile authority promotion remains blocked", () => {
+  const hostile = loadHostile("authority-promotion.json");
+  const contract = {
+    must_not_infer: ["unstated_relationship", "authority", "permission"]
+  };
+  assert.throws(
+    () => assertNoForbiddenInference(hostile, contract),
+    /HOSTILE_INFERENCE_BLOCKED/
+  );
+  assert.equal(runFalsificationPack().hostile_fixture_results.authority_promotion.blocked, true);
+});
+
+test("falsification report classifies held, weakened, and broke outcomes", () => {
+  const pack = runFalsificationPack();
+  const outcomes = new Set(pack.assessments.map((item) => item.outcome));
+  assert.deepEqual(outcomes, new Set(["HELD", "WEAKENED", "BROKE"]));
+  assert.equal(pack.disposition.promote_to_p1, false);
 });
