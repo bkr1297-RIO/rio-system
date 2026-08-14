@@ -4,7 +4,7 @@ on:
   pull_request:
     paths:
       - "compliance/cid-001/**"
-      - "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.1.md"
+      - "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.2.md"
       - "gateway/governance/policy-engine.mjs"
       - "gateway/governance/office-integrity-execution-precheck.mjs"
       - "gateway/config/rio/policy-v2.json"
@@ -16,7 +16,7 @@ on:
       - main
     paths:
       - "compliance/cid-001/**"
-      - "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.1.md"
+      - "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.2.md"
       - "gateway/governance/policy-engine.mjs"
       - "gateway/governance/office-integrity-execution-precheck.mjs"
       - "gateway/config/rio/policy-v2.json"

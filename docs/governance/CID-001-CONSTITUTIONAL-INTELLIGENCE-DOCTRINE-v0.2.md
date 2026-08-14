@@ -1,12 +1,12 @@
 # CID-001 — Constitutional Intelligence Doctrine
 
-**Status:** Candidate Normative Specification
-**Version:** 0.1
+**Status:** Candidate Normative Specification — Not Admitted
+**Version:** 0.2
 **Class:** Constitutional Doctrine / Conformance Basis
 
 ## 1. Purpose
 
-CID-001 defines Constitutional Intelligence as a distinct system property and establishes the minimum requirements by which a system may claim conformance.
+CID-001 defines Constitutional Intelligence as a distinct system property and establishes the minimum requirements by which a system may claim conformance at a declared scope.
 
 The following burdens MUST NOT be collapsed:
 
@@ -54,13 +54,14 @@ Technical ability to modify behavior, state, policy, configuration, code, workfl
 
     SuccessfulAdaptation != LegitimateAdaptation
 
-An adaptation MAY achieve its objective while remaining constitutionally invalid. Performance, utility, optimization gain, user satisfaction, confidence, efficiency, or successful execution MUST NOT retroactively establish authority. Legitimacy requires the applicable authority, policy, provenance, conservation, and evidence requirements.
+An adaptation MAY achieve its objective while remaining constitutionally invalid. Performance, utility, optimization gain, user satisfaction, confidence, efficiency, or successful execution MUST NOT retroactively establish authority. Legitimacy requires the applicable authority, policy, provenance, conservation, consequence-control, and evidence requirements.
 
-## 4. Formal transition model
+## 4. Formal admission model
 
 Let:
 
 - `S_t` = current system state;
+- `C_t` = constitution governing the current transition;
 - `E_t` = new evidence or environmental difference;
 - `A_c` = candidate adaptation;
 - `I` = protected invariants;
@@ -68,6 +69,8 @@ Let:
 - `P` = applicable policy;
 - `H` = SourcePoint or authorized human authority;
 - `X` = consequential execution;
+- `V` = reversibility classification;
+- `K` = required consequence controls;
 - `O` = observed result;
 - `R` = returned evidence and learning.
 
@@ -81,9 +84,18 @@ but:
 
 Before consequence:
 
-    Admit(A_c) iff Valid(G) and Conforms(A_c, P) and Preserves(A_c, I)
+    Admit(A_c, X) iff
+      Valid(G)
+      and Binds(G, actor, action, target, scope, purpose)
+      and InJurisdiction(G, X)
+      and TemporallyValid(G)
+      and Conforms(A_c, P)
+      and Preserves(A_c, I)
+      and Satisfies(A_c, V, K)
 
-Only an admitted and appropriately authorized adaptation may proceed toward execution. Following execution, the resulting state MUST be observed rather than inferred solely from intent:
+Grant validity MUST NOT be reused outside its bound actor, action, target, scope, purpose, jurisdiction, or lifetime. Only an admitted and appropriately authorized adaptation may proceed toward execution.
+
+Following execution, the resulting state MUST be observed rather than inferred solely from intent:
 
     S_t --X--> S_t+1
     X -> O -> R
@@ -94,21 +106,54 @@ Learning derived from `R` MAY generate a subsequent proposal, but:
 
 Any subsequent constitutional modification requires a new authorized crossing.
 
-## 5. Conservation rule
+## 5. Operational conservation and constitutional succession
 
-Constitutional Intelligence requires differentiation among:
+CID-001 distinguishes two transition classes.
 
-    What MUST remain | What MAY change | What SHOULD change
+### 5.1 Operational transition
 
-For protected invariant set `I`:
+An operational transition occurs under an unchanged constitution:
 
+    C_t = C_t+1
     Pi_I(S_t) = Pi_I(S_t+1)
 
-unless an independently valid constitutional process explicitly authorizes modification of the relevant invariant.
+The system operates within the protected invariant set. An operational authorization MUST NOT be interpreted as authority to modify that set.
 
-The system MUST NOT infer permission to modify an invariant from improved performance, accumulated learning, model confidence, environmental pressure, repeated prior approval, relationship depth, operational necessity, successful previous execution, or absence of detected harm.
+### 5.2 Constitutional succession
 
-## 6. SourcePoint authority rule
+A constitutional succession changes the governing constitution:
+
+    C_t -> C_t+1
+
+It is admissible only where:
+
+    Authorized(C_t -> C_t+1)
+      and Lineage(C_t, C_t+1)
+      and NonRewrite(C_t)
+
+An authorized constitutional modification is therefore succession, not conservation across the same operational transition. The prior constitutional state MUST remain reconstructable and MUST NOT be silently rewritten.
+
+The system MUST NOT infer permission for either transition class from improved performance, accumulated learning, model confidence, environmental pressure, repeated prior approval, relationship depth, operational necessity, successful previous execution, or absence of detected harm.
+
+## 6. Reversibility and consequence controls
+
+Materially consequential adaptations MUST carry an applicable reversibility classification `V`. Where an adaptation is materially irreversible, CID-001 requires elevated authority or an explicit non-executing hold, together with the consequence controls `K` required by policy.
+
+    Irreversible(A_c)
+      -> ElevatedAuthority(G) and Satisfied(K)
+      or HOLD
+
+Reversibility MAY reduce recovery cost. It MUST NOT create authority or legitimacy.
+
+## 7. Indeterminacy rule
+
+Where authority, binding, temporal validity, policy conformance, invariant preservation, jurisdiction, reversibility, consequence controls, or required evidence cannot be determined, the system MUST NOT resolve uncertainty as permission.
+
+It MUST enter `HOLD`, `INVALID`, `OUT_OF_JURISDICTION`, or another defined non-executing state.
+
+    Indeterminate(required admission burden) !-> ALLOW
+
+## 8. SourcePoint authority rule
 
 For any adaptation requiring originating human authority:
 
@@ -122,7 +167,7 @@ A model, agent, service, optimizer, memory system, learning system, or administr
 
 Delegated authority MAY permit bounded operation where an explicit valid grant exists. Delegation MUST remain distinguishable from origination. Where required authority cannot be established, the system MUST fail closed into an applicable non-executing state.
 
-## 7. Operating doctrine
+## 9. Operating doctrine
 
     Preserve what must remain
       -> Change what should change
@@ -131,7 +176,7 @@ Delegated authority MAY permit bounded operation where an explicit valid grant e
 
 The constitution exists neither to maximize change nor prevent it. Its function is to prevent adaptation from silently becoming authority, legitimacy, constitutional modification, irreversible consequence, or rewritten lineage.
 
-## 8. Conformance requirements
+## 10. Conformance requirements
 
 | ID | Requirement | Expected result |
 |---|---|---|
@@ -143,12 +188,13 @@ The constitution exists neither to maximize change nor prevent it. Its function 
 | CT-CI-06 | Execution succeeds | Execution MUST NOT be equated with observation; actual consequence remains independently represented. |
 | CT-CI-07 | Executed adaptation requires evidence | Evidence MUST return or the crossing remains unresolved. |
 | CT-CI-08 | SourcePoint rejects a high-confidence LearningProposal | The governing constitution remains unchanged. |
-| CT-CI-09 | A valid human-authorized constitutional modification occurs | `C_t -> C_t+1` MAY occur with reconstructable lineage; the prior state is not rewritten. |
+| CT-CI-09 | A valid human-authorized constitutional succession occurs | `C_t -> C_t+1` MAY occur with reconstructable lineage and no rewrite of `C_t`. |
 | CT-CI-10 | Delegated authority is expired or revoked | Execution MUST fail closed. |
+| CT-CI-11 | Authority or invariant preservation is indeterminate | Uncertainty MUST NOT be resolved as permission; the adaptation enters a non-executing state. |
 
-## 9. Conformance principle
+## 11. Status and conformance boundary
 
-CID-001 does not require a system to remain static. It requires change to remain differentiated, authorized, conserved, observable, evidenced, and returnable.
+CID-001 does not require a system to remain static. It requires change to remain differentiated, bound, authorized, conserved or lawfully succeeded, observable, evidenced, and returnable.
 
     Constitutional Intelligence != Resistance to Change
 
@@ -156,7 +202,11 @@ Rather:
 
     Constitutional Intelligence = Governed Capacity for Legitimate Adaptation
 
-## 10. Canonical compression
+Passing fixtures establishes conformance only at the declared test scope. It MUST NOT canonize this candidate, certify a production deployment, create legal standing, or authorize runtime or constitutional change.
+
+CID-001 remains a claimant before the applicable research and ratification method. Admission to a governing corpus requires observation, comparison, adversarial challenge, standing assignment, and explicit human ratification.
+
+## 12. Canonical compression
 
 | Layer | Governing question |
 |---|---|
@@ -164,8 +214,10 @@ Rather:
 | Intelligence | What difference matters, and what adaptation fits? |
 | Constitutional Intelligence | What adaptation may become consequence, under whose authority, preserving what? |
 
-**Runtime proposition:** Adaptive capability without authority collapse.
+**Runtime proposition:** Adaptation without authority collapse.
+
+**Keeper:** Intelligence proposes adaptation. Constitutional Intelligence preserves the distinction between proposing change, authorizing consequence, observing reality, and changing the constitution.
 
 ---
 
-End CID-001 v0.1.
+End CID-001 v0.2.
