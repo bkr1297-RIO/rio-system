@@ -82,3 +82,30 @@ export function explicitTimestamps(markdown) {
 
   return records;
 }
+
+export function explicitIdentityComparisons(markdown) {
+  const records = [];
+  const identityFieldPattern =
+    /`(agent_id|identity\.subject|authorized_by|signer_id|principal_id)`\s+is\s+`([^`]+)`/gi;
+  const sharedReferentPattern =
+    /\b(?:same human|same person|same principal|refer to the same)\b/i;
+
+  for (const record of markdownLines(markdown)) {
+    const bindings = [...record.text.matchAll(identityFieldPattern)].map(
+      (match) => ({ field: match[1], value: match[2] })
+    );
+    if (bindings.length < 2) continue;
+
+    records.push({
+      ...record,
+      left: bindings[0],
+      right: bindings[1],
+      label_comparison: record.text.includes("!=")
+        ? "DISTINCT_STRINGS"
+        : "UNSPECIFIED",
+      source_states_shared_referent: sharedReferentPattern.test(record.text)
+    });
+  }
+
+  return records;
+}

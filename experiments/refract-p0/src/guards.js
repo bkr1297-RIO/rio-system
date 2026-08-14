@@ -15,6 +15,15 @@ const CAUSAL_MARKERS = [
   "\"standing\":\"causal\""
 ];
 
+const IDENTITY_COLLAPSE_MARKERS = [
+  "\"claim_type\":\"identity_equivalence\"",
+  "\"identity_status\":\"resolved\"",
+  "\"relation\":\"same_identity_as\"",
+  "\"relation\":\"same_principal_as\"",
+  "\"standing\":\"canonical\"",
+  "\"value\":\"same principal\""
+];
+
 export function assertNoPromotion(view) {
   const status = String(view.epistemic_status ?? "").toUpperCase();
   if (FORBIDDEN_PROMOTION_STATUSES.has(status)) {
@@ -62,6 +71,16 @@ export function assertNoForbiddenInference(view, contract) {
     for (const marker of ["\"intent\":\"known\"", "\"motive\":\""]) {
       if (generated.includes(marker)) {
         throw new Error("HOSTILE_INFERENCE_BLOCKED: intent inference " + marker);
+      }
+    }
+  }
+
+  if (contract.must_not_infer.includes("unstated_relationship")) {
+    for (const marker of IDENTITY_COLLAPSE_MARKERS) {
+      if (generated.includes(marker)) {
+        throw new Error(
+          "HOSTILE_INFERENCE_BLOCKED: identity collapse " + marker
+        );
       }
     }
   }

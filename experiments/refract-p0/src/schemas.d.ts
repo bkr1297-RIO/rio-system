@@ -51,6 +51,7 @@ export interface UnresolvedDifference {
     | "INSUFFICIENT_EVIDENCE"
     | "CONTRACT_PROHIBITS_INFERENCE"
     | "CONFLICTING_OBSERVATIONS"
+    | "REQUIRES_AUTHORIZED_RESOLVER"
     | "OUT_OF_SCOPE";
   evidence_refs: string[];
 }

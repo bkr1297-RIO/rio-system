@@ -55,6 +55,23 @@ export function runFalsificationPack({ experimentRoot = process.cwd() } = {}) {
     authorityPromotion,
     relationalContract
   );
+  const relationalEntities = claimValue(relational, "explicit_entities");
+  const relationalRoles = claimValue(relational, "declared_roles");
+  const relationalLinks = claimValue(relational, "explicit_links");
+  const identityResolution = relational.unresolved_differences.find(
+    (item) => item.dimension === "canonical_identity_resolution"
+  );
+  const identityVisible =
+    relationalEntities.includes("brian.k.rasmussen") &&
+    relationalEntities.includes("I-1") &&
+    relationalRoles.some((item) => item.role === "agent_id") &&
+    relationalRoles.some((item) => item.role === "authorized_by") &&
+    relationalLinks.some(
+      (item) =>
+        item.relation === "source_states_same_human_as" &&
+        item.standing === "SOURCE_STATED_UNRESOLVED"
+    ) &&
+    identityResolution?.reason === "REQUIRES_AUTHORIZED_RESOLVER";
 
   const assessments = [
     {
@@ -90,11 +107,14 @@ export function runFalsificationPack({ experimentRoot = process.cwd() } = {}) {
     },
     {
       criterion: "relational_identity_visibility",
-      outcome: "BROKE",
+      outcome: identityVisible ? "HELD" : "BROKE",
       evidence: {
-        explicit_entities: claimValue(relational, "explicit_entities"),
-        declared_roles: claimValue(relational, "declared_roles"),
-        limitation: "The source states an identity-label collision, but relational.v1 only recognizes role labels inside an Action section."
+        explicit_entities: relationalEntities,
+        declared_roles: relationalRoles,
+        explicit_identity_links: relationalLinks.filter(
+          (item) => item.relation === "source_states_same_human_as"
+        ),
+        canonical_resolution: identityResolution ?? null
       }
     },
     {
@@ -111,6 +131,7 @@ export function runFalsificationPack({ experimentRoot = process.cwd() } = {}) {
 
   return {
     pack_id: "REFRACT-P0-FALSIFICATION-PACK-v0.1",
+    implementation_id: "REFRACT-P0.1-IDENTITY-REPAIR",
     scope: "P0 only; unchanged structural.v1, temporal.v1, and relational.v1 contracts",
     proof,
     expected_unresolved_differences: expected.expected_unresolved_differences,
@@ -121,7 +142,7 @@ export function runFalsificationPack({ experimentRoot = process.cwd() } = {}) {
     assessments,
     disposition: {
       promote_to_p1: false,
-      reason: "P0 does not yet expose canonical identity collisions or fail closed on unstated identity equivalence."
+      reason: "P0.1 closes the two targeted identity breaks; temporal reconstruction remains weakened and no P1 decision is authorized by this repair."
     }
   };
 }

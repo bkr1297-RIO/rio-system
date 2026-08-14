@@ -217,7 +217,7 @@ test("April temporal projection reproduces the weakened sequence account", () =>
   assert.equal(sequence.standing, "OBSERVED");
 });
 
-test("April relational projection reproduces the identity-visibility break", () => {
+test("P0.1 exposes the April identity labels without resolving them", () => {
   const proof = runAprilFalsificationProof();
   const view = proof.views.find((item) => item.view_type === "relational");
   const entities = view.claims.find(
@@ -226,8 +226,26 @@ test("April relational projection reproduces the identity-visibility break", () 
   const roles = view.claims.find(
     (item) => item.dimension === "declared_roles"
   );
-  assert.deepEqual(entities.value, []);
-  assert.deepEqual(roles.value, []);
+  const links = view.claims.find(
+    (item) => item.dimension === "explicit_links"
+  );
+  const unresolved = view.unresolved_differences.find(
+    (item) => item.dimension === "canonical_identity_resolution"
+  );
+
+  assert.deepEqual(entities.value, ["brian.k.rasmussen", "I-1"]);
+  assert.ok(roles.value.some((item) => item.role === "agent_id"));
+  assert.ok(roles.value.some((item) => item.role === "authorized_by"));
+  assert.ok(
+    links.value.some(
+      (item) =>
+        item.relation === "source_states_same_human_as" &&
+        item.standing === "SOURCE_STATED_UNRESOLVED" &&
+        item.label_comparison === "DISTINCT_STRINGS"
+    )
+  );
+  assert.equal(unresolved.reason, "REQUIRES_AUTHORIZED_RESOLVER");
+  assert.equal(JSON.stringify(view).includes("\"standing\":\"CANONICAL\""), false);
 });
 
 test("expected April differences remain explicitly unresolved", () => {
@@ -244,13 +262,19 @@ test("expected April differences remain explicitly unresolved", () => {
   );
 });
 
-test("hostile identity collapse reproduces the known guard break", () => {
+test("P0.1 blocks hostile identity collapse", () => {
   const hostile = loadHostile("identity-collapse.json");
   const contract = {
     must_not_infer: ["unstated_relationship", "authority", "permission"]
   };
-  assert.doesNotThrow(() => assertNoForbiddenInference(hostile, contract));
-  assert.equal(runFalsificationPack().hostile_fixture_results.identity_collapse.blocked, false);
+  assert.throws(
+    () => assertNoForbiddenInference(hostile, contract),
+    /HOSTILE_INFERENCE_BLOCKED: identity collapse/
+  );
+  assert.equal(
+    runFalsificationPack().hostile_fixture_results.identity_collapse.blocked,
+    true
+  );
 });
 
 test("hostile authority promotion remains blocked", () => {
@@ -265,9 +289,17 @@ test("hostile authority promotion remains blocked", () => {
   assert.equal(runFalsificationPack().hostile_fixture_results.authority_promotion.blocked, true);
 });
 
-test("falsification report classifies held, weakened, and broke outcomes", () => {
+test("P0.1 closes both broken outcomes while preserving the temporal weakness", () => {
   const pack = runFalsificationPack();
   const outcomes = new Set(pack.assessments.map((item) => item.outcome));
-  assert.deepEqual(outcomes, new Set(["HELD", "WEAKENED", "BROKE"]));
+  assert.deepEqual(outcomes, new Set(["HELD", "WEAKENED"]));
+  assert.equal(
+    pack.assessments.filter((item) => item.outcome === "HELD").length,
+    6
+  );
+  assert.equal(
+    pack.assessments.filter((item) => item.outcome === "BROKE").length,
+    0
+  );
   assert.equal(pack.disposition.promote_to_p1, false);
 });
