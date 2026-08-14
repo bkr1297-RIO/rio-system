@@ -1,10 +1,10 @@
 {
   "suite_id": "cid-001-conformance",
   "doctrine_id": "CID-001",
-  "doctrine_version": "0.1",
+  "doctrine_version": "0.2",
   "status": "candidate_conformance_basis",
   "execution_class": "offline_repo_conformance",
-  "doctrine_ref": "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.1.md",
+  "doctrine_ref": "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.2.md",
   "claim_boundary": {
     "establishes": "Deterministic fixture behavior and explicit mappings to existing RIO, Sentinel, MUS, and SourcePoint runtime seams.",
     "does_not_establish": [
@@ -58,13 +58,16 @@
     { "id": "CT-CI-07", "fixture": "fixtures/ct-ci-07-evidence-return.json", "maps_to": ["MUS"] },
     { "id": "CT-CI-08", "fixture": "fixtures/ct-ci-08-human-rejection.json", "maps_to": ["RIO", "SourcePoint"] },
     { "id": "CT-CI-09", "fixture": "fixtures/ct-ci-09-authorized-evolution.json", "maps_to": ["RIO", "MUS", "SourcePoint"] },
-    { "id": "CT-CI-10", "fixture": "fixtures/ct-ci-10-expired-revoked-delegation.json", "maps_to": ["RIO", "Sentinel"] }
+    { "id": "CT-CI-10", "fixture": "fixtures/ct-ci-10-expired-revoked-delegation.json", "maps_to": ["RIO", "Sentinel"] },
+    { "id": "CT-CI-11", "fixture": "fixtures/ct-ci-11-indeterminate-admission.json", "maps_to": ["RIO", "Sentinel"] }
   ],
   "pass_criteria": {
     "all_fixture_expectations_match": true,
     "all_runtime_component_paths_exist": true,
     "no_external_effects": true,
     "no_fixture_may_self_authorize": true,
-    "constitutional_evolution_requires_sourcepoint_and_lineage": true
+    "constitutional_evolution_requires_sourcepoint_lineage_and_nonrewrite": true,
+    "indeterminacy_never_resolves_to_permission": true,
+    "materially_irreversible_consequence_requires_elevated_authority_and_controls": true
   }
 }

@@ -27,14 +27,14 @@ function loadFixture(requirement) {
 }
 
 describe("CID-001 manifest", () => {
-  it("declares the three invariants and all ten conformance requirements", () => {
+  it("declares the three invariants and all eleven conformance requirements", () => {
     assert.deepEqual(
       manifest.invariants.map((item) => item.id),
       ["CI-01", "CI-02", "CI-03"]
     );
     assert.deepEqual(
       manifest.requirements.map((item) => item.id),
-      Array.from({ length: 10 }, (_, index) =>
+      Array.from({ length: 11 }, (_, index) =>
         `CT-CI-${String(index + 1).padStart(2, "0")}`
       )
     );
@@ -77,6 +77,76 @@ describe("CID-001 executable fixtures", () => {
     assert.equal(applied.length, 1);
     assert.equal(applied[0].requirement_id, "CT-CI-09");
     assert.equal(applied[0].lineage_preserved, true);
+  });
+
+  it("blocks constitutional succession that rewrites the prior state", () => {
+    const fixture = structuredClone(
+      loadFixture(manifest.requirements.find((item) => item.id === "CT-CI-09"))
+    );
+    fixture.input.constitutional_state.lineage.prior_state_rewritten = true;
+
+    const result = evaluateCidFixture(fixture);
+
+    assert.equal(result.transition_class, "CONSTITUTIONAL_SUCCESSION");
+    assert.equal(result.disposition, "BLOCK");
+    assert.equal(result.execution_permitted, false);
+    assert.equal(result.reason_code, "CONSTITUTIONAL_LINEAGE_REQUIRED");
+  });
+
+  it("does not permit reuse of a grant outside its exact binding", () => {
+    const fixture = structuredClone(
+      loadFixture(manifest.requirements.find((item) => item.id === "CT-CI-06"))
+    );
+    fixture.input.candidate_adaptation.target = "different_recipient";
+
+    const result = evaluateCidFixture(fixture);
+
+    assert.equal(result.disposition, "DENY");
+    assert.equal(result.execution_permitted, false);
+    assert.equal(result.reason_code, "AUTHORITY_BINDING_MISMATCH");
+  });
+
+  it("holds materially irreversible consequence without elevated authority", () => {
+    const fixture = structuredClone(
+      loadFixture(manifest.requirements.find((item) => item.id === "CT-CI-06"))
+    );
+    fixture.input.candidate_adaptation.reversibility_class =
+      "MATERIALLY_IRREVERSIBLE";
+    fixture.input.consequence_controls = {
+      required: ["secondary_confirmation"],
+      satisfied: ["secondary_confirmation"]
+    };
+
+    const result = evaluateCidFixture(fixture);
+
+    assert.equal(result.disposition, "HOLD");
+    assert.equal(result.execution_permitted, false);
+    assert.equal(
+      result.reason_code,
+      "IRREVERSIBLE_CONSEQUENCE_REQUIRES_ELEVATED_AUTHORITY"
+    );
+  });
+
+  it("requires consequence controls after elevated irreversible authority", () => {
+    const fixture = structuredClone(
+      loadFixture(manifest.requirements.find((item) => item.id === "CT-CI-06"))
+    );
+    fixture.input.candidate_adaptation.reversibility_class =
+      "MATERIALLY_IRREVERSIBLE";
+    fixture.input.authority.grant.elevated_authority = true;
+    fixture.input.consequence_controls = {
+      required: ["secondary_confirmation"],
+      satisfied: []
+    };
+
+    const result = evaluateCidFixture(fixture);
+
+    assert.equal(result.disposition, "HOLD");
+    assert.equal(result.execution_permitted, false);
+    assert.equal(
+      result.reason_code,
+      "IRREVERSIBLE_CONSEQUENCE_CONTROLS_REQUIRED"
+    );
   });
 });
 

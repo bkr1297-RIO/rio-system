@@ -8,6 +8,11 @@
     "as_of": "2026-08-14T12:00:00.000Z",
     "candidate_adaptation": {
       "action": "send_email",
+      "actor": "manus",
+      "target": "external_recipient",
+      "scope": "single_message",
+      "purpose": "governed_outreach",
+      "jurisdiction": "gmail_mcp",
       "source": "AGENT",
       "technically_executable": true,
       "modifies_constitution": false,
@@ -19,6 +24,14 @@
         "grant_type": "DELEGATED_AUTHORITY",
         "status": "ACTIVE",
         "scope": ["send_email"],
+        "bindings": {
+          "actor": "manus",
+          "action": "send_email",
+          "target": "external_recipient",
+          "scope": "single_message",
+          "purpose": "governed_outreach"
+        },
+        "jurisdiction": "gmail_mcp",
         "expires_at": "2026-12-31T00:00:00.000Z"
       }
     },

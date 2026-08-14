@@ -3,7 +3,23 @@ function scopeAllows(grant, action) {
     (grant.scope.includes("*") || grant.scope.includes(action));
 }
 
-function evaluateGrant(grant, action, asOf) {
+function evaluateBinding(grant, candidate) {
+  const bindings = grant.bindings;
+  const required = ["actor", "action", "target", "scope", "purpose"];
+  if (!bindings || required.some((field) => !bindings[field] || !candidate[field])) {
+    return {
+      valid: false,
+      indeterminate: true,
+      reason: "AUTHORITY_BINDING_INDETERMINATE"
+    };
+  }
+  if (required.some((field) => bindings[field] !== candidate[field])) {
+    return { valid: false, indeterminate: false, reason: "AUTHORITY_BINDING_MISMATCH" };
+  }
+  return { valid: true, indeterminate: false, reason: null };
+}
+
+function evaluateGrant(grant, candidate, asOf) {
   if (!grant) return { valid: false, reason: "MISSING_AUTHORITY" };
   if (grant.status === "REVOKED" || grant.revoked === true) {
     return { valid: false, reason: "AUTHORITY_REVOKED_OR_EXPIRED" };
@@ -15,8 +31,53 @@ function evaluateGrant(grant, action, asOf) {
   if (!grant.expires_at || Number.isNaN(expiry.getTime()) || expiry <= asOf) {
     return { valid: false, reason: "AUTHORITY_REVOKED_OR_EXPIRED" };
   }
-  if (!scopeAllows(grant, action)) {
+  if (!scopeAllows(grant, candidate.action)) {
     return { valid: false, reason: "AUTHORITY_OUT_OF_SCOPE" };
+  }
+  const binding = evaluateBinding(grant, candidate);
+  if (!binding.valid) return binding;
+  if (!grant.jurisdiction || !candidate.jurisdiction) {
+    return {
+      valid: false,
+      indeterminate: true,
+      reason: "JURISDICTION_INDETERMINATE"
+    };
+  }
+  if (grant.jurisdiction !== candidate.jurisdiction) {
+    return { valid: false, reason: "OUT_OF_JURISDICTION" };
+  }
+  return { valid: true, reason: null };
+}
+
+function findIndeterminateBurden(input) {
+  const determinations = input.determinations || {};
+  const burdens = [
+    "authority",
+    "policy_conformance",
+    "invariant_preservation",
+    "jurisdiction",
+    "required_evidence"
+  ];
+  return burdens.find((burden) => determinations[burden] === "INDETERMINATE");
+}
+
+function evaluateConsequenceControls(input, candidate, grant) {
+  if (candidate.reversibility_class === "UNKNOWN") {
+    return { valid: false, reason: "REVERSIBILITY_INDETERMINATE" };
+  }
+  if (candidate.reversibility_class !== "MATERIALLY_IRREVERSIBLE") {
+    return { valid: true, reason: null };
+  }
+  if (grant.elevated_authority !== true) {
+    return {
+      valid: false,
+      reason: "IRREVERSIBLE_CONSEQUENCE_REQUIRES_ELEVATED_AUTHORITY"
+    };
+  }
+  const required = input.consequence_controls?.required || [];
+  const satisfied = new Set(input.consequence_controls?.satisfied || []);
+  if (required.length === 0 || required.some((control) => !satisfied.has(control))) {
+    return { valid: false, reason: "IRREVERSIBLE_CONSEQUENCE_CONTROLS_REQUIRED" };
   }
   return { valid: true, reason: null };
 }
@@ -26,6 +87,9 @@ function baseResult(fixture) {
   return {
     fixture_id: fixture.fixture_id,
     requirement_id: fixture.requirement_id,
+    transition_class: input.candidate_adaptation?.modifies_constitution === true
+      ? "CONSTITUTIONAL_SUCCESSION"
+      : "OPERATIONAL_TRANSITION",
     disposition: "HOLD",
     execution_permitted: false,
     constitutional_change: "UNCHANGED",
@@ -61,7 +125,17 @@ export function evaluateCidFixture(fixture) {
     return stop(result, "DENY", "NO_AUTHORITY_BY_COMPOSITION", "Sentinel");
   }
 
-  const grantEvaluation = evaluateGrant(grant, candidate.action, asOf);
+  const indeterminateBurden = findIndeterminateBurden(input);
+  if (indeterminateBurden) {
+    result.runtime_trace.push({
+      component: "Sentinel",
+      burden: indeterminateBurden,
+      outcome: "INDETERMINATE"
+    });
+    return stop(result, "HOLD", "ADMISSION_INDETERMINATE", "Sentinel");
+  }
+
+  const grantEvaluation = evaluateGrant(grant, candidate, asOf);
 
   if (
     candidate.source === "LEARNING" &&
@@ -78,9 +152,19 @@ export function evaluateCidFixture(fixture) {
   }
 
   if (!grantEvaluation.valid) {
-    return stop(result, "DENY", grantEvaluation.reason, "RIO");
+    return stop(
+      result,
+      grantEvaluation.indeterminate ? "HOLD" : "DENY",
+      grantEvaluation.reason,
+      "RIO"
+    );
   }
   result.runtime_trace.push({ component: "RIO", outcome: "AUTHORITY_VALID" });
+
+  const consequenceEvaluation = evaluateConsequenceControls(input, candidate, grant);
+  if (!consequenceEvaluation.valid) {
+    return stop(result, "HOLD", consequenceEvaluation.reason, "Sentinel");
+  }
 
   const protectedInvariants = new Set(input.policy?.protected_invariants || []);
   const explicitlyAuthorized = new Set(grant.explicit_invariant_changes || []);
@@ -113,7 +197,8 @@ export function evaluateCidFixture(fixture) {
       before.id !== after.id &&
       lineage?.parent_id === before.id &&
       lineage?.child_id === after.id &&
-      lineage?.prior_state_preserved === true
+      lineage?.prior_state_preserved === true &&
+      lineage?.prior_state_rewritten === false
     );
     if (!lineageValid) {
       return stop(result, "BLOCK", "CONSTITUTIONAL_LINEAGE_REQUIRED", "MUS");

@@ -1,8 +1,8 @@
 {
-  "fixture_id": "cid-001-ct-ci-04",
-  "requirement_id": "CT-CI-04",
-  "title": "Authorized objective with invariant-violating implementation",
-  "doctrine_invariants": ["CI-02"],
+  "fixture_id": "cid-001-ct-ci-11",
+  "requirement_id": "CT-CI-11",
+  "title": "Indeterminate invariant preservation",
+  "doctrine_invariants": ["CI-02", "CI-03"],
   "runtime_components": ["RIO", "Sentinel"],
   "input": {
     "as_of": "2026-08-14T12:00:00.000Z",
@@ -16,11 +16,11 @@
       "source": "AGENT",
       "technically_executable": true,
       "modifies_constitution": false,
-      "invariant_changes": ["human_final_authority"]
+      "invariant_changes": []
     },
     "authority": {
       "grant": {
-        "grant_id": "G-CT04",
+        "grant_id": "G-CT11",
         "grant_type": "DELEGATED_AUTHORITY",
         "status": "ACTIVE",
         "scope": ["deploy_configuration"],
@@ -32,17 +32,23 @@
           "purpose": "deploy_governed_configuration"
         },
         "jurisdiction": "local",
-        "explicit_invariant_changes": [],
         "expires_at": "2026-12-31T00:00:00.000Z"
       }
+    },
+    "determinations": {
+      "authority": "DETERMINATE",
+      "policy_conformance": "DETERMINATE",
+      "invariant_preservation": "INDETERMINATE",
+      "jurisdiction": "DETERMINATE",
+      "required_evidence": "DETERMINATE"
     },
     "policy": { "protected_invariants": ["human_final_authority"] },
     "execution": { "status": "NOT_ATTEMPTED" }
   },
   "expected": {
-    "disposition": "BLOCK",
+    "disposition": "HOLD",
     "execution_permitted": false,
     "constitutional_change": "UNCHANGED",
-    "reason_code": "PROTECTED_INVARIANT_VIOLATION"
+    "reason_code": "ADMISSION_INDETERMINATE"
   }
 }

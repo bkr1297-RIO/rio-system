@@ -8,6 +8,11 @@
     "as_of": "2026-08-14T12:00:00.000Z",
     "candidate_adaptation": {
       "action": "deploy_staging",
+      "actor": "manus",
+      "target": "staging_environment",
+      "scope": "single_deployment",
+      "purpose": "validate_candidate_release",
+      "jurisdiction": "staging",
       "source": "AGENT",
       "technically_executable": true,
       "modifies_constitution": false,
@@ -19,6 +24,14 @@
         "grant_type": "DELEGATED_AUTHORITY",
         "status": "ACTIVE",
         "scope": ["deploy_staging"],
+        "bindings": {
+          "actor": "manus",
+          "action": "deploy_staging",
+          "target": "staging_environment",
+          "scope": "single_deployment",
+          "purpose": "validate_candidate_release"
+        },
+        "jurisdiction": "staging",
         "expires_at": "2026-12-31T00:00:00.000Z"
       }
     },
