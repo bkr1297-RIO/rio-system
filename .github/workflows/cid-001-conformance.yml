@@ -1,0 +1,46 @@
+name: CID-001 Conformance
+
+on:
+  pull_request:
+    paths:
+      - "compliance/cid-001/**"
+      - "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.1.md"
+      - "gateway/governance/policy-engine.mjs"
+      - "gateway/governance/office-integrity-execution-precheck.mjs"
+      - "gateway/config/rio/policy-v2.json"
+      - "gateway/prime/bridge.mjs"
+      - "gateway/receipts/receipts.mjs"
+      - ".github/workflows/cid-001-conformance.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "compliance/cid-001/**"
+      - "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.1.md"
+      - "gateway/governance/policy-engine.mjs"
+      - "gateway/governance/office-integrity-execution-precheck.mjs"
+      - "gateway/config/rio/policy-v2.json"
+      - "gateway/prime/bridge.mjs"
+      - "gateway/receipts/receipts.mjs"
+      - ".github/workflows/cid-001-conformance.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  conformance:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: compliance/cid-001
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Run CID-001 tests
+        run: npm test
+      - name: Emit CID-001 conformance report
+        run: npm run conform

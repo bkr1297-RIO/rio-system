@@ -1,0 +1,35 @@
+{
+  "fixture_id": "cid-001-ct-ci-04",
+  "requirement_id": "CT-CI-04",
+  "title": "Authorized objective with invariant-violating implementation",
+  "doctrine_invariants": ["CI-02"],
+  "runtime_components": ["RIO", "Sentinel"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "deploy_configuration",
+      "source": "AGENT",
+      "technically_executable": true,
+      "modifies_constitution": false,
+      "invariant_changes": ["human_final_authority"]
+    },
+    "authority": {
+      "grant": {
+        "grant_id": "G-CT04",
+        "grant_type": "DELEGATED_AUTHORITY",
+        "status": "ACTIVE",
+        "scope": ["deploy_configuration"],
+        "explicit_invariant_changes": [],
+        "expires_at": "2026-12-31T00:00:00.000Z"
+      }
+    },
+    "policy": { "protected_invariants": ["human_final_authority"] },
+    "execution": { "status": "NOT_ATTEMPTED" }
+  },
+  "expected": {
+    "disposition": "BLOCK",
+    "execution_permitted": false,
+    "constitutional_change": "UNCHANGED",
+    "reason_code": "PROTECTED_INVARIANT_VIOLATION"
+  }
+}

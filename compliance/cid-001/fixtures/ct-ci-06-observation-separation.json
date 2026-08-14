@@ -1,0 +1,37 @@
+{
+  "fixture_id": "cid-001-ct-ci-06",
+  "requirement_id": "CT-CI-06",
+  "title": "Execution is not observation",
+  "doctrine_invariants": ["CI-03"],
+  "runtime_components": ["MUS"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "send_email",
+      "source": "AGENT",
+      "technically_executable": true,
+      "modifies_constitution": false,
+      "invariant_changes": []
+    },
+    "authority": {
+      "grant": {
+        "grant_id": "G-CT06",
+        "grant_type": "DELEGATED_AUTHORITY",
+        "status": "ACTIVE",
+        "scope": ["send_email"],
+        "expires_at": "2026-12-31T00:00:00.000Z"
+      }
+    },
+    "policy": { "protected_invariants": [] },
+    "execution": { "status": "EXECUTED" },
+    "observation": { "status": "MISSING" },
+    "evidence_return": { "required": false, "status": "NOT_REQUIRED" }
+  },
+  "expected": {
+    "disposition": "UNRESOLVED",
+    "execution_permitted": true,
+    "observation_status": "UNRESOLVED",
+    "constitutional_change": "UNCHANGED",
+    "reason_code": "OBSERVATION_REQUIRED"
+  }
+}
