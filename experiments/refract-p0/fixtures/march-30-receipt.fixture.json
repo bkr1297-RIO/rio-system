@@ -1,0 +1,15 @@
+{
+  "fixture_id": "march-30-governed-outreach",
+  "source_id": "RIO-RECEIPT-0003",
+  "object_type": "governed_action_receipt",
+  "source_type": "markdown",
+  "source_path": "legacy/archive/receipts/2026-03-30-outreach-receipt3.md",
+  "source_blob_sha": "9998d3681cde9231d04a29dc9db5e40eb7a40c44",
+  "expected_raw_sha256": "309ccb81dc719c5be018956a607b479d25a2e0f6253612669985c24ad3a2f897",
+  "source_timestamp": "2026-03-30T16:48:03.494Z",
+  "provenance": {
+    "repository": "bkr1297-RIO/rio-system",
+    "ref": "0de798458d6c0426b26b308a32f4febd8c2267eb",
+    "canonical_path": "legacy/archive/receipts/2026-03-30-outreach-receipt3.md"
+  }
+}

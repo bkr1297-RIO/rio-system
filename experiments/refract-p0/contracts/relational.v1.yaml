@@ -1,0 +1,26 @@
+contract_id: relational.v1
+view_type: relational
+observable_dimensions:
+  - explicit_entities
+  - explicit_links
+  - declared_roles
+  - source_target_pairs
+  - stated_membership
+must_preserve:
+  - source_id
+  - source_hash
+  - entity_labels
+  - explicit_relationships
+  - provenance
+may_change:
+  - representation
+  - graph_projection
+  - adjacency_summary
+must_not_infer:
+  - causal_claim
+  - intent
+  - authority
+  - fact_promotion
+  - unstated_relationship
+  - trust
+  - permission

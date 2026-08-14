@@ -1,0 +1,25 @@
+contract_id: temporal.v1
+view_type: temporal
+observable_dimensions:
+  - explicit_timestamps
+  - declared_sequence
+  - durations_if_derivable
+  - ordering_if_explicit
+  - temporal_gaps_if_derivable
+must_preserve:
+  - source_id
+  - source_hash
+  - timestamp_values
+  - declared_sequence
+  - provenance
+may_change:
+  - representation
+  - normalized_timestamp_format
+  - derived_duration_summary
+must_not_infer:
+  - causal_claim
+  - intent
+  - authority
+  - fact_promotion
+  - unobserved_event
+  - temporal_causation
