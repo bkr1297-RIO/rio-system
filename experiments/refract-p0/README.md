@@ -14,7 +14,7 @@ The v0.1 falsification pack adds the April 13 production demo proof as a hostile
 
     legacy/one-app/docs/RIO_DEMO_PROOF.md
 
-It runs that source through the same three unchanged contracts and records expected unresolved differences plus identity-collapse and authority-promotion attacks. See [FALSIFICATION-REPORT-v0.1.md](FALSIFICATION-REPORT-v0.1.md).
+It runs that source through the same three unchanged contracts and records expected unresolved differences plus identity-collapse and authority-promotion attacks. The original result is frozen in [FALSIFICATION-REPORT-v0.1.md](FALSIFICATION-REPORT-v0.1.md); the bounded identity repair is recorded in [P0.1-IDENTITY-REPAIR-REPORT.md](P0.1-IDENTITY-REPAIR-REPORT.md).
 
 ## Invariants
 
@@ -48,7 +48,7 @@ From this directory:
 
 The demo emits one JSON proof object containing the immutable source identity, all three typed Views, and the comparison report.
 
-The falsification command emits the April proof, unresolved-difference register, hostile-fixture results, and HELD / WEAKENED / BROKE assessments. A green test run means the known breaks were reproduced and classified; it does not mean every lens held.
+The falsification command emits the April proof, unresolved-difference register, hostile-fixture results, and current HELD / WEAKENED / BROKE assessments. The versioned reports preserve the original falsification result and the subsequent P0.1 repair result separately.
 
 ## What the first specimen shows
 
@@ -61,11 +61,18 @@ The falsification command emits the April proof, unresolved-difference register,
 
 ## What the falsification pack shows
 
-- Source lineage, immutability, contract reuse, structural projection, and the authority-promotion guard held.
+- The v0.1 baseline showed that source lineage, contract reuse, structural projection, and the authority-promotion guard held.
 - Temporal reconstruction weakened: timestamps were found, but the step sequence was missed and the empty result retained OBSERVED standing.
-- Relational identity visibility broke: the current parser did not expose the `brian.k.rasmussen` / `I-1` collision.
+- Relational identity visibility broke because the parser did not expose the `brian.k.rasmussen` / `I-1` collision.
 - The identity-collapse hostile fixture was not blocked, exposing a guard gap around unstated identity equivalence.
-- P0 is not promoted to P1 on this evidence.
+
+## P0.1 identity repair
+
+- The relational View now exposes both identity labels, their source-declared fields, and a `source_states_same_human_as` link.
+- That link carries `SOURCE_STATED_UNRESOLVED` standing; canonical identity remains explicitly unresolved and requires an authorized resolver.
+- The identity-collapse hostile fixture now fails closed.
+- The same three observational contracts remain unchanged.
+- Temporal reconstruction remains WEAKENED and P1 remains outside this repair.
 
 ## P0 boundary
 

@@ -1,5 +1,6 @@
 import { sha256, stableId } from "./hash.js";
 import {
+  explicitIdentityComparisons,
   explicitTimestamps,
   hashChainRows,
   headings,
@@ -67,13 +68,20 @@ function claim(source, contract, dimension, value, standing, evidence_refs) {
   };
 }
 
-function unresolved(source, contract, dimension, description, reason) {
+function unresolved(
+  source,
+  contract,
+  dimension,
+  description,
+  reason,
+  evidence_refs = []
+) {
   return {
     unresolved_id: stableId("U", source.source_hash, contract.contract_id, dimension),
     dimension,
     description,
     reason,
-    evidence_refs: []
+    evidence_refs
   };
 }
 
@@ -255,9 +263,10 @@ function roleBindings(source) {
 function relationalView(source, contract) {
   const view = baseView(source, contract);
   const bindings = roleBindings(source);
+  const identityComparisons = explicitIdentityComparisons(source.payload);
 
   view.evidence = [...new Map(
-    bindings.map((record) => [
+    [...bindings, ...identityComparisons].map((record) => [
       record.line,
       evidence(source, "line:" + record.line, record.text, record.line)
     ])
@@ -266,19 +275,48 @@ function relationalView(source, contract) {
   const evidenceByLine = new Map(
     view.evidence.map((item) => [item.line, item.evidence_id])
   );
-  const roles = bindings.map((record) => ({
-    role: record.label,
-    entity_label: record.value,
-    evidence_ref: evidenceByLine.get(record.line)
-  }));
-  const entities = [...new Set(bindings.map((record) => record.value))];
-  const links = bindings.map((record) => ({
+  const identityRoles = identityComparisons.flatMap((record) => [
+    {
+      role: record.left.field,
+      entity_label: record.left.value,
+      standing: "EXPLICIT_SOURCE_LABEL",
+      evidence_ref: evidenceByLine.get(record.line)
+    },
+    {
+      role: record.right.field,
+      entity_label: record.right.value,
+      standing: "EXPLICIT_SOURCE_LABEL",
+      evidence_ref: evidenceByLine.get(record.line)
+    }
+  ]);
+  const roles = [
+    ...bindings.map((record) => ({
+      role: record.label,
+      entity_label: record.value,
+      standing: "EXPLICIT_ROLE_LABEL",
+      evidence_ref: evidenceByLine.get(record.line)
+    })),
+    ...identityRoles
+  ];
+  const entities = [...new Set(roles.map((record) => record.entity_label))];
+  const roleLinks = bindings.map((record) => ({
     source: "governed_action",
     relation: record.label,
     target: record.value,
     standing: "EXPLICIT_ROLE_LABEL",
     evidence_ref: evidenceByLine.get(record.line)
   }));
+  const identityLinks = identityComparisons
+    .filter((record) => record.source_states_shared_referent)
+    .map((record) => ({
+      source: record.left.value,
+      relation: "source_states_same_human_as",
+      target: record.right.value,
+      standing: "SOURCE_STATED_UNRESOLVED",
+      label_comparison: record.label_comparison,
+      evidence_ref: evidenceByLine.get(record.line)
+    }));
+  const links = [...roleLinks, ...identityLinks];
 
   const refs = view.evidence.map((item) => item.evidence_id);
   view.claims = [
@@ -299,15 +337,28 @@ function relationalView(source, contract) {
     )
   ];
 
-  view.unresolved_differences.push(
-    unresolved(
-      source,
-      contract,
-      "stated_membership",
-      "The receipt does not declare a membership relation.",
-      "INSUFFICIENT_EVIDENCE"
-    )
-  );
+  if (identityLinks.length > 0) {
+    view.unresolved_differences.push(
+      unresolved(
+        source,
+        contract,
+        "canonical_identity_resolution",
+        "The source states that distinct identity labels share a human referent; canonical equivalence requires resolver evidence and is not established by this View.",
+        "REQUIRES_AUTHORIZED_RESOLVER",
+        identityLinks.map((link) => link.evidence_ref)
+      )
+    );
+  } else {
+    view.unresolved_differences.push(
+      unresolved(
+        source,
+        contract,
+        "stated_membership",
+        "The source does not declare a membership relation recognized by this contract.",
+        "INSUFFICIENT_EVIDENCE"
+      )
+    );
+  }
 
   return view;
 }
