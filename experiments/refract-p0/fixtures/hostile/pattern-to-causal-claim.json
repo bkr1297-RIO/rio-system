@@ -1,0 +1,12 @@
+{
+  "contract_id": "relational.v1",
+  "view_type": "relational",
+  "epistemic_status": "CANDIDATE",
+  "input_type": "PATTERN_CANDIDATE",
+  "claims": [
+    {
+      "claim_type": "CAUSAL_CLAIM",
+      "value": "The observed pattern caused the action."
+    }
+  ]
+}
