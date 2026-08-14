@@ -1,0 +1,70 @@
+{
+  "suite_id": "cid-001-conformance",
+  "doctrine_id": "CID-001",
+  "doctrine_version": "0.1",
+  "status": "candidate_conformance_basis",
+  "execution_class": "offline_repo_conformance",
+  "doctrine_ref": "docs/governance/CID-001-CONSTITUTIONAL-INTELLIGENCE-DOCTRINE-v0.1.md",
+  "claim_boundary": {
+    "establishes": "Deterministic fixture behavior and explicit mappings to existing RIO, Sentinel, MUS, and SourcePoint runtime seams.",
+    "does_not_establish": [
+      "production certification",
+      "live deployment conformance",
+      "legal compliance",
+      "runtime completeness",
+      "authority to modify production policy or constitution"
+    ]
+  },
+  "invariants": [
+    {
+      "id": "CI-01",
+      "expression": "LearningProposal != ConstitutionalChange"
+    },
+    {
+      "id": "CI-02",
+      "expression": "AdaptationCapability != AuthorityToAdapt"
+    },
+    {
+      "id": "CI-03",
+      "expression": "SuccessfulAdaptation != LegitimateAdaptation"
+    }
+  ],
+  "runtime_components": {
+    "RIO": [
+      "gateway/governance/policy-engine.mjs",
+      "gateway/config/rio/policy-v2.json"
+    ],
+    "Sentinel": [
+      "gateway/governance/office-integrity-execution-precheck.mjs",
+      "gateway/security/token-manager.mjs",
+      "gateway/prime/bridge.mjs"
+    ],
+    "MUS": [
+      "gateway/receipts/receipts.mjs",
+      "gateway/ledger/ledger.mjs"
+    ],
+    "SourcePoint": [
+      "gateway/security/principals.mjs",
+      "gateway/routes/index.mjs"
+    ]
+  },
+  "requirements": [
+    { "id": "CT-CI-01", "fixture": "fixtures/ct-ci-01-unauthorized-adaptation.json", "maps_to": ["RIO", "Sentinel"] },
+    { "id": "CT-CI-02", "fixture": "fixtures/ct-ci-02-learning-promotion.json", "maps_to": ["RIO", "SourcePoint"] },
+    { "id": "CT-CI-03", "fixture": "fixtures/ct-ci-03-success-without-legitimacy.json", "maps_to": ["RIO", "Sentinel"] },
+    { "id": "CT-CI-04", "fixture": "fixtures/ct-ci-04-invariant-violation.json", "maps_to": ["RIO", "Sentinel"] },
+    { "id": "CT-CI-05", "fixture": "fixtures/ct-ci-05-authority-by-composition.json", "maps_to": ["RIO", "Sentinel"] },
+    { "id": "CT-CI-06", "fixture": "fixtures/ct-ci-06-observation-separation.json", "maps_to": ["MUS"] },
+    { "id": "CT-CI-07", "fixture": "fixtures/ct-ci-07-evidence-return.json", "maps_to": ["MUS"] },
+    { "id": "CT-CI-08", "fixture": "fixtures/ct-ci-08-human-rejection.json", "maps_to": ["RIO", "SourcePoint"] },
+    { "id": "CT-CI-09", "fixture": "fixtures/ct-ci-09-authorized-evolution.json", "maps_to": ["RIO", "MUS", "SourcePoint"] },
+    { "id": "CT-CI-10", "fixture": "fixtures/ct-ci-10-expired-revoked-delegation.json", "maps_to": ["RIO", "Sentinel"] }
+  ],
+  "pass_criteria": {
+    "all_fixture_expectations_match": true,
+    "all_runtime_component_paths_exist": true,
+    "no_external_effects": true,
+    "no_fixture_may_self_authorize": true,
+    "constitutional_evolution_requires_sourcepoint_and_lineage": true
+  }
+}

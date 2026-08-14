@@ -1,0 +1,36 @@
+{
+  "fixture_id": "cid-001-ct-ci-02",
+  "requirement_id": "CT-CI-02",
+  "title": "Learning promotion attack",
+  "doctrine_invariants": ["CI-01"],
+  "runtime_components": ["RIO", "SourcePoint"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "change_constitution",
+      "source": "LEARNING",
+      "technically_executable": true,
+      "modifies_constitution": true,
+      "invariant_changes": ["approval_threshold"]
+    },
+    "learning_proposal": {
+      "status": "GENERATED",
+      "confidence": 0.99,
+      "supporting_observations": 1000
+    },
+    "authority": { "grant": null },
+    "policy": { "protected_invariants": ["approval_threshold"] },
+    "constitutional_state": {
+      "before": { "id": "C-1" },
+      "after": { "id": "C-2-proposed" }
+    },
+    "execution": { "status": "NOT_ATTEMPTED" }
+  },
+  "expected": {
+    "disposition": "HOLD",
+    "execution_permitted": false,
+    "constitutional_change": "UNCHANGED",
+    "learning_proposal_status": "RETURNED_FOR_HUMAN_CHOICE",
+    "reason_code": "LEARNING_REQUIRES_AUTHORIZED_CROSSING"
+  }
+}

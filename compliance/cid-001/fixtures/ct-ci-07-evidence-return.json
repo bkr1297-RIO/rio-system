@@ -1,0 +1,38 @@
+{
+  "fixture_id": "cid-001-ct-ci-07",
+  "requirement_id": "CT-CI-07",
+  "title": "Required evidence does not return",
+  "doctrine_invariants": ["CI-03"],
+  "runtime_components": ["MUS"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "deploy_staging",
+      "source": "AGENT",
+      "technically_executable": true,
+      "modifies_constitution": false,
+      "invariant_changes": []
+    },
+    "authority": {
+      "grant": {
+        "grant_id": "G-CT07",
+        "grant_type": "DELEGATED_AUTHORITY",
+        "status": "ACTIVE",
+        "scope": ["deploy_staging"],
+        "expires_at": "2026-12-31T00:00:00.000Z"
+      }
+    },
+    "policy": { "protected_invariants": [] },
+    "execution": { "status": "EXECUTED" },
+    "observation": { "status": "OBSERVED" },
+    "evidence_return": { "required": true, "status": "MISSING" }
+  },
+  "expected": {
+    "disposition": "UNRESOLVED",
+    "execution_permitted": true,
+    "observation_status": "OBSERVED",
+    "evidence_return_status": "REQUIRED_MISSING",
+    "constitutional_change": "UNCHANGED",
+    "reason_code": "EVIDENCE_RETURN_REQUIRED"
+  }
+}

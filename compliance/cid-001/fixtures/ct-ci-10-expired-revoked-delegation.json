@@ -1,0 +1,35 @@
+{
+  "fixture_id": "cid-001-ct-ci-10",
+  "requirement_id": "CT-CI-10",
+  "title": "Expired and revoked delegation",
+  "doctrine_invariants": ["CI-02"],
+  "runtime_components": ["RIO", "Sentinel"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "send_email",
+      "source": "AGENT",
+      "technically_executable": true,
+      "modifies_constitution": false,
+      "invariant_changes": []
+    },
+    "authority": {
+      "grant": {
+        "grant_id": "G-CT10",
+        "grant_type": "DELEGATED_AUTHORITY",
+        "status": "REVOKED",
+        "revoked": true,
+        "scope": ["send_email"],
+        "expires_at": "2026-08-13T00:00:00.000Z"
+      }
+    },
+    "policy": { "protected_invariants": [] },
+    "execution": { "status": "NOT_ATTEMPTED" }
+  },
+  "expected": {
+    "disposition": "DENY",
+    "execution_permitted": false,
+    "constitutional_change": "UNCHANGED",
+    "reason_code": "AUTHORITY_REVOKED_OR_EXPIRED"
+  }
+}

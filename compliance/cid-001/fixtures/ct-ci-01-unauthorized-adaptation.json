@@ -1,0 +1,26 @@
+{
+  "fixture_id": "cid-001-ct-ci-01",
+  "requirement_id": "CT-CI-01",
+  "title": "Unauthorized adaptation",
+  "doctrine_invariants": ["CI-02"],
+  "runtime_components": ["RIO", "Sentinel"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "deploy_production",
+      "source": "MODEL",
+      "technically_executable": true,
+      "modifies_constitution": false,
+      "invariant_changes": []
+    },
+    "authority": { "grant": null },
+    "policy": { "protected_invariants": ["human_final_authority"] },
+    "execution": { "status": "NOT_ATTEMPTED" }
+  },
+  "expected": {
+    "disposition": "DENY",
+    "execution_permitted": false,
+    "constitutional_change": "UNCHANGED",
+    "reason_code": "MISSING_AUTHORITY"
+  }
+}

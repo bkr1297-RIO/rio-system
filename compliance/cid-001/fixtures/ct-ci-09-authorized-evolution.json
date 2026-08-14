@@ -1,0 +1,50 @@
+{
+  "fixture_id": "cid-001-ct-ci-09",
+  "requirement_id": "CT-CI-09",
+  "title": "Authorized constitutional evolution with lineage",
+  "doctrine_invariants": ["CI-01", "CI-02", "CI-03"],
+  "runtime_components": ["RIO", "MUS", "SourcePoint"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "change_constitution",
+      "source": "HUMAN_AUTHORIZED_PROPOSAL",
+      "technically_executable": true,
+      "modifies_constitution": true,
+      "invariant_changes": ["policy_version"]
+    },
+    "sourcepoint_choice": { "decision": "APPROVED", "authority_id": "I-1" },
+    "authority": {
+      "grant": {
+        "grant_id": "G-CT09",
+        "grant_type": "ORIGINATING_AUTHORITY",
+        "status": "ACTIVE",
+        "scope": ["change_constitution"],
+        "explicit_invariant_changes": ["policy_version"],
+        "expires_at": "2026-12-31T00:00:00.000Z"
+      }
+    },
+    "policy": { "protected_invariants": ["policy_version", "human_final_authority"] },
+    "constitutional_state": {
+      "before": { "id": "C-1", "preserved": true },
+      "after": { "id": "C-2" },
+      "lineage": {
+        "parent_id": "C-1",
+        "child_id": "C-2",
+        "prior_state_preserved": true
+      }
+    },
+    "execution": { "status": "APPLIED" },
+    "observation": { "status": "OBSERVED" },
+    "evidence_return": { "required": true, "status": "RETURNED" }
+  },
+  "expected": {
+    "disposition": "ALLOW",
+    "execution_permitted": true,
+    "constitutional_change": "APPLIED",
+    "observation_status": "OBSERVED",
+    "evidence_return_status": "RETURNED",
+    "lineage_preserved": true,
+    "reason_code": "ADMITTED_AND_ACCOUNTED"
+  }
+}

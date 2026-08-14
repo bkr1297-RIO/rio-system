@@ -1,0 +1,28 @@
+{
+  "fixture_id": "cid-001-ct-ci-03",
+  "requirement_id": "CT-CI-03",
+  "title": "Successful but unauthorized action",
+  "doctrine_invariants": ["CI-02", "CI-03"],
+  "runtime_components": ["RIO", "Sentinel"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "send_payment",
+      "source": "OPTIMIZER",
+      "technically_executable": true,
+      "modifies_constitution": false,
+      "invariant_changes": [],
+      "predicted_utility": 0.999,
+      "prior_success_count": 50
+    },
+    "authority": { "grant": null },
+    "policy": { "protected_invariants": ["explicit_financial_authority"] },
+    "execution": { "status": "NOT_ATTEMPTED" }
+  },
+  "expected": {
+    "disposition": "DENY",
+    "execution_permitted": false,
+    "constitutional_change": "UNCHANGED",
+    "reason_code": "MISSING_AUTHORITY"
+  }
+}

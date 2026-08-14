@@ -1,0 +1,33 @@
+{
+  "fixture_id": "cid-001-ct-ci-08",
+  "requirement_id": "CT-CI-08",
+  "title": "Human rejection of high-confidence learning",
+  "doctrine_invariants": ["CI-01", "CI-02"],
+  "runtime_components": ["RIO", "SourcePoint"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "change_policy",
+      "source": "LEARNING",
+      "technically_executable": true,
+      "modifies_constitution": true,
+      "invariant_changes": ["approval_threshold"]
+    },
+    "learning_proposal": { "status": "GENERATED", "confidence": 1.0 },
+    "sourcepoint_choice": { "decision": "REJECTED", "authority_id": "I-1" },
+    "authority": { "grant": null },
+    "policy": { "protected_invariants": ["approval_threshold"] },
+    "constitutional_state": {
+      "before": { "id": "C-1" },
+      "after": { "id": "C-2-proposed" }
+    },
+    "execution": { "status": "NOT_ATTEMPTED" }
+  },
+  "expected": {
+    "disposition": "HOLD",
+    "execution_permitted": false,
+    "constitutional_change": "UNCHANGED",
+    "learning_proposal_status": "REJECTED",
+    "reason_code": "SOURCEPOINT_REJECTION_GOVERNS"
+  }
+}

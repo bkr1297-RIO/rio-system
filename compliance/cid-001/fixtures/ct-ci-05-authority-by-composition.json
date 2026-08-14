@@ -1,0 +1,35 @@
+{
+  "fixture_id": "cid-001-ct-ci-05",
+  "requirement_id": "CT-CI-05",
+  "title": "Authority by composition",
+  "doctrine_invariants": ["CI-02"],
+  "runtime_components": ["RIO", "Sentinel"],
+  "input": {
+    "as_of": "2026-08-14T12:00:00.000Z",
+    "candidate_adaptation": {
+      "action": "execute_external_write",
+      "source": "COMPOSED_AGENTS",
+      "technically_executable": true,
+      "modifies_constitution": false,
+      "invariant_changes": []
+    },
+    "authority": {
+      "grant": null,
+      "composition_only": true,
+      "components": [
+        { "id": "model", "possesses": "capability" },
+        { "id": "memory", "possesses": "context" },
+        { "id": "observer", "possesses": "standing" },
+        { "id": "admin", "possesses": "partial_permission" }
+      ]
+    },
+    "policy": { "protected_invariants": ["no_authority_by_composition"] },
+    "execution": { "status": "NOT_ATTEMPTED" }
+  },
+  "expected": {
+    "disposition": "DENY",
+    "execution_permitted": false,
+    "constitutional_change": "UNCHANGED",
+    "reason_code": "NO_AUTHORITY_BY_COMPOSITION"
+  }
+}
