@@ -1,0 +1,16 @@
+{
+  "fixture_id": "april-identity-resolution",
+  "source_id": "RIO-DEMO-PROOF-2026-04-13",
+  "object_type": "governance_demo_proof",
+  "source_type": "markdown",
+  "source_path": "legacy/one-app/docs/RIO_DEMO_PROOF.md",
+  "source_blob_sha": "74dcae45fc3fcdc5ea97cc7592a60272e9d7539e",
+  "expected_raw_sha256": "614072527bcfec78cdf636ab0ca6b810c343ce5082c27bb87c1bfb13c50c1e2f",
+  "source_timestamp": "2026-04-13T01:26:00Z",
+  "provenance": {
+    "repository": "bkr1297-RIO/rio-system",
+    "ref": "62a3382570d6edd5d3caed4559fc42e0d91a3136",
+    "canonical_path": "legacy/one-app/docs/RIO_DEMO_PROOF.md",
+    "observation_scope": "source-bounded"
+  }
+}

@@ -5,6 +5,7 @@ on:
     paths:
       - "experiments/refract-p0/**"
       - "legacy/archive/receipts/2026-03-30-outreach-receipt3.md"
+      - "legacy/one-app/docs/RIO_DEMO_PROOF.md"
       - ".github/workflows/refract-p0.yml"
   push:
     branches:
@@ -12,6 +13,7 @@ on:
     paths:
       - "experiments/refract-p0/**"
       - "legacy/archive/receipts/2026-03-30-outreach-receipt3.md"
+      - "legacy/one-app/docs/RIO_DEMO_PROOF.md"
       - ".github/workflows/refract-p0.yml"
 
 permissions:
@@ -34,3 +36,5 @@ jobs:
         run: npm test
       - name: Run March 30 three-view comparison
         run: npm run demo
+      - name: Run April identity-resolution falsification pack
+        run: npm run falsify

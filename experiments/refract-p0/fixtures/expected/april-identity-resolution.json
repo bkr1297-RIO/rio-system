@@ -1,0 +1,30 @@
+{
+  "fixture_id": "april-identity-resolution",
+  "expected_unresolved_differences": [
+    {
+      "id": "canonical-identity-equivalence",
+      "difference": "The source uses brian.k.rasmussen for the proposer and I-1 for the approver and states that they refer to the same human.",
+      "must_remain_unresolved": "Canonical equivalence cannot be established from string identity or this retrospective report alone; a canonical resolver record is not embedded in the specimen."
+    },
+    {
+      "id": "proxy-resolution-evidence",
+      "difference": "The source says the proxy resolves both identifiers to the same principalId.",
+      "must_remain_unresolved": "No raw proxy identity-resolution trace is embedded in the specimen."
+    },
+    {
+      "id": "cooldown-versus-separation",
+      "difference": "The expected result is described as cooldown enforcement while the finding is described as proposer/approver separation failure.",
+      "must_remain_unresolved": "The specimen does not establish whether cooldown and identity separation were implemented as the same control."
+    },
+    {
+      "id": "downstream-consequence",
+      "difference": "Demo 3 records authorization but no execution step.",
+      "must_remain_unresolved": "The specimen does not establish whether the self-approved intent was executed or produced an external consequence."
+    },
+    {
+      "id": "artifact-versus-live-state",
+      "difference": "The source is a proof document containing embedded response excerpts.",
+      "must_remain_unresolved": "The specimen is not direct access to the historical live system state."
+    }
+  ]
+}
