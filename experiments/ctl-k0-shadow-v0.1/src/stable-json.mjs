@@ -5,7 +5,7 @@ function normalize(value) {
   if (value !== null && typeof value === "object") {
     return Object.fromEntries(Object.entries(value)
       .filter(([, child]) => child !== undefined)
-      .sort(([left], [right]) => left.localeCompare(right, "en"))
+      .sort(([left], [right]) => left < right ? -1 : left > right ? 1 : 0)
       .map(([key, child]) => [key, normalize(child)]));
   }
   return value;

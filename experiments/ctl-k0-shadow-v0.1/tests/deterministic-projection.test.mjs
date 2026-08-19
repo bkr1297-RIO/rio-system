@@ -21,3 +21,14 @@ test("stable source record projects deterministically without silent promotions"
   assert.equal(JSON.stringify(first).includes("private@example.com"), false);
   assert.equal(JSON.stringify(first).includes("sensitive detail"), false);
 });
+
+test("unknown runtime actions remain fixed, undefined, and data-minimized", async () => {
+  const unknownIntent = { ...INTENT, action: "private-action-name" };
+  const unknownEntry = { ...LEDGER_ENTRY, action: "private-action-name" };
+  const getJson = async (path) => path.includes("intents/")
+    ? structuredClone(unknownIntent)
+    : { entries: [structuredClone(unknownEntry)], total: 1, chain_tip: "tip-001" };
+  const [request] = projectSnapshot(await captureStableSnapshot({ getJson, clock: fixedClock() }));
+  assert.equal(request.verificationInput.program.kind, "RIO_UNMAPPED_ACTION");
+  assert.equal(JSON.stringify(request).includes("private-action-name"), false);
+});

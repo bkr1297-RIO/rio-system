@@ -34,7 +34,7 @@ const ACTION_MAPPINGS = new Map([
 
 export function mapAction(action) {
   return ACTION_MAPPINGS.get(String(action).toLowerCase()) ?? {
-    kind: `RIO_UNMAPPED_ACTION:${String(action)}`,
+    kind: "RIO_UNMAPPED_ACTION",
     effects: ["UNMAPPED_RUNTIME_ACTION"],
     capabilities: [],
   };
