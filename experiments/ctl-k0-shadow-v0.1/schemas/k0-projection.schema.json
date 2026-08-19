@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio-to-k0-projection-0.1.json",
+  "type": "object",
+  "required": ["schemaVersion", "mode", "requestId", "asOf", "source", "verificationInput"],
+  "properties": {
+    "schemaVersion": { "const": "ctl-k0.shadow-request/0.1" },
+    "mode": { "const": "NON_AUTHORITATIVE_SHADOW" },
+    "verificationInput": {
+      "type": "object",
+      "not": {
+        "required": ["actualHistory"]
+      }
+    }
+  }
+}

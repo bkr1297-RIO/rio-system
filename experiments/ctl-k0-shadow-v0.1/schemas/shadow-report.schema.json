@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-shadow-capture-0.1.json",
+  "type": "object",
+  "required": ["schemaVersion", "labels", "status", "gatewayEffect"],
+  "properties": {
+    "schemaVersion": { "enum": ["rio.k0-shadow-capture/0.1", "rio.k0-shadow-failure/0.1"] },
+    "labels": { "type": "array", "contains": { "const": "NOT_FOR_DECISION_USE" } },
+    "status": { "enum": ["CAPTURE_STABLE", "CAPTURE_HOLD", "SHADOW_FAILURE_ISOLATED"] },
+    "gatewayEffect": { "const": "NONE" }
+  }
+}
