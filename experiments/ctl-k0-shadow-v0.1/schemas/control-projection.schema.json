@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-control-projection-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "evaluationRef", "policyDigest", "mode", "covered", "proposedControl", "firedPredicates", "unresolvedPredicates", "telemetryComplete", "gatewayEffect"],
+  "properties": {
+    "schemaVersion": { "const": "rio.k0-control-projection/0.1" },
+    "evaluationRef": { "type": "string" },
+    "policyDigest": { "type": "string" },
+    "mode": { "const": "HYPOTHETICAL_ONLY" },
+    "covered": { "type": "boolean" },
+    "proposedControl": { "enum": ["PASS", "HOLD", "BLOCK", "NOT_COVERED"] },
+    "firedPredicates": { "type": "array", "items": { "type": "string" } },
+    "unresolvedPredicates": { "type": "array", "items": { "type": "string" } },
+    "telemetryComplete": { "type": "boolean" },
+    "gatewayEffect": { "const": "NONE" }
+  }
+}

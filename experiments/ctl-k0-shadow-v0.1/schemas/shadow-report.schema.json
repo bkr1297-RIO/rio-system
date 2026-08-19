@@ -6,7 +6,7 @@
   "properties": {
     "schemaVersion": { "enum": ["rio.k0-shadow-capture/0.1", "rio.k0-shadow-failure/0.1"] },
     "labels": { "type": "array", "contains": { "const": "NOT_FOR_DECISION_USE" } },
-    "status": { "enum": ["CAPTURE_STABLE", "CAPTURE_HOLD", "SHADOW_FAILURE_ISOLATED"] },
+    "status": { "enum": ["CAPTURE_STABLE_NON_ATOMIC", "CAPTURE_HOLD", "SHADOW_FAILURE_ISOLATED"] },
     "gatewayEffect": { "const": "NONE" }
   }
 }

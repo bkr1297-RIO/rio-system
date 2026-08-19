@@ -1,0 +1,44 @@
+{
+  "schemaVersion": "rio.k0-shadow-experiment-contract/0.1",
+  "experimentId": "ctl-k0-shadow-v0.1",
+  "stage": "SHADOW",
+  "captureMode": "POST_FACTO_RETROSPECTIVE",
+  "activationStatus": "DRAFT_NOT_ACTIVATED",
+  "promotionEligible": false,
+  "humanVisible": false,
+  "prospectiveSealing": "NOT_IMPLEMENTED",
+  "humanDispositionLinkage": "SCHEMA_ONLY_NOT_IMPLEMENTED",
+  "consequenceLinkage": "SCHEMA_ONLY_NOT_IMPLEMENTED",
+  "automaticPromotion": false,
+  "automaticSuspension": true,
+  "maxActivationDaysBeforeReview": 30,
+  "permittedSourcePaths": [
+    "GET /api/v1/ledger"
+  ],
+  "prohibitedEffects": [
+    "AUTHORIZE",
+    "BLOCK",
+    "ROUTE",
+    "EXECUTE",
+    "SETTLE",
+    "WRITE_GATEWAY",
+    "CALLBACK_GATEWAY"
+  ],
+  "requiredLabels": [
+    "NON_AUTHORITATIVE_SHADOW",
+    "NOT_FOR_DECISION_USE"
+  ],
+  "automaticSuspensionTriggers": [
+    "MISSING_SHADOW_LABEL",
+    "NONZERO_GATEWAY_EFFECT",
+    "SCHEMA_INVALID",
+    "PIN_MISMATCH",
+    "AUDITOR_SCOPE_FAILURE",
+    "SINK_BOUNDARY_FAILURE",
+    "SOURCE_REWIND",
+    "UNRECONCILED_EPOCH_RUPTURE",
+    "DUPLICATE_COUNT_CORRUPTION",
+    "HUMAN_VISIBILITY_DETECTED",
+    "DECISION_USE_DETECTED"
+  ]
+}

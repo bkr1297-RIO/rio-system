@@ -1,0 +1,19 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-consequence-link-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "consequenceLinkId", "evaluationRef", "attemptRefs", "historyAssertionRefs", "observationRefs", "evidenceClaimRefs", "settlementRefs", "linkStatus", "gatewayEffect"],
+  "properties": {
+    "schemaVersion": { "const": "rio.k0-consequence-link/0.1" },
+    "consequenceLinkId": { "type": "string", "minLength": 1 },
+    "evaluationRef": { "type": "string", "minLength": 1 },
+    "attemptRefs": { "type": "array", "items": { "type": "string" } },
+    "historyAssertionRefs": { "type": "array", "items": { "type": "string" } },
+    "observationRefs": { "type": "array", "items": { "type": "string" } },
+    "evidenceClaimRefs": { "type": "array", "items": { "type": "string" } },
+    "settlementRefs": { "type": "array", "items": { "type": "string" } },
+    "linkStatus": { "enum": ["UNLINKED", "PARTIAL", "COMPLETE", "CONFLICTING"] },
+    "gatewayEffect": { "const": "NONE" }
+  }
+}

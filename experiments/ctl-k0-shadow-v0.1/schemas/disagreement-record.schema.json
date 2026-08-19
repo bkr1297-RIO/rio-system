@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-disagreement-record-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "evaluationRef", "controlProjectionRef", "humanDispositionRef", "classification", "gatewayEffect", "disagreementId"],
+  "properties": {
+    "schemaVersion": { "const": "rio.k0-disagreement-record/0.1" },
+    "classification": { "enum": ["AGREE", "K0_MORE_RESTRICTIVE", "HUMAN_MORE_RESTRICTIVE", "INPUT_TELEMETRY_GAP", "INSUFFICIENT_DATA", "NOT_COVERED"] },
+    "gatewayEffect": { "const": "NONE" }
+  }
+}

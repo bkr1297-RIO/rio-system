@@ -1,5 +1,4 @@
 import { readLedger } from "./ledger-reader.mjs";
-import { readIntent } from "./intent-reader.mjs";
 import { sha256Canonical } from "./stable-json.mjs";
 
 function minimizeLedgerEntry(entry) {
@@ -18,22 +17,6 @@ function minimizeLedgerEntry(entry) {
   };
 }
 
-function minimizeIntent(intent) {
-  return {
-    intent_id: intent.intent_id ?? null,
-    action: intent.action ?? null,
-    agent_id: intent.agent_id ?? null,
-    target_environment: intent.target_environment ?? null,
-    timestamp: intent.timestamp ?? null,
-    status: intent.status ?? null,
-    parameters_digest: sha256Canonical(intent.parameters ?? {}),
-    has_governance_record: Boolean(intent.governance),
-    has_authorization_record: Boolean(intent.authorization),
-    has_execution_record: Boolean(intent.execution),
-    has_receipt_record: Boolean(intent.receipt),
-  };
-}
-
 export function dedupeKey(entry) {
   return sha256Canonical({ entry_id: entry.entry_id, ledger_hash: entry.ledger_hash });
 }
@@ -48,7 +31,7 @@ export function classifyEpoch(previous, current) {
 
 export async function captureStableSnapshot({
   getJson,
-  limit = 100,
+  limit = 20,
   offset = 0,
   maxAttempts = 3,
   clock = () => new Date().toISOString(),
@@ -58,11 +41,10 @@ export async function captureStableSnapshot({
   for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
     const captureStartedAt = clock();
     const before = await readLedger(getJson, { limit, offset });
-    const hydrated = [];
+    const records = [];
     for (const rawEntry of before.entries) {
       const entry = minimizeLedgerEntry(rawEntry);
-      const intent = minimizeIntent(await readIntent(getJson, entry.intent_id));
-      hydrated.push({ entry, intent, dedupe_key: dedupeKey(entry) });
+      records.push({ entry, dedupe_key: dedupeKey(entry) });
     }
     const after = await readLedger(getJson, { limit: 1, offset: 0 });
     const captureCompletedAt = clock();
@@ -73,13 +55,19 @@ export async function captureStableSnapshot({
       captureStartedAt,
       captureCompletedAt,
       captureAttempt: attempt,
-      atomicity: stable ? "STABLE" : "NON_ATOMIC_SNAPSHOT",
+      consistency: stable ? "CHAIN_TIP_STABLE_NON_ATOMIC" : "CHAIN_TIP_CHANGED",
       chainTipBefore: before.chainTip,
       chainTipAfter: after.chainTip,
       totalBefore: before.total,
       totalAfter: after.total,
       epochStatus: classifyEpoch(previousCheckpoint, { total: before.total, chainTip: before.chainTip }),
-      records: hydrated,
+      pageCoverage: {
+        offset,
+        requestedLimit: limit,
+        returnedCount: records.length,
+        total: before.total,
+      },
+      records,
     };
     last.captureId = sha256Canonical(last);
     if (stable) return last;

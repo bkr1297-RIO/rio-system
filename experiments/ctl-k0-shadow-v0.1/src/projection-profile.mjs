@@ -19,7 +19,7 @@ export const K0_CONSTITUTION = Object.freeze({
   ]
 });
 
-const ACTION_MAPPINGS = new Map([
+const ACTION_MAPPING_ENTRIES = [
   ["send_email", { kind: "SEND_EXTERNAL", effects: ["SEND_MESSAGE"], capabilities: ["message.send"] }],
   ["gmail.send", { kind: "SEND_EXTERNAL", effects: ["SEND_MESSAGE"], capabilities: ["message.send"] }],
   ["update_record", { kind: "UPDATE_RECORD", effects: ["WRITE_RECORD"], capabilities: ["record.write"] }],
@@ -30,7 +30,18 @@ const ACTION_MAPPINGS = new Map([
   ["run_pattern", { kind: "RUN_PATTERN", effects: ["PATTERN_EFFECT"], capabilities: ["pattern.run"] }],
   ["provision_capability", { kind: "PROVISION_CAPABILITY", effects: ["PROVISION_TOOL"], capabilities: ["tool.provision"] }],
   ["amend_constitution", { kind: "AMEND_CONSTITUTION", effects: ["WRITE_CONSTITUTION"], capabilities: ["constitution.write"] }]
-]);
+];
+
+const ACTION_MAPPINGS = new Map(ACTION_MAPPING_ENTRIES);
+
+export const PROJECTION_PROFILE_DESCRIPTOR = Object.freeze({
+  projectionVersion: PROJECTION_VERSION,
+  actionMappings: ACTION_MAPPING_ENTRIES,
+  unknownAction: { kind: "RIO_UNMAPPED_ACTION", effects: ["UNMAPPED_RUNTIME_ACTION"] },
+  actualityPolicy: "OBSERVATION_ONLY",
+  authorityPolicy: "NOT_ESTABLISHED",
+  settlementPolicy: "OPEN",
+});
 
 export function mapAction(action) {
   return ACTION_MAPPINGS.get(String(action).toLowerCase()) ?? {

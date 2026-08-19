@@ -11,22 +11,12 @@ export const LEDGER_ENTRY = Object.freeze({
   intent_hash: "intent-hash-001"
 });
 
-export const INTENT = Object.freeze({
-  intent_id: "intent-001",
-  action: "send_email",
-  agent_id: "bondi",
-  target_environment: "production",
-  timestamp: "2026-08-19T17:59:00.000Z",
-  status: "executed",
-  parameters: { to: "private@example.com", body: "secret" },
-  governance: { status: "complete" },
-  authorization: { decision: "approved" },
-  execution: { status: "success" },
-  receipt: { receipt_id: "receipt-001" }
-});
-
 export function jsonResponse(value, status = 200) {
-  return { ok: status >= 200 && status < 300, status, async json() { return structuredClone(value); } };
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    async text() { return JSON.stringify(value); },
+  };
 }
 
 export function fixedClock() {

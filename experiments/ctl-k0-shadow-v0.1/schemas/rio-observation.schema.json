@@ -2,11 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://rio.local/schemas/rio.k0-observation-0.1.json",
   "type": "object",
-  "required": ["schemaVersion", "labels", "captureStartedAt", "captureCompletedAt", "atomicity", "chainTipBefore", "chainTipAfter", "totalBefore", "totalAfter", "epochStatus", "records", "captureId"],
+  "required": ["schemaVersion", "labels", "captureStartedAt", "captureCompletedAt", "consistency", "chainTipBefore", "chainTipAfter", "totalBefore", "totalAfter", "epochStatus", "pageCoverage", "records", "captureId"],
   "properties": {
     "schemaVersion": { "const": "rio.k0-observation/0.1" },
     "labels": { "type": "array", "contains": { "const": "NON_AUTHORITATIVE_SHADOW" } },
-    "atomicity": { "enum": ["STABLE", "NON_ATOMIC_SNAPSHOT"] },
+    "consistency": { "enum": ["CHAIN_TIP_STABLE_NON_ATOMIC", "CHAIN_TIP_CHANGED"] },
+    "pageCoverage": { "type": "object" },
     "records": { "type": "array" },
     "captureId": { "type": "string", "minLength": 64, "maxLength": 64 }
   }

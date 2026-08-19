@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-shadow-experiment-contract-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "experimentId", "stage", "captureMode", "activationStatus", "promotionEligible", "humanVisible", "prospectiveSealing", "humanDispositionLinkage", "consequenceLinkage", "automaticPromotion", "automaticSuspension", "maxActivationDaysBeforeReview", "permittedSourcePaths", "prohibitedEffects", "requiredLabels", "automaticSuspensionTriggers"],
+  "properties": {
+    "schemaVersion": { "const": "rio.k0-shadow-experiment-contract/0.1" },
+    "stage": { "const": "SHADOW" },
+    "captureMode": { "const": "POST_FACTO_RETROSPECTIVE" },
+    "activationStatus": { "const": "DRAFT_NOT_ACTIVATED" },
+    "promotionEligible": { "const": false },
+    "humanVisible": { "const": false },
+    "automaticPromotion": { "const": false },
+    "automaticSuspension": { "const": true }
+  }
+}
