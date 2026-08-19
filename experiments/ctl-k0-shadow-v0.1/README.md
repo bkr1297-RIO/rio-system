@@ -20,8 +20,12 @@ It cannot authorize, block, route, execute, settle, write a receipt, write the l
 or alter an intent. A K0 `PASS` is not an `ALLOW`. Semantic denial or breach is data,
 not a process failure.
 
+The effect contract is a vector, not the false claim that reading has no effect. The
+authority, blocking, execution, settlement, and business-mutation axes are `NONE`.
+HTTP access logging and rate-limit accounting are explicitly `PRESENT`.
+
 Every emitted request or result is wrapped in a shadow-owned `K0_EVALUATION` record.
-The wrapper—not the runner—fixes the non-authority labels, `gatewayEffect = NONE`,
+The wrapper—not the runner—fixes the non-authority labels, the effect vector,
 retrospective capture mode, input/report digests, and promotion ineligibility.
 
 ## Hard boundary

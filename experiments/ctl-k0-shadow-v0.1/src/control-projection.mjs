@@ -1,4 +1,5 @@
 import { sha256Canonical } from "./stable-json.mjs";
+import { SHADOW_EFFECT_VECTOR } from "./evaluation-record.mjs";
 
 export function hypotheticalControlProjection(evaluation, policy = { version: "shadow-control/0.1" }) {
   const judgments = evaluation.report?.semantic?.report?.judgments;
@@ -30,7 +31,7 @@ export function hypotheticalControlProjection(evaluation, policy = { version: "s
     firedPredicates,
     unresolvedPredicates,
     telemetryComplete: Object.values(evaluation.telemetryCompleteness).every(Boolean),
-    gatewayEffect: "NONE",
+    effectVector: SHADOW_EFFECT_VECTOR,
   };
 }
 
@@ -57,7 +58,7 @@ export function classifyDisagreement(projection, humanDisposition) {
     controlProjectionRef: sha256Canonical(projection),
     humanDispositionRef: humanDisposition?.dispositionId ?? null,
     classification,
-    gatewayEffect: "NONE",
+    effectVector: SHADOW_EFFECT_VECTOR,
   };
   return { ...core, disagreementId: sha256Canonical(core) };
 }

@@ -24,6 +24,10 @@
     "WRITE_GATEWAY",
     "CALLBACK_GATEWAY"
   ],
+  "declaredSourceAccessEffects": [
+    "HTTP_ACCESS_LOG",
+    "RATE_LIMIT_ACCOUNTING"
+  ],
   "requiredLabels": [
     "NON_AUTHORITATIVE_SHADOW",
     "NOT_FOR_DECISION_USE"

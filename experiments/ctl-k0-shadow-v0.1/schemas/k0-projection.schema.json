@@ -2,12 +2,31 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://rio.local/schemas/rio-to-k0-projection-0.1.json",
   "type": "object",
+  "additionalProperties": false,
   "required": ["schemaVersion", "mode", "requestId", "asOf", "source", "verificationInput"],
   "properties": {
     "schemaVersion": { "const": "ctl-k0.shadow-request/0.1" },
     "mode": { "const": "NON_AUTHORITATIVE_SHADOW" },
+    "requestId": { "type": "string", "minLength": 1 },
+    "asOf": { "type": "string", "format": "date-time" },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["system", "projectionVersion", "sourceRefs", "captureStartedAt", "captureCompletedAt", "chainTipBefore", "chainTipAfter"],
+      "properties": {
+        "system": { "const": "rio-system/api-v1" },
+        "projectionVersion": { "type": "string", "minLength": 1 },
+        "sourceRefs": { "type": "array", "items": { "type": "string", "minLength": 1 }, "uniqueItems": true },
+        "captureStartedAt": { "type": "string", "format": "date-time" },
+        "captureCompletedAt": { "type": "string", "format": "date-time" },
+        "ledgerHash": { "type": "string", "minLength": 1 },
+        "chainTipBefore": { "type": "string", "minLength": 1 },
+        "chainTipAfter": { "type": "string", "minLength": 1 }
+      }
+    },
     "verificationInput": {
       "type": "object",
+      "required": ["schemaVersion", "constitution", "world", "context", "program", "observations", "evidenceClaims"],
       "not": {
         "required": ["actualHistory"]
       }

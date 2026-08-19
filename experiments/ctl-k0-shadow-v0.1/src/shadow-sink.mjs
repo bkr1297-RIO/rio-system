@@ -1,4 +1,5 @@
 import { canonicalJson } from "./stable-json.mjs";
+import { SHADOW_EFFECT_VECTOR } from "./evaluation-record.mjs";
 
 export function writeShadowRecord(record, stream = process.stdout) {
   stream.write(`${canonicalJson(record)}\n`);
@@ -12,6 +13,6 @@ export function failureRecord(stage, error, source = {}) {
     stage,
     error: error instanceof Error ? error.message : String(error),
     source,
-    gatewayEffect: "NONE",
+    effectVector: SHADOW_EFFECT_VECTOR,
   };
 }

@@ -4,7 +4,7 @@ import { captureStableSnapshot } from "./stable-snapshot.mjs";
 import { projectSnapshot } from "./project-k0-envelope.mjs";
 import { invokeK0Runner } from "./invoke-k0-runner.mjs";
 import { failureRecord, writeShadowRecord } from "./shadow-sink.mjs";
-import { createEvaluationRecord } from "./evaluation-record.mjs";
+import { createEvaluationRecord, SHADOW_EFFECT_VECTOR } from "./evaluation-record.mjs";
 
 function optionalCheckpoint(env) {
   if (!env.K0_SHADOW_PREVIOUS_TOTAL || !env.K0_SHADOW_PREVIOUS_TIP) return undefined;
@@ -48,7 +48,7 @@ export async function runOnce({ env = process.env, fetchImpl = globalThis.fetch,
     chainTipAfter: snapshot.chainTipAfter,
     recordCount: snapshot.records.length,
     pageCoverage: snapshot.pageCoverage,
-    gatewayEffect: "NONE",
+    effectVector: SHADOW_EFFECT_VECTOR,
   }, stream);
   if (snapshot.consistency !== "CHAIN_TIP_STABLE_NON_ATOMIC"
       || ["SOURCE_REWIND", "EPOCH_RUPTURE"].includes(snapshot.epochStatus)) {

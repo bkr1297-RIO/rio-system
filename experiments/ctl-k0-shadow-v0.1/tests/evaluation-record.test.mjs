@@ -16,7 +16,8 @@ async function evaluation() {
 test("every evaluation is shadow-owned, retrospective, and promotion-ineligible", async () => {
   const record = await evaluation();
   assert.deepEqual(record.labels, ["NON_AUTHORITATIVE_SHADOW", "NOT_FOR_DECISION_USE"]);
-  assert.equal(record.gatewayEffect, "NONE");
+  assert.equal(record.effectVector.authorityEffect, "NONE");
+  assert.equal(record.effectVector.sourceReadAuditEffect, "PRESENT");
   assert.equal(record.captureMode, "POST_FACTO_RETROSPECTIVE");
   assert.equal(record.humanVisible, false);
   assert.equal(record.sealedBeforeHumanDisposition, false);
@@ -35,6 +36,6 @@ test("incomplete telemetry is a gap, not K0-human disagreement", async () => {
     disposition: "APPROVE",
   });
   assert.equal(projection.mode, "HYPOTHETICAL_ONLY");
-  assert.equal(projection.gatewayEffect, "NONE");
+  assert.equal(projection.effectVector.blockingEffect, "NONE");
   assert.equal(disagreement.classification, "INPUT_TELEMETRY_GAP");
 });

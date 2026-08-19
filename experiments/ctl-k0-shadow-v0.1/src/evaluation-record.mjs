@@ -6,6 +6,16 @@ export const SHADOW_LABELS = Object.freeze([
   "NOT_FOR_DECISION_USE",
 ]);
 
+export const SHADOW_EFFECT_VECTOR = Object.freeze({
+  authorityEffect: "NONE",
+  blockingEffect: "NONE",
+  executionEffect: "NONE",
+  settlementEffect: "NONE",
+  businessMutationEffect: "NONE",
+  sourceReadAuditEffect: "PRESENT",
+  rateLimitEffect: "PRESENT",
+});
+
 export function createEvaluationRecord({ snapshot, request, runnerResult = null }) {
   const report = runnerResult?.semantic?.report ?? null;
   const projection = runnerResult?.semantic?.projection ?? null;
@@ -15,7 +25,7 @@ export function createEvaluationRecord({ snapshot, request, runnerResult = null 
     stage: "SHADOW",
     captureMode: "POST_FACTO_RETROSPECTIVE",
     labels: SHADOW_LABELS,
-    gatewayEffect: "NONE",
+    effectVector: SHADOW_EFFECT_VECTOR,
     requestId: request.requestId,
     captureId: snapshot.captureId,
     sourceConsistency: snapshot.consistency,

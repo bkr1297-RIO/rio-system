@@ -3,15 +3,40 @@
   "$id": "https://rio.local/schemas/rio.k0-shadow-experiment-contract-0.1.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "experimentId", "stage", "captureMode", "activationStatus", "promotionEligible", "humanVisible", "prospectiveSealing", "humanDispositionLinkage", "consequenceLinkage", "automaticPromotion", "automaticSuspension", "maxActivationDaysBeforeReview", "permittedSourcePaths", "prohibitedEffects", "requiredLabels", "automaticSuspensionTriggers"],
+  "required": ["schemaVersion", "experimentId", "stage", "captureMode", "activationStatus", "promotionEligible", "humanVisible", "prospectiveSealing", "humanDispositionLinkage", "consequenceLinkage", "automaticPromotion", "automaticSuspension", "maxActivationDaysBeforeReview", "permittedSourcePaths", "prohibitedEffects", "declaredSourceAccessEffects", "requiredLabels", "automaticSuspensionTriggers"],
   "properties": {
     "schemaVersion": { "const": "rio.k0-shadow-experiment-contract/0.1" },
+    "experimentId": { "const": "ctl-k0-shadow-v0.1" },
     "stage": { "const": "SHADOW" },
     "captureMode": { "const": "POST_FACTO_RETROSPECTIVE" },
     "activationStatus": { "const": "DRAFT_NOT_ACTIVATED" },
     "promotionEligible": { "const": false },
     "humanVisible": { "const": false },
+    "prospectiveSealing": { "const": "NOT_IMPLEMENTED" },
+    "humanDispositionLinkage": { "const": "SCHEMA_ONLY_NOT_IMPLEMENTED" },
+    "consequenceLinkage": { "const": "SCHEMA_ONLY_NOT_IMPLEMENTED" },
     "automaticPromotion": { "const": false },
-    "automaticSuspension": { "const": true }
+    "automaticSuspension": { "const": true },
+    "maxActivationDaysBeforeReview": { "type": "integer", "minimum": 1, "maximum": 30 },
+    "permittedSourcePaths": {
+      "const": ["GET /api/v1/ledger"]
+    },
+    "prohibitedEffects": {
+      "const": ["AUTHORIZE", "BLOCK", "ROUTE", "EXECUTE", "SETTLE", "WRITE_GATEWAY", "CALLBACK_GATEWAY"]
+    },
+    "declaredSourceAccessEffects": {
+      "const": ["HTTP_ACCESS_LOG", "RATE_LIMIT_ACCOUNTING"]
+    },
+    "requiredLabels": {
+      "const": ["NON_AUTHORITATIVE_SHADOW", "NOT_FOR_DECISION_USE"]
+    },
+    "automaticSuspensionTriggers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "enum": ["MISSING_SHADOW_LABEL", "NONZERO_GATEWAY_EFFECT", "SCHEMA_INVALID", "PIN_MISMATCH", "AUDITOR_SCOPE_FAILURE", "SINK_BOUNDARY_FAILURE", "SOURCE_REWIND", "UNRECONCILED_EPOCH_RUPTURE", "DUPLICATE_COUNT_CORRUPTION", "HUMAN_VISIBILITY_DETECTED", "DECISION_USE_DETECTED"]
+      }
+    }
   }
 }

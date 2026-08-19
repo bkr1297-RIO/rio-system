@@ -3,7 +3,7 @@
   "$id": "https://rio.local/schemas/rio.k0-control-projection-0.1.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "evaluationRef", "policyDigest", "mode", "covered", "proposedControl", "firedPredicates", "unresolvedPredicates", "telemetryComplete", "gatewayEffect"],
+  "required": ["schemaVersion", "evaluationRef", "policyDigest", "mode", "covered", "proposedControl", "firedPredicates", "unresolvedPredicates", "telemetryComplete", "effectVector"],
   "properties": {
     "schemaVersion": { "const": "rio.k0-control-projection/0.1" },
     "evaluationRef": { "type": "string" },
@@ -14,6 +14,22 @@
     "firedPredicates": { "type": "array", "items": { "type": "string" } },
     "unresolvedPredicates": { "type": "array", "items": { "type": "string" } },
     "telemetryComplete": { "type": "boolean" },
-    "gatewayEffect": { "const": "NONE" }
+    "effectVector": { "$ref": "#/$defs/effectVector" }
+  },
+  "$defs": {
+    "effectVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorityEffect", "blockingEffect", "executionEffect", "settlementEffect", "businessMutationEffect", "sourceReadAuditEffect", "rateLimitEffect"],
+      "properties": {
+        "authorityEffect": { "const": "NONE" },
+        "blockingEffect": { "const": "NONE" },
+        "executionEffect": { "const": "NONE" },
+        "settlementEffect": { "const": "NONE" },
+        "businessMutationEffect": { "const": "NONE" },
+        "sourceReadAuditEffect": { "const": "PRESENT" },
+        "rateLimitEffect": { "const": "PRESENT" }
+      }
+    }
   }
 }

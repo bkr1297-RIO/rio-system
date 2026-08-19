@@ -3,7 +3,7 @@
   "$id": "https://rio.local/schemas/rio.k0-consequence-link-0.1.json",
   "type": "object",
   "additionalProperties": false,
-  "required": ["schemaVersion", "consequenceLinkId", "evaluationRef", "attemptRefs", "historyAssertionRefs", "observationRefs", "evidenceClaimRefs", "settlementRefs", "linkStatus", "gatewayEffect"],
+  "required": ["schemaVersion", "consequenceLinkId", "evaluationRef", "attemptRefs", "historyAssertionRefs", "observationRefs", "evidenceClaimRefs", "settlementRefs", "linkStatus", "effectVector"],
   "properties": {
     "schemaVersion": { "const": "rio.k0-consequence-link/0.1" },
     "consequenceLinkId": { "type": "string", "minLength": 1 },
@@ -14,6 +14,22 @@
     "evidenceClaimRefs": { "type": "array", "items": { "type": "string" } },
     "settlementRefs": { "type": "array", "items": { "type": "string" } },
     "linkStatus": { "enum": ["UNLINKED", "PARTIAL", "COMPLETE", "CONFLICTING"] },
-    "gatewayEffect": { "const": "NONE" }
+    "effectVector": { "$ref": "#/$defs/effectVector" }
+  },
+  "$defs": {
+    "effectVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorityEffect", "blockingEffect", "executionEffect", "settlementEffect", "businessMutationEffect", "sourceReadAuditEffect", "rateLimitEffect"],
+      "properties": {
+        "authorityEffect": { "const": "NONE" },
+        "blockingEffect": { "const": "NONE" },
+        "executionEffect": { "const": "NONE" },
+        "settlementEffect": { "const": "NONE" },
+        "businessMutationEffect": { "const": "NONE" },
+        "sourceReadAuditEffect": { "const": "PRESENT" },
+        "rateLimitEffect": { "const": "PRESENT" }
+      }
+    }
   }
 }
