@@ -29,23 +29,19 @@ jobs:
       - name: Run SPG-M core tests
         run: npm run test:spgm
         env:
-          NODE_TEST_CONTEXT: "1"
           ED25519_MODE: required
 
       - name: Run SPG-M policy review tests
         run: npm run test:spgm:policy-review
         env:
-          NODE_TEST_CONTEXT: "1"
           ED25519_MODE: required
 
       - name: Run SPG-M govern bridge tests
         run: npm run test:spgm:govern
         env:
-          NODE_TEST_CONTEXT: "1"
           ED25519_MODE: required
 
       - name: Run SPG-M OpenAPI contract tests
         run: npm run test:spgm:openapi
         env:
-          NODE_TEST_CONTEXT: "1"
           ED25519_MODE: required
