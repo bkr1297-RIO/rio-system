@@ -17,6 +17,7 @@ const REQUIRED_FALSE_POLICY_USE_FLAGS = [
 const REQUIRED_TRUE_BOUNDARY_FLAGS = [
   "non_executing",
   "signal_not_command",
+  "fact_symbol_separated",
   "interpretation_provisional",
   "machine_boundary_preserved",
 ];
