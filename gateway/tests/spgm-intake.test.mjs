@@ -30,7 +30,8 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.routing.muss_required, false);
     assert.equal(result.next_step, "private_reflection");
     assert.equal(result.receipt_event.recommended, false);
-    assert.equal(result.policy_review.accepted, true);
+    assert.equal(result.policy_review.accepted, false);
+    assert.equal(result.policy_review.required_action, "reject_or_contain_context");
     assert.equal(result.policy_review.policy_effect.may_authorize, false);
     assert.equal(result.policy_review.policy_effect.may_execute, false);
   });
