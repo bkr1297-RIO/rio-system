@@ -1,0 +1,14 @@
+{
+  "name": "resolution-closure-atlas-f0-1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "npm run test:schema && npm run test:structural",
+    "test:schema": "node tests/validate-schema.mjs",
+    "test:structural": "node tests/validate.mjs"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0"
+  }
+}

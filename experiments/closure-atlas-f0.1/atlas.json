@@ -1,0 +1,1664 @@
+{
+  "atlas_id": "RESOLUTION-CLOSURE-ATLAS-F0.1",
+  "version": "F0.1",
+  "standing": "RESEARCH_CLARIFICATION_METHOD",
+  "runtime_effect": "NONE",
+  "authority_effect": "NONE",
+  "canon_effect": "NONE",
+  "novelty": "NOT_ESTABLISHED",
+  "closure_records": [
+    {
+      "closure_id": "RCA-001",
+      "title": "Productive resolution with retained alternatives",
+      "closure_type": "COMPOSITIONAL",
+      "typing_status": "CANDIDATE",
+      "result": "SURVIVES",
+      "observation": "A bounded mechanism composes an alternative set, a resolution rule, a selected or typed-nonselected result, and an immutable record of nonselected alternatives.",
+      "assessment": "This is the strongest implemented precursor to a macro-view with recoverable residue. It is not a general quotient, minimum summary, or reopen algorithm. Its README execution metadata and later run receipt also require standing reconciliation.",
+      "assessment_disposition": "SUPPORTED_BOUNDED",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "RHO-001 digest-binds the resolution and retains nonselected alternatives with lineage, evidence, uncertainty, standing, and reason.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["rio-reference-impl:RHO-001", "rio-reference-impl:RUN-RHO-001"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "Typing the resolution rule, outcome, and immutable alternative record as one compositional macro-function is introduced by this Atlas.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["rio-reference-impl:RHO-001"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "RHO-001:alternative-set",
+          "role_slice": "supplies differentiated candidates",
+          "standing": "RESEARCH_FIXTURE_COMPONENT"
+        },
+        {
+          "member_id": "RHO-001:resolution-rule",
+          "role_slice": "selects an outcome or typed nonselection",
+          "standing": "RESEARCH_FIXTURE_COMPONENT"
+        },
+        {
+          "member_id": "RHO-001:immutable-record",
+          "role_slice": "retains the nonselected alternatives and reasons",
+          "standing": "RESEARCH_FIXTURE_COMPONENT"
+        }
+      ],
+      "profile": {
+        "profile_id": "RHO-001-PRODUCTIVE-RESOLUTION",
+        "version": "F0.1",
+        "source_anchor_ref": "rio-reference-impl:RHO-001"
+      },
+      "resolution": {
+        "fine_resolution": "typed alternative set with individual lineage, evidence, standing, and uncertainty",
+        "macro_resolution": "selected result or typed nonselection plus integrity-bound resolution record",
+        "relation": "ASSEMBLES",
+        "macro_contract_ref": "RHO-001 Productive Resolution F0.1",
+        "macro_contract_status": "PRESENT",
+        "boundary_ports": [
+          "alternatives-in",
+          "resolution-result-out",
+          "immutable-record-out"
+        ]
+      },
+      "macro_function": "Produce a bounded resolution without deleting the differentiated alternatives that did not become the active result.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-001-D1",
+          "description": "The active result view does not display every nonselected alternative.",
+          "materiality_basis_ref": "RHO-001 retained-alternative contract",
+          "retention": "WITNESSED",
+          "witness_ref": "RCA-001-W1",
+          "reopen_trigger": "Review, appeal, changed constraints, or a later action whose admissibility depends on a nonselected alternative."
+        }
+      ],
+      "witness": [
+        {
+          "witness_id": "RCA-001-W1",
+          "witness_type": "DERIVATION_PROVENANCE",
+          "status": "PRESENT",
+          "availability": "RETRIEVABLE",
+          "source_anchor_ref": "rio-reference-impl:RHO-001",
+          "integrity_binding": "RHO-001 exact digest binding",
+          "description": "Immutable resolution record retaining selected and nonselected alternatives with their typed metadata."
+        }
+      ],
+      "reopen_triggers": [
+        "changed decision profile",
+        "appeal or review",
+        "downstream dependence on a nonselected alternative",
+        "integrity or source-head mismatch"
+      ],
+      "adequacy": {
+        "criterion_type": "BOUNDARY_REFINEMENT",
+        "status": "FINITE_FIXTURE_EVIDENCE",
+        "consequence_use": false,
+        "profile_binding": "RHO-001 F0.1 fixture domain",
+        "action_family": "research-only productive-resolution fixtures",
+        "semantics_ref": "RHO-001 implementation and fixture expectations",
+        "evidence_ref": "RUN-RHO-001",
+        "finite_domain_ref": "16 RHO-001 tests; the receipt records CI source commit 49076a7"
+      },
+      "failure_disposition": {
+        "pre_effect": "ALLOW_RESEARCH_USE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "rio-reference-impl:RHO-001",
+          "location": "artifacts/rho-001-productive-resolution/spec/RHO-001-PRODUCTIVE-RESOLUTION-F0.1.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "sections describing selection, exact digest binding, and retained nonselected alternatives",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The bounded artifact records selected and nonselected alternatives without granting a general closure theorem."
+        },
+        {
+          "artifact_id": "rio-reference-impl:RUN-RHO-001",
+          "location": "artifacts/rho-001-productive-resolution/receipts/RUN-RHO-001.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "finite test and CI result",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "Sixteen bounded tests passed; this is computational evidence only."
+        }
+      ],
+      "concordance_candidate_crosswalk": [],
+      "strongest_attack": "The immutable record can retain the entire fine input, making reopenability trivial while proving neither compression nor action-relative sufficiency; the artifact also records NOT_ATTEMPTED in one metadata surface while a later receipt records successful runs."
+    },
+    {
+      "closure_id": "RCA-002",
+      "title": "Human-machine translation assembly",
+      "closure_type": "COMPOSITIONAL",
+      "typing_status": "CANDIDATE",
+      "result": "UNKNOWN",
+      "observation": "An external model grouped Scribe, MCP, and Counterpart under a human-machine translation function.",
+      "assessment": "The constituents have different types and exist separately. No current MCP server/client binding or executed joint assembly was found, so this remains a compositional candidate only.",
+      "assessment_disposition": "CANDIDATE",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "The external-model grouping occurred in the supplied conversation record.",
+          "source_kind": "EXTERNAL_MODEL_OBSERVATION",
+          "source_anchor_refs": ["thread:external-model-map"]
+        },
+        {
+          "status": "EXISTING",
+          "claim": "A Scribe schema and a distinct candidate Counterpart assessor exist in the repositories.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["rio-protocol:Scribe-schema", "rio-reference-impl:Counterpart-assessor"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "Interpreting the grouping as a compositional assembly rather than equivalence is introduced by this analysis.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["thread:external-model-map", "rio-protocol:Scribe-schema", "rio-reference-impl:Counterpart-assessor"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "Scribe",
+          "role_slice": "forms typed intent, scope, authority, and return packets",
+          "standing": "CORPUS_OBJECT"
+        },
+        {
+          "member_id": "MCP",
+          "role_slice": "candidate transport and tool interface",
+          "standing": "THREAD_CONCEPT"
+        },
+        {
+          "member_id": "Counterpart:navigation-role",
+          "role_slice": "makes differentiated competence relationally legible",
+          "standing": "TARGET_STATE_COMPONENT"
+        }
+      ],
+      "profile": {
+        "profile_id": "TRANSLATION-ASSEMBLY-RESEARCH",
+        "version": "F0.1",
+        "source_anchor_ref": "thread:external-model-map"
+      },
+      "resolution": {
+        "fine_resolution": "packet compiler, transport interface, and persistent relational-navigation role",
+        "macro_resolution": "human-machine translation function",
+        "relation": "ASSEMBLES",
+        "macro_contract_status": "ABSENT",
+        "boundary_ports": ["human-intent-in", "typed-packet-out", "bounded-return-in"]
+      },
+      "macro_function": "Carry human intent into typed machine-readable form and return a legible account without transferring authority.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-002-D1",
+          "description": "Compiler, transport, and relational-navigation responsibilities are distinct.",
+          "materiality_basis_ref": "C2C office non-collapse rule",
+          "retention": "PROHIBITED"
+        }
+      ],
+      "witness": [],
+      "reopen_triggers": [
+        "authority evaluation",
+        "tool execution",
+        "packet provenance audit",
+        "transport failure"
+      ],
+      "adequacy": {
+        "criterion_type": "BOUNDARY_REFINEMENT",
+        "status": "UNESTABLISHED",
+        "consequence_use": false,
+        "profile_binding": "TRANSLATION-ASSEMBLY-RESEARCH F0.1",
+        "action_family": "research-only architecture comparison",
+        "semantics_ref": "joint boundary semantics absent"
+      },
+      "failure_disposition": {
+        "pre_effect": "ALLOW_RESEARCH_USE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "rio-protocol:Scribe-schema",
+          "location": "spec/scribe_compiler_capsule.schema.json",
+          "revision": "f7fbd3acb129eedf80ce52d4ca8bc9e5c1a6d179",
+          "fragment": "intent, scope, authority, and return packet fields",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "TARGET_STATE",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The Scribe packet surface exists without authority transfer."
+        },
+        {
+          "artifact_id": "rio-reference-impl:Counterpart-assessor",
+          "location": "artifacts/ill-rho-001-identity-continuity-profile/src/counterpart.ts",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "candidate Counterpart assessor and open binding boundary",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "A bounded candidate Counterpart assessor exists; it is not an MCP binding or installed persistent relationship."
+        },
+        {
+          "artifact_id": "thread:external-model-map",
+          "revision": "conversation-2026-09-01",
+          "fragment": "Scribe/MCP/Counterpart grouping",
+          "evidence_kind": "EXTERNAL_MODEL_OUTPUT",
+          "source_standing": "EXTERNAL_OBSERVATION",
+          "binding_status": "TRANSCRIPT_UNPINNED",
+          "verification_date": "2026-09-01",
+          "claim": "The grouping is an observed model closure, not an implementation claim."
+        }
+      ],
+      "concordance_candidate_crosswalk": [
+        { "primitive_id": "SCRIBE", "relation": "ROLE_SLICE", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "COUNTERPART", "relation": "ROLE_SLICE", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" }
+      ],
+      "strongest_attack": "No MCP implementation or boundary refinement connects the three constituents; the external grouping may be semantic proximity rather than joint realization."
+    },
+    {
+      "closure_id": "RCA-003",
+      "title": "Relational memory field type-mix",
+      "closure_type": "MORPHOLOGICAL",
+      "typing_status": "CANDIDATE",
+      "result": "UNKNOWN",
+      "observation": "An external model grouped Living Corpus, GraphRAG, graph projection, and constitutional configuration space as one governed graph memory architecture.",
+      "assessment": "A graph-shaped morphology is a defensible research hypothesis. The further step from morphology to an implemented joint memory substrate does not survive: GraphRAG is absent and the Living Corpus topology is explicitly candidate prose.",
+      "assessment_disposition": "CANDIDATE",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "The external-model grouping occurred and the corpus contains candidate relational-topology descriptions.",
+          "source_kind": "EXTERNAL_MODEL_OBSERVATION",
+          "source_anchor_refs": ["thread:external-model-map", "one-rio-muss-architecture:GENESIS-LIVING-CORPUS"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "Classifying only the graph-shaped recurrence as morphological while rejecting the implementation closure is introduced by this Atlas.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["thread:external-model-map", "one-rio-muss-architecture:GENESIS-LIVING-CORPUS"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "Living-Corpus",
+          "role_slice": "typed genealogy and retrieval relations",
+          "standing": "TARGET_STATE_COMPONENT"
+        },
+        {
+          "member_id": "GraphRAG",
+          "role_slice": "externally proposed retrieval implementation",
+          "standing": "EXTERNAL_ALGORITHM"
+        },
+        {
+          "member_id": "Configuration-Space",
+          "role_slice": "field of possible typed relations and states",
+          "standing": "CORPUS_OBJECT"
+        }
+      ],
+      "profile": {
+        "profile_id": "RELATIONAL-MEMORY-RESEARCH",
+        "version": "F0.1",
+        "source_anchor_ref": "one-rio-muss-architecture:GENESIS-LIVING-CORPUS"
+      },
+      "resolution": {
+        "fine_resolution": "genealogical corpus, retrieval mechanism, relation graph, and configuration-space semantics",
+        "macro_resolution": "relational memory field",
+        "relation": "INSTANTIATES",
+        "pattern_signature_ref": "typed nodes and relations -> provenance-bound retrieval candidate -> explicit standing and succession"
+      },
+      "macro_function": "Preserve and retrieve typed relationships, standing, provenance, and succession across a living corpus.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-003-D1",
+          "description": "A storage/retrieval implementation is not the same object as the corpus topology or semantic configuration space.",
+          "materiality_basis_ref": "type/altitude boundary",
+          "retention": "PROHIBITED"
+        }
+      ],
+      "witness": [],
+      "reopen_triggers": [
+        "claim of loaded corpus",
+        "claim of GraphRAG implementation",
+        "consequential retrieval",
+        "standing or genealogy dispute"
+      ],
+      "adequacy": {
+        "criterion_type": "PATTERN_ONLY",
+        "status": "NOT_APPLICABLE",
+        "consequence_use": false,
+        "profile_binding": "RELATIONAL-MEMORY-RESEARCH F0.1",
+        "action_family": "morphological comparison only",
+        "semantics_ref": "no joint runtime semantics"
+      },
+      "failure_disposition": {
+        "pre_effect": "MORPHOLOGICAL_CANDIDATE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "one-rio-muss-architecture:GENESIS-LIVING-CORPUS",
+          "location": "docs/topology/GENESIS_LIVING_CORPUS_SUBSTRATE_v0_1.md",
+          "revision": "b9ea6c0d3f639f072cbb653b8e220848219b31c5",
+          "fragment": "status and topology boundary",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "CANDIDATE",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The file says it is a topology candidate, not an implementation or proof that a corpus is loaded."
+        },
+        {
+          "artifact_id": "thread:external-model-map",
+          "revision": "conversation-2026-09-01",
+          "fragment": "Living governed graph / GraphRAG grouping",
+          "evidence_kind": "EXTERNAL_MODEL_OUTPUT",
+          "source_standing": "EXTERNAL_OBSERVATION",
+          "binding_status": "TRANSCRIPT_UNPINNED",
+          "verification_date": "2026-09-01",
+          "claim": "The GraphRAG grouping is observed model output only."
+        }
+      ],
+      "concordance_candidate_crosswalk": [],
+      "strongest_attack": "The grouping mixes substrate, semantic space, and implementation; no GraphRAG symbol or implementation exists in the inspected repositories."
+    },
+    {
+      "closure_id": "RCA-004",
+      "title": "Selective legibility and orientation morphology",
+      "closure_type": "MORPHOLOGICAL",
+      "typing_status": "CANDIDATE",
+      "result": "PARTIALLY_SURVIVES",
+      "observation": "Refractive Intelligence, REFRACT, LUMEN, and ORIENT were repeatedly grouped around projection, selective legibility, and bounded bearing.",
+      "assessment": "REFRACT supplies a bounded specimen of source-bound projection. The wider REFRACT/LUMEN/ORIENT morphology remains a thread-level hypothesis; no unified runtime or general preservation theorem exists.",
+      "assessment_disposition": "CANDIDATE",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "REFRACT-P0.1 implements three source-bound views and reports bounded falsification results.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["rio-system:REFRACT-P0.1"]
+        },
+        {
+          "status": "EXISTING",
+          "claim": "The wider Refractive Intelligence/LUMEN/ORIENT grouping is explicit in the supplied thread.",
+          "source_kind": "SOURCEPOINT_THREAD_PROPOSAL",
+          "source_anchor_refs": ["thread:refractive-orientation-map"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "The Atlas classifies the recurrence as morphological rather than substitutive or compositional.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["rio-system:REFRACT-P0.1", "thread:refractive-orientation-map"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "REFRACT-P0.1",
+          "role_slice": "produces structural, temporal, and relational source-bound views",
+          "standing": "RESEARCH_FIXTURE_COMPONENT"
+        },
+        {
+          "member_id": "LUMEN",
+          "role_slice": "candidate legibility and sensitivity burden",
+          "standing": "THREAD_CONCEPT"
+        },
+        {
+          "member_id": "ORIENT",
+          "role_slice": "candidate bounded bearing burden",
+          "standing": "THREAD_CONCEPT"
+        }
+      ],
+      "profile": {
+        "profile_id": "REFRACT-P0.1",
+        "version": "P0.1",
+        "source_anchor_ref": "rio-system:REFRACT-P0.1"
+      },
+      "resolution": {
+        "fine_resolution": "immutable source plus separate structural, temporal, and relational dimensions",
+        "macro_resolution": "source-bound selective legibility pattern",
+        "relation": "INSTANTIATES",
+        "pattern_signature_ref": "source -> typed bounded projections -> explicit limits -> no authority promotion"
+      },
+      "macro_function": "Expose selected relations or dimensions while preserving source lineage and the boundary between view, fact, and authority.",
+      "resolution_distinctions": [],
+      "witness": [
+        {
+          "witness_id": "RCA-004-W1",
+          "witness_type": "SOURCE_HANDLE",
+          "status": "PRESENT",
+          "availability": "RETRIEVABLE",
+          "source_anchor_ref": "rio-system:REFRACT-P0.1",
+          "integrity_binding": "Git blob SHA and raw SHA-256 in fixture descriptor",
+          "description": "Every view points to the same immutable source identity and hashes."
+        }
+      ],
+      "reopen_triggers": [
+        "view-to-fact promotion",
+        "identity equivalence claim",
+        "authority inference",
+        "missing temporal sequence"
+      ],
+      "adequacy": {
+        "criterion_type": "PATTERN_ONLY",
+        "status": "NOT_APPLICABLE",
+        "consequence_use": false,
+        "profile_binding": "REFRACT-P0.1 bounded fixture pack",
+        "action_family": "observational projection only",
+        "semantics_ref": "Morphological classification makes no substitution or consequential-use claim; finite evidence is recorded in the source anchor."
+      },
+      "failure_disposition": {
+        "pre_effect": "MORPHOLOGICAL_CANDIDATE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "rio-system:REFRACT-P0.1",
+          "location": "experiments/refract-p0/P0.1-IDENTITY-REPAIR-REPORT.md",
+          "revision": "7be75d60c918d70b99e2aec3c302ad1edfeb5154",
+          "fragment": "current bounded results and no-promotion boundary",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The bounded projection experiment currently reports six HELD, one WEAKENED, and zero BROKE; it is not a general theorem."
+        },
+        {
+          "artifact_id": "thread:refractive-orientation-map",
+          "revision": "conversation-2026-09-01",
+          "fragment": "Refractive Intelligence / LUMEN / ORIENT grouping",
+          "evidence_kind": "THREAD_TEXT",
+          "source_standing": "THREAD_OBSERVATION",
+          "binding_status": "TRANSCRIPT_UNPINNED",
+          "verification_date": "2026-09-01",
+          "claim": "The wider grouping is explicit in the thread but lacks a pinned model/version provenance record."
+        }
+      ],
+      "concordance_candidate_crosswalk": [
+        { "primitive_id": "REFRACT", "relation": "PRECURSOR", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "LUMEN", "relation": "SIBLING", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "ORIENT", "relation": "SIBLING", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" }
+      ],
+      "strongest_attack": "The shared vocabulary may reflect prompted semantic proximity; bounded source-preserving projections do not prove a unified orientation system or preservation under arbitrary transformations."
+    },
+    {
+      "closure_id": "RCA-005",
+      "title": "Governed crossing assembly",
+      "closure_type": "COMPOSITIONAL",
+      "typing_status": "CANDIDATE",
+      "result": "PARTIALLY_SURVIVES",
+      "observation": "AURA, RIO, and Sentinel repeatedly close into a macro-function that admits, evaluates, and checks a consequential crossing.",
+      "assessment": "RIO-to-Sentinel flow has bounded implementations, but the final-action seam refutes exact end-to-end adequacy: approved tool identity and arguments can diverge from final dispatch without recomputation.",
+      "assessment_disposition": "HOLD",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "RIO and Sentinel are distinct declared stages and bounded code paths exist.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["rio-proxy:runtime-route", "rio-proxy:Sentinel-scope-match"]
+        },
+        {
+          "status": "IMPLICIT",
+          "claim": "Treating their boundary-visible sequence as a compositional macro-function is encoded by the runtime orchestrator flow.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["rio-tools:AURA-membrane", "rio-proxy:runtime-route"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "The Atlas frames EA-001 as a failed action-relative boundary-refinement certificate.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["rio-proxy:runtime-route", "bodyunity:RUN-024"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "AURA:membrane-role",
+          "role_slice": "candidate boundary aggregation",
+          "standing": "TARGET_STATE_COMPONENT"
+        },
+        {
+          "member_id": "RIO:adjudication-role",
+          "role_slice": "governs admissibility and consequence",
+          "standing": "REPO_IMPLEMENTATION_COMPONENT"
+        },
+        {
+          "member_id": "Sentinel:match-role",
+          "role_slice": "checks proposed and final execution fidelity",
+          "standing": "REPO_IMPLEMENTATION_COMPONENT"
+        }
+      ],
+      "profile": {
+        "profile_id": "EA-001-EXACT-ACTION",
+        "version": "RUN-024",
+        "source_anchor_ref": "bodyunity:RUN-024"
+      },
+      "resolution": {
+        "fine_resolution": "exact proposal, approval, tool identity, canonical arguments, transformation trace, source head, and dispatch",
+        "macro_resolution": "governed crossing outcome",
+        "relation": "ASSEMBLES",
+        "macro_contract_ref": "admit -> adjudicate -> exact match -> dispatch or HOLD -> receipt",
+        "macro_contract_status": "PRESENT",
+        "boundary_ports": [
+          "proposal-in",
+          "approval-binding",
+          "final-action-binding",
+          "dispatch-or-hold-out",
+          "receipt-out"
+        ]
+      },
+      "macro_function": "Allow only a consequence whose final tool identity and canonical arguments remain bound to the admitted decision.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-005-D1",
+          "description": "Difference between approved original arguments and agent-produced final arguments.",
+          "materiality_basis_ref": "EA-001 exact-action profile",
+          "retention": "PROHIBITED"
+        }
+      ],
+      "witness": [
+        {
+          "witness_id": "RCA-005-W1",
+          "witness_type": "DERIVATION_PROVENANCE",
+          "status": "PARTIAL",
+          "availability": "RETRIEVABLE",
+          "source_anchor_ref": "rio-proxy:runtime-route",
+          "integrity_binding": "original approval-bound hash only",
+          "description": "The route retains the original approval hash but does not bind it to canonical final arguments after transformation."
+        }
+      ],
+      "reopen_triggers": [
+        "final tool name differs from approved tool name",
+        "canonical final arguments differ from approved arguments",
+        "source or approval head mismatch",
+        "connector verification does not cover final dispatch"
+      ],
+      "adequacy": {
+        "criterion_type": "BOUNDARY_REFINEMENT",
+        "status": "REFUTED_BY_COUNTEREXAMPLE",
+        "consequence_use": true,
+        "profile_binding": "EA-001 RUN-024 exact-action seam",
+        "action_family": "final external tool dispatch",
+        "semantics_ref": "final tool identity, canonical final args, disposition, and possible sink effect",
+        "counterexample_refs": ["RCA-H06"]
+      },
+      "failure_disposition": {
+        "pre_effect": "HOLD",
+        "post_possible_effect": "UNSETTLED_OR_AMBIGUOUS"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "rio-tools:AURA-membrane",
+          "location": "src/rio_tools/one_grammar/membrane.py and tests/one-grammar-layer1/test_membrane.py",
+          "revision": "40e0a7140e6dd86289aef3798e211de4f189b72e",
+          "fragment": "six-input structural membrane evaluator and Rung 1 boundary",
+          "evidence_kind": "STATIC_ANALYSIS",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "A bounded structural evaluator exists, but it combines caller-supplied booleans and is not runtime proof."
+        },
+        {
+          "artifact_id": "rio-proxy:runtime-route",
+          "location": "server/routers.ts and server/one/connectors.ts",
+          "revision": "70945d1f037915f132dba0a1418a42103606e63a",
+          "fragment": "approval hash check, finalToolName/finalToolArgs replacement, and dispatch using original hash",
+          "evidence_kind": "STATIC_ANALYSIS",
+          "source_standing": "REPO_IMPLEMENTATION",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The static route admits a transformed final action without recomputing a canonical hash over the final arguments."
+        },
+        {
+          "artifact_id": "rio-proxy:Sentinel-scope-match",
+          "location": "server/runtime-orchestrator/sentinel.ts",
+          "revision": "70945d1f037915f132dba0a1418a42103606e63a",
+          "fragment": "normalized scope equality and substring inclusion match",
+          "evidence_kind": "STATIC_ANALYSIS",
+          "source_standing": "REPO_IMPLEMENTATION",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The inspected match accepts equality or substring inclusion in either direction, so exact fidelity is not established."
+        },
+        {
+          "artifact_id": "bodyunity:RUN-024",
+          "location": "receipts/RUN-024.md",
+          "revision": "fd414de63689649dc17e7d5178406d92c79ca1a1",
+          "fragment": "EA-001 HOLD and exact-action seam",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "LOCAL_UNBOUND",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The branch-local adapter records HOLD; it does not establish that an unauthorized effect occurred."
+        }
+      ],
+      "concordance_candidate_crosswalk": [
+        { "primitive_id": "AURA", "relation": "BOUNDARY", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "RIO", "relation": "MEMBER", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "SENTINEL", "relation": "MEMBER", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" }
+      ],
+      "strongest_attack": "The macro-label governed crossing hides the only distinction that matters at point of effect: whether the exact final action is the one that was admitted."
+    },
+    {
+      "closure_id": "RCA-006",
+      "title": "Dimensional burden-reduction morphology",
+      "closure_type": "MORPHOLOGICAL",
+      "typing_status": "CANDIDATE",
+      "result": "UNKNOWN",
+      "observation": "An external model grouped QJL rotation, constitutional projection, and beam pruning as forms of refractive burden reduction.",
+      "assessment": "The generic morphology survives: reduce search or representation burden while declaring what structure is meant to survive. No evidence establishes that QJL preserves authority, lineage, standing, or exact action semantics.",
+      "assessment_disposition": "CANDIDATE",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "The external-model grouping is explicit in the supplied thread.",
+          "source_kind": "EXTERNAL_MODEL_OBSERVATION",
+          "source_anchor_refs": ["thread:external-model-map"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "Restricting the grouping to a morphology and refusing constitutional equivalence is introduced by this Atlas.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["thread:external-model-map"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "QJL",
+          "role_slice": "approximate high-dimensional geometric compression",
+          "standing": "EXTERNAL_ALGORITHM"
+        },
+        {
+          "member_id": "Constitutional-Projection",
+          "role_slice": "typed view under a declared preservation contract",
+          "standing": "CORPUS_OBJECT"
+        },
+        {
+          "member_id": "Beam-Pruning",
+          "role_slice": "candidate relevance-directed search reduction",
+          "standing": "EXTERNAL_ALGORITHM"
+        }
+      ],
+      "profile": {
+        "profile_id": "BURDEN-REDUCTION-MORPHOLOGY",
+        "version": "F0.1",
+        "source_anchor_ref": "thread:external-model-map"
+      },
+      "resolution": {
+        "fine_resolution": "different mathematical and operational reduction mechanisms",
+        "macro_resolution": "reduce burden while attempting to preserve declared structure",
+        "relation": "INSTANTIATES",
+        "pattern_signature_ref": "fine representation -> lower-cost representation/search -> explicit preservation obligation"
+      },
+      "macro_function": "Describe a cross-domain burden-reduction pattern without treating approximate geometry as a constitutional certificate.",
+      "resolution_distinctions": [],
+      "witness": [],
+      "reopen_triggers": [
+        "consequential action",
+        "exact provenance request",
+        "lineage or standing comparison",
+        "approximation error beyond declared bound"
+      ],
+      "adequacy": {
+        "criterion_type": "PATTERN_ONLY",
+        "status": "NOT_APPLICABLE",
+        "consequence_use": false,
+        "profile_binding": "BURDEN-REDUCTION-MORPHOLOGY F0.1",
+        "action_family": "pattern comparison only",
+        "semantics_ref": "no common consequential semantics specified"
+      },
+      "failure_disposition": {
+        "pre_effect": "MORPHOLOGICAL_CANDIDATE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "thread:external-model-map",
+          "revision": "conversation-2026-09-01",
+          "fragment": "QJL / projection / beam-pruning grouping",
+          "evidence_kind": "EXTERNAL_MODEL_OUTPUT",
+          "source_standing": "EXTERNAL_OBSERVATION",
+          "binding_status": "TRANSCRIPT_UNPINNED",
+          "verification_date": "2026-09-01",
+          "claim": "The grouping is data about model closure, not evidence of a shared theorem or implementation."
+        }
+      ],
+      "concordance_candidate_crosswalk": [],
+      "strongest_attack": "A random projection may approximately preserve geometric distances while destroying exactly the symbolic distinctions needed for authorization or succession."
+    },
+    {
+      "closure_id": "RCA-007",
+      "title": "Witness-evaluate-record speed-layer collapse",
+      "closure_type": "REJECTED_FALSE_CLOSURE",
+      "typing_status": "REJECTED",
+      "result": "REJECTED",
+      "observation": "An external model mapped MANTIS, RIO, and MUS to fast, medium, and dense processing layers.",
+      "assessment": "The grouping substitutes processing speed for constitutional office. Witnessing, adjudicating, and recording remain different burdens even if implementations happen to run at different rates.",
+      "assessment_disposition": "REFUTED",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "The speed-layer grouping is explicit external-model output.",
+          "source_kind": "EXTERNAL_MODEL_OBSERVATION",
+          "source_anchor_refs": ["thread:external-speed-layer-map"]
+        },
+        {
+          "status": "EXISTING",
+          "claim": "C2C explicitly states that pattern sameness is not office sameness.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["rio-system:C2C-001"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "This Atlas records the speed-layer grouping as a rejected false closure.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["thread:external-speed-layer-map", "rio-system:C2C-001"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "MANTIS",
+          "role_slice": "witnesses patterns without authorizing",
+          "standing": "CORPUS_OBJECT"
+        },
+        {
+          "member_id": "RIO",
+          "role_slice": "adjudicates consequential crossings",
+          "standing": "CORPUS_OBJECT"
+        },
+        {
+          "member_id": "MUS",
+          "role_slice": "produces durable attributable records",
+          "standing": "CORPUS_OBJECT"
+        }
+      ],
+      "profile": {
+        "profile_id": "C2C-OFFICE-INTEGRITY",
+        "version": "v0.1",
+        "source_anchor_ref": "rio-system:C2C-001"
+      },
+      "resolution": {
+        "fine_resolution": "witness, adjudication, and record offices",
+        "macro_resolution": "processing-density layers",
+        "relation": "INVALID_COLLAPSE"
+      },
+      "macro_function": "Rejected: no lawful macro-function is established by assigning the offices different processing speeds.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-007-D1",
+          "description": "Witnessing cannot become authorization and a receipt cannot become permission.",
+          "materiality_basis_ref": "C2C-001 office integrity invariants",
+          "retention": "PROHIBITED"
+        }
+      ],
+      "witness": [],
+      "reopen_triggers": [],
+      "adequacy": {
+        "criterion_type": "REJECTED_TYPE_MIX",
+        "status": "REFUTED_BY_COUNTEREXAMPLE",
+        "consequence_use": false,
+        "profile_binding": "C2C-001 v0.1",
+        "action_family": "office classification",
+        "semantics_ref": "office allowed/prohibited action boundaries",
+        "counterexample_refs": ["RCA-H01", "RCA-H11"]
+      },
+      "failure_disposition": {
+        "pre_effect": "REJECT_CLOSURE",
+        "post_possible_effect": "BREACH_REVIEW"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "thread:external-speed-layer-map",
+          "revision": "conversation-2026-09-01",
+          "fragment": "MANTIS / RIO / MUS processing-density grouping",
+          "evidence_kind": "EXTERNAL_MODEL_OUTPUT",
+          "source_standing": "EXTERNAL_OBSERVATION",
+          "binding_status": "TRANSCRIPT_UNPINNED",
+          "verification_date": "2026-09-01",
+          "claim": "The speed-layer grouping is observed external-model output, not corpus doctrine."
+        },
+        {
+          "artifact_id": "rio-system:C2C-001",
+          "location": "docs/c2c/c2c-001-concordance-control-registry-v0.1.md",
+          "revision": "7be75d60c918d70b99e2aec3c302ad1edfeb5154",
+          "fragment": "pattern sameness is not office sameness; office integrity invariants",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "TARGET_STATE",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The office distinctions explicitly prohibit the proposed collapse."
+        }
+      ],
+      "concordance_candidate_crosswalk": [
+        { "primitive_id": "MANTIS", "relation": "SIBLING", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "RIO", "relation": "SIBLING", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "MUS", "relation": "SIBLING", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" }
+      ],
+      "strongest_attack": "The proposed macro-view erases exactly the office boundaries that prevent witness, decision, and proof from laundering one another.",
+      "rejection_reason": "Implementation speed is not an independently defined constitutional function and cannot substitute for office identity."
+    },
+    {
+      "closure_id": "RCA-008",
+      "title": "Profile-relative embodiment assembly",
+      "closure_type": "COMPOSITIONAL",
+      "typing_status": "CANDIDATE",
+      "result": "PARTIALLY_SURVIVES",
+      "observation": "A differentiated set of machine-side systems is proposed to constitute one attributable body under bounded membership, typed relation, continuity, and coordinated return.",
+      "assessment": "The Second Body is the proposed composition; BodyUnity is its evaluator, not a closure operator. Synthetic and adapter fixtures support only a bounded conformance surface, and estate standing remains UNBOUND.",
+      "assessment_disposition": "SUPPORTED_BOUNDED",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "The embodiment freeze and BodyUnity branch define the assembly and finite hostile fixtures.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["one-rio-muss-architecture:embodiment-freeze", "bodyunity:fd414de"]
+        },
+        {
+          "status": "IMPLICIT",
+          "claim": "Body-system participation forms an overlapping functional cover rather than a unique-parent organ tree.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["one-rio-muss-architecture:embodiment-freeze", "bodyunity:fd414de"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "The Atlas types Second Body as a compositional assembly and BodyUnity as a separate bounded evaluator.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["one-rio-muss-architecture:embodiment-freeze", "bodyunity:fd414de"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "Second-Body:member-ports",
+          "role_slice": "bounded profile-relative membership",
+          "standing": "TARGET_STATE_COMPONENT"
+        },
+        {
+          "member_id": "Second-Body:typed-relations",
+          "role_slice": "declared inter-system relation",
+          "standing": "TARGET_STATE_COMPONENT"
+        },
+        {
+          "member_id": "Second-Body:continuity",
+          "role_slice": "reconstructable genealogy and replacement standing",
+          "standing": "TARGET_STATE_COMPONENT"
+        },
+        {
+          "member_id": "Second-Body:coordinated-return",
+          "role_slice": "bounded attributable synthesis",
+          "standing": "TARGET_STATE_COMPONENT"
+        }
+      ],
+      "profile": {
+        "profile_id": "BODYUNITY-CONFORMANCE-PROFILE",
+        "version": "F0.1a",
+        "source_anchor_ref": "bodyunity:fd414de"
+      },
+      "resolution": {
+        "fine_resolution": "differentiated systems, member histories, typed relations, local returns, conflicts, and remainders",
+        "macro_resolution": "one claimed machine-side embodiment under profile K",
+        "relation": "ASSEMBLES",
+        "macro_contract_ref": "BodyUnity_K = membership and relation and continuity and coordinated return",
+        "macro_contract_status": "CANDIDATE",
+        "boundary_ports": [
+          "member-return-in",
+          "whole-posture-out",
+          "lineage-witness",
+          "remainder-out"
+        ]
+      },
+      "macro_function": "Present one attributable whole-body posture without requiring internal sameness or universal shared state.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-008-D1",
+          "description": "Private local fields may remain absent from the released posture.",
+          "materiality_basis_ref": "BUF-007 bounded projection profile",
+          "retention": "WITNESSED",
+          "witness_ref": "RCA-008-W1",
+          "reopen_trigger": "Only an independently authorized action whose semantics requires the private field."
+        },
+        {
+          "distinction_id": "RCA-008-D2",
+          "description": "Material conflict and missing coverage may not be hidden by the whole-body posture.",
+          "materiality_basis_ref": "BUC-006 and BUF-002",
+          "retention": "PROHIBITED"
+        }
+      ],
+      "witness": [
+        {
+          "witness_id": "RCA-008-W1",
+          "witness_type": "DERIVATION_PROVENANCE",
+          "status": "PARTIAL",
+          "availability": "RETRIEVABLE",
+          "source_anchor_ref": "bodyunity:fd414de",
+          "integrity_binding": "fixture-local case identifiers and evidence receipt",
+          "description": "Synthetic fixtures retain the fine private-state variants and their identical authorized projections."
+        }
+      ],
+      "reopen_triggers": [
+        "new body profile",
+        "member replacement",
+        "missing or stale return",
+        "material conflict",
+        "exact consequential action"
+      ],
+      "adequacy": {
+        "criterion_type": "BOUNDARY_REFINEMENT",
+        "status": "FINITE_FIXTURE_EVIDENCE",
+        "consequence_use": false,
+        "profile_binding": "BodyUnity F0.1a synthetic and pinned-adapter cases",
+        "action_family": "research conformance classification only",
+        "semantics_ref": "BUC-001 through BUC-007 evaluator outcomes",
+        "evidence_ref": "RUN-023 and RUN-024",
+        "finite_domain_ref": "twelve synthetic/adapter cases; RUN-023 8 tests and RUN-024 14 tests"
+      },
+      "failure_disposition": {
+        "pre_effect": "ALLOW_RESEARCH_USE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "one-rio-muss-architecture:embodiment-freeze",
+          "location": "RCI_CONSTITUTIONAL_EMBODIMENT_FREEZE_F0.1.md",
+          "revision": "92450b453ad1c40f73726d0039b3bcb50aa8d7ba",
+          "fragment": "frozen candidate-conformance ontology and non-collapse boundaries",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "CANDIDATE",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The freeze establishes candidate conformance organization, not a sufficiency theorem or estate conformance."
+        },
+        {
+          "artifact_id": "bodyunity:fd414de",
+          "location": "bkr1297-RIO/rio-reference-impl:artifacts/bodyunity-conformance-harness-f0.1a/{README.md,receipts/RUN-023.md,receipts/RUN-024.md,src/evaluator.ts}",
+          "revision": "fd414de63689649dc17e7d5178406d92c79ca1a1",
+          "fragment": "README, RUN-023, RUN-024, and evaluator",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "LOCAL_UNBOUND",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The branch-local harness passes its finite cases while estate composition remains UNBOUND and EA-001 remains HOLD."
+        }
+      ],
+      "concordance_candidate_crosswalk": [
+        { "primitive_id": "BODYUNITY", "relation": "BOUNDARY", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "SECOND_BODY", "relation": "SUBJECT", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" }
+      ],
+      "strongest_attack": "The evaluator checks a profile-declared list of material distinctions; it does not prove that list complete or that every unlisted difference is behaviorally irrelevant."
+    },
+    {
+      "closure_id": "RCA-009",
+      "title": "Continuation-relative endpoint abstraction",
+      "closure_type": "EQUIVALENCE",
+      "typing_status": "CANDIDATE",
+      "result": "UNKNOWN",
+      "observation": "The corpus repeatedly distinguishes raw endpoint equality from history-sensitive standing and proposes contextual endpoint equivalence under a declared profile.",
+      "assessment": "No concrete abstraction map, independently defined observer/action family, strict-middle proof, or quotient algorithm exists. This is an equivalence candidate, not a completed closure.",
+      "assessment_disposition": "HOLD",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "PBR-001 and the RC-001 record explicitly reject endpoint-only identity.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["rio-reference-impl:PBR-001", "thread:RC-001"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "The factorization and bad-fiber proof burden is introduced by the RC-001 extraction and this Atlas.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["thread:RC-001"]
+        }
+      ],
+      "members": [
+        {
+          "member_id": "History-space",
+          "role_slice": "admissible fine histories",
+          "standing": "FUNCTIONAL_ROLE"
+        },
+        {
+          "member_id": "Endpoint-map",
+          "role_slice": "projects a history to its current endpoint",
+          "standing": "FUNCTIONAL_ROLE"
+        },
+        {
+          "member_id": "Continuation-observer",
+          "role_slice": "distinguishes histories by bounded future consequences",
+          "standing": "FUNCTIONAL_ROLE"
+        }
+      ],
+      "profile": {
+        "profile_id": "RC-001-HISTORY-MINIMIZATION",
+        "version": "baseline-2026-08-31",
+        "source_anchor_ref": "thread:RC-001"
+      },
+      "resolution": {
+        "fine_resolution": "raw admissible histories",
+        "macro_resolution": "continuation-equivalence classes under K",
+        "relation": "COARSER_THAN",
+        "abstraction_ref": "alpha_K(h) = equivalence class of h under all admitted continuations and consequential observations"
+      },
+      "macro_function": "Retain exactly the history distinctions needed to preserve the declared bounded continuation semantics.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-009-D1",
+          "description": "Raw event differences that do not change any admitted future observation may be suppressed.",
+          "materiality_basis_ref": "independently defined continuation semantics required",
+          "retention": "UNKNOWN"
+        },
+        {
+          "distinction_id": "RCA-009-D2",
+          "description": "Same-endpoint differences that change standing or a future admissible result may not be suppressed.",
+          "materiality_basis_ref": "PBR-001 and path-composition counterexamples",
+          "retention": "PROHIBITED"
+        }
+      ],
+      "witness": [],
+      "reopen_triggers": [
+        "new continuation family",
+        "new action family",
+        "profile change",
+        "same coarse view with divergent consequence"
+      ],
+      "adequacy": {
+        "criterion_type": "FACTORIZATION",
+        "status": "UNESTABLISHED",
+        "consequence_use": true,
+        "profile_binding": "RC-001 bounded profile not yet defined",
+        "action_family": "history-sensitive future consequences",
+        "semantics_ref": "implementation-independent semantics absent"
+      },
+      "failure_disposition": {
+        "pre_effect": "HOLD",
+        "post_possible_effect": "UNSETTLED_OR_AMBIGUOUS"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "rio-reference-impl:PBR-001",
+          "location": "artifacts/pbr-001-same-endpoint-different-becoming/README.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "same endpoint, different becoming fixture",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The bounded fixture supplies a negative witness against endpoint-only collapse, not the strict middle quotient."
+        },
+        {
+          "artifact_id": "thread:RC-001",
+          "revision": "conversation-2026-08-31",
+          "fragment": "continuation-equivalence quotient and strict-middle burden",
+          "evidence_kind": "THREAD_TEXT",
+          "source_standing": "THREAD_OBSERVATION",
+          "binding_status": "TRANSCRIPT_UNPINNED",
+          "verification_date": "2026-09-01",
+          "claim": "The factorization target remains RC-001 NOT READY."
+        }
+      ],
+      "concordance_candidate_crosswalk": [],
+      "strongest_attack": "Choosing the observer to retain all history or only the endpoint makes the result trivial; the observer and continuation family must be independent, bounded, and non-circular."
+    },
+    {
+      "closure_id": "RCA-010",
+      "title": "Five-stage resolution-cycle morphology",
+      "closure_type": "MORPHOLOGICAL",
+      "typing_status": "CANDIDATE",
+      "result": "UNKNOWN",
+      "observation": "Repeated external-model closures suggest FIELD -> REFRACT -> TRANSLATE -> GOVERN -> RETURN.",
+      "assessment": "The recurrence is worth preserving as a candidate macro-cycle. It does not yet define five peer organs because FIELD is a state/configuration space while the remaining terms mostly name transformations or burdens.",
+      "assessment_disposition": "CANDIDATE",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "The five-term recurrence is explicit in the supplied synthesis and external-model closure data.",
+          "source_kind": "SOURCEPOINT_THREAD_PROPOSAL",
+          "source_anchor_refs": ["thread:closure-cycle"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "The Atlas preserves it as morphology rather than anatomy and identifies the type mismatch.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["thread:closure-cycle"]
+        }
+      ],
+      "members": [
+        { "member_id": "FIELD", "role_slice": "relational configuration space", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "REFRACT", "role_slice": "produce bounded differentiated views", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "TRANSLATE", "role_slice": "carry meaning into typed form", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "GOVERN", "role_slice": "test admissibility before consequence", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "RETURN", "role_slice": "produce attributable outcome, proof, and remainder", "standing": "FUNCTIONAL_ROLE" }
+      ],
+      "profile": {
+        "profile_id": "FIVE-STAGE-CYCLE-RESEARCH",
+        "version": "F0.1",
+        "source_anchor_ref": "thread:closure-cycle"
+      },
+      "resolution": {
+        "fine_resolution": "multiple project-specific flows and vocabularies",
+        "macro_resolution": "five-stage candidate lifecycle",
+        "relation": "INSTANTIATES",
+        "pattern_signature_ref": "field/state -> differentiated projection -> typed carriage -> consequence test -> attributable return"
+      },
+      "macro_function": "Offer a small comparative cycle for testing whether diverse flows share one stable transformation morphology.",
+      "resolution_distinctions": [],
+      "witness": [],
+      "reopen_triggers": [
+        "claim that the terms are peer organs",
+        "claim of runtime implementation",
+        "phase order change",
+        "missing proof or remainder on return"
+      ],
+      "adequacy": {
+        "criterion_type": "PATTERN_ONLY",
+        "status": "NOT_APPLICABLE",
+        "consequence_use": false,
+        "profile_binding": "FIVE-STAGE-CYCLE-RESEARCH F0.1",
+        "action_family": "cross-domain pattern comparison only",
+        "semantics_ref": "no common operational semantics specified"
+      },
+      "failure_disposition": {
+        "pre_effect": "MORPHOLOGICAL_CANDIDATE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "thread:closure-cycle",
+          "revision": "conversation-2026-09-01",
+          "fragment": "FIELD -> REFRACT -> TRANSLATE -> GOVERN -> RETURN",
+          "evidence_kind": "THREAD_TEXT",
+          "source_standing": "THREAD_OBSERVATION",
+          "binding_status": "TRANSCRIPT_UNPINNED",
+          "verification_date": "2026-09-01",
+          "claim": "The sequence is an explicit research proposal, not frozen anatomy."
+        }
+      ],
+      "concordance_candidate_crosswalk": [],
+      "strongest_attack": "The sequence mixes object types and can be manufactured by choosing verbs after seeing the corpus; blind coding and negative controls are required before claiming stable emergence."
+    },
+    {
+      "closure_id": "RCA-011",
+      "title": "Crossing-and-return correspondence morphology",
+      "closure_type": "MORPHOLOGICAL",
+      "typing_status": "CANDIDATE",
+      "result": "UNKNOWN",
+      "observation": "The SourcePoint identifies chiasm as a foundational crossing-and-return form whose broken correspondence may expose loss or corruption.",
+      "assessment": "The research priority and topology survive. No repository symbol or implementation exists, and mirrored structure is not yet a checksum, cryptographic hash, or proved corruption detector.",
+      "assessment_disposition": "CANDIDATE",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "The SourcePoint explicitly formulates chiasm as a foundational research object in the supplied thread.",
+          "source_kind": "SOURCEPOINT_THREAD_PROPOSAL",
+          "source_anchor_refs": ["thread:chiasm-priority"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "The Atlas isolates the exact coding-theoretic burden and records the current absence of an implementation.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["thread:chiasm-priority"]
+        }
+      ],
+      "members": [
+        { "member_id": "outbound-A", "role_slice": "source-side initial state", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "crossing-B-X-B-prime", "role_slice": "typed differentiated crossing", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "return-A-prime", "role_slice": "returned successor with reconstructable correspondence", "standing": "FUNCTIONAL_ROLE" }
+      ],
+      "profile": {
+        "profile_id": "CHIASM-RESEARCH",
+        "version": "thread-2026-09-01",
+        "source_anchor_ref": "thread:chiasm-priority"
+      },
+      "resolution": {
+        "fine_resolution": "outbound elements, crossing relations, transformed elements, return correspondence, and lineage",
+        "macro_resolution": "A -> B -> X -> B-prime -> A-prime crossing-and-return form",
+        "relation": "INSTANTIATES",
+        "pattern_signature_ref": "typed outbound/return correspondence with declared preserved, changed, lost, and emergent components"
+      },
+      "macro_function": "Test whether a typed crossing-and-return correspondence can make specified transformation faults legible.",
+      "resolution_distinctions": [],
+      "witness": [],
+      "reopen_triggers": [
+        "security or integrity claim",
+        "broken outbound/return correspondence",
+        "unexplained loss",
+        "claim of cryptographic strength"
+      ],
+      "adequacy": {
+        "criterion_type": "PATTERN_ONLY",
+        "status": "UNESTABLISHED",
+        "consequence_use": false,
+        "profile_binding": "CHIASM-RESEARCH thread proposal",
+        "action_family": "research-only pattern and fault-detection study",
+        "semantics_ref": "encoding, threat model, fault class, and detection relation absent"
+      },
+      "failure_disposition": {
+        "pre_effect": "MORPHOLOGICAL_CANDIDATE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "thread:chiasm-priority",
+          "revision": "conversation-2026-09-01",
+          "fragment": "SourcePoint statement on chiasm as ancient checksum/security beacon and crossing tissue",
+          "evidence_kind": "THREAD_TEXT",
+          "source_standing": "THREAD_OBSERVATION",
+          "binding_status": "TRANSCRIPT_UNPINNED",
+          "verification_date": "2026-09-01",
+          "claim": "The source priority is explicit; the computational error-detection claim remains unproved."
+        }
+      ],
+      "concordance_candidate_crosswalk": [],
+      "strongest_attack": "Symmetric substitutions or paired deletions can preserve a mirrored form, so symmetry alone has no cryptographic collision or fault-detection guarantee."
+    },
+    {
+      "closure_id": "RCA-012",
+      "title": "Return and unresolved-remainder assembly",
+      "closure_type": "COMPOSITIONAL",
+      "typing_status": "CANDIDATE",
+      "result": "SURVIVES",
+      "observation": "RGCB, Golden Crossing, and METRO-SBAM repeatedly compose effect, evidence, return, unresolved remainder, and open settlement without treating technical completion as full resolution.",
+      "assessment": "This is a bounded compositional precursor to closure without erasure. It does not prove that every material distinction was captured before the remainder was formed, nor does it supply a generic reopen semantics.",
+      "assessment_disposition": "SUPPORTED_BOUNDED",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "Typed ReturnObject and RemainderAccount structures plus finite zero-egress fixtures exist in the reference implementation.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": ["rio-reference-impl:RGCB", "rio-reference-impl:METRO-SBAM", "rio-reference-impl:Golden-Crossing"]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "The Atlas groups these bounded structures as a return/remainder compositional assembly while preserving their separate offices and fixture limits.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": ["rio-reference-impl:RGCB", "rio-reference-impl:METRO-SBAM", "rio-reference-impl:Golden-Crossing"]
+        }
+      ],
+      "members": [
+        { "member_id": "RGCB:effect-evidence", "role_slice": "binds observed effect and evidence", "standing": "RESEARCH_FIXTURE_COMPONENT" },
+        { "member_id": "ReturnObject", "role_slice": "returns attributable state and unresolved status", "standing": "RESEARCH_FIXTURE_COMPONENT" },
+        { "member_id": "RemainderAccount", "role_slice": "retains ambiguity, partiality, collateral effects, or open obligation", "standing": "RESEARCH_FIXTURE_COMPONENT" },
+        { "member_id": "Settlement", "role_slice": "records OPEN, settled, or otherwise typed completion standing", "standing": "RESEARCH_FIXTURE_COMPONENT" }
+      ],
+      "profile": {
+        "profile_id": "RGCB-METRO-RETURN",
+        "version": "bounded-fixtures-2026-09-01",
+        "source_anchor_ref": "rio-reference-impl:RGCB"
+      },
+      "resolution": {
+        "fine_resolution": "effects, evidence, delivery/read/outcome states, unresolved obligations, collateral effects, and settlement conditions",
+        "macro_resolution": "typed return with explicit remainder and settlement standing",
+        "relation": "ASSEMBLES",
+        "macro_contract_ref": "effect -> evidence -> remainder -> settlement -> return",
+        "macro_contract_status": "PRESENT",
+        "boundary_ports": ["effect-in", "evidence-in", "return-out", "remainder-out", "settlement-out"]
+      },
+      "macro_function": "Complete a bounded return while keeping unresolved material explicit and preventing technical completion from laundering settlement.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-012-D1",
+          "description": "Unresolved delivery, read, outcome, ambiguity, collateral effect, or obligation may not disappear behind a successful technical result.",
+          "materiality_basis_ref": "RGCB and METRO-SBAM remainder contracts",
+          "retention": "WITNESSED",
+          "witness_ref": "RCA-012-W1",
+          "reopen_trigger": "Settlement review, repair, later dependency, or changed evidence."
+        }
+      ],
+      "witness": [
+        {
+          "witness_id": "RCA-012-W1",
+          "witness_type": "DERIVATION_PROVENANCE",
+          "status": "PRESENT",
+          "availability": "RETRIEVABLE",
+          "source_anchor_ref": "rio-reference-impl:RGCB",
+          "integrity_binding": "fixture-local integrity bindings and typed remainder records",
+          "description": "Return and remainder structures retain unresolved material and its relationship to the bounded crossing."
+        }
+      ],
+      "reopen_triggers": [
+        "OPEN settlement",
+        "new evidence",
+        "repair request",
+        "unresolved downstream dependency",
+        "integrity mismatch"
+      ],
+      "adequacy": {
+        "criterion_type": "BOUNDARY_REFINEMENT",
+        "status": "FINITE_FIXTURE_EVIDENCE",
+        "consequence_use": false,
+        "profile_binding": "RGCB, Golden Crossing, and METRO-SBAM bounded fixture domains",
+        "action_family": "zero-egress research fixtures",
+        "semantics_ref": "typed return, remainder, and settlement fixture expectations",
+        "evidence_ref": "RUN-002, RUN-004, and RUN-014",
+        "finite_domain_ref": "RGCB 9/9; Golden Crossing 49/49 and combined 104/104; METRO-SBAM successor 66/66"
+      },
+      "failure_disposition": {
+        "pre_effect": "ALLOW_RESEARCH_USE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "rio-reference-impl:RGCB",
+          "location": "artifacts/rgcb-operator-contracts/spec/RGCB-F0.1.md and receipts/RUN-002.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "typed return and dirty-return unresolved state",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "Bounded fixtures preserve unresolved return state; no generic closure theorem follows."
+        },
+        {
+          "artifact_id": "rio-reference-impl:METRO-SBAM",
+          "location": "artifacts/metro-sbam-shadow-route-fixture/spec/METRO-SBAM-SHADOW-ROUTE-F0.1.md and receipts/RUN-014.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "integrity-bound RemainderAccount, reopen conditions, and OPEN settlement",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The bounded zero-egress fixture preserves open remainder but does not prove completeness of pre-remainder materiality capture."
+        },
+        {
+          "artifact_id": "rio-reference-impl:Golden-Crossing",
+          "location": "artifacts/rgcb-golden-crossing-join/receipts/RUN-004.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "bounded Golden Crossing join and combined RGCB fixture results",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-01",
+          "claim": "The join is bounded local evidence with no external system or whole-estate claim."
+        }
+      ],
+      "concordance_candidate_crosswalk": [
+        { "primitive_id": "RETURN", "relation": "MEMBER", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "REMAINDER", "relation": "MEMBER", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" },
+        { "primitive_id": "SETTLEMENT", "relation": "BOUNDARY", "binding_status": "UNBOUND", "source_ref": "C2C-001 target-state; no registry row resolved" }
+      ],
+      "strongest_attack": "A perfectly formed RemainderAccount cannot recover a material distinction that was silently omitted before the account was constructed."
+    },
+    {
+      "closure_id": "RCA-013",
+      "title": "Typed temporal becoming assembly",
+      "closure_type": "COMPOSITIONAL",
+      "typing_status": "CANDIDATE",
+      "result": "PARTIALLY_SURVIVES",
+      "observation": "The corpus already distributes typed temporal artifacts with substantially executable bounded paths across prospective readiness, SourcePoint authorship, single-edge passage, occurrence, evidence, return, reconstruction, settlement, and inheritance.",
+      "assessment": "The thirteen-burden Becoming Spine is adopted as a frozen candidate conformance view over that estate when treated as a typed causal hypergraph rather than thirteen atomic states. The path from exact AuthoredIntent through conditional successor context is executable in bounded assemblies; Possibility and Preparation remain a documented front edge, and two cross-profile defects require explicit repair.",
+      "assessment_disposition": "SUPPORTED_BOUNDED",
+      "genealogy": [
+        {
+          "status": "EXISTING",
+          "claim": "Typed causal graphs, operator laws, non-conversions, frozen grammar, an admitted 102-test single-edge runtime, a 16-test transition-occurrence protocol, reconstruction specimens, and a 590-test stacked bounded assembly already exist.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": [
+            "architecture:minimum-spine",
+            "architecture:operator-laws",
+            "rio-reference-impl:CM-Core",
+            "rio-reference-impl:ONE-RCC",
+            "rio-reference-impl:TOP",
+            "rio-reference-impl:RGCB",
+            "rio-reference-impl:PBR",
+            "rio-reference-impl:CHR",
+            "rio-reference-impl:ONE-V1-stacked"
+          ]
+        },
+        {
+          "status": "IMPLICIT",
+          "claim": "The distributed carriers form one temporal conformance surface even though no prior artifact names the exact thirteen-burden whole.",
+          "source_kind": "CORPUS",
+          "source_anchor_refs": [
+            "rio-reference-impl:prospective-readiness",
+            "rio-reference-impl:Golden-Crossing-spine",
+            "rio-reference-impl:ONE-RCC",
+            "rio-reference-impl:TOP",
+            "rio-reference-impl:ONE-V1-stacked"
+          ]
+        },
+        {
+          "status": "NEW_DERIVATION",
+          "claim": "The exact thirteen-burden consolidation, eight-surface BecomingView, and promotion-collapse conservation pair are introduced by the linked F0.1 reconciliation.",
+          "source_kind": "ANALYTIC_DERIVATION",
+          "source_anchor_refs": [
+            "rio-system:Becoming-Spine-F0.1",
+            "architecture:operator-laws",
+            "rio-reference-impl:PBR"
+          ]
+        }
+      ],
+      "members": [
+        { "member_id": "Possibility", "role_slice": "carries differentiated possible futures without inevitability or authority", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Preparation", "role_slice": "forms and preserves zero-egress prepared material", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Choice", "role_slice": "records exact SourcePoint authorship or decline", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Commitment", "role_slice": "binds authorship, proposal, deltas, dependencies, and current conditions", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Attempt", "role_slice": "records admitted execution identity and retry/rerun lineage", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Occurrence", "role_slice": "identifies consequential events separately from attempt and endpoint", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Consequence", "role_slice": "preserves intended, authorized, actual, observed, and unresolved deltas", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Witness", "role_slice": "returns bounded attributable observation and coverage", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Evidence", "role_slice": "assesses observations under independent evidence admission", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Return", "role_slice": "carries attributable receipts, account, and unresolved remainder", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Reconstruction", "role_slice": "forms a trace-bound higher-order account without standing promotion", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Settlement", "role_slice": "separates judgment, control disposition, and open or completed handling", "standing": "FUNCTIONAL_ROLE" },
+        { "member_id": "Inheritance", "role_slice": "admits exact material into successor context on independent basis", "standing": "FUNCTIONAL_ROLE" }
+      ],
+      "profile": {
+        "profile_id": "CONSTITUTIONAL-BECOMING-SPINE-F0.1",
+        "version": "F0.1",
+        "source_anchor_ref": "rio-system:Becoming-Spine-F0.1"
+      },
+      "resolution": {
+        "fine_resolution": "profile-qualified carrier records, identities, typed edges, zero-to-many branches, causal joins, retry lineage, evidence posture, open settlement, and conditional successor admission",
+        "macro_resolution": "Possibility -> Preparation -> Choice -> Commitment -> Attempt -> Occurrence -> Consequence -> Witness -> Evidence -> Return -> Reconstruction -> Settlement -> Inheritance",
+        "relation": "ASSEMBLES",
+        "macro_contract_ref": "CONSTITUTIONAL-BECOMING-SPINE-F0.1.md and becoming-spine-crosswalk.json",
+        "macro_contract_status": "PRESENT",
+        "boundary_ports": [
+          "possibility-field-in",
+          "sourcepoint-choice",
+          "exact-effect-boundary",
+          "attributable-return-out",
+          "conditional-successor-out"
+        ]
+      },
+      "macro_function": "Present the distributed temporal estate as one accountable becoming surface while retaining every carrier distinction that can affect interpretation, consequence, settlement, or succession.",
+      "resolution_distinctions": [
+        {
+          "distinction_id": "RCA-013-D1",
+          "description": "A burden name is not a universal carrier type; profile-qualified runtime records retain their own semantics and cardinality.",
+          "materiality_basis_ref": "ONE-RCC/TOP/RGCB type and non-conversion contracts",
+          "retention": "PROHIBITED"
+        },
+        {
+          "distinction_id": "RCA-013-D2",
+          "description": "The human-facing order does not erase joins, forks, loops, open states, or conditional inheritance in the causal hypergraph.",
+          "materiality_basis_ref": "ONE-RCC causal join, TOP cardinality, PBR causal hypergraph, and RGCB recurrence boundaries",
+          "retention": "VISIBLE"
+        },
+        {
+          "distinction_id": "RCA-013-D3",
+          "description": "Return, reconstruction, settlement, and inheritance remain separately typed even when presented as one late-stage region.",
+          "materiality_basis_ref": "RGCB, CHR, TOP, and ONE V1 non-conversions",
+          "retention": "WITNESSED",
+          "witness_ref": "RCA-013-W1",
+          "reopen_trigger": "Any standing, settlement, retry, recovery, or successor decision."
+        }
+      ],
+      "witness": [
+        {
+          "witness_id": "RCA-013-W1",
+          "witness_type": "DERIVATION_PROVENANCE",
+          "status": "PRESENT",
+          "availability": "RETRIEVABLE",
+          "source_anchor_ref": "rio-system:Becoming-Spine-F0.1",
+          "integrity_binding": "F0.1 crosswalk binds stage, carrier, standing, source revision, non-conversion, collision, evidence, and remaining-seam records",
+          "description": "The linked machine-readable crosswalk preserves how every macro burden resolves back to profile-qualified corpus artifacts."
+        }
+      ],
+      "reopen_triggers": [
+        "same label with different profile semantics",
+        "attempt-cardinality change",
+        "candidate-to-intent or receipt-to-settlement promotion",
+        "new external-effect route",
+        "later evidence or reconstruction",
+        "successor admission or profile change"
+      ],
+      "adequacy": {
+        "criterion_type": "BOUNDARY_REFINEMENT",
+        "status": "UNESTABLISHED",
+        "consequence_use": false,
+        "profile_binding": "CONSTITUTIONAL-BECOMING-SPINE-F0.1 frozen estate reconciliation",
+        "action_family": "research crosswalk and bounded conformance analysis",
+        "semantics_ref": "linked stage/carrier/non-conversion crosswalk over pinned source revisions",
+        "evidence_ref": "ONE-RCC 102 tests; TOP 16 tests; RGCB 55 recorded test nodes; CHR 70 tests; PBR 33 tests; ONE V1 stacked 590 combined tests",
+        "finite_domain_ref": "Recorded suites overlap and are not additive; the all-thirteen front-to-back route is not yet one executed harness."
+      },
+      "failure_disposition": {
+        "pre_effect": "ALLOW_RESEARCH_USE_ONLY",
+        "post_possible_effect": "NOT_APPLICABLE"
+      },
+      "source_anchors": [
+        {
+          "artifact_id": "rio-system:Becoming-Spine-F0.1",
+          "location": "experiments/closure-atlas-f0.1/CONSTITUTIONAL-BECOMING-SPINE-F0.1.md and becoming-spine-crosswalk.json",
+          "revision": "F0.1",
+          "fragment": "frozen thirteen-burden conformance view, eight-surface projection, collisions, and exact remaining seams",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_REVISION",
+          "verification_date": "2026-09-02",
+          "claim": "The exact macro-view is defined and adopted as a frozen candidate conformance view by this successor reconciliation; it creates no runtime or authority effect."
+        },
+        {
+          "artifact_id": "architecture:minimum-spine",
+          "location": "one-rio-muss-architecture/docs/protocols/ONE-CODE-MINIMUM-ARTIFACT-SPINE-001_v0.1.md",
+          "revision": "b9ea6c0d3f639f072cbb653b8e220848219b31c5",
+          "fragment": "minimum proposal-through-return artifact spine and separately recoverable responsibilities",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "CANDIDATE",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "A non-collapsing temporal artifact spine already exists at architecture altitude."
+        },
+        {
+          "artifact_id": "architecture:operator-laws",
+          "location": "one-rio-muss-architecture/docs/language/OPERATOR-INVENTORY-001_v0.1.md",
+          "revision": "b9ea6c0d3f639f072cbb653b8e220848219b31c5",
+          "fragment": "O-LAW-002 through O-LAW-005 and typed operator signature",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "CANDIDATE",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "Explicit no-promotion, non-absorption, and recoverable-compression laws predate this reconciliation."
+        },
+        {
+          "artifact_id": "rio-reference-impl:prospective-readiness",
+          "location": "artifacts/prospective-readiness-composition/spec/PROSPECTIVE-READINESS-COMPOSITION-F0.1.md and contracts/PREPARED-POSSIBILITY-FIELD-CONTRACT-F0.1.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "Possibility/Preparation through SourcePoint CHOOSE and separately governed CROSS",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "CANDIDATE",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "The prospective front edge is explicit and documentation-only, not absent."
+        },
+        {
+          "artifact_id": "rio-reference-impl:Golden-Crossing-spine",
+          "location": "artifacts/rgcb-golden-crossing-join/spec/RGCB-GOLDEN-CROSSING-JOIN-F0.1.md and src/",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "SourcePointAuthorshipDeclaration, AuthoredIntent, return, and inheritance join",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "Executable bounded choice/authorship and return/inheritance carriers exist; signatures are opaque test values."
+        },
+        {
+          "artifact_id": "rio-reference-impl:CM-Core",
+          "location": "artifacts/one-rcc-runtime/spec/CM-CORE-PASSAGE-001_F0.2.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "human-admitted passage aggregate, typed lifecycle, and separation of operational and standing-bearing records",
+          "evidence_kind": "REPO_TEXT",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "CM-Core supplies a human-admitted experimental typed passage specification; it explicitly denies production conformance, universal validity, and mathematical-proof standing."
+        },
+        {
+          "artifact_id": "rio-reference-impl:ONE-RCC",
+          "location": "artifacts/one-rcc-runtime/spec/ONE-RCC-RUNTIME-001_Single-Edge_Runtime_Profile_F0.1.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "admitted frozen proposal-to-standing causal join and 102-test reference specimen",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "A substantial exact single-edge runtime passage already exists with explicit non-conversions."
+        },
+        {
+          "artifact_id": "rio-reference-impl:TOP",
+          "location": "artifacts/transition-occurrence-protocol/spec/TRANSITION-OCCURRENCE-PROTOCOL-F0.1.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "potential-to-recognized-successor braid, cardinality, and 16 hostile tests",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "TOP supplies a candidate, noncanonical, zero-authority executable occurrence/evidence/settlement/succession profile and exposes the attempt-admission cardinality collision."
+        },
+        {
+          "artifact_id": "rio-reference-impl:RGCB",
+          "location": "artifacts/rgcb-operator-contracts/spec/RGCB-F0.1.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "frozen becoming/reconstruction/succession grammar and 55 recorded test nodes",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "Return, orientation, and inheritance already have separately typed operator burdens."
+        },
+        {
+          "artifact_id": "rio-reference-impl:PBR",
+          "location": "artifacts/pbr-001-same-endpoint-different-becoming/spec/TRACE-SENSITIVE-CONSTITUTIONAL-SEMANTICS-F0.1.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "causal hypergraph, endpoint insufficiency, reconstruction, and independent inheritance admission",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "A 33-test same-endpoint/different-assessment specimen exists; no general theorem is claimed."
+        },
+        {
+          "artifact_id": "rio-reference-impl:CHR",
+          "location": "artifacts/constitutional-optics-chr/spec/CHR-F0.1.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "pure ReconstructionResult and reconstruction non-promotion laws",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "A bounded reconstruction carrier exists and cannot observe, evidence, settle, inherit, recover, or replay."
+        },
+        {
+          "artifact_id": "rio-reference-impl:ONE-V1-stacked",
+          "location": "artifacts/one-v1-stacked-bounded-assembly/spec/ONE-V1-STACKED-BOUNDED-ASSEMBLY-F0.1.md and receipts/RUN-015.md",
+          "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+          "fragment": "AuthoredIntent through conditional successor context and 590/590 combined finite tests",
+          "evidence_kind": "FINITE_FIXTURE",
+          "source_standing": "RESEARCH_EXPERIMENT",
+          "binding_status": "PINNED_COMMIT",
+          "verification_date": "2026-09-02",
+          "claim": "The late and middle spine is already composed in one bounded assembly; the prospective front edge is not part of this route."
+        }
+      ],
+      "concordance_candidate_crosswalk": [],
+      "strongest_attack": "The thirteen words could be a stitching taxonomy that falsely linearizes heterogeneous carrier types. The attack partially succeeds: the exact macro-view is new, the prospective front edge is not executable, AttemptAdmission semantics conflict across profiles, and no single harness spans all thirteen burdens. It does not collapse the object because the core and late causal joins, identities, non-conversions, failure states, and bounded compositions are already executable and source-bound."
+    }
+  ],
+  "hostile_fixture_pack": "fixtures/hostile.json",
+  "findings": {
+    "five_term_cycle": "FIELD -> REFRACT -> TRANSLATE -> GOVERN -> RETURN survives only as a morphological cycle hypothesis, not five peer organs.",
+    "resolution_geometry": "Raw views form a factorization preorder; kernels or views modulo mutual determinacy form a partial order with incomparable resolutions, alongside overlapping role-slice participation rather than a single hierarchy.",
+    "cohesion": "Cohesion is persistence of an attributable differentiated relation across time or resolution change; it is neither sameness nor an action-bound adequacy certificate.",
+    "external_closure_signal": "Repeated model closure may indicate functional altitude or recurring morphology, but prompt-induced alignment and summary compression are competing explanations; stability must be tested with pinned prompts/models, label permutation, blind coding, anti-collapse instructions, and negative controls.",
+    "strict_middle": "BUF-007 and BUF-002 could supply a finite safe-merge/must-distinguish witness once an endpoint map, profile, and consequential semantics are independently defined and the BUF-002 pair is proved to share an endpoint; the proof is not yet present.",
+    "next_burden": "Bind the PreparedPossibilityField/BearingOffer front edge into exact SourcePoint authorship and ONE-RCC commitment; split the colliding AttemptAdmission profiles; repair validation of the generated MUS settlement receipt; then run one hostile route spanning all thirteen burdens."
+  }
+}

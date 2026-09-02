@@ -1,0 +1,1135 @@
+{
+  "crosswalk_id": "CONSTITUTIONAL-BECOMING-SPINE-ESTATE-CROSSWALK-F0.1",
+  "version": "F0.1",
+  "standing": "FROZEN_ESTATE_RECONCILIATION",
+  "runtime_effect": "NONE",
+  "authority_effect": "NONE",
+  "canon_effect": "NONE",
+  "freeze_scope": {
+    "frozen": [
+      "The thirteen burden names and their human-facing display order.",
+      "The rule that the display order is a coarse conformance view over a typed causal hypergraph, not a claim of thirteen atomic runtime states.",
+      "The requirement that each mapped carrier retain its own type, standing, identity, cardinality, and non-conversions.",
+      "The eight-surface BecomingView projection defined in this crosswalk.",
+      "The promotion-and-collapse conservation pair, with its genealogy preserved."
+    ],
+    "not_frozen": [
+      "A universal synchronous implementation order.",
+      "A monolithic service or new organ.",
+      "A claim that every existing profile implements all thirteen burdens in one route.",
+      "The unresolved front-edge adapter, cross-package return adapter, or colliding type names.",
+      "Production, canon, external-effect, or mathematical-proof standing."
+    ]
+  },
+  "topology": {
+    "kind": "TYPED_CAUSAL_HYPERGRAPH",
+    "display_order": [
+      "CBS-01",
+      "CBS-02",
+      "CBS-03",
+      "CBS-04",
+      "CBS-05",
+      "CBS-06",
+      "CBS-07",
+      "CBS-08",
+      "CBS-09",
+      "CBS-10",
+      "CBS-11",
+      "CBS-12",
+      "CBS-13"
+    ],
+    "linearity_claim": false,
+    "cardinality_rules": [
+      "ONE-RCC F0.1 binds one AttemptAdmission to one exact authorized attempt identity.",
+      "TOP F0.1 separately permits one AttemptAdmission to govern zero or many ExecutionAttempt records; this is a profile collision, not an equivalence.",
+      "TOP permits one attempt to yield zero or many occurrences, one occurrence to yield zero or many observations, and one observation to yield zero or many receipts.",
+      "Inheritance is optional and occurs only after an independently based admitting disposition."
+    ],
+    "joins": [
+      "ONE-RCC branches an occurrence into a semantic receipt/candidate path and an observation/evidence/runtime-receipt path; both meet at the RuntimeCandidateGate.",
+      "ONE V1 joins Proof Return, SourcePoint Fit Return, and SourcePoint disposition before any InheritanceRecord or successor context exists."
+    ],
+    "recurrent_regions": [
+      "Return and reconstruction may recur as later evidence or improved resolution arrives.",
+      "Settlement may remain OPEN or UNSETTLED and re-enter review without rewriting prior return records.",
+      "A deliberate rerun creates a new attempt identity and recursively reconstructible lineage; transport retry is not rerun."
+    ],
+    "conditional_edges": [
+      "Prepared possibility reaches crossing only after separate SourcePoint choice and separate authorization.",
+      "Observation reaches evidence standing only through an independent EvidenceAssessment.",
+      "Settlement reaches recognized successor standing only under the applicable admission rule.",
+      "Persistence alone never creates inheritance."
+    ]
+  },
+  "genealogy": [
+    {
+      "status": "EXISTING",
+      "claim": "The corpus already contains typed causal graphs, formal operators and judgments, frozen experimental grammars, executable single-edge passage semantics, trace-sensitive reconstruction, return, settlement, and inheritance carriers.",
+      "source_anchor_refs": [
+        "src:minimum-spine",
+        "src:operator-laws",
+        "src:cm-core",
+        "src:one-rcc",
+        "src:top",
+        "src:rgcb",
+        "src:pbr",
+        "src:chr",
+        "src:one-v1-stacked"
+      ]
+    },
+    {
+      "status": "IMPLICIT",
+      "claim": "The distributed carriers jointly form one temporal conformance surface from prepared possibility through conditional successor admission, although no prior artifact names the exact thirteen-burden whole.",
+      "source_anchor_refs": [
+        "src:prospective-readiness",
+        "src:golden-crossing",
+        "src:one-rcc",
+        "src:top",
+        "src:rgcb",
+        "src:one-v1-stacked"
+      ]
+    },
+    {
+      "status": "NEW_DERIVATION",
+      "claim": "The exact thirteen-burden Becoming Spine, the eight-surface BecomingView, and the pairing of no-silent-promotion with no-premature-collapse are introduced by this reconciliation.",
+      "source_anchor_refs": [
+        "src:becoming-spine",
+        "src:operator-laws",
+        "src:minimum-spine",
+        "src:pbr"
+      ]
+    }
+  ],
+  "laws": [
+    {
+      "law_id": "CBS-L01",
+      "name": "No Silent Promotion",
+      "genealogy": "EXISTING",
+      "statement": "No artifact acquires a higher type, standing, authority, evidence status, settlement status, or successor status without the explicit typed transition and distinct record required by its governing profile.",
+      "source_anchor_refs": [
+        "src:operator-laws",
+        "src:minimum-spine",
+        "src:one-rcc",
+        "src:top"
+      ]
+    },
+    {
+      "law_id": "CBS-L02",
+      "name": "No Premature Collapse",
+      "genealogy": "EXISTING",
+      "statement": "A profile may compose operations atomically only when each operation's input, output, authority basis, standing effect, temporal position, trace, and failure semantics remain separately recoverable.",
+      "source_anchor_refs": [
+        "src:operator-laws",
+        "src:minimum-spine",
+        "src:pbr",
+        "src:chr"
+      ]
+    },
+    {
+      "law_id": "CBS-L03",
+      "name": "Promotion-Collapse Conservation Pair",
+      "genealogy": "NEW_DERIVATION",
+      "statement": "Standing may not increase without an explicit typed transition; consequential differentiation may not decrease without action-relative adequacy.",
+      "source_anchor_refs": [
+        "src:becoming-spine",
+        "src:operator-laws",
+        "src:pbr"
+      ]
+    }
+  ],
+  "stages": [
+    {
+      "stage_id": "CBS-01",
+      "order": 1,
+      "name": "Possibility",
+      "burden_kind": "FIELD_STATE",
+      "binding_status": "EXISTING_DOCUMENTED_FRONT_EDGE",
+      "definition": "Carry differentiated possible futures without treating any candidate as inevitable, chosen, authorized, or executable.",
+      "carriers": [
+        {
+          "carrier_id": "ScenarioSet",
+          "role": "Holds the bounded candidate population from which prospective preparation is formed.",
+          "standing": "EXISTING_CANDIDATE_SEMANTICS",
+          "scope": "Prospective Readiness documentation-only composition.",
+          "source_anchor_refs": ["src:prospective-readiness"]
+        },
+        {
+          "carrier_id": "PreparedPossibilityField",
+          "role": "Holds sealed dormant candidates, assumptions, provenance, uncertainty, expiry, and invalidation conditions with consequence standing NONE.",
+          "standing": "EXISTING_DOCUMENTED",
+          "scope": "Candidate research contract; no runtime service or schema is asserted.",
+          "source_anchor_refs": ["src:prepared-field"]
+        },
+        {
+          "carrier_id": "RENEWED(P)",
+          "role": "Predicates that a live possibility field was faithfully reconstituted without implying choice, authorization, or execution.",
+          "standing": "EXISTING_FORMAL",
+          "scope": "Frozen RGCB field predicate, not an eighth operator.",
+          "source_anchor_refs": ["src:rgcb"]
+        }
+      ],
+      "non_conversions": [
+        "PreparedPossibilityField != Truth",
+        "PreparedPossibilityField != Intent",
+        "RENEWED(P) != Chosen",
+        "Possibility != Authorization"
+      ],
+      "source_anchor_refs": ["src:prospective-readiness", "src:prepared-field", "src:rgcb"]
+    },
+    {
+      "stage_id": "CBS-02",
+      "order": 2,
+      "name": "Preparation",
+      "burden_kind": "FORMATION_AND_CUSTODY",
+      "binding_status": "EXISTING_DOCUMENTED_FRONT_EDGE",
+      "definition": "Form, preserve, correspond, revalidate, and orient prepared material while keeping its zero-egress and non-authoritative standing explicit.",
+      "carriers": [
+        {
+          "carrier_id": "RehearsalRun",
+          "role": "Records bounded formation or evaluation used to prepare candidate responses.",
+          "standing": "EXISTING_DOCUMENTED",
+          "scope": "Observation-first constitutional rehearsal candidate discipline.",
+          "source_anchor_refs": ["src:rehearsal"]
+        },
+        {
+          "carrier_id": "ProspectiveCommitment",
+          "role": "Seals time, source, profile, candidate population, feature definitions, expiry, invalidation rules, and exposure lineage.",
+          "standing": "EXISTING_CANDIDATE_SEMANTICS",
+          "scope": "A preparation-custody seal; not SourcePoint commitment or execution commitment.",
+          "source_anchor_refs": ["src:prospective-readiness", "src:prepared-field"]
+        }
+      ],
+      "non_conversions": [
+        "Preparation != Intent",
+        "ProspectiveCommitment != SourcePointCommitment",
+        "Rehearsal != Prediction",
+        "PreparedResponse != ExecutableAction"
+      ],
+      "source_anchor_refs": ["src:prospective-readiness", "src:prepared-field", "src:rehearsal"]
+    },
+    {
+      "stage_id": "CBS-03",
+      "order": 3,
+      "name": "Choice",
+      "burden_kind": "HUMAN_DISPOSITION",
+      "binding_status": "EXISTING_EXECUTABLE_BOUND",
+      "definition": "Record the SourcePoint decision to author or decline an exact intent without inheriting standing from a prepared candidate or bearing.",
+      "carriers": [
+        {
+          "carrier_id": "SourcePointAuthorshipDeclaration",
+          "role": "Binds the human decision, action, target, payload, candidate, bearing, signature basis, and time.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Experimental RGCB-Golden Crossing reference interface.",
+          "source_anchor_refs": ["src:golden-crossing"]
+        },
+        {
+          "carrier_id": "CandidateIntent",
+          "role": "Offers a non-authoritative candidate for SourcePoint choice with choiceEffect and authorityEffect NONE.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Experimental RGCB-Golden Crossing reference interface.",
+          "source_anchor_refs": ["src:golden-crossing"]
+        }
+      ],
+      "non_conversions": [
+        "CandidateIntent != AuthoredIntent",
+        "BearingOffer != Choice",
+        "Choice != Authorization",
+        "Decline != Intent"
+      ],
+      "source_anchor_refs": ["src:golden-crossing", "src:prospective-readiness"]
+    },
+    {
+      "stage_id": "CBS-04",
+      "order": 4,
+      "name": "Commitment",
+      "burden_kind": "BINDING",
+      "binding_status": "EXISTING_DISTRIBUTED",
+      "definition": "Bind human authorship, an exact proposal, permitted change, dependencies, and point-of-use conditions without conflating preparation seals, authorship, execution commitment, or consequence-time commit.",
+      "carriers": [
+        {
+          "carrier_id": "Intent + SourcePointAuthorshipReceipt",
+          "role": "Records SourcePoint-authored intent and its exact origin without deriving authority from the prior bearing.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Experimental Golden Crossing join.",
+          "source_anchor_refs": ["src:golden-crossing"]
+        },
+        {
+          "carrier_id": "TranslationCommitment",
+          "role": "Binds the exact proposal, authority derivation, translator, dependency root, intended and permitted deltas, required coverage, validity interval, and policy.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC single-edge profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "ViewBoundCrossingCommit",
+          "role": "Binds an exact consequence-time crossing to the current expected head.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "OGKT-006 bounded consequence-time coherence specimen.",
+          "source_anchor_refs": ["src:ogkt-006"]
+        }
+      ],
+      "non_conversions": [
+        "ProspectiveCommitment != SourcePointAuthoredIntent",
+        "SourcePointAuthoredIntent != TranslationCommitment",
+        "TranslationCommitment != AttemptAdmission",
+        "ViewBoundCrossingCommit != HumanCommitment"
+      ],
+      "source_anchor_refs": ["src:golden-crossing", "src:one-rcc", "src:ogkt-006"],
+      "notes": "Commitment is a burden family with separately qualified types, not one universal record."
+    },
+    {
+      "stage_id": "CBS-05",
+      "order": 5,
+      "name": "Attempt",
+      "burden_kind": "EXECUTION_LINEAGE",
+      "binding_status": "EXISTING_EXECUTABLE_BOUND",
+      "definition": "Admit and record attributable execution attempts with exact identity, current authority, retry/rerun distinction, and reconstructible lineage.",
+      "carriers": [
+        {
+          "carrier_id": "ONE-RCC AttemptAdmission + TranslationAttempt",
+          "role": "Binds one exact admitted attempt identity and requires a new admission and operation key for deliberate rerun.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC single-edge profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "TOP AttemptAdmission + ExecutionAttempt",
+          "role": "Carries proposal-bound attempt entitlement, point-of-use currentness, and zero-to-many attempt cardinality under the TOP profile.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Candidate experimental Transition Occurrence Protocol.",
+          "source_anchor_refs": ["src:top"]
+        }
+      ],
+      "non_conversions": [
+        "AttemptAdmission != Attempt",
+        "Attempt != Occurrence",
+        "Replay != Rerun",
+        "TransportRetry != DeliberateRerun"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:top"],
+      "notes": "The same AttemptAdmission label carries incompatible one-attempt and zero-to-many-attempt profiles; no cross-profile substitution is permitted."
+    },
+    {
+      "stage_id": "CBS-06",
+      "order": 6,
+      "name": "Occurrence",
+      "burden_kind": "CONSEQUENTIAL_EVENT",
+      "binding_status": "EXISTING_EXECUTABLE_BOUND",
+      "definition": "Identify and bind consequential effects separately from the attempt, later observation, and endpoint state.",
+      "carriers": [
+        {
+          "carrier_id": "TranslationOccurrence + OccurrenceBinding",
+          "role": "Binds a semantic occurrence claim to the exact runtime attempt and actual-delta claims.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC single-edge profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "TransitionOccurrence",
+          "role": "Represents a separately identified consequential effect attributable to one ExecutionAttempt.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Candidate experimental Transition Occurrence Protocol.",
+          "source_anchor_refs": ["src:top"]
+        }
+      ],
+      "non_conversions": [
+        "Attempt != Occurrence",
+        "Occurrence != Observation",
+        "SamePayload != SameOccurrence",
+        "EndpointEquality != PathEquivalence"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:pbr"]
+    },
+    {
+      "stage_id": "CBS-07",
+      "order": 7,
+      "name": "Consequence",
+      "burden_kind": "DELTA_SURFACE",
+      "binding_status": "EXISTING_DISTRIBUTED",
+      "definition": "Keep intended, authorized, actual, observed, unresolved, and supportable deltas distinct through consequence assessment.",
+      "carriers": [
+        {
+          "carrier_id": "actual_delta_claims + DeltaSettlementInput",
+          "role": "Preserves authorized, occurred, observed, unobserved, and unresolved delta surfaces for later settlement.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "ONE-RCC and TOP bounded profiles.",
+          "source_anchor_refs": ["src:one-rcc", "src:top"]
+        },
+        {
+          "carrier_id": "BoundedConsequenceReturn",
+          "role": "Accounts for one confined local effect and returns its bounded consequence material.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "ONE V1 bounded computation specimen.",
+          "source_anchor_refs": ["src:one-v1-bounded"]
+        }
+      ],
+      "non_conversions": [
+        "IntendedDelta != AuthorizedDelta",
+        "AuthorizedDelta != ActualDelta",
+        "ActualDeltaClaim != ObservedDelta",
+        "AggregateBenefit != CompleteConsequenceAccount"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:one-v1-bounded"]
+    },
+    {
+      "stage_id": "CBS-08",
+      "order": 8,
+      "name": "Witness",
+      "burden_kind": "BOUNDED_OBSERVATION",
+      "binding_status": "EXISTING_EXECUTABLE_BOUND",
+      "definition": "Produce an attributable bounded observation while preserving coverage, uncertainty, and the distinction between seeing, evidencing, and settling.",
+      "carriers": [
+        {
+          "carrier_id": "TranslationObservation",
+          "role": "Binds observed delta, actual coverage, witness identity, and observation time to an exact occurrence binding.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC single-edge profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "TOP Observation",
+          "role": "Represents partial or uncertain observation of one or more occurrences with no automatic evidence or standing effect.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Candidate experimental Transition Occurrence Protocol.",
+          "source_anchor_refs": ["src:top"]
+        }
+      ],
+      "non_conversions": [
+        "Occurrence != Observation",
+        "Observation != EvidenceAssessment",
+        "Witness != Truth",
+        "MissingCoverage != CompleteCompliance"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:top"]
+    },
+    {
+      "stage_id": "CBS-09",
+      "order": 9,
+      "name": "Evidence",
+      "burden_kind": "EVIDENCE_ASSESSMENT",
+      "binding_status": "EXISTING_EXECUTABLE_BOUND",
+      "definition": "Assess admitted observations and receipts under an independent evidence basis without converting integrity, coverage, or coherence into truth.",
+      "carriers": [
+        {
+          "carrier_id": "TranslationEvidenceAssessment",
+          "role": "Assesses unexpected, unconfirmed, and missing delta/coverage surfaces against the exact commitment and observation.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC single-edge profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "TOP EvidenceAssessment",
+          "role": "Binds observations and receipts under an independent admission basis and separates evidence strength from succession disposition.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Candidate experimental Transition Occurrence Protocol.",
+          "source_anchor_refs": ["src:top"]
+        },
+        {
+          "carrier_id": "StageEvidenceBundle",
+          "role": "Carries bounded stage evidence into Proof Return without inheriting upstream success as standing.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "ONE V1 bounded and stacked assemblies.",
+          "source_anchor_refs": ["src:one-v1-bounded", "src:one-v1-stacked"]
+        }
+      ],
+      "non_conversions": [
+        "Observation != Evidence",
+        "ReceiptIntegrity != Truth",
+        "Evidence != Settlement",
+        "EvidenceAssessment != StandingDecision"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:one-v1-bounded", "src:one-v1-stacked"]
+    },
+    {
+      "stage_id": "CBS-10",
+      "order": 10,
+      "name": "Return",
+      "burden_kind": "ATTRIBUTABLE_ACCOUNT",
+      "binding_status": "EXISTING_DISTRIBUTED",
+      "definition": "Carry an attributable account of attempt, occurrence, observation, evidence, outcome, and unresolved remainder back to a disposition point.",
+      "carriers": [
+        {
+          "carrier_id": "TranslationReceipt + RuntimeReceipt",
+          "role": "Keeps semantic translation and runtime evidence postures distinct before the candidate gate.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC single-edge profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "TransitionOccurrenceReceipt",
+          "role": "Integrity-binds one or more observations without establishing truth, evidence admission, settlement, or standing.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Candidate experimental Transition Occurrence Protocol.",
+          "source_anchor_refs": ["src:top"]
+        },
+        {
+          "carrier_id": "ReturnObject + RemainderAccount",
+          "role": "Returns attributable material while preserving unresolved delivery, outcome, collateral effect, or settlement burdens.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Frozen RGCB grammar and executable bounded specimens.",
+          "source_anchor_refs": ["src:rgcb", "src:golden-crossing"]
+        },
+        {
+          "carrier_id": "ProofReturnBundle",
+          "role": "Returns bounded evidence material to SourcePoint Fit and disposition.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "ONE V1 bounded and stacked assemblies.",
+          "source_anchor_refs": ["src:one-v1-bounded", "src:one-v1-stacked"]
+        }
+      ],
+      "non_conversions": [
+        "SemanticReceipt != RuntimeReceipt",
+        "Receipt != Settlement",
+        "ReturnObject != History",
+        "Return != FuturePermission"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:rgcb", "src:golden-crossing", "src:one-v1-bounded", "src:one-v1-stacked"]
+    },
+    {
+      "stage_id": "CBS-11",
+      "order": 11,
+      "name": "Reconstruction",
+      "burden_kind": "DERIVED_VIEW",
+      "binding_status": "EXISTING_DISTRIBUTED",
+      "definition": "Reconstruct an attributable higher-order account from exact-bound traces and returns without creating evidence, authority, recovery, or successor standing.",
+      "carriers": [
+        {
+          "carrier_id": "AttemptLineageBundle + RuntimeLineageBundle",
+          "role": "Reconstructs retry/rerun lineage under one proposal and commitment while preserving each attempt identity.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC single-edge profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "CHR ReconstructionObject | ReconstructionHold",
+          "role": "Produces a deterministic bounded reconstructed view or typed hold from provenance-preserving material.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Formal build candidate with a bounded 70-test implementation surface.",
+          "source_anchor_refs": ["src:chr"]
+        },
+        {
+          "carrier_id": "PBR causal hypergraph and ReconstructionObject",
+          "role": "Supports trace-sensitive constitutional assessment and reconstruction without retroactively changing what occurred.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Experimental test-only conformance specimen.",
+          "source_anchor_refs": ["src:pbr"]
+        }
+      ],
+      "non_conversions": [
+        "ReturnObject != ReconstructionObject",
+        "Reconstruction != EvidenceAdmission",
+        "Reconstruction != Recovery",
+        "LaterResolution != RetroactiveValidity"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:chr", "src:pbr"]
+    },
+    {
+      "stage_id": "CBS-12",
+      "order": 12,
+      "name": "Settlement",
+      "burden_kind": "ADJUDICATION",
+      "binding_status": "EXISTING_DISTRIBUTED",
+      "definition": "Adjudicate returned and reconstructed material into a bounded judgment and control disposition while preserving OPEN, UNSETTLED, DENIED, QUARANTINED, and admitted states as distinct.",
+      "carriers": [
+        {
+          "carrier_id": "DestinationBurdenAssessment + ClaimStandingDecision",
+          "role": "Assesses destination burdens and produces a separately typed standing decision before a standing effect specification exists.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC single-edge profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "TOP SuccessionDecision",
+          "role": "Separates succession judgment, control disposition, and effective successor state; absent decision yields UNSETTLED.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Candidate experimental Transition Occurrence Protocol.",
+          "source_anchor_refs": ["src:top"]
+        },
+        {
+          "carrier_id": "ShadowSettlementRecord + RemainderAccount",
+          "role": "Preserves procedural RECORDED_OPEN standing without treating a settlement record as completed settlement.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "METRO-SBAM zero-egress shadow specimen.",
+          "source_anchor_refs": ["src:metro-sbam"]
+        },
+        {
+          "carrier_id": "SourcePoint ADMIT | HOLD | REJECT",
+          "role": "Supplies the exact human disposition controlling whether an inheritance record and successor context may be emitted.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "ONE V1 bounded and stacked assemblies.",
+          "source_anchor_refs": ["src:one-v1-bounded", "src:one-v1-stacked"]
+        },
+        {
+          "carrier_id": "MUS Return Settlement",
+          "role": "Separates returned proof from settlement meaning under a bounded validator and schema family.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Prime-kernel proof harness; the generated mock receipt currently escapes schema validation.",
+          "source_anchor_refs": ["src:mus-settlement-script", "src:mus-settlement-schema"]
+        }
+      ],
+      "non_conversions": [
+        "Receipt != Settlement",
+        "SettlementRecord != Settlement",
+        "SuccessionJudgment != ControlDisposition",
+        "Settlement != FutureAuthorization"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:metro-sbam", "src:one-v1-bounded", "src:one-v1-stacked", "src:mus-settlement-script", "src:mus-settlement-schema"]
+    },
+    {
+      "stage_id": "CBS-13",
+      "order": 13,
+      "name": "Inheritance",
+      "burden_kind": "SUCCESSOR_ADMISSION",
+      "binding_status": "EXISTING_DISTRIBUTED",
+      "definition": "Admit exact material into a named successor context only through an independently based disposition while preserving predecessor identity, lineage, and bounded standing.",
+      "carriers": [
+        {
+          "carrier_id": "StandingEffectSpec + StandingRecord",
+          "role": "Separates a decision from its exact standing effect and transactionally idempotent bounded ledger record.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Human-admitted frozen ONE-RCC ASSIGN-standing profile.",
+          "source_anchor_refs": ["src:one-rcc"]
+        },
+        {
+          "carrier_id": "SuccessorStateRef",
+          "role": "References a physically or structurally present successor whose standing depends on an accepted independent succession decision.",
+          "standing": "EXISTING_EXECUTABLE",
+          "scope": "Candidate experimental Transition Occurrence Protocol.",
+          "source_anchor_refs": ["src:top"]
+        },
+        {
+          "carrier_id": "InheritanceRecord + successor context",
+          "role": "Preserves exact admitted material, predecessor target, independent admission basis, and successor context after ADMIT only.",
+          "standing": "EXISTING_FROZEN_EXECUTABLE",
+          "scope": "Frozen RGCB grammar and ONE V1 bounded assemblies.",
+          "source_anchor_refs": ["src:rgcb", "src:one-v1-bounded", "src:one-v1-stacked"]
+        }
+      ],
+      "non_conversions": [
+        "Persistence != Inheritance",
+        "Reconstruction != InheritanceAdmission",
+        "Inheritance != FuturePermission",
+        "Inheritance != Renewal"
+      ],
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:rgcb", "src:one-v1-bounded", "src:one-v1-stacked"],
+      "notes": "The mapped profiles establish bounded ASSIGN and ADMIT behavior. They do not establish general REPLACE or REMOVE semantics, a universal successor-head rule, merge/fork closure, or general path-composition closure."
+    }
+  ],
+  "interstitial_objects": [
+    {
+      "object_id": "AuthoredIntent",
+      "role": "Carries exact SourcePoint authorship from Choice into Proposal/Commitment without turning the prior candidate into authority.",
+      "between_stage_refs": ["CBS-03", "CBS-04"],
+      "source_anchor_refs": ["src:golden-crossing", "src:one-v1-stacked"]
+    },
+    {
+      "object_id": "RegisterCrossingProposal",
+      "role": "Represents the exact proposed crossing bound by TranslationCommitment; Proposal remains distinct from Commitment.",
+      "between_stage_refs": ["CBS-03", "CBS-04"],
+      "source_anchor_refs": ["src:one-rcc"]
+    },
+    {
+      "object_id": "AttemptAdmission",
+      "role": "Guards entry from Commitment into Attempt under a profile-specific cardinality and current authority basis.",
+      "between_stage_refs": ["CBS-04", "CBS-05"],
+      "source_anchor_refs": ["src:one-rcc", "src:top"]
+    },
+    {
+      "object_id": "OccurrenceBinding",
+      "role": "Binds an occurrence claim to the exact attempt and delta surface before observation.",
+      "between_stage_refs": ["CBS-06", "CBS-07"],
+      "source_anchor_refs": ["src:one-rcc"]
+    },
+    {
+      "object_id": "RuntimeCandidateGate",
+      "role": "Joins the semantic candidate path and RuntimeReceipt after Return and before destination assessment/Settlement; Reconstruction is an optional separate region, not a gate prerequisite.",
+      "between_stage_refs": ["CBS-10", "CBS-12"],
+      "source_anchor_refs": ["src:one-rcc"]
+    },
+    {
+      "object_id": "StandingDecision + StandingEffectSpec",
+      "role": "Separates settlement/adjudication from the exact effect later recorded as bounded standing.",
+      "between_stage_refs": ["CBS-12", "CBS-13"],
+      "source_anchor_refs": ["src:one-rcc"]
+    },
+    {
+      "object_id": "IndependentInheritanceAdmission",
+      "role": "Prevents a ReturnObject, ReconstructionObject, or BearingOffer from donating standing to successor context.",
+      "between_stage_refs": ["CBS-12", "CBS-13"],
+      "source_anchor_refs": ["src:rgcb", "src:pbr", "src:one-v1-stacked"]
+    }
+  ],
+  "projection": {
+    "genealogy": "NEW_DERIVATION",
+    "source_notation": "chi_t = (P_t, C_t, X_t, O_t, E_t, R_t, D_t, I_t)",
+    "canonical_name": "BecomingView_t",
+    "semantics": "An eight-surface projection over the thirteen-burden causal hypergraph. Coordinates contain typed subrecords and may be partial, branching, or unresolved; they are not assumed independent scalar state variables.",
+    "coordinates": [
+      {
+        "coordinate_id": "BV-01",
+        "source_symbol": "P_t",
+        "canonical_name": "PossibilityPreparation_t",
+        "stage_refs": ["CBS-01", "CBS-02"],
+        "definition": "The live possibility field plus its preparation, provenance, custody, expiry, and invalidation state."
+      },
+      {
+        "coordinate_id": "BV-02",
+        "source_symbol": "C_t",
+        "canonical_name": "ChoiceCommitment_t",
+        "stage_refs": ["CBS-03", "CBS-04"],
+        "definition": "SourcePoint choice and the distinct exact bindings that carry that authorship toward attempted consequence."
+      },
+      {
+        "coordinate_id": "BV-03",
+        "source_symbol": "X_t",
+        "canonical_name": "Realization_t",
+        "stage_refs": ["CBS-05", "CBS-06", "CBS-07"],
+        "definition": "Attempt identities, occurrences, and differentiated consequence/delta surfaces."
+      },
+      {
+        "coordinate_id": "BV-04",
+        "source_symbol": "O_t",
+        "canonical_name": "WitnessObservation_t",
+        "stage_refs": ["CBS-08"],
+        "definition": "Bounded attributable observations, coverage, uncertainty, and witness conditions."
+      },
+      {
+        "coordinate_id": "BV-05",
+        "source_symbol": "E_t",
+        "canonical_name": "Evidence_t",
+        "stage_refs": ["CBS-09"],
+        "definition": "Evidence assessments and bundles with their independent admission bases and claim ceilings."
+      },
+      {
+        "coordinate_id": "BV-06",
+        "source_symbol": "R_t",
+        "canonical_name": "ReturnReconstruction_t",
+        "stage_refs": ["CBS-10", "CBS-11"],
+        "definition": "Receipts, ReturnObjects, remainder, lineage, and reconstruction objects or holds."
+      },
+      {
+        "coordinate_id": "BV-07",
+        "source_symbol": "D_t",
+        "canonical_name": "SettlementDisposition_t",
+        "stage_refs": ["CBS-12"],
+        "definition": "Judgments, control dispositions, open/unsettled burdens, and exact SourcePoint disposition."
+      },
+      {
+        "coordinate_id": "BV-08",
+        "source_symbol": "I_t",
+        "canonical_name": "Inheritance_t",
+        "stage_refs": ["CBS-13"],
+        "definition": "Independently admitted successor material, standing effects, inheritance records, and successor context."
+      }
+    ],
+    "notation_collision_rule": "The source symbols are preserved for genealogy but are not machine type identifiers: PBR already uses chi_t^Gamma and P_t for a causal hypergraph, while C_t, X_t, E_t, R_t, D_t, and I_t have other corpus uses. Implementations must use the unabbreviated canonical coordinate names."
+  },
+  "known_collisions": [
+    {
+      "collision_id": "CBS-C01",
+      "term": "AttemptAdmission",
+      "description": "ONE-RCC binds an admission to one exact authorized attempt; TOP simultaneously describes one bounded attempt and declares zero-to-many ExecutionAttempt records per admission.",
+      "disposition": "PROFILE_QUALIFY",
+      "source_anchor_refs": ["src:one-rcc", "src:top"],
+      "hostile_fixture_ref": "RCA-H16"
+    },
+    {
+      "collision_id": "CBS-C02",
+      "term": "Commitment",
+      "description": "Prospective field seal, SourcePoint-authored intent, TranslationCommitment, and ViewBoundCrossingCommit perform different typed bindings at different temporal boundaries.",
+      "disposition": "DO_NOT_IDENTIFY",
+      "source_anchor_refs": ["src:prospective-readiness", "src:golden-crossing", "src:one-rcc", "src:ogkt-006"]
+    },
+    {
+      "collision_id": "CBS-C03",
+      "term": "Receipt",
+      "description": "Semantic translation receipt, runtime receipt, TransitionOccurrenceReceipt, ProofReturnBundle, and ReturnObject have different inputs, ceilings, and downstream roles.",
+      "disposition": "DO_NOT_IDENTIFY",
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:rgcb", "src:one-v1-bounded"]
+    },
+    {
+      "collision_id": "CBS-C04",
+      "term": "Settlement",
+      "description": "TOP succession adjudication, RGCB open settlement, SourcePoint disposition, and MUS return settlement are related but non-identical profiles; a SettlementRecord is not completed settlement.",
+      "disposition": "DEFINE_ADAPTER",
+      "source_anchor_refs": ["src:top", "src:rgcb", "src:metro-sbam", "src:one-v1-stacked", "src:mus-settlement-schema"]
+    },
+    {
+      "collision_id": "CBS-C05",
+      "term": "Generated MUS mock settlement receipt",
+      "description": "The 17-check harness validates the schema and canned examples, then writes a flat mock receipt that omits schema_version, settlement_decision, mus_settlement_receipt, and created_at; that generated payload is never passed to the schema validator.",
+      "disposition": "REPAIR_VALIDATION",
+      "source_anchor_refs": ["src:mus-settlement-script", "src:mus-settlement-schema"],
+      "hostile_fixture_ref": "RCA-H21"
+    }
+  ],
+  "attack_crosswalk": [
+    {
+      "attack_id": "CBS-A01",
+      "attack_name": "Preparedness Laundering",
+      "evidence_status": "SPECIFIED_ONLY",
+      "source_anchor_refs": ["src:prepared-field", "src:rehearsal"],
+      "hostile_fixture_ref": "RCA-H17",
+      "finding": "The semantics explicitly deny promotion, but the prospective front edge is documentation-only and not yet bound to the executable authorship route."
+    },
+    {
+      "attack_id": "CBS-A02",
+      "attack_name": "Similarity Laundering",
+      "evidence_status": "SPECIFIED_ONLY",
+      "source_anchor_refs": ["src:prospective-readiness", "src:rehearsal"],
+      "finding": "Correspondence and relevance are specified as non-authoritative; the prospective package does not execute its PTR hostile mutations."
+    },
+    {
+      "attack_id": "CBS-A03",
+      "attack_name": "Authority Promotion",
+      "evidence_status": "EXECUTED_BOUNDED",
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:golden-crossing"],
+      "finding": "Bounded suites reject stale/revoked authority, authority substitution, and candidate-to-intent promotion."
+    },
+    {
+      "attack_id": "CBS-A04",
+      "attack_name": "Endpoint Redemption",
+      "evidence_status": "EXECUTED_BOUNDED",
+      "source_anchor_refs": ["src:pbr"],
+      "hostile_fixture_ref": "RCA-H18",
+      "finding": "PBR establishes a finite same-endpoint lawful/breached contrast; successful endpoint does not repair the breached path."
+    },
+    {
+      "attack_id": "CBS-A05",
+      "attack_name": "Consequence Averaging",
+      "evidence_status": "EXECUTED_BOUNDED",
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:one-v1-bounded"],
+      "finding": "The carriers preserve intended, authorized, actual, observed, unobserved, and unresolved delta surfaces instead of a single averaged result."
+    },
+    {
+      "attack_id": "CBS-A06",
+      "attack_name": "Witness Erasure",
+      "evidence_status": "EXECUTED_BOUNDED",
+      "source_anchor_refs": ["src:one-rcc", "src:top"],
+      "finding": "Observation identity, coverage, and missing/unconfirmed deltas remain bound separately from evidence assessment."
+    },
+    {
+      "attack_id": "CBS-A07",
+      "attack_name": "Recognition Rewrite",
+      "evidence_status": "EXECUTED_BOUNDED",
+      "source_anchor_refs": ["src:pbr", "src:chr"],
+      "hostile_fixture_ref": "RCA-H19",
+      "finding": "PBR and CHR preserve historical standing and prohibit later resolution from retroactively changing prior validity."
+    },
+    {
+      "attack_id": "CBS-A08",
+      "attack_name": "Receipt Inflation",
+      "evidence_status": "EXECUTED_BOUNDED",
+      "source_anchor_refs": ["src:one-rcc", "src:top", "src:mus-settlement-script"],
+      "finding": "Receipt is separated from evidence admission, truth, settlement, standing, and future permission."
+    },
+    {
+      "attack_id": "CBS-A09",
+      "attack_name": "Reconstruction Inflation",
+      "evidence_status": "EXECUTED_BOUNDED",
+      "source_anchor_refs": ["src:chr", "src:pbr"],
+      "finding": "ReconstructionObject cannot create evidence, recovery, authority, disclosure permission, or independent inheritance admission."
+    },
+    {
+      "attack_id": "CBS-A10",
+      "attack_name": "Persistence Promotion",
+      "evidence_status": "EXECUTED_BOUNDED",
+      "source_anchor_refs": ["src:rgcb", "src:one-v1-bounded", "src:one-v1-stacked"],
+      "hostile_fixture_ref": "RCA-H20",
+      "finding": "Only an exact independent ADMIT path emits inheritance; restart durability or persistence does not."
+    },
+    {
+      "attack_id": "CBS-A11",
+      "attack_name": "Type-Name Cardinality Laundering",
+      "evidence_status": "STATIC_DEFECT_FOUND",
+      "source_anchor_refs": ["src:one-rcc", "src:top"],
+      "hostile_fixture_ref": "RCA-H16",
+      "finding": "The shared AttemptAdmission label hides incompatible cardinality semantics and requires a profile split or explicit adapter."
+    },
+    {
+      "attack_id": "CBS-A12",
+      "attack_name": "Settlement Receipt Schema Escape",
+      "evidence_status": "STATIC_DEFECT_FOUND",
+      "source_anchor_refs": ["src:mus-settlement-script", "src:mus-settlement-schema"],
+      "hostile_fixture_ref": "RCA-H21",
+      "finding": "The harness can report PASS while its generated mock settlement receipt is outside the required schema shape."
+    }
+  ],
+  "evidence": [
+    {
+      "evidence_id": "CBS-E01",
+      "description": "ONE-RCC single-edge runtime profile",
+      "kind": "FINITE_COMPUTATIONAL_EVIDENCE",
+      "test_count": 102,
+      "result": "PASS",
+      "evidence_ref": "GitHub Actions run 33178275682, job 98872515858; 102 tests",
+      "source_anchor_refs": ["src:one-rcc"],
+      "claim_ceiling": "Human-admitted bounded reference implementation evidence; not production, external-effect, or universal conformance proof."
+    },
+    {
+      "evidence_id": "CBS-E02",
+      "description": "Transition Occurrence Protocol hostile profile",
+      "kind": "FINITE_COMPUTATIONAL_EVIDENCE",
+      "test_count": 16,
+      "result": "PASS",
+      "evidence_ref": "GitHub Actions run 32792605080, job 97637082384; 16 tests",
+      "source_anchor_refs": ["src:top"],
+      "claim_ceiling": "Conformance to the candidate experimental reference protocol over its supplied fixtures only."
+    },
+    {
+      "evidence_id": "CBS-E03",
+      "description": "RGCB frozen operator grammar recorded test nodes",
+      "kind": "FINITE_COMPUTATIONAL_EVIDENCE",
+      "test_count": 55,
+      "result": "PASS",
+      "evidence_ref": "artifacts/rgcb-operator-contracts/receipts/RUN-001.md through RUN-003.md; 55 recorded test nodes",
+      "source_anchor_refs": ["src:rgcb"],
+      "claim_ceiling": "Internal consistency of the bounded reference harness; no operator minimality or production claim."
+    },
+    {
+      "evidence_id": "CBS-E04",
+      "description": "Constitutional Holographic Reconstruction bounded capability",
+      "kind": "FINITE_COMPUTATIONAL_EVIDENCE",
+      "test_count": 70,
+      "result": "PASS",
+      "evidence_ref": "artifacts/constitutional-optics-chr/receipts/RUN-CHR-001.json; 70 tests",
+      "source_anchor_refs": ["src:chr"],
+      "claim_ceiling": "Bounded implementation assurance only; no evidence, disclosure, recovery, settlement, or inheritance effect."
+    },
+    {
+      "evidence_id": "CBS-E05",
+      "description": "PBR same-endpoint different-becoming specimen",
+      "kind": "FINITE_COMPUTATIONAL_EVIDENCE",
+      "test_count": 33,
+      "result": "PASS",
+      "evidence_ref": "artifacts/pbr-001-same-endpoint-different-becoming/receipts/RUN-PBR-001.json; 33 tests",
+      "source_anchor_refs": ["src:pbr"],
+      "claim_ceiling": "Finite test-only trace-sensitive witness; no general theorem or native two-path completeness claim."
+    },
+    {
+      "evidence_id": "CBS-E06",
+      "description": "ONE V1 stacked bounded assembly combined suites",
+      "kind": "FINITE_COMPUTATIONAL_EVIDENCE",
+      "test_count": 590,
+      "result": "PASS",
+      "evidence_ref": "artifacts/one-v1-stacked-bounded-assembly/receipts/RUN-015.md and RUN-016.md; 590/590 combined",
+      "source_anchor_refs": ["src:one-v1-stacked"],
+      "claim_ceiling": "Combined finite suites include component tests and are not additive independent proof; the assembly begins at exact AuthoredIntent rather than PreparedPossibilityField."
+    },
+    {
+      "evidence_id": "CBS-E07",
+      "description": "MUS return-settlement harness reported checks",
+      "kind": "FINITE_COMPUTATIONAL_EVIDENCE",
+      "test_count": 17,
+      "result": "PASS",
+      "evidence_ref": "scripts/validate_mus_return_settlement.py and receipts/PR-31-mus-return-settlement-proof-v0.1.receipt.md; 17/17 reported",
+      "source_anchor_refs": ["src:mus-settlement-script", "src:mus-settlement-schema"],
+      "claim_ceiling": "The run covers schema validity, four examples, and twelve decision fixtures; it does not validate the generated mock receipt, which is currently schema-incompatible."
+    }
+  ],
+  "remaining_seams": [
+    {
+      "seam_id": "CBS-S01",
+      "description": "Bind PreparedPossibilityField/BearingOffer through SourcePointAuthorshipDeclaration and AuthoredIntent into exact RegisterCrossingProposal and TranslationCommitment.",
+      "disposition": "BIND",
+      "source_anchor_refs": ["src:prospective-readiness", "src:prepared-field", "src:golden-crossing", "src:one-rcc"]
+    },
+    {
+      "seam_id": "CBS-S02",
+      "description": "Split or adapt ONE-RCC exact-attempt admission and TOP multi-attempt-envelope semantics; shared spelling is not a type proof.",
+      "disposition": "PROFILE_SPLIT",
+      "source_anchor_refs": ["src:one-rcc", "src:top"]
+    },
+    {
+      "seam_id": "CBS-S03",
+      "description": "Bind RuntimeReceipt, ReturnObject/ProofReturnBundle, and settlement artifacts through exact identity and digest-preserving adapters.",
+      "disposition": "BIND",
+      "source_anchor_refs": ["src:one-rcc", "src:rgcb", "src:one-v1-bounded", "src:mus-settlement-schema"]
+    },
+    {
+      "seam_id": "CBS-S04",
+      "description": "Schema-validate the exact mock settlement receipt emitted by write_mock_settlement_receipt and make its shape conform to mus-return-settlement.schema.json.",
+      "disposition": "REPAIR",
+      "source_anchor_refs": ["src:mus-settlement-script", "src:mus-settlement-schema"]
+    },
+    {
+      "seam_id": "CBS-S05",
+      "description": "Run one whole-path hostile conformance route spanning all thirteen burdens; the existing 590-test assembly starts at AuthoredIntent and does not execute the prospective front edge.",
+      "disposition": "BIND",
+      "source_anchor_refs": ["src:prospective-readiness", "src:one-v1-stacked"]
+    }
+  ],
+  "source_anchors": [
+    {
+      "artifact_id": "src:becoming-spine",
+      "repository": "bkr1297-RIO/rio-system",
+      "location": "experiments/closure-atlas-f0.1/CONSTITUTIONAL-BECOMING-SPINE-F0.1.md",
+      "revision": "F0.1",
+      "standing": "LOCAL_FROZEN_RECONCILIATION",
+      "verification_date": "2026-09-02",
+      "claim": "This local successor artifact freezes the exact thirteen-burden conformance view and its preserved genealogy."
+    },
+    {
+      "artifact_id": "src:minimum-spine",
+      "repository": "bkr1297-RIO/one-rio-muss-architecture",
+      "location": "docs/protocols/ONE-CODE-MINIMUM-ARTIFACT-SPINE-001_v0.1.md",
+      "revision": "b9ea6c0d3f639f072cbb653b8e220848219b31c5",
+      "standing": "EDITORIAL_CANDIDATE",
+      "verification_date": "2026-09-02",
+      "claim": "Defines a non-collapsing minimum artifact spine from proposal through human disposition and STOP; explicitly permits non-serial composition when responsibilities remain recoverable."
+    },
+    {
+      "artifact_id": "src:operator-laws",
+      "repository": "bkr1297-RIO/one-rio-muss-architecture",
+      "location": "docs/language/OPERATOR-INVENTORY-001_v0.1.md",
+      "revision": "b9ea6c0d3f639f072cbb653b8e220848219b31c5",
+      "standing": "EDITORIAL_CANDIDATE",
+      "verification_date": "2026-09-02",
+      "claim": "States no implicit standing rise, no predecessor-stage absorption, and recoverable compression laws with explicit operator signatures."
+    },
+    {
+      "artifact_id": "src:prospective-readiness",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/prospective-readiness-composition/spec/PROSPECTIVE-READINESS-COMPOSITION-F0.1.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "CANDIDATE_RESEARCH",
+      "verification_date": "2026-09-02",
+      "claim": "Defines the documentation-only GENERATE/PRESERVE/RECOGNIZE/CHOOSE/CROSS prospective composition and denies candidate-to-authority promotion."
+    },
+    {
+      "artifact_id": "src:prepared-field",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/prospective-readiness-composition/contracts/PREPARED-POSSIBILITY-FIELD-CONTRACT-F0.1.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "CANDIDATE_RESEARCH",
+      "verification_date": "2026-09-02",
+      "claim": "Defines the zero-egress PreparedPossibilityField semantic burden, lifecycle, provenance, expiry, and non-conversions without claiming a runtime service."
+    },
+    {
+      "artifact_id": "src:rehearsal",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/api-server/docs/OBSERVATION_FIRST_CONSTITUTIONAL_REHEARSAL_v0.1.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "CANDIDATE_RESEARCH",
+      "verification_date": "2026-09-02",
+      "claim": "Defines preparation through SourcePoint choice with authority/effect NONE and no external calls."
+    },
+    {
+      "artifact_id": "src:golden-crossing",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/rgcb-golden-crossing-join/spec/RGCB-GOLDEN-CROSSING-JOIN-F0.1.md and src/",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "EXPERIMENTAL_REFERENCE",
+      "verification_date": "2026-09-02",
+      "claim": "Provides executable SourcePoint authorship, AuthoredIntent, return, and inheritance bindings with 49/49 join and 104/104 combined finite tests."
+    },
+    {
+      "artifact_id": "src:cm-core",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/one-rcc-runtime/spec/CM-CORE-PASSAGE-001_F0.2.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "HUMAN_ADMITTED_EXPERIMENTAL",
+      "verification_date": "2026-09-02",
+      "claim": "Defines the admitted passage aggregate, typed lifecycle, and explicit separation of operations, occurrences, observations, assessments, judgments, standing, succession, and inheritance without claiming mathematical proof or production conformance."
+    },
+    {
+      "artifact_id": "src:one-rcc",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/one-rcc-runtime/spec/ONE-RCC-RUNTIME-001_Single-Edge_Runtime_Profile_F0.1.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "HUMAN_ADMITTED_EXPERIMENTAL",
+      "verification_date": "2026-09-02",
+      "claim": "Freezes an admitted single-edge proposal-to-standing runtime profile and records a 102-test reference specimen."
+    },
+    {
+      "artifact_id": "src:top",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/transition-occurrence-protocol/spec/TRANSITION-OCCURRENCE-PROTOCOL-F0.1.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "EXPERIMENTAL_REFERENCE",
+      "verification_date": "2026-09-02",
+      "claim": "Defines a candidate, noncanonical, zero-authority potential-to-recognized-successor braid, zero-to-many cardinalities, independent evidence admission, and 16 hostile tests."
+    },
+    {
+      "artifact_id": "src:rgcb",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/rgcb-operator-contracts/spec/RGCB-F0.1.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "FROZEN_EXPERIMENTAL",
+      "verification_date": "2026-09-02",
+      "claim": "Freezes a seven-operator becoming/reconstruction/succession grammar and its non-promotion boundaries with 55 recorded test nodes."
+    },
+    {
+      "artifact_id": "src:ogkt-006",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/ogkt-006-consequence-time-constitutional-coherence/spec/OGKT-006.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "EXPERIMENTAL_REFERENCE",
+      "verification_date": "2026-09-02",
+      "claim": "Defines an exact expected-head consequence-time commitment distinct from human or prospective commitment."
+    },
+    {
+      "artifact_id": "src:pbr",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/pbr-001-same-endpoint-different-becoming/spec/TRACE-SENSITIVE-CONSTITUTIONAL-SEMANTICS-F0.1.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "CANDIDATE_RESEARCH",
+      "verification_date": "2026-09-02",
+      "claim": "Defines a trace-sensitive causal hypergraph view and a 33-test same-endpoint/different-assessment specimen without claiming a general theorem."
+    },
+    {
+      "artifact_id": "src:chr",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/constitutional-optics-chr/spec/CHR-F0.1.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "FORMAL_CANDIDATE",
+      "verification_date": "2026-09-02",
+      "claim": "Defines a pure bounded reconstruction capability and non-promotion laws with a 70-test implementation surface."
+    },
+    {
+      "artifact_id": "src:one-v1-bounded",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/one-v1-bounded-computation-specimen/",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "EXPERIMENTAL_REFERENCE",
+      "verification_date": "2026-09-02",
+      "claim": "Composes bounded consequence, evidence, proof return, SourcePoint disposition, and conditional inheritance with 77 finite tests."
+    },
+    {
+      "artifact_id": "src:one-v1-stacked",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/one-v1-stacked-bounded-assembly/spec/ONE-V1-STACKED-BOUNDED-ASSEMBLY-F0.1.md and receipts/RUN-015.md",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "EXPERIMENTAL_REFERENCE",
+      "verification_date": "2026-09-02",
+      "claim": "Composes exact AuthoredIntent through bounded consequence, return, SourcePoint disposition, and conditional successor context; records 590/590 combined finite tests."
+    },
+    {
+      "artifact_id": "src:metro-sbam",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "artifacts/metro-sbam-shadow-route-fixture/",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "EXPERIMENTAL_REFERENCE",
+      "verification_date": "2026-09-02",
+      "claim": "Preserves an OPEN settlement and exact route reconstruction in a zero-egress specimen; a recorded settlement is not completed settlement."
+    },
+    {
+      "artifact_id": "src:mus-settlement-script",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "scripts/validate_mus_return_settlement.py",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "EXPERIMENTAL_REFERENCE",
+      "verification_date": "2026-09-02",
+      "claim": "Reports 17/17 checks but does not schema-validate the flat mock settlement receipt produced by write_mock_settlement_receipt."
+    },
+    {
+      "artifact_id": "src:mus-settlement-schema",
+      "repository": "bkr1297-RIO/rio-reference-impl",
+      "location": "schemas/settlement/mus-return-settlement.schema.json",
+      "revision": "2fc009530ae21f22f269af159bc2e50befed88a7",
+      "standing": "EXPERIMENTAL_REFERENCE",
+      "verification_date": "2026-09-02",
+      "claim": "Requires nested settlement_decision and mus_settlement_receipt objects plus schema_version and created_at, which the mock writer does not emit."
+    }
+  ]
+}

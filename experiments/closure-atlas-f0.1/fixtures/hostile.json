@@ -1,0 +1,350 @@
+{
+  "fixture_pack_id": "RCA-F0.1-HOSTILE",
+  "version": "F0.1",
+  "standing": "RESEARCH_FALSIFICATION_FIXTURES",
+  "runtime_effect": "NONE",
+  "fixtures": [
+    {
+      "fixture_id": "RCA-H01",
+      "title": "Same macro-label, different authorization",
+      "attack_class": "FALSE_EQUIVALENCE",
+      "target_record_refs": ["RCA-002", "RCA-007"],
+      "construction": {
+        "fine_case": "Two carriers both expose TRANSLATE, but only one has fresh scoped authority to bind an execution packet.",
+        "coarse_case": "Both are labeled translation components.",
+        "consequence": "Substitution changes whether the resulting packet may cross."
+      },
+      "violated_condition": "The coarse relation merges a pair outside the kernel of the authorization semantics.",
+      "expected_disposition": "REJECT_CLOSURE",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "Shared macro-function does not imply equivalence, substitution, or authority transfer."
+    },
+    {
+      "fixture_id": "RCA-H02",
+      "title": "Present-equivalent, future-distinct histories",
+      "attack_class": "FUTURE_DISTINCTION",
+      "target_record_refs": ["RCA-009"],
+      "construction": {
+        "fine_case": "States x0 and x1 have the same current projection; continuation reveal emits 0 from x0 and 1 from x1.",
+        "coarse_case": "alpha(x0) = alpha(x1).",
+        "consequence": "The continuation semantics distinguishes the fiber members."
+      },
+      "violated_condition": "Current observation equality is not congruence under the admitted continuation family.",
+      "expected_disposition": "REFINE_OR_REOPEN",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "The view is inadequate for any action family containing reveal."
+    },
+    {
+      "fixture_id": "RCA-H03",
+      "title": "Joint dependence missed by local sensitivity",
+      "attack_class": "JOINT_DEPENDENCE",
+      "target_record_refs": ["RCA-009"],
+      "construction": {
+        "fine_case": "For action a(b1,b2)=b1 AND b2 at state (0,0), changing either bit alone preserves 0 while changing both produces 1.",
+        "coarse_case": "A field-local scan marks both bits individually nonmaterial.",
+        "consequence": "The joint fiber contains different action results."
+      },
+      "violated_condition": "Materiality was tested coordinate-by-coordinate rather than over the complete abstraction fiber.",
+      "expected_disposition": "REJECT_CLOSURE",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "Local sensitivity is not a complete adequacy test."
+    },
+    {
+      "fixture_id": "RCA-H04",
+      "title": "Same members, different wiring",
+      "attack_class": "COMPOSITION_ORDER",
+      "target_record_refs": ["RCA-002", "RCA-005"],
+      "construction": {
+        "fine_case": "Assembly one executes Sanitize then Send; assembly two executes Send then Sanitize.",
+        "coarse_case": "Both assemblies contain the same two member names.",
+        "consequence": "One protects the payload; the other discloses the unsanitized payload."
+      },
+      "violated_condition": "Membership was retained while order, interfaces, and hidden channels were suppressed.",
+      "expected_disposition": "REJECT_CLOSURE",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "A compositional witness must retain wiring and boundary assumptions, not only members."
+    },
+    {
+      "fixture_id": "RCA-H05",
+      "title": "Profile drift invalidates prior adequacy",
+      "attack_class": "PROFILE_DRIFT",
+      "target_record_refs": ["RCA-008", "RCA-009"],
+      "construction": {
+        "fine_case": "A jurisdiction distinction is irrelevant under K0 and becomes required under K1.",
+        "coarse_case": "A K0 certificate is reused after the profile changes to K1.",
+        "consequence": "The same macro-view now permits a result that differs across its hidden jurisdiction states."
+      },
+      "violated_condition": "The certificate is not atomically bound to the current profile version and action family.",
+      "expected_disposition": "HOLD",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "Profile change must invalidate or reprove every affected adequacy certificate."
+    },
+    {
+      "fixture_id": "RCA-H06",
+      "title": "Approved abstraction, mutated final action",
+      "attack_class": "EXACT_ACTION_MUTATION",
+      "target_record_refs": ["RCA-005"],
+      "construction": {
+        "fine_case": "Approval is bound to send(amount=10); an agent transformation produces final dispatch send(amount=100).",
+        "coarse_case": "Both route states retain the same original approval hash and macro-label APPROVED.",
+        "consequence": "The final external effect differs although the coarse approval view is unchanged."
+      },
+      "violated_condition": "The exact final tool identity and canonical arguments are absent from the approval-bound semantics.",
+      "expected_disposition": "HOLD",
+      "proof_status": "STATIC_ANALYSIS",
+      "source_refs": [
+        "rio-proxy@70945d1f037915f132dba0a1418a42103606e63a",
+        "bodyunity RUN-024@fd414de63689649dc17e7d5178406d92c79ca1a1"
+      ],
+      "claim_ceiling": "The inspected route is nonconformant at the exact-action seam; no unauthorized effect is asserted to have occurred."
+    },
+    {
+      "fixture_id": "RCA-H07",
+      "title": "Hidden change with no active reopen trigger",
+      "attack_class": "TRIGGER_FAILURE",
+      "target_record_refs": ["RCA-001", "RCA-009", "RCA-012"],
+      "construction": {
+        "fine_case": "A grant contains a hidden expiry time and is summarized only as VALID.",
+        "coarse_case": "Time advances beyond expiry without an event visible to the coarse state.",
+        "consequence": "The next use remains marked VALID even though its fine semantics changed."
+      },
+      "violated_condition": "A witness exists, but no active invalidation metadata can detect when adequacy ceases.",
+      "expected_disposition": "HOLD",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "Reopenability needs trigger completeness, not merely stored fine data."
+    },
+    {
+      "fixture_id": "RCA-H08",
+      "title": "Overlapping cover amplifies a single grant",
+      "attack_class": "OVERLAP_AMPLIFICATION",
+      "target_record_refs": ["RCA-008"],
+      "construction": {
+        "fine_case": "One authority grant participates through different role slices in two macro-functions.",
+        "coarse_case": "An aggregator counts each participation as an independent grant.",
+        "consequence": "The effective authority or quota is doubled."
+      },
+      "violated_condition": "Overlapping functional participation duplicated identity, authority, or quota.",
+      "expected_disposition": "REJECT_AMPLIFICATION",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "A hypergraph permits overlap but must preserve shared resource identity."
+    },
+    {
+      "fixture_id": "RCA-H09",
+      "title": "Pairwise-compatible views with no global realization",
+      "attack_class": "LOCAL_GLOBAL_INCOMPATIBILITY",
+      "target_record_refs": ["RCA-003", "RCA-008"],
+      "construction": {
+        "fine_case": "Binary variables satisfy local reports x!=y, y!=z, and z!=x.",
+        "coarse_case": "Every pairwise report is individually well-formed.",
+        "consequence": "No binary global state realizes all three reports."
+      },
+      "violated_condition": "Local well-formedness and pairwise overlap were mistaken for global compatibility.",
+      "expected_disposition": "HOLD",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "A functional cover needs explicit compatibility semantics; incidence alone does not establish a whole."
+    },
+    {
+      "fixture_id": "RCA-H10",
+      "title": "Mixed operations do not commute",
+      "attack_class": "MIXED_NONCOMMUTATION",
+      "target_record_refs": ["RCA-008"],
+      "construction": {
+        "fine_case": "Two body-member returns jointly expose an XOR conflict that changes the whole-body posture.",
+        "coarse_case": "Projecting each local return to a constant before composing erases the conflict; composing fine returns first and then projecting the posture preserves it.",
+        "consequence": "Equivalence abstraction followed by composition differs from composition followed by abstraction."
+      },
+      "violated_condition": "Equivalence projection and compositional assembly were assumed to commute without proof.",
+      "expected_disposition": "REJECT_CLOSURE",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "The order and type of every closure operation are material unless commutation is proved."
+    },
+    {
+      "fixture_id": "RCA-H11",
+      "title": "Shared morphology launders semantic inversion",
+      "attack_class": "MORPHOLOGY_LAUNDERING",
+      "target_record_refs": ["RCA-006", "RCA-007", "RCA-010", "RCA-011"],
+      "construction": {
+        "fine_case": "Sanitization and exfiltration both instantiate read -> transform -> write; a mirrored substitution may also preserve visible bilateral form.",
+        "coarse_case": "The systems share a transformation or symmetry signature.",
+        "consequence": "One protects data while the other discloses it; one symmetric corruption remains undetected."
+      },
+      "violated_condition": "Morphological recurrence was promoted into equivalence, authority, or a fault-detection guarantee.",
+      "expected_disposition": "MORPHOLOGICAL_CANDIDATE_ONLY",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "A shared form supports comparison only until independent semantics or a detection bound is supplied."
+    },
+    {
+      "fixture_id": "RCA-H12",
+      "title": "Lawful reopening is blocked by privacy or deletion",
+      "attack_class": "PRIVACY_REOPEN_CONFLICT",
+      "target_record_refs": ["RCA-008", "RCA-009"],
+      "construction": {
+        "fine_case": "A future action needs a distinction that policy forbids retaining or revealing.",
+        "coarse_case": "The active view cannot distinguish the relevant states and the witness is unavailable by law or scope.",
+        "consequence": "The system cannot establish action-relative adequacy."
+      },
+      "violated_condition": "Reopening was assumed always possible and allowed.",
+      "expected_disposition": "HOLD",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "Failure to reopen may require HOLD; it never authorizes broader access."
+    },
+    {
+      "fixture_id": "RCA-H13",
+      "title": "Reopening fails after possible sink acceptance",
+      "attack_class": "LATE_FAILURE",
+      "target_record_refs": ["RCA-005", "RCA-012"],
+      "construction": {
+        "fine_case": "An external sink may accept the dispatch before the system discovers a witness mismatch or crashes.",
+        "coarse_case": "Local durable state cannot distinguish accepted from not accepted.",
+        "consequence": "Retry risks duplication while no retry risks loss."
+      },
+      "violated_condition": "HOLD was treated as available after the irreversible effect boundary.",
+      "expected_disposition": "UNSETTLED_OR_AMBIGUOUS",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "Fail-closed safety applies only before possible external acceptance."
+    },
+    {
+      "fixture_id": "RCA-H14",
+      "title": "Complete-source witness trivializes compression",
+      "attack_class": "WITNESS_TRIVIALIZATION",
+      "target_record_refs": ["RCA-001", "RCA-004", "RCA-009", "RCA-012"],
+      "construction": {
+        "fine_case": "The witness stores the complete fine state and every relation.",
+        "coarse_case": "The active view is one bit while the full source remains beside it.",
+        "consequence": "Reconstruction is exact but total retained information has not decreased."
+      },
+      "violated_condition": "Active-view reduction was reported as overall storage or information minimization.",
+      "expected_disposition": "CLAIM_REDUCTION_ONLY",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "claim_ceiling": "Reopenability can be genuine while the claimed nontrivial compression collapses."
+    },
+    {
+      "fixture_id": "RCA-H15",
+      "title": "Shared carrier participates without duplication",
+      "attack_class": "OVERLAP_POSITIVE_CONTROL",
+      "target_record_refs": ["RCA-008"],
+      "construction": {
+        "fine_case": "One carrier exposes two separately typed role slices to two macro-functions while both slices reference the same grant and quota identity.",
+        "coarse_case": "The functional cover records two incidences and one shared resource identity.",
+        "consequence": "Both macro-functions remain available without duplicating standing, authority, evidence, or quota."
+      },
+      "violated_condition": "None; this is the positive control distinguishing lawful overlap from amplification.",
+      "expected_disposition": "PRESERVE_OVERLAP",
+      "proof_status": "PROOF_BURDEN_ONLY",
+      "claim_ceiling": "The fixture specifies the required positive behavior; no implementation evidence is claimed."
+    },
+    {
+      "fixture_id": "RCA-H16",
+      "title": "Same admission name, incompatible attempt cardinality",
+      "attack_class": "TYPE_NAME_CARDINALITY_COLLISION",
+      "target_record_refs": ["RCA-013"],
+      "construction": {
+        "fine_case": "ONE-RCC binds one AttemptAdmission to one exact authorized_attempt_ref and requires a fresh admission for deliberate rerun; TOP permits one AttemptAdmission to govern zero or many ExecutionAttempt records.",
+        "coarse_case": "Both objects are identified only by the shared label AttemptAdmission.",
+        "consequence": "A cross-profile adapter may reuse a one-attempt entitlement as a multi-attempt envelope or incorrectly reject TOP-conformant multiplicity."
+      },
+      "violated_condition": "Type identity was inferred from a shared noun while cardinality, replay, and authorization-consumption semantics differ.",
+      "expected_disposition": "REJECT_CLOSURE",
+      "proof_status": "STATIC_ANALYSIS",
+      "source_refs": [
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/one-rcc-runtime/spec/ONE-RCC-RUNTIME-001_Single-Edge_Runtime_Profile_F0.1.md",
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/transition-occurrence-protocol/spec/TRANSITION-OCCURRENCE-PROTOCOL-F0.1.md"
+      ],
+      "claim_ceiling": "The two current profiles require qualified types or an explicit refinement adapter; the analysis does not select which cardinality should govern a future common profile."
+    },
+    {
+      "fixture_id": "RCA-H17",
+      "title": "Prepared possibility silently becomes intent",
+      "attack_class": "PREPARATION_PROMOTION",
+      "target_record_refs": ["RCA-013"],
+      "construction": {
+        "fine_case": "A PreparedPossibilityField contains a sealed dormant response with consequence standing NONE and no SourcePointAuthorshipDeclaration.",
+        "coarse_case": "The prepared response is labeled ready and passed directly into RegisterCrossingProposal as though the human chose it.",
+        "consequence": "Machine preparation acquires human authorship and enters the consequence path without the required choice transition."
+      },
+      "violated_condition": "Preparation, recognition, or relevance cannot supply the derivation required for SourcePoint-authored intent.",
+      "expected_disposition": "HOLD",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "source_refs": [
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/prospective-readiness-composition/contracts/PREPARED-POSSIBILITY-FIELD-CONTRACT-F0.1.md",
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/rgcb-golden-crossing-join/spec/RGCB-GOLDEN-CROSSING-JOIN-F0.1.md"
+      ],
+      "claim_ceiling": "The attack demonstrates the required front-edge barrier; the prospective package specifies but does not yet execute the complete adapter."
+    },
+    {
+      "fixture_id": "RCA-H18",
+      "title": "Correct endpoint redeems a breached path",
+      "attack_class": "ENDPOINT_REDEMPTION",
+      "target_record_refs": ["RCA-013"],
+      "construction": {
+        "fine_case": "Two histories reach the same bounded endpoint; one satisfies the declared causal profile and the other breaches a required path condition.",
+        "coarse_case": "Only the matching endpoint digest is retained and both histories are classified as lawful succession.",
+        "consequence": "An unlawful or unwarranted path acquires the same assessment and successor eligibility as the lawful path."
+      },
+      "violated_condition": "Endpoint equality does not determine trace-sensitive assessment or repair prior path invalidity.",
+      "expected_disposition": "REJECT_CLOSURE",
+      "proof_status": "FINITE_COMPUTATIONAL_EVIDENCE",
+      "source_refs": [
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/pbr-001-same-endpoint-different-becoming/receipts/RUN-PBR-001.json"
+      ],
+      "claim_ceiling": "PBR supplies a finite same-endpoint/different-assessment witness; no general path-equivalence theorem follows."
+    },
+    {
+      "fixture_id": "RCA-H19",
+      "title": "Later reconstruction rewrites earlier knowledge",
+      "attack_class": "RETROACTIVE_KNOWLEDGE_REWRITE",
+      "target_record_refs": ["RCA-013"],
+      "construction": {
+        "fine_case": "At time t the preserved trace warrants UNESTABLISHED; at t+1 new material supports a more resolved current ReconstructionObject while the earlier assessment remains historically attributable.",
+        "coarse_case": "The later coherent reconstruction overwrites the earlier record as though the missing material had been known at time t.",
+        "consequence": "Historical knowledge, uncertainty, and responsibility are retroactively laundered."
+      },
+      "violated_condition": "LaterResolution does not imply RetroactiveValidity, and reconstruction may supersede a current view only while preserving prior historical standing.",
+      "expected_disposition": "REJECT_CLOSURE",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "source_refs": [
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/constitutional-optics-chr/spec/CHR-F0.1.md",
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/pbr-001-same-endpoint-different-becoming/spec/TRACE-SENSITIVE-CONSTITUTIONAL-SEMANTICS-F0.1.md"
+      ],
+      "claim_ceiling": "The construction preserves the required temporal non-conversion; it does not establish completeness of every historical-knowledge representation."
+    },
+    {
+      "fixture_id": "RCA-H20",
+      "title": "Durability silently becomes inheritance",
+      "attack_class": "PERSISTENCE_PROMOTION",
+      "target_record_refs": ["RCA-013"],
+      "construction": {
+        "fine_case": "A durable state survives restart and remains reconstructable, but no exact independent ADMIT disposition exists for successor context.",
+        "coarse_case": "The restart loader treats every surviving record as inherited standing.",
+        "consequence": "Persistence manufactures successor standing and future participation without an inheritance admission."
+      },
+      "violated_condition": "Reconstructability and persistence do not supply independent inheritance admission or future permission.",
+      "expected_disposition": "HOLD",
+      "proof_status": "COUNTEREXAMPLE_BY_CONSTRUCTION",
+      "source_refs": [
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/rgcb-operator-contracts/spec/RGCB-F0.1.md",
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:artifacts/one-v1-stacked-bounded-assembly/spec/ONE-V1-STACKED-BOUNDED-ASSEMBLY-F0.1.md"
+      ],
+      "claim_ceiling": "The attack fixes the inheritance barrier; it does not claim that all durable stores currently make this mistake."
+    },
+    {
+      "fixture_id": "RCA-H21",
+      "title": "Generated settlement receipt escapes schema validation",
+      "attack_class": "VALIDATION_COVERAGE_ESCAPE",
+      "target_record_refs": ["RCA-013"],
+      "construction": {
+        "fine_case": "mus-return-settlement.schema.json requires schema_version, settlement_decision, mus_settlement_receipt, and created_at, while write_mock_settlement_receipt emits a flat object with generated_at and no required nested decision or receipt objects.",
+        "coarse_case": "The harness reports RESULT: PASS after validating the schema, canned examples, and decision fixtures but never validates the generated mock receipt.",
+        "consequence": "A reported 17/17 result can coexist with a schema-incompatible generated artifact."
+      },
+      "violated_condition": "The exact emitted artifact is outside the validator's checked surface, so harness success cannot establish output-schema conformance.",
+      "expected_disposition": "HOLD",
+      "proof_status": "STATIC_ANALYSIS",
+      "source_refs": [
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:scripts/validate_mus_return_settlement.py",
+        "rio-reference-impl@2fc009530ae21f22f269af159bc2e50befed88a7:schemas/settlement/mus-return-settlement.schema.json"
+      ],
+      "claim_ceiling": "The defect is limited to generated-output validation coverage; it does not refute the twelve decision-fixture results or prove that an incompatible receipt was consumed elsewhere."
+    }
+  ]
+}

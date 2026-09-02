@@ -1,0 +1,855 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://one-rio-muss.local/experiments/closure-atlas-f0.1/schema/closure-atlas.schema.json",
+  "title": "Resolution Closure Atlas F0.1",
+  "description": "Research-only records for typed resolution abstractions, functional assemblies, recurring morphologies, ordered mixed traces, and rejected false closures.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "atlas_id",
+    "version",
+    "standing",
+    "runtime_effect",
+    "authority_effect",
+    "canon_effect",
+    "novelty",
+    "closure_records",
+    "hostile_fixture_pack",
+    "findings"
+  ],
+  "properties": {
+    "atlas_id": {
+      "const": "RESOLUTION-CLOSURE-ATLAS-F0.1"
+    },
+    "version": {
+      "const": "F0.1"
+    },
+    "standing": {
+      "const": "RESEARCH_CLARIFICATION_METHOD"
+    },
+    "runtime_effect": {
+      "const": "NONE"
+    },
+    "authority_effect": {
+      "const": "NONE"
+    },
+    "canon_effect": {
+      "const": "NONE"
+    },
+    "novelty": {
+      "const": "NOT_ESTABLISHED"
+    },
+    "closure_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/closureRecord"
+      }
+    },
+    "hostile_fixture_pack": {
+      "type": "string",
+      "const": "fixtures/hostile.json"
+    },
+    "findings": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "five_term_cycle",
+        "resolution_geometry",
+        "cohesion",
+        "external_closure_signal",
+        "strict_middle",
+        "next_burden"
+      ],
+      "properties": {
+        "five_term_cycle": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "resolution_geometry": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "cohesion": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "external_closure_signal": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "strict_middle": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "next_burden": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "uniqueItems": true
+    },
+    "nonEmptyStringArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "uniqueItems": true
+    },
+    "sourceAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "artifact_id",
+        "revision",
+        "fragment",
+        "evidence_kind",
+        "source_standing",
+        "binding_status",
+        "verification_date",
+        "claim"
+      ],
+      "properties": {
+        "artifact_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "location": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "revision": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "fragment": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_kind": {
+          "enum": [
+            "REPO_TEXT",
+            "DRIVE_TEXT",
+            "FINITE_FIXTURE",
+            "STATIC_ANALYSIS",
+            "PROOF",
+            "THREAD_TEXT",
+            "EXTERNAL_MODEL_OUTPUT"
+          ]
+        },
+        "source_standing": {
+          "enum": [
+            "RATIFIED",
+            "REPO_IMPLEMENTATION",
+            "CANDIDATE",
+            "TARGET_STATE",
+            "RESEARCH_EXPERIMENT",
+            "LOCAL_UNBOUND",
+            "THREAD_OBSERVATION",
+            "EXTERNAL_OBSERVATION"
+          ]
+        },
+        "binding_status": {
+          "enum": [
+            "PINNED_DIGEST",
+            "PINNED_COMMIT",
+            "PINNED_REVISION",
+            "ACCESSED_MUTABLE",
+            "TRANSCRIPT_UNPINNED"
+          ]
+        },
+        "verification_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "claim": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "binding_status": { "const": "PINNED_COMMIT" }
+            }
+          },
+          "then": {
+            "properties": {
+              "revision": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "genealogyClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "claim", "source_kind", "source_anchor_refs"],
+      "properties": {
+        "status": {
+          "enum": ["EXISTING", "IMPLICIT", "NEW_DERIVATION"]
+        },
+        "claim": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_kind": {
+          "enum": [
+            "CORPUS",
+            "SOURCEPOINT_THREAD_PROPOSAL",
+            "EXTERNAL_MODEL_OBSERVATION",
+            "ANALYTIC_DERIVATION"
+          ]
+        },
+        "source_anchor_refs": {
+          "$ref": "#/$defs/nonEmptyStringArray"
+        }
+      }
+    },
+    "member": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["member_id", "role_slice", "standing"],
+      "properties": {
+        "member_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "role_slice": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "standing": {
+          "enum": [
+            "CORPUS_OBJECT",
+            "RESEARCH_FIXTURE_COMPONENT",
+            "REPO_IMPLEMENTATION_COMPONENT",
+            "RUNTIME_INSTALLED_COMPONENT",
+            "TARGET_STATE_COMPONENT",
+            "THREAD_CONCEPT",
+            "EXTERNAL_ALGORITHM",
+            "FUNCTIONAL_ROLE"
+          ]
+        }
+      }
+    },
+    "resolutionDistinction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "distinction_id",
+        "description",
+        "materiality_basis_ref",
+        "retention"
+      ],
+      "properties": {
+        "distinction_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "description": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "materiality_basis_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "retention": {
+          "enum": [
+            "VISIBLE",
+            "WITNESSED",
+            "DROPPED",
+            "UNKNOWN",
+            "PROHIBITED"
+          ]
+        },
+        "witness_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "reopen_trigger": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "retention": { "const": "WITNESSED" }
+            }
+          },
+          "then": {
+            "required": ["witness_ref", "reopen_trigger"],
+            "properties": {
+              "witness_ref": {
+                "$ref": "#/$defs/nonEmptyString"
+              },
+              "reopen_trigger": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "witnessPart": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "witness_id",
+        "witness_type",
+        "status",
+        "availability",
+        "description"
+      ],
+      "properties": {
+        "witness_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "witness_type": {
+          "enum": [
+            "RECONSTRUCTIVE_COMPLEMENT",
+            "SOURCE_HANDLE",
+            "DERIVATION_PROVENANCE",
+            "INTEGRITY_BINDING",
+            "REOPEN_POLICY",
+            "ACTIVE_INVALIDATION_METADATA"
+          ]
+        },
+        "status": {
+          "enum": ["PRESENT", "PARTIAL", "ABSENT", "PROPOSED"]
+        },
+        "availability": {
+          "enum": ["ACTIVE", "RETRIEVABLE", "STALE", "UNAVAILABLE", "PROPOSED"]
+        },
+        "source_anchor_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "integrity_binding": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "description": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "adequacy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "criterion_type",
+        "status",
+        "consequence_use",
+        "profile_binding",
+        "action_family",
+        "semantics_ref"
+      ],
+      "properties": {
+        "criterion_type": {
+          "enum": [
+            "FACTORIZATION",
+            "BOUNDARY_REFINEMENT",
+            "PATTERN_ONLY",
+            "REJECTED_TYPE_MIX"
+          ]
+        },
+        "status": {
+          "enum": [
+            "PROVED",
+            "EXHAUSTIVELY_VERIFIED_FINITE",
+            "FINITE_FIXTURE_EVIDENCE",
+            "UNESTABLISHED",
+            "REFUTED_BY_COUNTEREXAMPLE",
+            "NOT_APPLICABLE"
+          ]
+        },
+        "consequence_use": {
+          "type": "boolean"
+        },
+        "profile_binding": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "action_family": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "semantics_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "evidence_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "proof_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "finite_domain_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "counterexample_refs": {
+          "$ref": "#/$defs/stringArray"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "status": { "const": "PROVED" } }
+          },
+          "then": {
+            "required": ["proof_ref"],
+            "properties": {
+              "proof_ref": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "const": "EXHAUSTIVELY_VERIFIED_FINITE" }
+            }
+          },
+          "then": {
+            "required": ["finite_domain_ref"],
+            "properties": {
+              "finite_domain_ref": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "const": "FINITE_FIXTURE_EVIDENCE" }
+            }
+          },
+          "then": {
+            "required": ["finite_domain_ref"],
+            "properties": {
+              "finite_domain_ref": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": { "const": "REFUTED_BY_COUNTEREXAMPLE" }
+            }
+          },
+          "then": {
+            "required": ["counterexample_refs"],
+            "properties": {
+              "counterexample_refs": {
+                "$ref": "#/$defs/stringArray"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "failureDisposition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["pre_effect", "post_possible_effect"],
+      "properties": {
+        "pre_effect": {
+          "enum": [
+            "ALLOW_RESEARCH_USE_ONLY",
+            "MORPHOLOGICAL_CANDIDATE_ONLY",
+            "REJECT_CLOSURE",
+            "REJECT_AMPLIFICATION",
+            "PRESERVE_OVERLAP",
+            "REFINE_OR_REOPEN",
+            "HOLD"
+          ]
+        },
+        "post_possible_effect": {
+          "enum": [
+            "NOT_APPLICABLE",
+            "UNSETTLED_OR_AMBIGUOUS",
+            "BREACH_REVIEW"
+          ]
+        }
+      }
+    },
+    "mixedOperation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "order",
+        "operation",
+        "input_type_ref",
+        "output_type_ref",
+        "typing_status",
+        "description"
+      ],
+      "properties": {
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "operation": {
+          "enum": ["EQUIVALENCE", "COMPOSITIONAL", "MORPHOLOGICAL"]
+        },
+        "input_type_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "output_type_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "typing_status": {
+          "enum": ["SUPPORTED_BOUNDED", "CANDIDATE", "REFUTED"]
+        },
+        "description": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "profileBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["profile_id", "version", "source_anchor_ref"],
+      "properties": {
+        "profile_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "version": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "source_anchor_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "content_digest": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "concordanceRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["primitive_id", "relation", "binding_status", "source_ref"],
+      "properties": {
+        "primitive_id": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "relation": {
+          "enum": [
+            "MEMBER",
+            "SUBJECT",
+            "BOUNDARY",
+            "SIBLING",
+            "INVERSION",
+            "ROLE_SLICE",
+            "PRECURSOR"
+          ]
+        },
+        "binding_status": {
+          "enum": ["UNBOUND", "TARGET_STATE", "RESOLVED"]
+        },
+        "source_ref": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    },
+    "closureRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "closure_id",
+        "title",
+        "closure_type",
+        "typing_status",
+        "result",
+        "observation",
+        "assessment",
+        "assessment_disposition",
+        "genealogy",
+        "members",
+        "profile",
+        "resolution",
+        "macro_function",
+        "resolution_distinctions",
+        "witness",
+        "reopen_triggers",
+        "adequacy",
+        "failure_disposition",
+        "source_anchors",
+        "concordance_candidate_crosswalk",
+        "strongest_attack"
+      ],
+      "properties": {
+        "closure_id": {
+          "type": "string",
+          "pattern": "^RCA-[0-9]{3}$"
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "closure_type": {
+          "enum": [
+            "EQUIVALENCE",
+            "COMPOSITIONAL",
+            "MORPHOLOGICAL",
+            "MIXED_TRACE",
+            "REJECTED_FALSE_CLOSURE"
+          ]
+        },
+        "typing_status": {
+          "enum": ["ESTABLISHED_OBJECT", "CANDIDATE", "REJECTED"]
+        },
+        "result": {
+          "enum": [
+            "SURVIVES",
+            "PARTIALLY_SURVIVES",
+            "COLLAPSES",
+            "UNKNOWN",
+            "REJECTED"
+          ]
+        },
+        "observation": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "assessment": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "assessment_disposition": {
+          "enum": [
+            "OBSERVED",
+            "CANDIDATE",
+            "SUPPORTED_BOUNDED",
+            "REFUTED",
+            "HOLD"
+          ]
+        },
+        "genealogy": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/genealogyClaim"
+          }
+        },
+        "members": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/member"
+          }
+        },
+        "profile": {
+          "$ref": "#/$defs/profileBinding"
+        },
+        "resolution": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fine_resolution", "macro_resolution", "relation"],
+          "properties": {
+            "fine_resolution": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "macro_resolution": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "relation": {
+              "enum": [
+                "COARSER_THAN",
+                "ASSEMBLES",
+                "INSTANTIATES",
+                "ORDERED_COMPOSITION",
+                "INVALID_COLLAPSE"
+              ]
+            },
+            "abstraction_ref": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "macro_contract_ref": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "macro_contract_status": {
+              "enum": ["PRESENT", "CANDIDATE", "ABSENT"]
+            },
+            "boundary_ports": {
+              "$ref": "#/$defs/stringArray"
+            },
+            "pattern_signature_ref": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "macro_contract_status": {
+                    "enum": ["PRESENT", "CANDIDATE"]
+                  }
+                },
+                "required": ["macro_contract_status"]
+              },
+              "then": {
+                "required": ["macro_contract_ref"],
+                "properties": {
+                  "macro_contract_ref": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                }
+              }
+            }
+          ]
+        },
+        "macro_function": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "resolution_distinctions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/resolutionDistinction"
+          }
+        },
+        "witness": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/witnessPart"
+          }
+        },
+        "reopen_triggers": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "adequacy": {
+          "$ref": "#/$defs/adequacy"
+        },
+        "failure_disposition": {
+          "$ref": "#/$defs/failureDisposition"
+        },
+        "source_anchors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/sourceAnchor"
+          }
+        },
+        "concordance_candidate_crosswalk": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/concordanceRef"
+          }
+        },
+        "strongest_attack": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "rejection_reason": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "mixed_trace": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/mixedOperation"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "closure_type": { "const": "EQUIVALENCE" }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution": {
+                "type": "object",
+                "required": ["abstraction_ref"],
+                "properties": {
+                  "abstraction_ref": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "closure_type": { "const": "COMPOSITIONAL" }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution": {
+                "type": "object",
+                "required": ["macro_contract_status", "boundary_ports"],
+                "properties": {
+                  "macro_contract_status": {
+                    "enum": ["PRESENT", "CANDIDATE", "ABSENT"]
+                  },
+                  "boundary_ports": {
+                    "$ref": "#/$defs/stringArray"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "closure_type": { "const": "MORPHOLOGICAL" }
+            }
+          },
+          "then": {
+            "properties": {
+              "resolution": {
+                "type": "object",
+                "required": ["pattern_signature_ref"],
+                "properties": {
+                  "pattern_signature_ref": {
+                    "$ref": "#/$defs/nonEmptyString"
+                  }
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "closure_type": { "const": "MIXED_TRACE" }
+            }
+          },
+          "then": {
+            "required": ["mixed_trace"],
+            "properties": {
+              "mixed_trace": {
+                "type": "array",
+                "minItems": 2,
+                "items": {
+                  "$ref": "#/$defs/mixedOperation"
+                }
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "closure_type": { "const": "REJECTED_FALSE_CLOSURE" }
+            }
+          },
+          "then": {
+            "required": ["rejection_reason"],
+            "properties": {
+              "rejection_reason": {
+                "$ref": "#/$defs/nonEmptyString"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

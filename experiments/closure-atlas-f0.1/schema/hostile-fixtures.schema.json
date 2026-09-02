@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://one-rio-muss.local/experiments/closure-atlas-f0.1/schema/hostile-fixtures.schema.json",
+  "title": "Resolution Closure Atlas F0.1 Hostile Fixtures",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixture_pack_id",
+    "version",
+    "standing",
+    "runtime_effect",
+    "fixtures"
+  ],
+  "properties": {
+    "fixture_pack_id": {
+      "const": "RCA-F0.1-HOSTILE"
+    },
+    "version": {
+      "const": "F0.1"
+    },
+    "standing": {
+      "const": "RESEARCH_FALSIFICATION_FIXTURES"
+    },
+    "runtime_effect": {
+      "const": "NONE"
+    },
+    "fixtures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/fixture"
+      }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stringArray": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/nonEmptyString"
+      },
+      "uniqueItems": true
+    },
+    "fixture": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "fixture_id",
+        "title",
+        "attack_class",
+        "target_record_refs",
+        "construction",
+        "violated_condition",
+        "expected_disposition",
+        "proof_status",
+        "claim_ceiling"
+      ],
+      "properties": {
+        "fixture_id": {
+          "type": "string",
+          "pattern": "^RCA-H[0-9]{2}$"
+        },
+        "title": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "attack_class": {
+          "enum": [
+            "FALSE_EQUIVALENCE",
+            "FUTURE_DISTINCTION",
+            "JOINT_DEPENDENCE",
+            "COMPOSITION_ORDER",
+            "PROFILE_DRIFT",
+            "EXACT_ACTION_MUTATION",
+            "TRIGGER_FAILURE",
+            "OVERLAP_AMPLIFICATION",
+            "OVERLAP_POSITIVE_CONTROL",
+            "LOCAL_GLOBAL_INCOMPATIBILITY",
+            "MIXED_NONCOMMUTATION",
+            "MORPHOLOGY_LAUNDERING",
+            "PRIVACY_REOPEN_CONFLICT",
+            "LATE_FAILURE",
+            "WITNESS_TRIVIALIZATION",
+            "TYPE_NAME_CARDINALITY_COLLISION",
+            "PREPARATION_PROMOTION",
+            "ENDPOINT_REDEMPTION",
+            "RETROACTIVE_KNOWLEDGE_REWRITE",
+            "PERSISTENCE_PROMOTION",
+            "VALIDATION_COVERAGE_ESCAPE"
+          ]
+        },
+        "target_record_refs": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "construction": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fine_case", "coarse_case", "consequence"],
+          "properties": {
+            "fine_case": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "coarse_case": {
+              "$ref": "#/$defs/nonEmptyString"
+            },
+            "consequence": {
+              "$ref": "#/$defs/nonEmptyString"
+            }
+          }
+        },
+        "violated_condition": {
+          "$ref": "#/$defs/nonEmptyString"
+        },
+        "expected_disposition": {
+          "enum": [
+            "REJECT_CLOSURE",
+            "REJECT_AMPLIFICATION",
+            "PRESERVE_OVERLAP",
+            "REFINE_OR_REOPEN",
+            "HOLD",
+            "UNSETTLED_OR_AMBIGUOUS",
+            "BREACH_REVIEW",
+            "MORPHOLOGICAL_CANDIDATE_ONLY",
+            "CLAIM_REDUCTION_ONLY"
+          ]
+        },
+        "proof_status": {
+          "enum": [
+            "COUNTEREXAMPLE_BY_CONSTRUCTION",
+            "STATIC_ANALYSIS",
+            "FINITE_COMPUTATIONAL_EVIDENCE",
+            "PROOF_BURDEN_ONLY"
+          ]
+        },
+        "source_refs": {
+          "$ref": "#/$defs/stringArray"
+        },
+        "claim_ceiling": {
+          "$ref": "#/$defs/nonEmptyString"
+        }
+      }
+    }
+  }
+}

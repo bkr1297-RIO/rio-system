@@ -1,0 +1,406 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://one-rio-muss.local/experiments/closure-atlas-f0.1/schema/becoming-spine-crosswalk.schema.json",
+  "title": "Constitutional Becoming Spine F0.1 Estate Crosswalk",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "crosswalk_id",
+    "version",
+    "standing",
+    "runtime_effect",
+    "authority_effect",
+    "canon_effect",
+    "freeze_scope",
+    "topology",
+    "genealogy",
+    "laws",
+    "stages",
+    "interstitial_objects",
+    "projection",
+    "known_collisions",
+    "attack_crosswalk",
+    "evidence",
+    "remaining_seams",
+    "source_anchors"
+  ],
+  "properties": {
+    "crosswalk_id": {
+      "const": "CONSTITUTIONAL-BECOMING-SPINE-ESTATE-CROSSWALK-F0.1"
+    },
+    "version": { "const": "F0.1" },
+    "standing": { "const": "FROZEN_ESTATE_RECONCILIATION" },
+    "runtime_effect": { "const": "NONE" },
+    "authority_effect": { "const": "NONE" },
+    "canon_effect": { "const": "NONE" },
+    "freeze_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["frozen", "not_frozen"],
+      "properties": {
+        "frozen": { "$ref": "#/$defs/nonEmptyStringArray" },
+        "not_frozen": { "$ref": "#/$defs/nonEmptyStringArray" }
+      }
+    },
+    "topology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "display_order",
+        "linearity_claim",
+        "cardinality_rules",
+        "joins",
+        "recurrent_regions",
+        "conditional_edges"
+      ],
+      "properties": {
+        "kind": { "const": "TYPED_CAUSAL_HYPERGRAPH" },
+        "display_order": {
+          "type": "array",
+          "minItems": 13,
+          "maxItems": 13,
+          "items": { "$ref": "#/$defs/stageRef" },
+          "uniqueItems": true
+        },
+        "linearity_claim": { "const": false },
+        "cardinality_rules": { "$ref": "#/$defs/nonEmptyStringArray" },
+        "joins": { "$ref": "#/$defs/nonEmptyStringArray" },
+        "recurrent_regions": { "$ref": "#/$defs/nonEmptyStringArray" },
+        "conditional_edges": { "$ref": "#/$defs/nonEmptyStringArray" }
+      }
+    },
+    "genealogy": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/genealogyClaim" }
+    },
+    "laws": {
+      "type": "array",
+      "minItems": 3,
+      "items": { "$ref": "#/$defs/law" }
+    },
+    "stages": {
+      "type": "array",
+      "minItems": 13,
+      "maxItems": 13,
+      "items": { "$ref": "#/$defs/stage" }
+    },
+    "interstitial_objects": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/interstitialObject" }
+    },
+    "projection": { "$ref": "#/$defs/projection" },
+    "known_collisions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/collision" }
+    },
+    "attack_crosswalk": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/attack" }
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/evidence" }
+    },
+    "remaining_seams": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/seam" }
+    },
+    "source_anchors": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/sourceAnchor" }
+    }
+  },
+  "$defs": {
+    "nonEmptyString": { "type": "string", "minLength": 1 },
+    "nonEmptyStringArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" },
+      "uniqueItems": true
+    },
+    "sourceRefArray": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/nonEmptyString" },
+      "uniqueItems": true
+    },
+    "stageRef": {
+      "type": "string",
+      "pattern": "^CBS-(0[1-9]|1[0-3])$"
+    },
+    "genealogyClaim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "claim", "source_anchor_refs"],
+      "properties": {
+        "status": { "enum": ["EXISTING", "IMPLICIT", "NEW_DERIVATION"] },
+        "claim": { "$ref": "#/$defs/nonEmptyString" },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" }
+      }
+    },
+    "law": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["law_id", "name", "genealogy", "statement", "source_anchor_refs"],
+      "properties": {
+        "law_id": { "type": "string", "pattern": "^CBS-L[0-9]{2}$" },
+        "name": { "$ref": "#/$defs/nonEmptyString" },
+        "genealogy": { "enum": ["EXISTING", "IMPLICIT", "NEW_DERIVATION"] },
+        "statement": { "$ref": "#/$defs/nonEmptyString" },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" }
+      }
+    },
+    "carrier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["carrier_id", "role", "standing", "scope", "source_anchor_refs"],
+      "properties": {
+        "carrier_id": { "$ref": "#/$defs/nonEmptyString" },
+        "role": { "$ref": "#/$defs/nonEmptyString" },
+        "standing": {
+          "enum": [
+            "EXISTING_FROZEN_EXECUTABLE",
+            "EXISTING_EXECUTABLE",
+            "EXISTING_FORMAL",
+            "EXISTING_DOCUMENTED",
+            "EXISTING_CANDIDATE_SEMANTICS"
+          ]
+        },
+        "scope": { "$ref": "#/$defs/nonEmptyString" },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" }
+      }
+    },
+    "stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "stage_id",
+        "order",
+        "name",
+        "burden_kind",
+        "binding_status",
+        "definition",
+        "carriers",
+        "non_conversions",
+        "source_anchor_refs"
+      ],
+      "properties": {
+        "stage_id": { "$ref": "#/$defs/stageRef" },
+        "order": { "type": "integer", "minimum": 1, "maximum": 13 },
+        "name": {
+          "enum": [
+            "Possibility",
+            "Preparation",
+            "Choice",
+            "Commitment",
+            "Attempt",
+            "Occurrence",
+            "Consequence",
+            "Witness",
+            "Evidence",
+            "Return",
+            "Reconstruction",
+            "Settlement",
+            "Inheritance"
+          ]
+        },
+        "burden_kind": {
+          "enum": [
+            "FIELD_STATE",
+            "FORMATION_AND_CUSTODY",
+            "HUMAN_DISPOSITION",
+            "BINDING",
+            "EXECUTION_LINEAGE",
+            "CONSEQUENTIAL_EVENT",
+            "DELTA_SURFACE",
+            "BOUNDED_OBSERVATION",
+            "EVIDENCE_ASSESSMENT",
+            "ATTRIBUTABLE_ACCOUNT",
+            "DERIVED_VIEW",
+            "ADJUDICATION",
+            "SUCCESSOR_ADMISSION"
+          ]
+        },
+        "binding_status": {
+          "enum": [
+            "EXISTING_EXECUTABLE_BOUND",
+            "EXISTING_DISTRIBUTED",
+            "EXISTING_DOCUMENTED_FRONT_EDGE"
+          ]
+        },
+        "definition": { "$ref": "#/$defs/nonEmptyString" },
+        "carriers": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/carrier" }
+        },
+        "non_conversions": { "$ref": "#/$defs/nonEmptyStringArray" },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" },
+        "notes": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "interstitialObject": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["object_id", "role", "between_stage_refs", "source_anchor_refs"],
+      "properties": {
+        "object_id": { "$ref": "#/$defs/nonEmptyString" },
+        "role": { "$ref": "#/$defs/nonEmptyString" },
+        "between_stage_refs": {
+          "type": "array",
+          "minItems": 2,
+          "maxItems": 2,
+          "items": { "$ref": "#/$defs/stageRef" }
+        },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" }
+      }
+    },
+    "projectionCoordinate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["coordinate_id", "source_symbol", "canonical_name", "stage_refs", "definition"],
+      "properties": {
+        "coordinate_id": { "type": "string", "pattern": "^BV-0[1-8]$" },
+        "source_symbol": { "$ref": "#/$defs/nonEmptyString" },
+        "canonical_name": { "$ref": "#/$defs/nonEmptyString" },
+        "stage_refs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/stageRef" },
+          "uniqueItems": true
+        },
+        "definition": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "projection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "genealogy",
+        "source_notation",
+        "canonical_name",
+        "semantics",
+        "coordinates",
+        "notation_collision_rule"
+      ],
+      "properties": {
+        "genealogy": { "const": "NEW_DERIVATION" },
+        "source_notation": { "const": "chi_t = (P_t, C_t, X_t, O_t, E_t, R_t, D_t, I_t)" },
+        "canonical_name": { "const": "BecomingView_t" },
+        "semantics": { "$ref": "#/$defs/nonEmptyString" },
+        "coordinates": {
+          "type": "array",
+          "minItems": 8,
+          "maxItems": 8,
+          "items": { "$ref": "#/$defs/projectionCoordinate" }
+        },
+        "notation_collision_rule": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "collision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["collision_id", "term", "description", "disposition", "source_anchor_refs"],
+      "properties": {
+        "collision_id": { "type": "string", "pattern": "^CBS-C[0-9]{2}$" },
+        "term": { "$ref": "#/$defs/nonEmptyString" },
+        "description": { "$ref": "#/$defs/nonEmptyString" },
+        "disposition": {
+          "enum": ["PROFILE_QUALIFY", "DO_NOT_IDENTIFY", "DEFINE_ADAPTER", "REPAIR_VALIDATION"]
+        },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" },
+        "hostile_fixture_ref": { "type": "string", "pattern": "^RCA-H[0-9]{2}$" }
+      }
+    },
+    "attack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["attack_id", "attack_name", "evidence_status", "source_anchor_refs"],
+      "properties": {
+        "attack_id": { "type": "string", "pattern": "^CBS-A[0-9]{2}$" },
+        "attack_name": { "$ref": "#/$defs/nonEmptyString" },
+        "evidence_status": {
+          "enum": ["EXECUTED_BOUNDED", "SPECIFIED_ONLY", "STATIC_DEFECT_FOUND"]
+        },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" },
+        "hostile_fixture_ref": { "type": "string", "pattern": "^RCA-H[0-9]{2}$" },
+        "finding": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "description", "kind", "test_count", "result", "evidence_ref", "source_anchor_refs", "claim_ceiling"],
+      "properties": {
+        "evidence_id": { "type": "string", "pattern": "^CBS-E[0-9]{2}$" },
+        "description": { "$ref": "#/$defs/nonEmptyString" },
+        "kind": { "const": "FINITE_COMPUTATIONAL_EVIDENCE" },
+        "test_count": { "type": "integer", "minimum": 1 },
+        "result": { "enum": ["PASS", "FAIL", "PARTIAL", "NOT_RERUN"] },
+        "evidence_ref": { "$ref": "#/$defs/nonEmptyString" },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" },
+        "claim_ceiling": { "$ref": "#/$defs/nonEmptyString" }
+      }
+    },
+    "seam": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["seam_id", "description", "disposition", "source_anchor_refs"],
+      "properties": {
+        "seam_id": { "type": "string", "pattern": "^CBS-S[0-9]{2}$" },
+        "description": { "$ref": "#/$defs/nonEmptyString" },
+        "disposition": { "enum": ["BIND", "HOLD", "REPAIR", "PROFILE_SPLIT"] },
+        "source_anchor_refs": { "$ref": "#/$defs/sourceRefArray" }
+      }
+    },
+    "sourceAnchor": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "repository", "location", "revision", "standing", "verification_date", "claim"],
+      "properties": {
+        "artifact_id": { "$ref": "#/$defs/nonEmptyString" },
+        "repository": { "$ref": "#/$defs/nonEmptyString" },
+        "location": { "$ref": "#/$defs/nonEmptyString" },
+        "revision": { "$ref": "#/$defs/nonEmptyString" },
+        "standing": {
+          "enum": [
+            "FROZEN_EXPERIMENTAL",
+            "HUMAN_ADMITTED_EXPERIMENTAL",
+            "EXPERIMENTAL_REFERENCE",
+            "FORMAL_CANDIDATE",
+            "CANDIDATE_RESEARCH",
+            "EDITORIAL_CANDIDATE",
+            "LOCAL_FROZEN_RECONCILIATION"
+          ]
+        },
+        "verification_date": { "type": "string", "format": "date" },
+        "claim": { "$ref": "#/$defs/nonEmptyString" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "repository": { "not": { "const": "bkr1297-RIO/rio-system" } }
+            },
+            "required": ["repository"]
+          },
+          "then": {
+            "properties": {
+              "revision": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{40}$"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

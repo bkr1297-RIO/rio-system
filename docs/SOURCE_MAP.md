@@ -73,6 +73,12 @@ Keeper:
 |---|---|---|---|
 | Governance starter harness | Starter / conformance seed | `governance-starter-v0.1.1/` | Policy schema, receipt schema, example ledger, deterministic evaluator, and tests proving initial governance boundary semantics |
 
+## Current Research Experiments
+
+| Layer | Status | File or directory | Scope |
+|---|---|---|---|
+| Resolution Closure Atlas | Research clarification method / no runtime effect | `experiments/closure-atlas-f0.1/` | Types observed higher-order groupings as equivalence abstractions, compositional assemblies, morphological classifications, ordered mixed traces, or rejected false closures; separates reopening witnesses from action-bound adequacy and retains hostile fixtures without amending frozen architecture |
+
 ## Current Non-Claims
 
 This repository state does **not** claim:
