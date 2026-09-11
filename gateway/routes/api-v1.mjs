@@ -562,6 +562,8 @@ router.post("/intents/:id/confirm", requireScope("write"), requireRole("executor
       tool_name: intent.action,
       args_hash: computeArgsHash(intent.parameters || {}),
       environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+      signature: intent.execution_token?.token_signature,
+      verifyFn: (payload, sig) => verifySignature(payload, sig, getGatewayKeypair().publicKey),
     });
     if (!burnResult.valid) {
       appendEntry({

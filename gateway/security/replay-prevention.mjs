@@ -2,7 +2,7 @@
  * RIO Gateway — Replay Prevention (Fix #2: Nonce + Timestamp Validation)
  *
  * Prevents request replay attacks on all state-changing endpoints.
- * Every POST to /intent, /govern, /authorize, /execute, /execute-confirm
+ * Consequential pipeline POSTs, including direct and API v1 execution,
  * MUST include request_timestamp and request_nonce.
  *
  * Security guarantees:
@@ -32,15 +32,25 @@ const CLEANUP_INTERVAL_MS = 60 * 60 * 1000; // Clean up every hour
 // ---------------------------------------------------------------------------
 const nonceStore = new Map(); // nonce -> { path, timestamp, used_at }
 
-// Endpoints that require replay prevention (all state-changing POSTs)
+// Exact pipeline endpoints that require replay prevention.
 const PROTECTED_ENDPOINTS = new Set([
   "/intent",
   "/govern",
   "/authorize",
   "/execute",
   "/execute-confirm",
+  "/execute-action",
   "/receipt",
 ]);
+
+const PROTECTED_ENDPOINT_PATTERNS = [
+  /^\/api\/v1\/intents\/[^/]+\/(?:execute|confirm)$/,
+];
+
+export function requiresReplayPrevention(path) {
+  return typeof path === "string" &&
+    (PROTECTED_ENDPOINTS.has(path) || PROTECTED_ENDPOINT_PATTERNS.some(pattern => pattern.test(path)));
+}
 
 // ---------------------------------------------------------------------------
 // Validate request nonce and timestamp
@@ -49,7 +59,7 @@ export function validateRequestNonce(req) {
   const path = req.path;
 
   // Only enforce on protected endpoints
-  if (!PROTECTED_ENDPOINTS.has(path)) {
+  if (!requiresReplayPrevention(path)) {
     return { valid: true, reason: "Endpoint not protected by replay prevention." };
   }
 
