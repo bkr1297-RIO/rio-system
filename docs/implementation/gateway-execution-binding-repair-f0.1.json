@@ -1,0 +1,75 @@
+{
+  "profile": "GATEWAY-EXECUTION-BINDING-REPAIR-F0.1",
+  "status": "PROPOSED_FOR_HUMAN_REVIEW",
+  "source_census": {
+    "repository": "bkr1297-RIO/rio-reference-impl",
+    "pull_request": 199,
+    "merge_commit": "22256e811b67a846ea4859b42e5265c6b6dac977"
+  },
+  "implementation": {
+    "repository": "bkr1297-RIO/rio-system",
+    "base_commit": "7be75d60c918d70b99e2aec3c302ad1edfeb5154"
+  },
+  "findings": {
+    "CB-005": "CLOSED_IN_TOKEN_PROFILE",
+    "CB-006": "CLOSED_IN_TOKEN_PROFILE",
+    "CB-007": "CLOSED_SINGLE_PROCESS_DISTRIBUTED_OPEN",
+    "CB-008": "CLOSED_DIRECT_GATEWAY_ROUTE"
+  },
+  "tests": [
+    {
+      "command": "npm run test:execution-binding --prefix gateway",
+      "tests": 12,
+      "pass": 12,
+      "fail": 0
+    },
+    {
+      "command": "npm run test:c2c --prefix gateway",
+      "tests": 14,
+      "pass": 14,
+      "fail": 0
+    },
+    {
+      "command": "npm run test:prime --prefix gateway",
+      "tests": 21,
+      "pass": 21,
+      "fail": 0
+    },
+    {
+      "command": "node --test gateway/tests/sms-executor.test.mjs gateway/tests/policy-engine.test.mjs",
+      "tests": 56,
+      "pass": 56,
+      "fail": 0
+    }
+  ],
+  "bounded_passing_total": 103,
+  "live_effects": {
+    "smtp": 0,
+    "sms": 0,
+    "database": 0,
+    "oauth": 0,
+    "http_gateway_requests": 0
+  },
+  "predecessor_residue": {
+    "spgm": {
+      "tests": 50,
+      "pass": 48,
+      "fail": 2,
+      "source_blobs_unchanged": true,
+      "open_draft_prs": [
+        198,
+        199
+      ]
+    }
+  },
+  "remaining": [
+    "DISTRIBUTED_DURABLE_RESERVATION",
+    "PROCESS_RESTART_TOKEN_AND_NONCE_CUSTODY",
+    "INDEPENDENT_EXTERNAL_EFFECT_OBSERVATION",
+    "DIRECT_ADAPTER_CALLER_CUSTODY",
+    "POST_EFFECT_RECEIPT_RECOVERY",
+    "LEGACY_PYTHON_CB_001_THROUGH_CB_004"
+  ],
+  "no_bypass_closure": "NOT_ESTABLISHED",
+  "promotion_recommendation": "READY_FOR_HUMAN_REVIEW"
+}

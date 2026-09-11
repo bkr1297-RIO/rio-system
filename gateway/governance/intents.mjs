@@ -145,6 +145,29 @@ export function updateIntent(intentId, updates) {
 }
 
 /**
+ * Compare-and-set one intent status before an asynchronous effect boundary.
+ *
+ * JavaScript run-to-completion makes the cache transition atomic within this
+ * gateway process: only the first caller observing expectedStatus succeeds.
+ * PostgreSQL persistence remains asynchronous, so this function does not make
+ * a multi-process or crash-recovery reservation claim.
+ */
+export function updateIntentIfStatus(intentId, expectedStatus, updates) {
+  if (!updates || typeof updates !== "object" || Array.isArray(updates) || typeof updates.status !== "string") {
+    throw new TypeError("A guarded intent transition requires an explicit next status");
+  }
+  const intent = cache.get(intentId);
+  if (!intent || intent.status !== expectedStatus) return null;
+
+  Object.assign(intent, updates);
+  cache.set(intentId, intent);
+  persistUpdate(intentId, intent).catch((err) =>
+    console.error(`[Intent Store] guarded PG write failed for ${intentId}:`, err.message)
+  );
+  return intent;
+}
+
+/**
  * List all intents, optionally filtered by status.
  */
 export function listIntents(status, limit = 50) {

@@ -1,0 +1,56 @@
+name: Gateway Execution Binding Repair F0.1
+
+on:
+  pull_request:
+    paths:
+      - "gateway/security/token-manager.mjs"
+      - "gateway/security/replay-prevention.mjs"
+      - "gateway/governance/intents.mjs"
+      - "gateway/routes/index.mjs"
+      - "gateway/routes/api-v1.mjs"
+      - "gateway/tests/execution-binding-repair.test.mjs"
+      - "gateway/package.json"
+      - "docs/implementation/gateway-execution-binding-repair-f0.1.*"
+      - ".github/workflows/gateway-execution-binding-repair-f0-1.yml"
+  push:
+    branches: [main]
+    paths:
+      - "gateway/security/token-manager.mjs"
+      - "gateway/security/replay-prevention.mjs"
+      - "gateway/governance/intents.mjs"
+      - "gateway/routes/index.mjs"
+      - "gateway/routes/api-v1.mjs"
+      - "gateway/tests/execution-binding-repair.test.mjs"
+      - "gateway/package.json"
+      - "docs/implementation/gateway-execution-binding-repair-f0.1.*"
+      - ".github/workflows/gateway-execution-binding-repair-f0-1.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  bounded-repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: gateway
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.19.0"
+          cache: npm
+          cache-dependency-path: gateway/package-lock.json
+      - run: npm ci --ignore-scripts --no-audit --no-fund
+      - name: Strict execution binding and direct-route repair
+        run: npm run test:execution-binding
+      - name: Office-integrity regression
+        run: npm run test:c2c
+      - name: Prime runtime regression
+        run: npm run test:prime
+      - name: Policy and SMS normalization regression
+        run: node --test tests/sms-executor.test.mjs tests/policy-engine.test.mjs

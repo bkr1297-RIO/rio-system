@@ -7,7 +7,7 @@
  * The system is fail-closed: missing authorization blocks execution.
  */
 import { Router } from "express";
-import { createIntent, getIntent, updateIntent, listIntents, getStats } from "../governance/intents.mjs";
+import { createIntent, getIntent, updateIntent, updateIntentIfStatus, listIntents, getStats } from "../governance/intents.mjs";
 import { evaluateIntent } from "../governance/policy.mjs";
 import { getAllConfig, getConstitution, getPolicy } from "../governance/config.mjs";
 import { evaluatePolicy, computeGovernanceHash, isApprovalExpired } from "../governance/policy-engine.mjs";
@@ -886,6 +886,10 @@ router.post("/execute", requireRole("executor"), (req, res) => {
       status: "execute_now",
       execution_token: burnableToken,
       token_expires_at: tokenExpiresAt,
+      token_id: tokenId_exec,
+      token_signature: tokenSig,
+      tool_name: intent.action,
+      args_hash: tokenArgsHash,
     };
 
     // Move intent to "executing" state
@@ -953,6 +957,8 @@ router.post("/execute-confirm", requireRole("executor"), (req, res) => {
       tool_name: intent.action,
       args_hash: computeArgsHash(intent.parameters || {}),
       environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+      signature: intent.execution_token?.token_signature,
+      verifyFn: (payload, sig) => verifySignature(payload, sig, getGatewayKeypair().publicKey),
     });
     if (!burnResult.valid) {
       appendEntry({
@@ -1166,58 +1172,40 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       });
     }
 
-    // ——— ITEM 1: Issue bound authorization token after verifying approval ————
-    const gatewayKp = getGatewayKeypair();
-    const tokenArgsHash = computeArgsHash(intent.parameters || {});
-    const { token: executionToken, token_id: tokenId, payload: tokenPayload, signature: tokenSig, expires_at: tokenExpiresAt } = issueExecutionToken({
-      intent_id,
-      approval_id: intent.authorization?.approval_id || null,
-      tool_name: intent.action,
-      args_hash: tokenArgsHash,
-      max_executions: 1,
-      signFn: (payload) => signPayload(payload, gatewayKp.secretKey),
-    });
-
-    console.log(`[RIO Gateway] Token issued for ${intent_id} — expires ${tokenExpiresAt}`);
-
-    appendEntry({
-      intent_id,
-      action: intent.action,
-      agent_id: intent.agent_id,
-      status: "token_issued",
-      detail: `Authorization token issued (single-use, expires ${tokenExpiresAt}).`,
-    });
-
-    // ——— ITEM 2 + 3: Validate and burn token with full binding checks ——————
-    // Token is validated against: intent, tool, args hash, environment.
-    // Single-use: burned on first call. Replay/mismatch = DENY.
-    const burnResult = validateAndBurnToken(intent_id, executionToken, {
-      tool_name: intent.action,
-      args_hash: tokenArgsHash,
-      environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
-      signature: tokenSig,
-      verifyFn: (payload, sig) => verifySignature(payload, sig, gatewayKp.publicKey),
-    });
-    if (!burnResult.valid) {
-      // FAIL CLOSED: token validation failed — do not execute
-      appendEntry({
-        intent_id,
-        action: intent.action,
-        agent_id: intent.agent_id,
-        status: "blocked",
-        detail: `Execution BLOCKED: Token validation failed — ${burnResult.reason}`,
-      });
-      return res.status(403).json({
+    // This endpoint owns direct connector dispatch only. Delivery semantics are
+    // part of the approved intent parameters and cannot be added at point of use.
+    const approvedDeliveryMode = intent.parameters?.delivery_mode || "gateway";
+    if (Object.hasOwn(req.body, "delivery_mode") && req.body.delivery_mode !== approvedDeliveryMode) {
+      return res.status(409).json({
         intent_id,
         status: "blocked",
-        reason: burnResult.reason,
+        reason: "Requested delivery mode does not match the approved intent parameters.",
       });
     }
-
-    console.log(`[RIO Gateway] Token validated and burned for ${intent_id}`);
+    if (approvedDeliveryMode !== "gateway") {
+      return res.status(409).json({
+        intent_id,
+        status: "blocked",
+        reason: "POST /execute-action permits gateway delivery only. Use the separately governed external execution flow.",
+      });
+    }
+    if (intent.action !== "send_email" && intent.action !== "send_sms") {
+      return res.status(422).json({
+        intent_id,
+        status: "blocked",
+        reason: `No direct connector is registered for action "${intent.action}".`,
+      });
+    }
+    const approvedParameters = intent.parameters || {};
+    if (intent.action === "send_email" && !(approvedParameters.to || approvedParameters.recipient)) {
+      return res.status(400).json({ error: "Cannot execute send_email: approved parameters have no recipient." });
+    }
+    if (intent.action === "send_sms" && !(approvedParameters.to || approvedParameters.phone || approvedParameters.recipient)) {
+      return res.status(400).json({ error: "Cannot execute send_sms: approved parameters have no recipient." });
+    }
 
     // ——— POLICY LAYER — evaluate user-defined policy constraints ———
-    // Runs AFTER token burn, BEFORE execution.
+    // Runs BEFORE reservation and token issuance, and BEFORE execution.
     // DENY → block execution. REQUIRE_CONFIRMATION → return to approval.
     const policyResult = evaluateUserPolicy(intent, {
       principal: req.principal,
@@ -1246,12 +1234,59 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       });
     }
 
-    // ——— STEP 1: Execute the action ———————————————————————————————————————
+    // Reserve the one approved intent before any asynchronous connector call.
+    // This compare-and-set is atomic in the current single-process cache. It
+    // deliberately makes no distributed or crash-recovery reservation claim.
     const timestamp = new Date().toISOString();
-    let executionResult;
+    const reserved = updateIntentIfStatus(intent_id, "authorized", {
+      status: "executing",
+      execution: {
+        intent_id,
+        action: intent.action,
+        status: "reserved",
+        reserved_at: timestamp,
+        principal_id: req.principal?.principal_id || null,
+      },
+    });
+    if (!reserved) {
+      return res.status(409).json({
+        intent_id,
+        status: "blocked",
+        reason: "An execution attempt has already been reserved or the intent is no longer authorized.",
+      });
+    }
 
-    // Check if caller requests external delivery (caller will send email via OAuth/MCP)
-    const deliveryMode = req.body.delivery_mode || "gateway";
+    // Issue and immediately validate one exact, signed, single-use token after
+    // successful reservation. Every point-of-use binding is mandatory.
+    const gatewayKp = getGatewayKeypair();
+    const tokenArgsHash = computeArgsHash(intent.parameters || {});
+    const { token: executionToken, token_id: tokenId, signature: tokenSig, expires_at: tokenExpiresAt } = issueExecutionToken({
+      intent_id,
+      approval_id: intent.authorization?.approval_id || null,
+      tool_name: intent.action,
+      args_hash: tokenArgsHash,
+      max_executions: 1,
+      signFn: (payload) => signPayload(payload, gatewayKp.secretKey),
+    });
+    const burnResult = validateAndBurnToken(intent_id, executionToken, {
+      tool_name: intent.action,
+      args_hash: tokenArgsHash,
+      environment: process.env.RIO_ENVIRONMENT || process.env.NODE_ENV || "production",
+      signature: tokenSig,
+      verifyFn: (payload, sig) => verifySignature(payload, sig, gatewayKp.publicKey),
+    });
+    if (!burnResult.valid) {
+      updateIntent(intent_id, { status: "blocked", execution: { ...reserved.execution, status: "blocked", reason: burnResult.reason } });
+      appendEntry({ intent_id, action: intent.action, agent_id: intent.agent_id, status: "blocked",
+        detail: `Execution BLOCKED: Token validation failed — ${burnResult.reason}` });
+      return res.status(403).json({ intent_id, status: "blocked", reason: burnResult.reason });
+    }
+    appendEntry({ intent_id, action: intent.action, agent_id: intent.agent_id, status: "token_issued",
+      detail: `Authorization token issued, validated and burned (single-use, expires ${tokenExpiresAt}).` });
+    console.log(`[RIO Gateway] Token issued, validated and burned for ${intent_id}`);
+
+    // ——— STEP 1: Execute the action ———————————————————————————————————————
+    let executionResult;
 
     if (intent.action === "send_email") {
       // Extract email parameters
@@ -1267,31 +1302,13 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
         });
       }
 
-      if (deliveryMode === "external") {
-        // External delivery mode: Gateway handles ALL governance (token, receipt, ledger)
-        // but the caller is responsible for actually sending the email.
-        // We record execution as "external_pending" and return the email payload.
-        executionResult = {
-          status: "external_pending",
-          connector: "external",
-          detail: `Email delivery delegated to external caller. To: ${to}, Subject: ${subject}`,
-          email_payload: { to, cc, subject, body },
-        };
-      } else {
-        // Gateway delivery mode: send via nodemailer SMTP
-        try {
-          executionResult = await sendEmail({ to, cc, subject, body });
-        } catch (emailErr) {
-          // SMTP failed — fall back to external mode instead of blocking
-          console.warn(`[RIO Gateway] SMTP failed (${emailErr.message}) — switching to external delivery mode`);
-          executionResult = {
-            status: "external_pending",
-            connector: "external_fallback",
-            detail: `SMTP failed: ${emailErr.message}. Email delivery delegated to external caller. To: ${to}, Subject: ${subject}`,
-            email_payload: { to, cc, subject, body },
-            smtp_error: emailErr.message,
-          };
-        }
+      try {
+        executionResult = await sendEmail({ to, cc, subject, body });
+      } catch (emailErr) {
+        const reason = `SMTP execution failed: ${emailErr.message}`;
+        updateIntent(intent_id, { status: "blocked", execution: { ...reserved.execution, status: "failed", reason } });
+        appendEntry({ intent_id, action: intent.action, agent_id: intent.agent_id, status: "blocked", detail: reason });
+        return res.status(502).json({ intent_id, status: "blocked", reason });
       }
     } else if (intent.action === "send_sms") {
       // Extract SMS parameters
@@ -1308,21 +1325,18 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       try {
         executionResult = await sendSms({ to, body: smsBody });
       } catch (smsErr) {
-        console.warn(`[RIO Gateway] Twilio SMS failed (${smsErr.message})`);
-        executionResult = {
-          status: "failed",
-          connector: "twilio_sms",
-          detail: `SMS failed: ${smsErr.message}. To: ${to}`,
-          sms_error: smsErr.message,
-        };
+        const reason = `SMS execution failed: ${smsErr.message}`;
+        updateIntent(intent_id, { status: "blocked", execution: { ...reserved.execution, status: "failed", reason } });
+        appendEntry({ intent_id, action: intent.action, agent_id: intent.agent_id, status: "blocked", detail: reason });
+        return res.status(502).json({ intent_id, status: "blocked", reason });
       }
-    } else {
-      // For other actions, record as simulated execution
-      executionResult = {
-        status: "simulated",
-        connector: "none",
-        detail: `Action '${intent.action}' executed (simulated — no connector configured).`,
-      };
+    }
+
+    if (!executionResult || executionResult.status !== "sent") {
+      const reason = `Connector did not report a completed send (status: ${executionResult?.status || "missing"}).`;
+      updateIntent(intent_id, { status: "blocked", execution: { ...reserved.execution, status: "failed", reason } });
+      appendEntry({ intent_id, action: intent.action, agent_id: intent.agent_id, status: "blocked", detail: reason });
+      return res.status(502).json({ intent_id, status: "blocked", reason });
     }
 
     // ——— STEP 2: Record execution ——————————————————————————————————
@@ -1487,13 +1501,6 @@ router.post("/execute-action", requireRole("proposer"), async (req, res) => {
       },
       timestamp,
     };
-
-    // If external delivery, include the email payload so caller can send it
-    if (executionResult.email_payload) {
-      responsePayload.email_payload = executionResult.email_payload;
-      responsePayload.delivery_mode = executionResult.connector === "external" ? "external" : "external_fallback";
-      responsePayload.delivery_instruction = "Email not yet sent. Use the email_payload to send via your preferred method (OAuth, MCP, etc). The receipt and ledger entry are already written.";
-    }
 
     res.json(responsePayload);
   } catch (err) {
