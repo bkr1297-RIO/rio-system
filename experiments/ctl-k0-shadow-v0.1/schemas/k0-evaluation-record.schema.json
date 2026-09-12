@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-evaluation-record-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "recordKind", "stage", "captureMode", "labels", "effectVector", "requestId", "captureId", "sourceConsistency", "sourceEpochStatus", "sourceCoverage", "inputDigest", "constitutionDigest", "projectionProfileDigest", "humanVisible", "sealedBeforeHumanDisposition", "promotionEligible", "telemetryCompleteness", "projectionRemainder", "request", "report", "evaluationId"],
+  "properties": {
+    "schemaVersion": { "const": "rio.k0-evaluation-record/0.1" },
+    "recordKind": { "const": "K0_EVALUATION" },
+    "stage": { "const": "SHADOW" },
+    "captureMode": { "const": "POST_FACTO_RETROSPECTIVE" },
+    "labels": { "const": ["NON_AUTHORITATIVE_SHADOW", "NOT_FOR_DECISION_USE"] },
+    "effectVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorityEffect", "blockingEffect", "executionEffect", "settlementEffect", "businessMutationEffect", "sourceReadAuditEffect", "rateLimitEffect"],
+      "properties": {
+        "authorityEffect": { "const": "NONE" },
+        "blockingEffect": { "const": "NONE" },
+        "executionEffect": { "const": "NONE" },
+        "settlementEffect": { "const": "NONE" },
+        "businessMutationEffect": { "const": "NONE" },
+        "sourceReadAuditEffect": { "const": "PRESENT" },
+        "rateLimitEffect": { "const": "PRESENT" }
+      }
+    },
+    "requestId": { "type": "string", "minLength": 1 },
+    "captureId": { "type": "string", "minLength": 64, "maxLength": 64 },
+    "sourceConsistency": { "const": "CHAIN_TIP_STABLE_NON_ATOMIC" },
+    "sourceEpochStatus": { "enum": ["INITIAL_CAPTURE", "SOURCE_REWIND", "EPOCH_RUPTURE", "UNCHANGED", "ADVANCED_ANCESTRY_UNVERIFIED"] },
+    "sourceCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offset", "requestedLimit", "returnedCount", "total"],
+      "properties": {
+        "offset": { "type": "integer", "minimum": 0 },
+        "requestedLimit": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "returnedCount": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "total": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "inputDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "reportDigest": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^[a-f0-9]{64}$" }] },
+    "semanticProjectionDigest": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^[a-f0-9]{64}$" }] },
+    "constitutionDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "verifierDigest": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^[a-f0-9]{64}$" }] },
+    "runnerResultDigest": { "oneOf": [{ "type": "null" }, { "type": "string", "pattern": "^[a-f0-9]{64}$" }] },
+    "projectionProfileDigest": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "humanVisible": { "const": false },
+    "sealedBeforeHumanDisposition": { "const": false },
+    "promotionEligible": { "const": false },
+    "telemetryCompleteness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prospectiveSealing", "humanDispositionLinked", "consequenceLinked", "authorityMaterialAvailable"],
+      "properties": {
+        "prospectiveSealing": { "const": false },
+        "humanDispositionLinked": { "const": false },
+        "consequenceLinked": { "const": false },
+        "authorityMaterialAvailable": { "const": false }
+      }
+    },
+    "projectionRemainder": { "type": "array", "items": { "type": "string" } },
+    "request": { "$ref": "k0-projection.schema.json" },
+    "report": { "oneOf": [{ "type": "object" }, { "type": "null" }] },
+    "evaluationId": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

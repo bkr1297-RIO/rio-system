@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-observation-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "labels", "captureStartedAt", "captureCompletedAt", "consistency", "chainTipBefore", "chainTipAfter", "totalBefore", "totalAfter", "epochStatus", "pageCoverage", "records", "captureId"],
+  "properties": {
+    "schemaVersion": { "const": "rio.k0-observation/0.1" },
+    "labels": { "const": ["NON_AUTHORITATIVE_SHADOW", "NOT_FOR_DECISION_USE"] },
+    "captureStartedAt": { "type": "string", "format": "date-time" },
+    "captureCompletedAt": { "type": "string", "format": "date-time" },
+    "captureAttempt": { "type": "integer", "minimum": 1, "maximum": 3 },
+    "consistency": { "enum": ["CHAIN_TIP_STABLE_NON_ATOMIC", "CHAIN_TIP_CHANGED"] },
+    "chainTipBefore": { "type": "string" },
+    "chainTipAfter": { "type": "string" },
+    "totalBefore": { "type": "integer", "minimum": 0 },
+    "totalAfter": { "type": "integer", "minimum": 0 },
+    "epochStatus": { "enum": ["INITIAL_CAPTURE", "SOURCE_REWIND", "EPOCH_RUPTURE", "UNCHANGED", "ADVANCED_ANCESTRY_UNVERIFIED"] },
+    "pageCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offset", "requestedLimit", "returnedCount", "total"],
+      "properties": {
+        "offset": { "type": "integer", "minimum": 0 },
+        "requestedLimit": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "returnedCount": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "total": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "records": {
+      "type": "array",
+      "maxItems": 20,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["entry", "dedupe_key"],
+        "properties": {
+          "dedupe_key": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "entry": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["entry_id", "prev_hash", "ledger_hash", "timestamp", "intent_id", "action", "agent_id", "status", "receipt_hash", "authorization_hash", "intent_hash"],
+            "properties": {
+              "entry_id": { "type": ["string", "null"] },
+              "prev_hash": { "type": ["string", "null"] },
+              "ledger_hash": { "type": ["string", "null"] },
+              "timestamp": { "type": ["string", "null"] },
+              "intent_id": { "type": ["string", "null"] },
+              "action": { "type": ["string", "null"] },
+              "agent_id": { "type": ["string", "null"] },
+              "status": { "type": ["string", "null"] },
+              "receipt_hash": { "type": ["string", "null"] },
+              "authorization_hash": { "type": ["string", "null"] },
+              "intent_hash": { "type": ["string", "null"] }
+            }
+          }
+        }
+      }
+    },
+    "captureId": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-disagreement-record-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "evaluationRef", "controlProjectionRef", "humanDispositionRef", "classification", "effectVector", "disagreementId"],
+  "properties": {
+    "schemaVersion": { "const": "rio.k0-disagreement-record/0.1" },
+    "evaluationRef": { "type": "string", "minLength": 1 },
+    "controlProjectionRef": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "humanDispositionRef": { "type": ["string", "null"] },
+    "classification": { "enum": ["AGREE", "K0_MORE_RESTRICTIVE", "HUMAN_MORE_RESTRICTIVE", "INPUT_TELEMETRY_GAP", "INSUFFICIENT_DATA", "NOT_COVERED"] },
+    "effectVector": { "$ref": "#/$defs/effectVector" },
+    "disagreementId": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+  },
+  "$defs": {
+    "effectVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorityEffect", "blockingEffect", "executionEffect", "settlementEffect", "businessMutationEffect", "sourceReadAuditEffect", "rateLimitEffect"],
+      "properties": {
+        "authorityEffect": { "const": "NONE" },
+        "blockingEffect": { "const": "NONE" },
+        "executionEffect": { "const": "NONE" },
+        "settlementEffect": { "const": "NONE" },
+        "businessMutationEffect": { "const": "NONE" },
+        "sourceReadAuditEffect": { "const": "PRESENT" },
+        "rateLimitEffect": { "const": "PRESENT" }
+      }
+    }
+  }
+}

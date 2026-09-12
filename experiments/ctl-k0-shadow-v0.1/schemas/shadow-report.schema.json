@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.k0-shadow-capture-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "labels", "status", "effectVector"],
+  "properties": {
+    "schemaVersion": { "enum": ["rio.k0-shadow-capture/0.1", "rio.k0-shadow-failure/0.1"] },
+    "labels": { "const": ["NON_AUTHORITATIVE_SHADOW", "NOT_FOR_DECISION_USE"] },
+    "status": { "enum": ["CAPTURE_STABLE_NON_ATOMIC", "CAPTURE_HOLD", "SHADOW_FAILURE_ISOLATED"] },
+    "captureId": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+    "consistency": { "enum": ["CHAIN_TIP_STABLE_NON_ATOMIC", "CHAIN_TIP_CHANGED"] },
+    "epochStatus": { "enum": ["INITIAL_CAPTURE", "SOURCE_REWIND", "EPOCH_RUPTURE", "UNCHANGED", "ADVANCED_ANCESTRY_UNVERIFIED"] },
+    "totalBefore": { "type": "integer", "minimum": 0 },
+    "totalAfter": { "type": "integer", "minimum": 0 },
+    "chainTipBefore": { "type": "string" },
+    "chainTipAfter": { "type": "string" },
+    "recordCount": { "type": "integer", "minimum": 0, "maximum": 20 },
+    "pageCoverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["offset", "requestedLimit", "returnedCount", "total"],
+      "properties": {
+        "offset": { "type": "integer", "minimum": 0 },
+        "requestedLimit": { "type": "integer", "minimum": 1, "maximum": 20 },
+        "returnedCount": { "type": "integer", "minimum": 0, "maximum": 20 },
+        "total": { "type": "integer", "minimum": 0 }
+      }
+    },
+    "stage": { "enum": ["CAPTURE", "K0_RUNNER"] },
+    "error": { "type": "string", "minLength": 1 },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "requestId": { "type": "string", "minLength": 1 }
+      }
+    },
+    "effectVector": { "$ref": "#/$defs/effectVector" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "schemaVersion": { "const": "rio.k0-shadow-capture/0.1" } }, "required": ["schemaVersion"] },
+      "then": { "required": ["captureId", "consistency", "epochStatus", "totalBefore", "totalAfter", "chainTipBefore", "chainTipAfter", "recordCount", "pageCoverage"] }
+    },
+    {
+      "if": { "properties": { "schemaVersion": { "const": "rio.k0-shadow-failure/0.1" } }, "required": ["schemaVersion"] },
+      "then": { "required": ["stage", "error", "source"] }
+    }
+  ],
+  "$defs": {
+    "effectVector": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["authorityEffect", "blockingEffect", "executionEffect", "settlementEffect", "businessMutationEffect", "sourceReadAuditEffect", "rateLimitEffect"],
+      "properties": {
+        "authorityEffect": { "const": "NONE" },
+        "blockingEffect": { "const": "NONE" },
+        "executionEffect": { "const": "NONE" },
+        "settlementEffect": { "const": "NONE" },
+        "businessMutationEffect": { "const": "NONE" },
+        "sourceReadAuditEffect": { "const": "PRESENT" },
+        "rateLimitEffect": { "const": "PRESENT" }
+      }
+    }
+  }
+}

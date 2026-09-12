@@ -1,0 +1,24 @@
+name: K0.1 shadow observer
+
+on:
+  pull_request:
+    paths:
+      - "experiments/ctl-k0-shadow-v0.1/**"
+      - ".github/workflows/k0-shadow-observer.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verify retrospective shadow boundaries
+        working-directory: experiments/ctl-k0-shadow-v0.1
+        run: node --test tests/*.test.mjs

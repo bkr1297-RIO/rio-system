@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.local/schemas/rio.human-disposition-observation-0.1.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schemaVersion", "dispositionId", "evaluationRef", "phase", "humanRef", "humanSawK0", "disposition", "observedAt", "sourceRefs"],
+  "properties": {
+    "schemaVersion": { "const": "rio.human-disposition-observation/0.1" },
+    "dispositionId": { "type": "string", "minLength": 1 },
+    "evaluationRef": { "type": "string", "minLength": 1 },
+    "phase": { "enum": ["OPERATIVE_DISPOSITION", "POST_CASE_ADJUDICATION"] },
+    "humanRef": { "type": "string", "minLength": 1 },
+    "humanSawK0": { "const": false },
+    "disposition": { "enum": ["APPROVE", "HOLD", "REVISE", "DENY"] },
+    "observedAt": { "type": "string", "format": "date-time" },
+    "sourceRefs": { "type": "array", "items": { "type": "string" } }
+  }
+}

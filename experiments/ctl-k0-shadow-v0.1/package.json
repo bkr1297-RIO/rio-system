@@ -1,0 +1,15 @@
+{
+  "name": "@rio/ctl-k0-shadow-v0.1",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Out-of-process, read-only observer for bounded K0.1 shadow evaluation.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --test tests/*.test.mjs",
+    "check": "node --test tests/*.test.mjs"
+  },
+  "license": "UNLICENSED"
+}
