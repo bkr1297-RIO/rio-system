@@ -44,6 +44,14 @@ Keeper:
 | Protocol/spec bridge layer | Active Source-of-Truth | `docs/protocols/portable-governance-protocol-stack-v0.1.md` | Portable protocol/spec bridge: grounding, Bondi/MANTIS role extraction, RIO boundary, MUS receipt boundary, consent/mode/delegation posture, governed turn protocol, consequence levels, test harness, promotion/supersession posture, Matrix-to-Clearance Fence, MANTIS Baseline Non-Adjustment Fence |
 | Bondi/MANTIS translational layer | Active Companion Source-of-Truth | `docs/protocols/bondi-mantis-translational-layer-v0.2.md` | Bondi translation/packetization, orientation support, matrix-coordinate proposal rules, packet fields, MANTIS witness/recurrence, orientation drift, matrix-path observation, witness fields, non-collapse rules, mapping to Matrix, Orientation Function, and Sovereign Turn flow |
 
+## Internal Canonical v0.1 Alignment
+
+| Layer | Status | File | Scope |
+|---|---|---|---|
+| Repo reconciliation | internal-canonical-reference | `docs/handoffs/repo-reconciliation-internal-canonical-v0.1.md` | Records the docs-only reconciliation of Internal Canonical v0.1 against the current repo shelf, including inspected files, missing expected paths, deferred decisions, and non-claims. |
+
+Meaning: Internal Canonical v0.1 is an approved internal source reference for defined architecture scope. Repository documents remain repo artifacts and must each declare their own status. Repo files do not automatically become runtime proof, public claims, or production implementation.
+
 ## Current Protocol Candidates
 
 | Layer | Status | File | Scope |

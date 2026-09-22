@@ -78,6 +78,18 @@ POST /api/v1/intents/:id/govern
 
 ---
 
+## Architecture Reconciliation
+
+A docs-only reconciliation receipt for Internal Canonical v0.1 is available at:
+
+```text
+docs/handoffs/repo-reconciliation-internal-canonical-v0.1.md
+```
+
+This receipt records inspected files, missing expected architecture-spine paths, deferred questions, and confirms that the reconciliation does not implement runtime behavior.
+
+---
+
 ## Key Runtime Docs
 
 Read in this order:
