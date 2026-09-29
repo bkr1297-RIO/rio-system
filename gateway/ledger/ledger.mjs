@@ -67,8 +67,7 @@ function sha256(data) {
  * @param {string} [data.intent_hash] - Hash of the original intent
  * @returns {object} The new ledger entry
  */
-export function appendEntry(data) {
-  const prevHash = currentHash;
+export function buildLedgerEntry(data, prevHash) {
   const timestamp = new Date().toISOString();
   const entryId = randomUUID();
 
@@ -104,6 +103,12 @@ export function appendEntry(data) {
     intent_hash: data.intent_hash || null,
   };
 
+  return entry;
+}
+
+export function appendEntry(data) {
+  const entry = buildLedgerEntry(data, currentHash);
+  const ledgerHash = entry.ledger_hash;
   entries.push(entry);
   currentHash = ledgerHash;
 
@@ -140,7 +145,9 @@ export function getEntryCount() {
  * Verify the entire hash chain.
  * Returns { valid: boolean, entries_checked: number, first_invalid: number|null }
  */
-export function verifyChain() {
+export function verifyChain() { return verifyLedgerEntries(entries); }
+
+export function verifyLedgerEntries(entries) {
   if (entries.length === 0) {
     return { valid: true, entries_checked: 0, first_invalid: null };
   }
