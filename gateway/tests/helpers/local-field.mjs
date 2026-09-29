@@ -30,7 +30,14 @@ function signed(body, key) {
     signature: signPayload(canonicalizeArgs(body), key.secretKey),
   };
 }
-function setup(t, nodeType = 'laptop', policyPatch = {}, sourcePatch = {}) {
+function setup(
+  t,
+  nodeType = 'laptop',
+  policyPatch = {},
+  sourcePatch = {},
+  fieldPatch = {},
+  runtimeOptions = {},
+) {
   assert.equal(
     typeof api?.LocalField,
     'function',
@@ -75,6 +82,7 @@ function setup(t, nodeType = 'laptop', policyPatch = {}, sourcePatch = {}) {
         ...policyPatch,
       },
       dependencies: { corpus: 'v1' },
+      ...fieldPatch,
     },
     human,
   );
@@ -84,6 +92,7 @@ function setup(t, nodeType = 'laptop', policyPatch = {}, sourcePatch = {}) {
     receiver: 'node-b',
     signingKey: b.secretKey,
     definition,
+    ...runtimeOptions,
   });
   const control = (type, values, key = human, issuer = 'I-1') =>
     runtime.control(signed({ ...stamp(), type, issuer, ...values }, key));
@@ -182,6 +191,7 @@ function setup(t, nodeType = 'laptop', policyPatch = {}, sourcePatch = {}) {
         anchor,
         receiver: 'node-b',
         signingKey: b.secretKey,
+        ...runtimeOptions,
       });
       return runtime;
     },
