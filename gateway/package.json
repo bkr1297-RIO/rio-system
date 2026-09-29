@@ -15,7 +15,10 @@
     "test:spgm:govern": "node --test tests/spgm-govern-request.test.mjs tests/spgm-govern-route.test.mjs",
     "test:spgm:openapi": "node --test tests/openapi-spgm.test.mjs",
     "test:prime": "node --test tests/prime-runtime-bridge.test.mjs tests/prime-authenticated-sandbox.test.mjs tests/prime-live-gateway-wiring.test.mjs tests/prime-workspace-concurrency.test.mjs tests/prime-workspace-crash-recovery.test.mjs tests/prime-receipt-durability.test.mjs",
-    "test:execution-binding": "node --test tests/execution-binding-repair.test.mjs"
+    "test:execution-binding": "node --test tests/execution-binding-repair.test.mjs",
+    "field": "node local-field/cli.mjs",
+    "test:local-field": "node --test tests/local-field*.test.mjs",
+    "field:acceptance": "node scripts/run-local-field-acceptance.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

@@ -1,0 +1,1248 @@
+{
+  "profile": "one-local-field-v0.1",
+  "run_id": "aedf7a91-0a7d-4719-86d9-229c44c876a3",
+  "ran_at": "2026-09-29T00:21:18.441Z",
+  "evidence_ceiling": "Real local engineering execution with ephemeral independently keyed principals; no production SourcePoint impersonation, deployment or constitutional ratification.",
+  "runtime": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "first_pid": 25,
+    "second_pid": 33
+  },
+  "anchor": {
+    "principal_id": "sourcepoint-engineering-fixture",
+    "actor_type": "human",
+    "primary_role": "root_authority",
+    "public_key_hex": "a54ad2d09ee310bcbee0bd4e454665092f72c36547a9132689778b2e1c5de47f"
+  },
+  "definition": {
+    "body": {
+      "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+      "record_id": "6b345a0c-ea26-4387-92d2-cc5813eafc3e",
+      "issued_at": "2026-09-29T00:21:17.489Z",
+      "expires_at": "2026-09-29T01:21:17.490Z",
+      "type": "field",
+      "sourcepoint": "sourcepoint-engineering-fixture",
+      "receiver_node": "field-node-b",
+      "policy": {
+        "policy_id": "one-field-create-only",
+        "policy_version": "0.1",
+        "status": "active",
+        "scope": {
+          "agents": [
+            "field-node-a"
+          ],
+          "systems": [
+            "local"
+          ]
+        },
+        "action_classes": [
+          {
+            "class_id": "bounded-artifact",
+            "pattern": "create_document",
+            "governance_decision": "REQUIRE_HUMAN",
+            "risk_tier": "LOW"
+          }
+        ]
+      },
+      "dependencies": {
+        "build_contract": "one-local-field-v0.1"
+      }
+    },
+    "signature": "b9426ae60573a3ac5399a21878aa9058a5d6757a04b2e28fb5bcdbe59ea8c666be11c3f15e1b63097012ec88d584af1ab58c7b2ad10bf5831185efc7aadd850c"
+  },
+  "controls": [
+    {
+      "body": {
+        "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+        "record_id": "7193c4f0-78ab-42fc-b713-34dc1a8c45e3",
+        "issued_at": "2026-09-29T00:21:17.624Z",
+        "expires_at": "2026-09-29T01:21:17.624Z",
+        "type": "enrollment",
+        "issuer": "sourcepoint-engineering-fixture",
+        "node": {
+          "node_id": "field-node-a",
+          "principal_id": "field-node-a",
+          "node_type": "model_runtime",
+          "actor_type": "ai_agent",
+          "primary_role": "proposer",
+          "secondary_roles": [],
+          "public_key_hex": "96f31b62515e1c836d810859051fb36ff38c6142c7e629680e6862ca8288b151",
+          "capabilities": [
+            "create_document"
+          ],
+          "interfaces": [
+            "http-json"
+          ],
+          "custody_boundary": "field-node-a",
+          "status": "active"
+        }
+      },
+      "signature": "929f34cbb25cbd6b64607eca90abb24214b9d45aa1b6395d19ada98bbb81b1816367338f35fc01af47c09bfb0c2c170938a6877977bc625e62fb79cd4fcbcc09"
+    },
+    {
+      "body": {
+        "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+        "record_id": "4fac185f-7d22-4ed8-8296-9d1f553f6f3f",
+        "issued_at": "2026-09-29T00:21:17.677Z",
+        "expires_at": "2026-09-29T01:21:17.677Z",
+        "type": "enrollment",
+        "issuer": "sourcepoint-engineering-fixture",
+        "node": {
+          "node_id": "field-node-b",
+          "principal_id": "field-node-b",
+          "node_type": "local_service",
+          "actor_type": "executor",
+          "primary_role": "executor",
+          "secondary_roles": [],
+          "public_key_hex": "36bb3aeb5da2d60729b7349ca3d7e205b1b017cb3b7480982c835b488f27633f",
+          "capabilities": [
+            "create_document"
+          ],
+          "interfaces": [
+            "http-json"
+          ],
+          "custody_boundary": "field-node-b",
+          "status": "active"
+        }
+      },
+      "signature": "f74294727f06a50462e4bbd416d2553493022d8bb182acabaeba722d2c5c15e31566918c2264ff6bcd60e3f4410531f918f40900a7c250f89c298e346189540a"
+    },
+    {
+      "body": {
+        "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+        "record_id": "8925e782-37ef-47d3-b79e-f01c92b5bb62",
+        "issued_at": "2026-09-29T00:21:17.797Z",
+        "expires_at": "2026-09-29T01:21:17.797Z",
+        "type": "grant",
+        "issuer": "sourcepoint-engineering-fixture",
+        "grant": {
+          "grant_id": "8c74b84a-a4c0-46ef-8769-15dda879bd7e",
+          "subject": "field-node-a",
+          "target_node": "field-node-b",
+          "action": "create_document",
+          "target": "one-local-field-return.txt",
+          "scope": "artifact-create",
+          "purpose": "bounded engineering acceptance",
+          "dependencies": {
+            "build_contract": "one-local-field-v0.1"
+          },
+          "conditions": {},
+          "parent": null,
+          "allow_delegation": false,
+          "max_uses": null
+        }
+      },
+      "signature": "07ab099348eaccbc61f928caadef73c254ac68e8b48cdcf680743c5a7c6b6164119d8d861cac6c41b47ea88bf8d1c6f63776bb5188dfc972564a5d4b7577f90c"
+    },
+    {
+      "body": {
+        "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+        "record_id": "df0f4b59-aa32-430e-9fb0-cc9d765fda00",
+        "issued_at": "2026-09-29T00:21:18.052Z",
+        "expires_at": "2026-09-29T01:21:18.052Z",
+        "type": "revocation",
+        "issuer": "sourcepoint-engineering-fixture",
+        "grant_id": "8c74b84a-a4c0-46ef-8769-15dda879bd7e"
+      },
+      "signature": "97c0df258dc2010963b6f3eb5448a3d690cf9187b49cd8173e57702a00d9d0284374c637f831774de9e21c32e43d0d471797c188ecaee7c0ec97d256764b7406"
+    }
+  ],
+  "candidate": {
+    "body": {
+      "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+      "record_id": "f58c3571-03b2-4d40-95f4-95ca9e72ac65",
+      "issued_at": "2026-09-29T00:21:17.720Z",
+      "expires_at": "2026-09-29T01:21:17.720Z",
+      "type": "candidate",
+      "source_node": "field-node-a",
+      "candidate_id": "bfa133cc-70b0-4684-9138-bb85a4467732",
+      "kind": "recommended_action",
+      "content": {
+        "artifact_kind": "recommended_action",
+        "authored_by": "Codex during Brian's ONE Local Field v0.1 build assignment",
+        "authority_effect": "none",
+        "action": "create_document",
+        "target": "one-local-field-return.txt",
+        "content": "ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\n"
+      }
+    },
+    "signature": "01fd9eed833d2e017118205c72821bc25408af0179acb4b84767b3f4ff887621474dae3b188e07f429701363388e604b0a7aa7a06bfffb09aafa316144b35f0f",
+    "authority_effect": "none",
+    "content_hash": "8426ad48c9de65dcb1c27551f6df5125390de6ec867fdf5533bfdbe59f78e49e"
+  },
+  "chain": {
+    "passage": {
+      "body": {
+        "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+        "record_id": "c399395a-499c-4e5e-ad30-6bd050c91185",
+        "issued_at": "2026-09-29T00:21:17.826Z",
+        "expires_at": "2026-09-29T01:21:17.826Z",
+        "type": "passage",
+        "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+        "source_node": "field-node-a",
+        "subject": "field-node-a",
+        "target_node": "field-node-b",
+        "action": "create_document",
+        "target": "one-local-field-return.txt",
+        "payload": {
+          "content": "ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\n"
+        },
+        "payload_hash": "d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c",
+        "authority_basis": "8c74b84a-a4c0-46ef-8769-15dda879bd7e",
+        "scope": "artifact-create",
+        "purpose": "bounded engineering acceptance",
+        "dependencies": {
+          "build_contract": "one-local-field-v0.1"
+        },
+        "conditions": {},
+        "nonce": "0be4b4f9-6a96-4806-bf55-90cb41091de8",
+        "correlation_id": "9b0462d3-140c-4ef4-9d03-9ed0c66a99b1",
+        "return_requirement": {
+          "required": true,
+          "to": "sourcepoint-engineering-fixture"
+        },
+        "origin": {
+          "intent": "Brian / SourcePoint authorized this isolated Local Field build and real bounded filesystem acceptance. This ephemeral verification anchor is not Brian's deployed identity.",
+          "candidate_id": "bfa133cc-70b0-4684-9138-bb85a4467732"
+        }
+      },
+      "signature": "c33131e3b29a4f650dc6ea019deaec35cf985b6d227599aa73d22cc9ac436096865f0053592b6245af50e96071a5dc66a563425ef8a199d3086e1207970bfc0b"
+    },
+    "intent": {
+      "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+      "action": "create_document",
+      "agent_id": "field-node-a",
+      "parameters": {
+        "content": "ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\n",
+        "target": "one-local-field-return.txt",
+        "passage": {
+          "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+          "record_id": "c399395a-499c-4e5e-ad30-6bd050c91185",
+          "issued_at": "2026-09-29T00:21:17.826Z",
+          "expires_at": "2026-09-29T01:21:17.826Z",
+          "type": "passage",
+          "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+          "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+          "source_node": "field-node-a",
+          "subject": "field-node-a",
+          "target_node": "field-node-b",
+          "action": "create_document",
+          "target": "one-local-field-return.txt",
+          "payload": {
+            "content": "ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\n"
+          },
+          "payload_hash": "d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c",
+          "authority_basis": "8c74b84a-a4c0-46ef-8769-15dda879bd7e",
+          "scope": "artifact-create",
+          "purpose": "bounded engineering acceptance",
+          "dependencies": {
+            "build_contract": "one-local-field-v0.1"
+          },
+          "conditions": {},
+          "nonce": "0be4b4f9-6a96-4806-bf55-90cb41091de8",
+          "correlation_id": "9b0462d3-140c-4ef4-9d03-9ed0c66a99b1",
+          "return_requirement": {
+            "required": true,
+            "to": "sourcepoint-engineering-fixture"
+          },
+          "origin": {
+            "intent": "Brian / SourcePoint authorized this isolated Local Field build and real bounded filesystem acceptance. This ephemeral verification anchor is not Brian's deployed identity.",
+            "candidate_id": "bfa133cc-70b0-4684-9138-bb85a4467732"
+          }
+        }
+      },
+      "timestamp": "2026-09-29T00:21:17.826Z",
+      "target_environment": "local"
+    },
+    "decision": {
+      "decision_id": "88c89cc0-94d6-4154-ac03-de2e7d379e43",
+      "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "status": "ADMITTED",
+      "passage_hash": "bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3",
+      "policy": {
+        "governance_decision": "REQUIRE_HUMAN",
+        "risk_tier": "LOW",
+        "matched_class": "bounded-artifact",
+        "status": "requires_approval",
+        "reason": "Action requires explicit human authorization before execution.",
+        "requires_approval": true,
+        "risk_level": "low",
+        "checks": [
+          {
+            "check": "policy_status",
+            "passed": true,
+            "status": "active"
+          },
+          {
+            "check": "agent_in_scope",
+            "passed": true,
+            "agent_id": "field-node-a"
+          },
+          {
+            "check": "system_in_scope",
+            "passed": true,
+            "target_system": "local"
+          },
+          {
+            "check": "action_class_match",
+            "passed": true,
+            "action": "create_document",
+            "matched_class": "bounded-artifact",
+            "risk_tier": "LOW",
+            "governance_decision": "REQUIRE_HUMAN"
+          },
+          {
+            "check": "confidence_threshold",
+            "passed": true,
+            "confidence": 0,
+            "threshold": 80
+          },
+          {
+            "check": "spgm_policy_review_context",
+            "passed": true,
+            "effect": "not_present"
+          }
+        ],
+        "policy_version": "0.1",
+        "policy_hash": "0200e6b10be291eddcf227066518b804f2e7f185cd899d7a122b874a15e3e03f",
+        "approval_requirement": {
+          "required_roles": null
+        },
+        "approval_ttl": null
+      },
+      "authority_lineage": [
+        "8c74b84a-a4c0-46ef-8769-15dda879bd7e"
+      ],
+      "issued_at": "2026-09-29T00:21:17.883Z",
+      "owner": "gateway/governance/policy-engine.mjs"
+    },
+    "fidelity": {
+      "fidelity_id": "c0b2dce6-d1f0-4b65-be6e-a0757ca34fa9",
+      "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "status": "PASS",
+      "decision_id": "88c89cc0-94d6-4154-ac03-de2e7d379e43",
+      "passage_hash": "bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3",
+      "checks": {
+        "binding_inputs_present": true,
+        "token_exists": true,
+        "token_active": true,
+        "token_not_expired": true,
+        "intent_binding": true,
+        "tool_binding": true,
+        "args_binding": true,
+        "environment_binding": true,
+        "payload_integrity": true,
+        "signature_valid": true,
+        "execution_limit": true
+      },
+      "checked_at": "2026-09-29T00:21:17.944Z"
+    },
+    "attempt": {
+      "attempt_id": "f2a0d5e7-4e31-4eb0-a688-93d5353e4204",
+      "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "create_document",
+      "target": "one-local-field-return.txt",
+      "payload_hash": "d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c",
+      "attempted_at": "2026-09-29T00:21:17.944Z",
+      "executor_node": "field-node-b"
+    },
+    "occurrence": {
+      "occurrence_id": "9c830242-47e6-439c-a48b-10214a4965ac",
+      "status": "OBSERVED",
+      "target": "one-local-field-return.txt",
+      "content_hash": "2b247a9a43316d059f54677e564b013e49017dc7e233842df4655d67948ecf04",
+      "bytes": 230,
+      "device": 27,
+      "inode": 1190946,
+      "observed_at": "2026-09-29T00:21:17.945Z",
+      "method": "separate_descriptor_read_after_write"
+    },
+    "receipt_artifacts": {
+      "intent": {
+        "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+        "action": "create_document",
+        "agent_id": "field-node-a",
+        "parameters": {
+          "content": "ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\n",
+          "target": "one-local-field-return.txt",
+          "passage": {
+            "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+            "record_id": "c399395a-499c-4e5e-ad30-6bd050c91185",
+            "issued_at": "2026-09-29T00:21:17.826Z",
+            "expires_at": "2026-09-29T01:21:17.826Z",
+            "type": "passage",
+            "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+            "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+            "source_node": "field-node-a",
+            "subject": "field-node-a",
+            "target_node": "field-node-b",
+            "action": "create_document",
+            "target": "one-local-field-return.txt",
+            "payload": {
+              "content": "ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\n"
+            },
+            "payload_hash": "d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c",
+            "authority_basis": "8c74b84a-a4c0-46ef-8769-15dda879bd7e",
+            "scope": "artifact-create",
+            "purpose": "bounded engineering acceptance",
+            "dependencies": {
+              "build_contract": "one-local-field-v0.1"
+            },
+            "conditions": {},
+            "nonce": "0be4b4f9-6a96-4806-bf55-90cb41091de8",
+            "correlation_id": "9b0462d3-140c-4ef4-9d03-9ed0c66a99b1",
+            "return_requirement": {
+              "required": true,
+              "to": "sourcepoint-engineering-fixture"
+            },
+            "origin": {
+              "intent": "Brian / SourcePoint authorized this isolated Local Field build and real bounded filesystem acceptance. This ephemeral verification anchor is not Brian's deployed identity.",
+              "candidate_id": "bfa133cc-70b0-4684-9138-bb85a4467732"
+            }
+          }
+        },
+        "timestamp": "2026-09-29T00:21:17.826Z",
+        "target_environment": "local"
+      },
+      "governance": {
+        "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+        "status": "ADMITTED",
+        "risk_level": "LOW",
+        "requires_approval": true,
+        "checks": {
+          "decision": {
+            "decision_id": "88c89cc0-94d6-4154-ac03-de2e7d379e43",
+            "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+            "status": "ADMITTED",
+            "passage_hash": "bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3",
+            "policy": {
+              "governance_decision": "REQUIRE_HUMAN",
+              "risk_tier": "LOW",
+              "matched_class": "bounded-artifact",
+              "status": "requires_approval",
+              "reason": "Action requires explicit human authorization before execution.",
+              "requires_approval": true,
+              "risk_level": "low",
+              "checks": [
+                {
+                  "check": "policy_status",
+                  "passed": true,
+                  "status": "active"
+                },
+                {
+                  "check": "agent_in_scope",
+                  "passed": true,
+                  "agent_id": "field-node-a"
+                },
+                {
+                  "check": "system_in_scope",
+                  "passed": true,
+                  "target_system": "local"
+                },
+                {
+                  "check": "action_class_match",
+                  "passed": true,
+                  "action": "create_document",
+                  "matched_class": "bounded-artifact",
+                  "risk_tier": "LOW",
+                  "governance_decision": "REQUIRE_HUMAN"
+                },
+                {
+                  "check": "confidence_threshold",
+                  "passed": true,
+                  "confidence": 0,
+                  "threshold": 80
+                },
+                {
+                  "check": "spgm_policy_review_context",
+                  "passed": true,
+                  "effect": "not_present"
+                }
+              ],
+              "policy_version": "0.1",
+              "policy_hash": "0200e6b10be291eddcf227066518b804f2e7f185cd899d7a122b874a15e3e03f",
+              "approval_requirement": {
+                "required_roles": null
+              },
+              "approval_ttl": null
+            },
+            "authority_lineage": [
+              "8c74b84a-a4c0-46ef-8769-15dda879bd7e"
+            ],
+            "issued_at": "2026-09-29T00:21:17.883Z",
+            "owner": "gateway/governance/policy-engine.mjs"
+          }
+        }
+      },
+      "authorization": {
+        "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+        "decision": "approved",
+        "authorized_by": "sourcepoint-engineering-fixture",
+        "timestamp": "2026-09-29T00:21:17.883Z",
+        "conditions": {
+          "lineage": [
+            {
+              "body": {
+                "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+                "record_id": "8925e782-37ef-47d3-b79e-f01c92b5bb62",
+                "issued_at": "2026-09-29T00:21:17.797Z",
+                "expires_at": "2026-09-29T01:21:17.797Z",
+                "type": "grant",
+                "issuer": "sourcepoint-engineering-fixture",
+                "grant": {
+                  "grant_id": "8c74b84a-a4c0-46ef-8769-15dda879bd7e",
+                  "subject": "field-node-a",
+                  "target_node": "field-node-b",
+                  "action": "create_document",
+                  "target": "one-local-field-return.txt",
+                  "scope": "artifact-create",
+                  "purpose": "bounded engineering acceptance",
+                  "dependencies": {
+                    "build_contract": "one-local-field-v0.1"
+                  },
+                  "conditions": {},
+                  "parent": null,
+                  "allow_delegation": false,
+                  "max_uses": null
+                }
+              },
+              "signature": "07ab099348eaccbc61f928caadef73c254ac68e8b48cdcf680743c5a7c6b6164119d8d861cac6c41b47ea88bf8d1c6f63776bb5188dfc972564a5d4b7577f90c"
+            }
+          ],
+          "passage_hash": "bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3"
+        }
+      },
+      "execution": {
+        "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+        "action": "create_document",
+        "connector": "gateway/execution/filesystem-executor.mjs",
+        "timestamp": "2026-09-29T00:21:17.945Z",
+        "result": {
+          "adapter": {
+            "status": "COMPLETED",
+            "invocation_id": "2d75b55f-f76a-4fb8-ad54-5430917c1e9d",
+            "bytes": 230
+          },
+          "attempt": {
+            "attempt_id": "f2a0d5e7-4e31-4eb0-a688-93d5353e4204",
+            "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+            "action": "create_document",
+            "target": "one-local-field-return.txt",
+            "payload_hash": "d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c",
+            "attempted_at": "2026-09-29T00:21:17.944Z",
+            "executor_node": "field-node-b"
+          },
+          "occurrence": {
+            "occurrence_id": "9c830242-47e6-439c-a48b-10214a4965ac",
+            "status": "OBSERVED",
+            "target": "one-local-field-return.txt",
+            "content_hash": "2b247a9a43316d059f54677e564b013e49017dc7e233842df4655d67948ecf04",
+            "bytes": 230,
+            "device": 27,
+            "inode": 1190946,
+            "observed_at": "2026-09-29T00:21:17.945Z",
+            "method": "separate_descriptor_read_after_write"
+          },
+          "fidelity": {
+            "fidelity_id": "c0b2dce6-d1f0-4b65-be6e-a0757ca34fa9",
+            "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+            "status": "PASS",
+            "decision_id": "88c89cc0-94d6-4154-ac03-de2e7d379e43",
+            "passage_hash": "bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3",
+            "checks": {
+              "binding_inputs_present": true,
+              "token_exists": true,
+              "token_active": true,
+              "token_not_expired": true,
+              "intent_binding": true,
+              "tool_binding": true,
+              "args_binding": true,
+              "environment_binding": true,
+              "payload_integrity": true,
+              "signature_valid": true,
+              "execution_limit": true
+            },
+            "checked_at": "2026-09-29T00:21:17.944Z"
+          },
+          "provenance": {
+            "proposed": "field-node-a",
+            "admitted": "field-node-b",
+            "attempted": "field-node-b",
+            "observed": "field-node-b",
+            "returned": "field-node-b"
+          },
+          "correlation_id": "9b0462d3-140c-4ef4-9d03-9ed0c66a99b1"
+        }
+      }
+    },
+    "receipt": {
+      "receipt_id": "1f7d28bd-6888-4da5-80fb-91705709a1a2",
+      "receipt_type": "governed_action",
+      "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+      "action": "create_document",
+      "agent_id": "field-node-a",
+      "authorized_by": "sourcepoint-engineering-fixture",
+      "timestamp": "2026-09-29T00:21:17.945Z",
+      "hash_chain": {
+        "intent_hash": "da91215393e397ca6510181996ad7d8a1887fea738080d2f8b92dccbcb7cb596",
+        "governance_hash": "aa89c8647e911f35c97083b190f4828478944326249f2b6d5fc3a6bec4669c59",
+        "authorization_hash": "511257b7308d8da2b9e639e86c8099e9082163d3f53d2bff1697d2c2540222a2",
+        "execution_hash": "841342e5b2b345a1e199a04ec3d01413788edeea6e5aa6127eded5620992e983",
+        "receipt_hash": "d612669c802e58b3b07a569ae57350305b73f1661abbdf52dd06f05ae3b9f8dc"
+      },
+      "verification": {
+        "algorithm": "SHA-256",
+        "chain_length": 5,
+        "chain_order": [
+          "intent_hash",
+          "governance_hash",
+          "authorization_hash",
+          "execution_hash",
+          "receipt_hash"
+        ]
+      },
+      "ingestion": {
+        "source": "local-field",
+        "channel": "signed-passage",
+        "source_message_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "timestamp": "2026-09-29T00:21:17.945Z"
+      },
+      "policy": {
+        "evaluated": true,
+        "decision": "ALLOW",
+        "policy_pack": "one-field-create-only",
+        "rules_triggered": [
+          "EXACT_HUMAN_GRANT",
+          "POINT_OF_USE_FIDELITY"
+        ]
+      },
+      "local_field_attestation": {
+        "profile": "rio-gateway-local-field-v0.1",
+        "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+        "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "signer_id": "field-node-b",
+        "signature": "07bf4b99e0904248a5f6f161c3caea2fc2ea13242db545ab9f53065020dcf4e07816293ec94a133c836f83ef144e9a0a05ef2d27d2d8178f3c004df64b0caa05"
+      }
+    },
+    "return": {
+      "return_id": "b9293441-1663-47d4-9cc1-ccdc456ebe78",
+      "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+      "correlation_id": "9b0462d3-140c-4ef4-9d03-9ed0c66a99b1",
+      "to": "sourcepoint-engineering-fixture",
+      "status": "RETURNED",
+      "outcome": "OBSERVED",
+      "receipt_id": "1f7d28bd-6888-4da5-80fb-91705709a1a2",
+      "reason": null,
+      "returned_at": "2026-09-29T00:21:17.954Z",
+      "attestation": {
+        "profile": "rio-gateway-local-field-return-v0.1",
+        "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+        "signer_id": "field-node-b",
+        "signature": "8d3a054902d6461aadf95ebd895110b7f754711bde88a350b8303f70dce5b65cfabc76762cfea6cf4fa6d07d8182e93a83e4d98cde92fedcd1ce85c697d8fb01"
+      }
+    }
+  },
+  "ledger": [
+    {
+      "entry_id": "d47ed6eb-efd8-43ad-831a-756e8dc09ffc",
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "ledger_hash": "3c83644a8895f837b042dcb42d4cced74720148aa7393346938e61820bcb8370",
+      "timestamp": "2026-09-29T00:21:17.605Z",
+      "intent_id": "6b345a0c-ea26-4387-92d2-cc5813eafc3e",
+      "action": "field.constitute",
+      "agent_id": "sourcepoint-engineering-fixture",
+      "status": "constituted",
+      "detail": "{\"body\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"6b345a0c-ea26-4387-92d2-cc5813eafc3e\",\"issued_at\":\"2026-09-29T00:21:17.489Z\",\"expires_at\":\"2026-09-29T01:21:17.490Z\",\"type\":\"field\",\"sourcepoint\":\"sourcepoint-engineering-fixture\",\"receiver_node\":\"field-node-b\",\"policy\":{\"policy_id\":\"one-field-create-only\",\"policy_version\":\"0.1\",\"status\":\"active\",\"scope\":{\"agents\":[\"field-node-a\"],\"systems\":[\"local\"]},\"action_classes\":[{\"class_id\":\"bounded-artifact\",\"pattern\":\"create_document\",\"governance_decision\":\"REQUIRE_HUMAN\",\"risk_tier\":\"LOW\"}]},\"dependencies\":{\"build_contract\":\"one-local-field-v0.1\"}},\"signature\":\"b9426ae60573a3ac5399a21878aa9058a5d6757a04b2e28fb5bcdbe59ea8c666be11c3f15e1b63097012ec88d584af1ab58c7b2ad10bf5831185efc7aadd850c\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "0c371d9a-74e2-4fd9-8bdb-9d4400a47cfa",
+      "prev_hash": "3c83644a8895f837b042dcb42d4cced74720148aa7393346938e61820bcb8370",
+      "ledger_hash": "0eccee8d9607d2206e37d9349b6e4eb126b7af1e6064651b20706c8ce88c76a8",
+      "timestamp": "2026-09-29T00:21:17.669Z",
+      "intent_id": "7193c4f0-78ab-42fc-b713-34dc1a8c45e3",
+      "action": "enrollment",
+      "agent_id": "field-node-b",
+      "status": "enrollment",
+      "detail": "{\"body\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"7193c4f0-78ab-42fc-b713-34dc1a8c45e3\",\"issued_at\":\"2026-09-29T00:21:17.624Z\",\"expires_at\":\"2026-09-29T01:21:17.624Z\",\"type\":\"enrollment\",\"issuer\":\"sourcepoint-engineering-fixture\",\"node\":{\"node_id\":\"field-node-a\",\"principal_id\":\"field-node-a\",\"node_type\":\"model_runtime\",\"actor_type\":\"ai_agent\",\"primary_role\":\"proposer\",\"secondary_roles\":[],\"public_key_hex\":\"96f31b62515e1c836d810859051fb36ff38c6142c7e629680e6862ca8288b151\",\"capabilities\":[\"create_document\"],\"interfaces\":[\"http-json\"],\"custody_boundary\":\"field-node-a\",\"status\":\"active\"}},\"signature\":\"929f34cbb25cbd6b64607eca90abb24214b9d45aa1b6395d19ada98bbb81b1816367338f35fc01af47c09bfb0c2c170938a6877977bc625e62fb79cd4fcbcc09\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "6b8106de-38aa-48b5-9acd-5e83c7048a81",
+      "prev_hash": "0eccee8d9607d2206e37d9349b6e4eb126b7af1e6064651b20706c8ce88c76a8",
+      "ledger_hash": "03b24223e6671b9e8082693f846ba26faf409815aa6ecbd7e3115a718f425a82",
+      "timestamp": "2026-09-29T00:21:17.718Z",
+      "intent_id": "4fac185f-7d22-4ed8-8296-9d1f553f6f3f",
+      "action": "enrollment",
+      "agent_id": "field-node-b",
+      "status": "enrollment",
+      "detail": "{\"body\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"4fac185f-7d22-4ed8-8296-9d1f553f6f3f\",\"issued_at\":\"2026-09-29T00:21:17.677Z\",\"expires_at\":\"2026-09-29T01:21:17.677Z\",\"type\":\"enrollment\",\"issuer\":\"sourcepoint-engineering-fixture\",\"node\":{\"node_id\":\"field-node-b\",\"principal_id\":\"field-node-b\",\"node_type\":\"local_service\",\"actor_type\":\"executor\",\"primary_role\":\"executor\",\"secondary_roles\":[],\"public_key_hex\":\"36bb3aeb5da2d60729b7349ca3d7e205b1b017cb3b7480982c835b488f27633f\",\"capabilities\":[\"create_document\"],\"interfaces\":[\"http-json\"],\"custody_boundary\":\"field-node-b\",\"status\":\"active\"}},\"signature\":\"f74294727f06a50462e4bbd416d2553493022d8bb182acabaeba722d2c5c15e31566918c2264ff6bcd60e3f4410531f918f40900a7c250f89c298e346189540a\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "a32abb91-fc8a-4965-bd16-44322544433c",
+      "prev_hash": "03b24223e6671b9e8082693f846ba26faf409815aa6ecbd7e3115a718f425a82",
+      "ledger_hash": "6805ac8f46101feb6a7b31444f35d404521207c0144e31f86e4d4c209f59de50",
+      "timestamp": "2026-09-29T00:21:17.751Z",
+      "intent_id": "f58c3571-03b2-4d40-95f4-95ca9e72ac65",
+      "action": "candidate",
+      "agent_id": "field-node-b",
+      "status": "candidate",
+      "detail": "{\"body\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"f58c3571-03b2-4d40-95f4-95ca9e72ac65\",\"issued_at\":\"2026-09-29T00:21:17.720Z\",\"expires_at\":\"2026-09-29T01:21:17.720Z\",\"type\":\"candidate\",\"source_node\":\"field-node-a\",\"candidate_id\":\"bfa133cc-70b0-4684-9138-bb85a4467732\",\"kind\":\"recommended_action\",\"content\":{\"artifact_kind\":\"recommended_action\",\"authored_by\":\"Codex during Brian's ONE Local Field v0.1 build assignment\",\"authority_effect\":\"none\",\"action\":\"create_document\",\"target\":\"one-local-field-return.txt\",\"content\":\"ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\\n\"}},\"signature\":\"01fd9eed833d2e017118205c72821bc25408af0179acb4b84767b3f4ff887621474dae3b188e07f429701363388e604b0a7aa7a06bfffb09aafa316144b35f0f\",\"authority_effect\":\"none\",\"content_hash\":\"8426ad48c9de65dcb1c27551f6df5125390de6ec867fdf5533bfdbe59f78e49e\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "c7d43325-7097-4f6d-9ce5-6b5489d3f399",
+      "prev_hash": "6805ac8f46101feb6a7b31444f35d404521207c0144e31f86e4d4c209f59de50",
+      "ledger_hash": "e1c8d9bbc8da5f398b675eb48ad353c8876b9d85e46b442d3bd2e5a7512d3a11",
+      "timestamp": "2026-09-29T00:21:17.795Z",
+      "intent_id": "97737b7c-b7eb-4647-8ce4-9533edc88a42",
+      "action": "denial",
+      "agent_id": "field-node-b",
+      "status": "denial",
+      "detail": "{\"denial_id\":\"676e4598-aa10-4e99-9394-8d806dc4507a\",\"passage_id\":\"97737b7c-b7eb-4647-8ce4-9533edc88a42\",\"status\":\"DENIED\",\"reason\":\"AUTHORITY_MISSING\",\"at\":\"2026-09-29T00:21:17.795Z\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "7cf4c842-906c-4633-9ab2-15386efd56e6",
+      "prev_hash": "e1c8d9bbc8da5f398b675eb48ad353c8876b9d85e46b442d3bd2e5a7512d3a11",
+      "ledger_hash": "6b3c3a517ef871692bc5d609930ff133ecdfd09de63f81b5a855e10f560704a2",
+      "timestamp": "2026-09-29T00:21:17.823Z",
+      "intent_id": "8925e782-37ef-47d3-b79e-f01c92b5bb62",
+      "action": "grant",
+      "agent_id": "field-node-b",
+      "status": "grant",
+      "detail": "{\"body\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"8925e782-37ef-47d3-b79e-f01c92b5bb62\",\"issued_at\":\"2026-09-29T00:21:17.797Z\",\"expires_at\":\"2026-09-29T01:21:17.797Z\",\"type\":\"grant\",\"issuer\":\"sourcepoint-engineering-fixture\",\"grant\":{\"grant_id\":\"8c74b84a-a4c0-46ef-8769-15dda879bd7e\",\"subject\":\"field-node-a\",\"target_node\":\"field-node-b\",\"action\":\"create_document\",\"target\":\"one-local-field-return.txt\",\"scope\":\"artifact-create\",\"purpose\":\"bounded engineering acceptance\",\"dependencies\":{\"build_contract\":\"one-local-field-v0.1\"},\"conditions\":{},\"parent\":null,\"allow_delegation\":false,\"max_uses\":null}},\"signature\":\"07ab099348eaccbc61f928caadef73c254ac68e8b48cdcf680743c5a7c6b6164119d8d861cac6c41b47ea88bf8d1c6f63776bb5188dfc972564a5d4b7577f90c\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "e0b961fa-c547-4da8-8b48-31ce68be1e40",
+      "prev_hash": "6b3c3a517ef871692bc5d609930ff133ecdfd09de63f81b5a855e10f560704a2",
+      "ledger_hash": "c57f7e3804f0bff0a7ed03224b0084eb2a1a183198d8a7dd6cf5650685552428",
+      "timestamp": "2026-09-29T00:21:17.887Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "passage",
+      "agent_id": "field-node-b",
+      "status": "passage",
+      "detail": "{\"body\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"c399395a-499c-4e5e-ad30-6bd050c91185\",\"issued_at\":\"2026-09-29T00:21:17.826Z\",\"expires_at\":\"2026-09-29T01:21:17.826Z\",\"type\":\"passage\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"source_node\":\"field-node-a\",\"subject\":\"field-node-a\",\"target_node\":\"field-node-b\",\"action\":\"create_document\",\"target\":\"one-local-field-return.txt\",\"payload\":{\"content\":\"ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\\n\"},\"payload_hash\":\"d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c\",\"authority_basis\":\"8c74b84a-a4c0-46ef-8769-15dda879bd7e\",\"scope\":\"artifact-create\",\"purpose\":\"bounded engineering acceptance\",\"dependencies\":{\"build_contract\":\"one-local-field-v0.1\"},\"conditions\":{},\"nonce\":\"0be4b4f9-6a96-4806-bf55-90cb41091de8\",\"correlation_id\":\"9b0462d3-140c-4ef4-9d03-9ed0c66a99b1\",\"return_requirement\":{\"required\":true,\"to\":\"sourcepoint-engineering-fixture\"},\"origin\":{\"intent\":\"Brian / SourcePoint authorized this isolated Local Field build and real bounded filesystem acceptance. This ephemeral verification anchor is not Brian's deployed identity.\",\"candidate_id\":\"bfa133cc-70b0-4684-9138-bb85a4467732\"}},\"signature\":\"c33131e3b29a4f650dc6ea019deaec35cf985b6d227599aa73d22cc9ac436096865f0053592b6245af50e96071a5dc66a563425ef8a199d3086e1207970bfc0b\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "71e648f1-cd3c-4302-bc19-abc6d199a01b",
+      "prev_hash": "c57f7e3804f0bff0a7ed03224b0084eb2a1a183198d8a7dd6cf5650685552428",
+      "ledger_hash": "c85644e189767d09298f910cb446cce43af29aeed61653f1716589e6fd83af82",
+      "timestamp": "2026-09-29T00:21:17.887Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "intent",
+      "agent_id": "field-node-b",
+      "status": "intent",
+      "detail": "{\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"action\":\"create_document\",\"agent_id\":\"field-node-a\",\"parameters\":{\"content\":\"ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\\n\",\"target\":\"one-local-field-return.txt\",\"passage\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"c399395a-499c-4e5e-ad30-6bd050c91185\",\"issued_at\":\"2026-09-29T00:21:17.826Z\",\"expires_at\":\"2026-09-29T01:21:17.826Z\",\"type\":\"passage\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"source_node\":\"field-node-a\",\"subject\":\"field-node-a\",\"target_node\":\"field-node-b\",\"action\":\"create_document\",\"target\":\"one-local-field-return.txt\",\"payload\":{\"content\":\"ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\\n\"},\"payload_hash\":\"d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c\",\"authority_basis\":\"8c74b84a-a4c0-46ef-8769-15dda879bd7e\",\"scope\":\"artifact-create\",\"purpose\":\"bounded engineering acceptance\",\"dependencies\":{\"build_contract\":\"one-local-field-v0.1\"},\"conditions\":{},\"nonce\":\"0be4b4f9-6a96-4806-bf55-90cb41091de8\",\"correlation_id\":\"9b0462d3-140c-4ef4-9d03-9ed0c66a99b1\",\"return_requirement\":{\"required\":true,\"to\":\"sourcepoint-engineering-fixture\"},\"origin\":{\"intent\":\"Brian / SourcePoint authorized this isolated Local Field build and real bounded filesystem acceptance. This ephemeral verification anchor is not Brian's deployed identity.\",\"candidate_id\":\"bfa133cc-70b0-4684-9138-bb85a4467732\"}}},\"timestamp\":\"2026-09-29T00:21:17.826Z\",\"target_environment\":\"local\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "9707be0b-6f25-4473-b331-530d6f217850",
+      "prev_hash": "c85644e189767d09298f910cb446cce43af29aeed61653f1716589e6fd83af82",
+      "ledger_hash": "7aafb4a085f50bf203223c82e7c0892e6013189344e67b030290d37796921620",
+      "timestamp": "2026-09-29T00:21:17.887Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "decision",
+      "agent_id": "field-node-b",
+      "status": "decision",
+      "detail": "{\"decision_id\":\"88c89cc0-94d6-4154-ac03-de2e7d379e43\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"status\":\"ADMITTED\",\"passage_hash\":\"bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3\",\"policy\":{\"governance_decision\":\"REQUIRE_HUMAN\",\"risk_tier\":\"LOW\",\"matched_class\":\"bounded-artifact\",\"status\":\"requires_approval\",\"reason\":\"Action requires explicit human authorization before execution.\",\"requires_approval\":true,\"risk_level\":\"low\",\"checks\":[{\"check\":\"policy_status\",\"passed\":true,\"status\":\"active\"},{\"check\":\"agent_in_scope\",\"passed\":true,\"agent_id\":\"field-node-a\"},{\"check\":\"system_in_scope\",\"passed\":true,\"target_system\":\"local\"},{\"check\":\"action_class_match\",\"passed\":true,\"action\":\"create_document\",\"matched_class\":\"bounded-artifact\",\"risk_tier\":\"LOW\",\"governance_decision\":\"REQUIRE_HUMAN\"},{\"check\":\"confidence_threshold\",\"passed\":true,\"confidence\":0,\"threshold\":80},{\"check\":\"spgm_policy_review_context\",\"passed\":true,\"effect\":\"not_present\"}],\"policy_version\":\"0.1\",\"policy_hash\":\"0200e6b10be291eddcf227066518b804f2e7f185cd899d7a122b874a15e3e03f\",\"approval_requirement\":{\"required_roles\":null},\"approval_ttl\":null},\"authority_lineage\":[\"8c74b84a-a4c0-46ef-8769-15dda879bd7e\"],\"issued_at\":\"2026-09-29T00:21:17.883Z\",\"owner\":\"gateway/governance/policy-engine.mjs\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "4c62bf75-c08d-47c0-833b-a0ab8ec14b72",
+      "prev_hash": "7aafb4a085f50bf203223c82e7c0892e6013189344e67b030290d37796921620",
+      "ledger_hash": "b5a6b01a75f55459d307503af23a964ef7b9c7087a47cdf4a093f7301e6efc5d",
+      "timestamp": "2026-09-29T00:21:17.944Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "fidelity",
+      "agent_id": "field-node-b",
+      "status": "fidelity",
+      "detail": "{\"fidelity_id\":\"c0b2dce6-d1f0-4b65-be6e-a0757ca34fa9\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"status\":\"PASS\",\"decision_id\":\"88c89cc0-94d6-4154-ac03-de2e7d379e43\",\"passage_hash\":\"bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3\",\"checks\":{\"binding_inputs_present\":true,\"token_exists\":true,\"token_active\":true,\"token_not_expired\":true,\"intent_binding\":true,\"tool_binding\":true,\"args_binding\":true,\"environment_binding\":true,\"payload_integrity\":true,\"signature_valid\":true,\"execution_limit\":true},\"checked_at\":\"2026-09-29T00:21:17.944Z\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "f018caf6-0ac0-474d-8297-068cf0d225df",
+      "prev_hash": "b5a6b01a75f55459d307503af23a964ef7b9c7087a47cdf4a093f7301e6efc5d",
+      "ledger_hash": "f463d386b2d7e1e4b8216a67a524176235479e245339c189e33ba7aa682950f1",
+      "timestamp": "2026-09-29T00:21:17.944Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "attempt",
+      "agent_id": "field-node-b",
+      "status": "attempt",
+      "detail": "{\"attempt_id\":\"f2a0d5e7-4e31-4eb0-a688-93d5353e4204\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"action\":\"create_document\",\"target\":\"one-local-field-return.txt\",\"payload_hash\":\"d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c\",\"attempted_at\":\"2026-09-29T00:21:17.944Z\",\"executor_node\":\"field-node-b\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "4be4e87f-8f15-4b56-ad8e-f7d689192b49",
+      "prev_hash": "f463d386b2d7e1e4b8216a67a524176235479e245339c189e33ba7aa682950f1",
+      "ledger_hash": "fbf148a011afc6d3bd3ebee6533eb89884ab47f20b264eb3b78ccb8da50d1d41",
+      "timestamp": "2026-09-29T00:21:17.945Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "occurrence",
+      "agent_id": "field-node-b",
+      "status": "occurrence",
+      "detail": "{\"occurrence_id\":\"9c830242-47e6-439c-a48b-10214a4965ac\",\"status\":\"OBSERVED\",\"target\":\"one-local-field-return.txt\",\"content_hash\":\"2b247a9a43316d059f54677e564b013e49017dc7e233842df4655d67948ecf04\",\"bytes\":230,\"device\":27,\"inode\":1190946,\"observed_at\":\"2026-09-29T00:21:17.945Z\",\"method\":\"separate_descriptor_read_after_write\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "ae4d7380-0ff3-4136-84e1-ca4107aec9bc",
+      "prev_hash": "fbf148a011afc6d3bd3ebee6533eb89884ab47f20b264eb3b78ccb8da50d1d41",
+      "ledger_hash": "0fee7e21d7d98181af3b29918929d8ceeb112a4be6dc625523e207f9e370d0b9",
+      "timestamp": "2026-09-29T00:21:17.953Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "receipt_artifacts",
+      "agent_id": "field-node-b",
+      "status": "receipt_artifacts",
+      "detail": "{\"intent\":{\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"action\":\"create_document\",\"agent_id\":\"field-node-a\",\"parameters\":{\"content\":\"ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\\n\",\"target\":\"one-local-field-return.txt\",\"passage\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"c399395a-499c-4e5e-ad30-6bd050c91185\",\"issued_at\":\"2026-09-29T00:21:17.826Z\",\"expires_at\":\"2026-09-29T01:21:17.826Z\",\"type\":\"passage\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"source_node\":\"field-node-a\",\"subject\":\"field-node-a\",\"target_node\":\"field-node-b\",\"action\":\"create_document\",\"target\":\"one-local-field-return.txt\",\"payload\":{\"content\":\"ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\\n\"},\"payload_hash\":\"d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c\",\"authority_basis\":\"8c74b84a-a4c0-46ef-8769-15dda879bd7e\",\"scope\":\"artifact-create\",\"purpose\":\"bounded engineering acceptance\",\"dependencies\":{\"build_contract\":\"one-local-field-v0.1\"},\"conditions\":{},\"nonce\":\"0be4b4f9-6a96-4806-bf55-90cb41091de8\",\"correlation_id\":\"9b0462d3-140c-4ef4-9d03-9ed0c66a99b1\",\"return_requirement\":{\"required\":true,\"to\":\"sourcepoint-engineering-fixture\"},\"origin\":{\"intent\":\"Brian / SourcePoint authorized this isolated Local Field build and real bounded filesystem acceptance. This ephemeral verification anchor is not Brian's deployed identity.\",\"candidate_id\":\"bfa133cc-70b0-4684-9138-bb85a4467732\"}}},\"timestamp\":\"2026-09-29T00:21:17.826Z\",\"target_environment\":\"local\"},\"governance\":{\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"status\":\"ADMITTED\",\"risk_level\":\"LOW\",\"requires_approval\":true,\"checks\":{\"decision\":{\"decision_id\":\"88c89cc0-94d6-4154-ac03-de2e7d379e43\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"status\":\"ADMITTED\",\"passage_hash\":\"bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3\",\"policy\":{\"governance_decision\":\"REQUIRE_HUMAN\",\"risk_tier\":\"LOW\",\"matched_class\":\"bounded-artifact\",\"status\":\"requires_approval\",\"reason\":\"Action requires explicit human authorization before execution.\",\"requires_approval\":true,\"risk_level\":\"low\",\"checks\":[{\"check\":\"policy_status\",\"passed\":true,\"status\":\"active\"},{\"check\":\"agent_in_scope\",\"passed\":true,\"agent_id\":\"field-node-a\"},{\"check\":\"system_in_scope\",\"passed\":true,\"target_system\":\"local\"},{\"check\":\"action_class_match\",\"passed\":true,\"action\":\"create_document\",\"matched_class\":\"bounded-artifact\",\"risk_tier\":\"LOW\",\"governance_decision\":\"REQUIRE_HUMAN\"},{\"check\":\"confidence_threshold\",\"passed\":true,\"confidence\":0,\"threshold\":80},{\"check\":\"spgm_policy_review_context\",\"passed\":true,\"effect\":\"not_present\"}],\"policy_version\":\"0.1\",\"policy_hash\":\"0200e6b10be291eddcf227066518b804f2e7f185cd899d7a122b874a15e3e03f\",\"approval_requirement\":{\"required_roles\":null},\"approval_ttl\":null},\"authority_lineage\":[\"8c74b84a-a4c0-46ef-8769-15dda879bd7e\"],\"issued_at\":\"2026-09-29T00:21:17.883Z\",\"owner\":\"gateway/governance/policy-engine.mjs\"}}},\"authorization\":{\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"decision\":\"approved\",\"authorized_by\":\"sourcepoint-engineering-fixture\",\"timestamp\":\"2026-09-29T00:21:17.883Z\",\"conditions\":{\"lineage\":[{\"body\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"8925e782-37ef-47d3-b79e-f01c92b5bb62\",\"issued_at\":\"2026-09-29T00:21:17.797Z\",\"expires_at\":\"2026-09-29T01:21:17.797Z\",\"type\":\"grant\",\"issuer\":\"sourcepoint-engineering-fixture\",\"grant\":{\"grant_id\":\"8c74b84a-a4c0-46ef-8769-15dda879bd7e\",\"subject\":\"field-node-a\",\"target_node\":\"field-node-b\",\"action\":\"create_document\",\"target\":\"one-local-field-return.txt\",\"scope\":\"artifact-create\",\"purpose\":\"bounded engineering acceptance\",\"dependencies\":{\"build_contract\":\"one-local-field-v0.1\"},\"conditions\":{},\"parent\":null,\"allow_delegation\":false,\"max_uses\":null}},\"signature\":\"07ab099348eaccbc61f928caadef73c254ac68e8b48cdcf680743c5a7c6b6164119d8d861cac6c41b47ea88bf8d1c6f63776bb5188dfc972564a5d4b7577f90c\"}],\"passage_hash\":\"bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3\"}},\"execution\":{\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"action\":\"create_document\",\"connector\":\"gateway/execution/filesystem-executor.mjs\",\"timestamp\":\"2026-09-29T00:21:17.945Z\",\"result\":{\"adapter\":{\"status\":\"COMPLETED\",\"invocation_id\":\"2d75b55f-f76a-4fb8-ad54-5430917c1e9d\",\"bytes\":230},\"attempt\":{\"attempt_id\":\"f2a0d5e7-4e31-4eb0-a688-93d5353e4204\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"action\":\"create_document\",\"target\":\"one-local-field-return.txt\",\"payload_hash\":\"d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c\",\"attempted_at\":\"2026-09-29T00:21:17.944Z\",\"executor_node\":\"field-node-b\"},\"occurrence\":{\"occurrence_id\":\"9c830242-47e6-439c-a48b-10214a4965ac\",\"status\":\"OBSERVED\",\"target\":\"one-local-field-return.txt\",\"content_hash\":\"2b247a9a43316d059f54677e564b013e49017dc7e233842df4655d67948ecf04\",\"bytes\":230,\"device\":27,\"inode\":1190946,\"observed_at\":\"2026-09-29T00:21:17.945Z\",\"method\":\"separate_descriptor_read_after_write\"},\"fidelity\":{\"fidelity_id\":\"c0b2dce6-d1f0-4b65-be6e-a0757ca34fa9\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"status\":\"PASS\",\"decision_id\":\"88c89cc0-94d6-4154-ac03-de2e7d379e43\",\"passage_hash\":\"bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3\",\"checks\":{\"binding_inputs_present\":true,\"token_exists\":true,\"token_active\":true,\"token_not_expired\":true,\"intent_binding\":true,\"tool_binding\":true,\"args_binding\":true,\"environment_binding\":true,\"payload_integrity\":true,\"signature_valid\":true,\"execution_limit\":true},\"checked_at\":\"2026-09-29T00:21:17.944Z\"},\"provenance\":{\"proposed\":\"field-node-a\",\"admitted\":\"field-node-b\",\"attempted\":\"field-node-b\",\"observed\":\"field-node-b\",\"returned\":\"field-node-b\"},\"correlation_id\":\"9b0462d3-140c-4ef4-9d03-9ed0c66a99b1\"}}}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "6e8b2cbf-7f4c-492b-b586-48a4cc7b27f3",
+      "prev_hash": "0fee7e21d7d98181af3b29918929d8ceeb112a4be6dc625523e207f9e370d0b9",
+      "ledger_hash": "a3feb49a8cebe64b3f28e43a45892dab4712b762f526ade3cba8231a4e4adb91",
+      "timestamp": "2026-09-29T00:21:17.953Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "receipt",
+      "agent_id": "field-node-b",
+      "status": "receipt",
+      "detail": "{\"receipt_id\":\"1f7d28bd-6888-4da5-80fb-91705709a1a2\",\"receipt_type\":\"governed_action\",\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"action\":\"create_document\",\"agent_id\":\"field-node-a\",\"authorized_by\":\"sourcepoint-engineering-fixture\",\"timestamp\":\"2026-09-29T00:21:17.945Z\",\"hash_chain\":{\"intent_hash\":\"da91215393e397ca6510181996ad7d8a1887fea738080d2f8b92dccbcb7cb596\",\"governance_hash\":\"aa89c8647e911f35c97083b190f4828478944326249f2b6d5fc3a6bec4669c59\",\"authorization_hash\":\"511257b7308d8da2b9e639e86c8099e9082163d3f53d2bff1697d2c2540222a2\",\"execution_hash\":\"841342e5b2b345a1e199a04ec3d01413788edeea6e5aa6127eded5620992e983\",\"receipt_hash\":\"d612669c802e58b3b07a569ae57350305b73f1661abbdf52dd06f05ae3b9f8dc\"},\"verification\":{\"algorithm\":\"SHA-256\",\"chain_length\":5,\"chain_order\":[\"intent_hash\",\"governance_hash\",\"authorization_hash\",\"execution_hash\",\"receipt_hash\"]},\"ingestion\":{\"source\":\"local-field\",\"channel\":\"signed-passage\",\"source_message_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"timestamp\":\"2026-09-29T00:21:17.945Z\"},\"policy\":{\"evaluated\":true,\"decision\":\"ALLOW\",\"policy_pack\":\"one-field-create-only\",\"rules_triggered\":[\"EXACT_HUMAN_GRANT\",\"POINT_OF_USE_FIDELITY\"]},\"local_field_attestation\":{\"profile\":\"rio-gateway-local-field-v0.1\",\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"signer_id\":\"field-node-b\",\"signature\":\"07bf4b99e0904248a5f6f161c3caea2fc2ea13242db545ab9f53065020dcf4e07816293ec94a133c836f83ef144e9a0a05ef2d27d2d8178f3c004df64b0caa05\"}}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "b34133ae-08cf-4059-ba5a-a510b6d1833e",
+      "prev_hash": "a3feb49a8cebe64b3f28e43a45892dab4712b762f526ade3cba8231a4e4adb91",
+      "ledger_hash": "c2feb104edc871fdd2c8309c2c80e6f274a4c3d5bc871807c318ce778a15f93c",
+      "timestamp": "2026-09-29T00:21:17.960Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "return",
+      "agent_id": "field-node-b",
+      "status": "return",
+      "detail": "{\"return_id\":\"b9293441-1663-47d4-9cc1-ccdc456ebe78\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"intent_id\":\"d95c4534-ee5a-4df8-b880-26da3de838f2\",\"correlation_id\":\"9b0462d3-140c-4ef4-9d03-9ed0c66a99b1\",\"to\":\"sourcepoint-engineering-fixture\",\"status\":\"RETURNED\",\"outcome\":\"OBSERVED\",\"receipt_id\":\"1f7d28bd-6888-4da5-80fb-91705709a1a2\",\"reason\":null,\"returned_at\":\"2026-09-29T00:21:17.954Z\",\"attestation\":{\"profile\":\"rio-gateway-local-field-return-v0.1\",\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"signer_id\":\"field-node-b\",\"signature\":\"8d3a054902d6461aadf95ebd895110b7f754711bde88a350b8303f70dce5b65cfabc76762cfea6cf4fa6d07d8182e93a83e4d98cde92fedcd1ce85c697d8fb01\"}}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "b95c7f10-c38d-4111-8aa1-fbeb05158f79",
+      "prev_hash": "c2feb104edc871fdd2c8309c2c80e6f274a4c3d5bc871807c318ce778a15f93c",
+      "ledger_hash": "b25219e99947a87a6dbae1ca35782ff5992fddbcd21b15616ed7f9cf5c89e343",
+      "timestamp": "2026-09-29T00:21:18.050Z",
+      "intent_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+      "action": "denial",
+      "agent_id": "field-node-b",
+      "status": "denial",
+      "detail": "{\"denial_id\":\"7d999e5c-9640-45a0-9d5f-bc4d2faa0a94\",\"passage_id\":\"dac2980f-88f0-45fe-ad95-e7f2e0eb1871\",\"status\":\"DENIED\",\"reason\":\"REPLAY\",\"at\":\"2026-09-29T00:21:18.050Z\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "54465d01-696f-4949-b770-20897234be61",
+      "prev_hash": "b25219e99947a87a6dbae1ca35782ff5992fddbcd21b15616ed7f9cf5c89e343",
+      "ledger_hash": "80b3f6375c78d1a52d670341ddc14e842bf2ff8350ae951146b7da2de7682ba6",
+      "timestamp": "2026-09-29T00:21:18.075Z",
+      "intent_id": "df0f4b59-aa32-430e-9fb0-cc9d765fda00",
+      "action": "revocation",
+      "agent_id": "field-node-b",
+      "status": "revocation",
+      "detail": "{\"body\":{\"field_id\":\"1b510f53-d58f-4077-8e98-b903e22c1876\",\"record_id\":\"df0f4b59-aa32-430e-9fb0-cc9d765fda00\",\"issued_at\":\"2026-09-29T00:21:18.052Z\",\"expires_at\":\"2026-09-29T01:21:18.052Z\",\"type\":\"revocation\",\"issuer\":\"sourcepoint-engineering-fixture\",\"grant_id\":\"8c74b84a-a4c0-46ef-8769-15dda879bd7e\"},\"signature\":\"97c0df258dc2010963b6f3eb5448a3d690cf9187b49cd8173e57702a00d9d0284374c637f831774de9e21c32e43d0d471797c188ecaee7c0ec97d256764b7406\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "825b4921-176e-4aac-b714-c8930cfa0150",
+      "prev_hash": "80b3f6375c78d1a52d670341ddc14e842bf2ff8350ae951146b7da2de7682ba6",
+      "ledger_hash": "38b3142286be2e927bda38df79b2f667ecd1740661b1a729427cb30eefa1645a",
+      "timestamp": "2026-09-29T00:21:18.124Z",
+      "intent_id": "72fef319-b2e5-4e48-9bf7-f63150d150fa",
+      "action": "denial",
+      "agent_id": "field-node-b",
+      "status": "denial",
+      "detail": "{\"denial_id\":\"7d6bb4d8-d39e-4c7d-b151-3f0c17fd0469\",\"passage_id\":\"72fef319-b2e5-4e48-9bf7-f63150d150fa\",\"status\":\"DENIED\",\"reason\":\"AUTHORITY_REVOKED\",\"at\":\"2026-09-29T00:21:18.124Z\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    },
+    {
+      "entry_id": "57237658-abb8-4b02-9ea2-92f83dad558b",
+      "prev_hash": "38b3142286be2e927bda38df79b2f667ecd1740661b1a729427cb30eefa1645a",
+      "ledger_hash": "e2125b02c181cc179ddc2a5ef5ed0009ea47be9da12c0c572b86567fd0482faf",
+      "timestamp": "2026-09-29T00:21:18.402Z",
+      "intent_id": "0d1d7f7d-3658-4d64-b60a-bc9f92d1d6d7",
+      "action": "denial",
+      "agent_id": "field-node-b",
+      "status": "denial",
+      "detail": "{\"denial_id\":\"71a5c836-4834-4567-97f5-3916c7782897\",\"passage_id\":\"0d1d7f7d-3658-4d64-b60a-bc9f92d1d6d7\",\"status\":\"DENIED\",\"reason\":\"AUTHORITY_REVOKED\",\"at\":\"2026-09-29T00:21:18.402Z\"}",
+      "receipt_hash": null,
+      "authorization_hash": null,
+      "intent_hash": null
+    }
+  ],
+  "status": {
+    "field": {
+      "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+      "sourcepoint": "sourcepoint-engineering-fixture",
+      "receiver": "field-node-b"
+    },
+    "nodes": [
+      {
+        "node_id": "field-node-a",
+        "principal_id": "field-node-a",
+        "node_type": "model_runtime",
+        "actor_type": "ai_agent",
+        "primary_role": "proposer",
+        "secondary_roles": [],
+        "public_key_hex": "96f31b62515e1c836d810859051fb36ff38c6142c7e629680e6862ca8288b151",
+        "capabilities": [
+          "create_document"
+        ],
+        "interfaces": [
+          "http-json"
+        ],
+        "custody_boundary": "field-node-a",
+        "status": "active",
+        "created_at": "2026-09-29T00:21:17.624Z",
+        "revoked_at": null
+      },
+      {
+        "node_id": "field-node-b",
+        "principal_id": "field-node-b",
+        "node_type": "local_service",
+        "actor_type": "executor",
+        "primary_role": "executor",
+        "secondary_roles": [],
+        "public_key_hex": "36bb3aeb5da2d60729b7349ca3d7e205b1b017cb3b7480982c835b488f27633f",
+        "capabilities": [
+          "create_document"
+        ],
+        "interfaces": [
+          "http-json"
+        ],
+        "custody_boundary": "field-node-b",
+        "status": "active",
+        "created_at": "2026-09-29T00:21:17.677Z",
+        "revoked_at": null
+      }
+    ],
+    "bindings": [
+      {
+        "grant_id": "8c74b84a-a4c0-46ef-8769-15dda879bd7e",
+        "subject": "field-node-a",
+        "target_node": "field-node-b",
+        "parent": null,
+        "revoked": true,
+        "superseded": false,
+        "uses": 1,
+        "status": "inactive",
+        "reason": "AUTHORITY_REVOKED",
+        "expires_at": "2026-09-29T01:21:17.797Z"
+      }
+    ],
+    "passages": [
+      {
+        "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "phase": "COMPLETED"
+      }
+    ],
+    "decisions": [
+      {
+        "decision_id": "88c89cc0-94d6-4154-ac03-de2e7d379e43",
+        "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "status": "ADMITTED",
+        "passage_hash": "bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3",
+        "policy": {
+          "governance_decision": "REQUIRE_HUMAN",
+          "risk_tier": "LOW",
+          "matched_class": "bounded-artifact",
+          "status": "requires_approval",
+          "reason": "Action requires explicit human authorization before execution.",
+          "requires_approval": true,
+          "risk_level": "low",
+          "checks": [
+            {
+              "check": "policy_status",
+              "passed": true,
+              "status": "active"
+            },
+            {
+              "check": "agent_in_scope",
+              "passed": true,
+              "agent_id": "field-node-a"
+            },
+            {
+              "check": "system_in_scope",
+              "passed": true,
+              "target_system": "local"
+            },
+            {
+              "check": "action_class_match",
+              "passed": true,
+              "action": "create_document",
+              "matched_class": "bounded-artifact",
+              "risk_tier": "LOW",
+              "governance_decision": "REQUIRE_HUMAN"
+            },
+            {
+              "check": "confidence_threshold",
+              "passed": true,
+              "confidence": 0,
+              "threshold": 80
+            },
+            {
+              "check": "spgm_policy_review_context",
+              "passed": true,
+              "effect": "not_present"
+            }
+          ],
+          "policy_version": "0.1",
+          "policy_hash": "0200e6b10be291eddcf227066518b804f2e7f185cd899d7a122b874a15e3e03f",
+          "approval_requirement": {
+            "required_roles": null
+          },
+          "approval_ttl": null
+        },
+        "authority_lineage": [
+          "8c74b84a-a4c0-46ef-8769-15dda879bd7e"
+        ],
+        "issued_at": "2026-09-29T00:21:17.883Z",
+        "owner": "gateway/governance/policy-engine.mjs"
+      }
+    ],
+    "holds": [
+      {
+        "denial_id": "676e4598-aa10-4e99-9394-8d806dc4507a",
+        "passage_id": "97737b7c-b7eb-4647-8ce4-9533edc88a42",
+        "status": "DENIED",
+        "reason": "AUTHORITY_MISSING",
+        "at": "2026-09-29T00:21:17.795Z"
+      },
+      {
+        "denial_id": "7d999e5c-9640-45a0-9d5f-bc4d2faa0a94",
+        "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "status": "DENIED",
+        "reason": "REPLAY",
+        "at": "2026-09-29T00:21:18.050Z"
+      },
+      {
+        "denial_id": "7d6bb4d8-d39e-4c7d-b151-3f0c17fd0469",
+        "passage_id": "72fef319-b2e5-4e48-9bf7-f63150d150fa",
+        "status": "DENIED",
+        "reason": "AUTHORITY_REVOKED",
+        "at": "2026-09-29T00:21:18.124Z"
+      },
+      {
+        "denial_id": "71a5c836-4834-4567-97f5-3916c7782897",
+        "passage_id": "0d1d7f7d-3658-4d64-b60a-bc9f92d1d6d7",
+        "status": "DENIED",
+        "reason": "AUTHORITY_REVOKED",
+        "at": "2026-09-29T00:21:18.402Z"
+      }
+    ],
+    "fidelity": [
+      {
+        "fidelity_id": "c0b2dce6-d1f0-4b65-be6e-a0757ca34fa9",
+        "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "status": "PASS",
+        "decision_id": "88c89cc0-94d6-4154-ac03-de2e7d379e43",
+        "passage_hash": "bf0ce25c397fdc7d2229c26ef6c6e9953c82906841a0f19634bf3fd19a9f71c3",
+        "checks": {
+          "binding_inputs_present": true,
+          "token_exists": true,
+          "token_active": true,
+          "token_not_expired": true,
+          "intent_binding": true,
+          "tool_binding": true,
+          "args_binding": true,
+          "environment_binding": true,
+          "payload_integrity": true,
+          "signature_valid": true,
+          "execution_limit": true
+        },
+        "checked_at": "2026-09-29T00:21:17.944Z"
+      }
+    ],
+    "fidelity_failures": [],
+    "occurrences": [
+      {
+        "occurrence_id": "9c830242-47e6-439c-a48b-10214a4965ac",
+        "status": "OBSERVED",
+        "target": "one-local-field-return.txt",
+        "content_hash": "2b247a9a43316d059f54677e564b013e49017dc7e233842df4655d67948ecf04",
+        "bytes": 230,
+        "device": 27,
+        "inode": 1190946,
+        "observed_at": "2026-09-29T00:21:17.945Z",
+        "method": "separate_descriptor_read_after_write"
+      }
+    ],
+    "attempts": [
+      {
+        "attempt_id": "f2a0d5e7-4e31-4eb0-a688-93d5353e4204",
+        "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "action": "create_document",
+        "target": "one-local-field-return.txt",
+        "payload_hash": "d1d85b331dc7752a505fb2c717c649bc0a07d14ce3c70d5841eef0193177971c",
+        "attempted_at": "2026-09-29T00:21:17.944Z",
+        "executor_node": "field-node-b"
+      }
+    ],
+    "receipts": [
+      {
+        "receipt_id": "1f7d28bd-6888-4da5-80fb-91705709a1a2",
+        "receipt_type": "governed_action",
+        "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+        "action": "create_document",
+        "agent_id": "field-node-a",
+        "authorized_by": "sourcepoint-engineering-fixture",
+        "timestamp": "2026-09-29T00:21:17.945Z",
+        "hash_chain": {
+          "intent_hash": "da91215393e397ca6510181996ad7d8a1887fea738080d2f8b92dccbcb7cb596",
+          "governance_hash": "aa89c8647e911f35c97083b190f4828478944326249f2b6d5fc3a6bec4669c59",
+          "authorization_hash": "511257b7308d8da2b9e639e86c8099e9082163d3f53d2bff1697d2c2540222a2",
+          "execution_hash": "841342e5b2b345a1e199a04ec3d01413788edeea6e5aa6127eded5620992e983",
+          "receipt_hash": "d612669c802e58b3b07a569ae57350305b73f1661abbdf52dd06f05ae3b9f8dc"
+        },
+        "verification": {
+          "algorithm": "SHA-256",
+          "chain_length": 5,
+          "chain_order": [
+            "intent_hash",
+            "governance_hash",
+            "authorization_hash",
+            "execution_hash",
+            "receipt_hash"
+          ]
+        },
+        "ingestion": {
+          "source": "local-field",
+          "channel": "signed-passage",
+          "source_message_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+          "timestamp": "2026-09-29T00:21:17.945Z"
+        },
+        "policy": {
+          "evaluated": true,
+          "decision": "ALLOW",
+          "policy_pack": "one-field-create-only",
+          "rules_triggered": [
+            "EXACT_HUMAN_GRANT",
+            "POINT_OF_USE_FIDELITY"
+          ]
+        },
+        "local_field_attestation": {
+          "profile": "rio-gateway-local-field-v0.1",
+          "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+          "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+          "signer_id": "field-node-b",
+          "signature": "07bf4b99e0904248a5f6f161c3caea2fc2ea13242db545ab9f53065020dcf4e07816293ec94a133c836f83ef144e9a0a05ef2d27d2d8178f3c004df64b0caa05"
+        }
+      }
+    ],
+    "revocations": [
+      {
+        "body": {
+          "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+          "record_id": "df0f4b59-aa32-430e-9fb0-cc9d765fda00",
+          "issued_at": "2026-09-29T00:21:18.052Z",
+          "expires_at": "2026-09-29T01:21:18.052Z",
+          "type": "revocation",
+          "issuer": "sourcepoint-engineering-fixture",
+          "grant_id": "8c74b84a-a4c0-46ef-8769-15dda879bd7e"
+        },
+        "signature": "97c0df258dc2010963b6f3eb5448a3d690cf9187b49cd8173e57702a00d9d0284374c637f831774de9e21c32e43d0d471797c188ecaee7c0ec97d256764b7406"
+      }
+    ],
+    "returns": [
+      {
+        "return_id": "b9293441-1663-47d4-9cc1-ccdc456ebe78",
+        "passage_id": "dac2980f-88f0-45fe-ad95-e7f2e0eb1871",
+        "intent_id": "d95c4534-ee5a-4df8-b880-26da3de838f2",
+        "correlation_id": "9b0462d3-140c-4ef4-9d03-9ed0c66a99b1",
+        "to": "sourcepoint-engineering-fixture",
+        "status": "RETURNED",
+        "outcome": "OBSERVED",
+        "receipt_id": "1f7d28bd-6888-4da5-80fb-91705709a1a2",
+        "reason": null,
+        "returned_at": "2026-09-29T00:21:17.954Z",
+        "attestation": {
+          "profile": "rio-gateway-local-field-return-v0.1",
+          "field_id": "1b510f53-d58f-4077-8e98-b903e22c1876",
+          "signer_id": "field-node-b",
+          "signature": "8d3a054902d6461aadf95ebd895110b7f754711bde88a350b8303f70dce5b65cfabc76762cfea6cf4fa6d07d8182e93a83e4d98cde92fedcd1ce85c697d8fb01"
+        }
+      }
+    ]
+  },
+  "independent_read": {
+    "observer": "acceptance-driver outside receiver process",
+    "target": "one-local-field-return.txt",
+    "sha256": "2b247a9a43316d059f54677e564b013e49017dc7e233842df4655d67948ecf04",
+    "bytes": 230,
+    "content": "ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\n"
+  },
+  "rejections": {
+    "capability_without_authority": {
+      "error": "AUTHORITY_MISSING"
+    },
+    "replay": {
+      "error": "REPLAY"
+    },
+    "revoked": {
+      "error": "AUTHORITY_REVOKED"
+    },
+    "revoked_after_restart": {
+      "error": "AUTHORITY_REVOKED"
+    }
+  },
+  "restart": {
+    "same_identity": true,
+    "same_completed_lineage": true,
+    "revocation_preserved": true
+  },
+  "owners": {
+    "intent": "gateway/local-field/index.mjs",
+    "identity": "gateway/security/principals.mjs + local-field-authority.mjs",
+    "authority": "gateway/security/local-field-authority.mjs",
+    "passage": "gateway/local-field/http.mjs",
+    "rio": "gateway/governance/policy-engine.mjs",
+    "sentinel": "gateway/security/token-manager.mjs",
+    "execution": "gateway/execution/filesystem-executor.mjs",
+    "receipt": "gateway/receipts/receipts.mjs",
+    "ledger": "gateway/ledger/local-store.mjs",
+    "return": "gateway/local-field/index.mjs"
+  }
+}

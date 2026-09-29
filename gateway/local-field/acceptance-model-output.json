@@ -1,0 +1,8 @@
+{
+  "artifact_kind": "recommended_action",
+  "authored_by": "Codex during Brian's ONE Local Field v0.1 build assignment",
+  "authority_effect": "none",
+  "action": "create_document",
+  "target": "one-local-field-return.txt",
+  "content": "ONE Local Field v0.1: this file was proposed as model output. A separate signed grant, RIO decision, and point-of-use fidelity check are required before creation. Its existence must be observed and returned with correlated proof.\n"
+}

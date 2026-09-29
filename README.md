@@ -129,3 +129,7 @@ SPG-M tests are also covered by GitHub Actions:
 ## One-Line Summary
 
 Human-led. Machine-operated. Governed by protocol. Proven by receipts.
+
+## ONE Local Field v0.1 (draft build)
+
+The [gateway Local Field runtime](gateway/local-field/README.md) provides signed node enrollment, exact delegated passages, existing RIO admission and point-of-use fidelity, real bounded filesystem effects, native receipts, signed Return and durable reconstruction. See the [actual acceptance trace and verification report](docs/evidence/one-local-field-v0.1/VERIFICATION.md) for the implemented profile and baseline test limitations. This branch does not ratify doctrine or claim deployment.
