@@ -58,7 +58,7 @@ Files: gateway/local-field/http.mjs, gateway/local-field/cli.mjs, gateway/tests/
 - [x] Implement bounded HTTP transport; CLI starts configured receiver; signed HTTP query inspects persisted state.
 - [x] Run actual HTTP acceptance path with independent keys and sandbox authority provisioned for this engineering run; retain real IDs and file evidence.
 - [x] Run whole-branch review and fix material findings with regression tests.
-- [ ] Commit and open cross-linked draft PRs.
-- [ ] Return gate A–P results with exact blockers; never infer acceptance from code presence.
+- [x] Commit and open cross-linked draft PRs: architecture#331, runtime#202, protocol#38, receipt#33.
+- [x] Record gate A–P results in the architecture Return packet with exact runtime evidence; no mandatory blocker remains.
 
 Verification checkpoint: 39 Local Field cases pass; receipt profile 9 cases pass; real run aedf7a91-0a7d-4719-86d9-229c44c876a3. Full gateway: 222 pass, 16 fail, 51 cancelled; untouched baseline: 183 pass, same 16 fail and 51 cancelled at identical test locations. See docs/evidence/one-local-field-v0.1/VERIFICATION.md.
