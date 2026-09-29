@@ -1,0 +1,22 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> rio-receipt-protocol@0.3.0 test:local-field
+> node --test test/local-field-profile.test.js
+
+✔ real gateway receipt profile reconstructs distinct attempt occurrence and Return (6.874545ms)
+✔ modified decision fails without rewriting authorization (3.758209ms)
+✔ modified occurrence fails without rewriting authorization (2.113312ms)
+✔ modified Return correlation fails without rewriting authorization (2.61002ms)
+✔ modified Return outcome fails without rewriting authorization (2.707377ms)
+✔ modified intent projection fails without rewriting authorization (1.764958ms)
+✔ modified signature fails without rewriting authorization (2.498331ms)
+✔ modified receiver attribution fails without rewriting authorization (1.138404ms)
+✔ receipt-provided key cannot replace the external trust anchor (0.279551ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 116.670211

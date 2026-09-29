@@ -1,0 +1,2 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+{"status":"CUSTOMER_ZERO_TRACE_VERIFIED","run_id":"1e672745-8b94-4490-9a1a-4221f3babab9","arrow_id":"ad5d11bb-3fe7-428f-9ccc-a1d4681ea706","passage_id":"89816375-67a2-41cd-b9ff-ef3b06b8cf80","receipt_id":"8565fcc0-b596-435e-ab20-e0dd6d83c6b7","return_id":"9061c809-c4ba-44d4-8af9-9f193ec04093","output":"/workspace/scratch/8acae2a413b8/rio-system/docs/evidence/one-open-arrow-v0.1/customer-zero-trace.json"}

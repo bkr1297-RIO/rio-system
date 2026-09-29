@@ -1,6 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { LocalStore } from '../ledger/local-store.mjs';
+import { OpenArrow } from './open-arrow.mjs';
 import {
   canonicalizeArgs,
   issueExecutionToken,
@@ -47,7 +48,8 @@ export class LocalField {
   #executor;
   #tokens = new Map();
   #closed = false;
-  constructor({ root, anchor, receiver, signingKey, definition }) {
+  #arrow;
+  constructor({ root, anchor, receiver, signingKey, definition, openArrow }) {
     requireValue(
       root &&
         anchor?.actor_type === 'human' &&
@@ -103,6 +105,15 @@ export class LocalField {
         'RECEIVER_SUBSTITUTION',
       );
       this.#field = clone(saved.body);
+      if (this.#field.open_arrow)
+        this.#arrow = new OpenArrow({
+          store: this.#store,
+          field: this.#field,
+          anchor: this.#anchor,
+          receiver,
+          signingKey,
+          library: openArrow,
+        });
       for (const enrolled of this.#store.all('enrollment'))
         verifySigned(enrolled, anchor.public_key_hex);
       const receiverEnrollment = this.#store.get('enrollment', receiver);
@@ -122,6 +133,9 @@ export class LocalField {
           this.#store.transaction(() => this.#release(operation, permit)),
       });
       this.#recover();
+      if (this.#arrow)
+        for (const r of this.#store.all('passage'))
+          this.#arrow.capture(this.inspect(r.body.passage_id));
     } catch (e) {
       this.#store.close();
       throw e;
@@ -371,6 +385,7 @@ export class LocalField {
       );
     }
     validateArtifactOperation(p);
+    this.#arrow?.guard(p);
     return p;
   }
   #decision(record) {
@@ -438,6 +453,7 @@ export class LocalField {
         this.#record('intent', p.passage_id, intent);
         this.#record('decision', p.passage_id, decision);
         this.#store.state('phase', p.passage_id, 'ADMITTED');
+        this.#arrow?.admitted(p, decision);
         return clone(decision);
       });
     } catch (e) {
@@ -551,6 +567,7 @@ export class LocalField {
           this.#store.state('phase', id, 'HELD');
           this.#return(id, 'FIDELITY_HOLD', null, e.message);
         });
+        this.#arrow?.capture(this.inspect(id));
         throw e;
       }
       result = { status: 'FAILED', reason: e.message };
@@ -563,7 +580,9 @@ export class LocalField {
           'Execution or observation failed; non-occurrence is not inferred',
       };
     }
-    return this.#complete(id, result, occurrence);
+    const returned = this.#complete(id, result, occurrence);
+    this.#arrow?.capture(this.inspect(id));
+    return returned;
   }
   #complete(id, result, occurrence) {
     return this.#store.transaction(() => {
@@ -738,6 +757,7 @@ export class LocalField {
   }
   status() {
     return {
+      open_arrows: this.#arrow?.status() || [],
       field: {
         field_id: this.#field.field_id,
         sourcepoint: this.#anchor.principal_id,
@@ -814,6 +834,10 @@ export class LocalField {
         : nodeAt(this.#store, b.issuer).public_key_hex;
     verifySigned(record, key);
     requireValue(b.issuer === this.#anchor.principal_id, 'QUERY_ROOT_REQUIRED');
+    if (b.view === 'arrow') {
+      requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');
+      return this.#arrow.view(b.arrow_id);
+    }
     if (b.view === 'ledger') return this.#store.ledger();
     return b.passage_id ? this.inspect(b.passage_id) : this.status();
   }
@@ -823,6 +847,10 @@ export class LocalField {
       node.interfaces.includes(surface),
       'NODE_INTERFACE_NOT_ALLOWED',
     );
+  }
+  arrow(record) {
+    requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');
+    return clone(this.#arrow.handle(record));
   }
   assertControlTransport(record, surface) {
     const body = this.#controlSignature(record);

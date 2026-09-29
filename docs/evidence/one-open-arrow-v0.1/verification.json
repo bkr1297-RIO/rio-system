@@ -1,0 +1,122 @@
+{
+  "profile": "one.open-arrow.customer-zero.v0.1",
+  "run_id": "1e672745-8b94-4490-9a1a-4221f3babab9",
+  "ran_at": "2026-09-29T15:36:13.709Z",
+  "trace_sha256": "e027479735cc13b448468897717f3072c53a7c7d7b66f38cf8d7a7fbae18408a",
+  "implementation_environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "first_pid": 13,
+    "second_pid": 21
+  },
+  "commands": [
+    {
+      "cwd": "rio-system/gateway",
+      "command": "ONE_REFERENCE_ROOT=/authorized/rio-reference-impl node --test tests/local-field*.test.mjs tests/open-arrow/*.test.mjs",
+      "passed": 52,
+      "failed": 0,
+      "cancelled": 0
+    },
+    {
+      "cwd": "rio-system/gateway",
+      "command": "ONE_REFERENCE_ROOT=/authorized/rio-reference-impl node --test tests/*.test.mjs tests/open-arrow/*.test.mjs",
+      "passed": 235,
+      "failed": 16,
+      "cancelled": 51,
+      "baseline_failure_identity_match": true,
+      "baseline": "../one-local-field-v0.1/gateway-final-all-tests.log",
+      "build_caused_failures": 0
+    },
+    {
+      "cwd": "rio-system",
+      "command": "npm run typecheck",
+      "result": "PASS"
+    },
+    {
+      "cwd": "rio-reference-impl",
+      "command": "node --test extensions/compiled-occurrence-return/open-arrow/compiler.test.mjs",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "cwd": "rio-reference-impl/artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1",
+      "command": "npm test",
+      "result": "PASS",
+      "coverage": "dependency integrity, schemas/context, TypeScript/Python fixtures and 156 rejection parity comparisons"
+    },
+    {
+      "cwd": "rio-reference-impl/artifacts/transition-occurrence-protocol",
+      "command": "node --test test/*.test.ts",
+      "passed": 34,
+      "failed": 0
+    },
+    {
+      "cwd": "rio-protocol",
+      "command": "seven packet-grammar and Local Field/Open Arrow validators; see open-arrow-verification.log",
+      "result": "PASS",
+      "real_open_arrow_objects": 69
+    },
+    {
+      "cwd": "one-rio-muss-architecture",
+      "command": "registry compilation, full 28-route matrix, offline Loom, generated documentation and 55 unit tests",
+      "result": "PASS"
+    },
+    {
+      "cwd": "rio-receipt-protocol",
+      "command": "npm run test:local-field",
+      "passed": 9,
+      "failed": 0
+    },
+    {
+      "cwd": "rio-receipt-protocol",
+      "command": "verifyLocalFieldProof(finalTrace, finalTrace.anchor.public_key_hex)",
+      "result": "PASS",
+      "root_basis": "engineering root supplied explicitly; not a production SourcePoint key"
+    },
+    {
+      "cwd": "rio-system",
+      "command": "node gateway/scripts/run-open-arrow-acceptance.mjs docs/evidence/one-open-arrow-v0.1/customer-zero-trace.json ../rio-reference-impl",
+      "result": "PASS",
+      "mocks": false
+    }
+  ],
+  "baseline_failures": {
+    "affected_files": [
+      "tests/gateway.test.mjs",
+      "tests/governed-flow-integration.test.mjs",
+      "tests/governed-flow-unit.test.mjs",
+      "tests/principals.test.mjs",
+      "tests/spgm-intake.test.mjs"
+    ],
+    "causes": [
+      "existing unavailable PostgreSQL/service integration",
+      "two existing SPGM intake expectation failures"
+    ],
+    "comparison": "All 80 failing/cancelled suite/test location entries equal prior Local Field baseline; no test rewritten or suppressed"
+  },
+  "review": {
+    "fresh_whole_change_review": true,
+    "critical": 0,
+    "important": 1,
+    "minor": 1,
+    "resolved": [
+      "invalid requests rejected before formation/persistence using existing adapter validation plus pure closed compiler request check",
+      "Lifecycle closed per artifact kind in construction/schema"
+    ],
+    "deferred_findings": []
+  },
+  "source_baseline": {
+    "reference_commit": "9c75055711e7dce3498324e5803cbaac63a6edb4",
+    "native_files_byte_identical": 157,
+    "reference_extension_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab"
+  },
+  "limits": [
+    "Closed Report 17 expression and create-only Linux filesystem profile",
+    "Same-custody observation, not independent external witness",
+    "Engineering human signatures; production identity provisioning is not performed",
+    "Explicit private compiler/TOP library required; no public standalone compiler bundle",
+    "Successor standing recognizes report state only, no installation or future authority",
+    "Receipt-less interrupted attempts remain held/unknown without redispatch",
+    "Existing whole-gateway failures remain reported separately"
+  ]
+}

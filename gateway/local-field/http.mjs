@@ -25,6 +25,7 @@ export function createFieldServer(field) {
           '/execute',
           '/passages',
           '/query',
+          '/arrow',
         ].includes(req.url)
       )
         return reply(404, { error: 'UNKNOWN_ROUTE' });
@@ -45,7 +46,12 @@ export function createFieldServer(field) {
           field.assertControlTransport(record, 'http-json');
           value = field.control(record);
         } else if (req.url === '/query') value = field.query(record);
-        else {
+        else if (req.url === '/arrow') {
+          if (record?.body?.type === 'arrow_propose')
+            field.assertTransport(record, 'http-json');
+          else field.assertControlTransport(record, 'http-json');
+          value = field.arrow(record);
+        } else {
           field.assertTransport(
             req.url === '/execute' ? record.record : record,
             'http-json',
