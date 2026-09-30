@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { LocalStore } from '../ledger/local-store.mjs';
 import { OpenArrow } from './open-arrow.mjs';
+import { ProjectionRuntime } from './projection.mjs';
 import {
   canonicalizeArgs,
   issueExecutionToken,
@@ -49,6 +50,7 @@ export class LocalField {
   #tokens = new Map();
   #closed = false;
   #arrow;
+  #projection;
   constructor({ root, anchor, receiver, signingKey, definition, openArrow }) {
     requireValue(
       root &&
@@ -105,6 +107,10 @@ export class LocalField {
         'RECEIVER_SUBSTITUTION',
       );
       this.#field = clone(saved.body);
+      if (this.#field.projection_runtime)
+        this.#projection = new ProjectionRuntime({
+          store: this.#store, field: this.#field, anchor: this.#anchor, receiver, signingKey,
+        });
       if (this.#field.open_arrow)
         this.#arrow = new OpenArrow({
           store: this.#store,
@@ -136,6 +142,9 @@ export class LocalField {
       if (this.#arrow)
         for (const r of this.#store.all('passage'))
           this.#arrow.capture(this.inspect(r.body.passage_id));
+      if (this.#projection)
+        for (const r of this.#store.all('passage'))
+          this.#projection.capture(this.inspect(r.body.passage_id));
     } catch (e) {
       this.#store.close();
       throw e;
@@ -386,6 +395,9 @@ export class LocalField {
     }
     validateArtifactOperation(p);
     this.#arrow?.guard(p);
+    if (p.projection && !this.#projection)
+      throw new Error('PROJECTION_NOT_CONFIGURED');
+    this.#projection?.guard(p);
     return p;
   }
   #decision(record) {
@@ -454,6 +466,7 @@ export class LocalField {
         this.#record('decision', p.passage_id, decision);
         this.#store.state('phase', p.passage_id, 'ADMITTED');
         this.#arrow?.admitted(p, decision);
+        this.#projection?.admitted(p, decision);
         return clone(decision);
       });
     } catch (e) {
@@ -568,6 +581,7 @@ export class LocalField {
           this.#return(id, 'FIDELITY_HOLD', null, e.message);
         });
         this.#arrow?.capture(this.inspect(id));
+        this.#projection?.capture(this.inspect(id));
         throw e;
       }
       result = { status: 'FAILED', reason: e.message };
@@ -582,6 +596,7 @@ export class LocalField {
     }
     const returned = this.#complete(id, result, occurrence);
     this.#arrow?.capture(this.inspect(id));
+    this.#projection?.capture(this.inspect(id));
     return returned;
   }
   #complete(id, result, occurrence) {
@@ -758,6 +773,7 @@ export class LocalField {
   status() {
     return {
       open_arrows: this.#arrow?.status() || [],
+      projections: this.#projection?.status() || [],
       field: {
         field_id: this.#field.field_id,
         sourcepoint: this.#anchor.principal_id,
@@ -838,6 +854,10 @@ export class LocalField {
       requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');
       return this.#arrow.view(b.arrow_id);
     }
+    if (b.view === 'projection') {
+      requireValue(this.#projection, 'PROJECTION_NOT_CONFIGURED');
+      return this.#projection.view(b.projection_id);
+    }
     if (b.view === 'ledger') return this.#store.ledger();
     return b.passage_id ? this.inspect(b.passage_id) : this.status();
   }
@@ -851,6 +871,15 @@ export class LocalField {
   arrow(record) {
     requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');
     return clone(this.#arrow.handle(record));
+  }
+  projection(record) {
+    requireValue(this.#projection, 'PROJECTION_NOT_CONFIGURED');
+    return clone(this.#projection.handle(record));
+  }
+  operateProjection(record) {
+    requireValue(this.#projection, 'PROJECTION_NOT_CONFIGURED');
+    this.admit(record);
+    return this.execute(record.body.passage_id, record);
   }
   assertControlTransport(record, surface) {
     const body = this.#controlSignature(record);

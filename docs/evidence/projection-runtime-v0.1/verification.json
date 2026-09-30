@@ -1,0 +1,79 @@
+{
+  "profile": "one.projection-runtime.v0.1",
+  "run_id": "c2fccc26-919f-49c0-85bd-7dcc1d4e48ec",
+  "ran_at": "2026-09-30T01:30:50.696Z",
+  "trace_sha256": "dd732837cf6081f414bbcfb3923e79993869635ee91dcd52634025c4c1ffffb1",
+  "runtime": "Node v24.19.0 / Linux / independent receiver subprocesses and durable stores",
+  "verification": {
+    "relevant_integration": {
+      "pass": 75,
+      "fail": 0,
+      "cancelled": 0,
+      "projection_cases": 23
+    },
+    "architecture_unit_tests": {
+      "pass": 55,
+      "fail": 0
+    },
+    "architecture_routes": 28,
+    "protocol_validators": {
+      "pass": 8,
+      "fail": 0,
+      "actual_projection_objects": 58
+    },
+    "receipt_profile": {
+      "pass": 9,
+      "fail": 0
+    },
+    "independent_receipt_proof": {
+      "valid": true,
+      "passage_id": "cc7a5be9-d1d4-41f4-b0fd-fcfe7ce8f812",
+      "receipt_id": "b0659415-f046-4e0a-9319-2da05b7d104e",
+      "occurrence_claim": "OBSERVED",
+      "authorization_created": false,
+      "evidence_ceiling": "Integrity and correlation of attributed historical records; not current standing or independent external truth"
+    },
+    "typecheck": "PASS",
+    "whole_gateway": {
+      "tests": 325,
+      "pass": 258,
+      "fail": 16,
+      "cancelled": 51
+    },
+    "baseline_failure_locations_unchanged": true
+  },
+  "actual_effect": {
+    "bytes": 61,
+    "sha256": "c536af1d46c8f27663cf5bd0d54d4421ccefa64e5abd343b9b114aaa01bedb3d",
+    "source_unchanged": true
+  },
+  "host_b": {
+    "status": "DENIED",
+    "admission_id": "9a7e6d34-3ce0-4a37-8893-e4b5c59c1238",
+    "reason": "PROJECTION_TERMINAL",
+    "projection_id": "550c42aa-ab01-44c3-9b1a-0d2096f6601e"
+  },
+  "held_effect": {
+    "passage_id": "be849797-1190-4e04-aab3-0d47cf1ad454",
+    "attempt": null,
+    "receipt": null,
+    "return_id": "5f452867-3e7c-4e96-b9f9-bd000c69b6a3",
+    "acknowledged": true
+  },
+  "restart": {
+    "first_pid": 13,
+    "second_pid": 29,
+    "host_b_pid": 21,
+    "same_projection_history": true,
+    "same_return": true,
+    "no_second_effect": true
+  },
+  "review": "REVIEW.md; three material findings fixed, no deferred minor",
+  "limits": "Actual engineering Holo/HTTP/file/restart integration, same-custody observation; independently keyed local processes. No production Brian key, public delivery, installation or federation proof.",
+  "dependencies": {
+    "rio-system_base": "f49123992e19e1d23d1656061fab5c279061fab3",
+    "rio-protocol_base": "f5d947df1f82cdaee53abef5bdbd7de015964f7e",
+    "private_compiler": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+    "receipt_proof": "8cb49727e98690f9f0dfb66625e3a182f321a6e9"
+  }
+}

@@ -1,0 +1,17 @@
+✔ real gateway receipt profile reconstructs distinct attempt occurrence and Return (6.24442ms)
+✔ modified decision fails without rewriting authorization (2.91674ms)
+✔ modified occurrence fails without rewriting authorization (1.882008ms)
+✔ modified Return correlation fails without rewriting authorization (1.867132ms)
+✔ modified Return outcome fails without rewriting authorization (2.464905ms)
+✔ modified intent projection fails without rewriting authorization (1.383701ms)
+✔ modified signature fails without rewriting authorization (2.054719ms)
+✔ modified receiver attribution fails without rewriting authorization (0.958452ms)
+✔ receipt-provided key cannot replace the external trust anchor (0.177116ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 121.629441
