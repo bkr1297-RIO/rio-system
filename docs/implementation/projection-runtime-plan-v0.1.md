@@ -19,27 +19,29 @@ Imported historical binding never activates permission; projection aliases canno
 Files: gateway/local-field/projection-profile.mjs, projection.mjs; tests/projection-runtime/runtime.test.mjs.
 Consumes: LocalStore, existing signed root/node records and resolveGrant.
 Produces: ProjectionRuntime.handle(record), guard(passage), admitted(passage,decision), capture(chain), view(id), status().
-- [ ] Write hostile cases for immutable constitution, self-promotion, lifecycle, successor identity and revoked standing; run RED.
-- [ ] Implement strict core/transition contract, signed append/reconstruction and exact grant affiliation.
-- [ ] Run targeted suite; expected PASS.
+- [x] Write hostile cases for immutable constitution, self-promotion, lifecycle, successor identity and revoked standing; run RED.
+- [x] Implement strict core/transition contract, signed append/reconstruction and exact grant affiliation.
+- [x] Run targeted suite; expected PASS.
 
 ### Task 2: Receiving boundary and host admission
 Files: existing local-field/index.mjs/http.mjs; projection runtime module and tests.
 Consumes: Task1 methods. Produces: LocalField.projection(record), operateProjection(passage); generic passage/use guard, /projection route, query projection view and telemetry.
-- [ ] Write cases for generic-route bypass, post-admission suspend, host carriage/denial, fresh valid rebind, expiry/revocation and read-only status; run RED.
-- [ ] Wire guard to current admission/use path, append actual accounts through native receipt/Return, and add authenticated host judgment.
-- [ ] Run Local Field/Open Arrow/Projection suites; expected all targeted cases PASS.
+- [x] Write cases for generic-route bypass, post-admission suspend, host carriage/denial, fresh valid rebind, expiry/revocation and read-only status; run RED.
+- [x] Wire guard to current admission/use path, append actual accounts through native receipt/Return, and add authenticated host judgment.
+- [x] Run Local Field/Open Arrow/Projection suites; expected all targeted cases PASS.
 
 ### Task 3: Portable profile and actual Customer Zero
 Files: rio-protocol canonical spec/schema/validator; runtime acceptance script/instructions/evidence.
 Consumes: persisted objects and signed existing HTTP surfaces. Produces: actual two-host trace and portable validation.
-- [ ] Add schema checks from real exports and rejected malformed standing; run RED.
-- [ ] Implement real HTTP receiver subprocess run: Customer Zero report, root acknowledgement, successor, Host B denial and fresh restart reconstruction.
-- [ ] Run native receipt verifier and protocol validator; expected PASS without mock effect.
+- [x] Add schema checks from real exports and rejected malformed standing; run RED.
+- [x] Implement real HTTP receiver subprocess run: Customer Zero report, root acknowledgement, successor, Host B denial and fresh restart reconstruction.
+- [x] Run native receipt verifier and protocol validator; expected PASS without mock effect.
 
 ### Task 4: Review and delivery
 Files: architecture contract/Loom/Return; repository evidence and draft PR metadata.
-- [ ] Run architecture/protocol/affected/full existing suites; compare exact baseline failures.
-- [ ] One fresh whole-change review; fix material findings with RED→GREEN regressions.
-- [ ] Commit changed repositories and open crosslinked draft PRs if authorized; no merge.
-- [ ] Return A–P individually; O requires all relevant existing and new cases PASS, with unrelated baseline failures separately disclosed. No weighted acceptance.
+- [x] Run architecture/protocol/affected/full existing suites; compare exact baseline failures.
+- [x] One fresh whole-change review; fix material findings with RED→GREEN regressions.
+- [x] Commit changed repositories and open crosslinked draft PRs if authorized; no merge.
+- [x] Return A–P individually; O requires all relevant existing and new cases PASS, with unrelated baseline failures separately disclosed. No weighted acceptance.
+
+Completed: final 75/75 relevant cases; actual run c2fccc26-919f-49c0-85bd-7dcc1d4e48ec, three material review findings fixed with RED→GREEN, native proof and eight portable validators. Review stack: runtime #204, protocol #40, architecture #333, all draft/unmerged. Full Return and A–P evidence: architecture docs/architecture/projection-runtime/PROJECTION-RUNTIME-RETURN-v0.1.md and acceptance.json. Broad unchanged gateway failures remain explicitly reported.
