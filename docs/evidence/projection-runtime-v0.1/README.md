@@ -1,0 +1,11 @@
+# Projection Runtime v0.1 evidence
+
+`customer-zero-trace.json` is the actual final two-receiver HTTP run. `verification.json` pins its SHA-256, run/record IDs and verification counts. It records a real create/readback, root acknowledgement and separately constituted successor, independent Host B denial, a real admitted/suspended pre-effect HOLD with no receipt, and process-kill/restart reconstruction. No executor/signature/store mock supplies this trace. Engineering root/node keys are isolated and discarded; the export contains no private keys.
+
+`targeted-tests.log`: all 75 relevant cases passed (39 Local Field, 13 Open Arrow, 23 Projection). `gateway-all-tests.log`: 258 passed, 16 failed, 51 cancelled; `baseline-failure-comparison.json` preserves exact failed/cancelled file/line/column multiplicities against unchanged Open Arrow baseline. Pre-existing failures concern PostgreSQL/service integration and two SPGM expectations; no unrelated failing case was rewritten or hidden.
+
+`independent-receipt-verification.json`: unchanged receipt repository verifier checked the final successful signed native chain against the run's separately supplied engineering root verification key. This proves bounded attributed historical integrity/correlation, not production human identity or independent world truth. `receipt-tests.log` has nine passing hostile proof cases; `typecheck.log` passes. `REVIEW.md` records three material findings and their RED→GREEN fixes, with no deferred minor.
+
+Portable validation: `rio-protocol/tests/local_field/projection-verification.log` (eight validators; 58 actual Projection portable records/events, including the null-receipt HOLD). Architecture validation: `one-rio-muss-architecture/docs/architecture/projection-runtime/architecture-tests.log` (55 cases; deterministic full 28-route matrix and offline pinned Loom reconstruction).
+
+Run instructions: `gateway/local-field/PROJECTION-RUNTIME.md`. Reconciled owner/contract: architecture `docs/architecture/projection-runtime/PROJECTION-RUNTIME-BUILD-SPEC-v0.1.md`, existing #322 / R-07 GAP. No route closure, doctrine ratification, merge, deployment, public Commons delivery, Exobody, graphical Helm or federation guarantee is claimed.

@@ -71,3 +71,7 @@ Protocol: `rio-protocol/spec/local-field-v0.1.md`. Proof profile: `rio-receipt-p
 ## Open Arrow Customer Zero
 
 The optional constituted approval/promotion profile is documented in [OPEN-ARROW.md](OPEN-ARROW.md). It uses the same receiver, grants, RIO, Sentinel, adapter, receipt and ledger.
+
+## Projection Runtime
+
+Persistent Holo lifecycle, explicit delegation and independent host admission are documented in [PROJECTION-RUNTIME.md](PROJECTION-RUNTIME.md). The optional signed field profile composes with these same owners and exposes existing signed human controls and field topology.
