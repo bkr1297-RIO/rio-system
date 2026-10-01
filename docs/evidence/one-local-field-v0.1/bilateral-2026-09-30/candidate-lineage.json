@@ -1,0 +1,183 @@
+{
+  "retrieval_completed": true,
+  "selected_candidate_baseline_is_not_main": true,
+  "queue_processing": "Material functionality/lineage only; not chronological; no whole-estate merge",
+  "classifications": [
+    {
+      "repo": "bkr1297-RIO/rio-system",
+      "pr": 202,
+      "commit": "099d5cb88f0dafdac1b0c71545aa1709c75a4a96",
+      "classification": "ALREADY_IN_BASELINE",
+      "reuse": "Required Local Field core: LocalField orchestration, signed controls/lineage, exact-scope authorization, SQLite store/lease, guarded executor, native receipt/Return and 14-case tests. Extended in their existing owners; not merged.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-system",
+      "pr": 203,
+      "commit": "f49123992e19e1d23d1656061fab5c279061fab3",
+      "classification": "ALREADY_IN_BASELINE",
+      "reuse": "Inherited optional Open Arrow owner remains disabled and unchanged for this accepted profile; regression-tested, no additional capability promoted.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-system",
+      "pr": 204,
+      "commit": "7baa2639ff9daf556d9bb9c49e176ebb969c5f4f",
+      "classification": "ALREADY_IN_BASELINE",
+      "reuse": "Pinned selected build-stack predecessor, not main/current runtime law. Optional Projection owner disabled and unchanged; existing model-authored candidate fixture reused byte-for-byte for actual process specimen.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-protocol",
+      "pr": 38,
+      "commit": "17331406c39ed93771eb6ba89b8a06cdf1cda29b",
+      "classification": "REUSE_REQUIRED",
+      "reuse": "Existing portable Local Field signed control/passage schema, native Return schema and spec owner extended minimally; existing semantic vocabulary retained.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-protocol",
+      "pr": 39,
+      "commit": "f5d947df1f82cdaee53abef5bdbd7de015964f7e",
+      "classification": "REUSE_OPTIONAL",
+      "reuse": "Inherited optional Open Arrow schemas retained for ancestor compatibility, not required/enabled by this profile.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-protocol",
+      "pr": 40,
+      "commit": "ce12202ebd3880b2f4fd3c78349bdeb797141eac",
+      "classification": "REUSE_OPTIONAL",
+      "reuse": "Selected schema-stack predecessor; optional Projection schemas retained, not required/enabled by this profile.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/one-rio-muss-architecture",
+      "pr": 331,
+      "commit": "aec3341da18af05a396ef6974ec00bdac2115aec",
+      "classification": "REUSE_REQUIRED",
+      "reuse": "Existing Local Field architecture home, routing, runtime and Return maps extended. Older A–P acceptance is historical EVIDENCE_ONLY and does not control the 19 gates.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/one-rio-muss-architecture",
+      "pr": 332,
+      "commit": "8101bcc35abdd82cba6a28fb8c67561742a2b1a4",
+      "classification": "EVIDENCE_ONLY",
+      "reuse": "Adjacent Open Arrow candidate lineage inspected; existing docs retained, no route closure or implementation extracted.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/one-rio-muss-architecture",
+      "pr": 333,
+      "commit": "4fb2b4b3ecdaae277aea6cfcba0ca38fa7830a29",
+      "classification": "EVIDENCE_ONLY",
+      "reuse": "Selected architecture-stack predecessor; optional Projection docs retained, no promotion of optional runtime law.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-receipt-protocol",
+      "pr": 33,
+      "commit": "8cb49727e98690f9f0dfb66625e3a182f321a6e9",
+      "classification": "REUSE_REQUIRED",
+      "reuse": "Exact unchanged native Local Field verifier/proof profile consumed read-only. verifier/local-field.js blob 531a24df57abbd0a1e85ff81af6d1e6cf334fe59 verified; no format or generator copied/replaced and no receipt repository mutation.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-reference-impl",
+      "pr": 224,
+      "commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "classification": "REUSE_OPTIONAL",
+      "reuse": "Existing native bridge used only as optional-profile regression dependency; not required/enabled for Local Field bilateral execution.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-reference-impl",
+      "pr": 225,
+      "commit": "6967ef351a5f402a5ace5a5017dc47c5f8aab992",
+      "classification": "EVIDENCE_ONLY",
+      "reuse": "Adjacent scale-closure candidate inspected for material lineage; no implementation extracted and no estate-wide closure claimed.",
+      "merged_by_this_build": false
+    },
+    {
+      "repo": "bkr1297-RIO/rio-reference-impl",
+      "pr": 226,
+      "commit": "10fa67c8755373e1bf71d598cbc39887593bbef0",
+      "classification": "EVIDENCE_ONLY",
+      "reuse": "TOP fixture establishes equal projected endpoints with ADMITTED versus UNSETTLED residue. Preserve route-part-of-result invariant; no fixture/runtime code copied and no Passage Geometry subsystem created.",
+      "merged_by_this_build": false
+    }
+  ],
+  "pr226": {
+    "head": "fixture/passage-residue-endpoint-equivalence-f0-1",
+    "commit": "10fa67c8755373e1bf71d598cbc39887593bbef0",
+    "live_status_checked": "2026-10-01",
+    "workflow_runs": [
+      {
+        "id": 36766299046,
+        "name": "Compiled Occurrence Return Reference",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 14,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299046/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299046/logs",
+        "workflow_id": 351067974
+      },
+      {
+        "id": 36766299123,
+        "name": "Rosetta Handshake F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 17,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299123/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299123/logs",
+        "workflow_id": 353596129
+      },
+      {
+        "id": 36766299099,
+        "name": "ONE V1 Reference Corpus Conformance F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 167,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299099/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299099/logs",
+        "workflow_id": 340255625
+      },
+      {
+        "id": 36766299045,
+        "name": "Semantic Candidate to Compiled Return F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 5,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299045/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299045/logs",
+        "workflow_id": 355542678
+      },
+      {
+        "id": 36766298999,
+        "name": "Transition Occurrence Protocol F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 9,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766298999/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766298999/logs",
+        "workflow_id": 341661905
+      },
+      {
+        "id": 36766298922,
+        "name": "ONE V1 Reference Reproducibility F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 170,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766298922/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766298922/logs",
+        "workflow_id": 340242410
+      }
+    ],
+    "evidence_ceiling": "Candidate lineage, not current runtime law; endpoint equality does not imply Passage equivalence"
+  },
+  "not_required_candidates": "Undisturbed",
+  "private_reference_source_copied": false,
+  "additional_governor_created": false,
+  "whole_estate_merge_performed": false
+}

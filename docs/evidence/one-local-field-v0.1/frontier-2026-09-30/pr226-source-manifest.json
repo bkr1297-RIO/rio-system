@@ -1,0 +1,54 @@
+{
+  "repository": "bkr1297-RIO/rio-reference-impl",
+  "commit": "10fa67c8755373e1bf71d598cbc39887593bbef0",
+  "files": [
+    {
+      "path": "package.json",
+      "git_blob": "8a42d35e4f5c91284217963da36c99e08a635ca5"
+    },
+    {
+      "path": "src/index.ts",
+      "git_blob": "22c9fbd84d297a3908d2a7ace0e7319a5d5a99e2"
+    },
+    {
+      "path": "src/canonical.ts",
+      "git_blob": "d38855b3e63476d41dd927373751f0d596d210b3"
+    },
+    {
+      "path": "src/types.ts",
+      "git_blob": "2949b9ffe7bf7b7ae65e8185c759e9e7b0a03de6"
+    },
+    {
+      "path": "src/protocol.ts",
+      "git_blob": "4286d41b36d2995d5baa7204164ce1979a0c00dd"
+    },
+    {
+      "path": "src/standing-genealogy.ts",
+      "git_blob": "a1175c62c54063a7a3996365f3bdd6d3955026e6"
+    },
+    {
+      "path": "src/boundary-judgment.ts",
+      "git_blob": "7bc888fbea29b7bbbe4236495fa0c7dd5c17db3b"
+    },
+    {
+      "path": "test/helpers.ts",
+      "git_blob": "10058d751f30a780ccdb56ae1d4e096d188c13ee"
+    },
+    {
+      "path": "test/protocol.test.ts",
+      "git_blob": "b7923ff9a4765b5f44d8b9d38640e46ef33c9571"
+    },
+    {
+      "path": "test/standing-genealogy.test.ts",
+      "git_blob": "9e727fdda3348a9df8ed56d304a15e3c20aa96e5"
+    },
+    {
+      "path": "fixtures/hostile-cases.json",
+      "git_blob": "ae4a5e7be09390f1c452ed0f3cb13425dae0a062"
+    },
+    {
+      "path": "test/passage-residue.test.ts",
+      "git_blob": "00a56855b794f10a81cff0cf5b503a0f7d074739"
+    }
+  ]
+}

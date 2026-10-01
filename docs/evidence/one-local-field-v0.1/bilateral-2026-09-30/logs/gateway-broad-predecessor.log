@@ -1,0 +1,1104 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Replay Prevention] Initialized — window: 300s, retention: 24h
+[RIO Token Manager] Token issued: d3f09041... for intent intent:mandatory | tool=send_email | env=repair-test | max=1 | expires 2026-10-01T00:15:07.436Z
+[RIO Token Manager] Token BURNED: d3f09041... for intent intent:mandatory — all 11 checks passed
+[RIO Token Manager] REPLAY BLOCKED: Token for intent intent:mandatory status=USED burned=true burned_at=2026-09-30T23:45:07.437Z
+[RIO Token Manager] Token issued: 84dd9b16... for intent intent:substitution | tool=send_email | env=repair-test | max=1 | expires 2026-10-01T00:15:07.439Z
+[RIO Token Manager] ARGS BINDING FAIL: Token args_hash=7da6b91799a56f4e... !== request args_hash=b6032ff534ebc152...
+[RIO Token Manager] SIGNATURE FAIL: Token signature verification failed for intent intent:substitution
+[RIO Token Manager] Token BURNED: 84dd9b16... for intent intent:substitution — all 11 checks passed
+[RIO Replay Prevention] REPLAY BLOCKED: Nonce "repair:nonce" already used on /execute-action at 2026-09-30T23:45:07.445Z
+[RIO Token Manager] Token issued: 7c7a1b6a... for intent intent:route:1 | tool=send_email | env=production | max=1 | expires 2026-10-01T00:15:07.453Z
+[RIO Token Manager] Token BURNED: 7c7a1b6a... for intent intent:route:1 — all 11 checks passed
+[RIO Token Manager] Token issued: 1c99d7ac... for intent intent:route:4 | tool=send_email | env=production | max=1 | expires 2026-10-01T00:15:07.460Z
+[RIO Token Manager] Token BURNED: 1c99d7ac... for intent intent:route:4 — all 11 checks passed
+[RIO Token Manager] Token issued: 5f700292... for intent intent:route:5 | tool=send_sms | env=production | max=1 | expires 2026-10-01T00:15:07.465Z
+[RIO Token Manager] Token BURNED: 5f700292... for intent intent:route:5 — all 11 checks passed
+✔ recursive canonicalization binds nested values and ignores object insertion order (5.728093ms)
+✔ non-JSON, accessor, hidden, sparse and cyclic argument carriers fail before hashing (0.545362ms)
+✔ issuance requires exact signed single-use bindings (0.495567ms)
+✔ omitted point-of-use checks fail without burning the token (3.081274ms)
+✔ nested substitution and signature substitution both fail closed (5.384354ms)
+✔ guarded intent transition admits one local reservation (0.596298ms)
+✔ nonce policy covers direct dispatch and API execution paths (1.18755ms)
+✔ every gateway token burn supplies the mandatory signature verifier and exact bindings (0.610971ms)
+✔ direct route reserves before await so two concurrent requests dispatch once (8.294661ms)
+✔ request delivery substitution and approved external delegation cannot enter direct dispatch (1.895907ms)
+✔ connector failure or incomplete send creates no receipt or fallback payload (8.956938ms)
+✔ unsupported direct action is not simulated into an execution receipt (6.459415ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Replay Prevention] Initialized — window: 300s, retention: 24h
+[RIO Rate Limiter] Initialized — global limit: 30 req/min, window: 60s
+============================================================
+  RIO GOVERNANCE GATEWAY v2.9.0
+  Governed AI Execution Runtime
+  Ledger: PostgreSQL (persistent)
+  Auth: JWT + Ed25519 + API Keys + Google OAuth (PostgreSQL-backed)
+  Principals: Unified identity model with role enforcement
+  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding
+  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs
+============================================================
+
+[RIO Config] Loaded: RIO_CONSTITUTION.json
+[RIO Config] Loaded: RIO_POLICY.json
+[RIO Config] Loaded: RIO_ROLE_MANUS.json
+[RIO Config] Loaded: RIO_ROLE_GEMINI.json
+[RIO Gateway] Governance configuration loaded.
+▶ RIO Governance Gateway
+  ▶ GET /health
+    ✖ should return operational status (30.221298ms)
+  ✖ GET /health (33.940222ms)
+  ▶ Full Pipeline (Happy Path)
+    ✖ POST /intent — should submit an intent (19.000986ms)
+    ✖ POST /govern — should evaluate governance (21.043956ms)
+    ✖ POST /authorize — should record human approval (11.086149ms)
+    ✖ POST /execute — should execute the action (3.712986ms)
+    ✖ POST /receipt — should generate a receipt (3.126953ms)
+    ✖ GET /verify — should verify the receipt and chain (6.876524ms)
+    ✖ GET /intent/:id — should show full pipeline state (13.138771ms)
+  ✖ Full Pipeline (Happy Path) (80.193982ms)
+  ▶ Fail Closed — No Authorization
+    ✖ should block execution of a submitted (ungoverned) intent (5.795344ms)
+  ✖ Fail Closed — No Authorization (6.280856ms)
+  ▶ Fail Closed — Denied Intent
+    ✖ should block execution of a denied intent (4.64503ms)
+  ✖ Fail Closed — Denied Intent (5.138824ms)
+  ▶ Fail Closed — Unknown Agent
+    ✖ should block governance for an unknown agent (4.915167ms)
+  ✖ Fail Closed — Unknown Agent (6.25701ms)
+  ▶ Ledger
+    ✖ GET /ledger — should return entries (4.309195ms)
+    ✖ GET /verify — full chain should be valid (1.719061ms)
+  ✖ Ledger (6.451494ms)
+✖ RIO Governance Gateway (985.699328ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Replay Prevention] Initialized — window: 300s, retention: 24h
+[RIO Rate Limiter] Initialized — global limit: 30 req/min, window: 60s
+============================================================
+  RIO GOVERNANCE GATEWAY v2.9.0
+  Governed AI Execution Runtime
+  Ledger: PostgreSQL (persistent)
+  Auth: JWT + Ed25519 + API Keys + Google OAuth (PostgreSQL-backed)
+  Principals: Unified identity model with role enforcement
+  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding
+  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs
+============================================================
+
+[RIO Config] Loaded: RIO_CONSTITUTION.json
+[RIO Config] Loaded: RIO_POLICY.json
+[RIO Config] Loaded: RIO_ROLE_MANUS.json
+[RIO Config] Loaded: RIO_ROLE_GEMINI.json
+[RIO Gateway] Governance configuration loaded.
+[RIO Gateway] FATAL: Could not connect to ledger database: 
+[RIO Gateway] Fail-closed: Gateway will not start without a persistent ledger.
+✖ tests/governed-flow-integration.test.mjs (565.754013ms)
+[RIO OAuth] Invalid or expired state token: invalid-...
+▶ Google OAuth Module
+  ✔ isGoogleOAuthConfigured returns false when env vars are missing (6.825607ms)
+  ✔ handleGoogleAuthRedirect returns 503 when not configured (0.385521ms)
+  ✔ handleAuthStatus returns correct status when not configured (0.231599ms)
+  ✔ handleGoogleCallback redirects with error when state is invalid (1.532139ms)
+✔ Google OAuth Module (16.751657ms)
+▶ Google OAuth Module (configured)
+  ✔ environment variables are set correctly (1.923139ms)
+✔ Google OAuth Module (configured) (15.32022ms)
+▶ Principal Email Resolution
+  ✖ resolves Brian's primary email to I-1
+  ✖ resolves riomethod5 email to I-2 (seed email match)
+  ✖ resolves Brian's hotmail email to I-1 (case insensitive)
+  ✖ returns null for unknown email
+  ✖ returns null for empty email
+✖ Principal Email Resolution (80.853831ms)
+▶ createToken with direct claims (Mode 2)
+  ✔ creates a token with direct claims (1.104444ms)
+  ✔ creates a token with legacy alias (Mode 1 — resolves to email) (0.210378ms)
+  ✔ creates a token with email directly (Mode 1) (0.338219ms)
+  ✔ returns null for unknown legacy user (0.113471ms)
+✔ createToken with direct claims (Mode 2) (4.424718ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ actual write followed by process death returns unresolved attempt and never replays (883.211608ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 6b4c44ff... for intent a307f4b3-85f6-4536-ae8d-3015937693b2 | tool=create_document | env=8aa22b4c-9656-40f7-9b72-2290da3442e8 | max=1 | expires 2026-10-01T00:15:07.842Z
+[RIO Token Manager] Token BURNED: 6b4c44ff... for intent a307f4b3-85f6-4536-ae8d-3015937693b2 — all 11 checks passed
+✔ real HTTP passage requires signed admission, executes and returns queryable lineage (654.895826ms)
+✔ HTTP exposes no raw adapter, unsigned telemetry or cross-origin browser path (171.282455ms)
+✔ delegated controls obey the issuer communication surface (128.922233ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 35cc1f49... for intent caa1753f-78d7-4a6f-af6d-5739cc02db7b | tool=create_document | env=62e4f7bc-83ac-4731-9fda-9dd9b83eda2b | max=1 | expires 2026-10-01T00:15:07.774Z
+[RIO Token Manager] Token BURNED: 35cc1f49... for intent caa1753f-78d7-4a6f-af6d-5739cc02db7b — all 11 checks passed
+[RIO Token Manager] Token issued: 892262f9... for intent cf04e925-57fe-4dd1-aba2-c14b49515b27 | tool=create_document | env=88489c7f-9705-4e25-a0d6-833a899fa034 | max=1 | expires 2026-10-01T00:15:08.601Z
+[RIO Token Manager] Token BURNED: 892262f9... for intent cf04e925-57fe-4dd1-aba2-c14b49515b27 — all 11 checks passed
+[RIO Token Manager] Token issued: 3dda6994... for intent e606c064-fee5-4450-9699-dc8471792d68 | tool=create_document | env=e92b630a-bf90-41e6-b3ca-1b505e235993 | max=1 | expires 2026-10-01T00:15:09.209Z
+[RIO Token Manager] Token issued: ec39c076... for intent 6c21a2bc-693a-4e59-a5e6-24f0962ec35c | tool=create_document | env=0bb5cb00-43fb-4e10-b39e-b99ead925d82 | max=1 | expires 2026-10-01T00:15:09.385Z
+[RIO Token Manager] Token issued: 4dd5ed3e... for intent 6009fb4e-efbe-4599-93a1-be93d76d9b7c | tool=create_document | env=c3287556-dff0-4092-ab65-059972da1d00 | max=1 | expires 2026-10-01T00:15:09.774Z
+[RIO Token Manager] Token BURNED: 4dd5ed3e... for intent 6009fb4e-efbe-4599-93a1-be93d76d9b7c — all 11 checks passed
+[RIO Token Manager] Token issued: 8926e860... for intent 84367050-129e-4750-ba12-661bc04f1a53 | tool=create_document | env=85af2523-b4b2-4ea9-941e-6aaa9355c6ab | max=1 | expires 2026-10-01T00:15:10.017Z
+[RIO Token Manager] Token BURNED: 8926e860... for intent 84367050-129e-4750-ba12-661bc04f1a53 — all 11 checks passed
+[RIO Token Manager] Token issued: 91e5bb64... for intent bc9d52d3-55ef-41ca-8677-4c3ade04dcf8 | tool=create_document | env=7294f5d0-cba3-43de-927d-788152ea22d3 | max=1 | expires 2026-10-01T00:15:10.348Z
+[RIO Token Manager] Token BURNED: 91e5bb64... for intent bc9d52d3-55ef-41ca-8677-4c3ade04dcf8 — all 11 checks passed
+[RIO Token Manager] Token issued: d889b184... for intent f6788c9d-799d-4692-a03a-e8692946b9e3 | tool=create_document | env=1df9b134-a731-4090-8196-7face6e7366d | max=1 | expires 2026-10-01T00:15:10.563Z
+[RIO Token Manager] Token BURNED: d889b184... for intent f6788c9d-799d-4692-a03a-e8692946b9e3 — all 11 checks passed
+[RIO Token Manager] Token issued: 5a886ead... for intent 4234fe0b-22be-4758-933c-1d0ee635df9b | tool=create_document | env=46a7a8a4-a8e7-428a-9608-b6ea1d666b63 | max=1 | expires 2026-10-01T00:15:10.840Z
+[RIO Token Manager] Token issued: ad7fc2b9... for intent 66b3216d-3583-4f68-becc-0aff1036c6c2 | tool=create_document | env=7d4f6696-f98c-4b7e-b5ec-34e68d92a325 | max=1 | expires 2026-10-01T00:15:11.176Z
+[RIO Token Manager] Token BURNED: ad7fc2b9... for intent 66b3216d-3583-4f68-becc-0aff1036c6c2 — all 11 checks passed
+[RIO Token Manager] Token issued: 2eca89c7... for intent c24a7432-ee4a-4355-8b9e-d8e65e5433a4 | tool=create_document | env=8d204aad-dea1-4065-8e2e-42d6a7b08ee7 | max=1 | expires 2026-10-01T00:15:11.450Z
+[RIO Token Manager] Token BURNED: 2eca89c7... for intent c24a7432-ee4a-4355-8b9e-d8e65e5433a4 — all 11 checks passed
+[RIO Token Manager] Token issued: 73d90c16... for intent ceddcc92-e36a-4422-82e1-8cbc4a0fb23c | tool=create_document | env=9f14ab15-d257-4530-a689-cf6713a93f28 | max=1 | expires 2026-10-01T00:15:11.669Z
+[RIO Token Manager] Token issued: b0b66897... for intent fe3210d7-daff-4f70-a88a-bbe49696c64c | tool=create_document | env=6e30f902-a53e-43aa-950a-91feee1133da | max=1 | expires 2026-10-01T00:15:11.828Z
+[RIO Token Manager] Token BURNED: b0b66897... for intent fe3210d7-daff-4f70-a88a-bbe49696c64c — all 11 checks passed
+[RIO Token Manager] Token issued: 52b51fba... for intent 1c8b86d4-9159-4726-ae09-4eec6edc0efc | tool=create_document | env=2fdc2e7f-5f62-4d39-a043-b3a2c5e8b1d5 | max=1 | expires 2026-10-01T00:15:12.179Z
+[RIO Token Manager] Token issued: 402b54e9... for intent 57095cf9-308c-4abe-85f3-817b8babdeb5 | tool=create_document | env=14c24ee1-c0c0-4b02-b9c8-ac2712762ab2 | max=1 | expires 2026-10-01T00:15:12.344Z
+[RIO Token Manager] Token issued: c7dffbbb... for intent 4f677e49-9192-4a89-8324-878b2fac4247 | tool=create_document | env=90602228-ed58-40a8-9b0d-f46d2e0b7cfa | max=1 | expires 2026-10-01T00:15:12.783Z
+[RIO Token Manager] Token issued: 3bd0f125... for intent 7c4cd10b-b655-4c59-80ce-826214b21f48 | tool=create_document | env=cebe45cf-57b3-4c82-bdb9-66f07c411015 | max=1 | expires 2026-10-01T00:15:13.005Z
+[RIO Token Manager] Token issued: 0a13fa50... for intent b96c5393-e968-4476-a5f7-3e142b6ae3f5 | tool=create_document | env=cebe45cf-57b3-4c82-bdb9-66f07c411015 | max=1 | expires 2026-10-01T00:15:13.057Z
+[RIO Token Manager] Token BURNED: 3bd0f125... for intent 7c4cd10b-b655-4c59-80ce-826214b21f48 — all 11 checks passed
+[RIO Token Manager] Token issued: b6584eca... for intent 54c20d26-2d4e-4025-ab47-0b8066189ca3 | tool=create_document | env=c236166b-fb43-4b57-9cd6-3d7856d9f702 | max=1 | expires 2026-10-01T00:15:13.465Z
+[RIO Token Manager] Token BURNED: b6584eca... for intent 54c20d26-2d4e-4025-ab47-0b8066189ca3 — all 11 checks passed
+[RIO Token Manager] Token issued: 91abe4c4... for intent bbc4893f-1e94-4382-91ce-97e3da4d234b | tool=create_document | env=82c39add-4089-4b6f-b7ea-73595afc2605 | max=1 | expires 2026-10-01T00:15:13.665Z
+[RIO Token Manager] Token BURNED: 91abe4c4... for intent bbc4893f-1e94-4382-91ce-97e3da4d234b — all 11 checks passed
+[RIO Token Manager] Token issued: 90fb2f67... for intent 57b7355e-2ed2-4c93-910b-55699aa279b2 | tool=create_document | env=eef1c8d3-e193-418b-bda0-ec2b412d8310 | max=1 | expires 2026-10-01T00:15:14.037Z
+✔ 01 valid enrolled passage creates an actual observed artifact with native receipt (425.47266ms)
+✔ 02 unknown node is rejected without effect (147.832243ms)
+✔ 03 invalid signature and changed integrity are rejected (140.633523ms)
+✔ 04 expired passage is rejected (179.967946ms)
+✔ 05 replayed passage cannot produce a second effect (347.001848ms)
+✔ 06 revoking authority rejects equivalent later passage at runtime (248.567444ms)
+✔ 07 changed target after admission fails point-of-use fidelity (232.307533ms)
+✔ 08 changed dependency after admission fails point-of-use fidelity (228.521728ms)
+✔ 09 capability and enrollment without authority cannot execute (118.704388ms)
+✔ 10 model candidate is non-authoritative and cannot directly execute (273.914ms)
+✔ 11 receipt cannot manufacture or rewrite a persisted RIO decision (255.894652ms)
+✔ 12 node A cannot impersonate node B by changing its identifier (95.918152ms)
+✔ 13 Return resolves to exact passage and originating correlation (198.617597ms)
+✔ 14 persisted identities grants revocations and completed lineage survive restart (313.384768ms)
+✔ revocation after admission is checked at point of use (184.513687ms)
+✔ control replay is rejected and wrong field cannot enroll (100.980737ms)
+✔ restart with substituted root is refused (67.402795ms)
+✔ single-use grant permits one action across separate passages (191.251892ms)
+✔ filesystem rejects traversal and existing symlink without external effect (258.647141ms)
+✔ unfinished admitted passage is held after restart without regenerated permission (191.894891ms)
+✔ receiver seals receipt with its own enrolled key and alteration fails (195.88822ms)
+✔ second runtime cannot reconstruct active owner as if it had stopped (125.23827ms)
+✔ node revocation blocks previously admitted operation (171.763275ms)
+✔ changed payload after admission is rejected even when sender signs again (161.767055ms)
+✔ unsupported grant conditions are never treated as satisfied (115.420333ms)
+✔ model node cannot omit the non-authoritative candidate boundary (140.696694ms)
+✔ ancestor revocation invalidates derived delegation at point of use (222.950772ms)
+✔ two admissions cannot spend one single-use grant twice (362.065326ms)
+✔ superseded authority is rejected without changing source code (121.295259ms)
+✔ rejected duplicate admission cannot destroy the original permission (222.065857ms)
+✔ another enrolled node cannot force an admitted passage into HOLD (159.813571ms)
+✔ RIO policy conditions evaluate actual executor content (96.911348ms)
+✔ non-proposer role cannot cross by holding capability and grant (95.548294ms)
+✔ wrong receiver key cannot corrupt recovery Return (224.117114ms)
+✔ stale lease from prior boot does not mistake reused PID for original receiver (126.93692ms)
+▶ C2C-001 Office Integrity Execution Precheck
+  ✔ extracts declared office from supported intent locations (0.697701ms)
+  ✔ infers authority level from existing authorization/governance state (0.142194ms)
+  ✔ skips without authorizing when no office is declared (0.297569ms)
+  ✔ builds an office integrity request from an authorized intent (0.136786ms)
+  ✔ passes when office/action/consequence/authority fit (4.641515ms)
+  ✔ returns ledger-compatible HOLD receipt when office overreaches (0.726165ms)
+  ✔ blocks convergence signal from becoming execution authority (0.231779ms)
+✔ C2C-001 Office Integrity Execution Precheck (7.906887ms)
+▶ C2C-001 Office Integrity Validator
+  ✔ loads schema-shaped sample concordance entries (1.254581ms)
+  ✔ finds entries by active office and alias (0.191989ms)
+  ✔ passes when declared office is allowed to perform requested action (0.495116ms)
+  ✔ fails with HOLD receipt when grammar office tries to authorize (0.24537ms)
+  ✔ fails with HOLD receipt when convergence signal tries to issue execution token (0.1397ms)
+  ✔ fails with HOLD receipt for unknown offices (0.410158ms)
+  ✔ fails with HOLD receipt when authority level is insufficient (0.155164ms)
+✔ C2C-001 Office Integrity Validator (4.245669ms)
+▶ OpenAPI SPG-M govern metadata
+  ✔ documents optional SPG-M review metadata on API v1 govern (1.821696ms)
+  ✔ defines SPG-M govern request schema aliases (0.395746ms)
+  ✔ defines SPG-M review metadata as non-executing context (0.354785ms)
+  ✔ documents SPG-M response fields on governance result (0.362366ms)
+✔ OpenAPI SPG-M govern metadata (4.424438ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Replay Prevention] Initialized — window: 300s, retention: 24h
+[RIO Rate Limiter] Initialized — global limit: 30 req/min, window: 60s
+============================================================
+  RIO GOVERNANCE GATEWAY v2.9.0
+  Governed AI Execution Runtime
+  Ledger: PostgreSQL (persistent)
+  Auth: JWT + Ed25519 + API Keys + Google OAuth (PostgreSQL-backed)
+  Principals: Unified identity model with role enforcement
+  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding
+  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs
+============================================================
+
+[RIO Config] Loaded: RIO_CONSTITUTION.json
+[RIO Config] Loaded: RIO_POLICY.json
+[RIO Config] Loaded: RIO_ROLE_MANUS.json
+[RIO Config] Loaded: RIO_ROLE_GEMINI.json
+[RIO Gateway] Governance configuration loaded.
+▶ Pattern Matching
+  ✔ matches exact action names (1.229272ms)
+  ✔ matches prefix patterns with _* (0.178569ms)
+  ✔ matches OR patterns with | (0.381354ms)
+  ✔ matches wildcard * (1.128881ms)
+  ✔ returns false for null/empty inputs (0.215124ms)
+  ✔ matches complex multi-prefix patterns (0.215385ms)
+✔ Pattern Matching (4.994116ms)
+▶ Condition Evaluation
+  ✔ returns true when no conditions (0.897864ms)
+  ✔ checks attachment_count.max (0.185589ms)
+  ✔ checks body_length.max (0.229886ms)
+  ✔ checks confidence.min (0.243157ms)
+  ✔ checks recipient_in with known contacts (0.183797ms)
+✔ Condition Evaluation (2.326427ms)
+▶ Policy Evaluation — Risk Tiers
+  ✔ classifies read operations as NONE risk / AUTO_APPROVE (0.745233ms)
+  ✔ classifies draft operations as LOW risk / AUTO_APPROVE (0.149976ms)
+  ✔ classifies design operations as LOW risk / AUTO_APPROVE (0.336747ms)
+  ✔ classifies send_email as MEDIUM risk / REQUIRE_HUMAN (0.200542ms)
+  ✔ classifies deploy operations as HIGH risk / REQUIRE_HUMAN (0.256326ms)
+  ✔ classifies destructive operations as CRITICAL risk / REQUIRE_HUMAN (0.151388ms)
+  ✔ classifies policy changes as CRITICAL risk / REQUIRE_QUORUM (0.317809ms)
+✔ Policy Evaluation — Risk Tiers (2.479848ms)
+▶ Policy Evaluation — AUTO_DENY (Invariant Violations)
+  ✔ denies self_authorize (0.419743ms)
+  ✔ denies bypass_governance (0.176306ms)
+  ✔ denies execute_without_approval (0.141103ms)
+✔ Policy Evaluation — AUTO_DENY (Invariant Violations) (1.319559ms)
+▶ Policy Evaluation — Fail-Closed Defaults
+  ✔ rejects when no policy is provided (0.251129ms)
+  ✔ rejects unknown actions with REQUIRE_HUMAN + HIGH (0.167122ms)
+  ✔ rejects unknown agents (0.126761ms)
+  ✔ rejects inactive policy (0.164078ms)
+✔ Policy Evaluation — Fail-Closed Defaults (0.920668ms)
+▶ Policy Evaluation — Confidence Threshold
+  ✔ upgrades AUTO_APPROVE to REQUIRE_HUMAN when confidence < 80 (0.203757ms)
+  ✔ keeps AUTO_APPROVE when confidence >= 80 (0.155064ms)
+✔ Policy Evaluation — Confidence Threshold (0.487355ms)
+▶ Policy Evaluation — System Mode Overrides
+  ✔ ELEVATED mode overrides AUTO_APPROVE to REQUIRE_HUMAN (0.500785ms)
+  ✔ ELEVATED mode does NOT override AUTO_DENY (0.211178ms)
+  ✔ LOCKDOWN mode restricts approvers to root_authority only (1.33413ms)
+  ✔ MAINTENANCE mode pauses execution (0.136676ms)
+  ✔ NORMAL mode allows AUTO_APPROVE (0.120892ms)
+✔ Policy Evaluation — System Mode Overrides (2.713139ms)
+▶ Policy Evaluation — Approval Requirements
+  ✔ AUTO_APPROVE requires 0 approvals (0.153712ms)
+  ✔ REQUIRE_HUMAN requires 1 approval from approver or root_authority (0.134123ms)
+  ✔ REQUIRE_QUORUM requires 2-of-3 from meta_governor or root_authority (0.6435ms)
+  ✔ AUTO_DENY has -1 approvals (no approval path) (0.15262ms)
+✔ Policy Evaluation — Approval Requirements (8.575815ms)
+▶ Policy Evaluation — Approval TTL
+  ✔ NONE risk has no TTL (0.257508ms)
+  ✔ MEDIUM risk has 3600s TTL (0.488736ms)
+  ✔ HIGH risk has 1800s TTL (0.115384ms)
+  ✔ CRITICAL risk has 900s TTL (0.146841ms)
+✔ Policy Evaluation — Approval TTL (1.197405ms)
+▶ Approval Expiration Helper
+  ✔ returns false when no TTL (1.018655ms)
+  ✔ returns false when within TTL (0.638072ms)
+  ✔ returns true when past TTL (0.098438ms)
+✔ Approval Expiration Helper (1.928867ms)
+▶ Governance Hash
+  ✔ produces consistent hash for same inputs (0.554906ms)
+  ✔ produces different hash for different inputs (0.160061ms)
+✔ Governance Hash (0.82281ms)
+▶ Policy Evaluation — Policy Version and Hash Tracking
+  ✔ includes policy_version in the result (0.473133ms)
+  ✔ includes policy_hash in the result (0.123336ms)
+✔ Policy Evaluation — Policy Version and Hash Tracking (3.84828ms)
+▶ Policy Evaluation — Action Class Priority (First Match Wins)
+  ✔ send_email with known contact matches send_known_contact before send_generic (0.228004ms)
+  ✔ send_email with unknown contact matches send_new_contact (0.138028ms)
+✔ Policy Evaluation — Action Class Priority (First Match Wins) (0.512422ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ authenticated Prime workspace set and rollback produce verified RIO receipts (71.616746ms)
+✔ workspace state and rollback capability survive a fresh sandbox instance (13.225593ms)
+✔ endpoint blocks requests when authentication middleware denies access (49.557994ms)
+✔ wrong authorization scope fails closed before workspace mutation (1.047639ms)
+✔ rollback refuses when persistent state changed after the receipted mutation (16.165293ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ mounted API v1 bridge executes and rolls back the reversible Prime action (98.131107ms)
+✔ mounted API v1 bridge rejects unauthenticated Prime consequence (33.773931ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ returned receipt is the exact proof atomically persisted with committed state (10.329948ms)
+✔ set and rollback each advance one proof-bound workspace revision (2.861783ms)
+✔ canonical state without its declared durable proof fails closed on recovery (7.353513ms)
+✔ proof record claiming a different revision fails closed on recovery (2.887221ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ executes a bounded Prime echo and returns a valid native RIO receipt (3.024378ms)
+✔ fails closed without explicit approval (0.557931ms)
+✔ fails closed when authorization scope names another action (0.235004ms)
+✔ fails closed on expired authorization (0.176576ms)
+✔ rejects malformed Prime IR before execution (0.206672ms)
+✔ two processes racing one rollback token produce exactly one winner (151.798226ms)
+✔ an active lock fails closed instead of overwriting state (39.476256ms)
+✔ dead process lock is reclaimed without changing canonical state (111.263909ms)
+✔ crash after temp fsync keeps canonical state and discards orphan temp (106.733622ms)
+✔ successful commit remains rollback-capable after recovery path (5.118434ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Replay Prevention] Initialized — window: 300s, retention: 24h
+[RIO Rate Limiter] Initialized — global limit: 30 req/min, window: 60s
+============================================================
+  RIO GOVERNANCE GATEWAY v2.9.0
+  Governed AI Execution Runtime
+  Ledger: PostgreSQL (persistent)
+  Auth: JWT + Ed25519 + API Keys + Google OAuth (PostgreSQL-backed)
+  Principals: Unified identity model with role enforcement
+  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding
+  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs
+============================================================
+
+[RIO Config] Loaded: RIO_CONSTITUTION.json
+[RIO Config] Loaded: RIO_POLICY.json
+[RIO Config] Loaded: RIO_ROLE_MANUS.json
+[RIO Config] Loaded: RIO_ROLE_GEMINI.json
+[RIO Gateway] Governance configuration loaded.
+▶ Area 1: Principal & Role Enforcement
+  ▶ Public Endpoints
+    ✖ GET /health — accessible without authentication
+    ✖ GET /api/receipts/recent — accessible without authentication
+  ✖ Public Endpoints
+  ▶ Fail-Closed: Unauthenticated Requests
+    ✖ POST /intent — should return 403 without auth
+    ✖ POST /govern — should return 403 without auth
+    ✖ POST /authorize — should return 403 without auth
+    ✖ POST /execute — should return 403 without auth
+    ✖ POST /execute-confirm — should return 403 without auth
+    ✖ POST /receipt — should return 403 without auth
+    ✖ GET /ledger — should return 403 without auth
+    ✖ GET /verify — should return 403 without auth
+    ✖ GET /intents — should return 403 without auth
+  ✖ Fail-Closed: Unauthenticated Requests
+  ▶ Root Authority: Brian (I-1) Full Access
+    ✖ POST /intent — Brian can submit intents (has implicit proposer)
+    ✖ POST /govern — Brian can run governance (has implicit proposer)
+    ✖ POST /authorize — Brian can authorize (has implicit approver)
+    ✖ GET /ledger — Brian can read ledger (has implicit auditor)
+    ✖ GET /verify — Brian can verify chain (has implicit auditor)
+    ✖ GET /intents — Brian can list intents (any principal)
+  ✖ Root Authority: Brian (I-1) Full Access
+  ▶ Role Boundaries: Proposer (bondi)
+    ✖ POST /intent — bondi (proposer) CAN submit intents
+    ✖ POST /authorize — bondi (proposer) CANNOT authorize
+    ✖ POST /execute — bondi (proposer) CANNOT execute
+    ✖ GET /ledger — bondi (proposer) CANNOT read ledger
+  ✖ Role Boundaries: Proposer (bondi)
+  ▶ Role Boundaries: Executor (gateway-exec)
+    ✖ POST /intent — gateway-exec (executor) CANNOT submit intents
+    ✖ POST /authorize — gateway-exec (executor) CANNOT authorize
+    ✖ GET /ledger — gateway-exec (executor) CANNOT read ledger
+  ✖ Role Boundaries: Executor (gateway-exec)
+  ▶ Role Boundaries: Auditor (mantis)
+    ✖ GET /ledger — mantis (auditor) CAN read ledger
+    ✖ GET /verify — mantis (auditor) CAN verify chain
+    ✖ POST /intent — mantis (auditor) CANNOT submit intents
+    ✖ POST /authorize — mantis (auditor) CANNOT authorize
+    ✖ POST /execute — mantis (auditor) CANNOT execute
+  ✖ Role Boundaries: Auditor (mantis)
+  ▶ Signer Management Role Gating
+    ✖ GET /api/signers — any principal can list signers
+    ✖ POST /api/signers/register — bondi (proposer) CANNOT register signers
+    ✖ DELETE /api/signers/test-signer — bondi (proposer) CANNOT revoke signers
+  ✖ Signer Management Role Gating
+  ▶ Kill Switch Role Gating
+    ✖ POST /api/kill — bondi (proposer) CANNOT activate kill switch
+    ✖ POST /api/kill — mantis (auditor) CANNOT activate kill switch
+  ✖ Kill Switch Role Gating
+  ▶ Fail-Closed: Unknown Principal
+    ✖ Request with no auth → 403
+    ✖ X-Principal-ID header is ignored (removed)
+  ✖ Fail-Closed: Unknown Principal
+  ▶ Principal Attribution
+    ✖ Intent created by Brian carries principal_id = I-1
+    ✖ Intent created by bondi carries principal_id = bondi
+  ✖ Principal Attribution
+  ▶ Full Pipeline with Role Enforcement
+    ✖ Step 1: Brian submits intent (proposer role)
+    ✖ Step 2: Brian runs governance (proposer role)
+    ✖ Step 3: Brian authorizes (approver role)
+    ✖ Step 4: Brian executes (root_authority — note: executor is NOT an implicit role)
+    ✖ Step 4b: gateway-exec executes (executor role)
+    ✖ Step 5: gateway-exec confirms execution
+    ✖ Step 6: mantis generates receipt (auditor role)
+    ✖ Step 7: mantis verifies chain (auditor role)
+  ✖ Full Pipeline with Role Enforcement
+✖ Area 1: Principal & Role Enforcement (2339.095576ms)
+▶ sanitizeToE164
+  ✔ passes through valid E.164 numbers unchanged (1.301812ms)
+  ✔ strips parentheses, dashes, and spaces from US numbers (0.206872ms)
+  ✔ handles 11-digit US numbers starting with 1 (0.138739ms)
+  ✔ handles 10-digit US numbers by prepending +1 (0.122214ms)
+  ✔ handles numbers with + prefix — treated as already having country code (0.210377ms)
+  ✔ handles international numbers with 12+ digits (0.202856ms)
+  ✔ throws on empty or non-string input (0.519242ms)
+✔ sanitizeToE164 (3.968912ms)
+▶ SPG-M Govern Request Helpers
+  ✔ extracts camelCase SPG-M review metadata (9.001716ms)
+  ✔ extracts snake_case SPG-M review metadata (0.159811ms)
+  ✔ extracts generic policy_review metadata (0.111949ms)
+  ✔ extracts nested SPG-M policy review metadata (0.093591ms)
+  ✔ returns null when no SPG-M review exists (0.095514ms)
+  ✔ builds /govern context with principal and mode (0.121754ms)
+  ✔ omits response fields when SPG-M did not affect governance (0.594055ms)
+  ✔ adds response fields when SPG-M bridge status exists (0.167622ms)
+✔ SPG-M Govern Request Helpers (16.478561ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+▶ SPG-M govern bridge handler
+  ✔ passes through when no SPG-M metadata is present (0.971404ms)
+  ✔ requires intent_id when SPG-M metadata is present (0.235815ms)
+  ✔ returns 404 when intent is missing (0.134643ms)
+  ✔ returns conflict unless intent is submitted (0.136996ms)
+  ✔ runs governance with SPG-M review metadata (1.575495ms)
+  ✔ preserves blocked status when policy denies (0.200582ms)
+✔ SPG-M govern bridge handler (5.189121ms)
+▶ SPG-M Intake Processor
+  ✔ classifies private reflection as Class 1 (10.364601ms)
+  ✔ routes relational action as Class 3 (0.307864ms)
+  ✔ classifies material domains as Class 4 (0.199911ms)
+  ✔ classifies system or memory use as Class 5 (0.183827ms)
+  ✖ refuses command-style use (1.237425ms)
+  ✖ holds when no literal signal is present (4.590989ms)
+  ✔ returns a non-executing authority boundary (0.402146ms)
+  ✔ builds receipt event recommendation without writing receipts (0.204308ms)
+✖ SPG-M Intake Processor (19.226357ms)
+▶ SPG-M Policy Adapter
+  ✔ accepts valid SPG-M policy context (2.374208ms)
+  ✔ rejects missing policy context (0.220402ms)
+  ✔ rejects policy context that could create authorization (0.472773ms)
+  ✔ rejects policy context that is not non-executing (0.264248ms)
+  ✔ builds accepted review metadata without authority (0.241344ms)
+  ✔ rejects unsafe review metadata (0.181504ms)
+  ✔ builds review metadata from intake result (0.315425ms)
+✔ SPG-M Policy Adapter (5.642675ms)
+▶ SPG-M Policy Bridge
+  ✔ accepts valid non-executing SPG-M review metadata (1.991741ms)
+  ✔ rejects metadata that can authorize (0.254093ms)
+  ✔ rejects executing metadata (0.321835ms)
+  ✔ builds an accepted policy bridge check (0.270037ms)
+  ✔ escalates AUTO_APPROVE to REQUIRE_HUMAN when RIO review is required (0.352111ms)
+  ✔ does not downgrade existing REQUIRE_HUMAN (0.233863ms)
+  ✔ does not override AUTO_DENY (0.350959ms)
+  ✔ rejects unsafe context without changing the decision (0.282085ms)
+  ✔ adds a not-present check when no SPG-M review metadata exists (0.463269ms)
+✔ SPG-M Policy Bridge (6.664283ms)
+▶ SPG-M Policy Context
+  ✔ builds policy context from consequential SPG-M intake (1.955627ms)
+  ✔ preserves non-authority policy use flags (4.095683ms)
+  ✔ is attached to SPG-M intake output (0.440334ms)
+  ✔ returns null without an SPG-M result (0.103656ms)
+✔ SPG-M Policy Context (7.655658ms)
+▶ SPG-M → RIO policy engine bridge
+  ✔ keeps AUTO_APPROVE when no SPG-M review metadata is present (1.600732ms)
+  ✔ escalates AUTO_APPROVE to REQUIRE_HUMAN when SPG-M requires RIO review (0.519913ms)
+  ✔ does not downgrade existing REQUIRE_HUMAN (0.173511ms)
+  ✔ does not override AUTO_DENY (0.243877ms)
+  ✔ rejects unsafe SPG-M review metadata without creating approval (0.17291ms)
+  ✔ accepts snake_case SPG-M review context key (0.297769ms)
+✔ SPG-M → RIO policy engine bridge (5.373779ms)
+▶ SPG-M Policy Review Preview
+  ✔ holds when intent is missing (1.20753ms)
+  ✔ returns non-executing policy preview without SPG-M metadata (0.65631ms)
+  ✔ escalates preview to REQUIRE_HUMAN when SPG-M review requires RIO (0.432011ms)
+  ✔ does not override AUTO_DENY (5.601231ms)
+  ✔ rejects unsafe SPG-M review metadata without creating authority (0.245119ms)
+✔ SPG-M Policy Review Preview (9.649613ms)
+▶ SPG-M Receipt Event Handoff
+  ✔ builds a recommended BLOCK handoff for Class 3 route events (1.751639ms)
+  ✔ returns null for private non-consequential reflection (0.234293ms)
+  ✔ attaches receipt_handoff to consequential SPG-M intake output (0.405901ms)
+✔ SPG-M Receipt Event Handoff (3.877153ms)
+▶ SPG-M Routes
+  ✔ reports non-executing SPG-M status (28.487615ms)
+  ✔ returns non-executing private reflection result (16.954984ms)
+  ✔ routes relational output without execution authority (4.915167ms)
+  ✔ previews RIO policy review with SPG-M escalation (4.964872ms)
+  ✔ holds SPG-M policy review preview without an intent (3.876483ms)
+  ✔ fails closed on invalid intake packets (3.452193ms)
+✔ SPG-M Routes (75.051132ms)
+▶ SPG-M Intake Schema
+  ✔ accepts a valid private reflection packet (1.728735ms)
+  ✔ rejects packets without a signal object (0.24559ms)
+  ✔ rejects packets without a literal signal string (0.210277ms)
+  ✔ rejects unknown signal types (0.200792ms)
+  ✔ rejects unknown proposed use types (0.191368ms)
+  ✔ rejects malformed machine assistance fields (0.187573ms)
+  ✔ builds non-executing hold response for invalid packets (0.314644ms)
+✔ SPG-M Intake Schema (4.614986ms)
+ℹ tests 289
+ℹ suites 51
+ℹ pass 222
+ℹ fail 16
+ℹ cancelled 51
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16230.721806
+
+✖ failing tests:
+
+test at tests/gateway.test.mjs:43:5
+✖ should return operational status (30.221298ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:59:5
+✖ POST /intent — should submit an intent (19.000986ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:75:5
+✖ POST /govern — should evaluate governance (21.043956ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:84:5
+✖ POST /authorize — should record human approval (11.086149ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:95:5
+✖ POST /execute — should execute the action (3.712986ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:102:5
+✖ POST /receipt — should generate a receipt (3.126953ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:115:5
+✖ GET /verify — should verify the receipt and chain (6.876524ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:122:5
+✖ GET /intent/:id — should show full pipeline state (13.138771ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:139:5
+✖ should block execution of a submitted (ungoverned) intent (5.795344ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:159:5
+✖ should block execution of a denied intent (4.64503ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:190:5
+✖ should block governance for an unknown agent (4.915167ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:207:5
+✖ GET /ledger — should return entries (4.309195ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:215:5
+✖ GET /verify — full chain should be valid (1.719061ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/governed-flow-integration.test.mjs:1:1
+✖ tests/governed-flow-integration.test.mjs (565.754013ms)
+  'test failed'
+
+test at tests/governed-flow-unit.test.mjs:107:3
+✖ resolves Brian's primary email to I-1
+  'test did not finish before its parent and was cancelled'
+
+test at tests/governed-flow-unit.test.mjs:114:3
+✖ resolves riomethod5 email to I-2 (seed email match)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/governed-flow-unit.test.mjs:122:3
+✖ resolves Brian's hotmail email to I-1 (case insensitive)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/governed-flow-unit.test.mjs:128:3
+✖ returns null for unknown email
+  'test did not finish before its parent and was cancelled'
+
+test at tests/governed-flow-unit.test.mjs:133:3
+✖ returns null for empty email
+  'test did not finish before its parent and was cancelled'
+
+test at tests/governed-flow-unit.test.mjs:95:1
+✖ Principal Email Resolution (80.853831ms)
+  AggregateError [ECONNREFUSED]: 
+      at /workspace/scratch/8acae2a413b8/rio-system/gateway/node_modules/pg-pool/index.js:45:11
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async Module.initPrincipals (file:///workspace/scratch/8acae2a413b8/rio-system/gateway/security/principals.mjs:178:3)
+      at async SuiteContext.<anonymous> (file:///workspace/scratch/8acae2a413b8/rio-system/gateway/tests/governed-flow-unit.test.mjs:104:5)
+      at async TestHook.run (node:internal/test_runner/test:1389:7)
+      at async Suite.runHook (node:internal/test_runner/test:1269:9)
+      at async Suite.run (node:internal/test_runner/test:1863:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    code: 'ECONNREFUSED',
+    [errors]: [
+      Error: connect ECONNREFUSED ::1:5432
+          at createConnectionError (node:net:1905:14)
+          at afterConnectMultiple (node:net:1935:16),
+      Error: connect ECONNREFUSED 127.0.0.1:5432
+          at createConnectionError (node:net:1905:14)
+          at afterConnectMultiple (node:net:1935:16)
+    ]
+  }
+
+test at tests/principals.test.mjs:114:5
+✖ GET /health — accessible without authentication
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:126:5
+✖ GET /api/receipts/recent — accessible without authentication
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:113:3
+✖ Public Endpoints
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ POST /intent — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ POST /govern — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ POST /authorize — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ POST /execute — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ POST /execute-confirm — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ POST /receipt — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ GET /ledger — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ GET /verify — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:150:7
+✖ GET /intents — should return 403 without auth
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:136:3
+✖ Fail-Closed: Unauthenticated Requests
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:166:5
+✖ POST /intent — Brian can submit intents (has implicit proposer)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:181:5
+✖ POST /govern — Brian can run governance (has implicit proposer)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:188:5
+✖ POST /authorize — Brian can authorize (has implicit approver)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:197:5
+✖ GET /ledger — Brian can read ledger (has implicit auditor)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:203:5
+✖ GET /verify — Brian can verify chain (has implicit auditor)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:208:5
+✖ GET /intents — Brian can list intents (any principal)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:163:3
+✖ Root Authority: Brian (I-1) Full Access
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:220:5
+✖ POST /intent — bondi (proposer) CAN submit intents
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:232:5
+✖ POST /authorize — bondi (proposer) CANNOT authorize
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:243:5
+✖ POST /execute — bondi (proposer) CANNOT execute
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:252:5
+✖ GET /ledger — bondi (proposer) CANNOT read ledger
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:217:3
+✖ Role Boundaries: Proposer (bondi)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:263:5
+✖ POST /intent — gateway-exec (executor) CANNOT submit intents
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:275:5
+✖ POST /authorize — gateway-exec (executor) CANNOT authorize
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:285:5
+✖ GET /ledger — gateway-exec (executor) CANNOT read ledger
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:262:3
+✖ Role Boundaries: Executor (gateway-exec)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:296:5
+✖ GET /ledger — mantis (auditor) CAN read ledger
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:302:5
+✖ GET /verify — mantis (auditor) CAN verify chain
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:307:5
+✖ POST /intent — mantis (auditor) CANNOT submit intents
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:318:5
+✖ POST /authorize — mantis (auditor) CANNOT authorize
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:328:5
+✖ POST /execute — mantis (auditor) CANNOT execute
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:295:3
+✖ Role Boundaries: Auditor (mantis)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:341:5
+✖ GET /api/signers — any principal can list signers
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:346:5
+✖ POST /api/signers/register — bondi (proposer) CANNOT register signers
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:355:5
+✖ DELETE /api/signers/test-signer — bondi (proposer) CANNOT revoke signers
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:340:3
+✖ Signer Management Role Gating
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:366:5
+✖ POST /api/kill — bondi (proposer) CANNOT activate kill switch
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:374:5
+✖ POST /api/kill — mantis (auditor) CANNOT activate kill switch
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:365:3
+✖ Kill Switch Role Gating
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:387:5
+✖ Request with no auth → 403
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:396:5
+✖ X-Principal-ID header is ignored (removed)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:386:3
+✖ Fail-Closed: Unknown Principal
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:412:5
+✖ Intent created by Brian carries principal_id = I-1
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:423:5
+✖ Intent created by bondi carries principal_id = bondi
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:411:3
+✖ Principal Attribution
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:443:5
+✖ Step 1: Brian submits intent (proposer role)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:456:5
+✖ Step 2: Brian runs governance (proposer role)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:461:5
+✖ Step 3: Brian authorizes (approver role)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:470:5
+✖ Step 4: Brian executes (root_authority — note: executor is NOT an implicit role)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:480:5
+✖ Step 4b: gateway-exec executes (executor role)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:486:5
+✖ Step 5: gateway-exec confirms execution
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:496:5
+✖ Step 6: mantis generates receipt (auditor role)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:503:5
+✖ Step 7: mantis verifies chain (auditor role)
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:440:3
+✖ Full Pipeline with Role Enforcement
+  'test did not finish before its parent and was cancelled'
+
+test at tests/principals.test.mjs:79:1
+✖ Area 1: Principal & Role Enforcement (2339.095576ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4402
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4402
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/spgm-intake.test.mjs:82:3
+✖ refuses command-style use (1.237425ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8acae2a413b8/rio-system/gateway/tests/spgm-intake.test.mjs:99:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests/spgm-intake.test.mjs:103:3
+✖ holds when no literal signal is present (4.590989ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8acae2a413b8/rio-system/gateway/tests/spgm-intake.test.mjs:114:12)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Suite.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Suite.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

@@ -1,0 +1,129 @@
+{
+  "status": "ONE_LOCAL_FIELD_V0_1_ACCEPTED",
+  "gate_count": 19,
+  "gates_passed": 19,
+  "gates_failed": 0,
+  "mandatory_cases": {
+    "required": 14,
+    "passed": 14,
+    "failed": 0
+  },
+  "run_id": "7d0d8b7f-17ab-4296-9710-bafd2dd26d59",
+  "accepted_source_pins": {
+    "runtime": "d950bd2ccf8179e4e63d3cd77aa0f65ef8d7ab21",
+    "protocol": "0449f2dd135d93791b9b4ce3f96093d1aca463cf",
+    "architecture": "891edcaf818a5d5dfdd88b3bea57ce9824bff531",
+    "receipt": "8cb49727e98690f9f0dfb66625e3a182f321a6e9"
+  },
+  "accepted_source_tree_pins": {
+    "runtime": "b49cbbc0845bec5bee6dd004b3ada97153dd1642",
+    "protocol": "1959459ba40f477e4707061b8d17651666714ffc",
+    "architecture": "bc8d6b38d52c6884a59b7e2f3230129e0a50fc2a"
+  },
+  "architecture_report_commit": "725c7d9fb6a0dabb1a612b12ecffd38ed89ba75b",
+  "return": "https://github.com/bkr1297-RIO/one-rio-muss-architecture/blob/725c7d9fb6a0dabb1a612b12ecffd38ed89ba75b/docs/architecture/local-field/ONE-LOCAL-FIELD-BILATERAL-RETURN-v0.1.md",
+  "single_current_machine_acceptance": "https://github.com/bkr1297-RIO/one-rio-muss-architecture/blob/725c7d9fb6a0dabb1a612b12ecffd38ed89ba75b/docs/architecture/local-field/ONE-LOCAL-FIELD-19-GATE-ACCEPTANCE-v0.1.json",
+  "acceptance_integrity": {
+    "status": "PASS",
+    "checks": 14,
+    "trace_references_resolved": 59,
+    "gate_count": 19,
+    "case_count": 14,
+    "missing_schema_fields": [],
+    "extra_schema_fields": [],
+    "all_source_blobs_verified": true
+  },
+  "drafts": [
+    {
+      "repo": "bkr1297-RIO/rio-system",
+      "pr": 205,
+      "url": "https://github.com/bkr1297-RIO/rio-system/pull/205"
+    },
+    {
+      "repo": "bkr1297-RIO/rio-protocol",
+      "pr": 41,
+      "url": "https://github.com/bkr1297-RIO/rio-protocol/pull/41"
+    },
+    {
+      "repo": "bkr1297-RIO/one-rio-muss-architecture",
+      "pr": 335,
+      "url": "https://github.com/bkr1297-RIO/one-rio-muss-architecture/pull/335"
+    }
+  ],
+  "source_commit_ci": {
+    "runtime": [
+      {
+        "id": 36795328807,
+        "name": "Prime Runtime Bridge",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 25,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-system/actions/runs/36795328807/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-system/actions/runs/36795328807/logs",
+        "workflow_id": 324059021
+      },
+      {
+        "id": 36795328866,
+        "name": "Local Field Bilateral v0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 1,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-system/actions/runs/36795328866/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-system/actions/runs/36795328866/logs",
+        "workflow_id": 371681860
+      },
+      {
+        "id": 36795328673,
+        "name": "Gateway Execution Binding Repair F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 8,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-system/actions/runs/36795328673/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-system/actions/runs/36795328673/logs",
+        "workflow_id": 355961748
+      }
+    ],
+    "protocol": [
+      {
+        "id": 36795329402,
+        "name": "Packet Grammar",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 36,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-protocol/actions/runs/36795329402/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-protocol/actions/runs/36795329402/logs",
+        "workflow_id": 306439337
+      }
+    ],
+    "architecture": [
+      {
+        "id": 36795330757,
+        "name": "Reconciliation tooling",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 167,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/one-rio-muss-architecture/actions/runs/36795330757/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/one-rio-muss-architecture/actions/runs/36795330757/logs",
+        "workflow_id": 324796128
+      }
+    ]
+  },
+  "completion_recheck": {
+    "command": "cd gateway && npm run test:local-field",
+    "tests": 54,
+    "passed": 54,
+    "failed": 0,
+    "cancelled": 0,
+    "log": "logs/completion-recheck.log"
+  },
+  "source_manifest": "source-manifest.json",
+  "relevant_build_regressions": [],
+  "evidence_only_descendant": true,
+  "runtime_and_schema_changed_after_source_pin": false,
+  "merged": false,
+  "deployed": false,
+  "canonized": false,
+  "release_or_publication": false,
+  "permission_ceiling": "Engineering acceptance only. All adoption/merge/deploy/evaluation publication/constitutional disposition remains human authority.",
+  "self_pin_note": "This metadata commit is an evidence-only descendant; its own SHA is verified through the draft PR ref. Accepted source pins and immutable architecture report commit are explicit without self-reference."
+}

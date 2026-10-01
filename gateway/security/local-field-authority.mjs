@@ -93,6 +93,8 @@ export function nodeAt(store, id) {
   const entry = store.get('enrollment', id);
   requireValue(entry, 'UNKNOWN_NODE');
   requireValue(!store.state('node_revoked', id), 'NODE_REVOKED');
+  try { fresh(entry.body); }
+  catch { throw new Error('ENROLLMENT_EXPIRED_OR_INVALID_TIME'); }
   return entry.body.node;
 }
 export function verifyNodeRecord(store, record, fieldId) {

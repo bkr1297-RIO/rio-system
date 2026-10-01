@@ -1,0 +1,59 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> rio-receipt-protocol@0.3.0 test
+> node test_tamper.js && node test_chain.js && node test/spgm-receipt-mapping.test.js && node test/coherence-assessment.test.js
+
+=== TEST 1: VALID CASE ===
+Decision: ALLOW
+receipt_hash_valid: true
+signature_valid: true
+key_trusted: false
+nonce_unique: true
+RESULT: FAIL
+
+=== TEST 2: DRIFT CASE (execution differs from intent) ===
+Decision: BLOCK
+intent_match: false
+RESULT: BLOCKED (correct)
+
+=== TEST 3: TAMPER CASE (receipt modified after signing) ===
+Tampered intent_hash to: 29d640e037bb201989d86e6c7151780e541869f253a2b8ec6be80186ecc090b7
+receipt_hash_valid: false
+signature_valid: false
+RESULT: FAIL
+
+=== TEST 4: FORGED RECEIPT (untrusted key) ===
+Forged key: 302a300506032b65...
+Trusted key: 302a300506032b65...
+Keys match: false
+receipt_hash_valid: true
+signature_valid: true
+key_trusted: false
+RESULT: FAIL
+
+=== TEST 5: REPLAY CASE (reused nonce) ===
+Reused nonce: 63e119b0-7c09-4337-8b3b-ddc79c71c0b8
+receipt_hash_valid: true
+signature_valid: true
+key_trusted: false
+nonce_unique: false
+RESULT: FAIL
+
+=== TEST 6: NESTED FIELD TAMPER (parameters.body changed) ===
+Original execution_hash: 2c80aa620447268c89613900a99dc0f90fa58da1fda1f648e7c659830f9f3fa0
+Tampered execution_hash: fa3052c154a3646ebe6509a4c487218ed4c35f21b897a4b0552b2c02f72ba5d6
+Hashes differ: true
+receipt_hash_valid: false
+signature_valid: false
+RESULT: FAIL
+
+=== SUMMARY ===
+Test 1 (Valid):         FAIL
+Test 2 (Drift):         BLOCKED
+Test 3 (Tamper):        DETECTED
+Test 4 (Forged):        REJECTED
+Test 5 (Replay):        BLOCKED
+Test 6 (Nested tamper): DETECTED
+
+ALL TESTS: FAIL
+

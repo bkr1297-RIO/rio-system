@@ -1,4 +1,5 @@
 import { createServer } from 'node:http';
+import { MAX_RECORD_BYTES, MAX_RETURN_BYTES } from './bilateral.mjs';
 
 /** Loopback adapter. Node signatures carry attribution; receiving bytes grants
  * no permission. Deploy behind a separately governed tunnel for remote clients.
@@ -27,6 +28,9 @@ export function createFieldServer(field) {
           '/query',
           '/arrow',
           '/projection',
+          '/dispatch',
+          '/receive',
+          '/returns',
         ].includes(req.url)
       )
         return reply(404, { error: 'UNKNOWN_ROUTE' });
@@ -35,7 +39,7 @@ export function createFieldServer(field) {
         let bytes = 0;
         for await (const chunk of req) {
           bytes += chunk.length;
-          if (bytes > 65536) {
+          if (bytes > (req.url === '/returns' ? MAX_RETURN_BYTES : MAX_RECORD_BYTES)) {
             reply(413, { error: 'RECORD_TOO_LARGE' });
             return;
           }
@@ -66,6 +70,9 @@ export function createFieldServer(field) {
             'http-json',
           );
           if (req.url === '/candidates') value = field.candidate(record);
+          if (req.url === '/dispatch') value = await field.dispatch(record);
+          if (req.url === '/receive') value = field.receive(record);
+          if (req.url === '/returns') value = field.admitReturn(record);
           if (req.url === '/admit') value = field.admit(record);
           if (req.url === '/execute')
             value = field.execute(record.passage_id, record.record);

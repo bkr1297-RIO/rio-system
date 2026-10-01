@@ -1,0 +1,122 @@
+✔ bilateral acceptance uses two real processes, native proof, independent Return admission, restart and cleanup (2126.270486ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 74d95317... for intent f15f4d78-4279-488d-97e8-0e6c4cb5efc1 | tool=create_document | env=c3f0a027-a730-46de-9aa1-24c9487fd5ef | max=1 | expires 2026-10-01T00:29:31.240Z
+[RIO Token Manager] Token BURNED: 74d95317... for intent f15f4d78-4279-488d-97e8-0e6c4cb5efc1 — all 11 checks passed
+✔ controlled dispatch performs two independent judgments and admits Return only as an attributed record (607.997229ms)
+✔ A egress cannot replace missing B authority and raw ingress cannot bypass controlled egress (434.187934ms)
+✔ missing source warrant emits nothing even if B has authority (275.911225ms)
+[RIO Token Manager] Token issued: 5d1ff597... for intent e45e80e3-4771-4711-8ab6-b57313f6f047 | tool=create_document | env=864c53e7-18b5-4f08-9106-418ac24d087e | max=1 | expires 2026-10-01T00:29:32.546Z
+[RIO Token Manager] Token BURNED: 5d1ff597... for intent e45e80e3-4771-4711-8ab6-b57313f6f047 — all 11 checks passed
+✔ independent Return admission refuses forged attribution and signed contradictions in native proof (593.6534ms)
+[RIO Token Manager] Token issued: b17447de... for intent 731f2505-1329-4867-adbe-ab932626bc89 | tool=create_document | env=583d65f5-a412-405c-88a5-068dea4cf012 | max=1 | expires 2026-10-01T00:29:33.109Z
+[RIO Token Manager] Token BURNED: b17447de... for intent 731f2505-1329-4867-adbe-ab932626bc89 — all 11 checks passed
+[RIO Token Manager] Token issued: fcdcac98... for intent 8b976d01-a5c9-4624-a0a5-adb52d7203e1 | tool=create_document | env=583d65f5-a412-405c-88a5-068dea4cf012 | max=1 | expires 2026-10-01T00:29:33.418Z
+[RIO Token Manager] Token BURNED: fcdcac98... for intent 8b976d01-a5c9-4624-a0a5-adb52d7203e1 — all 11 checks passed
+✔ Return signature and membership without a current Return warrant cannot acquire admission (776.966473ms)
+✔ an unfinished dispatch survives restart with residue and no retransmission or new permission (494.15581ms)
+[RIO Token Manager] Token issued: 5f3b2250... for intent 25fafd05-f76e-4f90-830b-56d0f02749b6 | tool=create_document | env=ff7db546-3415-4121-9c92-f02fe3ccf855 | max=1 | expires 2026-10-01T00:29:34.427Z
+[RIO Token Manager] Token BURNED: 5f3b2250... for intent 25fafd05-f76e-4f90-830b-56d0f02749b6 — all 11 checks passed
+[RIO Token Manager] Token issued: 16f50440... for intent d537d643-7432-4089-a6e0-75fea154715b | tool=create_document | env=c64941f0-8869-447e-83d1-534977628cac | max=1 | expires 2026-10-01T00:29:34.913Z
+✔ bounded Return standing is spent independently at both Return boundaries (732.432012ms)
+✔ expired enrollment cannot authorize a new passage or an already admitted operation (169.693521ms)
+[RIO Token Manager] Token issued: 6f8cd348... for intent f543a827-7590-46b6-8a97-20ce0690ade0 | tool=create_document | env=7fadece2-ce14-4a74-9f56-d9a86506d42c | max=1 | expires 2026-10-01T00:29:35.295Z
+[RIO Token Manager] Token BURNED: 6f8cd348... for intent f543a827-7590-46b6-8a97-20ce0690ade0 — all 11 checks passed
+✔ maximally JSON-escaped 4096-byte payload completes native Return rather than failing after effect (530.242746ms)
+[RIO Token Manager] Token issued: bf163538... for intent 0f3f087d-b039-457a-8bf3-f68211938bf5 | tool=create_document | env=f93c4388-ce13-4cff-b253-1b2d5b867807 | max=1 | expires 2026-10-01T00:29:35.791Z
+[RIO Token Manager] Token BURNED: bf163538... for intent 0f3f087d-b039-457a-8bf3-f68211938bf5 — all 11 checks passed
+[RIO Token Manager] Token issued: 36dc5ac0... for intent eb5c5ab6-2cc6-4fe3-b2f4-8285d73a45ce | tool=create_document | env=f93c4388-ce13-4cff-b253-1b2d5b867807 | max=1 | expires 2026-10-01T00:29:36.126Z
+[RIO Token Manager] Token BURNED: 36dc5ac0... for intent eb5c5ab6-2cc6-4fe3-b2f4-8285d73a45ce — all 11 checks passed
+✔ equal projected file endpoints do not erase different occurrence paths or unsettled residue (825.057398ms)
+[RIO Token Manager] Token issued: 308686cd... for intent dabd2185-4e43-4c56-9e74-37773422f2f4 | tool=create_document | env=379a7c96-0c28-44f5-a4d5-08c79d41c032 | max=1 | expires 2026-10-01T00:29:36.997Z
+[RIO Token Manager] Token BURNED: 308686cd... for intent dabd2185-4e43-4c56-9e74-37773422f2f4 — all 11 checks passed
+[RIO Token Manager] Token issued: 73a8f162... for intent 5dd44c9b-11a3-4879-a3be-7252877c5a93 | tool=create_document | env=0eade56b-23b4-4b3d-bc80-37ca2eed294e | max=1 | expires 2026-10-01T00:29:37.314Z
+✔ bilateral unknown semantics cannot silently expand authority: {"schema_version":"future"} (262.598213ms)
+✔ bilateral unknown semantics cannot silently expand authority: {"silent_authority_extension":true} (240.581873ms)
+✔ point-of-use authority is distinct from ingress and fidelity in the native effect proof (354.15678ms)
+✔ revocation after ingress records denied current authority without an attempt or effect (220.141499ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ actual write followed by process death returns unresolved attempt and never replays (468.018401ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: ff4b9fba... for intent 327f164d-fbc7-478f-a9f8-dc1cb63bd84b | tool=create_document | env=6d254314-3f5a-47eb-87f6-e7f50376e0a9 | max=1 | expires 2026-10-01T00:29:31.074Z
+[RIO Token Manager] Token BURNED: ff4b9fba... for intent 327f164d-fbc7-478f-a9f8-dc1cb63bd84b — all 11 checks passed
+✔ real HTTP passage requires signed admission, executes and returns queryable lineage (402.830901ms)
+✔ HTTP exposes no raw adapter, unsigned telemetry or cross-origin browser path (124.356818ms)
+✔ delegated controls obey the issuer communication surface (103.708977ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 5e46ce81... for intent 6d075d35-9c2a-4105-b71a-41538cb71dd8 | tool=create_document | env=380eea80-bc58-49f0-b413-5ede4621618f | max=1 | expires 2026-10-01T00:29:31.015Z
+[RIO Token Manager] Token BURNED: 5e46ce81... for intent 6d075d35-9c2a-4105-b71a-41538cb71dd8 — all 11 checks passed
+[RIO Token Manager] Token issued: 82f4cabc... for intent cc07c2ed-6642-48ea-93d3-438952cdebff | tool=create_document | env=70c3c5c5-4faf-4baf-ac2c-d04676c9c8e2 | max=1 | expires 2026-10-01T00:29:31.576Z
+[RIO Token Manager] Token BURNED: 82f4cabc... for intent cc07c2ed-6642-48ea-93d3-438952cdebff — all 11 checks passed
+[RIO Token Manager] Token issued: e9ae5a00... for intent f51f2c86-cf17-4cb2-afd0-9020386ea99c | tool=create_document | env=f4f98bc5-3e2d-4150-83e6-c72cb7ef0a22 | max=1 | expires 2026-10-01T00:29:31.944Z
+[RIO Token Manager] Token issued: 9a822d66... for intent d91da4a4-5e92-4c8a-b689-80c3786a9e98 | tool=create_document | env=4ed1a241-16ab-4b46-a1b0-51c9238e9b59 | max=1 | expires 2026-10-01T00:29:32.171Z
+[RIO Token Manager] Token issued: 915f7e8c... for intent 417512d8-9c68-4d2e-89ae-5c80e94d0907 | tool=create_document | env=a6fa6e19-8040-4f96-b38a-59762ed7ab81 | max=1 | expires 2026-10-01T00:29:32.577Z
+[RIO Token Manager] Token BURNED: 915f7e8c... for intent 417512d8-9c68-4d2e-89ae-5c80e94d0907 — all 11 checks passed
+[RIO Token Manager] Token issued: 080ef6e9... for intent 787940da-2ae4-4df0-bfa0-66996b576ae6 | tool=create_document | env=cf510aa3-059d-4b45-8f2f-9e76db40b197 | max=1 | expires 2026-10-01T00:29:32.805Z
+[RIO Token Manager] Token BURNED: 080ef6e9... for intent 787940da-2ae4-4df0-bfa0-66996b576ae6 — all 11 checks passed
+[RIO Token Manager] Token issued: 148a0f93... for intent 4b80b8e7-1716-4448-8c11-f2ffef824aa5 | tool=create_document | env=84c1d40f-3f51-4c55-916d-ce3c648c27c1 | max=1 | expires 2026-10-01T00:29:33.150Z
+[RIO Token Manager] Token BURNED: 148a0f93... for intent 4b80b8e7-1716-4448-8c11-f2ffef824aa5 — all 11 checks passed
+[RIO Token Manager] Token issued: 8fefbe0a... for intent 1d34cf54-1fe8-4f23-b41d-f29992bbfda8 | tool=create_document | env=a6aa3209-579c-4a8f-a4b2-b9f590a5dab1 | max=1 | expires 2026-10-01T00:29:33.317Z
+[RIO Token Manager] Token BURNED: 8fefbe0a... for intent 1d34cf54-1fe8-4f23-b41d-f29992bbfda8 — all 11 checks passed
+[RIO Token Manager] Token issued: 12eca14e... for intent a79e9418-af84-4f14-a3c4-06667d095550 | tool=create_document | env=1a81dc67-8330-4e5f-8d59-b2fdf1d588b5 | max=1 | expires 2026-10-01T00:29:33.675Z
+[RIO Token Manager] Token issued: f5f95ac7... for intent 9ccc8384-c62f-404f-b566-ac26cd28a48f | tool=create_document | env=631aa5b7-ea5c-4544-b414-19b62c625465 | max=1 | expires 2026-10-01T00:29:34.082Z
+[RIO Token Manager] Token BURNED: f5f95ac7... for intent 9ccc8384-c62f-404f-b566-ac26cd28a48f — all 11 checks passed
+[RIO Token Manager] Token issued: 88cec5bd... for intent 3b4f3bd6-188e-429b-a64a-d33165a72309 | tool=create_document | env=200cbd24-6a0b-4054-bdbb-ed7d7239537c | max=1 | expires 2026-10-01T00:29:34.355Z
+[RIO Token Manager] Token BURNED: 88cec5bd... for intent 3b4f3bd6-188e-429b-a64a-d33165a72309 — all 11 checks passed
+[RIO Token Manager] Token issued: ab914000... for intent d986d865-6e62-40d1-92fd-aa4356cf16d4 | tool=create_document | env=1e80fac9-f456-4db4-9ddc-86eb54ead043 | max=1 | expires 2026-10-01T00:29:34.531Z
+[RIO Token Manager] Token issued: d8f479f2... for intent 0462522b-f84e-45a7-936e-d5536e94e04f | tool=create_document | env=d3db30c7-99e1-49bf-8fb9-ae7798cbce8f | max=1 | expires 2026-10-01T00:29:34.669Z
+[RIO Token Manager] Token BURNED: d8f479f2... for intent 0462522b-f84e-45a7-936e-d5536e94e04f — all 11 checks passed
+[RIO Token Manager] Token issued: 74e52d47... for intent f2b1ad56-294e-44fd-9a3e-025ab6cf8e6f | tool=create_document | env=688d67cf-1997-43a7-8d7a-ddf2de6f9d4b | max=1 | expires 2026-10-01T00:29:34.962Z
+[RIO Token Manager] Token issued: d76a6373... for intent 2ee98765-2b3d-457b-a6e6-586bda1a81d4 | tool=create_document | env=e4e8275e-f41a-47f5-ab4a-6cf4a834ab78 | max=1 | expires 2026-10-01T00:29:35.104Z
+[RIO Token Manager] Token issued: 31afb8b7... for intent c1119ae9-17d1-49c2-8f44-65c94d62ef76 | tool=create_document | env=4a25aed9-14c9-4eff-a30a-a80c05d3fcaa | max=1 | expires 2026-10-01T00:29:35.503Z
+[RIO Token Manager] Token issued: b8d55c87... for intent eee09b02-9f03-424d-997d-52ecac4ff5ab | tool=create_document | env=f37ab268-72b4-4164-a0ca-b3158637d1c6 | max=1 | expires 2026-10-01T00:29:35.724Z
+[RIO Token Manager] Token issued: f9fff07b... for intent dd521ee8-d181-437c-8049-699ee690b8ae | tool=create_document | env=f37ab268-72b4-4164-a0ca-b3158637d1c6 | max=1 | expires 2026-10-01T00:29:35.758Z
+[RIO Token Manager] Token BURNED: b8d55c87... for intent eee09b02-9f03-424d-997d-52ecac4ff5ab — all 11 checks passed
+[RIO Token Manager] Token issued: fac47bee... for intent ce3434b1-80e0-43e4-92c2-4bcf9f2d9a05 | tool=create_document | env=27a0fd25-8c1e-4561-ab0c-661cd653d965 | max=1 | expires 2026-10-01T00:29:36.120Z
+[RIO Token Manager] Token BURNED: fac47bee... for intent ce3434b1-80e0-43e4-92c2-4bcf9f2d9a05 — all 11 checks passed
+[RIO Token Manager] Token issued: 50ae5890... for intent 8e3b06c5-95f6-4833-80c1-f57558ba7c85 | tool=create_document | env=194200c1-086f-4652-8aed-e204ae49b481 | max=1 | expires 2026-10-01T00:29:36.348Z
+[RIO Token Manager] Token BURNED: 50ae5890... for intent 8e3b06c5-95f6-4833-80c1-f57558ba7c85 — all 11 checks passed
+[RIO Token Manager] Token issued: 418faa27... for intent b36398b0-23fa-437d-9afd-762b9965aaaa | tool=create_document | env=da2bc9fb-d299-488c-9ca6-a3cf4d2cae83 | max=1 | expires 2026-10-01T00:29:36.872Z
+✔ 01 valid enrolled passage creates an actual observed artifact with native receipt (220.224921ms)
+✔ 02 unknown node is rejected without effect (92.538555ms)
+✔ 03 invalid signature and changed integrity are rejected (131.850452ms)
+✔ 04 expired passage is rejected (86.940853ms)
+✔ 05 replayed passage cannot produce a second effect (268.44094ms)
+✔ 06 revoking authority rejects equivalent later passage at runtime (137.163581ms)
+✔ 07 changed target after admission fails point-of-use fidelity (183.668051ms)
+✔ 08 changed dependency after admission fails point-of-use fidelity (263.785317ms)
+✔ 09 capability and enrollment without authority cannot execute (137.390863ms)
+✔ 10 model candidate is non-authoritative and cannot directly execute (244.168105ms)
+✔ 11 receipt cannot manufacture or rewrite a persisted RIO decision (237.05934ms)
+✔ 12 node A cannot impersonate node B by changing its identifier (105.029522ms)
+✔ 13 Return resolves to exact passage and originating correlation (212.118268ms)
+✔ 14 persisted identities grants revocations and completed lineage survive restart (315.873827ms)
+✔ revocation after admission is checked at point of use (227.653282ms)
+✔ control replay is rejected and wrong field cannot enroll (109.693306ms)
+✔ restart with substituted root is refused (73.922721ms)
+✔ single-use grant permits one action across separate passages (241.451609ms)
+✔ filesystem rejects traversal and existing symlink without external effect (239.099179ms)
+✔ unfinished admitted passage is held after restart without regenerated permission (166.007536ms)
+✔ receiver seals receipt with its own enrolled key and alteration fails (170.410934ms)
+✔ second runtime cannot reconstruct active owner as if it had stopped (97.652147ms)
+✔ node revocation blocks previously admitted operation (142.21155ms)
+✔ changed payload after admission is rejected even when sender signs again (192.158197ms)
+✔ unsupported grant conditions are never treated as satisfied (79.218462ms)
+✔ model node cannot omit the non-authoritative candidate boundary (98.054663ms)
+✔ ancestor revocation invalidates derived delegation at point of use (207.603176ms)
+✔ two admissions cannot spend one single-use grant twice (286.895781ms)
+✔ superseded authority is rejected without changing source code (148.064195ms)
+✔ rejected duplicate admission cannot destroy the original permission (240.370569ms)
+✔ another enrolled node cannot force an admitted passage into HOLD (227.020819ms)
+✔ RIO policy conditions evaluate actual executor content (157.031391ms)
+✔ non-proposer role cannot cross by holding capability and grant (99.219109ms)
+✔ wrong receiver key cannot corrupt recovery Return (263.024005ms)
+✔ stale lease from prior boot does not mistake reused PID for original receiver (122.989647ms)
+ℹ tests 54
+ℹ suites 0
+ℹ pass 54
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6665.606734
+

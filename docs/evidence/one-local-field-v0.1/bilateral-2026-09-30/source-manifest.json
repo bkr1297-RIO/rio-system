@@ -1,0 +1,333 @@
+{
+  "source_pins": {
+    "runtime": "d950bd2ccf8179e4e63d3cd77aa0f65ef8d7ab21",
+    "protocol": "0449f2dd135d93791b9b4ce3f96093d1aca463cf",
+    "architecture": "891edcaf818a5d5dfdd88b3bea57ce9824bff531",
+    "receipt": "8cb49727e98690f9f0dfb66625e3a182f321a6e9"
+  },
+  "runtime_local_verified_commit": "f782738f3174012cafe89b37e79409d91ecdee80",
+  "runtime_uploaded_tree_matches_local": true,
+  "repositories": [
+    {
+      "repo": "bkr1297-RIO/rio-system",
+      "source_commit": "d950bd2ccf8179e4e63d3cd77aa0f65ef8d7ab21",
+      "tree": "b49cbbc0845bec5bee6dd004b3ada97153dd1642",
+      "files": [
+        {
+          "path": ".github/workflows/local-field-bilateral.yml",
+          "mode": "100644",
+          "git_blob": "fd3115e4e73276e4d6db2b0c66e3f331f28f8d43",
+          "sha256": "9d07f564603638ffe82bfc58df5140247ced915a8284bd80fcdfe002bc65be0e"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/acceptance-trace.json",
+          "mode": "100644",
+          "git_blob": "194a7ba0bf8e9fd20e599133207a3e504e8d7b6b",
+          "sha256": "182480a77edb850b74bb52cc0859033c21ffd4fb31bcf5abf5d49b9ed1a2545e"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/candidate-lineage.json",
+          "mode": "100644",
+          "git_blob": "e62a40ea066c7bd6c6a627bbd751f45b155cfc2d",
+          "sha256": "c001ed59a186f4270deb14d9d91e97026f767ce60a72582f69a54994aafee552"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/independent-receipt-verification.json",
+          "mode": "100644",
+          "git_blob": "7951627a4178bc5fae3e96f0b640bf06c9b294e6",
+          "sha256": "efbcf4ecbfc067fd246a1a61d84788e8001e221d795f871f3111dbc6369364ca"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/architecture-loom.log",
+          "mode": "100644",
+          "git_blob": "6efe928f9c3fcb97735f144c516c83debd08682d",
+          "sha256": "7308c7e8512ecb9b60205a8dda5b0f7fb272beebe62f359160867525bf69f4a8"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/architecture-reconciliation.log",
+          "mode": "100644",
+          "git_blob": "72aa130b186c51e9634ec810d8e812a1d0cb99fc",
+          "sha256": "9f6fd77b051ad20a551a43f4c70179789ebd7fb3d7a24bc00157434417b5a0da"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/expired-observability-red.log",
+          "mode": "100644",
+          "git_blob": "2efad26ec89db20e0e8fe738bf3ce50dc08f19b0",
+          "sha256": "5c1c02721db72eb2303460ab7ab4178ef11c7877799c5d9ee8683eaabfc5bf6e"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/final-local-field.log",
+          "mode": "100644",
+          "git_blob": "a64c92979de50ed178c8f0155c4b8dce04b11c4f",
+          "sha256": "02b140fc748b19c1a31c96fcee414323ed73ff2a5a0ef887ca9d60d2a2888c7d"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/final-optional-regressions.log",
+          "mode": "100644",
+          "git_blob": "28b68d5dc0307218c185bf5eeac761562b8261b2",
+          "sha256": "23f81ec268075b1ecbb881cca90275327075b36d3317b2e61febd5532bf641a9"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/gateway-broad-final.log",
+          "mode": "100644",
+          "git_blob": "0822feced013239bc10ea2d0b6fd9745bea3b971",
+          "sha256": "3d843b2c4582a11e4e6527bae2aa6f18a52017af4dbbd04919c7cacdbb859434"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/gateway-broad-predecessor.log",
+          "mode": "100644",
+          "git_blob": "58cee57bd8e13b64e9e8db09960bdad0f866981b",
+          "sha256": "44096865fb41cf36b43e2600fa665ab22cd6c9a7a509613f1d357c21378e19b4"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/gateway-main-suite.log",
+          "mode": "100644",
+          "git_blob": "784c1258f6a741190d2fbaf702b00d105a87b2e3",
+          "sha256": "72bef9a2a43c00695cb93298b6ff4615c198ed0fb8d3ecb76df7e06615b2c691"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/gateway-project-suite.log",
+          "mode": "100644",
+          "git_blob": "1282b6ad3fbfd9d819ffbc1493413ca86228b4e9",
+          "sha256": "355aec118b70bbd02b5fae033a4b8d5b7530342ebfc70d9d86e08bcc9e694dc9"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/loom-final.log",
+          "mode": "100644",
+          "git_blob": "29040a557315f0692fd8caf5456df51638cde0a9",
+          "sha256": "1389ddc4e743970cc77c455ac33efbbba51ef95ff89827220cd29321858e4e79"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/portable-final.log",
+          "mode": "100644",
+          "git_blob": "e46380c266da3e90b6b581f4b2a36f7b04d6f2c1",
+          "sha256": "8c9ead27a93d092ab0c5797da18a2d54f1cbb0a5ebd7c7448c533540a1477b6b"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/pr226-top.log",
+          "mode": "100644",
+          "git_blob": "3882e8174d6b34fa6c86dca557a7e0e01149b3df",
+          "sha256": "53ac10c0b1ad063a428042111abb3ecf1665d50b9928e7917f932bdb21aea861"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/receipt-additional-final.log",
+          "mode": "100644",
+          "git_blob": "c7fa12cc261fbe097107d206fa91b0a77cbb020c",
+          "sha256": "b68d8f0e4c5e44274487028065db15976b6d57ea0cc193427163bc90d3a089fe"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/receipt-project-suite.log",
+          "mode": "100644",
+          "git_blob": "d5ffcc6a2f74a0cca4b5697aa75a062a1d46b020",
+          "sha256": "0e3b6d5fda9d9a17a740156fe8e040c3b2d7306c0662cd106729057e8201c19a"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/receipt-regressions.log",
+          "mode": "100644",
+          "git_blob": "925fd605a76c7cbef2cae984ee16f72d537e79a0",
+          "sha256": "b3bfad8a87f9d49e0be161c600c4f087d37db19e8ae47c1120e8eded4f30c815"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/review-fixes-red.log",
+          "mode": "100644",
+          "git_blob": "72021355cba3d97cd152bc2f58ff3df83c35ab5c",
+          "sha256": "a92b37918077ae263c8a9446a13d3034bc2e70a5570f8bd47e3613ef40b3d1f7"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/logs/root-final.log",
+          "mode": "100644",
+          "git_blob": "e0aaaf973f93a1602060423c1b2c6f00f3085ee5",
+          "sha256": "a15eb2da21e5b33eebeb06a5003b4eaf8362c7b53cea81b2a3283d4fa6a2ac55"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/bilateral-2026-09-30/verification.json",
+          "mode": "100644",
+          "git_blob": "922e3e1ae88e74af82d5e69e5ba2c6608ac4bf6e",
+          "sha256": "1d1146905779afb7997e292d76d947ed2531ece19dfd236b36396f2534a95123"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/frontier-2026-09-30/REPORT.md",
+          "mode": "100644",
+          "git_blob": "620b83c41d4374c541980c09686630ee89ffa744",
+          "sha256": "83d81124cf5fd043cae4587c17bb66b62f3186eaa71cd81f0aebe252042e6cfa"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/frontier-2026-09-30/SHA256SUMS",
+          "mode": "100644",
+          "git_blob": "4fd12deb840247dbb1239de530725f511c777701",
+          "sha256": "94deebb7f54b3a18e8079b0121a2940fc2c10e737712b78c0604da54b0796e7f"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/frontier-2026-09-30/frontier.json",
+          "mode": "100644",
+          "git_blob": "55ba73af370bd427dab9a1cff5852ebd45a825ed",
+          "sha256": "e11ee417e5b6ba59a52724463e3fccdf4d59c78bca89c0fd3d13176da7fb361b"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/frontier-2026-09-30/local-field-baseline.log",
+          "mode": "100644",
+          "git_blob": "dd522222a4a68f3514964e195e51029be7022287",
+          "sha256": "dcfcc7880702cba221cdfd7a31b4df53bbd96a22a64963ed70cb901d7fbba4dc"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/frontier-2026-09-30/pr226-source-manifest.json",
+          "mode": "100644",
+          "git_blob": "7b4647d430befc6f866286b9bb99dfed925a6fc4",
+          "sha256": "f1fb6ec6cb1eef5dc17ff0b9c3bab0415779a6cdd92f04c6b27d52ba0245800a"
+        },
+        {
+          "path": "docs/evidence/one-local-field-v0.1/frontier-2026-09-30/pr226-top.log",
+          "mode": "100644",
+          "git_blob": "421c63b9526915522df6dc3b76a2cf0274e47987",
+          "sha256": "d85a418c86a888d77dd1c0c6125da75fff3ddefa063fa95021842e4568f52677"
+        },
+        {
+          "path": "docs/implementation/ONE-LOCAL-FIELD-v0.1-COMPLETE-BUILD-PACKET.md",
+          "mode": "100644",
+          "git_blob": "907b8c215e5bfc97798bb9301134094725355380",
+          "sha256": "e39e80a33b60932c4a9bfa473da3004ab1e8b0ff732ab161865f4f46c7197969"
+        },
+        {
+          "path": "docs/implementation/local-field-bilateral-plan.md",
+          "mode": "100644",
+          "git_blob": "5c1c940621ffbe7faaaa9c71bf65c983ca853cfa",
+          "sha256": "1694eee4828ad147aaebc11de00ee08ff7c926b86966f50727f0bc9f0880086c"
+        },
+        {
+          "path": "gateway/local-field/BILATERAL.md",
+          "mode": "100644",
+          "git_blob": "b1e493348bec8f0ec084cbdd51ebe6965fd9a00b",
+          "sha256": "6882d983f1d280cb09db3c70e894abcab5df468b2939eecbf4a876169c744087"
+        },
+        {
+          "path": "gateway/local-field/bilateral.mjs",
+          "mode": "100644",
+          "git_blob": "9803e7365e5bbed47d50a7847e8840970182cf4e",
+          "sha256": "429cd57d920e565b5326efedd2382208a0f2a56d3b0101fdde471a3fb965a51d"
+        },
+        {
+          "path": "gateway/local-field/cli.mjs",
+          "mode": "100644",
+          "git_blob": "74e04cd4b05b019d7e12789371a922528665670a",
+          "sha256": "62557c674c6934e47e73b67b325303ba939f13384b327a7e1b11fecf74afb798"
+        },
+        {
+          "path": "gateway/local-field/http.mjs",
+          "mode": "100644",
+          "git_blob": "17903496e7797c20a2accb8fb242e04413945b0b",
+          "sha256": "d502c79e0b89d2b38af751b2bc08f61f3ba2cc388addf286aa8de2f960783622"
+        },
+        {
+          "path": "gateway/local-field/index.mjs",
+          "mode": "100644",
+          "git_blob": "a27b54e19fa13e1526fdb04d0a81015f1fbf19bf",
+          "sha256": "b2b9f1398b1210cc42d3e38875ba3d970c224c816dde3e444d8601f3e8932d1b"
+        },
+        {
+          "path": "gateway/package.json",
+          "mode": "100644",
+          "git_blob": "3897cddfda39061c59807c4413eeb999b14249bb",
+          "sha256": "a2fde0a4f4d073c6ab7d58eddea7fcf6aaa5df7395f9866c1c2e02a58c5484b7"
+        },
+        {
+          "path": "gateway/scripts/run-local-field-bilateral-acceptance.mjs",
+          "mode": "100644",
+          "git_blob": "b659be6267c8b4d3a5ab7148b6186f4cc34d72e7",
+          "sha256": "594830bb429354b585558faba1a2e7bc87d1a10dc303ed1064f542171260f89c"
+        },
+        {
+          "path": "gateway/security/local-field-authority.mjs",
+          "mode": "100644",
+          "git_blob": "6e23c602ec7be8714504a45ab9afad7b86318b96",
+          "sha256": "91e04ca76775b219bb481e104af78c70834b9890f235f8936be0a463ff1ea62a"
+        },
+        {
+          "path": "gateway/tests/helpers/bilateral-field.mjs",
+          "mode": "100644",
+          "git_blob": "633b65a25ec7ee565ba74870236b7ffa1599ac3a",
+          "sha256": "f79c25bc082d52e2a7ad2f78c23bdc60ca410a8c03d3ed55aa255cbedf3ee0f2"
+        },
+        {
+          "path": "gateway/tests/local-field-bilateral-acceptance.test.mjs",
+          "mode": "100644",
+          "git_blob": "001557ed7d569d63cf6b31f0da8aef158167021c",
+          "sha256": "bb707e04cfd9383be9399205633fccbad9eca329dc17be667e98e8370f44122e"
+        },
+        {
+          "path": "gateway/tests/local-field-bilateral.test.mjs",
+          "mode": "100644",
+          "git_blob": "e43322ffc59377eaad9942938ef4407ad4d79b46",
+          "sha256": "f32fba5abaf57511ce769f10eb29ef28d263e4fb0554d64eecb2cd43f31ea738"
+        }
+      ]
+    },
+    {
+      "repo": "bkr1297-RIO/rio-protocol",
+      "source_commit": "0449f2dd135d93791b9b4ce3f96093d1aca463cf",
+      "tree": "1959459ba40f477e4707061b8d17651666714ffc",
+      "files": [
+        {
+          "path": "schemas/local-field-v0.1.schema.json",
+          "mode": "100644",
+          "git_blob": "cafc97cd92aacc63119e01494a88266b864328f7",
+          "sha256": "75047752c84c66f55f6f8fe091d5436463d708f5a8bd8da84b2e2aabfdda046a"
+        },
+        {
+          "path": "schemas/local-field-bilateral-v0.1.schema.json",
+          "mode": "100644",
+          "git_blob": "c8029601a61669aead20c724eb23bee18ede4708",
+          "sha256": "165bfb8bd53fbfd69ae56286f1c3ca20aac5aa50527b29f8dad62ebe1df60ba6"
+        },
+        {
+          "path": "spec/local-field-v0.1.md",
+          "mode": "100644",
+          "git_blob": "bf1b3132d775ebcb0a1f30337f603b18af819dbe",
+          "sha256": "fbb9dc3a483f37a2081d3c12d4e144ad828a53f450b10e79eb0489dc45d383b3"
+        },
+        {
+          "path": "tests/local_field/validate_bilateral_runtime.py",
+          "mode": "100644",
+          "git_blob": "b60e442ada7202a4de75a0a92292a1f2cb62baab",
+          "sha256": "56b61ef3d2b97f4981a8b06d76880e75405b646b1736eac6f86085629c0ee9e7"
+        }
+      ]
+    },
+    {
+      "repo": "bkr1297-RIO/one-rio-muss-architecture",
+      "source_commit": "891edcaf818a5d5dfdd88b3bea57ce9824bff531",
+      "tree": "bc8d6b38d52c6884a59b7e2f3230129e0a50fc2a",
+      "files": [
+        {
+          "path": "docs/architecture/local-field/ONE-LOCAL-FIELD-BUILD-SPEC-v0.1.md",
+          "mode": "100644",
+          "git_blob": "8021eb63b4e3030f8e1a168981885aea17962a6f",
+          "sha256": "c99234c03d33be23f0b4873b97fa499e293f265b4de530db6ae5d97efc9e6bd0"
+        },
+        {
+          "path": "docs/architecture/local-field/ONE-LOCAL-FIELD-RUNTIME-MAP-v0.1.md",
+          "mode": "100644",
+          "git_blob": "ace813dd6b7b76420f1263fc675f62020400c178",
+          "sha256": "e3df4e27a08a82faf5597c7c914162a31ccd36e17180310bf46267b313cf5980"
+        },
+        {
+          "path": "docs/architecture/local-field/ONE-LOCAL-FIELD-RETURN-MAP-v0.1.md",
+          "mode": "100644",
+          "git_blob": "60535b56e334e721a03a97e33e072b6e8f93c7a0",
+          "sha256": "f2dfa93c568827d0c76fe32dde59762f2d485dc8c542c6b8de49fbf73f4e5ca1"
+        },
+        {
+          "path": "docs/architecture/local-field/ONE-LOCAL-FIELD-CONTROLLING-RECONCILIATION-v0.1.md",
+          "mode": "100644",
+          "git_blob": "32c97d779cd35431b376216c4422e159a54f5a5e",
+          "sha256": "93ae41db0d23afd1d7e434232a763c034eabbf2d042652a70b210731151d35ee"
+        }
+      ]
+    }
+  ],
+  "unchanged_dependency": {
+    "repo": "bkr1297-RIO/rio-receipt-protocol",
+    "commit": "8cb49727e98690f9f0dfb66625e3a182f321a6e9",
+    "verifier_blob": "531a24df57abbd0a1e85ff81af6d1e6cf334fe59"
+  },
+  "evidence_only_descendants": "Acceptance/Return/delivery metadata may be committed after these immutable pins; production code and schema source remain unchanged"
+}

@@ -1,0 +1,23 @@
+name: Local Field Bilateral v0.1
+on:
+  pull_request:
+    paths: ['gateway/local-field/**', 'gateway/security/**', 'gateway/governance/**', 'gateway/execution/**', 'gateway/ledger/**', 'gateway/receipts/**', 'gateway/tests/local-field*', 'gateway/tests/helpers/**', 'gateway/scripts/run-local-field*', 'gateway/package*.json', '.github/workflows/local-field-bilateral.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bounded-runtime:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: gateway/package-lock.json
+      - run: npm ci
+        working-directory: gateway
+      - run: npm run test:local-field
+        working-directory: gateway
+      - run: npm run field:bilateral-acceptance -- /tmp/one-local-field-bilateral-trace.json
+        working-directory: gateway

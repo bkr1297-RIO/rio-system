@@ -1,0 +1,3 @@
+VALID: mandatory boot -> 28 routes -> R-24, adjacency, namespace and evidence maps
+OFFLINE: pinned observation verified; live branch freshness and runtime execution not asserted
+

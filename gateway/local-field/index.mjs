@@ -3,6 +3,7 @@ import { join, resolve } from 'node:path';
 import { LocalStore } from '../ledger/local-store.mjs';
 import { OpenArrow } from './open-arrow.mjs';
 import { ProjectionRuntime } from './projection.mjs';
+import { Bilateral, MAX_RECORD_BYTES } from './bilateral.mjs';
 import {
   canonicalizeArgs,
   issueExecutionToken,
@@ -51,7 +52,8 @@ export class LocalField {
   #closed = false;
   #arrow;
   #projection;
-  constructor({ root, anchor, receiver, signingKey, definition, openArrow }) {
+  #bilateral;
+  constructor({ root, anchor, receiver, signingKey, definition, openArrow, peers }) {
     requireValue(
       root &&
         anchor?.actor_type === 'human' &&
@@ -107,6 +109,11 @@ export class LocalField {
         'RECEIVER_SUBSTITUTION',
       );
       this.#field = clone(saved.body);
+      if (this.#field.bilateral_profile !== undefined) {
+        requireValue(this.#field.bilateral_profile === 'local-field-bilateral-v0.1', 'FIELD_PROFILE_UNSUPPORTED');
+        this.#bilateral = new Bilateral({ store: this.#store, field: this.#field, anchor: this.#anchor, receiver, signingKey, peers,
+          decide: (r, options) => this.#decision(r, options), record: (...args) => this.#record(...args) });
+      }
       if (this.#field.projection_runtime)
         this.#projection = new ProjectionRuntime({
           store: this.#store, field: this.#field, anchor: this.#anchor, receiver, signingKey,
@@ -139,6 +146,7 @@ export class LocalField {
           this.#store.transaction(() => this.#release(operation, permit)),
       });
       this.#recover();
+      this.#bilateral?.recover();
       if (this.#arrow)
         for (const r of this.#store.all('passage'))
           this.#arrow.capture(this.inspect(r.body.passage_id));
@@ -180,6 +188,7 @@ export class LocalField {
     return b;
   }
   control(record) {
+    if (this.#bilateral) requireValue(Buffer.byteLength(JSON.stringify(record)) <= MAX_RECORD_BYTES, 'CONTROL_RESOURCE_LIMIT');
     canonicalizeArgs(record);
     record = clone(record);
     const b = this.#controlSignature(record),
@@ -331,21 +340,23 @@ export class LocalField {
     });
     return clone(artifact);
   }
-  #request(record) {
+  #request(record, { egress = false } = {}) {
     requireValue(record?.body?.type === 'passage', 'PASSAGE_REQUIRED');
     canonicalizeArgs(record);
     const p = record.body,
       node = verifyNodeRecord(this.#store, record, this.#field.field_id);
+    this.#bilateral?.envelope(p);
     requireValue(p.subject === p.source_node, 'SUBJECT_BINDING');
     requireValue(
       [node.primary_role, ...node.secondary_roles].includes('proposer'),
       'PROPOSER_ROLE_REQUIRED',
     );
-    requireValue(p.target_node === this.#receiver, 'TARGET_NODE_MISMATCH');
+    requireValue(egress ? p.source_node === this.#receiver : p.target_node === this.#receiver, 'TARGET_NODE_MISMATCH');
     const receiver = nodeAt(this.#store, this.#receiver);
+    const target = nodeAt(this.#store, p.target_node);
     requireValue(
-      receiver.primary_role === 'executor' &&
-        receiver.capabilities.includes(p.action) &&
+      target.primary_role === 'executor' &&
+        target.capabilities.includes(p.action) &&
         node.capabilities.includes(p.action),
       'CAPABILITY_MISSING',
     );
@@ -364,7 +375,7 @@ export class LocalField {
       );
     requireValue(
       p.return_requirement?.required === true &&
-        p.return_requirement.to === this.#anchor.principal_id,
+        p.return_requirement.to === (this.#bilateral ? p.source_node : this.#anchor.principal_id),
       'RETURN_REQUIRED',
     );
     requireValue(
@@ -400,8 +411,8 @@ export class LocalField {
     this.#projection?.guard(p);
     return p;
   }
-  #decision(record) {
-    const p = this.#request(record);
+  #decision(record, options) {
+    const p = this.#request(record, options);
     const lineage = resolveGrant(
       this.#store,
       p.authority_basis,
@@ -428,14 +439,16 @@ export class LocalField {
     );
     return { intent, lineage, policy };
   }
-  admit(record) {
+  admit(record, transit = null) {
     canonicalizeArgs(record);
     record = clone(record);
     const p = record.body;
     let createdToken = false;
     try {
       return this.#store.transaction(() => {
+        this.#bilateral?.transit(record, transit);
         const { intent, lineage, policy } = this.#decision(record);
+        const returnBudget = this.#bilateral?.returnBudget({ record, transit, intent, lineage, policy });
         this.#store.useNonce(`passage:${p.source_node}`, p.nonce);
         requireValue(
           !this.#store.get('passage', p.passage_id),
@@ -445,6 +458,7 @@ export class LocalField {
           decision_id: randomUUID(),
           passage_id: p.passage_id,
           status: 'ADMITTED',
+          context: 'INGRESS',
           passage_hash: hash(p),
           policy,
           authority_lineage: lineage.map((g) => g.body.grant.grant_id),
@@ -464,6 +478,8 @@ export class LocalField {
         this.#record('passage', p.passage_id, record);
         this.#record('intent', p.passage_id, intent);
         this.#record('decision', p.passage_id, decision);
+        if (returnBudget) this.#record('return_budget', p.passage_id, returnBudget);
+        if (transit) this.#record('ingress_transit', p.passage_id, transit);
         this.#store.state('phase', p.passage_id, 'ADMITTED');
         this.#arrow?.admitted(p, decision);
         this.#projection?.admitted(p, decision);
@@ -494,13 +510,32 @@ export class LocalField {
     );
     const decision = this.#store.get('decision', id),
       p = record?.body;
+    // Current authority concerns the immutable admitted request. A different
+    // submitted operation never becomes the object authorized by this check.
+    const authority = {
+      decision_id: randomUUID(), passage_id: id,
+      ingress_decision_id: decision.decision_id,
+      passage_hash: decision.passage_hash, status: 'AUTHORIZED',
+      checked_at: stamp(), owner: 'gateway/governance/policy-engine.mjs',
+    };
+    permit.execution_authority = authority;
+    let lineage, policy;
+    try {
+      ({ lineage, policy } = this.#decision(this.#store.get('passage', id)));
+      authority.authority_lineage = lineage.map(g => g.body.grant.grant_id);
+      authority.policy = policy;
+    } catch (e) {
+      authority.status = 'DENIED';
+      authority.reason = e.message;
+      throw e;
+    }
+    this.#record('execution_authority', id, authority);
     requireValue(
       p?.passage_id === id &&
         hash(p) === decision.passage_hash &&
         hash(operation) === hash(p),
       'FIDELITY_MUTATION',
     );
-    const { lineage, policy } = this.#decision(record);
     requireValue(
       hash(policy) === hash(decision.policy),
       'FIDELITY_POLICY_CHANGED',
@@ -566,11 +601,13 @@ export class LocalField {
     const operation = clone(record.body);
     let result, occurrence;
     try {
-      result = this.#executor.execute(operation, { ...permit, commit: true });
+      result = this.#executor.execute(operation, permit);
       occurrence = this.#executor.observe(operation);
     } catch (e) {
       if (this.#store.state('phase', id) !== 'ATTEMPTED') {
         this.#store.transaction(() => {
+          if (permit.execution_authority && !this.#store.get('execution_authority', id))
+            this.#record('execution_authority', id, permit.execution_authority);
           this.#record('fidelity_failure', randomUUID(), {
             passage_id: id,
             status: 'FAIL',
@@ -635,6 +672,7 @@ export class LocalField {
           attempt: this.#store.get('attempt', id),
           occurrence,
           fidelity: this.#store.get('fidelity', id),
+          execution_authority: this.#store.get('execution_authority', id),
           provenance: {
             proposed: p.source_node,
             admitted: this.#receiver,
@@ -728,12 +766,24 @@ export class LocalField {
       'passage',
       'intent',
       'decision',
+      'execution_authority',
       'fidelity',
       'attempt',
       'occurrence',
       'receipt_artifacts',
       'receipt',
       'return',
+      'ingress_transit',
+      'return_egress',
+      'return_transit',
+      'outgoing',
+      'egress',
+      'outgoing_transit',
+      'dispatch_attempt',
+      'dispatch_residue',
+      'incoming_return',
+      'return_ingress',
+      'return_budget',
     ];
     return Object.fromEntries(kinds.map((k) => [k, this.#store.get(k, id)]));
   }
@@ -779,7 +829,10 @@ export class LocalField {
         sourcepoint: this.#anchor.principal_id,
         receiver: this.#receiver,
       },
-      nodes: this.#store.all('enrollment').map((r) => ({
+      nodes: this.#store.all('enrollment').map((r) => {
+        let validTime = true;
+        try { fresh(r.body); } catch { validTime = false; }
+        return {
         ...r.body.node,
         created_at: r.body.issued_at,
         revoked_at:
@@ -789,8 +842,9 @@ export class LocalField {
           )?.body.issued_at || null,
         status: this.#store.state('node_revoked', r.body.node.node_id)
           ? 'revoked'
-          : 'active',
-      })),
+          : validTime ? 'active' : 'expired',
+        };
+      }),
       bindings: this.#store.all('grant').map((r) => ({
         grant_id: r.body.grant.grant_id,
         subject: r.body.grant.subject,
@@ -811,6 +865,7 @@ export class LocalField {
         phase: this.#store.state('phase', r.body.passage_id),
       })),
       decisions: this.#store.all('decision'),
+      execution_authorities: this.#store.all('execution_authority'),
       holds: this.#store.all('denial'),
       fidelity: this.#store.all('fidelity'),
       fidelity_failures: this.#store.all('fidelity_failure'),
@@ -819,6 +874,13 @@ export class LocalField {
       receipts: this.#store.all('receipt'),
       revocations: this.#store.all('revocation'),
       returns: this.#store.all('return'),
+      outgoing: this.#store.all('outgoing').map(r => ({ passage_id: r.body.passage_id, phase: this.#store.state('outgoing_phase', r.body.passage_id) })),
+      egress: this.#store.all('egress'),
+      egress_holds: this.#store.all('egress_hold'),
+      return_egress: this.#store.all('return_egress'),
+      return_ingress: this.#store.all('return_ingress'),
+      return_ingress_holds: this.#store.all('return_ingress_hold'),
+      dispatch_residue: this.#store.all('dispatch_residue'),
     };
   }
   #bindingState(record) {
@@ -867,6 +929,22 @@ export class LocalField {
       node.interfaces.includes(surface),
       'NODE_INTERFACE_NOT_ALLOWED',
     );
+  }
+  async dispatch(record) {
+    requireValue(this.#bilateral, 'BILATERAL_PROFILE_REQUIRED');
+    return this.#bilateral.dispatch(record);
+  }
+  receive(transit) {
+    requireValue(this.#bilateral, 'BILATERAL_PROFILE_REQUIRED');
+    const record = transit?.body?.passage;
+    this.admit(record, transit);
+    try { this.execute(record.body.passage_id, record); }
+    catch (e) { if (!this.#store.get('return', record.body.passage_id)) throw e; }
+    return this.#bilateral.emitReturn(this.inspect(record.body.passage_id));
+  }
+  admitReturn(transit) {
+    requireValue(this.#bilateral, 'BILATERAL_PROFILE_REQUIRED');
+    return this.#bilateral.admitReturn(transit);
   }
   arrow(record) {
     requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');

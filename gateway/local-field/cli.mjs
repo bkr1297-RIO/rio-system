@@ -24,6 +24,7 @@ const field = new LocalField({
   receiver: config.receiver_node,
   signingKey: readFileSync(keyFile, 'utf8').trim(),
   definition: config.definition,
+  peers: config.peers,
 });
 const server = createFieldServer(field);
 server.listen(config.port ?? 0, '127.0.0.1', () =>
