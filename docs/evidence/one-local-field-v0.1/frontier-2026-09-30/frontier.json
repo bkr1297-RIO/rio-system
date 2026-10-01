@@ -1,0 +1,391 @@
+{
+  "command": "ONE_LOCAL_FIELD_V0_1_ACCEPTANCE",
+  "status": "ONE_LOCAL_FIELD_V0_1_NOT_ACCEPTED",
+  "phase": "COMPLETENESS_CHECK",
+  "disposition_basis": "The controlling later complete four-layer build contract and exact 19 A–S gate definitions could not be retrieved. The older 16 A–P implementation is not a substitute.",
+  "observed_at": "2026-09-30T19:50:11.335Z",
+  "runtime_baseline": {
+    "repo": "bkr1297-RIO/rio-system",
+    "commit": "7baa2639ff9daf556d9bb9c49e176ebb969c5f4f",
+    "main_commit": "13f2f61281ffe0a51385ba27c68bf81080bdd8c8",
+    "candidate_stack_includes": [
+      202,
+      203,
+      204
+    ],
+    "scope": "Existing unmerged working stack; ALREADY_IN_BASELINE means this selected stack, never default main."
+  },
+  "implementation_started": false,
+  "product_code_changed": false,
+  "local_branch": "build/one-local-field-frontier-v0.1",
+  "required_gate_count": 19,
+  "older_available_gate_count": 16,
+  "gate_results": null,
+  "blocking_failures": [
+    {
+      "component": "BUILD_PACKET / COMPLETENESS",
+      "missing": "Full current ONE LOCAL FIELD v0.1 COMPLETE BUILD PACKET with the complete four authoritative layers.",
+      "repair": "Supply the exact complete packet or a readable reference containing all layers."
+    },
+    {
+      "component": "PassageEnvelope contract",
+      "missing": "Exact expanded replacement (including the complete semantic field contract).",
+      "repair": "Recover the controlling original text; do not reconstruct missing fields from memory."
+    },
+    {
+      "component": "Bilateral Field contract",
+      "missing": "Complete original bilateral refinement, including independent egress/ingress/execution/fidelity/Return admission requirements.",
+      "repair": "Recover the controlling refinement and reconcile its requirements against existing owners."
+    },
+    {
+      "component": "Acceptance A–S",
+      "missing": "Exact latest 19 acceptance gate definitions and the latest mandatory 14-case contract.",
+      "repair": "Supply original A–S definitions and mandatory cases; preserve older A–P evidence separately."
+    }
+  ],
+  "frontier": [
+    {
+      "repo": "bkr1297-RIO/rio-system",
+      "pr": 202,
+      "url": "https://github.com/bkr1297-RIO/rio-system/pull/202",
+      "title": "build: ONE Local Field v0.1 — typed field runtime",
+      "head": "build/one-local-field-v0.1",
+      "head_commit": "099d5cb88f0dafdac1b0c71545aa1709c75a4a96",
+      "base": "main",
+      "base_commit": "13f2f61281ffe0a51385ba27c68bf81080bdd8c8",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "ALREADY_IN_BASELINE",
+      "reason": "Existing LocalField methods, durable storage, signed authority, RIO, Sentinel, actual file effect, receipt and Return. Verified ancestor of the selected worktree base."
+    },
+    {
+      "repo": "bkr1297-RIO/rio-system",
+      "pr": 203,
+      "url": "https://github.com/bkr1297-RIO/rio-system/pull/203",
+      "title": "build: ONE Open Arrow v0.1 — Customer Zero governed runtime",
+      "head": "build/one-open-arrow-v0.1",
+      "head_commit": "f49123992e19e1d23d1656061fab5c279061fab3",
+      "base": "build/one-local-field-v0.1",
+      "base_commit": "099d5cb88f0dafdac1b0c71545aa1709c75a4a96",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "ALREADY_IN_BASELINE",
+      "reason": "Existing optional OpenArrow profile and distinct signed human promotions. Verified ancestor of selected worktree base."
+    },
+    {
+      "repo": "bkr1297-RIO/rio-system",
+      "pr": 204,
+      "url": "https://github.com/bkr1297-RIO/rio-system/pull/204",
+      "title": "build: ONE Projection Runtime v0.1 — persisted Holo and host admission",
+      "head": "build/projection-runtime-v0.1",
+      "head_commit": "7baa2639ff9daf556d9bb9c49e176ebb969c5f4f",
+      "base": "build/one-open-arrow-v0.1",
+      "base_commit": "f49123992e19e1d23d1656061fab5c279061fab3",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "ALREADY_IN_BASELINE",
+      "reason": "Existing optional Projection lifecycle and independent host admission. Selected worktree base, not merged main."
+    },
+    {
+      "repo": "bkr1297-RIO/rio-reference-impl",
+      "pr": 224,
+      "url": "https://github.com/bkr1297-RIO/rio-reference-impl/pull/224",
+      "title": "build: ONE Open Arrow v0.1 — native compiler and settlement bridge",
+      "head": "build/one-open-arrow-v0.1",
+      "head_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "base": "main",
+      "base_commit": "9c75055711e7dce3498324e5803cbaac63a6edb4",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "REUSE_REQUIRED",
+      "reason": "Required native dependency when the already-existing OpenArrow profile is enabled. Preserve private library ownership and exact existing pin; no new extraction before packet completeness."
+    },
+    {
+      "repo": "bkr1297-RIO/rio-reference-impl",
+      "pr": 225,
+      "url": "https://github.com/bkr1297-RIO/rio-reference-impl/pull/225",
+      "title": "build: TACM Scale Closure F0.1 — bounded participation",
+      "head": "build/tacm-scale-closure-f0.1",
+      "head_commit": "6967ef351a5f402a5ace5a5017dc47c5f8aab992",
+      "base": "main",
+      "base_commit": "9c75055711e7dce3498324e5803cbaac63a6edb4",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "EVIDENCE_ONLY",
+      "reason": "Bounded separately keyed participant/Return composition informs bilateral reconciliation. It is not the LocalField gateway or proof of its missing A–S contract; no Scale code extracted."
+    },
+    {
+      "repo": "bkr1297-RIO/rio-protocol",
+      "pr": 38,
+      "url": "https://github.com/bkr1297-RIO/rio-protocol/pull/38",
+      "title": "build: ONE Local Field v0.1 — crossing protocol bindings",
+      "head": "build/one-local-field-v0.1",
+      "head_commit": "17331406c39ed93771eb6ba89b8a06cdf1cda29b",
+      "base": "main",
+      "base_commit": "f7fbd3acb129eedf80ce52d4ca8bc9e5c1a6d179",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "REUSE_REQUIRED",
+      "reason": "Existing LocalField signed record and Return contracts; retain protocol owner rather than duplicate schemas. Required for reuse of the current LocalField implementation."
+    },
+    {
+      "repo": "bkr1297-RIO/rio-protocol",
+      "pr": 39,
+      "url": "https://github.com/bkr1297-RIO/rio-protocol/pull/39",
+      "title": "build: ONE Open Arrow v0.1 — typed artifact and promotion contract",
+      "head": "build/one-open-arrow-v0.1",
+      "head_commit": "f5d947df1f82cdaee53abef5bdbd7de015964f7e",
+      "base": "build/one-local-field-v0.1",
+      "base_commit": "17331406c39ed93771eb6ba89b8a06cdf1cda29b",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "REUSE_REQUIRED",
+      "reason": "Existing typed artifact/promotion contract for the enabled OpenArrow profile; no alternative protocol proposed."
+    },
+    {
+      "repo": "bkr1297-RIO/rio-protocol",
+      "pr": 40,
+      "url": "https://github.com/bkr1297-RIO/rio-protocol/pull/40",
+      "title": "build: ONE Projection Runtime v0.1 — portable lifecycle and binding",
+      "head": "build/projection-runtime-v0.1",
+      "head_commit": "ce12202ebd3880b2f4fd3c78349bdeb797141eac",
+      "base": "build/one-open-arrow-v0.1",
+      "base_commit": "f5d947df1f82cdaee53abef5bdbd7de015964f7e",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "REUSE_REQUIRED",
+      "reason": "Existing portable projection/delegation/binding contract for the enabled Projection profile."
+    },
+    {
+      "repo": "bkr1297-RIO/one-rio-muss-architecture",
+      "pr": 331,
+      "url": "https://github.com/bkr1297-RIO/one-rio-muss-architecture/pull/331",
+      "title": "build: ONE Local Field v0.1 — architecture and runtime map",
+      "head": "build/one-local-field-v0.1",
+      "head_commit": "aec3341da18af05a396ef6974ec00bdac2115aec",
+      "base": "docs/architecture-repo-bootstrap",
+      "base_commit": "f1377d8f6ab0784a04102225cb8483aaba5d754c",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "EVIDENCE_ONLY",
+      "reason": "Existing LocalField routing, map and earlier A–P acceptance evidence; does not replace the missing later A–S contract."
+    },
+    {
+      "repo": "bkr1297-RIO/one-rio-muss-architecture",
+      "pr": 332,
+      "url": "https://github.com/bkr1297-RIO/one-rio-muss-architecture/pull/332",
+      "title": "build: ONE Open Arrow v0.1 — contract, Loom binding and Return",
+      "head": "build/one-open-arrow-v0.1",
+      "head_commit": "8101bcc35abdd82cba6a28fb8c67561742a2b1a4",
+      "base": "build/one-local-field-v0.1",
+      "base_commit": "aec3341da18af05a396ef6974ec00bdac2115aec",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "EVIDENCE_ONLY",
+      "reason": "Existing OpenArrow owner reconciliation and separate acceptance."
+    },
+    {
+      "repo": "bkr1297-RIO/one-rio-muss-architecture",
+      "pr": 333,
+      "url": "https://github.com/bkr1297-RIO/one-rio-muss-architecture/pull/333",
+      "title": "build: ONE Projection Runtime v0.1 — reconciled Customer Zero runtime map",
+      "head": "build/projection-runtime-v0.1",
+      "head_commit": "4fb2b4b3ecdaae277aea6cfcba0ca38fa7830a29",
+      "base": "build/one-open-arrow-v0.1",
+      "base_commit": "8101bcc35abdd82cba6a28fb8c67561742a2b1a4",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "classification": "EVIDENCE_ONLY",
+      "reason": "Existing Projection owner reconciliation and separate acceptance."
+    },
+    {
+      "repo": "bkr1297-RIO/rio-reference-impl",
+      "pr": 226,
+      "url": "https://github.com/bkr1297-RIO/rio-reference-impl/pull/226",
+      "head": "fixture/passage-residue-endpoint-equivalence-f0-1",
+      "head_commit": "10fa67c8755373e1bf71d598cbc39887593bbef0",
+      "classification": "EVIDENCE_ONLY",
+      "reason": "Test-only specimen; existing TOP assessor implements the ADMITTED versus UNSETTLED distinction. No new runtime implementation exists in the PR to extract.",
+      "state": "open",
+      "draft": true,
+      "merged": false
+    }
+  ],
+  "pr226_evidence": {
+    "observed_at": "2026-09-30T19:50:11.335Z",
+    "repo": "bkr1297-RIO/rio-reference-impl",
+    "pr": 226,
+    "head": "fixture/passage-residue-endpoint-equivalence-f0-1",
+    "commit": "10fa67c8755373e1bf71d598cbc39887593bbef0",
+    "draft": true,
+    "merged": false,
+    "changed_files": [
+      "artifacts/transition-occurrence-protocol/test/passage-residue.test.ts"
+    ],
+    "classification": "EVIDENCE_ONLY",
+    "reason": "Test-only specimen; existing TOP assessor implements the ADMITTED versus UNSETTLED distinction. No new runtime implementation exists in the PR to extract.",
+    "workflows": [
+      {
+        "id": 36766299046,
+        "name": "Compiled Occurrence Return Reference",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 14,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299046/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299046/logs",
+        "workflow_id": 351067974
+      },
+      {
+        "id": 36766299123,
+        "name": "Rosetta Handshake F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 17,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299123/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299123/logs",
+        "workflow_id": 353596129
+      },
+      {
+        "id": 36766299099,
+        "name": "ONE V1 Reference Corpus Conformance F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 167,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299099/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299099/logs",
+        "workflow_id": 340255625
+      },
+      {
+        "id": 36766299045,
+        "name": "Semantic Candidate to Compiled Return F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 5,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299045/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766299045/logs",
+        "workflow_id": 355542678
+      },
+      {
+        "id": 36766298999,
+        "name": "Transition Occurrence Protocol F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 9,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766298999/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766298999/logs",
+        "workflow_id": 341661905
+      },
+      {
+        "id": 36766298922,
+        "name": "ONE V1 Reference Reproducibility F0.1",
+        "status": "completed",
+        "conclusion": "success",
+        "run_number": 170,
+        "jobs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766298922/jobs",
+        "logs_url": "https://api.github.com/repos/bkr1297-RIO/rio-reference-impl/actions/runs/36766298922/logs",
+        "workflow_id": 340242410
+      }
+    ],
+    "local_blob_verification": {
+      "verified": 12,
+      "total": 12
+    },
+    "local_tests": {
+      "command": "node --test test/*.test.ts",
+      "passed": 35,
+      "failed": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "claim": "Exact-head TOP package tests, including the single passage-residue test. Not an end-to-end Local Field acceptance."
+    }
+  },
+  "existing_runtime_verification": {
+    "command": "node --test gateway/tests/local-field*.test.mjs",
+    "baseline_commit": "7baa2639ff9daf556d9bb9c49e176ebb969c5f4f",
+    "passed": 39,
+    "failed": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "claim": "Previously implemented LocalField profile only; not acceptance of the missing complete 19-gate packet."
+  },
+  "native_export": {
+    "repository": "bkr1297-RIO/rio-reference-impl",
+    "commit": "10fa67c8755373e1bf71d598cbc39887593bbef0",
+    "files": [
+      {
+        "path": "artifacts/transition-occurrence-protocol/package.json",
+        "git_blob": "8a42d35e4f5c91284217963da36c99e08a635ca5"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/src/index.ts",
+        "git_blob": "22c9fbd84d297a3908d2a7ace0e7319a5d5a99e2"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/src/canonical.ts",
+        "git_blob": "d38855b3e63476d41dd927373751f0d596d210b3"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/src/types.ts",
+        "git_blob": "2949b9ffe7bf7b7ae65e8185c759e9e7b0a03de6"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/src/protocol.ts",
+        "git_blob": "4286d41b36d2995d5baa7204164ce1979a0c00dd"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/src/standing-genealogy.ts",
+        "git_blob": "a1175c62c54063a7a3996365f3bdd6d3955026e6"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/src/boundary-judgment.ts",
+        "git_blob": "7bc888fbea29b7bbbe4236495fa0c7dd5c17db3b"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/test/helpers.ts",
+        "git_blob": "10058d751f30a780ccdb56ae1d4e096d188c13ee"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/test/protocol.test.ts",
+        "git_blob": "b7923ff9a4765b5f44d8b9d38640e46ef33c9571"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/test/standing-genealogy.test.ts",
+        "git_blob": "9e727fdda3348a9df8ed56d304a15e3c20aa96e5"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/fixtures/hostile-cases.json",
+        "git_blob": "ae4a5e7be09390f1c452ed0f3cb13425dae0a062"
+      },
+      {
+        "path": "artifacts/transition-occurrence-protocol/test/passage-residue.test.ts",
+        "git_blob": "00a56855b794f10a81cff0cf5b503a0f7d074739"
+      }
+    ],
+    "verified_git_blobs": 12,
+    "export_location": "Independent temporary verification surface; no private native source copied into rio-system."
+  },
+  "reuse_performed": {
+    "production_code": [],
+    "candidate_fixture": "Exact unmodified PR #226 package exported into a separate verification surface and executed. No new runtime implementation extracted."
+  },
+  "next_step": "Recover exact missing packet; continue RECONCILE → COMPLETENESS CHECK → BUILD → INTEGRATE → VERIFY → 19-GATE ACCEPTANCE → RETURN.",
+  "non_effects": {
+    "merged": false,
+    "deployed": false,
+    "published": false,
+    "released": false,
+    "canonized": false,
+    "production_or_personal_device_action": false
+  }
+}

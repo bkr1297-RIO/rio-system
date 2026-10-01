@@ -1,0 +1,33 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 06cee931... for intent f6363b1b-fc92-4b4a-bb85-92cc1fd8706d | tool=create_document | env=f3773356-5ead-4146-b4bd-f96cf34840c4 | max=1 | expires 2026-10-01T00:29:29.328Z
+✖ expired enrollment cannot authorize a new passage or an already admitted operation (149.10551ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 289.772357
+
+✖ failing tests:
+
+test at gateway/tests/local-field-bilateral.test.mjs:97:1
+✖ expired enrollment cannot authorize a new passage or an already admitted operation (149.10551ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/8acae2a413b8/local-field-frontier/rio-system/gateway/tests/local-field-bilateral.test.mjs:111:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+

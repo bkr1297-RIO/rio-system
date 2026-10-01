@@ -1,0 +1,248 @@
+{
+  "run_id": "7d0d8b7f-17ab-4296-9710-bafd2dd26d59",
+  "controlling_packet": "docs/implementation/ONE-LOCAL-FIELD-v0.1-COMPLETE-BUILD-PACKET.md",
+  "required_cases": 14,
+  "passed_required_cases": 14,
+  "local_field": {
+    "tests": 54,
+    "passed": 54,
+    "failed": 0,
+    "cancelled": 0
+  },
+  "optional_profiles_disabled_for_acceptance": {
+    "tests": 36,
+    "passed": 36,
+    "failed": 0
+  },
+  "receipt_owner": {
+    "tests": 9,
+    "passed": 9,
+    "failed": 0,
+    "unchanged_candidate_commit": "8cb49727e98690f9f0dfb66625e3a182f321a6e9"
+  },
+  "architecture": {
+    "loom": 38,
+    "reconciliation": 17,
+    "passed": 55
+  },
+  "portable": {
+    "actual_signed_records": "PASS",
+    "native_return": "PASS",
+    "malformed_rejections": 9
+  },
+  "root_typecheck": "PASS",
+  "root_build": "PASS",
+  "broad_gateway": {
+    "candidate": {
+      "tests": 304,
+      "passed": 237,
+      "failed": 16,
+      "cancelled": 51
+    },
+    "unchanged_predecessor": {
+      "commit": "7baa2639ff9daf556d9bb9c49e176ebb969c5f4f",
+      "tests": 289,
+      "passed": 222,
+      "failed": 16,
+      "cancelled": 51
+    },
+    "failure_and_cancellation_name_sets_identical": true,
+    "candidate_only": [],
+    "predecessor_only": [],
+    "names_including_suite_parents": [
+      "✖ RIO Governance Gateway",
+      "✖ tests/governed-flow-integration.test.mjs",
+      "✖ Principal Email Resolution",
+      "✖ Area 1: Principal & Role Enforcement",
+      "✖ SPG-M Intake Processor",
+      "✖ failing tests:",
+      "✖ should return operational status",
+      "✖ POST /intent — should submit an intent",
+      "✖ POST /govern — should evaluate governance",
+      "✖ POST /authorize — should record human approval",
+      "✖ POST /execute — should execute the action",
+      "✖ POST /receipt — should generate a receipt",
+      "✖ GET /verify — should verify the receipt and chain",
+      "✖ GET /intent/:id — should show full pipeline state",
+      "✖ should block execution of a submitted (ungoverned) intent",
+      "✖ should block execution of a denied intent",
+      "✖ should block governance for an unknown agent",
+      "✖ GET /ledger — should return entries",
+      "✖ GET /verify — full chain should be valid",
+      "✖ resolves Brian's primary email to I-1",
+      "✖ resolves riomethod5 email to I-2 (seed email match)",
+      "✖ resolves Brian's hotmail email to I-1 (case insensitive)",
+      "✖ returns null for unknown email",
+      "✖ returns null for empty email",
+      "✖ GET /health — accessible without authentication",
+      "✖ GET /api/receipts/recent — accessible without authentication",
+      "✖ Public Endpoints",
+      "✖ POST /intent — should return 403 without auth",
+      "✖ POST /govern — should return 403 without auth",
+      "✖ POST /authorize — should return 403 without auth",
+      "✖ POST /execute — should return 403 without auth",
+      "✖ POST /execute-confirm — should return 403 without auth",
+      "✖ POST /receipt — should return 403 without auth",
+      "✖ GET /ledger — should return 403 without auth",
+      "✖ GET /verify — should return 403 without auth",
+      "✖ GET /intents — should return 403 without auth",
+      "✖ Fail-Closed: Unauthenticated Requests",
+      "✖ POST /intent — Brian can submit intents (has implicit proposer)",
+      "✖ POST /govern — Brian can run governance (has implicit proposer)",
+      "✖ POST /authorize — Brian can authorize (has implicit approver)",
+      "✖ GET /ledger — Brian can read ledger (has implicit auditor)",
+      "✖ GET /verify — Brian can verify chain (has implicit auditor)",
+      "✖ GET /intents — Brian can list intents (any principal)",
+      "✖ Root Authority: Brian (I-1) Full Access",
+      "✖ POST /intent — bondi (proposer) CAN submit intents",
+      "✖ POST /authorize — bondi (proposer) CANNOT authorize",
+      "✖ POST /execute — bondi (proposer) CANNOT execute",
+      "✖ GET /ledger — bondi (proposer) CANNOT read ledger",
+      "✖ Role Boundaries: Proposer (bondi)",
+      "✖ POST /intent — gateway-exec (executor) CANNOT submit intents",
+      "✖ POST /authorize — gateway-exec (executor) CANNOT authorize",
+      "✖ GET /ledger — gateway-exec (executor) CANNOT read ledger",
+      "✖ Role Boundaries: Executor (gateway-exec)",
+      "✖ GET /ledger — mantis (auditor) CAN read ledger",
+      "✖ GET /verify — mantis (auditor) CAN verify chain",
+      "✖ POST /intent — mantis (auditor) CANNOT submit intents",
+      "✖ POST /authorize — mantis (auditor) CANNOT authorize",
+      "✖ POST /execute — mantis (auditor) CANNOT execute",
+      "✖ Role Boundaries: Auditor (mantis)",
+      "✖ GET /api/signers — any principal can list signers",
+      "✖ POST /api/signers/register — bondi (proposer) CANNOT register signers",
+      "✖ DELETE /api/signers/test-signer — bondi (proposer) CANNOT revoke signers",
+      "✖ Signer Management Role Gating",
+      "✖ POST /api/kill — bondi (proposer) CANNOT activate kill switch",
+      "✖ POST /api/kill — mantis (auditor) CANNOT activate kill switch",
+      "✖ Kill Switch Role Gating",
+      "✖ Request with no auth → 403",
+      "✖ X-Principal-ID header is ignored (removed)",
+      "✖ Fail-Closed: Unknown Principal",
+      "✖ Intent created by Brian carries principal_id = I-1",
+      "✖ Intent created by bondi carries principal_id = bondi",
+      "✖ Principal Attribution",
+      "✖ Step 1: Brian submits intent (proposer role)",
+      "✖ Step 2: Brian runs governance (proposer role)",
+      "✖ Step 3: Brian authorizes (approver role)",
+      "✖ Step 4: Brian executes (root_authority — note: executor is NOT an implicit role)",
+      "✖ Step 4b: gateway-exec executes (executor role)",
+      "✖ Step 5: gateway-exec confirms execution",
+      "✖ Step 6: mantis generates receipt (auditor role)",
+      "✖ Step 7: mantis verifies chain (auditor role)",
+      "✖ Full Pipeline with Role Enforcement",
+      "✖ refuses command-style use",
+      "✖ holds when no literal signal is present"
+    ]
+  },
+  "gateway_package_test": {
+    "candidate": "13/13 fail",
+    "unchanged_main_commit": "13f2f61281ffe0a51385ba27c68bf81080bdd8c8",
+    "main": "same 13/13 fail",
+    "reason": "Standalone default tests expect preexisting HTTP gateway on 127.0.0.1:4401; ECONNREFUSED"
+  },
+  "receipt_package_test": {
+    "result": "FAIL_PREEXISTING_CONFIGURATION",
+    "reason": "Unchanged test_tamper.js valid-case verifier reports key_trusted:false; configured fixture trust root is not test signer",
+    "remaining_commands_run_separately": "test_chain.js 15/15; spgm-receipt-mapping 10/10; coherence-assessment PASS",
+    "source_changed": false
+  },
+  "relevant_build_regressions": [],
+  "review": {
+    "base": "9fad96dcfa21ad9aaf8379fb617ef92564f063e3",
+    "reviewed_head": "b1ede8898ef8d0f40065d2b8c3ddcc8f40f067b8",
+    "critical": 0,
+    "important": 2,
+    "minor": 0,
+    "important_fixed": [
+      "Enrollment expiry checked at ingress, current execution authority and Return; status exposes expired enrollment",
+      "Before-effect Return closure budget plus bounded 8 MiB Return transport preserves worst-case 4096-byte payload"
+    ],
+    "red_evidence": [
+      "logs/review-fixes-red.log",
+      "logs/expired-observability-red.log"
+    ],
+    "green_evidence": "logs/final-local-field.log",
+    "second_review": "Not requested; one fix pass per execution skill"
+  },
+  "log_integrity": [
+    {
+      "path": "logs/final-local-field.log",
+      "sha256": "02b140fc748b19c1a31c96fcee414323ed73ff2a5a0ef887ca9d60d2a2888c7d",
+      "source_terminal_sha256": "f401abec89cf4ace923d60dbaad0fbcc464fc8cfcaa24b938f53fc6fd23e5e23",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/final-optional-regressions.log",
+      "sha256": "23f81ec268075b1ecbb881cca90275327075b36d3317b2e61febd5532bf641a9",
+      "source_terminal_sha256": "05dd530336df2e92c6adcff1b071147c862fe7e7f5a42958b0c9cee043743814",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/receipt-regressions.log",
+      "sha256": "b3bfad8a87f9d49e0be161c600c4f087d37db19e8ae47c1120e8eded4f30c815",
+      "source_terminal_sha256": "6cc5d9aa08875513805de4c0d8aa12b9f3acc803c01daab020551f52506ff3de",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/architecture-loom.log",
+      "sha256": "7308c7e8512ecb9b60205a8dda5b0f7fb272beebe62f359160867525bf69f4a8",
+      "source_terminal_sha256": "cb0f7122395312a235bb700602b9aad3c35774f3e996d5b3a7c0ba27c5a57a63",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/architecture-reconciliation.log",
+      "sha256": "9f6fd77b051ad20a551a43f4c70179789ebd7fb3d7a24bc00157434417b5a0da",
+      "source_terminal_sha256": "bcd0cf24f4255b66400567e8efbe5311d20e611ab6f2925b75537b11d9cf99d2",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/gateway-broad-final.log",
+      "sha256": "3d843b2c4582a11e4e6527bae2aa6f18a52017af4dbbd04919c7cacdbb859434",
+      "source_terminal_sha256": "01861c47a5d8808c739f4750292f30cca6c9c57e8975e17bde24f98b9f58bf06",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/gateway-broad-predecessor.log",
+      "sha256": "44096865fb41cf36b43e2600fa665ab22cd6c9a7a509613f1d357c21378e19b4",
+      "source_terminal_sha256": "28c579bdca682c03c2bec9d005615ef94f8db1a09daffa4d040ad2a4f73a67ca",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/gateway-project-suite.log",
+      "sha256": "355aec118b70bbd02b5fae033a4b8d5b7530342ebfc70d9d86e08bcc9e694dc9",
+      "source_terminal_sha256": "aa248515fbc4b1c48c2529503ed1ca829169b61b9edabcbef32bf685a3e4a7a2",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/gateway-main-suite.log",
+      "sha256": "72bef9a2a43c00695cb93298b6ff4615c198ed0fb8d3ecb76df7e06615b2c691",
+      "source_terminal_sha256": "18ff36deeeb2f56923e9fe6344f0dede770f10ed55122207e337c4d9ff8553f3",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/receipt-project-suite.log",
+      "sha256": "0e3b6d5fda9d9a17a740156fe8e040c3b2d7306c0662cd106729057e8201c19a",
+      "source_terminal_sha256": "b076fb8eb9c9abb79d9f96e9a45418a476c5364e362475d05def6b252cb2e74c",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/review-fixes-red.log",
+      "sha256": "a92b37918077ae263c8a9446a13d3034bc2e70a5570f8bd47e3613ef40b3d1f7",
+      "source_terminal_sha256": "b7fb4ead59768b3108cd27993ac2d68cb4d40c16967fab8ff42e10f937b977e8",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/expired-observability-red.log",
+      "sha256": "5c1c02721db72eb2303460ab7ab4178ef11c7877799c5d9ee8683eaabfc5bf6e",
+      "source_terminal_sha256": "7b8cb21bfc031e33d16f9a7cf15d4fb68228ce87402d1d92701367bf05882574",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    },
+    {
+      "path": "logs/pr226-top.log",
+      "sha256": "53ac10c0b1ad063a428042111abb3ecf1665d50b9928e7917f932bdb21aea861",
+      "source_terminal_sha256": "d85a418c86a888d77dd1c0c6125da75fff3ddefa063fa95021842e4568f52677",
+      "export_note": "Terminal text preserved; file export adds trailing newline only"
+    }
+  ]
+}

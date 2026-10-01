@@ -1,0 +1,44 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: b8b1d8cd... for intent b5db12fe-47ab-49cf-bfb0-1773e5d0b402 | tool=create_document | env=2e2b6bee-c775-4068-b8c5-fa284724582a | max=1 | expires 2026-10-01T00:23:16.755Z
+[RIO Token Manager] Token issued: 2cc3dfd1... for intent b5db12fe-47ab-49cf-bfb0-1773e5d0b402 | tool=create_document | env=2e2b6bee-c775-4068-b8c5-fa284724582a | max=1 | expires 2026-10-01T00:33:17.795Z
+✖ expired enrollment cannot authorize a new passage or an already admitted operation (186.795353ms)
+[RIO Token Manager] Token issued: 4e92a9a1... for intent 103e511a-81dd-4294-9a23-1ac68d878be4 | tool=create_document | env=44dab73e-272b-4722-b6ad-21fa18e1d594 | max=1 | expires 2026-10-01T00:23:17.169Z
+[RIO Token Manager] Token BURNED: 4e92a9a1... for intent 103e511a-81dd-4294-9a23-1ac68d878be4 — all 11 checks passed
+✖ maximally JSON-escaped 4096-byte payload completes native Return rather than failing after effect (477.419027ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 773.323534
+
+✖ failing tests:
+
+test at gateway/tests/local-field-bilateral.test.mjs:97:1
+✖ expired enrollment cannot authorize a new passage or an already admitted operation (186.795353ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/8acae2a413b8/local-field-frontier/rio-system/gateway/tests/local-field-bilateral.test.mjs:107:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /ENROLLMENT_EXPIRED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at gateway/tests/local-field-bilateral.test.mjs:113:1
+✖ maximally JSON-escaped 4096-byte payload completes native Return rather than failing after effect (477.419027ms)
+  Error: RETURN_RESOURCE_LIMIT
+      at requireValue (file:///workspace/scratch/8acae2a413b8/local-field-frontier/rio-system/gateway/security/local-field-authority.mjs:11:18)
+      at Bilateral.dispatch (file:///workspace/scratch/8acae2a413b8/local-field-frontier/rio-system/gateway/local-field/bilateral.mjs:85:32)
+      at process.processTicksAndRejections (node:internal/process/task_queues:104:5)
+      at async TestContext.<anonymous> (file:///workspace/scratch/8acae2a413b8/local-field-frontier/rio-system/gateway/tests/local-field-bilateral.test.mjs:117:18)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)
+

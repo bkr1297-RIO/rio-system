@@ -1,0 +1,44 @@
+✔ same projected endpoint does not imply passage equivalence when settlement residue differs (7.375696ms)
+✔ bounded happy path admits only through an independently authorized decision (6.463515ms)
+✔ TOP-H01 — Oracle Forgery (0.986671ms)
+✔ TOP-H02 — State Illusion (0.702223ms)
+✔ TOP-H03 — Ghost Successor (0.640993ms)
+✔ TOP-H04 — Metrological Breach (13.83894ms)
+✔ TOP-H05 — Stale Admission (0.774719ms)
+✔ TOP-H06 — Authority Substitution (1.912553ms)
+✔ TOP-H07 — Observation Inflation (0.548937ms)
+✔ TOP-H08 — Settlement Counterfeit (0.635455ms)
+✔ TOP-H09 — Zero-Occurrence Attempt (0.520996ms)
+✔ TOP-H10 — Multi-Effect Attempt (0.582917ms)
+✔ TOP-H11 — Receipt Without Evidence Admission (0.416042ms)
+✔ TOP-H12 — Cyclic Derivation (0.437543ms)
+✔ an explicit valid denial remains distinct from an absent decision (0.720329ms)
+✔ one attempt may produce multiple occurrences without identifier collapse (0.563468ms)
+✔ one attempt admission may govern multiple separately identified attempts (0.528848ms)
+✔ TOP artifacts cannot be substituted for an independent authority grant (3.559915ms)
+✔ TOP artifacts cannot be substituted for an authority source root (3.002726ms)
+✔ TOP artifacts cannot be substituted for an evidence-admission root (2.884983ms)
+✔ TOP artifacts cannot be substituted for a decision-authority root (2.665009ms)
+✔ standing genealogy reconstructs the bounded happy path without creating standing (7.612924ms)
+✔ observation and receipt retain their own standing without silently becoming evidence (1.073989ms)
+✔ admitted evidence without its own admission basis is not reconstructable (1.084975ms)
+✔ claimed successor standing without an accepted decision is not reconstructable (0.875657ms)
+✔ a lawful hold preserves genealogy without manufacturing successor standing (2.622776ms)
+✔ a caller-supplied assessment must exactly match independent recomputation (1.908767ms)
+✔ claimed evidence admission is not exposed as recognized standing when integrity fails (0.829049ms)
+✔ a claimed decision does not report recognized promotion when attestation fails (0.846625ms)
+✔ the genealogy graph refuses a cycle through decision authority (0.865583ms)
+✔ external standing roots remain explicit until a configured resolver evaluates them (0.776041ms)
+✔ party roles remain differentiated in the projection (0.683976ms)
+✔ a re-signed receipt with an unrelated observation is not recognized (0.551962ms)
+✔ an observation bound to an unrelated occurrence is not recognized (0.615705ms)
+✔ an unused invalid decision authority remains declared rather than recognized (0.775069ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 201.122739
+

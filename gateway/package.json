@@ -19,6 +19,7 @@
     "field": "node local-field/cli.mjs",
     "test:local-field": "node --test tests/local-field*.test.mjs",
     "field:acceptance": "node scripts/run-local-field-acceptance.mjs",
+    "field:bilateral-acceptance": "node scripts/run-local-field-bilateral-acceptance.mjs",
     "test:open-arrow": "node --test tests/open-arrow/*.test.mjs",
     "field:open-arrow-acceptance": "node scripts/run-open-arrow-acceptance.mjs",
     "test:projection": "node --test tests/projection-runtime/*.test.mjs",

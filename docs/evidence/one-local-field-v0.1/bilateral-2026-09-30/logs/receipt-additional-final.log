@@ -1,0 +1,50 @@
+=== CHAIN VERIFICATION TESTS ===
+
+Test 1: Valid chain passes verification
+  PASS: 3-entry chain is valid
+  PASS: total_records = 3
+  PASS: no errors
+
+Test 2: Modified receipt is detected (hash mismatch)
+  PASS: chain is invalid
+  PASS: detects modification
+
+Test 3: Deleted record is detected (chain gap)
+  PASS: chain is invalid
+  PASS: detects deleted record
+
+Test 4: Reordered records are detected
+  PASS: chain is invalid
+  PASS: detects reordering
+
+Test 5: Broken previous_receipt_hash link is detected
+  PASS: chain is invalid
+  PASS: detects broken link
+
+Test 6: Malformed JSON line is detected
+  PASS: chain is invalid
+  PASS: detects malformed line
+
+Test 7: Untrusted public key is detected
+  PASS: chain is invalid
+  PASS: detects untrusted key
+
+=== RESULTS ===
+  Passed: 15
+  Failed: 0
+  Total:  15
+
+CHAIN TESTS: ALL PASSED
+PASS SPG-M containment maps to BLOCK
+PASS SPG-M refusal maps to BLOCK
+PASS SPG-M escalation maps to BLOCK
+PASS SPG-M failure maps to BLOCK
+PASS symbolic interpretation alone never produces ALLOW
+PASS machine-assisted interpretation is metadata, not authority
+PASS SPG-M metadata is hash-bound when placed under validation
+PASS authorized low-risk proceed may map to ALLOW only when checks pass
+PASS no new decision enum is required
+PASS existing ALLOW/BLOCK model remains intact
+SPG-M receipt mapping tests passed: 10/10
+coherence assessment tests: PASS
+

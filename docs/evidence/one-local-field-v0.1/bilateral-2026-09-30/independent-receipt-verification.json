@@ -1,0 +1,11 @@
+{
+  "valid": true,
+  "passage_id": "5f36fd01-de0c-4610-82c8-68a95cf72565",
+  "receipt_id": "bb6f363f-889b-4eca-9af2-e615b68c2df5",
+  "occurrence_claim": "OBSERVED",
+  "authorization_created": false,
+  "evidence_ceiling": "Integrity and correlation of attributed historical records; not current standing or independent external truth",
+  "verifier_repository": "bkr1297-RIO/rio-receipt-protocol",
+  "predecessor_commit": "8cb49727e98690f9f0dfb66625e3a182f321a6e9",
+  "verifier_blob": "531a24df57abbd0a1e85ff81af6d1e6cf334fe59"
+}
