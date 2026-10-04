@@ -2,6 +2,8 @@
 
 HLSI means Human-Led Synthetic Intelligence. This optional LocalField profile compiles one typed relational configuration over eight logical capability roles. These roles do not create new principals or widen enrolled node standing. The fixed Reasoner is a deterministic extractive provider: it ranks matching source sentences and returns their exact text and source hashes. It makes no model-quality or relational-capability claim.
 
+The [HLSI Constitutional Compression Header F0.1](../../../docs/implementation/HLSI-CONSTITUTIONAL-COMPRESSION-HEADER-F0.1.md) is its build-lane conformance boundary: **FULL INTERVAL. EMPTY THRONE.** Rich relation and retained formation material do not require an execution grant or create SourceAuthority. Existing rooted operational delegation remains valid for its specified use, subject to every current crossing check. The header is not another runtime or authority owner.
+
 The public API is exported from `index.mjs`:
 
 - `RelationType(value)` / `Relation(value)` and `MatrixType(value)` / `Matrix(value)` validate the same immutable runtime declarations. `RelationalPlan(value)` validates a proposed compiler artifact.

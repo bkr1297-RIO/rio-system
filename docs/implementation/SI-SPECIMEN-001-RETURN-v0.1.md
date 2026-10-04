@@ -8,6 +8,8 @@ Repository: `bkr1297-RIO/rio-system`. Delivery branch: `build/si-specimen-001`, 
 
 Delivery: [draft rio-system#206](https://github.com/bkr1297-RIO/rio-system/pull/206), verified draft and unmerged. Implementation/evidence commit: `b13db3074e11daba082b3c4b20ffc47d4112e231`. Its tree exactly matches the verified local index. The following delivery-record commit changes documentation/metadata only.
 
+Later alignment: [HLSI Header Alignment Return F0.1](HLSI-HEADER-ALIGNMENT-RETURN-F0.1.md) records the current conformance boundary and new runtime proof. The original evidence/counts below remain historical at their stated implementation/substrate pins; no prior receipt or runtime state is migrated.
+
 Engine Loom binding: **R-07 GAP / [architecture#322](https://github.com/bkr1297-RIO/one-rio-muss-architecture/issues/322)**. This is a bounded contribution to Formation → Crossing → Return, not route closure. Architecture, protocol and receipt repositories were inspected but did not require duplicate objects or changes for this slice. The existing Local Field 19-gate register is unchanged and is not reissued as an HLSI certificate.
 
 ## D1 — Runtime type definitions

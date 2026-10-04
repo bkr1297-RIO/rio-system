@@ -1,0 +1,11 @@
+ResearchSynthesis.Direct
+Query: How do authority, occurrence, and Return remain distinct?
+
+- Root-signed field definitions pin `bilateral_profile: local-field-bilateral-v0.1`, an active `return_policy`, and `return_authority_basis` referencing a normal signed Local Field grant.
+  [repository-source-2 sha256:0d45a36f7d4b377aab60a44d69a1c1ee9c57464f83fa3043e77ba8532517be21]
+- Native proof expansion uses a distinct 8 MiB Return limit.
+  [repository-source-2 sha256:0d45a36f7d4b377aab60a44d69a1c1ee9c57464f83fa3043e77ba8532517be21]
+- The native five-hash receipt, occurrence/readback, Return and full-chain signed Return transit are preserved.
+  [repository-source-2 sha256:0d45a36f7d4b377aab60a44d69a1c1ee9c57464f83fa3043e77ba8532517be21]
+- The acceptance command starts a real receiver process, signs enrollment/grants using isolated engineering keys, submits an actual model-authored candidate, performs and independently reads a filesystem effect, records receipt/Return, checks replay and revocation, kills/restarts the receiver, and verifies reconstruction.
+  [repository-source-1 sha256:da4846b9be5fd8829ad046f45147cc301b1e7317ac481b92507055f58ac47ead]

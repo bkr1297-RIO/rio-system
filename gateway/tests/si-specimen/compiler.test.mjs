@@ -135,3 +135,14 @@ test('a Matrix without its required Return-to-HMI path cannot compile', () => {
   matrix.relations.pop();
   assert.throws(() => relations.compileRelations(matrix, substrate), /MATRIX_RELATIONS/);
 });
+
+test('header distinguishes delegated operation from self-originating SourceAuthority', () => {
+  const { substrate, matrix } = fixture();
+  for (const conversion of ['interval_state->source_authority', 'delegated_authority->source_authority',
+    'relation->authority', 'standing->delegation', 'delegation->execution', 'influence->jurisdiction',
+    'learning->delegation', 'persistence->sovereignty', 'observation->return']) {
+    assert.ok(matrix.relations.every(r => r.forbidden_conversions.includes(conversion)), conversion);
+  }
+  matrix.nodes[0].standing = 'self-originated-source-authority';
+  assert.throws(() => relations.compileRelations(matrix, substrate), /MATRIX_NODE/);
+});

@@ -101,3 +101,16 @@ test('malformed relation proofs are held before admission and cannot poison sour
   assert.equal(x.source.status().return_ingress_holds.length, 1);
   assert.equal(x.source.inspect(x.p.body.passage_id).relation_run, null);
 });
+
+test('an attributable observation record cannot be admitted as constitutional Return', async t => {
+  const x = await pair(t, () => {});
+  await x.source.dispatch(x.p);
+  const native = x.f.runtime.inspect(x.p.body.passage_id);
+  const claim = signed({ ...x.f.stamp(), type: 'candidate', source_node: 'node-b',
+    candidate_id: randomUUID(), kind: 'observation_claim', content: native.occurrence }, x.f.b);
+  const saved = x.source.candidate(claim);
+  assert.equal(saved.authority_effect, 'none');
+  assert.throws(() => x.source.admitReturn(claim), /RETURN_TRANSIT_INVALID/);
+  assert.equal(x.source.status().return_ingress.length, 1);
+  assert.equal(x.source.status().return_ingress[0].settlement_status, 'UNSETTLED');
+});

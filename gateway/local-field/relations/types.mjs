@@ -20,6 +20,12 @@ export const FORBIDDEN_CONVERSIONS = Object.freeze([
   'relation->inheritance', 'calibration->inheritance', 'observation->evidence',
   'emergent_capability->emergent_sovereignty', 'topology_proposal->topology_authorization',
   'return_arrival->home_mutation', 'boolean_clearance->typed_authority',
+  // Empty Throne forbids self-originating SourceAuthority, while explicitly
+  // rooted, bounded operational delegation remains usable at its crossing.
+  'interval_state->source_authority', 'delegated_authority->source_authority',
+  'relation->authority', 'relation->delegation', 'standing->delegation',
+  'delegation->execution', 'influence->jurisdiction', 'learning->delegation',
+  'persistence->sovereignty', 'observation->return',
 ]);
 export const TEMPORAL_SCOPE = Object.freeze({
   binding: 'native-passage', start: 'passage.issued_at', end: 'passage.expires_at',

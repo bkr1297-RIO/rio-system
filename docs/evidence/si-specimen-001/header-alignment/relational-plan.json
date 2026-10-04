@@ -1,0 +1,602 @@
+{
+  "profile": "hlsi.si-specimen-001.v0.1",
+  "matrix_id": "si-specimen-001-direct",
+  "matrix_hash": "fa135b301c77abfd7672dd0083417bb21a06d3b9bf35c890bd6c91c1f00efefe",
+  "substrate_hash": "24a37985b146b56d804c2aa289a7e5c780c92783bfa501d26b9a2f2e2b9c4b15",
+  "stages": [
+    "Parse",
+    "Resolve",
+    "TypeCheck",
+    "ConstitutionCheck",
+    "Plan"
+  ],
+  "configuration_status": "PROPOSED",
+  "authority_effect": "none",
+  "operations": [
+    {
+      "relation_id": "si-specimen-001-direct:r1",
+      "source": "HMI",
+      "target": "CCI",
+      "artifact_type": "HumanIntent",
+      "permitted_use": [
+        "orient"
+      ],
+      "forbidden_conversions": [
+        "source_node_id->authority",
+        "field_id->authority",
+        "membership->authority",
+        "signature->authority",
+        "authority_basis_reference->valid_authority",
+        "successful_delivery->ingress_admission",
+        "ingress_admission->current_execution_authority",
+        "current_execution_authority->execution_fidelity",
+        "execution_success->occurrence",
+        "occurrence->evidence",
+        "receipt->truth",
+        "return_attribution->return_truth",
+        "return_receipt->settlement",
+        "prior_permission->current_permission",
+        "lineage->authority",
+        "correlation->admission",
+        "capability->authority",
+        "connectivity->standing",
+        "signature->truth",
+        "proposal->admitted_configuration",
+        "receipt->settlement",
+        "access->jurisdiction",
+        "request->exercise",
+        "participation->jurisdiction",
+        "relation->inheritance",
+        "calibration->inheritance",
+        "observation->evidence",
+        "emergent_capability->emergent_sovereignty",
+        "topology_proposal->topology_authorization",
+        "return_arrival->home_mutation",
+        "boolean_clearance->typed_authority",
+        "interval_state->source_authority",
+        "delegated_authority->source_authority",
+        "relation->authority",
+        "relation->delegation",
+        "standing->delegation",
+        "delegation->execution",
+        "influence->jurisdiction",
+        "learning->delegation",
+        "persistence->sovereignty",
+        "observation->return"
+      ],
+      "provenance": {
+        "declared_by": "matrix-candidate",
+        "source_ref": "hlsi.si-specimen-001.v0.1"
+      },
+      "temporal_scope": {
+        "binding": "native-passage",
+        "start": "passage.issued_at",
+        "end": "passage.expires_at"
+      },
+      "return_requirement": {
+        "required": true,
+        "linkage": "native-passage-return"
+      },
+      "coordinates": {
+        "authority": "passage.authority_basis",
+        "admission": "decision",
+        "fidelity": "fidelity",
+        "witness": "occurrence",
+        "return": "return",
+        "settlement": "UNSETTLED"
+      }
+    },
+    {
+      "relation_id": "si-specimen-001-direct:r2",
+      "source": "CCI",
+      "target": "Sensorium",
+      "artifact_type": "ResearchRequest",
+      "permitted_use": [
+        "collect"
+      ],
+      "forbidden_conversions": [
+        "source_node_id->authority",
+        "field_id->authority",
+        "membership->authority",
+        "signature->authority",
+        "authority_basis_reference->valid_authority",
+        "successful_delivery->ingress_admission",
+        "ingress_admission->current_execution_authority",
+        "current_execution_authority->execution_fidelity",
+        "execution_success->occurrence",
+        "occurrence->evidence",
+        "receipt->truth",
+        "return_attribution->return_truth",
+        "return_receipt->settlement",
+        "prior_permission->current_permission",
+        "lineage->authority",
+        "correlation->admission",
+        "capability->authority",
+        "connectivity->standing",
+        "signature->truth",
+        "proposal->admitted_configuration",
+        "receipt->settlement",
+        "access->jurisdiction",
+        "request->exercise",
+        "participation->jurisdiction",
+        "relation->inheritance",
+        "calibration->inheritance",
+        "observation->evidence",
+        "emergent_capability->emergent_sovereignty",
+        "topology_proposal->topology_authorization",
+        "return_arrival->home_mutation",
+        "boolean_clearance->typed_authority",
+        "interval_state->source_authority",
+        "delegated_authority->source_authority",
+        "relation->authority",
+        "relation->delegation",
+        "standing->delegation",
+        "delegation->execution",
+        "influence->jurisdiction",
+        "learning->delegation",
+        "persistence->sovereignty",
+        "observation->return"
+      ],
+      "provenance": {
+        "declared_by": "matrix-candidate",
+        "source_ref": "hlsi.si-specimen-001.v0.1"
+      },
+      "temporal_scope": {
+        "binding": "native-passage",
+        "start": "passage.issued_at",
+        "end": "passage.expires_at"
+      },
+      "return_requirement": {
+        "required": true,
+        "linkage": "native-passage-return"
+      },
+      "coordinates": {
+        "authority": "passage.authority_basis",
+        "admission": "decision",
+        "fidelity": "fidelity",
+        "witness": "occurrence",
+        "return": "return",
+        "settlement": "UNSETTLED"
+      }
+    },
+    {
+      "relation_id": "si-specimen-001-direct:r3",
+      "source": "Sensorium",
+      "target": "Memory",
+      "artifact_type": "SourceBundle",
+      "permitted_use": [
+        "retain"
+      ],
+      "forbidden_conversions": [
+        "source_node_id->authority",
+        "field_id->authority",
+        "membership->authority",
+        "signature->authority",
+        "authority_basis_reference->valid_authority",
+        "successful_delivery->ingress_admission",
+        "ingress_admission->current_execution_authority",
+        "current_execution_authority->execution_fidelity",
+        "execution_success->occurrence",
+        "occurrence->evidence",
+        "receipt->truth",
+        "return_attribution->return_truth",
+        "return_receipt->settlement",
+        "prior_permission->current_permission",
+        "lineage->authority",
+        "correlation->admission",
+        "capability->authority",
+        "connectivity->standing",
+        "signature->truth",
+        "proposal->admitted_configuration",
+        "receipt->settlement",
+        "access->jurisdiction",
+        "request->exercise",
+        "participation->jurisdiction",
+        "relation->inheritance",
+        "calibration->inheritance",
+        "observation->evidence",
+        "emergent_capability->emergent_sovereignty",
+        "topology_proposal->topology_authorization",
+        "return_arrival->home_mutation",
+        "boolean_clearance->typed_authority",
+        "interval_state->source_authority",
+        "delegated_authority->source_authority",
+        "relation->authority",
+        "relation->delegation",
+        "standing->delegation",
+        "delegation->execution",
+        "influence->jurisdiction",
+        "learning->delegation",
+        "persistence->sovereignty",
+        "observation->return"
+      ],
+      "provenance": {
+        "declared_by": "matrix-candidate",
+        "source_ref": "hlsi.si-specimen-001.v0.1"
+      },
+      "temporal_scope": {
+        "binding": "native-passage",
+        "start": "passage.issued_at",
+        "end": "passage.expires_at"
+      },
+      "return_requirement": {
+        "required": true,
+        "linkage": "native-passage-return"
+      },
+      "coordinates": {
+        "authority": "passage.authority_basis",
+        "admission": "decision",
+        "fidelity": "fidelity",
+        "witness": "occurrence",
+        "return": "return",
+        "settlement": "UNSETTLED"
+      }
+    },
+    {
+      "relation_id": "si-specimen-001-direct:r4",
+      "source": "Memory",
+      "target": "Reasoner",
+      "artifact_type": "ResearchContext",
+      "permitted_use": [
+        "synthesize"
+      ],
+      "forbidden_conversions": [
+        "source_node_id->authority",
+        "field_id->authority",
+        "membership->authority",
+        "signature->authority",
+        "authority_basis_reference->valid_authority",
+        "successful_delivery->ingress_admission",
+        "ingress_admission->current_execution_authority",
+        "current_execution_authority->execution_fidelity",
+        "execution_success->occurrence",
+        "occurrence->evidence",
+        "receipt->truth",
+        "return_attribution->return_truth",
+        "return_receipt->settlement",
+        "prior_permission->current_permission",
+        "lineage->authority",
+        "correlation->admission",
+        "capability->authority",
+        "connectivity->standing",
+        "signature->truth",
+        "proposal->admitted_configuration",
+        "receipt->settlement",
+        "access->jurisdiction",
+        "request->exercise",
+        "participation->jurisdiction",
+        "relation->inheritance",
+        "calibration->inheritance",
+        "observation->evidence",
+        "emergent_capability->emergent_sovereignty",
+        "topology_proposal->topology_authorization",
+        "return_arrival->home_mutation",
+        "boolean_clearance->typed_authority",
+        "interval_state->source_authority",
+        "delegated_authority->source_authority",
+        "relation->authority",
+        "relation->delegation",
+        "standing->delegation",
+        "delegation->execution",
+        "influence->jurisdiction",
+        "learning->delegation",
+        "persistence->sovereignty",
+        "observation->return"
+      ],
+      "provenance": {
+        "declared_by": "matrix-candidate",
+        "source_ref": "hlsi.si-specimen-001.v0.1"
+      },
+      "temporal_scope": {
+        "binding": "native-passage",
+        "start": "passage.issued_at",
+        "end": "passage.expires_at"
+      },
+      "return_requirement": {
+        "required": true,
+        "linkage": "native-passage-return"
+      },
+      "coordinates": {
+        "authority": "passage.authority_basis",
+        "admission": "decision",
+        "fidelity": "fidelity",
+        "witness": "occurrence",
+        "return": "return",
+        "settlement": "UNSETTLED"
+      }
+    },
+    {
+      "relation_id": "si-specimen-001-direct:r5",
+      "source": "Reasoner",
+      "target": "Tool",
+      "artifact_type": "SynthesisCandidate",
+      "permitted_use": [
+        "propose"
+      ],
+      "forbidden_conversions": [
+        "source_node_id->authority",
+        "field_id->authority",
+        "membership->authority",
+        "signature->authority",
+        "authority_basis_reference->valid_authority",
+        "successful_delivery->ingress_admission",
+        "ingress_admission->current_execution_authority",
+        "current_execution_authority->execution_fidelity",
+        "execution_success->occurrence",
+        "occurrence->evidence",
+        "receipt->truth",
+        "return_attribution->return_truth",
+        "return_receipt->settlement",
+        "prior_permission->current_permission",
+        "lineage->authority",
+        "correlation->admission",
+        "capability->authority",
+        "connectivity->standing",
+        "signature->truth",
+        "proposal->admitted_configuration",
+        "receipt->settlement",
+        "access->jurisdiction",
+        "request->exercise",
+        "participation->jurisdiction",
+        "relation->inheritance",
+        "calibration->inheritance",
+        "observation->evidence",
+        "emergent_capability->emergent_sovereignty",
+        "topology_proposal->topology_authorization",
+        "return_arrival->home_mutation",
+        "boolean_clearance->typed_authority",
+        "interval_state->source_authority",
+        "delegated_authority->source_authority",
+        "relation->authority",
+        "relation->delegation",
+        "standing->delegation",
+        "delegation->execution",
+        "influence->jurisdiction",
+        "learning->delegation",
+        "persistence->sovereignty",
+        "observation->return"
+      ],
+      "provenance": {
+        "declared_by": "matrix-candidate",
+        "source_ref": "hlsi.si-specimen-001.v0.1"
+      },
+      "temporal_scope": {
+        "binding": "native-passage",
+        "start": "passage.issued_at",
+        "end": "passage.expires_at"
+      },
+      "return_requirement": {
+        "required": true,
+        "linkage": "native-passage-return"
+      },
+      "coordinates": {
+        "authority": "passage.authority_basis",
+        "admission": "decision",
+        "fidelity": "fidelity",
+        "witness": "occurrence",
+        "return": "return",
+        "settlement": "UNSETTLED"
+      }
+    },
+    {
+      "relation_id": "si-specimen-001-direct:r6",
+      "source": "Tool",
+      "target": "Witness",
+      "artifact_type": "ExecutionChain",
+      "permitted_use": [
+        "observe"
+      ],
+      "forbidden_conversions": [
+        "source_node_id->authority",
+        "field_id->authority",
+        "membership->authority",
+        "signature->authority",
+        "authority_basis_reference->valid_authority",
+        "successful_delivery->ingress_admission",
+        "ingress_admission->current_execution_authority",
+        "current_execution_authority->execution_fidelity",
+        "execution_success->occurrence",
+        "occurrence->evidence",
+        "receipt->truth",
+        "return_attribution->return_truth",
+        "return_receipt->settlement",
+        "prior_permission->current_permission",
+        "lineage->authority",
+        "correlation->admission",
+        "capability->authority",
+        "connectivity->standing",
+        "signature->truth",
+        "proposal->admitted_configuration",
+        "receipt->settlement",
+        "access->jurisdiction",
+        "request->exercise",
+        "participation->jurisdiction",
+        "relation->inheritance",
+        "calibration->inheritance",
+        "observation->evidence",
+        "emergent_capability->emergent_sovereignty",
+        "topology_proposal->topology_authorization",
+        "return_arrival->home_mutation",
+        "boolean_clearance->typed_authority",
+        "interval_state->source_authority",
+        "delegated_authority->source_authority",
+        "relation->authority",
+        "relation->delegation",
+        "standing->delegation",
+        "delegation->execution",
+        "influence->jurisdiction",
+        "learning->delegation",
+        "persistence->sovereignty",
+        "observation->return"
+      ],
+      "provenance": {
+        "declared_by": "matrix-candidate",
+        "source_ref": "hlsi.si-specimen-001.v0.1"
+      },
+      "temporal_scope": {
+        "binding": "native-passage",
+        "start": "passage.issued_at",
+        "end": "passage.expires_at"
+      },
+      "return_requirement": {
+        "required": true,
+        "linkage": "native-passage-return"
+      },
+      "coordinates": {
+        "authority": "passage.authority_basis",
+        "admission": "decision",
+        "fidelity": "fidelity",
+        "witness": "occurrence",
+        "return": "return",
+        "settlement": "UNSETTLED"
+      }
+    },
+    {
+      "relation_id": "si-specimen-001-direct:r7",
+      "source": "Witness",
+      "target": "ReturnEngine",
+      "artifact_type": "WitnessRecord",
+      "permitted_use": [
+        "return"
+      ],
+      "forbidden_conversions": [
+        "source_node_id->authority",
+        "field_id->authority",
+        "membership->authority",
+        "signature->authority",
+        "authority_basis_reference->valid_authority",
+        "successful_delivery->ingress_admission",
+        "ingress_admission->current_execution_authority",
+        "current_execution_authority->execution_fidelity",
+        "execution_success->occurrence",
+        "occurrence->evidence",
+        "receipt->truth",
+        "return_attribution->return_truth",
+        "return_receipt->settlement",
+        "prior_permission->current_permission",
+        "lineage->authority",
+        "correlation->admission",
+        "capability->authority",
+        "connectivity->standing",
+        "signature->truth",
+        "proposal->admitted_configuration",
+        "receipt->settlement",
+        "access->jurisdiction",
+        "request->exercise",
+        "participation->jurisdiction",
+        "relation->inheritance",
+        "calibration->inheritance",
+        "observation->evidence",
+        "emergent_capability->emergent_sovereignty",
+        "topology_proposal->topology_authorization",
+        "return_arrival->home_mutation",
+        "boolean_clearance->typed_authority",
+        "interval_state->source_authority",
+        "delegated_authority->source_authority",
+        "relation->authority",
+        "relation->delegation",
+        "standing->delegation",
+        "delegation->execution",
+        "influence->jurisdiction",
+        "learning->delegation",
+        "persistence->sovereignty",
+        "observation->return"
+      ],
+      "provenance": {
+        "declared_by": "matrix-candidate",
+        "source_ref": "hlsi.si-specimen-001.v0.1"
+      },
+      "temporal_scope": {
+        "binding": "native-passage",
+        "start": "passage.issued_at",
+        "end": "passage.expires_at"
+      },
+      "return_requirement": {
+        "required": true,
+        "linkage": "native-passage-return"
+      },
+      "coordinates": {
+        "authority": "passage.authority_basis",
+        "admission": "decision",
+        "fidelity": "fidelity",
+        "witness": "occurrence",
+        "return": "return",
+        "settlement": "UNSETTLED"
+      }
+    },
+    {
+      "relation_id": "si-specimen-001-direct:r8",
+      "source": "ReturnEngine",
+      "target": "HMI",
+      "artifact_type": "SynthesisReturn",
+      "permitted_use": [
+        "receive"
+      ],
+      "forbidden_conversions": [
+        "source_node_id->authority",
+        "field_id->authority",
+        "membership->authority",
+        "signature->authority",
+        "authority_basis_reference->valid_authority",
+        "successful_delivery->ingress_admission",
+        "ingress_admission->current_execution_authority",
+        "current_execution_authority->execution_fidelity",
+        "execution_success->occurrence",
+        "occurrence->evidence",
+        "receipt->truth",
+        "return_attribution->return_truth",
+        "return_receipt->settlement",
+        "prior_permission->current_permission",
+        "lineage->authority",
+        "correlation->admission",
+        "capability->authority",
+        "connectivity->standing",
+        "signature->truth",
+        "proposal->admitted_configuration",
+        "receipt->settlement",
+        "access->jurisdiction",
+        "request->exercise",
+        "participation->jurisdiction",
+        "relation->inheritance",
+        "calibration->inheritance",
+        "observation->evidence",
+        "emergent_capability->emergent_sovereignty",
+        "topology_proposal->topology_authorization",
+        "return_arrival->home_mutation",
+        "boolean_clearance->typed_authority",
+        "interval_state->source_authority",
+        "delegated_authority->source_authority",
+        "relation->authority",
+        "relation->delegation",
+        "standing->delegation",
+        "delegation->execution",
+        "influence->jurisdiction",
+        "learning->delegation",
+        "persistence->sovereignty",
+        "observation->return"
+      ],
+      "provenance": {
+        "declared_by": "matrix-candidate",
+        "source_ref": "hlsi.si-specimen-001.v0.1"
+      },
+      "temporal_scope": {
+        "binding": "native-passage",
+        "start": "passage.issued_at",
+        "end": "passage.expires_at"
+      },
+      "return_requirement": {
+        "required": true,
+        "linkage": "native-passage-return"
+      },
+      "coordinates": {
+        "authority": "passage.authority_basis",
+        "admission": "decision",
+        "fidelity": "fidelity",
+        "witness": "occurrence",
+        "return": "return",
+        "settlement": "UNSETTLED"
+      }
+    }
+  ],
+  "plan_hash": "8a082e96256779bebc10ffcb35aed66200afe18ebf23c3b2f04c0b8644354e82"
+}
