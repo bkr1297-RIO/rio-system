@@ -4,6 +4,8 @@ import { LocalStore } from '../ledger/local-store.mjs';
 import { OpenArrow } from './open-arrow.mjs';
 import { ProjectionRuntime } from './projection.mjs';
 import { Bilateral, MAX_RECORD_BYTES } from './bilateral.mjs';
+import { RelationRuntime } from './relations/profile.mjs';
+import { PROFILE as RELATION_PROFILE } from './relations/types.mjs';
 import {
   canonicalizeArgs,
   issueExecutionToken,
@@ -53,6 +55,7 @@ export class LocalField {
   #arrow;
   #projection;
   #bilateral;
+  #relations;
   constructor({ root, anchor, receiver, signingKey, definition, openArrow, peers }) {
     requireValue(
       root &&
@@ -109,10 +112,16 @@ export class LocalField {
         'RECEIVER_SUBSTITUTION',
       );
       this.#field = clone(saved.body);
+      if (Object.hasOwn(this.#field.dependencies, 'si-specimen-001'))
+        this.#relations = new RelationRuntime({
+          store: this.#store, field: this.#field, anchor: this.#anchor, receiver, signingKey,
+          record: (...args) => this.#record(...args),
+        });
       if (this.#field.bilateral_profile !== undefined) {
         requireValue(this.#field.bilateral_profile === 'local-field-bilateral-v0.1', 'FIELD_PROFILE_UNSUPPORTED');
         this.#bilateral = new Bilateral({ store: this.#store, field: this.#field, anchor: this.#anchor, receiver, signingKey, peers,
-          decide: (r, options) => this.#decision(r, options), record: (...args) => this.#record(...args) });
+          decide: (r, options) => this.#decision(r, options), record: (...args) => this.#record(...args),
+          verifyReturn: this.#relations ? chain => this.#relations.verifyReceiverRun(chain) : undefined });
       }
       if (this.#field.projection_runtime)
         this.#projection = new ProjectionRuntime({
@@ -153,6 +162,12 @@ export class LocalField {
       if (this.#projection)
         for (const r of this.#store.all('passage'))
           this.#projection.capture(this.inspect(r.body.passage_id));
+      if (this.#relations)
+        for (const r of this.#store.all('passage'))
+          this.#relations.capture(this.inspect(r.body.passage_id));
+      if (this.#relations)
+        for (const r of this.#store.all('outgoing'))
+          this.#relations.captureReturn(this.inspect(r.body.passage_id));
     } catch (e) {
       this.#store.close();
       throw e;
@@ -403,6 +418,8 @@ export class LocalField {
         c && c.body.source_node === p.source_node,
         'CANDIDATE_ORIGIN_MISMATCH',
       );
+      if (c.body.content?.profile === RELATION_PROFILE && !this.#relations)
+        throw new Error('RELATION_NOT_CONFIGURED');
     }
     validateArtifactOperation(p);
     this.#arrow?.guard(p);
@@ -413,6 +430,7 @@ export class LocalField {
   }
   #decision(record, options) {
     const p = this.#request(record, options);
+    const relation_binding = this.#relations?.guard(p);
     const lineage = resolveGrant(
       this.#store,
       p.authority_basis,
@@ -437,7 +455,7 @@ export class LocalField {
       ['REQUIRE_HUMAN', 'AUTO_APPROVE'].includes(policy.governance_decision),
       'RIO_DENIED_OR_HELD',
     );
-    return { intent, lineage, policy };
+    return { intent, lineage, policy, relation_binding };
   }
   admit(record, transit = null) {
     canonicalizeArgs(record);
@@ -447,7 +465,7 @@ export class LocalField {
     try {
       return this.#store.transaction(() => {
         this.#bilateral?.transit(record, transit);
-        const { intent, lineage, policy } = this.#decision(record);
+        const { intent, lineage, policy, relation_binding } = this.#decision(record);
         const returnBudget = this.#bilateral?.returnBudget({ record, transit, intent, lineage, policy });
         this.#store.useNonce(`passage:${p.source_node}`, p.nonce);
         requireValue(
@@ -464,6 +482,7 @@ export class LocalField {
           authority_lineage: lineage.map((g) => g.body.grant.grant_id),
           issued_at: stamp(),
           owner: 'gateway/governance/policy-engine.mjs',
+          ...(relation_binding ? { relation_binding } : {}),
         };
         const token = issueExecutionToken({
           intent_id: p.intent_id,
@@ -483,6 +502,7 @@ export class LocalField {
         this.#store.state('phase', p.passage_id, 'ADMITTED');
         this.#arrow?.admitted(p, decision);
         this.#projection?.admitted(p, decision);
+        if (relation_binding) this.#relations.admitted(p, relation_binding);
         return clone(decision);
       });
     } catch (e) {
@@ -519,11 +539,12 @@ export class LocalField {
       checked_at: stamp(), owner: 'gateway/governance/policy-engine.mjs',
     };
     permit.execution_authority = authority;
-    let lineage, policy;
+    let lineage, policy, relation_binding;
     try {
-      ({ lineage, policy } = this.#decision(this.#store.get('passage', id)));
+      ({ lineage, policy, relation_binding } = this.#decision(this.#store.get('passage', id)));
       authority.authority_lineage = lineage.map(g => g.body.grant.grant_id);
       authority.policy = policy;
+      if (relation_binding) authority.relation_binding = relation_binding;
     } catch (e) {
       authority.status = 'DENIED';
       authority.reason = e.message;
@@ -619,6 +640,7 @@ export class LocalField {
         });
         this.#arrow?.capture(this.inspect(id));
         this.#projection?.capture(this.inspect(id));
+        this.#relations?.capture(this.inspect(id));
         throw e;
       }
       result = { status: 'FAILED', reason: e.message };
@@ -634,6 +656,7 @@ export class LocalField {
     const returned = this.#complete(id, result, occurrence);
     this.#arrow?.capture(this.inspect(id));
     this.#projection?.capture(this.inspect(id));
+    this.#relations?.capture(this.inspect(id));
     return returned;
   }
   #complete(id, result, occurrence) {
@@ -784,6 +807,7 @@ export class LocalField {
       'incoming_return',
       'return_ingress',
       'return_budget',
+      'relation_run',
     ];
     return Object.fromEntries(kinds.map((k) => [k, this.#store.get(k, id)]));
   }
@@ -814,7 +838,8 @@ export class LocalField {
         hash(c.decision) === hash(a.governance.checks.decision) &&
         hash(c.occurrence) === hash(a.execution.result.occurrence) &&
         c.return.passage_id === c.passage.body.passage_id &&
-        c.return.receipt_id === r.receipt_id;
+        c.return.receipt_id === r.receipt_id &&
+        (!c.decision.relation_binding || this.#relations?.verify(c) === true);
       return { valid, passage_id: id };
     } catch {
       return { valid: false, passage_id: id };
@@ -824,6 +849,7 @@ export class LocalField {
     return {
       open_arrows: this.#arrow?.status() || [],
       projections: this.#projection?.status() || [],
+      relations: this.#relations?.status() || null,
       field: {
         field_id: this.#field.field_id,
         sourcepoint: this.#anchor.principal_id,
@@ -932,7 +958,9 @@ export class LocalField {
   }
   async dispatch(record) {
     requireValue(this.#bilateral, 'BILATERAL_PROFILE_REQUIRED');
-    return this.#bilateral.dispatch(record);
+    const admitted = await this.#bilateral.dispatch(record);
+    this.#relations?.captureReturn(this.inspect(admitted.passage_id));
+    return admitted;
   }
   receive(transit) {
     requireValue(this.#bilateral, 'BILATERAL_PROFILE_REQUIRED');
@@ -944,7 +972,9 @@ export class LocalField {
   }
   admitReturn(transit) {
     requireValue(this.#bilateral, 'BILATERAL_PROFILE_REQUIRED');
-    return this.#bilateral.admitReturn(transit);
+    const admitted = this.#bilateral.admitReturn(transit);
+    this.#relations?.captureReturn(this.inspect(admitted.passage_id));
+    return admitted;
   }
   arrow(record) {
     requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');

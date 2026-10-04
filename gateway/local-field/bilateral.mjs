@@ -16,8 +16,8 @@ const envelopeKeys = new Set(['type','field_id','record_id','issued_at','expires
  * This is not a per-node governor, a transport permission or a new proof type.
  */
 export class Bilateral {
-  constructor({ store, field, anchor, receiver, signingKey, peers = {}, decide, record }) {
-    Object.assign(this, { store, field, anchor, receiver, signingKey, decide, record });
+  constructor({ store, field, anchor, receiver, signingKey, peers = {}, decide, record, verifyReturn }) {
+    Object.assign(this, { store, field, anchor, receiver, signingKey, decide, record, verifyReturn });
     requireValue(field.return_policy?.status === 'active', 'RETURN_POLICY_REQUIRED');
     requireValue(encodedBytes(field) <= MAX_RECORD_BYTES, 'FIELD_RESOURCE_LIMIT');
     requireValue(typeof field.return_authority_basis === 'string' && field.return_authority_basis.length >= 16, 'RETURN_AUTHORITY_BASIS_REQUIRED');
@@ -190,6 +190,9 @@ export class Bilateral {
         hash(c.attempt) === hash(a.execution.result.attempt) &&
         hash(c.occurrence) === hash(a.execution.result.occurrence), 'RETURN_NATIVE_PROOF_INVALID');
     } else requireValue(r.outcome !== 'OBSERVED', 'RETURN_OCCURRENCE_WITHOUT_PROOF');
+    // Optional admitted runtime profiles may require reconstructable semantics
+    // in addition to the native proof. Refuse before committing Return admission.
+    this.verifyReturn?.(c);
     return this.store.transaction(() => {
       this.store.useNonce('return_ingress', r.return_id);
       requireValue(!this.store.get('return_ingress', id), 'REPLAY_RETURN');

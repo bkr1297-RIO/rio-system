@@ -23,7 +23,9 @@
     "test:open-arrow": "node --test tests/open-arrow/*.test.mjs",
     "field:open-arrow-acceptance": "node scripts/run-open-arrow-acceptance.mjs",
     "test:projection": "node --test tests/projection-runtime/*.test.mjs",
-    "field:projection-acceptance": "node scripts/run-projection-acceptance.mjs"
+    "field:projection-acceptance": "node scripts/run-projection-acceptance.mjs",
+    "test:si-specimen": "node --test tests/si-specimen/*.test.mjs",
+    "field:si-specimen": "node scripts/run-si-specimen-001.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

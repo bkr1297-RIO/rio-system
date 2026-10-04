@@ -1,0 +1,597 @@
+{
+  "profile": "hlsi.si-specimen-001.v0.1",
+  "matrix_id": "si-specimen-001-direct",
+  "substrate_hash": "48c1ccf210d314c3589127ef782d07ea248135a1663533b088c52f77d56cc5e1",
+  "components": [
+    {
+      "id": "HMI",
+      "provider": "./direct.mjs",
+      "implementation_hash": "92382d8f800851f6a7e39aa6719aebd7d2d36b3c7293474f43ddcf44d2a122c1"
+    },
+    {
+      "id": "CCI",
+      "provider": "./compiler.mjs",
+      "implementation_hash": "780f0799117d4a05ad815022e8f93dea84f47a56563a63bb164214a2694ac6fb"
+    },
+    {
+      "id": "Sensorium",
+      "provider": "./direct.mjs",
+      "implementation_hash": "92382d8f800851f6a7e39aa6719aebd7d2d36b3c7293474f43ddcf44d2a122c1"
+    },
+    {
+      "id": "Memory",
+      "provider": "./direct.mjs",
+      "implementation_hash": "92382d8f800851f6a7e39aa6719aebd7d2d36b3c7293474f43ddcf44d2a122c1"
+    },
+    {
+      "id": "Reasoner",
+      "provider": "./direct.mjs",
+      "implementation_hash": "92382d8f800851f6a7e39aa6719aebd7d2d36b3c7293474f43ddcf44d2a122c1"
+    },
+    {
+      "id": "Tool",
+      "provider": "../../execution/filesystem-executor.mjs",
+      "implementation_hash": "e3ac44c28d5b6215962c9c4add0c42f5658d383e2bd732555fa2b7cab42902bc"
+    },
+    {
+      "id": "Witness",
+      "provider": "../index.mjs",
+      "implementation_hash": "6ead1a9f98212d2f7428825b5c2c7b0d3934690f59c7754936a04fabd8e6ba6b"
+    },
+    {
+      "id": "ReturnEngine",
+      "provider": "../../receipts/receipts.mjs",
+      "implementation_hash": "d74e9f022532541be74e9711c064f32e607db8e893430e95ef17bc3dfcf0a7f9"
+    }
+  ],
+  "component_versions": {
+    "HMI": "si-specimen-001.v0.1",
+    "CCI": "si-specimen-001.v0.1",
+    "Sensorium": "si-specimen-001.v0.1",
+    "Memory": "si-specimen-001.v0.1",
+    "Reasoner": "si-specimen-001.v0.1",
+    "Tool": "si-specimen-001.v0.1",
+    "Witness": "si-specimen-001.v0.1",
+    "ReturnEngine": "si-specimen-001.v0.1"
+  },
+  "settings": {
+    "HMI": {
+      "mode": "bounded-direct"
+    },
+    "CCI": {
+      "mode": "bounded-direct"
+    },
+    "Sensorium": {
+      "mode": "bounded-direct"
+    },
+    "Memory": {
+      "mode": "bounded-direct"
+    },
+    "Reasoner": {
+      "strategy": "lexical-extractive",
+      "adaptive": false
+    },
+    "Tool": {
+      "mode": "bounded-direct"
+    },
+    "Witness": {
+      "mode": "bounded-direct"
+    },
+    "ReturnEngine": {
+      "mode": "bounded-direct"
+    }
+  },
+  "initial_state": {
+    "requirements": {
+      "memory": "empty-per-run",
+      "reasoner": "stateless",
+      "prior_run_context": "excluded",
+      "output": "absent-required"
+    },
+    "observed_source": {
+      "field": {
+        "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+        "sourcepoint": "sourcepoint-development-fixture",
+        "receiver": "node-a"
+      },
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "principal_id": "node-a",
+          "node_type": "model_runtime",
+          "actor_type": "ai_agent",
+          "primary_role": "proposer",
+          "secondary_roles": [],
+          "public_key_hex": "28990741d439e3d5de2915d6ce0f7ab3ad861e8c442b7c7f46a2d0d5ea5fcc1f",
+          "capabilities": [
+            "create_document",
+            "record_return"
+          ],
+          "interfaces": [
+            "http-json"
+          ],
+          "custody_boundary": "node-a",
+          "status": "active",
+          "created_at": "2026-10-04T00:45:26.669Z",
+          "revoked_at": null
+        },
+        {
+          "node_id": "node-b",
+          "principal_id": "node-b",
+          "node_type": "local_service",
+          "actor_type": "executor",
+          "primary_role": "executor",
+          "secondary_roles": [],
+          "public_key_hex": "15c3fe475d518907a816c6aba23988f2d5c68471d6d282696ae013fc5073154b",
+          "capabilities": [
+            "create_document",
+            "record_return"
+          ],
+          "interfaces": [
+            "http-json"
+          ],
+          "custody_boundary": "node-b",
+          "status": "active",
+          "created_at": "2026-10-04T00:45:26.864Z",
+          "revoked_at": null
+        }
+      ],
+      "configurations": [
+        {
+          "name": "relation-plan:si-specimen-001-direct",
+          "value": "dd532804891d273957544d4a2814f61237c8ab7265ce54b1659ce548316ccefd",
+          "record_id": "2656bbd7-5f6e-4b10-9bf5-c8b128c9ed7f",
+          "expires_at": "2026-10-04T01:45:27.544Z"
+        }
+      ],
+      "signed_controls": [
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "086f1af8-55b2-4e46-8a94-bd62025eb723",
+            "issued_at": "2026-10-04T00:45:26.065Z",
+            "expires_at": "2026-10-04T01:45:26.066Z",
+            "type": "field",
+            "sourcepoint": "sourcepoint-development-fixture",
+            "receiver_node": "node-a",
+            "bilateral_profile": "local-field-bilateral-v0.1",
+            "policy": {
+              "policy_id": "si-specimen-create_document",
+              "policy_version": "0.1",
+              "status": "active",
+              "scope": {
+                "agents": [
+                  "node-a"
+                ],
+                "systems": [
+                  "local"
+                ]
+              },
+              "action_classes": [
+                {
+                  "class_id": "create_document",
+                  "pattern": "create_document",
+                  "governance_decision": "REQUIRE_HUMAN",
+                  "risk_tier": "LOW"
+                }
+              ]
+            },
+            "return_policy": {
+              "policy_id": "si-specimen-record_return",
+              "policy_version": "0.1",
+              "status": "active",
+              "scope": {
+                "agents": [
+                  "node-b"
+                ],
+                "systems": [
+                  "local"
+                ]
+              },
+              "action_classes": [
+                {
+                  "class_id": "record_return",
+                  "pattern": "record_return",
+                  "governance_decision": "REQUIRE_HUMAN",
+                  "risk_tier": "LOW"
+                }
+              ]
+            },
+            "return_authority_basis": "b4d512e9-4168-46d4-a0cf-8b58572c254c",
+            "dependencies": {
+              "si-specimen-001": "48c1ccf210d314c3589127ef782d07ea248135a1663533b088c52f77d56cc5e1"
+            }
+          },
+          "signature": "4349bd188f485cc75a414411b010e2943a0f2384c437cd783dbbcb78e16df4228eba0d83cd0742a886abd5d92c16172956a9be7e80ba470faeca36e4139f9e08"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "5b9cc058-4b75-4034-9b2d-23d4dc60b4ca",
+            "issued_at": "2026-10-04T00:45:26.669Z",
+            "expires_at": "2026-10-04T01:45:26.669Z",
+            "type": "enrollment",
+            "issuer": "sourcepoint-development-fixture",
+            "node": {
+              "node_id": "node-a",
+              "principal_id": "node-a",
+              "node_type": "model_runtime",
+              "actor_type": "ai_agent",
+              "primary_role": "proposer",
+              "secondary_roles": [],
+              "public_key_hex": "28990741d439e3d5de2915d6ce0f7ab3ad861e8c442b7c7f46a2d0d5ea5fcc1f",
+              "capabilities": [
+                "create_document",
+                "record_return"
+              ],
+              "interfaces": [
+                "http-json"
+              ],
+              "custody_boundary": "node-a",
+              "status": "active"
+            }
+          },
+          "signature": "97a969c636607fa7594f0436aeb29305cd0a88fd541708590793af7eeac761f248e6412fcbf0a18452dfe61f7e70e921f31433bbe2f3d32f429fac7b01498f0c"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "fd957563-109a-47f7-b489-5160c5d32511",
+            "issued_at": "2026-10-04T00:45:26.864Z",
+            "expires_at": "2026-10-04T01:45:26.864Z",
+            "type": "enrollment",
+            "issuer": "sourcepoint-development-fixture",
+            "node": {
+              "node_id": "node-b",
+              "principal_id": "node-b",
+              "node_type": "local_service",
+              "actor_type": "executor",
+              "primary_role": "executor",
+              "secondary_roles": [],
+              "public_key_hex": "15c3fe475d518907a816c6aba23988f2d5c68471d6d282696ae013fc5073154b",
+              "capabilities": [
+                "create_document",
+                "record_return"
+              ],
+              "interfaces": [
+                "http-json"
+              ],
+              "custody_boundary": "node-b",
+              "status": "active"
+            }
+          },
+          "signature": "237939d9aae0cc3b4bc9795bfd8aeb58d8ea1dcb2d586d8ca4d60e2f48ff7f009f349ace477709a198c46ffda49e4337d338820ff7a1d14d2471f35f4a799b05"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "6b834e2e-c70d-48a5-8902-a86a07590770",
+            "issued_at": "2026-10-04T00:45:27.011Z",
+            "expires_at": "2026-10-04T01:45:27.011Z",
+            "type": "grant",
+            "issuer": "sourcepoint-development-fixture",
+            "grant": {
+              "grant_id": "b4d512e9-4168-46d4-a0cf-8b58572c254c",
+              "subject": "node-b",
+              "target_node": "node-a",
+              "action": "record_return",
+              "target": "return-record",
+              "scope": "attributed-record-only",
+              "purpose": "local-field-return",
+              "conditions": {},
+              "dependencies": {},
+              "parent": null,
+              "allow_delegation": false,
+              "max_uses": null
+            }
+          },
+          "signature": "67fe8ccff8b7bc81f8425310867baa82fbabe8a3d60d50b273ae7499b38e6649c56f4d88a6adecd89df2a9e289f1bbda74e7e5fbf106a97413e975c46eb5770d"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "2656bbd7-5f6e-4b10-9bf5-c8b128c9ed7f",
+            "issued_at": "2026-10-04T00:45:27.544Z",
+            "expires_at": "2026-10-04T01:45:27.544Z",
+            "type": "dependency",
+            "issuer": "sourcepoint-development-fixture",
+            "name": "relation-plan:si-specimen-001-direct",
+            "value": "dd532804891d273957544d4a2814f61237c8ab7265ce54b1659ce548316ccefd"
+          },
+          "signature": "c7f16d98bf9be4786581c28cc638182dbcd1acb35c9d4417fe7c3f638f5e34f7484d8b22e3b9b72bd89966f8aafb74a9bd9ccad522d38ccdadf2c1fcd897d40a"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "78262b0e-3d51-4f63-ae4b-c3c440c99349",
+            "issued_at": "2026-10-04T00:45:27.822Z",
+            "expires_at": "2026-10-04T01:45:27.822Z",
+            "type": "grant",
+            "issuer": "sourcepoint-development-fixture",
+            "grant": {
+              "grant_id": "bc581121-a302-4a56-93e7-0b4e326e58fa",
+              "subject": "node-a",
+              "target_node": "node-b",
+              "action": "create_document",
+              "target": "research-synthesis.txt",
+              "scope": "research-synthesis-artifact",
+              "purpose": "si-specimen-001",
+              "dependencies": {
+                "si-specimen-001": "48c1ccf210d314c3589127ef782d07ea248135a1663533b088c52f77d56cc5e1"
+              },
+              "conditions": {},
+              "parent": null,
+              "allow_delegation": false,
+              "max_uses": 1,
+              "payload_hash": "b66613d86414afb8a363104c0a001a01e6fb385a1a1442ba46e7a4636df517f0"
+            }
+          },
+          "signature": "21fc369d39487ea4f0a1f33a67cc2abab81347dab1ed4a934783637025a60c1bc83608e3ba23d370144e3828c7d7161f61bdd4ccfa9d166f8249519e7513f10b"
+        }
+      ]
+    },
+    "observed_receiver": {
+      "field": {
+        "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+        "sourcepoint": "sourcepoint-development-fixture",
+        "receiver": "node-b"
+      },
+      "nodes": [
+        {
+          "node_id": "node-a",
+          "principal_id": "node-a",
+          "node_type": "model_runtime",
+          "actor_type": "ai_agent",
+          "primary_role": "proposer",
+          "secondary_roles": [],
+          "public_key_hex": "28990741d439e3d5de2915d6ce0f7ab3ad861e8c442b7c7f46a2d0d5ea5fcc1f",
+          "capabilities": [
+            "create_document",
+            "record_return"
+          ],
+          "interfaces": [
+            "http-json"
+          ],
+          "custody_boundary": "node-a",
+          "status": "active",
+          "created_at": "2026-10-04T00:45:26.669Z",
+          "revoked_at": null
+        },
+        {
+          "node_id": "node-b",
+          "principal_id": "node-b",
+          "node_type": "local_service",
+          "actor_type": "executor",
+          "primary_role": "executor",
+          "secondary_roles": [],
+          "public_key_hex": "15c3fe475d518907a816c6aba23988f2d5c68471d6d282696ae013fc5073154b",
+          "capabilities": [
+            "create_document",
+            "record_return"
+          ],
+          "interfaces": [
+            "http-json"
+          ],
+          "custody_boundary": "node-b",
+          "status": "active",
+          "created_at": "2026-10-04T00:45:26.864Z",
+          "revoked_at": null
+        }
+      ],
+      "configurations": [
+        {
+          "name": "relation-plan:si-specimen-001-direct",
+          "value": "dd532804891d273957544d4a2814f61237c8ab7265ce54b1659ce548316ccefd",
+          "record_id": "2656bbd7-5f6e-4b10-9bf5-c8b128c9ed7f",
+          "expires_at": "2026-10-04T01:45:27.544Z"
+        }
+      ],
+      "signed_controls": [
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "d3a02278-56dd-4bdd-8bc6-3be98a81737a",
+            "issued_at": "2026-10-04T00:45:26.075Z",
+            "expires_at": "2026-10-04T01:45:26.075Z",
+            "type": "field",
+            "sourcepoint": "sourcepoint-development-fixture",
+            "receiver_node": "node-b",
+            "bilateral_profile": "local-field-bilateral-v0.1",
+            "policy": {
+              "policy_id": "si-specimen-create_document",
+              "policy_version": "0.1",
+              "status": "active",
+              "scope": {
+                "agents": [
+                  "node-a"
+                ],
+                "systems": [
+                  "local"
+                ]
+              },
+              "action_classes": [
+                {
+                  "class_id": "create_document",
+                  "pattern": "create_document",
+                  "governance_decision": "REQUIRE_HUMAN",
+                  "risk_tier": "LOW"
+                }
+              ]
+            },
+            "return_policy": {
+              "policy_id": "si-specimen-record_return",
+              "policy_version": "0.1",
+              "status": "active",
+              "scope": {
+                "agents": [
+                  "node-b"
+                ],
+                "systems": [
+                  "local"
+                ]
+              },
+              "action_classes": [
+                {
+                  "class_id": "record_return",
+                  "pattern": "record_return",
+                  "governance_decision": "REQUIRE_HUMAN",
+                  "risk_tier": "LOW"
+                }
+              ]
+            },
+            "return_authority_basis": "b4d512e9-4168-46d4-a0cf-8b58572c254c",
+            "dependencies": {
+              "si-specimen-001": "48c1ccf210d314c3589127ef782d07ea248135a1663533b088c52f77d56cc5e1"
+            }
+          },
+          "signature": "60c821aa3974a351dfc2e5a0f5c24f9ac71f1cf658bad01e0ac74a55a837aa67b18898c657a43424e6765b59de54646cca1380bca6ac61bdc570ed2f021eab08"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "5b9cc058-4b75-4034-9b2d-23d4dc60b4ca",
+            "issued_at": "2026-10-04T00:45:26.669Z",
+            "expires_at": "2026-10-04T01:45:26.669Z",
+            "type": "enrollment",
+            "issuer": "sourcepoint-development-fixture",
+            "node": {
+              "node_id": "node-a",
+              "principal_id": "node-a",
+              "node_type": "model_runtime",
+              "actor_type": "ai_agent",
+              "primary_role": "proposer",
+              "secondary_roles": [],
+              "public_key_hex": "28990741d439e3d5de2915d6ce0f7ab3ad861e8c442b7c7f46a2d0d5ea5fcc1f",
+              "capabilities": [
+                "create_document",
+                "record_return"
+              ],
+              "interfaces": [
+                "http-json"
+              ],
+              "custody_boundary": "node-a",
+              "status": "active"
+            }
+          },
+          "signature": "97a969c636607fa7594f0436aeb29305cd0a88fd541708590793af7eeac761f248e6412fcbf0a18452dfe61f7e70e921f31433bbe2f3d32f429fac7b01498f0c"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "fd957563-109a-47f7-b489-5160c5d32511",
+            "issued_at": "2026-10-04T00:45:26.864Z",
+            "expires_at": "2026-10-04T01:45:26.864Z",
+            "type": "enrollment",
+            "issuer": "sourcepoint-development-fixture",
+            "node": {
+              "node_id": "node-b",
+              "principal_id": "node-b",
+              "node_type": "local_service",
+              "actor_type": "executor",
+              "primary_role": "executor",
+              "secondary_roles": [],
+              "public_key_hex": "15c3fe475d518907a816c6aba23988f2d5c68471d6d282696ae013fc5073154b",
+              "capabilities": [
+                "create_document",
+                "record_return"
+              ],
+              "interfaces": [
+                "http-json"
+              ],
+              "custody_boundary": "node-b",
+              "status": "active"
+            }
+          },
+          "signature": "237939d9aae0cc3b4bc9795bfd8aeb58d8ea1dcb2d586d8ca4d60e2f48ff7f009f349ace477709a198c46ffda49e4337d338820ff7a1d14d2471f35f4a799b05"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "6b834e2e-c70d-48a5-8902-a86a07590770",
+            "issued_at": "2026-10-04T00:45:27.011Z",
+            "expires_at": "2026-10-04T01:45:27.011Z",
+            "type": "grant",
+            "issuer": "sourcepoint-development-fixture",
+            "grant": {
+              "grant_id": "b4d512e9-4168-46d4-a0cf-8b58572c254c",
+              "subject": "node-b",
+              "target_node": "node-a",
+              "action": "record_return",
+              "target": "return-record",
+              "scope": "attributed-record-only",
+              "purpose": "local-field-return",
+              "conditions": {},
+              "dependencies": {},
+              "parent": null,
+              "allow_delegation": false,
+              "max_uses": null
+            }
+          },
+          "signature": "67fe8ccff8b7bc81f8425310867baa82fbabe8a3d60d50b273ae7499b38e6649c56f4d88a6adecd89df2a9e289f1bbda74e7e5fbf106a97413e975c46eb5770d"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "2656bbd7-5f6e-4b10-9bf5-c8b128c9ed7f",
+            "issued_at": "2026-10-04T00:45:27.544Z",
+            "expires_at": "2026-10-04T01:45:27.544Z",
+            "type": "dependency",
+            "issuer": "sourcepoint-development-fixture",
+            "name": "relation-plan:si-specimen-001-direct",
+            "value": "dd532804891d273957544d4a2814f61237c8ab7265ce54b1659ce548316ccefd"
+          },
+          "signature": "c7f16d98bf9be4786581c28cc638182dbcd1acb35c9d4417fe7c3f638f5e34f7484d8b22e3b9b72bd89966f8aafb74a9bd9ccad522d38ccdadf2c1fcd897d40a"
+        },
+        {
+          "body": {
+            "field_id": "e2cab6be-97b1-4aaa-9bb8-c855d64e37ed",
+            "record_id": "78262b0e-3d51-4f63-ae4b-c3c440c99349",
+            "issued_at": "2026-10-04T00:45:27.822Z",
+            "expires_at": "2026-10-04T01:45:27.822Z",
+            "type": "grant",
+            "issuer": "sourcepoint-development-fixture",
+            "grant": {
+              "grant_id": "bc581121-a302-4a56-93e7-0b4e326e58fa",
+              "subject": "node-a",
+              "target_node": "node-b",
+              "action": "create_document",
+              "target": "research-synthesis.txt",
+              "scope": "research-synthesis-artifact",
+              "purpose": "si-specimen-001",
+              "dependencies": {
+                "si-specimen-001": "48c1ccf210d314c3589127ef782d07ea248135a1663533b088c52f77d56cc5e1"
+              },
+              "conditions": {},
+              "parent": null,
+              "allow_delegation": false,
+              "max_uses": 1,
+              "payload_hash": "b66613d86414afb8a363104c0a001a01e6fb385a1a1442ba46e7a4636df517f0"
+            }
+          },
+          "signature": "21fc369d39487ea4f0a1f33a67cc2abab81347dab1ed4a934783637025a60c1bc83608e3ba23d370144e3828c7d7161f61bdd4ccfa9d166f8249519e7513f10b"
+        }
+      ]
+    },
+    "burden": {
+      "query": "How do authority, occurrence, and Return remain distinct?",
+      "sources_hash": "be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d"
+    }
+  },
+  "resource_budgets": {
+    "max_sources": 8,
+    "max_source_bytes": 8192,
+    "max_total_source_bytes": 32768,
+    "max_findings": 4,
+    "max_query_bytes": 512,
+    "max_output_bytes": 4096,
+    "max_candidate_bytes": 65536
+  },
+  "runtime_version": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "infrastructure_hash": "b71075dbe5dc1b0f1b6f01c055cc8e7842d2d7c88acdaa7bba835944f65f01ab",
+  "canonical_manifest_location": "direct-trace.json.gz:substrate",
+  "comparison_status": "NOT_PERFORMED; replay the same burden, enrolled identities, controls and equivalent fresh state before varying relations"
+}

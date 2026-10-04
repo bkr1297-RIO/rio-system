@@ -1,7 +1,7 @@
 name: Local Field Bilateral v0.1
 on:
   pull_request:
-    paths: ['gateway/local-field/**', 'gateway/security/**', 'gateway/governance/**', 'gateway/execution/**', 'gateway/ledger/**', 'gateway/receipts/**', 'gateway/tests/local-field*', 'gateway/tests/helpers/**', 'gateway/scripts/run-local-field*', 'gateway/package*.json', '.github/workflows/local-field-bilateral.yml']
+    paths: ['gateway/local-field/**', 'gateway/security/**', 'gateway/governance/**', 'gateway/execution/**', 'gateway/ledger/**', 'gateway/receipts/**', 'gateway/tests/local-field*', 'gateway/tests/si-specimen/**', 'gateway/tests/helpers/**', 'gateway/scripts/run-local-field*', 'gateway/scripts/run-si-specimen-001.mjs', 'gateway/package*.json', '.github/workflows/local-field-bilateral.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -18,6 +18,8 @@ jobs:
       - run: npm ci
         working-directory: gateway
       - run: npm run test:local-field
+        working-directory: gateway
+      - run: npm run test:si-specimen
         working-directory: gateway
       - run: npm run field:bilateral-acceptance -- /tmp/one-local-field-bilateral-trace.json
         working-directory: gateway

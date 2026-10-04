@@ -1,0 +1,144 @@
+{
+  "result": "SI_SPECIMEN_001_DIRECT_CONFORMANT",
+  "scope": "SI-SPECIMEN-001 / ResearchSynthesis.Direct first slice",
+  "run_id": "2bc8f308-cf0c-4b55-b31d-216a9e34a2f0",
+  "ran_at": "2026-10-04T00:45:30.695Z",
+  "baseline_commit": "4436ede584c4c0c3938a75feccc632d4edceb24b",
+  "route": "R-07 GAP / one-rio-muss-architecture#322",
+  "matrix_id": "si-specimen-001-direct",
+  "plan_hash": "dd532804891d273957544d4a2814f61237c8ab7265ce54b1659ce548316ccefd",
+  "substrate_hash": "48c1ccf210d314c3589127ef782d07ea248135a1663533b088c52f77d56cc5e1",
+  "passage_id": "ec1ce88c-a867-41f7-8a8c-c3d71fa34853",
+  "receipt_id": "a15dc956-447b-48ed-b74d-6fb19a4b6812",
+  "return_id": "d4c5d7ab-14d7-4fc5-a4e9-094d1f3d91a8",
+  "relation_traversals": {
+    "receiver": 8,
+    "source": 8,
+    "receiver_final_admission": "PENDING",
+    "source_final_admission": "ADMITTED_AS_ATTRIBUTED_RECORD"
+  },
+  "native_occurrence": {
+    "occurrence_id": "54ecf150-fe7c-4e42-8a13-fca94d29027b",
+    "status": "OBSERVED",
+    "target": "research-synthesis.txt",
+    "content_hash": "2dad31389a8c09f74c5147a1538a95079ca59852a540ede918c53aef52328e7a",
+    "bytes": 1160,
+    "device": 27,
+    "inode": 415387,
+    "observed_at": "2026-10-04T00:45:28.712Z",
+    "method": "separate_descriptor_read_after_write"
+  },
+  "independent_readback_sha256": "2dad31389a8c09f74c5147a1538a95079ca59852a540ede918c53aef52328e7a",
+  "native_verifier": {
+    "repository": "bkr1297-RIO/rio-receipt-protocol",
+    "commit": "8cb49727e98690f9f0dfb66625e3a182f321a6e9",
+    "result": {
+      "valid": true,
+      "passage_id": "ec1ce88c-a867-41f7-8a8c-c3d71fa34853",
+      "receipt_id": "a15dc956-447b-48ed-b74d-6fb19a4b6812",
+      "occurrence_claim": "OBSERVED",
+      "authorization_created": false,
+      "evidence_ceiling": "Integrity and correlation of attributed historical records; not current standing or independent external truth"
+    }
+  },
+  "canonical_schema": {
+    "repository": "bkr1297-RIO/rio-protocol",
+    "commit": "0449f2dd135d93791b9b4ce3f96093d1aca463cf",
+    "records_validated": 10
+  },
+  "verification": {
+    "command": "node --test tests/si-specimen/*.test.mjs tests/local-field*.test.mjs tests/execution-binding-repair.test.mjs",
+    "counts": {
+      "tests": 96,
+      "pass": 96,
+      "fail": 0,
+      "skipped": 0,
+      "cancelled": 0
+    },
+    "suites": {
+      "specimen": 30,
+      "local_field": 54,
+      "execution_binding": 12
+    },
+    "default_gateway_baseline": {
+      "pass": 0,
+      "fail": 13,
+      "reason": "ECONNREFUSED at expected localhost:4401 before changes",
+      "failed_tests": [
+        "should return operational status",
+        "POST /intent — should submit an intent",
+        "POST /govern — should evaluate governance",
+        "POST /authorize — should record human approval",
+        "POST /execute — should execute the action",
+        "POST /receipt — should generate a receipt",
+        "GET /verify — should verify the receipt and chain",
+        "GET /intent/:id — should show full pipeline state",
+        "should block execution of a submitted (ungoverned) intent",
+        "should block execution of a denied intent",
+        "should block governance for an unknown agent",
+        "GET /ledger — should return entries",
+        "GET /verify — full chain should be valid"
+      ]
+    }
+  },
+  "restart": {
+    "same_chain": true,
+    "attempts_before": 1,
+    "attempts_after": 1
+  },
+  "processes": {
+    "a": {
+      "initial_pid": 21,
+      "restarted_pid": 37
+    },
+    "b": {
+      "initial_pid": 13,
+      "restarted_pid": 29
+    }
+  },
+  "cleanup": {
+    "sandbox_removed": true,
+    "development_key_material_removed": true
+  },
+  "evidence": {
+    "trace": "direct-trace.json.gz",
+    "uncompressed_sha256": "66c107bf7e0ab0eb558d875ed51eee29ce021aff772d39fdaa72b3e65b2de1df",
+    "compressed_sha256": "d630a2b2b0f249b006c6de1c12b3dc03ea5fb4ddf759b2863d7f3a92c2ee3db3",
+    "uncompressed_bytes": 1494695,
+    "compressed_bytes": 184684,
+    "readback_export": "research-synthesis.txt",
+    "trust_anchor": "root-public-key.txt",
+    "matrix": "matrix.json",
+    "plan": "relational-plan.json",
+    "relation_trace": "relation-trace.json",
+    "substrate_manifest": "substrate-manifest.json"
+  },
+  "assay": "NOT_PERFORMED",
+  "adaptive_morphology": "NOT_IMPLEMENTED",
+  "alternate_morphology": "NOT_IMPLEMENTED",
+  "deployment": "NOT_PERFORMED",
+  "ratification": "NOT_CLAIMED",
+  "evidence_status": "NOT_ADMITTED",
+  "settlement_status": "UNSETTLED",
+  "local_field_19_gate_register": "UNCHANGED / NOT REISSUED BY THIS SPECIMEN",
+  "execution_boundary": {
+    "class_1": [
+      "Read public repository source artifacts"
+    ],
+    "class_2": [
+      "Development keys and identities",
+      "Two loopback processes",
+      "Root configuration admission and scoped grants",
+      "Bounded create-only artifact and external readback",
+      "Restart, public evidence export and exact temporary cleanup"
+    ],
+    "class_3_performed": []
+  },
+  "return_boundary": {
+    "authority_controls_unchanged": true,
+    "home_mutation": "NOT_INVOKED",
+    "successor_mutation": "NOT_INVOKED"
+  },
+  "builder_disposition": "PASS WITH NON-BLOCKING DEFECTS",
+  "reason": "F0.1 conformance and actual runtime path pass; pre-existing default gateway suite requires its unavailable localhost service."
+}
