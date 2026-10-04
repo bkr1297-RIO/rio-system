@@ -1,0 +1,11 @@
+{
+  "fixture_id": "simulation-transduction-f0.1",
+  "version": "f0.1",
+  "register": "DECLARED_SYNTHETIC_POSSIBILITIES",
+  "claim": "Inputs exercise burden preservation; they are not predictions established by a simulator or exterior observations.",
+  "scenarios": [
+    { "artifact_id": "possibility-a", "prediction": "A create-only report may complete promptly.", "material_risk": { "status": "KNOWN", "value": "Bounded development report creation." }, "missing_information": [] },
+    { "artifact_id": "possibility-b", "prediction": "The same report may complete after a scheduling delay.", "material_risk": { "status": "KNOWN", "value": "Bounded development report creation." }, "missing_information": [] },
+    { "artifact_id": "possibility-c", "prediction": "The requested report may encounter an unresolved resource condition.", "material_risk": { "status": "UNKNOWN", "value": null }, "missing_information": ["The decision-relevant resource condition is unresolved."] }
+  ]
+}

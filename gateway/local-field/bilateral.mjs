@@ -16,8 +16,8 @@ const envelopeKeys = new Set(['type','field_id','record_id','issued_at','expires
  * This is not a per-node governor, a transport permission or a new proof type.
  */
 export class Bilateral {
-  constructor({ store, field, anchor, receiver, signingKey, peers = {}, decide, record }) {
-    Object.assign(this, { store, field, anchor, receiver, signingKey, decide, record });
+  constructor({ store, field, anchor, receiver, signingKey, peers = {}, decide, record, verifyReturn }) {
+    Object.assign(this, { store, field, anchor, receiver, signingKey, decide, record, verifyReturn });
     requireValue(field.return_policy?.status === 'active', 'RETURN_POLICY_REQUIRED');
     requireValue(encodedBytes(field) <= MAX_RECORD_BYTES, 'FIELD_RESOURCE_LIMIT');
     requireValue(typeof field.return_authority_basis === 'string' && field.return_authority_basis.length >= 16, 'RETURN_AUTHORITY_BASIS_REQUIRED');
@@ -57,7 +57,7 @@ export class Bilateral {
     let transit;
     try {
       transit = this.store.transaction(() => {
-        const { policy, lineage } = this.decide(record, { egress: true });
+        const { policy, lineage, simulation_binding } = this.decide(record, { egress: true });
         requireValue(p.source_node === this.receiver, 'SOURCE_CUSTODY_MISMATCH');
         requireValue(this.peers[p.target_node], 'PEER_ROUTE_MISSING');
         this.store.useNonce(`egress:${p.source_node}`, p.nonce);
@@ -66,6 +66,7 @@ export class Bilateral {
           source_node: this.receiver, target_node: p.target_node, passage_id: p.passage_id,
           decision_id: randomUUID(), context: 'EGRESS', status: 'EMIT_AUTHORIZED',
           passage_hash: hash(p), authority_lineage: lineage.map(g => g.body.grant.grant_id),
+          ...(simulation_binding ? { simulation_binding } : {}),
           policy, owner: 'gateway/governance/policy-engine.mjs', issued_at: now(), expires_at: p.expires_at });
         const outgoing = this.signed({ type: 'passage_transit', field_id: this.field.field_id,
           source_node: this.receiver, record_id: randomUUID(), issued_at: now(), expires_at: p.expires_at,
@@ -184,12 +185,16 @@ export class Bilateral {
         c.receipt.hash_chain.governance_hash === hashGovernance(a.governance) &&
         c.receipt.hash_chain.authorization_hash === hashAuthorization(a.authorization) &&
         c.receipt.hash_chain.execution_hash === hashExecution(a.execution) &&
+        hash(c.intent) === hash(a.intent) &&
         hash(c.decision) === hash(a.governance.checks.decision) &&
         hash(c.execution_authority) === hash(a.execution.result.execution_authority) &&
         hash(c.fidelity) === hash(a.execution.result.fidelity) &&
         hash(c.attempt) === hash(a.execution.result.attempt) &&
         hash(c.occurrence) === hash(a.execution.result.occurrence), 'RETURN_NATIVE_PROOF_INVALID');
     } else requireValue(r.outcome !== 'OBSERVED', 'RETURN_OCCURRENCE_WITHOUT_PROOF');
+    // Optional admitted runtime profiles may require reconstructable semantics
+    // in addition to the native proof. Refuse before committing Return admission.
+    this.verifyReturn?.(c);
     return this.store.transaction(() => {
       this.store.useNonce('return_ingress', r.return_id);
       requireValue(!this.store.get('return_ingress', id), 'REPLAY_RETURN');

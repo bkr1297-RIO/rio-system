@@ -5,14 +5,14 @@ import { LocalField } from '../../local-field/index.mjs';
 import { createFieldServer } from '../../local-field/http.mjs';
 import { setup, signed } from './local-field.mjs';
 
-export async function bilateral(t, { returnMaxUses = null } = {}) {
+export async function bilateral(t, { returnMaxUses = null, nodeType = 'laptop', fieldPatch = {} } = {}) {
   const return_policy = {
     policy_id: 'bounded-attributed-return', policy_version: '0.1', status: 'active',
     scope: { agents: ['node-b'], systems: ['local'] },
     action_classes: [{ class_id: 'return', pattern: 'record_return', governance_decision: 'AUTO_APPROVE', risk_tier: 'LOW' }],
   };
   const return_authority_basis = randomUUID();
-  const x = setup(t, 'laptop', {}, {}, { bilateral_profile: 'local-field-bilateral-v0.1', return_policy, return_authority_basis });
+  const x = setup(t, nodeType, {}, {}, { bilateral_profile: 'local-field-bilateral-v0.1', return_policy, return_authority_basis, ...fieldPatch });
   const server = createFieldServer(x.runtime);
   await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
   t.after(() => new Promise(resolve => server.close(resolve)));

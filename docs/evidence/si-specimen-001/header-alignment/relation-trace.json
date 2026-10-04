@@ -1,0 +1,367 @@
+{
+  "matrix_id": "si-specimen-001-direct",
+  "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+  "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+  "physical_source": "node-a",
+  "physical_target": "node-b",
+  "traversals": [
+    {
+      "traversal_id": "b9874a3c359efddaa6632c0c2d209cf7922de02b82e036fc0f91ebe6a847d3b9",
+      "relation_id": "si-specimen-001-direct:r1",
+      "source": "HMI",
+      "target": "CCI",
+      "artifact_type": "HumanIntent",
+      "artifact_reference": "sha256:d5320ff5494b85ccceb89e9b05f11ec70ab3d8dc2808cf436ae6837d3bc4a257",
+      "provenance": {
+        "human_intent_hash": "d5320ff5494b85ccceb89e9b05f11ec70ab3d8dc2808cf436ae6837d3bc4a257",
+        "sources_hash": "be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d",
+        "sources": [
+          {
+            "source_id": "repository-source-1",
+            "content_hash": "da4846b9be5fd8829ad046f45147cc301b1e7317ac481b92507055f58ac47ead",
+            "uri": "repository:gateway/local-field/README.md"
+          },
+          {
+            "source_id": "repository-source-2",
+            "content_hash": "0d45a36f7d4b377aab60a44d69a1c1ee9c57464f83fa3043e77ba8532517be21",
+            "uri": "repository:gateway/local-field/BILATERAL.md"
+          }
+        ]
+      },
+      "witness_event": {
+        "event_id": "3ed098e91451a06378c7157b5adb0c8342f168a980963c091fec6701858a4cef",
+        "kind": "FORMATION_EVENT",
+        "meaning": "recorded artifact circulation; not external occurrence"
+      },
+      "return_linkage": {
+        "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+        "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "status": "RETURNED",
+        "truth_status": "UNESTABLISHED",
+        "settlement_status": "UNSETTLED"
+      }
+    },
+    {
+      "traversal_id": "a025651c9f013a292e8c60c323722cd48323cff5755d3b15498ceb6c918d7060",
+      "relation_id": "si-specimen-001-direct:r2",
+      "source": "CCI",
+      "target": "Sensorium",
+      "artifact_type": "ResearchRequest",
+      "artifact_reference": "sha256:83ad0ad11460acf00188830a81cb15ca86fcff213448ba5169e2319bacd8d089",
+      "provenance": {
+        "human_intent_hash": "d5320ff5494b85ccceb89e9b05f11ec70ab3d8dc2808cf436ae6837d3bc4a257",
+        "sources_hash": "be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d",
+        "sources": [
+          {
+            "source_id": "repository-source-1",
+            "content_hash": "da4846b9be5fd8829ad046f45147cc301b1e7317ac481b92507055f58ac47ead",
+            "uri": "repository:gateway/local-field/README.md"
+          },
+          {
+            "source_id": "repository-source-2",
+            "content_hash": "0d45a36f7d4b377aab60a44d69a1c1ee9c57464f83fa3043e77ba8532517be21",
+            "uri": "repository:gateway/local-field/BILATERAL.md"
+          }
+        ]
+      },
+      "witness_event": {
+        "event_id": "f21ded8af85b165678735d7ff5e2e9bc3e87179babacf8cd14ee8270c9951546",
+        "kind": "FORMATION_EVENT",
+        "meaning": "recorded artifact circulation; not external occurrence"
+      },
+      "return_linkage": {
+        "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+        "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "status": "RETURNED",
+        "truth_status": "UNESTABLISHED",
+        "settlement_status": "UNSETTLED"
+      }
+    },
+    {
+      "traversal_id": "b4b1a08ac26f65d5a4c39a1bdc4001851869af383fd71d0d118ff9f2a407a153",
+      "relation_id": "si-specimen-001-direct:r3",
+      "source": "Sensorium",
+      "target": "Memory",
+      "artifact_type": "SourceBundle",
+      "artifact_reference": "sha256:be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d",
+      "provenance": {
+        "human_intent_hash": "d5320ff5494b85ccceb89e9b05f11ec70ab3d8dc2808cf436ae6837d3bc4a257",
+        "sources_hash": "be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d",
+        "sources": [
+          {
+            "source_id": "repository-source-1",
+            "content_hash": "da4846b9be5fd8829ad046f45147cc301b1e7317ac481b92507055f58ac47ead",
+            "uri": "repository:gateway/local-field/README.md"
+          },
+          {
+            "source_id": "repository-source-2",
+            "content_hash": "0d45a36f7d4b377aab60a44d69a1c1ee9c57464f83fa3043e77ba8532517be21",
+            "uri": "repository:gateway/local-field/BILATERAL.md"
+          }
+        ]
+      },
+      "witness_event": {
+        "event_id": "948904ddd1cbb2e1df3ba04eb8eb84f15d4610ff63c45f24332d2369247ee9c6",
+        "kind": "FORMATION_EVENT",
+        "meaning": "recorded artifact circulation; not external occurrence"
+      },
+      "return_linkage": {
+        "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+        "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "status": "RETURNED",
+        "truth_status": "UNESTABLISHED",
+        "settlement_status": "UNSETTLED"
+      }
+    },
+    {
+      "traversal_id": "e177f033b46013de29994c356d451739f5051386dd324ce1ce2daa2c0f8e30b0",
+      "relation_id": "si-specimen-001-direct:r4",
+      "source": "Memory",
+      "target": "Reasoner",
+      "artifact_type": "ResearchContext",
+      "artifact_reference": "sha256:019b4ac687ed9eaf259e5f6733468caad80592d00e0593c13d7e1a9d708d6486",
+      "provenance": {
+        "human_intent_hash": "d5320ff5494b85ccceb89e9b05f11ec70ab3d8dc2808cf436ae6837d3bc4a257",
+        "sources_hash": "be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d",
+        "sources": [
+          {
+            "source_id": "repository-source-1",
+            "content_hash": "da4846b9be5fd8829ad046f45147cc301b1e7317ac481b92507055f58ac47ead",
+            "uri": "repository:gateway/local-field/README.md"
+          },
+          {
+            "source_id": "repository-source-2",
+            "content_hash": "0d45a36f7d4b377aab60a44d69a1c1ee9c57464f83fa3043e77ba8532517be21",
+            "uri": "repository:gateway/local-field/BILATERAL.md"
+          }
+        ]
+      },
+      "witness_event": {
+        "event_id": "2fa80bbf29924fb26cd61e87bde9f221ce4828854e652bd339b0b74c7b48d2a2",
+        "kind": "FORMATION_EVENT",
+        "meaning": "recorded artifact circulation; not external occurrence"
+      },
+      "return_linkage": {
+        "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+        "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "status": "RETURNED",
+        "truth_status": "UNESTABLISHED",
+        "settlement_status": "UNSETTLED"
+      }
+    },
+    {
+      "traversal_id": "7491a1598cb9135b7285a1126cf95e6ee780e2b12cf2019801956fdf9b45c746",
+      "relation_id": "si-specimen-001-direct:r5",
+      "source": "Reasoner",
+      "target": "Tool",
+      "artifact_type": "SynthesisCandidate",
+      "artifact_reference": "sha256:3b079a69b965d0b3069c847ba391d0890c8d4f7f37e3199f68d497132c961995",
+      "provenance": {
+        "human_intent_hash": "d5320ff5494b85ccceb89e9b05f11ec70ab3d8dc2808cf436ae6837d3bc4a257",
+        "sources_hash": "be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d",
+        "sources": [
+          {
+            "source_id": "repository-source-1",
+            "content_hash": "da4846b9be5fd8829ad046f45147cc301b1e7317ac481b92507055f58ac47ead",
+            "uri": "repository:gateway/local-field/README.md"
+          },
+          {
+            "source_id": "repository-source-2",
+            "content_hash": "0d45a36f7d4b377aab60a44d69a1c1ee9c57464f83fa3043e77ba8532517be21",
+            "uri": "repository:gateway/local-field/BILATERAL.md"
+          }
+        ]
+      },
+      "witness_event": {
+        "event_id": "d6daca44ad974e8b81698ea2b8a971e17808287bc2afc54f9f0ba9f5f3c04387",
+        "kind": "FORMATION_EVENT",
+        "meaning": "recorded artifact circulation; not external occurrence"
+      },
+      "return_linkage": {
+        "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+        "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "status": "RETURNED",
+        "truth_status": "UNESTABLISHED",
+        "settlement_status": "UNSETTLED"
+      }
+    },
+    {
+      "traversal_id": "9c6bfc2b30904ac112568a0220ff8b945767fefcd15b6ed1b0077b33324d9fac",
+      "relation_id": "si-specimen-001-direct:r6",
+      "source": "Tool",
+      "target": "Witness",
+      "artifact_type": "ExecutionChain",
+      "artifact_reference": "sha256:52863d6fb28f371915080da8ef37cbbdf507167a9c4fd6726eff4afd20e33e76",
+      "provenance": {
+        "candidate_id": "ce98faea-07cd-4395-94b5-dd14e90d8a51",
+        "candidate_hash": "966a6809d28a0d4eb4d34e0ed4e74f590a343a77b0f0775df97cc10f5c4f29cf",
+        "human_intent_hash": "d5320ff5494b85ccceb89e9b05f11ec70ab3d8dc2808cf436ae6837d3bc4a257",
+        "sources_hash": "be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d",
+        "admission_record_id": "e9cb99a1-6eba-4cab-90f6-c0338645a218"
+      },
+      "witness_event": {
+        "kind": "NATIVE_RUNTIME_EVENT",
+        "occurrence_id": "260777cd-e5b0-446e-a6c0-d4332d655029",
+        "observation_status": "OBSERVED",
+        "method": "separate_descriptor_read_after_write",
+        "custody": "receiver",
+        "independent_external_witness": false
+      },
+      "return_linkage": {
+        "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+        "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "status": "RETURNED",
+        "truth_status": "UNESTABLISHED",
+        "settlement_status": "UNSETTLED"
+      }
+    },
+    {
+      "traversal_id": "92d6eb245805a74f240dd58d59442f74261664e4d44ebd3ff9357885374bf497",
+      "relation_id": "si-specimen-001-direct:r7",
+      "source": "Witness",
+      "target": "ReturnEngine",
+      "artifact_type": "WitnessRecord",
+      "artifact_reference": "sha256:5ab4de63a5f6c8aab4fa62a67f09523a4f4767934384fb27f59afd3baf65de0a",
+      "provenance": {
+        "candidate_id": "ce98faea-07cd-4395-94b5-dd14e90d8a51",
+        "candidate_hash": "966a6809d28a0d4eb4d34e0ed4e74f590a343a77b0f0775df97cc10f5c4f29cf",
+        "human_intent_hash": "d5320ff5494b85ccceb89e9b05f11ec70ab3d8dc2808cf436ae6837d3bc4a257",
+        "sources_hash": "be562d8f97adaa03beb27364f8bf26e49599c1f01eef45d11bf04868dcc6b03d",
+        "admission_record_id": "e9cb99a1-6eba-4cab-90f6-c0338645a218"
+      },
+      "witness_event": {
+        "kind": "NATIVE_RUNTIME_EVENT",
+        "occurrence_id": "260777cd-e5b0-446e-a6c0-d4332d655029",
+        "observation_status": "OBSERVED",
+        "method": "separate_descriptor_read_after_write",
+        "custody": "receiver",
+        "independent_external_witness": false
+      },
+      "return_linkage": {
+        "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+        "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "status": "RETURNED",
+        "truth_status": "UNESTABLISHED",
+        "settlement_status": "UNSETTLED"
+      }
+    },
+    {
+      "traversal_id": "2fedc7aaa093df98efd6915adc101c3b827eba1ce32efe6bb013a41f42907801",
+      "relation_id": "si-specimen-001-direct:r8",
+      "source": "ReturnEngine",
+      "target": "HMI",
+      "artifact_type": "SynthesisReturn",
+      "artifact_reference": "sha256:7a752b27e5b5a07c61053c7275a0a7707ce9141521feb9daba074e6b07edf869",
+      "provenance": {
+        "source_run_hash": "a0f745b4a39f574bf8a8476bbf2e72802e80a276512eba9195ee36beb55abbf0",
+        "return_transit_hash": "f24a13fde5e92fcac47e6a2c9afd1afd1cf0f290b6fa0870f4d5c39fb20a8263"
+      },
+      "witness_event": {
+        "kind": "RETURN_INGRESS_EVENT",
+        "decision_id": "8bef61db-3eea-48bd-bf7c-93bed73eda8b",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "evidence_status": "NOT_ADMITTED",
+        "settlement_status": "UNSETTLED"
+      },
+      "return_linkage": {
+        "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+        "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+        "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+        "status": "RETURNED_WITH_RESIDUE"
+      },
+      "admission_status": "ADMITTED_AS_ATTRIBUTED_RECORD"
+    }
+  ],
+  "return_admission": {
+    "decision_id": "8bef61db-3eea-48bd-bf7c-93bed73eda8b",
+    "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+    "context": "RETURN_INGRESS",
+    "status": "ADMITTED_AS_ATTRIBUTED_RECORD",
+    "authority_basis": {
+      "grant_id": "a8379cc2-c21c-49ae-86c5-49b03a701e1a",
+      "authority_lineage": [
+        "a8379cc2-c21c-49ae-86c5-49b03a701e1a"
+      ],
+      "field_definition": "3a5f9094-7fed-4b4b-8bc4-55c9b9114b56",
+      "passage_hash": "426e4f185d38e178a791656ec4975414126c48ac04b5a24cf9e6b5ac19a0ce04",
+      "return_requirement": {
+        "required": true,
+        "to": "node-a"
+      }
+    },
+    "policy": {
+      "governance_decision": "REQUIRE_HUMAN",
+      "risk_tier": "LOW",
+      "matched_class": "record_return",
+      "status": "requires_approval",
+      "reason": "Action requires explicit human authorization before execution.",
+      "requires_approval": true,
+      "risk_level": "low",
+      "checks": [
+        {
+          "check": "policy_status",
+          "passed": true,
+          "status": "active"
+        },
+        {
+          "check": "agent_in_scope",
+          "passed": true,
+          "agent_id": "node-b"
+        },
+        {
+          "check": "system_in_scope",
+          "passed": true,
+          "target_system": "local"
+        },
+        {
+          "check": "action_class_match",
+          "passed": true,
+          "action": "record_return",
+          "matched_class": "record_return",
+          "risk_tier": "LOW",
+          "governance_decision": "REQUIRE_HUMAN"
+        },
+        {
+          "check": "confidence_threshold",
+          "passed": true,
+          "confidence": 0,
+          "threshold": 80
+        },
+        {
+          "check": "spgm_policy_review_context",
+          "passed": true,
+          "effect": "not_present"
+        }
+      ],
+      "policy_version": "0.1",
+      "policy_hash": "7e6749306a58371bbd59fc675de212e6faf96a1a9cd348d66ba15dbbeb865833",
+      "approval_requirement": {
+        "required_roles": null
+      },
+      "approval_ttl": null
+    },
+    "checked_at": "2026-10-04T01:57:49.983Z",
+    "owner": "gateway/governance/policy-engine.mjs",
+    "authority_effect": "none",
+    "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+    "correlation_id": "1ed9c7f7-29c2-4131-b7eb-3f8ef89bcaff",
+    "return_hash": "208c587110d3de51f801082bfbe9600bb803fe70aa09efad10f88ec4e3f0c558",
+    "truth_status": "UNESTABLISHED",
+    "observation_status": "ATTRIBUTED_CLAIM",
+    "evidence_status": "NOT_ADMITTED",
+    "settlement_status": "UNSETTLED",
+    "return_completion_status": "RETURNED_WITH_RESIDUE",
+    "residue": [
+      "Observation is not independently admitted evidence",
+      "Evidence and settlement prerequisites remain unevaluated"
+    ]
+  },
+  "signed_record_location": "direct-trace.json.gz:source_chain.relation_run"
+}

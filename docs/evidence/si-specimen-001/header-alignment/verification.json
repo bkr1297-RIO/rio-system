@@ -1,0 +1,242 @@
+{
+  "result": "HLSI_HEADER_CONFORMANT_WITHIN_TESTED_SCOPE",
+  "disposition": "PASS WITH NON-BLOCKING DEFECTS",
+  "scope": "SI-SPECIMEN-001 / Direct / constituted LocalField and HTTP public interfaces",
+  "header": "docs/implementation/HLSI-CONSTITUTIONAL-COMPRESSION-HEADER-F0.1.md",
+  "baseline_commit": "08e288052b470ffe1361b2dc4c37e6d90f67d4bc",
+  "ran_at": "2026-10-04T01:57:51.895Z",
+  "cases": [
+    {
+      "case": 1,
+      "requirement": "Rich relation without delegation",
+      "tests": [
+        "rich typed relation exists without any operational delegation"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 2,
+      "requirement": "Reasoning/synthesis without execution lease",
+      "tests": [
+        "reasoning and synthesis can finish formation without an execution lease"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 3,
+      "requirement": "Valid delegation does not execute",
+      "tests": [
+        "valid derived delegation and ingress admission do not themselves execute"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 4,
+      "requirement": "Stale dependency prevents execution",
+      "tests": [
+        "08 changed dependency after admission fails point-of-use fidelity"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 5,
+      "requirement": "Exact subject binding",
+      "tests": [
+        "an otherwise valid HLSI grant for another subject cannot release consequence"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 6,
+      "requirement": "Expired/revoked delegation prevents execution",
+      "tests": [
+        "operational grant expiry after HLSI ingress is checked at the execution crossing",
+        "operational revocation after HLSI ingress prevents execution",
+        "ancestor revocation invalidates derived delegation at point of use"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 7,
+      "requirement": "Capability growth does not widen authority",
+      "tests": [
+        "additional enrolled capability does not enlarge operational or source authority"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 8,
+      "requirement": "Memory growth does not widen authority",
+      "tests": [
+        "retaining additional source memory does not change authority state"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 9,
+      "requirement": "Relational richness does not widen authority",
+      "tests": [
+        "additional realized relation traversals do not accrete authority"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 10,
+      "requirement": "Persistence does not create authority",
+      "tests": [
+        "persisted formation memory cannot create permission during restart"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 11,
+      "requirement": "Observation is not Return",
+      "tests": [
+        "an attributable observation record cannot be admitted as constitutional Return"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 12,
+      "requirement": "Return does not mutate HOME",
+      "tests": [
+        "production LocalField processes circulate Direct, admit Return, and reconstruct after restart"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 13,
+      "requirement": "Delegated authority is not SourceAuthority",
+      "tests": [
+        "delegated operational authority cannot become SourceAuthority through public controls"
+      ],
+      "result": "PASS"
+    },
+    {
+      "case": 14,
+      "requirement": "No public endogenous authority-minting path",
+      "tests": [
+        "public claims and forged controls provide no endogenous authority-minting path",
+        "restart with substituted root is refused",
+        "HTTP exposes no raw adapter, unsigned telemetry or cross-origin browser path"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "counts": {
+    "tests": 110,
+    "pass": 110,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "suite_counts": {
+    "si_specimen": 44,
+    "local_field": 54,
+    "execution_binding": 12
+  },
+  "command": "node --test tests/si-specimen/*.test.mjs tests/local-field*.test.mjs tests/execution-binding-repair.test.mjs",
+  "default_gateway_suite": {
+    "tests": 13,
+    "pass": 0,
+    "fail": 13,
+    "cause": "ECONNREFUSED at localhost:4401",
+    "baseline_names_unchanged": true,
+    "failed_tests": [
+      "should return operational status",
+      "POST /intent — should submit an intent",
+      "POST /govern — should evaluate governance",
+      "POST /authorize — should record human approval",
+      "POST /execute — should execute the action",
+      "POST /receipt — should generate a receipt",
+      "GET /verify — should verify the receipt and chain",
+      "GET /intent/:id — should show full pipeline state",
+      "should block execution of a submitted (ungoverned) intent",
+      "should block execution of a denied intent",
+      "should block governance for an unknown agent",
+      "GET /ledger — should return entries",
+      "GET /verify — full chain should be valid"
+    ]
+  },
+  "run_id": "12ad2316-4b56-4259-bb05-9d913a3bbf10",
+  "matrix_id": "si-specimen-001-direct",
+  "plan_hash": "8a082e96256779bebc10ffcb35aed66200afe18ebf23c3b2f04c0b8644354e82",
+  "substrate_hash": "24a37985b146b56d804c2aa289a7e5c780c92783bfa501d26b9a2f2e2b9c4b15",
+  "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+  "receipt_id": "b569aae1-1b0a-4fd0-af9a-612f1f1171dc",
+  "return_id": "5ba8bc82-dd9d-4ed2-b9e2-81dd3acabdb5",
+  "canonical_schema": {
+    "repository": "bkr1297-RIO/rio-protocol",
+    "commit": "0449f2dd135d93791b9b4ce3f96093d1aca463cf",
+    "records_validated": 10
+  },
+  "native_verifier": {
+    "repository": "bkr1297-RIO/rio-receipt-protocol",
+    "commit": "8cb49727e98690f9f0dfb66625e3a182f321a6e9",
+    "result": {
+      "valid": true,
+      "passage_id": "6994ba25-1744-4498-b2e4-78fd2f5fc71e",
+      "receipt_id": "b569aae1-1b0a-4fd0-af9a-612f1f1171dc",
+      "occurrence_claim": "OBSERVED",
+      "authorization_created": false,
+      "evidence_ceiling": "Integrity and correlation of attributed historical records; not current standing or independent external truth"
+    }
+  },
+  "review": "No findings; independent focused38/38 and whitespace verification",
+  "evidence": {
+    "trace": "direct-trace.json.gz",
+    "uncompressed_sha256": "91a79cf0be3b64b5d8dd3d9836aca81540cbf2abcee469678cc42e34639d3f47",
+    "compressed_sha256": "227f848fb98342631a962ece4399aebb3e7ad03bfcedc67ad3e5f7f9d3cc7ba1",
+    "uncompressed_bytes": 1581735,
+    "compressed_bytes": 187813,
+    "anchor": "root-public-key.txt"
+  },
+  "return_boundary": {
+    "authority_controls_unchanged": true,
+    "home_mutation": "NOT_INVOKED",
+    "successor_mutation": "NOT_INVOKED"
+  },
+  "restart": {
+    "same_chain": true,
+    "attempts_before": 1,
+    "attempts_after": 1
+  },
+  "processes": {
+    "a": {
+      "initial_pid": 21,
+      "restarted_pid": 37
+    },
+    "b": {
+      "initial_pid": 13,
+      "restarted_pid": 29
+    }
+  },
+  "cleanup": {
+    "sandbox_removed": true,
+    "development_key_material_removed": true
+  },
+  "truth_status": "UNESTABLISHED",
+  "evidence_status": "NOT_ADMITTED",
+  "settlement_status": "UNSETTLED",
+  "mathematical_realization_dependency": "NONE_REQUIRED_BY_HEADER",
+  "source_authority_scope": "Root/bootstrap and typed controls of the constituted field; not arbitrary host compromise",
+  "growth_scope": "Extra enrolled capability and retained formation artifacts/traversals; no adaptive learning, graph optimizer or comparative assay",
+  "historical_evidence": "Earlier proof retained under its original implementation/substrate pins; no state migration",
+  "local_field_19_gate_register": "UNCHANGED / NOT REISSUED",
+  "execution_boundary": {
+    "class_1": [
+      "Read public repository source artifacts"
+    ],
+    "class_2": [
+      "Development keys and identities",
+      "Two loopback processes",
+      "Root configuration admission and scoped grants",
+      "Bounded create-only artifact and external readback",
+      "Restart, public evidence export and exact temporary cleanup"
+    ],
+    "class_3_performed": []
+  },
+  "no_merge": true,
+  "no_deployment": true,
+  "no_canonization": true
+}
