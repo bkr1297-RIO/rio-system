@@ -6,6 +6,8 @@ HLSI = Human-Led Synthetic Intelligence. This delivers the bounded first slice: 
 
 Repository: `bkr1297-RIO/rio-system`. Delivery branch: `build/si-specimen-001`, stacked on `build/one-local-field-frontier-v0.1` at `4436ede584c4c0c3938a75feccc632d4edceb24b`. The prerequisite candidate is [rio-system#205](https://github.com/bkr1297-RIO/rio-system/pull/205). The dedicated specimen branch isolates this later HLSI slice without rewriting the existing Local Field build branch. No merge, deployment, publication, release, or canonization is performed.
 
+Delivery: [draft rio-system#206](https://github.com/bkr1297-RIO/rio-system/pull/206), verified draft and unmerged. Implementation/evidence commit: `b13db3074e11daba082b3c4b20ffc47d4112e231`. Its tree exactly matches the verified local index. The following delivery-record commit changes documentation/metadata only.
+
 Engine Loom binding: **R-07 GAP / [architecture#322](https://github.com/bkr1297-RIO/one-rio-muss-architecture/issues/322)**. This is a bounded contribution to Formation → Crossing → Return, not route closure. Architecture, protocol and receipt repositories were inspected but did not require duplicate objects or changes for this slice. The existing Local Field 19-gate register is unchanged and is not reissued as an HLSI certificate.
 
 ## D1 — Runtime type definitions

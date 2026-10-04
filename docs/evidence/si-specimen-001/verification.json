@@ -140,5 +140,14 @@
     "successor_mutation": "NOT_INVOKED"
   },
   "builder_disposition": "PASS WITH NON-BLOCKING DEFECTS",
-  "reason": "F0.1 conformance and actual runtime path pass; pre-existing default gateway suite requires its unavailable localhost service."
+  "reason": "F0.1 conformance and actual runtime path pass; pre-existing default gateway suite requires its unavailable localhost service.",
+  "delivery": {
+    "repository": "bkr1297-RIO/rio-system",
+    "branch": "build/si-specimen-001",
+    "base_branch": "build/one-local-field-frontier-v0.1",
+    "implementation_commit": "b13db3074e11daba082b3c4b20ffc47d4112e231",
+    "draft_pr": "https://github.com/bkr1297-RIO/rio-system/pull/206",
+    "draft": true,
+    "merged": false
+  }
 }

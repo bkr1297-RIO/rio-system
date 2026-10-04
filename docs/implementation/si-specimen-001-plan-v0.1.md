@@ -40,4 +40,4 @@ Reviewed: repository source-of-truth, Engine Loom candidate/structure/registry, 
 - [x] Implement Direct preparation and LocalField integration.
 - [x] Reconcile D1–D12, temporal scope, inheritance and Return/HOME separation.
 - [x] Run conformance, real specimen and review.
-- [ ] Commit and Return for Brian / SourcePoint disposition.
+- [x] Commit and Return for Brian / SourcePoint disposition: draft rio-system#206; implementation b13db3074e11daba082b3c4b20ffc47d4112e231.
