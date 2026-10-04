@@ -1,0 +1,34 @@
+{
+  "kind": "DecisionContext",
+  "context_id": "simulation-development-report",
+  "question": "Create a bounded possibility report?",
+  "assessment_scope": "Declared fixture burdens, not validated future events.",
+  "required_dimensions": [
+    "disposition",
+    "authority_requirement",
+    "material_risk",
+    "irreversibility",
+    "uncertainty_disclosure",
+    "dependency_requirements",
+    "return_burden",
+    "benefit",
+    "alternatives"
+  ],
+  "request": {
+    "source_node": "node-a",
+    "subject": "node-a",
+    "target_node": "node-b",
+    "action": "create_document",
+    "target": "possibility-report.txt",
+    "scope": "simulation-report",
+    "purpose": "simulation-transduction-f0.1",
+    "dependencies": {
+      "corpus": "v1"
+    },
+    "conditions": {},
+    "return_requirement": {
+      "required": true,
+      "to": "node-a"
+    }
+  }
+}

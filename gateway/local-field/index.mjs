@@ -6,6 +6,10 @@ import { ProjectionRuntime } from './projection.mjs';
 import { Bilateral, MAX_RECORD_BYTES } from './bilateral.mjs';
 import { RelationRuntime } from './relations/profile.mjs';
 import { PROFILE as RELATION_PROFILE } from './relations/types.mjs';
+import { isSimulationContent, guardSimulationCandidate, verifySimulationReturn } from './relations/transduction.mjs';
+import { SIMULATION_DEPENDENCY } from './relations/possibility.mjs';
+import { fixedSubstrate } from './relations/substrate.mjs';
+import { fingerprint as formationHash } from './relations/types.mjs';
 import {
   canonicalizeArgs,
   issueExecutionToken,
@@ -121,7 +125,10 @@ export class LocalField {
         requireValue(this.#field.bilateral_profile === 'local-field-bilateral-v0.1', 'FIELD_PROFILE_UNSUPPORTED');
         this.#bilateral = new Bilateral({ store: this.#store, field: this.#field, anchor: this.#anchor, receiver, signingKey, peers,
           decide: (r, options) => this.#decision(r, options), record: (...args) => this.#record(...args),
-          verifyReturn: this.#relations ? chain => this.#relations.verifyReceiverRun(chain) : undefined });
+          verifyReturn: chain => {
+            this.#relations?.verifyReceiverRun(chain);
+            this.#verifySimulation(chain);
+          } });
       }
       if (this.#field.projection_runtime)
         this.#projection = new ProjectionRuntime({
@@ -431,6 +438,16 @@ export class LocalField {
   #decision(record, options) {
     const p = this.#request(record, options);
     const relation_binding = this.#relations?.guard(p);
+    const candidate = p.origin.candidate_id ? this.#store.get('candidate', p.origin.candidate_id) : null;
+    let simulation_binding;
+    const simulation_config = this.#field.dependencies[SIMULATION_DEPENDENCY];
+    if (simulation_config !== undefined || isSimulationContent(candidate?.body?.content)) {
+      requireValue(simulation_config !== undefined, 'SIMULATION_NOT_CONFIGURED');
+      requireValue(simulation_config === formationHash(fixedSubstrate()) &&
+        this.#store.state('dependency', SIMULATION_DEPENDENCY) === simulation_config, 'SUBSTRATE_DRIFT');
+      verifyNodeRecord(this.#store, candidate, this.#field.field_id);
+      simulation_binding = guardSimulationCandidate(p, candidate, { anchor: this.#anchor, field: this.#field });
+    }
     const lineage = resolveGrant(
       this.#store,
       p.authority_basis,
@@ -442,7 +459,12 @@ export class LocalField {
       intent_id: p.intent_id,
       action: p.action,
       agent_id: p.subject,
-      parameters: { ...p.payload, target: p.target, passage: p },
+      parameters: { ...p.payload, target: p.target, passage: p,
+        ...(simulation_binding ? { decision_surface: { ...candidate.body.content.decision_surface, expiry: {
+          passage: p.expires_at, candidate: candidate.body.expires_at,
+          formation_review: candidate.body.content.human_review.body.expires_at,
+          effective: simulation_binding.effective_expires_at,
+        } } } : {}) },
       timestamp: p.issued_at,
       target_environment: 'local',
     };
@@ -455,7 +477,7 @@ export class LocalField {
       ['REQUIRE_HUMAN', 'AUTO_APPROVE'].includes(policy.governance_decision),
       'RIO_DENIED_OR_HELD',
     );
-    return { intent, lineage, policy, relation_binding };
+    return { intent, lineage, policy, relation_binding, simulation_binding };
   }
   admit(record, transit = null) {
     canonicalizeArgs(record);
@@ -465,7 +487,7 @@ export class LocalField {
     try {
       return this.#store.transaction(() => {
         this.#bilateral?.transit(record, transit);
-        const { intent, lineage, policy, relation_binding } = this.#decision(record);
+        const { intent, lineage, policy, relation_binding, simulation_binding } = this.#decision(record);
         const returnBudget = this.#bilateral?.returnBudget({ record, transit, intent, lineage, policy });
         this.#store.useNonce(`passage:${p.source_node}`, p.nonce);
         requireValue(
@@ -483,6 +505,7 @@ export class LocalField {
           issued_at: stamp(),
           owner: 'gateway/governance/policy-engine.mjs',
           ...(relation_binding ? { relation_binding } : {}),
+          ...(simulation_binding ? { simulation_binding } : {}),
         };
         const token = issueExecutionToken({
           intent_id: p.intent_id,
@@ -539,12 +562,13 @@ export class LocalField {
       checked_at: stamp(), owner: 'gateway/governance/policy-engine.mjs',
     };
     permit.execution_authority = authority;
-    let lineage, policy, relation_binding;
+    let lineage, policy, relation_binding, simulation_binding;
     try {
-      ({ lineage, policy, relation_binding } = this.#decision(this.#store.get('passage', id)));
+      ({ lineage, policy, relation_binding, simulation_binding } = this.#decision(this.#store.get('passage', id)));
       authority.authority_lineage = lineage.map(g => g.body.grant.grant_id);
       authority.policy = policy;
       if (relation_binding) authority.relation_binding = relation_binding;
+      if (simulation_binding) authority.simulation_binding = simulation_binding;
     } catch (e) {
       authority.status = 'DENIED';
       authority.reason = e.message;
@@ -811,6 +835,16 @@ export class LocalField {
     ];
     return Object.fromEntries(kinds.map((k) => [k, this.#store.get(k, id)]));
   }
+  #verifySimulation(chain) {
+    const p = chain.passage?.body;
+    const candidate = p?.origin?.candidate_id ? this.#store.get('candidate', p.origin.candidate_id) : null;
+    if (this.#field.dependencies[SIMULATION_DEPENDENCY] === undefined && !isSimulationContent(candidate?.body?.content)) {
+      requireValue(!chain.decision?.simulation_binding, 'SIMULATION_RETURN_CONFORMANCE');
+      return true;
+    }
+    verifySigned(candidate, this.#store.get('enrollment', p.source_node).body.node.public_key_hex);
+    return verifySimulationReturn(chain, candidate, { anchor: this.#anchor, field: this.#field });
+  }
   verify(id, supplied = null) {
     try {
       const saved = this.inspect(id),
@@ -835,11 +869,12 @@ export class LocalField {
         r.hash_chain.authorization_hash ===
           hashAuthorization(a.authorization) &&
         r.hash_chain.execution_hash === hashExecution(a.execution) &&
+        hash(c.intent) === hash(a.intent) &&
         hash(c.decision) === hash(a.governance.checks.decision) &&
         hash(c.occurrence) === hash(a.execution.result.occurrence) &&
         c.return.passage_id === c.passage.body.passage_id &&
         c.return.receipt_id === r.receipt_id &&
-        (!c.decision.relation_binding || this.#relations?.verify(c) === true);
+        (!c.decision.relation_binding || this.#relations?.verify(c) === true) && this.#verifySimulation(c);
       return { valid, passage_id: id };
     } catch {
       return { valid: false, passage_id: id };

@@ -1,0 +1,164 @@
+{
+  "kind": "CompressedPossibilitySet",
+  "profile": "hlsi.simulation-transduction.f0.1",
+  "authority_effect": "none",
+  "context_hash": "d46c290179d82048bb4e22815ac75e97045b063499761b224f028787554a5a4a",
+  "artifact_set_hash": "c64ef8d9d1a2c519d4884c020f25ba90cef548509841fbcdab999ad03dbca275",
+  "artifact_count": 3,
+  "unresolved_artifact_count": 1,
+  "classes": [
+    {
+      "class_id": "0e924f32855639c9638c7f9288e367f5946848aa0652b13502a26cc9823c5318",
+      "representative_id": "possibility-a",
+      "equivalence_status": "DECLARED_BURDEN_EQUIVALENT",
+      "burden": {
+        "disposition": {
+          "status": "KNOWN",
+          "value": "propose"
+        },
+        "authority_requirement": {
+          "status": "KNOWN",
+          "value": "Exact current human-rooted action grant."
+        },
+        "material_risk": {
+          "status": "KNOWN",
+          "value": "Bounded development report creation."
+        },
+        "irreversibility": {
+          "status": "KNOWN",
+          "value": "Create-only disposable sandbox artifact."
+        },
+        "uncertainty_disclosure": {
+          "status": "KNOWN",
+          "value": "Predicted futures remain unobserved."
+        },
+        "dependency_requirements": {
+          "status": "KNOWN",
+          "value": {
+            "corpus": "v1"
+          }
+        },
+        "return_burden": {
+          "status": "KNOWN",
+          "value": "Attributed Return; evidence and settlement unevaluated."
+        },
+        "benefit": {
+          "status": "KNOWN",
+          "value": "Inspectable possibility and burden account."
+        },
+        "alternatives": {
+          "status": "KNOWN",
+          "value": [
+            "Do not create the report."
+          ]
+        }
+      },
+      "assumptions": [
+        "Target absent; sandbox adapter available."
+      ],
+      "metrology": {
+        "instrument": "declared fixture burden",
+        "limitations": [
+          "No prediction or risk validation."
+        ],
+        "burden_carrier": "development operator",
+        "unmeasured": [
+          "Actual future resource availability."
+        ]
+      },
+      "missing_information": [],
+      "members": [
+        {
+          "artifact_id": "possibility-a",
+          "artifact_hash": "18616e38bb13c5b654e008aa7ce6546683605be59f7311bf0ee6666e0c166106",
+          "model_id": "simulation-transduction-f0.1",
+          "model_version": "f0.1",
+          "model_input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+          "model_settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+        },
+        {
+          "artifact_id": "possibility-b",
+          "artifact_hash": "853a616b35572774acf4cbd396a79efdcdb903a771420050b02861619d61ad7a",
+          "model_id": "simulation-transduction-f0.1",
+          "model_version": "f0.1",
+          "model_input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+          "model_settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+        }
+      ]
+    },
+    {
+      "class_id": "21bcccbc782fae15fb0b18680ee156969058912d684f6cdec1cd1a0bec30a5eb",
+      "representative_id": "possibility-c",
+      "equivalence_status": "UNRESOLVED_KEEP_DISTINCT",
+      "burden": {
+        "disposition": {
+          "status": "KNOWN",
+          "value": "propose"
+        },
+        "authority_requirement": {
+          "status": "KNOWN",
+          "value": "Exact current human-rooted action grant."
+        },
+        "material_risk": {
+          "status": "UNKNOWN",
+          "value": null
+        },
+        "irreversibility": {
+          "status": "KNOWN",
+          "value": "Create-only disposable sandbox artifact."
+        },
+        "uncertainty_disclosure": {
+          "status": "KNOWN",
+          "value": "Predicted futures remain unobserved."
+        },
+        "dependency_requirements": {
+          "status": "KNOWN",
+          "value": {
+            "corpus": "v1"
+          }
+        },
+        "return_burden": {
+          "status": "KNOWN",
+          "value": "Attributed Return; evidence and settlement unevaluated."
+        },
+        "benefit": {
+          "status": "KNOWN",
+          "value": "Inspectable possibility and burden account."
+        },
+        "alternatives": {
+          "status": "KNOWN",
+          "value": [
+            "Do not create the report."
+          ]
+        }
+      },
+      "assumptions": [
+        "Target absent; sandbox adapter available."
+      ],
+      "metrology": {
+        "instrument": "declared fixture burden",
+        "limitations": [
+          "No prediction or risk validation."
+        ],
+        "burden_carrier": "development operator",
+        "unmeasured": [
+          "Actual future resource availability."
+        ]
+      },
+      "missing_information": [
+        "The decision-relevant resource condition is unresolved."
+      ],
+      "members": [
+        {
+          "artifact_id": "possibility-c",
+          "artifact_hash": "9f0be3ca8e97504a4dd6a6d79700e62e1be2e5690c9e4f652d9dba1b47674d71",
+          "model_id": "simulation-transduction-f0.1",
+          "model_version": "f0.1",
+          "model_input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+          "model_settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+        }
+      ]
+    }
+  ],
+  "compression_hash": "2e0664fc4666cb0f7c5f9144106bd648cddd6c6da5d3fc9e1b21dff3f22b00e5"
+}

@@ -1,0 +1,77 @@
+{
+  "profile": "hlsi.simulation-transduction.f0.1",
+  "runtime": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "arch": "x64"
+  },
+  "component_versions": {
+    "native_runtime": "rio-governance-gateway.2.9.0",
+    "formation": "hlsi.simulation-transduction.f0.1"
+  },
+  "implementation_hash": "e4136f7934fb923ab4d80e951f6022314c5ffbc47eb394bc4faf5616de4763e3",
+  "settings": {
+    "adaptive": false,
+    "supplied_fixture": true
+  },
+  "initial_state": {
+    "candidates": "none before formation",
+    "output": "absent",
+    "effects": 0
+  },
+  "resource_budgets": {
+    "artifacts": 32,
+    "artifact_bytes": 16384,
+    "set_bytes": 32768,
+    "candidate_bytes": 49152,
+    "prediction_bytes": 8192,
+    "output_bytes": 4096
+  },
+  "fixture_hash": "38568bda1935443fabf5ec72b822cd2c2fa4e19b03c32caac23aedacb81ee86c",
+  "model_sources": [
+    {
+      "artifact_id": "possibility-a",
+      "model": {
+        "model_id": "simulation-transduction-f0.1",
+        "version": "f0.1",
+        "realization": "supplied-possibility",
+        "input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+        "settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+      }
+    },
+    {
+      "artifact_id": "possibility-b",
+      "model": {
+        "model_id": "simulation-transduction-f0.1",
+        "version": "f0.1",
+        "realization": "supplied-possibility",
+        "input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+        "settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+      }
+    },
+    {
+      "artifact_id": "possibility-c",
+      "model": {
+        "model_id": "simulation-transduction-f0.1",
+        "version": "f0.1",
+        "realization": "supplied-possibility",
+        "input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+        "settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+      }
+    }
+  ],
+  "decision_context_id": "simulation-development-report",
+  "components": [
+    "relations/possibility.mjs",
+    "relations/compression.mjs",
+    "relations/transduction.mjs",
+    "local-field/index.mjs",
+    "governance/policy-engine.mjs",
+    "security/local-field-authority.mjs",
+    "execution/filesystem-executor.mjs",
+    "receipts/receipts.mjs",
+    "local-field/bilateral.mjs"
+  ],
+  "comparison": "No assay; Direct role components are recorded infrastructure references, not a claim that Direct executed in this mode.",
+  "unreviewed_candidate_id": "5a29b7aa-9b16-4209-baf5-d32dd80d41d7"
+}

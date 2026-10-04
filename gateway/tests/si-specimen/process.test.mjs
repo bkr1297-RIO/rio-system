@@ -44,3 +44,40 @@ test('production LocalField processes circulate Direct, admit Return, and recons
   assert.match(trace.rejections.unauthorized_source.error, /AUTHORITY_MISSING/);
   assert.equal(trace.rejections.replay.error, 'AUTHORITY_SPENT');
 });
+
+test('two keyed native processes carry compressed possibilities without treating their forecasts as occurrence', async t => {
+  const work = mkdtempSync(join(tmpdir(), 'simulation-process-test-'));
+  t.after(() => rmSync(work, { recursive: true, force: true }));
+  const output = join(work, 'simulation-trace.json');
+  await promisify(execFile)(process.execPath, [new URL('../../scripts/run-si-specimen-001.mjs', import.meta.url).pathname,
+    output, '--simulation'], { timeout: 30000 });
+  const trace = JSON.parse(readFileSync(output, 'utf8'));
+  assert.equal(trace.result, 'SIMULATION_TRANSDUCTION_F0_1_CONFORMANT');
+  assert.equal(trace.candidate.body.content.artifacts.length, 3);
+  assert.equal(trace.candidate.body.content.compression.classes.length, 2);
+  assert.equal(trace.candidate.body.content.compression.unresolved_artifact_count, 1);
+  assert.ok(trace.candidate.body.content.artifacts.every(a => a.epistemic_status === 'MODEL_DEPENDENT_POSSIBILITY' &&
+    a.occurrence_status === 'NOT_OBSERVED' && a.evidence_status === 'NOT_ADMITTED'));
+  assert.equal(trace.chain.decision.simulation_binding.authority_effect, 'none');
+  assert.deepEqual(trace.source_chain.egress.body.simulation_binding, trace.chain.decision.simulation_binding);
+  assert.deepEqual(trace.chain.execution_authority.simulation_binding, trace.chain.decision.simulation_binding);
+  assert.equal(trace.chain.execution_authority.status, 'AUTHORIZED');
+  assert.equal(trace.chain.fidelity.status, 'PASS');
+  assert.equal(trace.chain.occurrence.status, 'OBSERVED');
+  assert.equal(trace.chain.occurrence.target, trace.candidate.body.content.request.target);
+  assert.match(trace.independent_read.content, /model-dependent possibilities/);
+  assert.equal(trace.independent_read.content, trace.candidate.body.content.payload.content);
+  assert.notEqual(trace.processes.a.initial_pid, trace.processes.b.initial_pid);
+  assert.equal(trace.return_admission.status, 'ADMITTED_AS_ATTRIBUTED_RECORD');
+  assert.equal(trace.return_admission.evidence_status, 'NOT_ADMITTED');
+  assert.equal(trace.return_admission.settlement_status, 'UNSETTLED');
+  assert.deepEqual(trace.return_boundary.source_before, trace.return_boundary.source_after);
+  assert.deepEqual(trace.return_boundary.receiver_before, trace.return_boundary.receiver_after);
+  assert.equal(trace.restart.same_chain, true);
+  assert.equal(trace.restart.attempts_before, 1);
+  assert.equal(trace.restart.attempts_after, 1);
+  assert.equal(trace.cleanup.sandbox_removed, true);
+  assert.match(trace.rejections.proposal_only.error, /SIMULATION_REVIEW_REQUIRED/);
+  assert.match(trace.rejections.unauthorized_source.error, /AUTHORITY_MISSING/);
+  assert.equal(trace.rejections.replay.error, 'AUTHORITY_SPENT');
+});

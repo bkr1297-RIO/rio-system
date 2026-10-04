@@ -14,6 +14,18 @@ The public API is exported from `index.mjs`:
 
 The compiler intentionally accepts only Direct. This is a fixed lowering, not a topology optimizer or generalized scheduler. All declaration fields are checked; unsupported topology, unknown endpoints, artifact-type mismatches, missing coordinates and authority-converting uses fail closed.
 
+## Bounded simulation preparation
+
+The [Simulation Transduction F0.1 build contract](../../../docs/implementation/SIMULATION-TRANSDUCTION-BUILD-F0.1.md) extends formation beside this compiler. It creates no second runtime or authority owner. `DecisionContext(value)` and `SimulationArtifact(value)` validate model-dependent possibility material. `compressPossibilities(context, artifacts)` partitions by exact equality of every declared burden, model basis, assumption and metrology limit. Missing/unknown/conflicting burden stays distinct. Similar narrative alone never determines equivalence; raw inputs and membership remain retained.
+
+`transducePossibilities({context, artifacts, compression, selected_class_id, human_review})` reconstructs compression and produces only content for the existing `recommended_action` candidate. Passing `human_review: null` permits proposal formation; it cannot cross the configured consequential boundary. A signed formation review binds the exact surface and requested operation, while a separate current action grant remains required. All nine decision dimensions are mandatory, including authority requirement, material risk, irreversibility, uncertainty disclosure, dependency requirements and Return burden.
+
+Constitute the accepted path with the existing root-signed field dependency `simulation-transduction-f0.1 = fingerprint(fixedSubstrate())`. The root dependency owner also revokes it. Mandatory checks derive from that constituted configuration, so a model cannot disable them by removing its profile tag or install them by adding a tag. The native policy input records the complete surface and three expiry bounds. Current grant, subject, policy and Sentinel fidelity checks remain unchanged. RIO retains actual adjudication; a simulated ADMIT is only a declared possibility.
+
+The existing adapter retains its 4096-byte limit. A report projection retains every alternative burden, omits repeated member/provenance hashes and binds the complete retained surface by hash. Oversized reports refuse. The independently observed occurrence is creation of this report file; simulated futures remain `NOT_OBSERVED`. Native Return is separately admitted as an attributed record, not evidence, settled truth or HOME mutation.
+
+From `gateway/`, `npm run field:simulation -- /tmp/simulation-trace.json` runs the existing two-process driver in explicit simulation mode using declared synthetic fixture inputs. No new model, hardware substrate, assay, adaptive topology or UI is introduced. Runtime modules never import this harness. The manifest records actual implementation/version/settings/input/budget controls and makes no comparative capability claim.
+
 ## Existing owner bindings
 
 | Specimen concern | Existing owner | Integration |

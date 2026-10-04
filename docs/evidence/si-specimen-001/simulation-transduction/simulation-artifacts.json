@@ -1,0 +1,226 @@
+[
+  {
+    "kind": "SimulationArtifact",
+    "profile": "hlsi.simulation-transduction.f0.1",
+    "artifact_id": "possibility-a",
+    "context_hash": "d46c290179d82048bb4e22815ac75e97045b063499761b224f028787554a5a4a",
+    "epistemic_status": "MODEL_DEPENDENT_POSSIBILITY",
+    "authority_effect": "none",
+    "occurrence_status": "NOT_OBSERVED",
+    "evidence_status": "NOT_ADMITTED",
+    "model": {
+      "model_id": "simulation-transduction-f0.1",
+      "version": "f0.1",
+      "realization": "supplied-possibility",
+      "input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+      "settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+    },
+    "prediction": "A create-only report may complete promptly.",
+    "assumptions": [
+      "Target absent; sandbox adapter available."
+    ],
+    "metrology": {
+      "instrument": "declared fixture burden",
+      "limitations": [
+        "No prediction or risk validation."
+      ],
+      "burden_carrier": "development operator",
+      "unmeasured": [
+        "Actual future resource availability."
+      ]
+    },
+    "missing_information": [],
+    "burden": {
+      "disposition": {
+        "status": "KNOWN",
+        "value": "propose"
+      },
+      "authority_requirement": {
+        "status": "KNOWN",
+        "value": "Exact current human-rooted action grant."
+      },
+      "material_risk": {
+        "status": "KNOWN",
+        "value": "Bounded development report creation."
+      },
+      "irreversibility": {
+        "status": "KNOWN",
+        "value": "Create-only disposable sandbox artifact."
+      },
+      "uncertainty_disclosure": {
+        "status": "KNOWN",
+        "value": "Predicted futures remain unobserved."
+      },
+      "dependency_requirements": {
+        "status": "KNOWN",
+        "value": {
+          "corpus": "v1"
+        }
+      },
+      "return_burden": {
+        "status": "KNOWN",
+        "value": "Attributed Return; evidence and settlement unevaluated."
+      },
+      "benefit": {
+        "status": "KNOWN",
+        "value": "Inspectable possibility and burden account."
+      },
+      "alternatives": {
+        "status": "KNOWN",
+        "value": [
+          "Do not create the report."
+        ]
+      }
+    }
+  },
+  {
+    "kind": "SimulationArtifact",
+    "profile": "hlsi.simulation-transduction.f0.1",
+    "artifact_id": "possibility-b",
+    "context_hash": "d46c290179d82048bb4e22815ac75e97045b063499761b224f028787554a5a4a",
+    "epistemic_status": "MODEL_DEPENDENT_POSSIBILITY",
+    "authority_effect": "none",
+    "occurrence_status": "NOT_OBSERVED",
+    "evidence_status": "NOT_ADMITTED",
+    "model": {
+      "model_id": "simulation-transduction-f0.1",
+      "version": "f0.1",
+      "realization": "supplied-possibility",
+      "input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+      "settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+    },
+    "prediction": "The same report may complete after a scheduling delay.",
+    "assumptions": [
+      "Target absent; sandbox adapter available."
+    ],
+    "metrology": {
+      "instrument": "declared fixture burden",
+      "limitations": [
+        "No prediction or risk validation."
+      ],
+      "burden_carrier": "development operator",
+      "unmeasured": [
+        "Actual future resource availability."
+      ]
+    },
+    "missing_information": [],
+    "burden": {
+      "disposition": {
+        "status": "KNOWN",
+        "value": "propose"
+      },
+      "authority_requirement": {
+        "status": "KNOWN",
+        "value": "Exact current human-rooted action grant."
+      },
+      "material_risk": {
+        "status": "KNOWN",
+        "value": "Bounded development report creation."
+      },
+      "irreversibility": {
+        "status": "KNOWN",
+        "value": "Create-only disposable sandbox artifact."
+      },
+      "uncertainty_disclosure": {
+        "status": "KNOWN",
+        "value": "Predicted futures remain unobserved."
+      },
+      "dependency_requirements": {
+        "status": "KNOWN",
+        "value": {
+          "corpus": "v1"
+        }
+      },
+      "return_burden": {
+        "status": "KNOWN",
+        "value": "Attributed Return; evidence and settlement unevaluated."
+      },
+      "benefit": {
+        "status": "KNOWN",
+        "value": "Inspectable possibility and burden account."
+      },
+      "alternatives": {
+        "status": "KNOWN",
+        "value": [
+          "Do not create the report."
+        ]
+      }
+    }
+  },
+  {
+    "kind": "SimulationArtifact",
+    "profile": "hlsi.simulation-transduction.f0.1",
+    "artifact_id": "possibility-c",
+    "context_hash": "d46c290179d82048bb4e22815ac75e97045b063499761b224f028787554a5a4a",
+    "epistemic_status": "MODEL_DEPENDENT_POSSIBILITY",
+    "authority_effect": "none",
+    "occurrence_status": "NOT_OBSERVED",
+    "evidence_status": "NOT_ADMITTED",
+    "model": {
+      "model_id": "simulation-transduction-f0.1",
+      "version": "f0.1",
+      "realization": "supplied-possibility",
+      "input_hash": "d7e9530231b1eb73bd149af2e12eca729473936e4bda33b41c69f9b33e99cefe",
+      "settings_hash": "8adc1236299ddcdb926d62369e314963f751c1c57652a8fbf700a3334c348800"
+    },
+    "prediction": "The requested report may encounter an unresolved resource condition.",
+    "assumptions": [
+      "Target absent; sandbox adapter available."
+    ],
+    "metrology": {
+      "instrument": "declared fixture burden",
+      "limitations": [
+        "No prediction or risk validation."
+      ],
+      "burden_carrier": "development operator",
+      "unmeasured": [
+        "Actual future resource availability."
+      ]
+    },
+    "missing_information": [
+      "The decision-relevant resource condition is unresolved."
+    ],
+    "burden": {
+      "disposition": {
+        "status": "KNOWN",
+        "value": "propose"
+      },
+      "authority_requirement": {
+        "status": "KNOWN",
+        "value": "Exact current human-rooted action grant."
+      },
+      "material_risk": {
+        "status": "UNKNOWN",
+        "value": null
+      },
+      "irreversibility": {
+        "status": "KNOWN",
+        "value": "Create-only disposable sandbox artifact."
+      },
+      "uncertainty_disclosure": {
+        "status": "KNOWN",
+        "value": "Predicted futures remain unobserved."
+      },
+      "dependency_requirements": {
+        "status": "KNOWN",
+        "value": {
+          "corpus": "v1"
+        }
+      },
+      "return_burden": {
+        "status": "KNOWN",
+        "value": "Attributed Return; evidence and settlement unevaluated."
+      },
+      "benefit": {
+        "status": "KNOWN",
+        "value": "Inspectable possibility and burden account."
+      },
+      "alternatives": {
+        "status": "KNOWN",
+        "value": [
+          "Do not create the report."
+        ]
+      }
+    }
+  }
+]

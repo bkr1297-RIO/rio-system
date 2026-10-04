@@ -57,7 +57,7 @@ export class Bilateral {
     let transit;
     try {
       transit = this.store.transaction(() => {
-        const { policy, lineage } = this.decide(record, { egress: true });
+        const { policy, lineage, simulation_binding } = this.decide(record, { egress: true });
         requireValue(p.source_node === this.receiver, 'SOURCE_CUSTODY_MISMATCH');
         requireValue(this.peers[p.target_node], 'PEER_ROUTE_MISSING');
         this.store.useNonce(`egress:${p.source_node}`, p.nonce);
@@ -66,6 +66,7 @@ export class Bilateral {
           source_node: this.receiver, target_node: p.target_node, passage_id: p.passage_id,
           decision_id: randomUUID(), context: 'EGRESS', status: 'EMIT_AUTHORIZED',
           passage_hash: hash(p), authority_lineage: lineage.map(g => g.body.grant.grant_id),
+          ...(simulation_binding ? { simulation_binding } : {}),
           policy, owner: 'gateway/governance/policy-engine.mjs', issued_at: now(), expires_at: p.expires_at });
         const outgoing = this.signed({ type: 'passage_transit', field_id: this.field.field_id,
           source_node: this.receiver, record_id: randomUUID(), issued_at: now(), expires_at: p.expires_at,
@@ -184,6 +185,7 @@ export class Bilateral {
         c.receipt.hash_chain.governance_hash === hashGovernance(a.governance) &&
         c.receipt.hash_chain.authorization_hash === hashAuthorization(a.authorization) &&
         c.receipt.hash_chain.execution_hash === hashExecution(a.execution) &&
+        hash(c.intent) === hash(a.intent) &&
         hash(c.decision) === hash(a.governance.checks.decision) &&
         hash(c.execution_authority) === hash(a.execution.result.execution_authority) &&
         hash(c.fidelity) === hash(a.execution.result.fidelity) &&

@@ -26,6 +26,7 @@ export const FORBIDDEN_CONVERSIONS = Object.freeze([
   'relation->authority', 'relation->delegation', 'standing->delegation',
   'delegation->execution', 'influence->jurisdiction', 'learning->delegation',
   'persistence->sovereignty', 'observation->return',
+  'simulation->evidence', 'simulation->occurrence', 'simulation->authority',
 ]);
 export const TEMPORAL_SCOPE = Object.freeze({
   binding: 'native-passage', start: 'passage.issued_at', end: 'passage.expires_at',

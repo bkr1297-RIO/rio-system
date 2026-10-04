@@ -9,6 +9,18 @@ import { LocalStore } from '../ledger/local-store.mjs';
 import { verifyLocalFieldReturn } from '../receipts/receipts.mjs';
 import { setup, signed } from './helpers/local-field.mjs';
 
+test('an ordinary passage may omit its optional candidate ID through execution and historical verification', t => {
+  const x = setup(t, 'laptop'), p = x.passage(x.grant(), { origin: { intent: 'human-originated ordinary request' } });
+  const id = p.body.passage_id;
+  assert.equal(x.runtime.admit(p).status, 'ADMITTED');
+  assert.equal(x.runtime.execute(id, p).outcome, 'OBSERVED');
+  assert.equal(x.runtime.verify(id).valid, true);
+  const chain = x.runtime.inspect(id);
+  x.restart();
+  assert.deepEqual(x.runtime.inspect(id), chain);
+  assert.equal(x.runtime.verify(id).valid, true);
+});
+
 test('01 valid enrolled passage creates an actual observed artifact with native receipt', (t) => {
   const x = setup(t),
     p = x.passage(x.grant());

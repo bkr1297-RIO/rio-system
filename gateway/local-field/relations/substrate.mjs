@@ -18,6 +18,7 @@ export function fixedSubstrate() {
     })),
     infrastructure_hash: hash(Object.fromEntries([
       './types.mjs', './substrate.mjs', './profile.mjs',
+      './possibility.mjs', './compression.mjs', './transduction.mjs',
       '../bilateral.mjs', '../http.mjs', '../../package-lock.json',
       '../../security/local-field-authority.mjs', '../../security/token-manager.mjs',
       '../../security/ed25519.mjs', '../../governance/policy-engine.mjs', '../../ledger/local-store.mjs', '../../ledger/ledger.mjs',

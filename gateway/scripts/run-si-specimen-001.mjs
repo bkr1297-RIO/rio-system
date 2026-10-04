@@ -13,14 +13,21 @@ import { generateKeypair, signPayload, verifySignature } from '../security/ed255
 import { canonicalizeArgs, computeArgsHash } from '../security/token-manager.mjs';
 import { verifyLocalFieldReceipt, verifyLocalFieldReturn } from '../receipts/receipts.mjs';
 import { verifyLedgerEntries } from '../ledger/ledger.mjs';
-import { fixedSubstrate, directMatrix, compileRelations, prepareDirect, fingerprint as hash, PROFILE } from '../local-field/relations/index.mjs';
+import { fixedSubstrate, directMatrix, compileRelations, prepareDirect, fingerprint as hash, PROFILE,
+  DecisionContext, SimulationArtifact, SIMULATION_PROFILE, SIMULATION_LIMITS, DECISION_DIMENSIONS,
+  compressPossibilities, transducePossibilities } from '../local-field/relations/index.mjs';
 
-const output = resolve(process.argv[2] || 'si-specimen-001-trace.json');
+const argv = process.argv.slice(2), simulation = argv.includes('--simulation');
+const paths = argv.filter(arg => arg !== '--simulation');
+assert.ok(paths.length <= 1 && argv.filter(arg => arg === '--simulation').length <= 1 &&
+  paths.every(arg => !arg.startsWith('--')), 'unsupported specimen arguments');
+const output = resolve(paths[0] || (simulation ? 'simulation-transduction-trace.json' : 'si-specimen-001-trace.json'));
 const work = mkdtempSync(join(tmpdir(), 'si-specimen-001-'));
 const gateway = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const human = generateKeypair(), a = generateKeypair(), b = generateKeypair();
 const field_id = randomUUID(), returnGrantId = randomUUID(), controls = [];
-const substrate = fixedSubstrate(), matrix = directMatrix('si-specimen-001-direct', substrate), plan = compileRelations(matrix, substrate);
+const substrate = fixedSubstrate(), matrix = simulation ? null : directMatrix('si-specimen-001-direct', substrate),
+  plan = simulation ? null : compileRelations(matrix, substrate);
 const anchor = { principal_id: 'sourcepoint-development-fixture', actor_type: 'human', primary_role: 'root_authority', public_key_hex: human.publicKey };
 const stamp = () => ({ field_id, record_id: randomUUID(), issued_at: new Date().toISOString(), expires_at: new Date(Date.now() + 3600000).toISOString() });
 const signed = (body, key) => ({ body, signature: signPayload(canonicalizeArgs(body), key.secretKey) });
@@ -29,7 +36,7 @@ const policy = (action, agent) => ({ policy_id: `si-specimen-${action}`, policy_
 const definition = receiver => signed({ ...stamp(), type: 'field', sourcepoint: anchor.principal_id, receiver_node: receiver,
   bilateral_profile: 'local-field-bilateral-v0.1', policy: policy('create_document', 'node-a'),
   return_policy: policy('record_return', 'node-b'), return_authority_basis: returnGrantId,
-  dependencies: { 'si-specimen-001': hash(substrate) } }, human);
+  dependencies: simulation ? { corpus: 'v1', 'simulation-transduction-f0.1': hash(substrate) } : { 'si-specimen-001': hash(substrate) } }, human);
 const nodes = {};
 for (const [name, id, key] of [['a', 'node-a', a], ['b', 'node-b', b]]) {
   const directory = join(work, name);
@@ -72,7 +79,7 @@ const query = (n, values = {}) => send(n, '/query', signed({ ...stamp(), type: '
 async function constitutionalSnapshot(n) {
   const status = await query(n), ledger = await query(n, { view: 'ledger' });
   const governed = new Set(['field', 'enrollment', 'grant', 'revocation', 'dependency']);
-  return { field: status.field, nodes: status.nodes, configurations: status.relations.configurations,
+  return { field: status.field, nodes: status.nodes, configurations: status.relations?.configurations || null,
     signed_controls: ledger.map(e => JSON.parse(e.detail)).filter(r => governed.has(r.body?.type)) };
 }
 async function control(type, values) {
@@ -82,6 +89,7 @@ async function control(type, values) {
   return record;
 }
 let trace;
+let simulation_manifest;
 try {
   const firstB = await start(nodes.b);
   nodes.a.config.peers = { 'node-b': nodes.b.url };
@@ -96,35 +104,94 @@ try {
     action: 'record_return', target: 'return-record', scope: 'attributed-record-only', purpose: 'local-field-return',
     conditions: {}, dependencies: {}, parent: null, allow_delegation: false, max_uses: null } });
   const matrix_candidate_id = randomUUID();
-  const proposal = signed({ ...stamp(), type: 'candidate', source_node: 'node-a', candidate_id: matrix_candidate_id,
+  const proposal = simulation ? null : signed({ ...stamp(), type: 'candidate', source_node: 'node-a', candidate_id: matrix_candidate_id,
     kind: 'proposal', content: { profile: PROFILE, kind: 'relation-matrix', matrix, substrate } }, a);
-  for (const n of Object.values(nodes)) await send(n, '/candidates', proposal);
-  const sources = ['README.md', 'BILATERAL.md'].map((file, i) => ({ source_id: `repository-source-${i + 1}`,
+  if (!simulation) for (const n of Object.values(nodes)) await send(n, '/candidates', proposal);
+  const sources = simulation ? [] : ['README.md', 'BILATERAL.md'].map((file, i) => ({ source_id: `repository-source-${i + 1}`,
     title: `Local Field ${file}`, uri: `repository:gateway/local-field/${file}`,
     text: readFileSync(join(gateway, 'local-field', file), 'utf8') }));
-  const human_intent = signed({ ...stamp(), type: 'research_intent', issuer: anchor.principal_id,
+  const human_intent = simulation ? null : signed({ ...stamp(), type: 'research_intent', issuer: anchor.principal_id,
     source_node: 'node-a', target_node: 'node-b', target: 'research-synthesis.txt', action: 'create_document',
     scope: 'research-synthesis-artifact', purpose: 'si-specimen-001',
     query: 'How do authority, occurrence, and Return remain distinct?', sources_hash: hash(sources),
     plan_hash: plan.plan_hash, substrate_hash: plan.substrate_hash }, human);
-  const run_id = randomUUID(), candidate_id = randomUUID();
-  const content = { ...prepareDirect({ matrix, substrate, human_intent, sources, run_id }), matrix_candidate_id };
-  const candidate = signed({ ...stamp(), type: 'candidate', source_node: 'node-a', candidate_id,
+  const run_id = randomUUID();
+  let candidate_id = randomUUID();
+  let content = simulation ? null : { ...prepareDirect({ matrix, substrate, human_intent, sources, run_id }), matrix_candidate_id };
+  if (simulation) {
+    const raw = readFileSync(join(gateway, 'tests/fixtures/simulation-possibilities.json'), 'utf8');
+    const fixture = JSON.parse(raw), known = value => ({ status: 'KNOWN', value });
+    const context = DecisionContext({ kind: 'DecisionContext', context_id: 'simulation-development-report',
+      question: 'Create a bounded possibility report?', assessment_scope: 'Declared fixture burdens, not validated future events.',
+      required_dimensions: [...DECISION_DIMENSIONS], request: {
+        source_node: 'node-a', subject: 'node-a', target_node: 'node-b', action: 'create_document',
+        target: 'possibility-report.txt', scope: 'simulation-report', purpose: 'simulation-transduction-f0.1',
+        dependencies: { corpus: 'v1' }, conditions: {}, return_requirement: { required: true, to: 'node-a' },
+      } });
+    const artifacts = fixture.scenarios.map(scenario => SimulationArtifact({
+      kind: 'SimulationArtifact', profile: SIMULATION_PROFILE, artifact_id: scenario.artifact_id,
+      context_hash: hash(context), epistemic_status: 'MODEL_DEPENDENT_POSSIBILITY', authority_effect: 'none',
+      occurrence_status: 'NOT_OBSERVED', evidence_status: 'NOT_ADMITTED',
+      model: { model_id: fixture.fixture_id, version: fixture.version, realization: 'supplied-possibility',
+        input_hash: hash({ context, fixture }), settings_hash: hash({ adaptive: false, supplied_fixture: true }) },
+      prediction: scenario.prediction, assumptions: ['Target absent; sandbox adapter available.'],
+      metrology: { instrument: 'declared fixture burden', limitations: ['No prediction or risk validation.'],
+        burden_carrier: 'development operator', unmeasured: ['Actual future resource availability.'] },
+      missing_information: scenario.missing_information,
+      burden: { disposition: known('propose'), authority_requirement: known('Exact current human-rooted action grant.'),
+        material_risk: scenario.material_risk, irreversibility: known('Create-only disposable sandbox artifact.'),
+        uncertainty_disclosure: known('Predicted futures remain unobserved.'), dependency_requirements: known({ corpus: 'v1' }),
+        return_burden: known('Attributed Return; evidence and settlement unevaluated.'),
+        benefit: known('Inspectable possibility and burden account.'), alternatives: known(['Do not create the report.']) },
+    }));
+    const compression = compressPossibilities(context, artifacts);
+    assert.equal(compression.classes.length, 2);
+    assert.equal(compression.unresolved_artifact_count, 1);
+    content = transducePossibilities({ context, artifacts, compression,
+      selected_class_id: compression.classes[0].class_id, human_review: null });
+    simulation_manifest = { profile: SIMULATION_PROFILE, runtime: substrate.runtime,
+      component_versions: { native_runtime: 'rio-governance-gateway.2.9.0', formation: SIMULATION_PROFILE },
+      implementation_hash: content.implementation_hash, settings: { adaptive: false, supplied_fixture: true },
+      initial_state: { candidates: 'none before formation', output: 'absent', effects: 0 },
+      resource_budgets: SIMULATION_LIMITS, fixture_hash: hash({ source: raw }),
+      model_sources: artifacts.map(a => ({ artifact_id: a.artifact_id, model: a.model })),
+      decision_context_id: context.context_id,
+      components: ['relations/possibility.mjs', 'relations/compression.mjs', 'relations/transduction.mjs',
+        'local-field/index.mjs', 'governance/policy-engine.mjs', 'security/local-field-authority.mjs',
+        'execution/filesystem-executor.mjs', 'receipts/receipts.mjs', 'local-field/bilateral.mjs'],
+      comparison: 'No assay; Direct role components are recorded infrastructure references, not a claim that Direct executed in this mode.' };
+  }
+  let candidate = signed({ ...stamp(), type: 'candidate', source_node: 'node-a', candidate_id,
     kind: 'recommended_action', content }, a);
   for (const n of Object.values(nodes)) await send(n, '/candidates', candidate);
   const g = { grant_id: randomUUID(), subject: 'node-a', target_node: 'node-b', action: 'create_document',
-    target: human_intent.body.target, scope: human_intent.body.scope, purpose: human_intent.body.purpose,
-    dependencies: { 'si-specimen-001': hash(substrate) }, conditions: {}, parent: null,
+    target: simulation ? content.request.target : human_intent.body.target,
+    scope: simulation ? content.request.scope : human_intent.body.scope,
+    purpose: simulation ? content.request.purpose : human_intent.body.purpose,
+    dependencies: simulation ? content.request.dependencies : { 'si-specimen-001': hash(substrate) }, conditions: {}, parent: null,
     allow_delegation: false, max_uses: 1, payload_hash: computeArgsHash(content.payload) };
   const passage = () => signed({ ...stamp(), type: 'passage', schema_version: '0.1', passage_id: randomUUID(), intent_id: randomUUID(),
     source_node: 'node-a', subject: 'node-a', target_node: 'node-b', action: g.action, target: g.target,
     payload: content.payload, payload_hash: g.payload_hash, authority_basis: g.grant_id, scope: g.scope, purpose: g.purpose,
     dependencies: g.dependencies, conditions: {}, nonce: randomUUID(), replay: 'single-use', correlation_id: randomUUID(),
     lineage: [g.grant_id], return_requirement: { required: true, to: 'node-a' },
-    origin: { intent: human_intent.body.query, candidate_id } }, a);
+    origin: { intent: simulation ? content.context.question : human_intent.body.query, candidate_id } }, a);
   const proposal_only = await send(nodes.a, '/dispatch', passage(), 409);
-  assert.match(proposal_only.error, /RELATION_CONFIGURATION_NOT_ADMITTED/);
-  await control('dependency', { name: `relation-plan:${matrix.matrix_id}`, value: plan.plan_hash });
+  assert.match(proposal_only.error, simulation ? /SIMULATION_REVIEW_REQUIRED/ : /RELATION_CONFIGURATION_NOT_ADMITTED/);
+  if (simulation) {
+    const human_review = signed({ ...stamp(), type: 'simulation_decision_review', issuer: anchor.principal_id, source_node: 'node-a',
+      context_hash: content.context_hash, compression_hash: content.compression.compression_hash,
+      selected_class_id: content.selected_class_id, surface_hash: hash(content.decision_surface), request_hash: hash(content.request) }, human);
+    const prior = candidate;
+    content = transducePossibilities({ context: content.context, artifacts: content.artifacts, compression: content.compression,
+      selected_class_id: content.selected_class_id, human_review });
+    // Formation has a successor candidate identity; history is never overwritten.
+    candidate_id = randomUUID();
+    candidate = signed({ ...stamp(), type: 'candidate', source_node: 'node-a', candidate_id,
+      kind: 'recommended_action', content }, a);
+    for (const n of Object.values(nodes)) await send(n, '/candidates', candidate);
+    simulation_manifest.unreviewed_candidate_id = prior.body.candidate_id;
+  } else await control('dependency', { name: `relation-plan:${matrix.matrix_id}`, value: plan.plan_hash });
   const unauthorized_source = await send(nodes.a, '/dispatch', passage(), 409);
   assert.match(unauthorized_source.error, /AUTHORITY_MISSING/);
   await control('grant', { grant: g });
@@ -142,12 +209,19 @@ try {
   assert.equal(chain.occurrence.status, 'OBSERVED');
   assert.equal(chain.execution_authority.status, 'AUTHORIZED');
   assert.equal(chain.fidelity.status, 'PASS');
-  assert.equal(chain.relation_run.body.traversals.length, 8);
-  assert.equal(chain.relation_run.body.traversals.at(-1).admission_status, 'PENDING');
-  assert.equal(source_chain.relation_run.body.traversals.at(-1).admission_status, 'ADMITTED_AS_ATTRIBUTED_RECORD');
-  assert.equal(source_chain.relation_run.body.return_ingress.return_id, return_admission.return_id);
-  assert.equal(verifySignature(canonicalizeArgs(source_chain.relation_run.body), source_chain.relation_run.signature, a.publicKey), true);
-  assert.equal(verifySignature(canonicalizeArgs(chain.relation_run.body), chain.relation_run.signature, b.publicKey), true);
+  if (simulation) {
+    assert.equal(chain.decision.simulation_binding.compression_hash, content.compression.compression_hash);
+    assert.equal(chain.execution_authority.simulation_binding.review_hash, hash(content.human_review));
+    assert.equal(source_chain.return_ingress.return_id, return_admission.return_id);
+    assert.ok(content.artifacts.every(x => x.occurrence_status === 'NOT_OBSERVED'));
+  } else {
+    assert.equal(chain.relation_run.body.traversals.length, 8);
+    assert.equal(chain.relation_run.body.traversals.at(-1).admission_status, 'PENDING');
+    assert.equal(source_chain.relation_run.body.traversals.at(-1).admission_status, 'ADMITTED_AS_ATTRIBUTED_RECORD');
+    assert.equal(source_chain.relation_run.body.return_ingress.return_id, return_admission.return_id);
+    assert.equal(verifySignature(canonicalizeArgs(source_chain.relation_run.body), source_chain.relation_run.signature, a.publicKey), true);
+    assert.equal(verifySignature(canonicalizeArgs(chain.relation_run.body), chain.relation_run.signature, b.publicKey), true);
+  }
   assert.equal(verifyLocalFieldReceipt(chain.receipt, b.publicKey, { field_id, passage_id: p.body.passage_id, signer_id: 'node-b' }), true);
   assert.equal(verifyLocalFieldReturn(chain.return, b.publicKey, { field_id, signer_id: 'node-b' }), true);
   assert.equal(return_admission.evidence_status, 'NOT_ADMITTED');
@@ -170,14 +244,16 @@ try {
   assert.notEqual(firstB, secondB);
   assert.deepEqual(after.nodes, before.nodes);
   assert.equal(after.attempts.length, 1);
-  assert.equal(after.relations.substrate_hash, plan.substrate_hash);
+  if (!simulation) assert.equal(after.relations.substrate_hash, plan.substrate_hash);
   assert.equal(verifyLedgerEntries(ledger.a).valid, true);
   assert.equal(verifyLedgerEntries(ledger.b).valid, true);
-  trace = { result: 'SI_SPECIMEN_001_DIRECT_CONFORMANT', profile: PROFILE, run_id, ran_at: new Date().toISOString(),
+  trace = { result: simulation ? 'SIMULATION_TRANSDUCTION_F0_1_CONFORMANT' : 'SI_SPECIMEN_001_DIRECT_CONFORMANT',
+    profile: simulation ? SIMULATION_PROFILE : PROFILE, run_id, ran_at: new Date().toISOString(),
     evidence_ceiling: 'Development-only keyed LocalField processes; actual bounded file occurrence and attributed Return. No assay, adaptive morphology, whole-host isolation, independent MANTIS witness, truth, settlement, deployment or ratification claim.',
     processes: { a: { initial_pid: firstA, restarted_pid: secondA }, b: { initial_pid: firstB, restarted_pid: secondB } },
     anchor, definition: nodes.b.config.definition, definitions: { a: nodes.a.config.definition, b: nodes.b.config.definition },
     controls, substrate, matrix, plan, proposal, candidate, chain, source_chain, return_admission, ledger,
+    ...(simulation ? { simulation_manifest } : {}),
     return_boundary: { source_before, source_after, receiver_before, receiver_after,
       authority_controls_unchanged: true, home_mutation: 'NOT_INVOKED', successor_mutation: 'NOT_INVOKED' },
     independent_read: { observer: 'driver outside both runtime processes', observation_status: 'OBSERVATION_NOT_EVIDENCE',

@@ -1,0 +1,252 @@
+{
+  "result": "SIMULATION_TRANSDUCTION_F0_1_CONFORMANT_WITHIN_TESTED_SCOPE",
+  "disposition": "PASS WITH NON-BLOCKING DEFECTS",
+  "profile": "hlsi.simulation-transduction.f0.1",
+  "baseline_commit": "b164cc8693ceab564c3f5b5c6ce5d3085ccc57dc",
+  "ran_at": "2026-10-04T05:44:51.134Z",
+  "cases": [
+    {
+      "artifact": 1,
+      "requirement": "Generative Chamber Boundary",
+      "tests": [
+        "a reviewed simulation proposal cannot supply its own action authority",
+        "opaque authority and occurrence claims stay non-authoritative through public candidate interfaces"
+      ],
+      "result": "PASS"
+    },
+    {
+      "artifact": 2,
+      "requirement": "Typed SimulationArtifact",
+      "tests": [
+        "simulation artifact is immutable model-dependent possibility with no promoted standing",
+        "simulation cannot be reconstructed as evidence, occurrence, authority or an execution permit"
+      ],
+      "result": "PASS"
+    },
+    {
+      "artifact": 3,
+      "requirement": "Decision-equivalence compression",
+      "tests": [
+        "known equal burdens group while original predictions, identities and provenance remain reconstructable",
+        "matching unknowns and conflicts remain separate and visible",
+        "different assumptions, metrology or missing information cannot disappear into one class"
+      ],
+      "result": "PASS"
+    },
+    {
+      "artifact": 4,
+      "requirement": "Rasmussen transduction",
+      "tests": [
+        "pure transduction retains distinct burdens and supplies only a non-authoritative PassageCandidate",
+        "transduction rejects changed membership, artifacts, selected class and forbidden target constructions"
+      ],
+      "result": "PASS"
+    },
+    {
+      "artifact": 5,
+      "requirement": "Existing RIO decision surface and crossings",
+      "tests": [
+        "an actual grant cannot substitute for the exact reviewed decision surface",
+        "simulated ADMIT cannot override an actual policy denial",
+        "review expiry after ingress blocks execution without assuming non-occurrence",
+        "the human-constituted formation boundary cannot be bypassed by dropping a model-controlled profile tag",
+        "public Return admission refuses a receiver-resealed receipt whose surface contradicts the reviewed native intent"
+      ],
+      "result": "PASS"
+    },
+    {
+      "artifact": 6,
+      "requirement": "Compiler non-conversions",
+      "tests": [
+        "the existing Relation Compiler rejects simulation at the Direct consequential edge",
+        "two keyed native processes carry compressed possibilities without treating their forecasts as occurrence"
+      ],
+      "result": "PASS"
+    }
+  ],
+  "counts": {
+    "tests": 147,
+    "pass": 147,
+    "fail": 0,
+    "skipped": 0,
+    "cancelled": 0
+  },
+  "suite_counts": {
+    "si_specimen": 80,
+    "local_field": 55,
+    "execution_binding": 12
+  },
+  "supplemental_tests": 37,
+  "command": "node --test tests/si-specimen/*.test.mjs tests/local-field*.test.mjs tests/execution-binding-repair.test.mjs",
+  "default_gateway_suite": {
+    "tests": 13,
+    "pass": 0,
+    "fail": 13,
+    "cause": "ECONNREFUSED at localhost:4401",
+    "baseline_names_unchanged": true,
+    "failed_tests": [
+      "should return operational status",
+      "POST /intent \u2014 should submit an intent",
+      "POST /govern \u2014 should evaluate governance",
+      "POST /authorize \u2014 should record human approval",
+      "POST /execute \u2014 should execute the action",
+      "POST /receipt \u2014 should generate a receipt",
+      "GET /verify \u2014 should verify the receipt and chain",
+      "GET /intent/:id \u2014 should show full pipeline state",
+      "should block execution of a submitted (ungoverned) intent",
+      "should block execution of a denied intent",
+      "should block governance for an unknown agent",
+      "GET /ledger \u2014 should return entries",
+      "GET /verify \u2014 full chain should be valid"
+    ]
+  },
+  "review": {
+    "first_tree": "693e7caaf60ea1906e2cd578aef0e5843c1393a6",
+    "repair_tree": "a97e5779a330052a2054ff83c8b63fdb415df459",
+    "initial_findings": {
+      "critical": 0,
+      "important": 2,
+      "minor": 1
+    },
+    "repairs": [
+      "Bind native receipt intent to top-level reviewed intent at Return admission and verification.",
+      "Preserve optional candidate-ID compatibility.",
+      "Record simulation binding in the existing signed egress decision."
+    ],
+    "regressions_observed": "RED for actual issues, then GREEN 3/3",
+    "final_findings": 0,
+    "independent_repair_tests": {
+      "tests": 3,
+      "pass": 3,
+      "fail": 0
+    },
+    "verdict": "Ready for draft delivery within tested scope; no merge authority."
+  },
+  "run_id": "5ce09fd8-f7ae-4c3f-8fd4-0080ac8697d2",
+  "context_id": "simulation-development-report",
+  "candidate_id": "c16135fa-df95-41ce-80f9-95da23039a51",
+  "implementation_hash": "e4136f7934fb923ab4d80e951f6022314c5ffbc47eb394bc4faf5616de4763e3",
+  "context_hash": "d46c290179d82048bb4e22815ac75e97045b063499761b224f028787554a5a4a",
+  "compression_hash": "2e0664fc4666cb0f7c5f9144106bd648cddd6c6da5d3fc9e1b21dff3f22b00e5",
+  "artifact_count": 3,
+  "class_count": 2,
+  "unresolved_artifact_count": 1,
+  "passage_id": "11caa19f-6389-41fb-89b4-95538d25b9b4",
+  "receipt_id": "a9969064-e545-465c-8a02-1edf04178cb3",
+  "return_id": "3994865a-b435-49b0-9abc-eda7bbb1fdfa",
+  "canonical_schema": {
+    "repository": "bkr1297-RIO/rio-protocol",
+    "commit": "0449f2dd135d93791b9b4ce3f96093d1aca463cf",
+    "schema_id": "https://rio.ai/schemas/local-field-v0.1.schema.json",
+    "records_validated": 8,
+    "results": [
+      {
+        "record": "definition_a",
+        "type": "field",
+        "result": "PASS"
+      },
+      {
+        "record": "definition_b",
+        "type": "field",
+        "result": "PASS"
+      },
+      {
+        "record": "control_0_enrollment",
+        "type": "enrollment",
+        "result": "PASS"
+      },
+      {
+        "record": "control_1_enrollment",
+        "type": "enrollment",
+        "result": "PASS"
+      },
+      {
+        "record": "control_2_grant",
+        "type": "grant",
+        "result": "PASS"
+      },
+      {
+        "record": "control_3_grant",
+        "type": "grant",
+        "result": "PASS"
+      },
+      {
+        "record": "reviewed_candidate",
+        "type": "candidate",
+        "result": "PASS"
+      },
+      {
+        "record": "passage",
+        "type": "passage",
+        "result": "PASS"
+      }
+    ]
+  },
+  "native_verifier": {
+    "repository": "bkr1297-RIO/rio-receipt-protocol",
+    "commit": "8cb49727e98690f9f0dfb66625e3a182f321a6e9",
+    "result": {
+      "valid": true,
+      "passage_id": "11caa19f-6389-41fb-89b4-95538d25b9b4",
+      "receipt_id": "a9969064-e545-465c-8a02-1edf04178cb3",
+      "occurrence_claim": "OBSERVED",
+      "authorization_created": false,
+      "evidence_ceiling": "Integrity and correlation of attributed historical records; not current standing or independent external truth"
+    }
+  },
+  "evidence": {
+    "trace": "simulation-trace.json.gz",
+    "uncompressed_sha256": "19097d686f8ac2a7a3473371b9ee4a719296b04543123674e0b3bbe45ede44c6",
+    "compressed_sha256": "acb4164680bc941b98f523ae2766b42de4b23e0a02b66e4d208bfe0fbc55c9c2",
+    "uncompressed_bytes": 685785,
+    "compressed_bytes": 54872,
+    "anchor": "root-public-key.txt"
+  },
+  "formation_status": "MODEL_DEPENDENT_POSSIBILITY",
+  "actual_effect": "Create-only possibility report, independently read outside both runtime processes; no predicted future is actualized.",
+  "return_boundary": {
+    "authority_controls_unchanged": true,
+    "home_mutation": "NOT_INVOKED",
+    "successor_mutation": "NOT_INVOKED"
+  },
+  "restart": {
+    "same_chain": true,
+    "attempts_before": 1,
+    "attempts_after": 1
+  },
+  "processes": {
+    "a": {
+      "initial_pid": 34,
+      "restarted_pid": 50
+    },
+    "b": {
+      "initial_pid": 26,
+      "restarted_pid": 42
+    }
+  },
+  "cleanup": {
+    "sandbox_removed": true,
+    "development_key_material_removed": true
+  },
+  "return_admission": "ADMITTED_AS_ATTRIBUTED_RECORD",
+  "truth_status": "UNESTABLISHED",
+  "evidence_status": "NOT_ADMITTED",
+  "settlement_status": "UNSETTLED",
+  "scope": "Mandatory root-pinned simulation formation profile on constituted LocalField and HTTP interfaces; no whole-host compromise containment, prediction/risk accuracy, assay, independent MANTIS admission or settled HOME/succession.",
+  "historical_evidence": "Earlier proof retained with original implementation pins; this run uses fresh development identities/configuration/grants. No migration.",
+  "local_field_19_gate_register": "UNCHANGED / NOT REISSUED",
+  "execution_boundary": {
+    "class_1": [
+      "Read public repository source artifacts"
+    ],
+    "class_2": [
+      "Development keys and identities",
+      "Two loopback processes",
+      "Root configuration admission and scoped grants",
+      "Bounded create-only artifact and external readback",
+      "Restart, public evidence export and exact temporary cleanup"
+    ],
+    "class_3_performed": []
+  },
+  "dependencies_added": []
+}
