@@ -26,7 +26,9 @@
     "field:projection-acceptance": "node scripts/run-projection-acceptance.mjs",
     "test:si-specimen": "node --test tests/si-specimen/*.test.mjs",
     "field:si-specimen": "node scripts/run-si-specimen-001.mjs",
-    "field:simulation": "node scripts/run-si-specimen-001.mjs --simulation"
+    "field:simulation": "node scripts/run-si-specimen-001.mjs --simulation",
+    "test:ccm": "node --test tests/ccm-001/*.test.mjs",
+    "field:ccm": "node scripts/run-ccm-001.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

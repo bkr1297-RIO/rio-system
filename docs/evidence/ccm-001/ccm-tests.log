@@ -1,0 +1,52 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 62b0b1bd... for intent 68edb515-8361-4107-a0cc-8c5162bccb83 | tool=create_document | env=01a4698b-e8af-4768-ac02-8d4e2720e293 | max=1 | expires 2026-10-05T23:31:36.342Z
+✔ tampered derived event records cannot replace authenticated ledger custody on restart (311.969966ms)
+✔ a previously signed standing warrant cannot be appended again after downgrade (379.702949ms)
+✔ deleting dependency indexes cannot erase signed native dependency history (505.665534ms)
+✔ appending an earlier signed native dependency revision cannot revive old permission (484.035918ms)
+✔ receipt-less native restart Returns use the native verifier, including after reconstruction (1150.313069ms)
+✔ two commands from the same predecessor serialize; the second has no partial mutation (319.726467ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 8b2e1f26... for intent 09ca67ea-e01d-4fb9-a523-c1f7145a7b83 | tool=create_document | env=689fccb6-b2b6-478c-b610-138934a0fc11 | max=1 | expires 2026-10-05T23:31:35.379Z
+[RIO Token Manager] Token BURNED: 8b2e1f26... for intent 09ca67ea-e01d-4fb9-a523-c1f7145a7b83 — all 11 checks passed
+[RIO Token Manager] Token issued: e88bcd54... for intent 0ea6ee9d-8b07-49da-abc6-2165ee016407 | tool=create_document | env=c4d31d8d-0a3b-4054-ab8a-b7ab0423e11e | max=1 | expires 2026-10-05T23:31:36.737Z
+[RIO Token Manager] Token issued: f41d902e... for intent edf2dd87-1a50-49b8-98ab-7108c8f724d6 | tool=create_document | env=4e6a3552-7176-4c34-9938-8c2e1dbc8f4a | max=1 | expires 2026-10-05T23:31:39.866Z
+[RIO Token Manager] Token BURNED: f41d902e... for intent edf2dd87-1a50-49b8-98ab-7108c8f724d6 — all 11 checks passed
+[RIO Token Manager] Token issued: 8caa3ddf... for intent 7ed8e75e-6441-427d-94ca-164da0a91d0e | tool=create_document | env=70e69dbe-0ab4-4fed-8172-612d5f1942ab | max=1 | expires 2026-10-05T23:31:44.753Z
+✔ CCM profile is opt-in and does not grant standing to default fields (122.711786ms)
+✔ interval queries distinguish unknown endpoints, absent relation and independent parallel intervals (203.69958ms)
+✔ standing requires exact predecessor and current native SourcePoint warrant (204.914017ms)
+✔ H-01 and H-07 identical payload/shared participant retain interval-specific standing (905.433586ms)
+✔ H-03 revoked delegation blocks actual effect (557.991836ms)
+✔ H-10 dependency drift invalidates decision at point of use (766.383178ms)
+✔ H-12 subject drift and replay cannot change unrelated intervals (698.97658ms)
+✔ H-04 out-of-order Return arrival remains exact and never mutates orientation (861.052329ms)
+✔ H-05 denied outbound permits independently judged attributed exterior observation (765.89868ms)
+✔ H-06 lawful outbound cannot admit bad-provenance observation (1094.238662ms)
+✔ H-08 and H-09 context and authority cannot cross via shared endpoints (724.431117ms)
+✔ H-02 explicit notification preserves cross-boundary relation without authority propagation (746.87563ms)
+✔ H-11 receipt rewrite and direct promotion operations are unavailable (769.976653ms)
+✔ historical interval state reconstructs after restart and query results cannot mutate state (710.990711ms)
+✔ native policy denial remains distinct from interval eligibility (708.998357ms)
+✔ interval downgrade after native admission prevents point-of-use execution (922.047631ms)
+✔ an unbound native passage cannot bypass an opted-in CCM profile (524.367289ms)
+✔ historical hash cursor is global event order even when another interval changes at the same millisecond (337.036788ms)
+✔ historical event cursor excludes later events sharing its timestamp (187.25531ms)
+✔ dependency change-and-restore cannot resurrect an old bound passage (848.988301ms)
+✔ source warrants are retrievable and bind reconstructed interval lineage (284.840576ms)
+✔ query admission cannot outlive current node enrollment/revocation (567.998537ms)
+✔ malformed Return observation is rejected before any durable mutation (831.558925ms)
+✔ revoked observer cannot supply new admitted provenance, while later revocation preserves earlier history (1492.084107ms)
+✔ historical projections include authority, refreshed dependency standing, passages and supersession (879.543462ms)
+✔ explicit crossing is historical admission, not permanently current permission (619.987057ms)
+✔ supersession cannot point an interval to itself (321.550379ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ existing authenticated control/query transport carries CCM without a new authority surface (409.026862ms)
+ℹ tests 34
+ℹ suites 0
+ℹ pass 34
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 17965.663036

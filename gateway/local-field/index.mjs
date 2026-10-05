@@ -1,3 +1,4 @@
+import { ConstitutionalMedium } from './medium/index.mjs';
 import { randomUUID } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { LocalStore } from '../ledger/local-store.mjs';
@@ -60,6 +61,7 @@ export class LocalField {
   #projection;
   #bilateral;
   #relations;
+  #medium;
   constructor({ root, anchor, receiver, signingKey, definition, openArrow, peers }) {
     requireValue(
       root &&
@@ -155,6 +157,20 @@ export class LocalField {
           ),
           'RECEIVER_KEY_MISMATCH',
         );
+      if (Object.hasOwn(this.#field.dependencies, 'ccm-001'))
+        this.#medium = new ConstitutionalMedium({ store: this.#store, field: this.#field, anchor: this.#anchor,
+          rootCheck: record => this.#controlSignature(record),
+          inspect: id => ({ ...this.inspect(id), denials: this.#store.all('denial').filter(d => d.passage_id === id) }),
+          preflight: record => this.#decision(record),
+          verify: id => {
+            const chain = this.inspect(id);
+            if (chain.receipt) return this.verify(id);
+            if (!chain.return) return { valid: true, status: 'NO_NATIVE_RETURN' };
+            const key = this.#store.get('enrollment', this.#receiver)?.body.node.public_key_hex;
+            return { valid: verifyLocalFieldReturn(chain.return, key, { field_id: this.#field.field_id, signer_id: this.#receiver }) &&
+              chain.return.passage_id === id && !chain.return.receipt_id &&
+              this.#store.ledger().some(e => e.action === 'return' && hash(JSON.parse(e.detail)) === hash(chain.return)) };
+          } });
       this.#store.acquireLease();
       this.#executor = createFilesystemExecutor({
         root: join(resolve(root), 'artifacts'),
@@ -210,12 +226,13 @@ export class LocalField {
     return b;
   }
   control(record) {
+    if (record?.body?.type === 'ccm_command') return this.ccmCommand(record);
     if (this.#bilateral) requireValue(Buffer.byteLength(JSON.stringify(record)) <= MAX_RECORD_BYTES, 'CONTROL_RESOURCE_LIMIT');
     canonicalizeArgs(record);
     record = clone(record);
     const b = this.#controlSignature(record),
       root = b.issuer === this.#anchor.principal_id;
-    return this.#store.transaction(() => {
+    const recorded = this.#store.transaction(() => {
       this.#store.useNonce('control', b.record_id);
       if (b.type === 'enrollment') {
         requireValue(root, 'ROOT_REQUIRED');
@@ -329,6 +346,8 @@ export class LocalField {
         authority_effect: b.type === 'enrollment' ? 'membership_only' : b.type,
       };
     });
+    if (b.type === 'dependency') this.#medium?.dependencyChanged(record);
+    return recorded;
   }
   candidate(record) {
     requireValue(record?.body?.type === 'candidate', 'CANDIDATE_REQUIRED');
@@ -429,6 +448,7 @@ export class LocalField {
         throw new Error('RELATION_NOT_CONFIGURED');
     }
     validateArtifactOperation(p);
+    this.#medium?.guard(p);
     this.#arrow?.guard(p);
     if (p.projection && !this.#projection)
       throw new Error('PROJECTION_NOT_CONFIGURED');
@@ -973,6 +993,10 @@ export class LocalField {
         : nodeAt(this.#store, b.issuer).public_key_hex;
     verifySigned(record, key);
     requireValue(b.issuer === this.#anchor.principal_id, 'QUERY_ROOT_REQUIRED');
+    if (b.view === 'ccm') {
+      requireValue(Array.isArray(b.args), 'CCM_QUERY_ARGS');
+      return this.ccmQuery(b.query, ...b.args);
+    }
     if (b.view === 'arrow') {
       requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');
       return this.#arrow.view(b.arrow_id);
@@ -1010,6 +1034,14 @@ export class LocalField {
     const admitted = this.#bilateral.admitReturn(transit);
     this.#relations?.captureReturn(this.inspect(admitted.passage_id));
     return admitted;
+  }
+  ccmCommand(record) {
+    requireValue(this.#medium, 'CCM_NOT_CONFIGURED');
+    return this.#medium.apply(record);
+  }
+  ccmQuery(name, ...args) {
+    requireValue(this.#medium, 'CCM_NOT_CONFIGURED');
+    return this.#medium.query(name, ...args);
   }
   arrow(record) {
     requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');

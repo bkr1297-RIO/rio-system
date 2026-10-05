@@ -1,0 +1,49 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ tampered derived event records cannot replace authenticated ledger custody on restart (215.914368ms)
+✔ a previously signed standing warrant cannot be appended again after downgrade (539.694908ms)
+✔ deleting dependency indexes cannot erase signed native dependency history (728.05043ms)
+✔ two commands from the same predecessor serialize; the second has no partial mutation (393.650448ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: d8723dae... for intent d885ba49-f39b-4723-90f9-13335da442cc | tool=create_document | env=7341a231-e48d-4256-bf90-eec0526d16b7 | max=1 | expires 2026-10-05T23:24:55.565Z
+[RIO Token Manager] Token BURNED: d8723dae... for intent d885ba49-f39b-4723-90f9-13335da442cc — all 11 checks passed
+[RIO Token Manager] Token issued: 883be9cf... for intent 5c57ff00-2c28-43e8-a76c-9b094ffbdbdd | tool=create_document | env=9cb0b670-38b3-4937-b160-5c956ad4b250 | max=1 | expires 2026-10-05T23:24:57.266Z
+[RIO Token Manager] Token issued: 8804c3d8... for intent 24fa41c0-4010-4baa-9120-bf49b1830791 | tool=create_document | env=118e93d2-eb90-4d8a-b10c-01b8b930196e | max=1 | expires 2026-10-05T23:24:58.974Z
+[RIO Token Manager] Token BURNED: 8804c3d8... for intent 24fa41c0-4010-4baa-9120-bf49b1830791 — all 11 checks passed
+[RIO Token Manager] Token issued: 01613a73... for intent a869d372-7765-4096-8e1d-aad51a2ecbba | tool=create_document | env=33e5d8d5-acd0-4d5a-bfd2-031a54c03051 | max=1 | expires 2026-10-05T23:25:01.636Z
+✔ CCM profile is opt-in and does not grant standing to default fields (132.006283ms)
+✔ interval queries distinguish unknown endpoints, absent relation and independent parallel intervals (185.102382ms)
+✔ standing requires exact predecessor and current native SourcePoint warrant (183.239088ms)
+✔ H-01 and H-07 identical payload/shared participant retain interval-specific standing (634.416314ms)
+✔ H-03 revoked delegation blocks actual effect (673.653437ms)
+✔ H-10 dependency drift invalidates decision at point of use (906.653112ms)
+✔ H-12 subject drift and replay cannot change unrelated intervals (354.516814ms)
+✔ H-04 out-of-order Return arrival remains exact and never mutates orientation (443.602914ms)
+✔ H-05 denied outbound permits independently judged attributed exterior observation (388.005575ms)
+✔ H-06 lawful outbound cannot admit bad-provenance observation (646.607641ms)
+✔ H-08 and H-09 context and authority cannot cross via shared endpoints (417.34746ms)
+✔ H-02 explicit notification preserves cross-boundary relation without authority propagation (393.903422ms)
+✔ H-11 receipt rewrite and direct promotion operations are unavailable (410.658377ms)
+✔ historical interval state reconstructs after restart and query results cannot mutate state (358.377957ms)
+✔ native policy denial remains distinct from interval eligibility (424.267999ms)
+✔ interval downgrade after native admission prevents point-of-use execution (510.291432ms)
+✔ an unbound native passage cannot bypass an opted-in CCM profile (272.479807ms)
+✔ historical hash cursor is global event order even when another interval changes at the same millisecond (228.959513ms)
+✔ historical event cursor excludes later events sharing its timestamp (141.579379ms)
+✔ dependency change-and-restore cannot resurrect an old bound passage (576.541897ms)
+✔ source warrants are retrievable and bind reconstructed interval lineage (176.864646ms)
+✔ query admission cannot outlive current node enrollment/revocation (265.955336ms)
+✔ malformed Return observation is rejected before any durable mutation (490.391793ms)
+✔ revoked observer cannot supply new admitted provenance, while later revocation preserves earlier history (652.273188ms)
+✔ historical projections include authority, refreshed dependency standing, passages and supersession (796.633507ms)
+✔ explicit crossing is historical admission, not permanently current permission (400.434095ms)
+✔ supersession cannot point an interval to itself (219.452177ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ existing authenticated control/query transport carries CCM without a new authority surface (353.013631ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 32
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11522.438573

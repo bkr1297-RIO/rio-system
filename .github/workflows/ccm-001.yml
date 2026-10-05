@@ -1,0 +1,29 @@
+name: CCM-001 Candidate Conformance
+on:
+  pull_request:
+    paths: ['gateway/local-field/medium/**', 'gateway/local-field/index.mjs', 'gateway/tests/ccm-001/**', 'gateway/scripts/run-ccm-001.mjs', 'gateway/package*.json', '.github/workflows/ccm-001.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  candidate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: gateway/package-lock.json
+      - run: npm ci
+        working-directory: gateway
+      - run: npm run test:ccm
+        working-directory: gateway
+      - run: npm run test:local-field
+        working-directory: gateway
+      - run: npm run test:si-specimen
+        working-directory: gateway
+      - run: npm run test:execution-binding
+        working-directory: gateway
+      - run: npm run field:ccm -- /tmp/ccm-s1.json --s1
+        working-directory: gateway
