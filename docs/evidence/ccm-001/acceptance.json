@@ -1,0 +1,244 @@
+{
+  "schema_version": "ccm-001.f0.1.engineering-return",
+  "status": "PASS_WITH_RECORDED_SCOPE_LIMITS",
+  "standing": "CANDIDATE_FOR_SOURCEPOINT_REVIEW",
+  "base_revision": "3d8eb2016fc60a2f04c65a39cf8b21fd483fe7e1",
+  "branch": "build/ccm-001-f0.1",
+  "observed_at": "2026-10-05T23:02:59.017699+00:00",
+  "tested_scope": "Single-SourcePoint optional LocalField interval kernel; explicit scoped human-qualified orientation",
+  "constitutional_claim_ceiling": "Root-attributed qualified inbound judgment; no MANTIS truth, settlement or HOME mutation",
+  "criteria": [
+    {
+      "id": 1,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 2,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 3,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 4,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 5,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 6,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 7,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 8,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 9,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 10,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 11,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    },
+    {
+      "id": 12,
+      "status": "PASS_WITHIN_TESTED_SCOPE",
+      "evidence": "CONFORMANCE.md and scale.json"
+    }
+  ],
+  "checks": [
+    {
+      "suite": "ccm",
+      "command": "node --test gateway/tests/ccm-001/*.test.mjs",
+      "cwd": "repository root",
+      "exit_code": 0,
+      "tests": 34,
+      "pass": 34,
+      "fail": 0,
+      "log": "ccm-tests.log"
+    },
+    {
+      "suite": "local-field",
+      "command": "npm run test:local-field",
+      "cwd": "gateway/",
+      "exit_code": 0,
+      "tests": 55,
+      "pass": 55,
+      "fail": 0,
+      "log": "local-field-tests.log"
+    },
+    {
+      "suite": "si-specimen",
+      "command": "npm run test:si-specimen",
+      "cwd": "gateway/",
+      "exit_code": 0,
+      "tests": 80,
+      "pass": 80,
+      "fail": 0,
+      "log": "si-tests.log"
+    },
+    {
+      "suite": "execution-binding",
+      "command": "npm run test:execution-binding",
+      "cwd": "gateway/",
+      "exit_code": 0,
+      "tests": 12,
+      "pass": 12,
+      "fail": 0,
+      "log": "execution-binding-tests.log"
+    }
+  ],
+  "passed_test_count": 181,
+  "default_gateway_suite": {
+    "command": "npm test",
+    "cwd": "gateway/",
+    "tests": 13,
+    "pass": 0,
+    "fail": 13,
+    "reason": "localhost:4401 ECONNREFUSED; PostgreSQL-backed server did not become available",
+    "log": "default-gateway-tests.log"
+  },
+  "scale": [
+    {
+      "stage": "S1",
+      "participants": 10,
+      "active_intervals": 100,
+      "interval_constitution_ms": 71.81171899999998,
+      "ledger_interval_writes_per_second": 1364.6797676574213,
+      "query_ms": {
+        "p50": 0.07104900000001635,
+        "p95": 0.2576660000000288,
+        "p99": 0.4662190000000237,
+        "samples": 1000
+      },
+      "lineage_reconstruction_ms": 0.23140200000000277,
+      "sqlite_bytes": 683736,
+      "memory_rss_bytes": 64593920,
+      "resource_budgets": {
+        "command_bytes": 65536,
+        "batch_items": 128,
+        "query_samples": 1000
+      },
+      "root_mode": "DEVELOPMENT_KEYS_ONLY",
+      "restart_reconstruction_ms": 689.8209019999999,
+      "cross_interval_isolation_failures": 0,
+      "unauthorized_standing_inheritance": 0,
+      "historical_rewrite_failures": 0,
+      "reconstruction_head": "a98a41d096632221f68e67771a2b3a41c219af1fc3dd57ee0ddfcb7ac72ba634",
+      "hostile_checks_passed": 15
+    },
+    {
+      "stage": "S2",
+      "participants": 100,
+      "active_intervals": 10000,
+      "interval_constitution_ms": 4112.590452,
+      "ledger_interval_writes_per_second": 2431.0711500917523,
+      "query_ms": {
+        "p50": 0.7775910000000295,
+        "p95": 1.280720000000656,
+        "p99": 2.3290409999990516,
+        "samples": 1000
+      },
+      "lineage_reconstruction_ms": 0.03194199999961711,
+      "sqlite_bytes": 40381976,
+      "memory_rss_bytes": 161079296,
+      "resource_budgets": {
+        "command_bytes": 65536,
+        "batch_items": 128,
+        "query_samples": 1000
+      },
+      "root_mode": "DEVELOPMENT_KEYS_ONLY",
+      "restart_reconstruction_ms": 3100.1165330000003,
+      "cross_interval_isolation_failures": 0,
+      "unauthorized_standing_inheritance": 0,
+      "historical_rewrite_failures": 0,
+      "reconstruction_head": "b89e352868ea070d9eede71190223729a23df91d452d746f4d6791b9178558cf",
+      "hostile_checks_passed": 15
+    },
+    {
+      "stage": "S3",
+      "participants": 1000,
+      "active_intervals": 100000,
+      "interval_constitution_ms": 37850.105211999995,
+      "ledger_interval_writes_per_second": 2641.9477420183403,
+      "query_ms": {
+        "p50": 0.8679300000003423,
+        "p95": 1.4341819999972358,
+        "p99": 2.4668429999946966,
+        "samples": 1000
+      },
+      "lineage_reconstruction_ms": 0.036158000002615154,
+      "sqlite_bytes": 358909216,
+      "memory_rss_bytes": 524333056,
+      "resource_budgets": {
+        "command_bytes": 65536,
+        "batch_items": 128,
+        "query_samples": 1000
+      },
+      "root_mode": "DEVELOPMENT_KEYS_ONLY",
+      "restart_reconstruction_ms": 29771.870461,
+      "cross_interval_isolation_failures": 0,
+      "unauthorized_standing_inheritance": 0,
+      "historical_rewrite_failures": 0,
+      "reconstruction_head": "4727a149dd16c498023d29a5f3335c51ee8f524fe65d929c4b4ba48e36eca597",
+      "hostile_checks_passed": 15
+    }
+  ],
+  "source_sha256": {
+    "gateway/local-field/index.mjs": "b1289a47836f89f6e05ec91a96427200f97f03d106c2d527e4d3e23ff6787252",
+    "gateway/package.json": "71c10055743816bbe7170f914827c364cd68a16b34f70c0eb0bc5ad7f827808b",
+    ".github/workflows/ccm-001.yml": "9da1bc86be70ca022af68ec00ee770af438487933568946a63ca9851c94154d0",
+    "gateway/scripts/run-ccm-001.mjs": "7f9a53964fdf2f7e151076740c76e87383cf76770bd85ad8e6d525b7f55a6814",
+    "gateway/local-field/medium/index.mjs": "4a1a6751aec184efc54453f84b512705db1a6c98cdaaa7626ff18fbadf943ce6",
+    "gateway/local-field/medium/types.mjs": "7f71c2da0dd70547607bfeeb729846856bdc073bb6d12a41fc802e76722865b8",
+    "gateway/local-field/medium/types.d.ts": "1d02c6b2ab31b03764c9a1f50ea1db057b37661b5cee86cf8cd0c8d75b852f51",
+    "gateway/tests/ccm-001/helpers.mjs": "6cfce637919cf80dbbcacac13ad6e011911871d2c065a268088c007ee5dcecaf",
+    "gateway/tests/ccm-001/integrity.test.mjs": "f8060b7ba4fcf5d6f916bd3ee7e2a0073d5bf759f233e55c97b0d422998cf329",
+    "gateway/tests/ccm-001/medium.test.mjs": "1f93bf1a5aa3eca5933242083cb11fd76f5ef80b10fa42e0a24ae22e60d8c3d8",
+    "gateway/tests/ccm-001/scale-fixture.mjs": "ab8e1d13ceadf5b28a2196fcc49d68b42451e44cd28a5f728143180f0dcff11d",
+    "gateway/tests/ccm-001/transport.test.mjs": "ef6867e94bc90b1b13376ab78bf9f9c9099d8ae7a9aff065e01ad255273faa8e"
+  },
+  "fixture_secret_policy": "No private keys persisted in evidence; temporary development identities only",
+  "execution_boundary": {
+    "read": [
+      "Existing repositories/source-of-truth/Loom and predecessor artifacts"
+    ],
+    "build_local": [
+      "Isolated candidate worktree",
+      "Source/types/tests/docs",
+      "Temporary signed development fields and filesystem effects",
+      "Scoped candidate CI"
+    ],
+    "authorized_external_candidate": [
+      "Build branch and draft PR only"
+    ],
+    "class_3_performed": [],
+    "merge": false,
+    "deploy": false,
+    "canonize": false,
+    "real_account_consequence": false
+  }
+}

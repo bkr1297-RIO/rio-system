@@ -1,0 +1,225 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ tampered derived event records cannot replace authenticated ledger custody on restart (232.049658ms)
+✖ a previously signed standing warrant cannot be appended again after downgrade (504.75915ms)
+✖ deleting dependency indexes cannot erase signed native dependency history (801.244245ms)
+✔ two commands from the same predecessor serialize; the second has no partial mutation (592.983911ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 31b23a95... for intent 305ea61e-c974-4d53-8aa6-4aea5f9a720d | tool=create_document | env=cc7982fd-96cb-44f6-8a3e-21fa6c0baea9 | max=1 | expires 2026-10-05T23:22:47.577Z
+[RIO Token Manager] Token BURNED: 31b23a95... for intent 305ea61e-c974-4d53-8aa6-4aea5f9a720d — all 11 checks passed
+[RIO Token Manager] Token issued: cce7939e... for intent 020f55f9-77f9-480c-91c2-ec5096d659f5 | tool=create_document | env=218be179-af74-4c65-a490-0ae5cb7e4e35 | max=1 | expires 2026-10-05T23:22:49.228Z
+[RIO Token Manager] Token issued: 89ddb6ac... for intent 150107e1-413d-493b-ac4a-e5c23124b666 | tool=create_document | env=32b677fc-19d3-41bb-b7c7-c95f1993393e | max=1 | expires 2026-10-05T23:22:51.697Z
+[RIO Token Manager] Token BURNED: 89ddb6ac... for intent 150107e1-413d-493b-ac4a-e5c23124b666 — all 11 checks passed
+[RIO Token Manager] Token issued: 0945ad4f... for intent 58ef770e-a506-4ff0-9b19-9899bc96777a | tool=create_document | env=8b7c71f8-887a-4ca5-a696-586eb8eb3c5d | max=1 | expires 2026-10-05T23:22:55.669Z
+✔ CCM profile is opt-in and does not grant standing to default fields (114.939392ms)
+✔ interval queries distinguish unknown endpoints, absent relation and independent parallel intervals (271.299489ms)
+✔ standing requires exact predecessor and current native SourcePoint warrant (373.696262ms)
+✔ H-01 and H-07 identical payload/shared participant retain interval-specific standing (1273.128734ms)
+✔ H-03 revoked delegation blocks actual effect (693.566484ms)
+✔ H-10 dependency drift invalidates decision at point of use (785.612917ms)
+✔ H-12 subject drift and replay cannot change unrelated intervals (628.458641ms)
+✔ H-04 out-of-order Return arrival remains exact and never mutates orientation (652.293481ms)
+✔ H-05 denied outbound permits independently judged attributed exterior observation (500.231486ms)
+✔ H-06 lawful outbound cannot admit bad-provenance observation (824.054826ms)
+✔ H-08 and H-09 context and authority cannot cross via shared endpoints (508.310408ms)
+✔ H-02 explicit notification preserves cross-boundary relation without authority propagation (598.304477ms)
+✔ H-11 receipt rewrite and direct promotion operations are unavailable (610.445593ms)
+✔ historical interval state reconstructs after restart and query results cannot mutate state (640.218202ms)
+✔ native policy denial remains distinct from interval eligibility (595.145632ms)
+✔ interval downgrade after native admission prevents point-of-use execution (897.316605ms)
+✔ an unbound native passage cannot bypass an opted-in CCM profile (531.889139ms)
+✔ historical hash cursor is global event order even when another interval changes at the same millisecond (423.109705ms)
+✔ historical event cursor excludes later events sharing its timestamp (305.723056ms)
+✔ dependency change-and-restore cannot resurrect an old bound passage (626.657346ms)
+✔ source warrants are retrievable and bind reconstructed interval lineage (282.666024ms)
+✖ query admission cannot outlive current node enrollment/revocation (678.800012ms)
+✖ malformed Return observation is rejected before any durable mutation (631.834845ms)
+✖ revoked observer cannot supply new admitted provenance, while later revocation preserves earlier history (974.249796ms)
+✖ historical projections include authority, refreshed dependency standing, passages and supersession (517.769246ms)
+✖ explicit crossing is historical admission, not permanently current permission (867.417274ms)
+✖ supersession cannot point an interval to itself (394.425401ms)
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ existing authenticated control/query transport carries CCM without a new authority surface (330.820492ms)
+ℹ tests 32
+ℹ suites 0
+ℹ pass 24
+ℹ fail 8
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16399.646061
+
+✖ failing tests:
+
+test at gateway/tests/ccm-001/integrity.test.mjs:16:1
+✖ a previously signed standing warrant cannot be appended again after downgrade (504.75915ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/integrity.test.mjs:28:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CCM_COMMAND_REPLAY|CCM_EVENT_PREDECESSOR|CCM_EVENT_SOURCE/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at gateway/tests/ccm-001/integrity.test.mjs:30:1
+✖ deleting dependency indexes cannot erase signed native dependency history (801.244245ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'ADMIT' !== 'HOLD'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/integrity.test.mjs:36:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ADMIT',
+    expected: 'HOLD',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/ccm-001/medium.test.mjs:147:1
+✖ query admission cannot outlive current node enrollment/revocation (678.800012ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'ADMIT' !== 'DENY'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/medium.test.mjs:149:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ADMIT',
+    expected: 'DENY',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/ccm-001/medium.test.mjs:151:1
+✖ malformed Return observation is rejected before any durable mutation (631.834845ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /OBSERVATION_SHAPE/. Input:
+  
+  'TypeError: Token arguments must be a plain JSON object'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/medium.test.mjs:153:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: TypeError: Token arguments must be a plain JSON object
+        at canonicalizeArgs (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/security/token-manager.mjs:94:11)
+        at computeArgsHash (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/security/token-manager.mjs:101:17)
+        at #project (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/local-field/medium/index.mjs:189:40)
+        at ConstitutionalMedium.apply (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/local-field/medium/index.mjs:169:77)
+        at LocalField.ccmCommand (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/local-field/index.mjs:1029:25)
+        at command (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/helpers.mjs:19:70)
+        at Object.returned (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/helpers.mjs:37:5)
+        at file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/medium.test.mjs:153:22
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24),
+    expected: /OBSERVATION_SHAPE/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at gateway/tests/ccm-001/medium.test.mjs:157:1
+✖ revoked observer cannot supply new admitted provenance, while later revocation preserves earlier history (974.249796ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  true !== false
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/medium.test.mjs:161:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: true,
+    expected: false,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/ccm-001/medium.test.mjs:167:1
+✖ historical projections include authority, refreshed dependency standing, passages and supersession (517.769246ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + null
+  - '36c27f84-a00a-454b-b473-1dbf0957838e'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/medium.test.mjs:169:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: '36c27f84-a00a-454b-b473-1dbf0957838e',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/ccm-001/medium.test.mjs:183:1
+✖ explicit crossing is historical admission, not permanently current permission (867.417274ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  'ADMIT' !== 'HOLD'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/medium.test.mjs:189:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'ADMIT',
+    expected: 'HOLD',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/ccm-001/medium.test.mjs:192:1
+✖ supersession cannot point an interval to itself (394.425401ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/ccm-001/medium.test.mjs:193:27)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /SUCCESSOR/,
+    operator: 'throws',
+    diff: 'simple'
+  }

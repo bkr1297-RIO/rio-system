@@ -1,0 +1,41 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> rio-governance-gateway@2.9.0 test:execution-binding
+> node --test tests/execution-binding-repair.test.mjs
+
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Replay Prevention] Initialized — window: 300s, retention: 24h
+[RIO Token Manager] Token issued: 7bce007a... for intent intent:mandatory | tool=send_email | env=repair-test | max=1 | expires 2026-10-05T23:26:14.610Z
+[RIO Token Manager] Token BURNED: 7bce007a... for intent intent:mandatory — all 11 checks passed
+[RIO Token Manager] REPLAY BLOCKED: Token for intent intent:mandatory status=USED burned=true burned_at=2026-10-05T22:56:14.613Z
+[RIO Token Manager] Token issued: 08f16221... for intent intent:substitution | tool=send_email | env=repair-test | max=1 | expires 2026-10-05T23:26:14.619Z
+[RIO Token Manager] ARGS BINDING FAIL: Token args_hash=7da6b91799a56f4e... !== request args_hash=b6032ff534ebc152...
+[RIO Token Manager] SIGNATURE FAIL: Token signature verification failed for intent intent:substitution
+[RIO Token Manager] Token BURNED: 08f16221... for intent intent:substitution — all 11 checks passed
+[RIO Replay Prevention] REPLAY BLOCKED: Nonce "repair:nonce" already used on /execute-action at 2026-10-05T22:56:14.622Z
+[RIO Token Manager] Token issued: f2a364b5... for intent intent:route:1 | tool=send_email | env=production | max=1 | expires 2026-10-05T23:26:14.640Z
+[RIO Token Manager] Token BURNED: f2a364b5... for intent intent:route:1 — all 11 checks passed
+[RIO Token Manager] Token issued: cd60a469... for intent intent:route:4 | tool=send_email | env=production | max=1 | expires 2026-10-05T23:26:14.653Z
+[RIO Token Manager] Token BURNED: cd60a469... for intent intent:route:4 — all 11 checks passed
+[RIO Token Manager] Token issued: 87c3e7e9... for intent intent:route:5 | tool=send_sms | env=production | max=1 | expires 2026-10-05T23:26:14.659Z
+[RIO Token Manager] Token BURNED: 87c3e7e9... for intent intent:route:5 — all 11 checks passed
+✔ recursive canonicalization binds nested values and ignores object insertion order (8.03484ms)
+✔ non-JSON, accessor, hidden, sparse and cyclic argument carriers fail before hashing (1.115825ms)
+✔ issuance requires exact signed single-use bindings (3.359916ms)
+✔ omitted point-of-use checks fail without burning the token (5.713605ms)
+✔ nested substitution and signature substitution both fail closed (4.805703ms)
+✔ guarded intent transition admits one local reservation (0.697898ms)
+✔ nonce policy covers direct dispatch and API execution paths (0.738835ms)
+✔ every gateway token burn supplies the mandatory signature verifier and exact bindings (0.43845ms)
+✔ direct route reserves before await so two concurrent requests dispatch once (19.058766ms)
+✔ request delivery substitution and approved external delegation cannot enter direct dispatch (7.977695ms)
+✔ connector failure or incomplete send creates no receipt or fallback payload (11.748259ms)
+✔ unsupported direct action is not simulated into an execution receipt (2.649267ms)
+ℹ tests 12
+ℹ suites 0
+ℹ pass 12
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 637.812574

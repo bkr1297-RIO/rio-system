@@ -1,0 +1,15 @@
+# CCM-001 progress — approved spec: BUILD-SPEC-F0.1.md
+Base: rio-system #206 @ 3d8eb2016fc60a2f04c65a39cf8b21fd483fe7e1.
+Isolation: /workspace/scratch/1cf97914ef3d/ccm-001, build/ccm-001-f0.1.
+Ruling: reuse optional LocalField profile and its private LocalStore/root verification; no standalone constitutional engine. No existing CCM owner found locally. Cost if wrong: profile integration review rather than duplicate standing owners.
+Ruling: rich relations default observe-only. Native action grants remain necessary and independently resolved at use. SourcePoint-signed metadata constitution is not an execution lease.
+Ruling: inbound supported means a root-attributed qualified judgment over verified provenance, not proven world truth, MANTIS independence or HOME mutation. Missing broader live evidence/settlement joins remain explicit.
+Ruling: use a sibling isolated worktree to preserve the existing unrelated NavBar edit. Existing setup/branch authority permits this reversible local isolation.
+
+RED: 14 CCM tests failed against missing APIs. First implementation: 12 pass, two fail. Root causes: fixture used a different native receiver for one-runtime comparison; native denials are stored separately, not in decision. Compare parallel scoped intervals and read native denial records without manufacturing a decision. Native API tests now call admit + execute; receive requires bilateral transit.
+Task 1/2: complete at 0d1ad06; 24/24 CCM tests green. Root-source query and native authenticated transport implemented. Timestamp tie counterexample fixed using global ledger order; dependency ABA counterexample fixed using exact signed dependency revision hashes. Native denial records remain native diagnostics, not fabricated governance decisions.
+Task 3: initial S1/S2/S3 complete. S3 100,000 intervals, 38.75s constitution, 32.33s restart, 549,974,016 process RSS; p99 2.08ms in this local run. Raw evidence: ccm-scale-full.json. No performance threshold is inferred from one run.
+Review: fresh read-only candidate review dispatched, no implementation delegation.
+
+Final review: eight findings reproduced and repaired; no second reviewer run. Current preflight reuses native decision owner. Exact signed command coverage prevents old warrant replay; dependency revision history is reconstructed from signed native ledger custody; malformed observations are rejected before persistence; history includes refreshed standing, authority, passages and supersession; revoked observer provenance is evaluated at native ledger position; receipt-less native Returns reuse native verification. Added old native dependency-warrant replay control.
+Final verification: 34 CCM + 55 LocalField + 80 SI + 12 binding = 181/181. The default full-server suite separately fails 13/13 with localhost:4401 ECONNREFUSED. Final S1/S2/S3 records are in docs/evidence/ccm-001/scale.json and acceptance.json. No dependency additions or storage migration. Candidate Return preserves truth/settlement/HOME and whole-host claim limits.
