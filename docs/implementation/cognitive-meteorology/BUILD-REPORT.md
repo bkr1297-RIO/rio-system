@@ -4,7 +4,7 @@
 
 Exact predecessor: `bkr1297-RIO/rio-system` draft #208, `5df28c0e4262616bf560787a3a365583370351da`, tree `30007788b966ad16e0af7e237abef83aa0fb24ba`. Local candidate branch: `build/cognitive-meteorology-f0.1`, stacked on `build/constitutional-waist-f0.1`. Tested code commit: `ff788ce824c3fd9de2ce7be647e37c340766ff71`. Report/evidence commits follow it; the local branch head is available through `git rev-parse HEAD`.
 
-**Publication status:** automatic approval review blocked pushing this new code and evidence to the public `bkr1297-RIO/rio-system` repository. Connected account ownership/admin/push permissions were verified, but explicit permission to publish this payload is still required. The source, tests, reports and evidence are committed locally. No remote candidate branch or draft PR has been created.
+**Publication status:** Explicit public publication approval was supplied after the earlier automatic-review block. Draft [#209](https://github.com/bkr1297-RIO/rio-system/pull/209) now targets #208. Direct shell push was unavailable; the authorized GitHub connector exported an identical tree (`5bd16acb9dc7d3cfc1b6ef2295bc115fc23826cc`) from local candidate `9a1a7290a948c44aa35b5a1d4a19a18ff7d5472a` as snapshot commit `1428bed4d5dd9069f9384ddc3ffb8fecc8b3e67a`, parented on #208. Local per-task commit identities were not recreated by this transport. Publication metadata updates follow that snapshot; exact draft head is reported in the PR.
 
 ## Result
 
@@ -77,7 +77,7 @@ Independent read-only review found boxed metric values and insufficient received
 - Content hashes support attributable reconstruction; they do not authenticate raw source truth, establish Evidence, authorize action or mutate standing.
 - Zero effect is proved for the implemented pull interface, ordinary/hostile declared carriers and the tested native environment. Arbitrary executable programs, all possible network channels and future integrations are outside that proof.
 - Pressure differential's permanent regime/operator status remains open; the implementation separates a measured relation from its candidate regime label without promoting either.
-- The existing legacy-service and root-TypeScript setup gaps remain recorded above. GitHub CI has not run for this new candidate while public publication is blocked; no new remote CI result is claimed.
+- The existing legacy-service and root-TypeScript setup gaps remain recorded above. Remote CI status is reported separately; no unobserved result is claimed.
 
 ## Constitutional and conformance observations
 

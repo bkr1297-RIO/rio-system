@@ -93,13 +93,16 @@
   "deployment_performed": false,
   "raw_source_content_in_reading": false,
   "publication": {
-    "status": "BLOCKED_BY_AUTOMATIC_APPROVAL_REVIEW",
+    "status": "DRAFT_PUBLISHED",
     "destination": "https://github.com/bkr1297-RIO/rio-system",
     "visibility": "public",
     "owner_matches_authenticated_account": true,
-    "reason": "Explicit permission to publish new source and evidence to the public repository is required.",
-    "remote_branch_created": false,
-    "draft_pr_created": false,
-    "remote_ci_claimed": false
+    "reason": "User explicitly approved public publication; GitHub connector used because shell network/escalation unavailable.",
+    "remote_branch_created": true,
+    "draft_pr_created": true,
+    "remote_ci_claimed": false,
+    "draft_pr_url": "https://github.com/bkr1297-RIO/rio-system/pull/209",
+    "snapshot_commit": "1428bed4d5dd9069f9384ddc3ffb8fecc8b3e67a",
+    "snapshot_tree": "5bd16acb9dc7d3cfc1b6ef2295bc115fc23826cc"
   }
 }
