@@ -1,6 +1,7 @@
 /** Human rendering reuses both existing projections; no interpretation or authority engine. */
 import { randomUUID } from 'node:crypto';
 import { validateICAView } from './journey.mjs';
+import {renderNavigation} from './navigation.mjs';
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const COMMANDS={refresh:'Read latest conditions',what:'What is this?',why:'Why does it appear?',delegate:'Authorize this Research',start:'Start this Research',return:'Read Research’s Return',
  revoke:'Withdraw future use',acknowledge:'Check withdrawal acknowledgement',keep:'Keep this finding for orientation',perimeter:'Move retained items between NOW and Perimeter',compare:'Read the later source frame',replace:'Replace Research inhabitant',
@@ -33,7 +34,7 @@ export function renderICA(view,csrf,{message=''}={}){
  </style></head><body><main><header><p class="eyebrow">ONE · ICA-RR-001 · BOUNDED REFERENCE REALIZATION</p><h1>Observatory</h1><p>See what is changing. Ask Research to investigate within a scope you can understand. Read what it can establish, then decide what follows.</p><p class="muted">One Place: Observatory · One Office: Research · One Instrument: Metascope</p></header>
  <aside class="limit"><strong>Reference source replay — not connected to your live Calendar or Git.</strong><p>${esc(view.source_contract)}. ${esc(fixture)}.</p><p>Controller: a local reference human session. This does not establish production human identity.</p></aside>
  ${message?`<p role="alert" class="limit">${esc(message)}</p>`:''}${view.reentry?'<aside class="limit"><strong>Retained account</strong><p>This authenticated historical account preserves where you left the journey. No permission, delegation, or execution lease was revived. A new assignment requires a fresh reference session and human choice.</p></aside>':''}<h2>${view.reentry?'Where you left this journey':PHASE[view.phase]}</h2>${lumen}${replacement}${divergence}
- <p>${esc(view.answers[1].answer)}</p>${view.show_what?`<p class="limit">${esc(view.answers[2].answer)}</p>`:''}
+ ${view.navigation?renderNavigation(view.navigation):''}${view.show_what?`<p class="limit">${esc(view.answers[2].answer)}</p>`:''}
  <div class="weather-grid">${sections}</div>${signals}
  <section aria-label="Research scope"><h2>One bounded Research</h2><p>Research may compare the authorized Calendar/Git timing history, ask whether this has happened before, and write one local research note, at most 4096 bytes. It may not contact anyone, schedule work, or delegate further.</p><p>Findings describe the available replay. Storing the note, establishing its readback, and answering the research question are distinct burdens. Whether its possible bottleneck will occur remains unresolved.</p><p>Authorizing Research records permission for a signed invocation commitment. Starting it is a separate request, checked against current Office, inhabitant, delegation and authority.</p></section>
  <nav class="controls" aria-label="Available human choices">${buttons}</nav>

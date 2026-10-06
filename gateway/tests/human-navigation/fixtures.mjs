@@ -1,0 +1,5 @@
+export const movement=()=>({movement_id:'review-current-change',purpose:'Understand the current change'});
+export const source=(source_type='Hypothesis',standing='CANDIDATE')=>({source_id:'source-1',source_type,standing,content:'Review capacity may be tightening.',basis_refs:['reading:1']});
+export const burden=(flags={})=>({material_new_information:false,material_new_distinction:false,unresolved_relevant_contradiction:false,changed_dependency:false,newly_relevant_risk:false,human_choice_pending:false,requested_continuation:false,...flags});
+export const context=(changes={})=>({context_id:'context-1',envelope:{valid:true,basis_ref:'orientation-only:1'},sources:[source()],relevant_source_refs:['source-1'],relations:[],constraints:[],open_questions:[],possibilities:[],prior_returns:[],dependencies:[],choice:{requires_human_valuation:false,authored_choice_ref:null,question:null,basis_refs:[]},delivered_contribution_refs:[],...changes});
+export const contribution=(flags={},changes={})=>({contribution_id:'contribution-1',movement_id:'review-current-change',source_ref:'source-1',burden:burden(flags),basis_refs:['reading:1'],...changes});

@@ -12,6 +12,7 @@ import { exactData } from '../meteorology/signals.mjs';
 import {RESEARCH_OFFICE,investigate} from './research.mjs';
 import {ResearchDispatch} from './dispatch.mjs';
 import {RemainderRegister} from './residue.mjs';
+import {navigateRoom} from './navigation-room.mjs';
 const need=(ok,error)=>{if(!ok)throw new Error(error);};
 const copy=v=>structuredClone(v);
 const issuedViews=new WeakSet();
@@ -220,7 +221,7 @@ export class ICAJourney {
    {question:'What remains unresolved or controllable?',answer:(this.#returned?.return_completeness==='PARTIAL'?'Some required reporting accounts are still missing. ':'')+(this.#revocation?(this.#revocation.acknowledged?'This local executor validated withdrawal of future use under this grant. ':'Withdrawal is recorded; executor acknowledgement is pending. '):'You may withdraw future use of an admitted delegation. ')+(state?.evidence?'This control cannot reverse the earlier observed note. ':'')+'The forecast, actual review capacity and downstream consequences remain unestablished.'},
    {question:'What can I decide next?',answer:this.#orientation?'You retained this finding for orientation. No subsequent work was authorized.':this.#returned?'Keep the finding for orientation or withdraw future use. Any new work needs a fresh request.':'Use the available controls to inspect, delegate, start, or read a Return when its basis exists.'},
   ];
-  const view=freezeData({kind:'ICAView',journey_id:this.#id,revision:this.#revision,phase:this.#expired()&&!this.#returned?'EXPIRED':this.#phase,reference_fixture:this.#workspace.fixture,source_contract:this.#replay.source_contract,
+  const account={kind:'ICAView',journey_id:this.#id,revision:this.#revision,phase:this.#expired()&&!this.#returned?'EXPIRED':this.#phase,reference_fixture:this.#workspace.fixture,source_contract:this.#replay.source_contract,
    place:{kind:'Place',name:'Observatory'},office:RESEARCH_OFFICE,inhabitant:{kind:'Inhabitant',name:'Local reference human',identity_proof:'NOT_PRODUCTION_AUTHENTICATION'},
    research_inhabitant:{kind:'ResearchInhabitant',inhabitant_id:`research-worker-${this.#worker}`,office:'Research',identity_scope:'Local bounded deterministic program, not production identity'},
    research:this.#research,research_return:this.#researchReturn,research_gate:this.#gate,divergence:this.#divergence,archived_research:[...this.#archived],
@@ -228,7 +229,8 @@ export class ICAJourney {
     basis_ref:this.#gate?`ResearchDispatchDecision:${this.#gate.decision_id}`:this.#research?.findings.every(x=>x.status==='UNKNOWN')?`ResearchFindings:${this.#research.research_id}`:`FieldoscopyReading:${this.#reading.reading_id}`,scope:'Current visibility and known gaps; not judgment, personal condition or instruction',authorization_supplied:false},
    reading:this.#reading,change,instrument,program:PROGRAM,show_what:this.#what,show_why:this.#why,delegation:this.#delegation,disposition:this.#disposition,consequence,
    compilation:this.#prepared?.compilation??null,settlement:this.#settlement,successor:this.#successor,
-   orientation:this.#orientation,answers,register:[...this.#register],allowed_commands:this.#commands()});
+   orientation:this.#orientation,answers,register:[...this.#register],allowed_commands:this.#commands()};
+  const view=freezeData({...account,navigation:navigateRoom(account)});
   issuedViews.add(view);return view;
  }
 }
@@ -247,6 +249,7 @@ export function reopenICAReference(options){
  const consequence=retained.consequence?{...retained.consequence,claims:retained.consequence.claims.map(c=>({...c,text:'At the retained time: '+c.text})),typed_account:{...retained.consequence.typed_account,
   lease_condition:retained.consequence.typed_account.lease&&Date.parse(retained.consequence.typed_account.lease.commitment.expires_at)<=Date.now()?'EXPIRED':'UNKNOWN',
   retained_lease_condition:retained.consequence.typed_account.lease_condition,time_basis:'HISTORICAL_RETAINED_ACCOUNT',current_authority_knowledge:'NOT_ESTABLISHED_BY_REENTRY'}}:null;
- const view=freezeData({...retained,consequence,answers,allowed_commands:[],reentry:{kind:'RetainedRoomAccount',authority_restored:false,scope:'Authenticated historical account; no lease or delegation is revived. Snapshot freshness after external file rollback is not established.'}});issuedViews.add(view);
+ const account={...retained,consequence,answers,allowed_commands:[],reentry:{kind:'RetainedRoomAccount',authority_restored:false,scope:'Authenticated historical account; no lease or delegation is revived. Snapshot freshness after external file rollback is not established.'}};
+ const view=freezeData({...account,navigation:navigateRoom(account,{historical:true})});issuedViews.add(view);
  return {root:options.root,journey:{view:()=>view,dispatch:()=>{throw new Error('REENTRY_READ_ONLY');}},close:()=>{}};
 }

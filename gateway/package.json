@@ -37,7 +37,8 @@
     "field:weather": "node scripts/run-cognitive-meteorology.mjs",
     "test:ica": "node --test tests/ica-rr-001/*.test.mjs",
     "field:ica": "node scripts/run-ica-rr-001.mjs",
-    "field:ica:evidence": "node tests/ica-rr-001/export-evidence.mjs"
+    "field:ica:evidence": "node tests/ica-rr-001/export-evidence.mjs",
+    "test:navigation": "node --test tests/human-navigation/*.test.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

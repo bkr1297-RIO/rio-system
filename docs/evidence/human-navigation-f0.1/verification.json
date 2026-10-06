@@ -1,0 +1,253 @@
+{
+  "artifact": "HUMAN-NAVIGATION-F0.1-VERIFICATION",
+  "base_commit": "54742e02d2282d2c562a53da0c45ffdffe442bf5",
+  "conceptual_frontier": "#212",
+  "checks": [
+    {
+      "check": "compiler-profile",
+      "exit_code": 0,
+      "seconds": 5.48,
+      "log": "compiler-profile.log",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/open-arrow/runtime.test.mjs"
+      ],
+      "counts": {
+        "tests": "13",
+        "suites": "0",
+        "pass": "13",
+        "fail": "0",
+        "duration_ms": "5414.512772"
+      }
+    },
+    {
+      "check": "legacy-default-gateway",
+      "exit_code": 1,
+      "seconds": 0.97,
+      "log": "legacy-default-gateway.log",
+      "command": [
+        "npm",
+        "test"
+      ],
+      "counts": {
+        "tests": "13",
+        "suites": "7",
+        "pass": "0",
+        "fail": "13",
+        "duration_ms": "774.340639"
+      }
+    },
+    {
+      "check": "navigation-profile",
+      "exit_code": 0,
+      "seconds": 9.39,
+      "log": "navigation-profile.log",
+      "command": [
+        "npm",
+        "run",
+        "test:navigation"
+      ],
+      "counts": {
+        "tests": "31",
+        "suites": "0",
+        "pass": "31",
+        "fail": "0",
+        "duration_ms": "9169.520088"
+      }
+    },
+    {
+      "check": "native-profile",
+      "exit_code": 0,
+      "seconds": 44.48,
+      "log": "native-profile.log",
+      "command": [
+        "node",
+        "--test",
+        "--test-reporter=tap",
+        "tests/ccm-001/integrity.test.mjs",
+        "tests/ccm-001/medium.test.mjs",
+        "tests/ccm-001/transport.test.mjs",
+        "tests/cognitive-meteorology/boundary.test.mjs",
+        "tests/cognitive-meteorology/edges.test.mjs",
+        "tests/cognitive-meteorology/reading.test.mjs",
+        "tests/consequence-return-hardening/assay.test.mjs",
+        "tests/consequence-return-hardening/cli.test.mjs",
+        "tests/consequence-return-hardening/lifecycle.test.mjs",
+        "tests/consequence-return-hardening/projection.test.mjs",
+        "tests/consequence-return-hardening/review-regressions.test.mjs",
+        "tests/constitutional-waist/runtime.test.mjs",
+        "tests/execution-binding-repair.test.mjs",
+        "tests/f1-closure/integration.test.mjs",
+        "tests/f1-closure/native-profile.test.mjs",
+        "tests/f1-closure/reentry.test.mjs",
+        "tests/f1-closure/review-regressions.test.mjs",
+        "tests/human-navigation/navigation.test.mjs",
+        "tests/human-navigation/room.test.mjs",
+        "tests/ica-rr-001/boundaries.test.mjs",
+        "tests/ica-rr-001/lifecycle.test.mjs",
+        "tests/ica-rr-001/reconciliation-review.test.mjs",
+        "tests/ica-rr-001/reconciliation-surface.test.mjs",
+        "tests/ica-rr-001/reconciliation.test.mjs",
+        "tests/ica-rr-001/research-contracts.test.mjs",
+        "tests/ica-rr-001/review-regressions.test.mjs",
+        "tests/ica-rr-001/surface.test.mjs",
+        "tests/local-field-bilateral-acceptance.test.mjs",
+        "tests/local-field-bilateral.test.mjs",
+        "tests/local-field-crash.test.mjs",
+        "tests/local-field-http.test.mjs",
+        "tests/local-field.test.mjs",
+        "tests/projection-runtime/drift.test.mjs",
+        "tests/projection-runtime/hosts.test.mjs",
+        "tests/projection-runtime/runtime.test.mjs",
+        "tests/si-specimen/compiler.test.mjs",
+        "tests/si-specimen/direct.test.mjs",
+        "tests/si-specimen/possibility.test.mjs",
+        "tests/si-specimen/process.test.mjs",
+        "tests/si-specimen/return-boundary.test.mjs",
+        "tests/si-specimen/runtime.test.mjs",
+        "tests/si-specimen/transduction.test.mjs"
+      ],
+      "counts": {
+        "tests": "414",
+        "suites": "0",
+        "pass": "414",
+        "fail": "0",
+        "duration_ms": "44369.980724"
+      }
+    },
+    {
+      "check": "root-types",
+      "exit_code": 0,
+      "seconds": 0.62,
+      "log": "root-types.log",
+      "command": [
+        "node",
+        "/workspace/scratch/727e581c0c01/f1-build-tooling/node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--typeRoots",
+        "/workspace/scratch/727e581c0c01/f1-build-tooling/node_modules/@types",
+        "-p",
+        "tsconfig.json"
+      ],
+      "counts": {}
+    },
+    {
+      "check": "nominal-types",
+      "exit_code": 0,
+      "seconds": 0.72,
+      "log": "nominal-types.log",
+      "command": [
+        "node",
+        "/workspace/scratch/727e581c0c01/f1-build-tooling/node_modules/typescript/bin/tsc",
+        "--noEmit",
+        "--strict",
+        "--module",
+        "NodeNext",
+        "--moduleResolution",
+        "NodeNext",
+        "--target",
+        "ES2022",
+        "--skipLibCheck",
+        "--typeRoots",
+        "/workspace/scratch/727e581c0c01/f1-build-tooling/node_modules/@types",
+        "tests/human-navigation/types-consumer.mts",
+        "tests/f1-closure/types-consumer.mts",
+        "tests/ica-rr-001/types-consumer.mts",
+        "tests/consequence-return-hardening/types-consumer.mts"
+      ],
+      "counts": {}
+    }
+  ],
+  "standing_effect": "NONE",
+  "merged": false,
+  "deployed": false,
+  "preserved_unaffected_checks": [
+    "compiler-profile",
+    "legacy-default-gateway"
+  ],
+  "final_adapter_review_fix": "Recognize separate existing account admission as the human carrying choice; normal and UNKNOWN regressions.",
+  "review": {
+    "scope": "Bounded Human Navigation Runtime F0.1 code review and requested delta check",
+    "important_findings": [],
+    "discharged_findings": [
+      {
+        "severity": "Important",
+        "file": "gateway/local-field/ica/navigation-room.mjs",
+        "issue": "Separate admit-account carrying choice incorrectly remained RETURN_CHOICE",
+        "resolution": "carried = Boolean(view.orientation || view.successor) suppresses duplicate carrying choice and consumes the bounded reading contribution",
+        "verification": "node --test --test-name-pattern=separate account admission tests/human-navigation/room.test.mjs: 2 passed, 0 failed"
+      }
+    ],
+    "claim_limits_review": "No contradiction found. Docs explicitly bound F0.1 to declared structured burdens and known room lineage, exclude general language classification, factual truth and human understanding, preserve native passage ownership, and limit empty YIELD to this renderer.",
+    "outside_scope": [
+      "general natural-language classification",
+      "factual truth",
+      "constitutional redesign",
+      "production identity/authentication",
+      "remote revocation",
+      "broader-suite certification",
+      "old Seed changes",
+      "merge/deployment/promotion"
+    ],
+    "repo_mutation": "none by reviewer"
+  },
+  "claim_limits": [
+    "Declared structured contribution burdens, not general natural-language semantic classification or factual truth.",
+    "No new source connection, passage authority, constitutional standing, merge or deployment.",
+    "Private browser-host and F1 freeze burdens remain open; old Seed is unchanged.",
+    "Legacy default gateway suite has 13 pre-existing service connection failures."
+  ],
+  "source_artifacts": [
+    {
+      "path": "gateway/local-field/ica/navigation.mjs",
+      "sha256": "662bb19da684fdfb31393d1345275f1cbb07e25f8dab19a925d69f69c5f2914a"
+    },
+    {
+      "path": "gateway/local-field/ica/navigation.d.mts",
+      "sha256": "c9e82baca07884e92b95054bce00a3a721bfb90b124e8e1d407a5b02655cf4d5"
+    },
+    {
+      "path": "gateway/local-field/ica/navigation-room.mjs",
+      "sha256": "564b18f04ed84dd8ddd6956aefe76eec4cd65ecdaebba97886d26350ebfb62ab"
+    },
+    {
+      "path": "gateway/local-field/ica/journey.mjs",
+      "sha256": "1dce809ae213720ad3ac3082ba12e4bc74a9a51958340953809944451e60bac9"
+    },
+    {
+      "path": "gateway/local-field/ica/surface.mjs",
+      "sha256": "f751bcd810391a911c2698df1665b3b2c7c70f9e47e3dd5cb9092432970457f8"
+    },
+    {
+      "path": "gateway/package.json",
+      "sha256": "3906af66dc19df24f707d20519bcc6b3a5277f86a96ec47fe4ef9fcbb7f03924"
+    },
+    {
+      "path": "gateway/tests/human-navigation/fixtures.mjs",
+      "sha256": "4c750fd478f5caf57eb42b5ff0c1ddeef8ab25d42f4743711436ee8833d754bf"
+    },
+    {
+      "path": "gateway/tests/human-navigation/navigation.test.mjs",
+      "sha256": "5fcff625d3d5ed8f632c060c9537fceba8922f002e9c49e5554c72d91203dd21"
+    },
+    {
+      "path": "gateway/tests/human-navigation/room.test.mjs",
+      "sha256": "49817997453ec92078b2b1bc083f4dcbf13bc5286ce7ecf6ce617fccef9d33d6"
+    },
+    {
+      "path": "gateway/tests/human-navigation/types-consumer.mts",
+      "sha256": "33d84d96d3a3c2df5244a6be39b21ec0d8bd3a4e2afb690525d8e5deaebecaf0"
+    },
+    {
+      "path": "docs/implementation/human-navigation-f0.1.md",
+      "sha256": "6aae13e1e3dda4964d2cd9c7891c3299c3a2fa598f1d92f1014d5deadd6d7cf0"
+    }
+  ],
+  "tdd_evidence": {
+    "initial": "28 failed ->28 passed",
+    "reading_freshness": "1 failed ->1 passed",
+    "carrying_choice": "2 failed ->2 passed"
+  }
+}
