@@ -1,0 +1,105 @@
+ica-contracts-red.tap
+✖ authorized history establishes two changes but cannot establish earlier recurrence (1.95268ms)
+✖ research rejects unlisted reading and hidden raw content (0.19911ms)
+✖ warrant authorizes native commitment only; lease requires attributable owner custody (0.300523ms)
+✖ wrong inhabitant or foreign owner cannot dispatch an existing lease (0.263857ms)
+✖ native revocation validated before exercise blocks a previously issued lease (0.238509ms)
+ℹ tests 5
+ℹ pass 0
+ℹ fail 5
+✖ failing tests:
+✖ authorized history establishes two changes but cannot establish earlier recurrence (1.95268ms)
+✖ research rejects unlisted reading and hidden raw content (0.19911ms)
+✖ warrant authorizes native commitment only; lease requires attributable owner custody (0.300523ms)
+✖ wrong inhabitant or foreign owner cannot dispatch an existing lease (0.263857ms)
+✖ native revocation validated before exercise blocks a previously issued lease (0.238509ms)
+ica-reconciliation-red.tap
+✖ normal Research now investigates scoped history with findings separate from note occurrence (904.423245ms)
+✖ A UNKNOWN completes reporting without fabricating missing history (16.779633ms)
+✖ B source lost after delegation produces native relevant HOLD without blocking inspection (12.285334ms)
+✖ C prohibited consequence receives native DENY with no actuator or lease release (12.01099ms)
+✖ D active withdrawal returns interruption without erasing prior attributable findings (15.781529ms)
+✖ E two established findings and one unknown remain distinguishable in a complete Return (15.43006ms)
+✖ F clearing evidence records divergence and retains prior interpretation without new authority (13.227833ms)
+✖ G occupant replacement preserves charter but revokes old rights and needs fresh delegation (11.930519ms)
+✖ attention movement and retention preserve all residue, lineage and native standing (2083.81306ms)
+✖ LUMEN condition is qualified visibility, never authorization or success (92.612909ms)
+✖ withdraw before attempt still has an honest complete interruption Return (735.711809ms)
+ℹ tests 11
+ℹ pass 0
+ℹ fail 11
+✖ failing tests:
+✖ normal Research now investigates scoped history with findings separate from note occurrence (904.423245ms)
+✖ A UNKNOWN completes reporting without fabricating missing history (16.779633ms)
+✖ B source lost after delegation produces native relevant HOLD without blocking inspection (12.285334ms)
+✖ C prohibited consequence receives native DENY with no actuator or lease release (12.01099ms)
+✖ D active withdrawal returns interruption without erasing prior attributable findings (15.781529ms)
+✖ E two established findings and one unknown remain distinguishable in a complete Return (15.43006ms)
+✖ F clearing evidence records divergence and retains prior interpretation without new authority (13.227833ms)
+✖ G occupant replacement preserves charter but revokes old rights and needs fresh delegation (11.930519ms)
+✖ attention movement and retention preserve all residue, lineage and native standing (2083.81306ms)
+✖ LUMEN condition is qualified visibility, never authorization or success (92.612909ms)
+✖ withdraw before attempt still has an honest complete interruption Return (735.711809ms)
+ica-full-surface-red.tap
+✖ findings, unknown central claim and retained residue are readable without opening machine JSON (1919.476525ms)
+✖ research-unknown new burden is explained through actual authenticated forms (1846.275697ms)
+✖ research-deny new burden is explained through actual authenticated forms (1057.271978ms)
+✖ research-revoke new burden is explained through actual authenticated forms (2169.821661ms)
+✖ research-partial new burden is explained through actual authenticated forms (2074.953124ms)
+✖ occupant replacement requires a visible fresh delegation and exposes stable Office (617.681967ms)
+✖ later source disagreement is readable and keeps earlier candidate available (112.038929ms)
+ℹ tests 8
+ℹ pass 1
+ℹ fail 7
+✖ failing tests:
+✖ findings, unknown central claim and retained residue are readable without opening machine JSON (1919.476525ms)
+✖ research-unknown new burden is explained through actual authenticated forms (1846.275697ms)
+✖ research-deny new burden is explained through actual authenticated forms (1057.271978ms)
+✖ research-revoke new burden is explained through actual authenticated forms (2169.821661ms)
+✖ research-partial new burden is explained through actual authenticated forms (2074.953124ms)
+✖ occupant replacement requires a visible fresh delegation and exposes stable Office (617.681967ms)
+✖ later source disagreement is readable and keeps earlier candidate available (112.038929ms)
+ica-finish-red.tap
+✖ expired delegation truthfully returns without attempting or gaining future authority (478.641024ms)
+✖ a witnessed earlier candidate establishes recurrence only in the authorized replay (1079.134192ms)
+ℹ tests 2
+ℹ pass 0
+ℹ fail 2
+✖ failing tests:
+✖ expired delegation truthfully returns without attempting or gaining future authority (478.641024ms)
+✖ a witnessed earlier candidate establishes recurrence only in the authorized replay (1079.134192ms)
+ica-review-red.tap
+✖ duplicate observation does not establish prior recurrence (15.026655ms)
+✖ different observations at the same timestamp do not establish earlier recurrence (3.208956ms)
+✖ valid CALENDAR-only history reports its supported finding and missing counterpart (3.312713ms)
+✖ valid GIT-only history reports its supported finding and missing counterpart (1.443696ms)
+✖ ordinary native dependency rejection becomes a scoped blocked account and honest Return (846.906878ms)
+✖ replacement banner acknowledges the fresh current delegation after it exists (721.220179ms)
+✖ a denied consequence does not claim that source access was denied (872.03347ms)
+ℹ tests 7
+ℹ pass 0
+ℹ fail 7
+✖ failing tests:
+✖ duplicate observation does not establish prior recurrence (15.026655ms)
+✖ different observations at the same timestamp do not establish earlier recurrence (3.208956ms)
+✖ valid CALENDAR-only history reports its supported finding and missing counterpart (3.312713ms)
+✖ valid GIT-only history reports its supported finding and missing counterpart (1.443696ms)
+✖ ordinary native dependency rejection becomes a scoped blocked account and honest Return (846.906878ms)
+✖ replacement banner acknowledges the fresh current delegation after it exists (721.220179ms)
+✖ a denied consequence does not claim that source access was denied (872.03347ms)
+ica-review-render-red.tap
+✖ ordinary native dependency rejection becomes a scoped blocked account and honest Return (1164.253668ms)
+ℹ tests 1
+ℹ pass 0
+ℹ fail 1
+✖ failing tests:
+✖ ordinary native dependency rejection becomes a scoped blocked account and honest Return (1164.253668ms)
+ica-review-partial-surface-red.tap
+✖ partial Calendar history remains truthful through the whole human Return (110.683078ms)
+✖ newly available source keeps its previous value unknown rather than crashing inspection (82.161018ms)
+ℹ tests 2
+ℹ pass 0
+ℹ fail 2
+✖ failing tests:
+✖ partial Calendar history remains truthful through the whole human Return (110.683078ms)
+✖ newly available source keeps its previous value unknown rather than crashing inspection (82.161018ms)

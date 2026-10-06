@@ -5,7 +5,7 @@ import { LocalField } from '../index.mjs';
 import { generateKeypair,signPayload } from '../../security/ed25519.mjs';
 import { canonicalizeArgs,computeArgsHash } from '../../security/token-manager.mjs';
 import { hash } from '../../security/local-field-authority.mjs';
-export const FIXTURES=Object.freeze(['normal','unknown','hold','deny','partial']);
+export const FIXTURES=Object.freeze(['normal','unknown','hold','deny','partial','research-unknown','research-hold','research-deny','research-revoke','research-partial','model-contradiction','occupant-replacement']);
 export class ReferenceWorkspace {
  #human=generateKeypair();#source=generateKeypair();#receiver=generateKeypair();#field=randomUUID();
  constructor({root,fixture='normal'}){
@@ -45,5 +45,13 @@ export class ReferenceWorkspace {
  invocation(p,lease){return this.#signed({...this.#stamp(),type:'invocation',source_node:'node-a',passage_id:p.body.passage_id,passage_hash:hash(p.body),commitment_id:lease.lease_id,passage:p});}
  observation(p,attempt){return this.#signed({...this.#stamp(),type:'observation_request',source_node:'node-a',passage_id:p.body.passage_id,execution_id:attempt.execution_id});}
  revocation(grant_id){return this.#signed({...this.#stamp(),type:'revocation',issuer:'I-1',grant_id},this.#human);}
+ challenge(prepared,kind){
+  if(!['MISSING_SOURCE','PROHIBITED_CONSEQUENCE'].includes(kind))throw new Error('DECLARED_CHALLENGE_REQUIRED');
+  const body={...prepared.passage.body,...this.#stamp(),passage_id:randomUUID(),intent_id:randomUUID(),nonce:randomUUID(),correlation_id:randomUUID(),
+   target:kind==='PROHIBITED_CONSEQUENCE'?'production-state.json':prepared.passage.body.target};
+  const passage=this.#signed(body);this.#ccm('passage.open','I_AB',{interval_id:'I_AB',passage});
+  if(kind==='MISSING_SOURCE')this.#control('dependency',{name:'corpus',value:'SOURCE_UNAVAILABLE'});
+  return this.runtime.admit(passage);
+ }
  close(){this.runtime.close();}
 }

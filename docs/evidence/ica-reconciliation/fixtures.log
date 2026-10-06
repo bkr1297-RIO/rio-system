@@ -1,0 +1,39 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 991e05eb... for intent 60c1c4ad-9803-444c-8dda-79e782ef1624 | tool=create_document | env=f76b0699-9cef-4bed-b6b6-b2f1fd7b24a7 | max=1 | expires 2026-10-06T17:20:21.579Z
+[RIO Token Manager] Token BURNED: 991e05eb... for intent 60c1c4ad-9803-444c-8dda-79e782ef1624 — all 11 checks passed
+normal: PASS RETURNED, occurrence=KNOWN_OCCURRED, Return=COMPLETE
+[RIO Token Manager] Token issued: 6fac6e28... for intent 4ac062ed-3b1f-4327-a1f3-472b0100c7ea | tool=create_document | env=9d012000-fc00-4c66-82a0-52e4cda9516d | max=1 | expires 2026-10-06T17:20:24.005Z
+[RIO Token Manager] Token BURNED: 6fac6e28... for intent 4ac062ed-3b1f-4327-a1f3-472b0100c7ea — all 11 checks passed
+unknown: PASS RETURNED, occurrence=UNKNOWN, Return=COMPLETE
+hold: PASS HOLD, occurrence=no attempt, Return=none
+deny: PASS DENY, occurrence=no attempt, Return=none
+[RIO Token Manager] Token issued: c5031bbe... for intent 71c4ea2e-81d4-4513-98b6-bce0b85453f4 | tool=create_document | env=34e1b1ad-b5c5-4e89-a89e-ca7e2a8bb9ad | max=1 | expires 2026-10-06T17:20:26.755Z
+[RIO Token Manager] Token BURNED: c5031bbe... for intent 71c4ea2e-81d4-4513-98b6-bce0b85453f4 — all 11 checks passed
+partial: PASS PARTIAL_RETURN, occurrence=KNOWN_OCCURRED, Return=PARTIAL
+revoke-before-attempt: PASS REVOKED, occurrence=UNKNOWN, Return=none
+[RIO Token Manager] Token issued: 0758532c... for intent 70a6792a-b3e6-4cae-b336-444224e11bf5 | tool=create_document | env=2847a0b4-51c7-45e8-858d-917e0aadf0a3 | max=1 | expires 2026-10-06T17:20:30.230Z
+[RIO Token Manager] Token BURNED: 0758532c... for intent 70a6792a-b3e6-4cae-b336-444224e11bf5 — all 11 checks passed
+revoke-after-return: PASS REVOKED, occurrence=KNOWN_OCCURRED, Return=COMPLETE
+[RIO Token Manager] Token issued: c9ef0f7e... for intent 7dc95f6c-fd52-4239-89e4-659a474e6489 | tool=create_document | env=eaa338a3-bd82-409d-8eb3-2cbe76c0fb04 | max=1 | expires 2026-10-06T17:20:32.928Z
+[RIO Token Manager] Token BURNED: c9ef0f7e... for intent 7dc95f6c-fd52-4239-89e4-659a474e6489 — all 11 checks passed
+missing-readback: PASS RETURNED, occurrence=UNKNOWN, Return=COMPLETE
+[RIO Token Manager] Token issued: 88548800... for intent a231cc69-ddcd-432b-9406-1659178edfd0 | tool=create_document | env=0c301596-fe7c-4c57-ba77-a4548f9249b8 | max=1 | expires 2026-10-06T17:20:35.106Z
+[RIO Token Manager] Token BURNED: 88548800... for intent a231cc69-ddcd-432b-9406-1659178edfd0 — all 11 checks passed
+altered-readback: PASS RETURNED, occurrence=UNKNOWN, Return=COMPLETE
+[RIO Token Manager] Token issued: afa80b7f... for intent 7809e475-b06d-45ac-ba36-e5f89142e5de | tool=create_document | env=7076a303-e98e-4a39-9060-6c011accdfbc | max=1 | expires 2026-10-06T17:20:37.664Z
+[RIO Token Manager] Token BURNED: afa80b7f... for intent 7809e475-b06d-45ac-ba36-e5f89142e5de — all 11 checks passed
+research-unknown: PASS RETURNED, occurrence=KNOWN_OCCURRED, Return=COMPLETE
+research-hold: PASS RETURNED, occurrence=UNKNOWN, Return=COMPLETE
+research-deny: PASS RETURNED, occurrence=UNKNOWN, Return=COMPLETE
+[RIO Token Manager] Token issued: 20314c9b... for intent aa8af20e-daed-4835-946d-e97119c90519 | tool=create_document | env=65a44076-8478-48d4-b394-45f0a9a2d48d | max=1 | expires 2026-10-06T17:20:42.607Z
+[RIO Token Manager] Token BURNED: 20314c9b... for intent aa8af20e-daed-4835-946d-e97119c90519 — all 11 checks passed
+research-revoke: PASS RETURNED, occurrence=KNOWN_OCCURRED, Return=COMPLETE
+[RIO Token Manager] Token issued: 992e84d6... for intent f0f4240a-0e8c-4de5-89d0-b93df7dd6a06 | tool=create_document | env=37ee3bb4-554c-45fd-82c2-f45526fb5a46 | max=1 | expires 2026-10-06T17:20:45.469Z
+[RIO Token Manager] Token BURNED: 992e84d6... for intent f0f4240a-0e8c-4de5-89d0-b93df7dd6a06 — all 11 checks passed
+research-partial: PASS RETURNED, occurrence=KNOWN_OCCURRED, Return=COMPLETE
+[RIO Token Manager] Token issued: e3a34311... for intent 8c85b807-870e-4922-9716-abe0e5e9fb0b | tool=create_document | env=c8d3482c-74cc-4981-a40d-b3603d355ccf | max=1 | expires 2026-10-06T17:20:47.540Z
+[RIO Token Manager] Token BURNED: e3a34311... for intent 8c85b807-870e-4922-9716-abe0e5e9fb0b — all 11 checks passed
+model-contradiction: PASS RETURNED, occurrence=KNOWN_OCCURRED, Return=COMPLETE
+[RIO Token Manager] Token issued: da530b9a... for intent 6af4cac3-9cd4-4293-b760-305486a6bc76 | tool=create_document | env=f1c0f4f0-e827-4525-9508-d6080a59276b | max=1 | expires 2026-10-06T17:20:50.685Z
+[RIO Token Manager] Token BURNED: da530b9a... for intent 6af4cac3-9cd4-4293-b760-305486a6bc76 — all 11 checks passed
+occupant-replacement: PASS RETURNED, occurrence=KNOWN_OCCURRED, Return=COMPLETE

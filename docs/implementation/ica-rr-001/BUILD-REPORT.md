@@ -1,5 +1,6 @@
 # ICA-RR-001 build report
 
+The fuller-packet follow-up is reported in [RECONCILIATION-REPORT.md](RECONCILIATION-REPORT.md). This document preserves the predecessor evidence.
 Built one executable **Observatory → Research → Return** loop on the completed Cognitive Meteorology and Consequence / Return specimens. Implementation, conformance and testing remain below the Conformance Cut. The frozen identity, Constitutional Minimum, compiler law and native authority owners were not modified.
 
 **Architectural Conformance + Lived Simplicity = Reference Realization**

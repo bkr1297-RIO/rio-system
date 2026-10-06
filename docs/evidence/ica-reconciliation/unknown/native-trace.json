@@ -1,0 +1,244 @@
+{
+  "profile": "constitutional-waist.f0.1",
+  "candidate": {
+    "body": {
+      "field_id": "9d012000-fc00-4c66-82a0-52e4cda9516d",
+      "record_id": "2c046b93-f10f-42a8-977b-64f8df21a5f7",
+      "issued_at": "2026-10-06T16:50:23.397Z",
+      "expires_at": "2026-10-06T17:00:23.397Z",
+      "type": "passage",
+      "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+      "intent_id": "4ac062ed-3b1f-4327-a1f3-472b0100c7ea",
+      "source_node": "node-a",
+      "subject": "node-a",
+      "target_node": "node-b",
+      "action": "create_document",
+      "target": "research-return.json",
+      "payload": {
+        "content": "{\"kind\":\"BoundedResearchNote\",\"reading_id\":\"sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0\",\"sources\":[\"CALENDAR\",\"GIT\"],\"candidate_regime\":\"PRESSURE_DIFFERENTIAL\",\"findings\":[{\"finding_id\":\"501187c6-5592-46ad-8710-7fc667dc943b\",\"question\":\"CALENDAR_CHANGE\",\"status\":\"ESTABLISHED\",\"text\":\"Available time changed from 0.50 to 0.12 in the authorized frames.\"},{\"finding_id\":\"bbf5c6a7-6e0a-4a6f-87fb-224e88d3f31e\",\"question\":\"GIT_CHANGE\",\"status\":\"ESTABLISHED\",\"text\":\"Commit activity changed from 0.25 to 1.00; review wait changed from 0.06 to 0.88.\"},{\"finding_id\":\"7dff5c1c-224b-4abd-a372-aa4a1df98d05\",\"question\":\"PRIOR_RECURRENCE\",\"status\":\"UNKNOWN\",\"text\":\"The available earlier frame does not establish a prior pressure differential. Earlier history is absent; we cannot tell whether this has happened before.\"}],\"unresolved_remainder\":[\"UNCALIBRATED_FORECAST\",\"REVIEW_LATENCY_IS_CAPACITY_PROXY\",\"PENDING_REVIEWS_ARE_CENSORED\",\"NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL\",\"CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT\",\"PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN\"],\"forecast_status\":\"UNCALIBRATED_CANDIDATE\",\"authorization_supplied\":false}"
+      },
+      "payload_hash": "57ee16349f540c1d2a9514d60c93d7573a17f89afdef5de983fe8948af92cb0e",
+      "authority_basis": "016febe6-632b-4d12-9d89-65613b68c01e",
+      "scope": "artifact-create",
+      "purpose": "ccm:I_AB:outbound",
+      "dependencies": {
+        "corpus": "v1"
+      },
+      "conditions": {},
+      "nonce": "0d45fafe-e13c-48d2-9fbb-e3d9da83a6e9",
+      "correlation_id": "0c09daf5-039a-44ee-9aa0-a653d0ba7683",
+      "return_requirement": {
+        "required": true,
+        "to": "I-1"
+      },
+      "origin": {
+        "intent": "Explicit local reference human choice: bounded Research",
+        "candidate_id": "c8444df5-5c29-4ce6-9e60-ac3929a69944"
+      }
+    },
+    "signature": "5ee72db634de50a5deb4a58d4356eb960adeb4e34d9372f66c57e7f7ad39e75e35aea4543e2699133fe7662a0b9e2b5cbce562f9b9c44d0b6b9d566d05575503"
+  },
+  "formation": {
+    "body": {
+      "field_id": "9d012000-fc00-4c66-82a0-52e4cda9516d",
+      "record_id": "8b25cb87-5237-48b9-91d7-1db3c06126cf",
+      "issued_at": "2026-10-06T16:50:23.387Z",
+      "expires_at": "2026-10-06T17:00:23.387Z",
+      "type": "candidate",
+      "source_node": "node-a",
+      "candidate_id": "c8444df5-5c29-4ce6-9e60-ac3929a69944",
+      "kind": "proposal",
+      "content": {
+        "profile": "constitutional-waist.f0.1",
+        "interval_id": "I_AB",
+        "uncertainty": "Research note only; forecasting truth and downstream consequences remain unestablished.",
+        "obligations": [
+          "independent-readback",
+          "native-return"
+        ]
+      }
+    },
+    "signature": "9ac24f1d16ae5853be3a54cfe6a329a7d0126dc43c886db351b8a16786c6d02cc5358f9d5c1e73204819da895410df06542816242ee11d7337dc0cbc3852eb0c",
+    "authority_effect": "none",
+    "content_hash": "92c9a6e07fda5073a4170db93e6b1d762f7fc62645c5d70afbb83234cb14835e"
+  },
+  "decisions": [
+    {
+      "kind": "Disposition",
+      "decision_id": "6a1976d7-7148-419b-82d2-eb3b83b40e54",
+      "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+      "passage_hash": "e96e69bec1c658845c6f00e91ef23e5c51a7ac46e659ceb67ca10bfe595bd0e1",
+      "disposition": "ADMIT",
+      "reason": null,
+      "previous_decision_id": null,
+      "issued_at": "2026-10-06T16:50:23.607Z",
+      "source_authority": "I-1",
+      "interval_id": "I_AB",
+      "formation_ref": "c8444df5-5c29-4ce6-9e60-ac3929a69944",
+      "formation_hash": "f4fed289c71fcf8430e74ab83d8b3db9728f482f2506c23b27c32fc09002cb3d",
+      "standing": {
+        "status": "KNOWN",
+        "interval_id": "I_AB",
+        "sourcepoint": "I-1",
+        "constitution_ref": "cb41abc7654da9b4d841fa59102e3d27326697cad510557f34a9c84f01fcae2b",
+        "authority_basis": "016febe6-632b-4d12-9d89-65613b68c01e",
+        "standing": {
+          "outbound": "ELIGIBLE",
+          "inbound": "UNASSESSED"
+        },
+        "lineage_head": "dce0af984ee590f2c1a79bf4d3292e84060a4880d1564cf2eda5d9dd7edce7ff"
+      },
+      "native_decision_id": "6a1976d7-7148-419b-82d2-eb3b83b40e54",
+      "owner": "gateway/local-field/index.mjs"
+    }
+  ],
+  "hold_steps": [],
+  "commitment": {
+    "kind": "InvocationCommitment",
+    "commitment_id": "96b9e9d5-878f-484a-ba3c-4952d1ebe114",
+    "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+    "passage_hash": "e96e69bec1c658845c6f00e91ef23e5c51a7ac46e659ceb67ca10bfe595bd0e1",
+    "decision_id": "6a1976d7-7148-419b-82d2-eb3b83b40e54",
+    "warrant": {
+      "body": {
+        "field_id": "9d012000-fc00-4c66-82a0-52e4cda9516d",
+        "record_id": "96b9e9d5-878f-484a-ba3c-4952d1ebe114",
+        "issued_at": "2026-10-06T16:50:23.908Z",
+        "expires_at": "2026-10-06T17:00:23.908Z",
+        "type": "invocation_commit",
+        "issuer": "I-1",
+        "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+        "passage_hash": "e96e69bec1c658845c6f00e91ef23e5c51a7ac46e659ceb67ca10bfe595bd0e1",
+        "decision_id": "6a1976d7-7148-419b-82d2-eb3b83b40e54"
+      },
+      "signature": "8f729ef9d1dae9e1cd6d21bd54c13ab6ce7c032192c7e07a34d542eb820b990793879a295c0bac1a56f86528217c3b6d470629c8bb6eba2d0010c65349daa507"
+    },
+    "issued_at": "2026-10-06T16:50:23.908Z",
+    "expires_at": "2026-10-06T17:00:23.159Z",
+    "token_id": "6fac6e28-8839-44dd-aa8b-5b5535cd7424",
+    "authority_basis": "016febe6-632b-4d12-9d89-65613b68c01e",
+    "owner": "gateway/security/token-manager.mjs"
+  },
+  "invocation": {
+    "kind": "Invocation",
+    "invocation_id": "52f02467-f42b-41d4-be6a-dd7c56220dd2",
+    "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+    "commitment_id": "96b9e9d5-878f-484a-ba3c-4952d1ebe114",
+    "decision_id": "6a1976d7-7148-419b-82d2-eb3b83b40e54",
+    "request": {
+      "body": {
+        "field_id": "9d012000-fc00-4c66-82a0-52e4cda9516d",
+        "record_id": "52f02467-f42b-41d4-be6a-dd7c56220dd2",
+        "issued_at": "2026-10-06T16:50:24.026Z",
+        "expires_at": "2026-10-06T17:00:24.026Z",
+        "type": "invocation",
+        "source_node": "node-a",
+        "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+        "passage_hash": "e96e69bec1c658845c6f00e91ef23e5c51a7ac46e659ceb67ca10bfe595bd0e1",
+        "commitment_id": "96b9e9d5-878f-484a-ba3c-4952d1ebe114",
+        "passage": {
+          "body": {
+            "field_id": "9d012000-fc00-4c66-82a0-52e4cda9516d",
+            "record_id": "2c046b93-f10f-42a8-977b-64f8df21a5f7",
+            "issued_at": "2026-10-06T16:50:23.397Z",
+            "expires_at": "2026-10-06T17:00:23.397Z",
+            "type": "passage",
+            "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+            "intent_id": "4ac062ed-3b1f-4327-a1f3-472b0100c7ea",
+            "source_node": "node-a",
+            "subject": "node-a",
+            "target_node": "node-b",
+            "action": "create_document",
+            "target": "research-return.json",
+            "payload": {
+              "content": "{\"kind\":\"BoundedResearchNote\",\"reading_id\":\"sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0\",\"sources\":[\"CALENDAR\",\"GIT\"],\"candidate_regime\":\"PRESSURE_DIFFERENTIAL\",\"findings\":[{\"finding_id\":\"501187c6-5592-46ad-8710-7fc667dc943b\",\"question\":\"CALENDAR_CHANGE\",\"status\":\"ESTABLISHED\",\"text\":\"Available time changed from 0.50 to 0.12 in the authorized frames.\"},{\"finding_id\":\"bbf5c6a7-6e0a-4a6f-87fb-224e88d3f31e\",\"question\":\"GIT_CHANGE\",\"status\":\"ESTABLISHED\",\"text\":\"Commit activity changed from 0.25 to 1.00; review wait changed from 0.06 to 0.88.\"},{\"finding_id\":\"7dff5c1c-224b-4abd-a372-aa4a1df98d05\",\"question\":\"PRIOR_RECURRENCE\",\"status\":\"UNKNOWN\",\"text\":\"The available earlier frame does not establish a prior pressure differential. Earlier history is absent; we cannot tell whether this has happened before.\"}],\"unresolved_remainder\":[\"UNCALIBRATED_FORECAST\",\"REVIEW_LATENCY_IS_CAPACITY_PROXY\",\"PENDING_REVIEWS_ARE_CENSORED\",\"NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL\",\"CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT\",\"PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN\"],\"forecast_status\":\"UNCALIBRATED_CANDIDATE\",\"authorization_supplied\":false}"
+            },
+            "payload_hash": "57ee16349f540c1d2a9514d60c93d7573a17f89afdef5de983fe8948af92cb0e",
+            "authority_basis": "016febe6-632b-4d12-9d89-65613b68c01e",
+            "scope": "artifact-create",
+            "purpose": "ccm:I_AB:outbound",
+            "dependencies": {
+              "corpus": "v1"
+            },
+            "conditions": {},
+            "nonce": "0d45fafe-e13c-48d2-9fbb-e3d9da83a6e9",
+            "correlation_id": "0c09daf5-039a-44ee-9aa0-a653d0ba7683",
+            "return_requirement": {
+              "required": true,
+              "to": "I-1"
+            },
+            "origin": {
+              "intent": "Explicit local reference human choice: bounded Research",
+              "candidate_id": "c8444df5-5c29-4ce6-9e60-ac3929a69944"
+            }
+          },
+          "signature": "5ee72db634de50a5deb4a58d4356eb960adeb4e34d9372f66c57e7f7ad39e75e35aea4543e2699133fe7662a0b9e2b5cbce562f9b9c44d0b6b9d566d05575503"
+        }
+      },
+      "signature": "8e00ac299e3d9d6baa47f1611146bc7550384f5134c13670b25d427f49e5a7165774bd1ad850494ad6ae13d94e916aa47efc278dc0bde6a09ea03eeb4a7bd00a"
+    },
+    "invoked_at": "2026-10-06T16:50:24.156Z"
+  },
+  "execution": {
+    "kind": "Execution",
+    "execution_id": "d23d4cf9-4132-4a6c-a634-e47366d037bf",
+    "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+    "attempt_id": "cf74e77f-2c46-400c-ac8d-2c624d562b0e",
+    "status": "COMPLETED",
+    "result": {
+      "status": "COMPLETED",
+      "invocation_id": "4d0ffa70-a6ba-4ab7-9c72-db5826ea68f0",
+      "bytes": 1151
+    },
+    "completed_at": "2026-10-06T16:50:24.291Z",
+    "owner": "gateway/execution/filesystem-executor.mjs"
+  },
+  "observation": null,
+  "latest": {
+    "kind": "Disposition",
+    "decision_id": "6a1976d7-7148-419b-82d2-eb3b83b40e54",
+    "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+    "passage_hash": "e96e69bec1c658845c6f00e91ef23e5c51a7ac46e659ceb67ca10bfe595bd0e1",
+    "disposition": "ADMIT",
+    "reason": null,
+    "previous_decision_id": null,
+    "issued_at": "2026-10-06T16:50:23.607Z",
+    "source_authority": "I-1",
+    "interval_id": "I_AB",
+    "formation_ref": "c8444df5-5c29-4ce6-9e60-ac3929a69944",
+    "formation_hash": "f4fed289c71fcf8430e74ab83d8b3db9728f482f2506c23b27c32fc09002cb3d",
+    "standing": {
+      "status": "KNOWN",
+      "interval_id": "I_AB",
+      "sourcepoint": "I-1",
+      "constitution_ref": "cb41abc7654da9b4d841fa59102e3d27326697cad510557f34a9c84f01fcae2b",
+      "authority_basis": "016febe6-632b-4d12-9d89-65613b68c01e",
+      "standing": {
+        "outbound": "ELIGIBLE",
+        "inbound": "UNASSESSED"
+      },
+      "lineage_head": "dce0af984ee590f2c1a79bf4d3292e84060a4880d1564cf2eda5d9dd7edce7ff"
+    },
+    "native_decision_id": "6a1976d7-7148-419b-82d2-eb3b83b40e54",
+    "owner": "gateway/local-field/index.mjs"
+  },
+  "latest_time_basis": "HISTORICAL_RECORDED_DECISION",
+  "phase": "EXECUTED",
+  "attempt": {
+    "attempt_id": "cf74e77f-2c46-400c-ac8d-2c624d562b0e",
+    "passage_id": "8d17e934-77b2-421b-b0bf-865d0d1c65cc",
+    "action": "create_document",
+    "target": "research-return.json",
+    "payload_hash": "57ee16349f540c1d2a9514d60c93d7573a17f89afdef5de983fe8948af92cb0e",
+    "attempted_at": "2026-10-06T16:50:24.290Z",
+    "executor_node": "node-b"
+  },
+  "occurrence": null,
+  "return": null,
+  "receipt": null,
+  "actuator": 1,
+  "evidence": null,
+  "settlement": "UNESTABLISHED",
+  "home_mutation": "NOT_INVOKED",
+  "source_authority": "I-1"
+}
