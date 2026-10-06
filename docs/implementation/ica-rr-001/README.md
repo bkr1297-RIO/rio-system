@@ -1,5 +1,6 @@
 # ICA-RR-001
 
+The fuller-packet follow-up is reported in [RECONCILIATION-REPORT.md](RECONCILIATION-REPORT.md). This document preserves the predecessor evidence.
 One executable inhabited loop: **Observatory → Research → Return**.
 
 **Architectural Conformance + Lived Simplicity = Reference Realization**

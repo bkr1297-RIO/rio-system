@@ -1,0 +1,139 @@
+{
+  "profile": "constitutional-waist.f0.1",
+  "candidate": {
+    "body": {
+      "field_id": "1785d496-5c07-4bd4-97da-c67dda475111",
+      "record_id": "d03751f3-5f13-45fb-a056-3fc00b669454",
+      "issued_at": "2026-10-06T16:50:39.516Z",
+      "expires_at": "2026-10-06T17:00:39.516Z",
+      "type": "passage",
+      "passage_id": "d0683ece-24ef-4395-b5c5-b36e6d392845",
+      "intent_id": "c6737099-8222-46d0-8f16-3a6a44be14f7",
+      "source_node": "node-a",
+      "subject": "node-a",
+      "target_node": "node-b",
+      "action": "create_document",
+      "target": "research-return.json",
+      "payload": {
+        "content": "{\"kind\":\"BoundedResearchNote\",\"reading_id\":\"sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0\",\"sources\":[\"CALENDAR\",\"GIT\"],\"candidate_regime\":\"PRESSURE_DIFFERENTIAL\",\"findings\":[{\"finding_id\":\"3940f530-927a-4d80-845f-0ce22278d866\",\"question\":\"CALENDAR_CHANGE\",\"status\":\"ESTABLISHED\",\"text\":\"Available time changed from 0.50 to 0.12 in the authorized frames.\"},{\"finding_id\":\"c781c6e5-a69a-4ed9-acaa-9b3f8355d509\",\"question\":\"GIT_CHANGE\",\"status\":\"ESTABLISHED\",\"text\":\"Commit activity changed from 0.25 to 1.00; review wait changed from 0.06 to 0.88.\"},{\"finding_id\":\"5a79c8d5-3007-427d-9472-5e66a1b5fa3d\",\"question\":\"PRIOR_RECURRENCE\",\"status\":\"UNKNOWN\",\"text\":\"The available earlier frame does not establish a prior pressure differential. Earlier history is absent; we cannot tell whether this has happened before.\"}],\"unresolved_remainder\":[\"UNCALIBRATED_FORECAST\",\"REVIEW_LATENCY_IS_CAPACITY_PROXY\",\"PENDING_REVIEWS_ARE_CENSORED\",\"NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL\",\"CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT\",\"PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN\"],\"forecast_status\":\"UNCALIBRATED_CANDIDATE\",\"authorization_supplied\":false}"
+      },
+      "payload_hash": "bb5fca17534b1ad49e4bf43f60b0b1e37add66325765813ca7a0272a2ceda52a",
+      "authority_basis": "8bde42fc-9872-40eb-a8c6-42c5c9454bae",
+      "scope": "artifact-create",
+      "purpose": "ccm:I_AB:outbound",
+      "dependencies": {
+        "corpus": "v1"
+      },
+      "conditions": {},
+      "nonce": "c062a810-56b7-4a27-a6c3-9a627f472f71",
+      "correlation_id": "9f465a45-cea7-4414-ae66-1b072ea91ad9",
+      "return_requirement": {
+        "required": true,
+        "to": "I-1"
+      },
+      "origin": {
+        "intent": "Explicit local reference human choice: bounded Research",
+        "candidate_id": "abfe6fc6-5b4e-410e-ace3-a0b0f2b02201"
+      }
+    },
+    "signature": "5dd20a1188bc9d9dab3c4c2ac1b50e922fd07ea5de27597f3e5325ae5c850ae14471724248df61e1cb8098eaee89bc9e40e32d37fc3cd8d382390fafef953b0a"
+  },
+  "formation": {
+    "body": {
+      "field_id": "1785d496-5c07-4bd4-97da-c67dda475111",
+      "record_id": "e2276060-91b7-45c4-957b-23c69faf2579",
+      "issued_at": "2026-10-06T16:50:39.165Z",
+      "expires_at": "2026-10-06T17:00:39.165Z",
+      "type": "candidate",
+      "source_node": "node-a",
+      "candidate_id": "abfe6fc6-5b4e-410e-ace3-a0b0f2b02201",
+      "kind": "proposal",
+      "content": {
+        "profile": "constitutional-waist.f0.1",
+        "interval_id": "I_AB",
+        "uncertainty": "Research note only; forecasting truth and downstream consequences remain unestablished.",
+        "obligations": [
+          "independent-readback",
+          "native-return"
+        ]
+      }
+    },
+    "signature": "7da1f015689337cb3fb4b5e7b762439c5d8086020f11c3854fa6ba2971d1dbdb330ef56c907ff950385a60f7be84762ba3d0f215c52b37d7c81015ed155b7206",
+    "authority_effect": "none",
+    "content_hash": "92c9a6e07fda5073a4170db93e6b1d762f7fc62645c5d70afbb83234cb14835e"
+  },
+  "decisions": [
+    {
+      "kind": "Disposition",
+      "decision_id": "24a4ef48-f4a7-48d9-a8b7-67a59ea4f3a9",
+      "passage_id": "d0683ece-24ef-4395-b5c5-b36e6d392845",
+      "passage_hash": "ac54daef7a4b3acb1bd68d7d81ed01c45290adb05ea89771eddfdd7afdebbaee",
+      "disposition": "HOLD",
+      "reason": "CCM_DEPENDENCY_CHANGED",
+      "previous_decision_id": null,
+      "issued_at": "2026-10-06T16:50:39.595Z",
+      "source_authority": "I-1",
+      "interval_id": "I_AB",
+      "formation_ref": "abfe6fc6-5b4e-410e-ace3-a0b0f2b02201",
+      "formation_hash": "37820e41cb47dc82a7d610cf8ec8307287682ffb252d6680dbd95e47ee5cd147",
+      "standing": {
+        "status": "KNOWN",
+        "interval_id": "I_AB",
+        "sourcepoint": "I-1",
+        "constitution_ref": "9a52ae2677ca760b4ae65573fbe5189235ea44f5e9402fef03ca349881fc6217",
+        "authority_basis": "8bde42fc-9872-40eb-a8c6-42c5c9454bae",
+        "standing": {
+          "outbound": "ELIGIBLE",
+          "inbound": "UNASSESSED"
+        },
+        "lineage_head": "4a61a6731e0c6152f87ecda566e726024437041f16ad4ae1ecc90c5163bf3eec"
+      },
+      "native_decision_id": null,
+      "owner": "gateway/local-field/index.mjs"
+    }
+  ],
+  "hold_steps": [],
+  "commitment": null,
+  "invocation": null,
+  "execution": null,
+  "observation": null,
+  "latest": {
+    "kind": "Disposition",
+    "decision_id": "24a4ef48-f4a7-48d9-a8b7-67a59ea4f3a9",
+    "passage_id": "d0683ece-24ef-4395-b5c5-b36e6d392845",
+    "passage_hash": "ac54daef7a4b3acb1bd68d7d81ed01c45290adb05ea89771eddfdd7afdebbaee",
+    "disposition": "HOLD",
+    "reason": "CCM_DEPENDENCY_CHANGED",
+    "previous_decision_id": null,
+    "issued_at": "2026-10-06T16:50:39.595Z",
+    "source_authority": "I-1",
+    "interval_id": "I_AB",
+    "formation_ref": "abfe6fc6-5b4e-410e-ace3-a0b0f2b02201",
+    "formation_hash": "37820e41cb47dc82a7d610cf8ec8307287682ffb252d6680dbd95e47ee5cd147",
+    "standing": {
+      "status": "KNOWN",
+      "interval_id": "I_AB",
+      "sourcepoint": "I-1",
+      "constitution_ref": "9a52ae2677ca760b4ae65573fbe5189235ea44f5e9402fef03ca349881fc6217",
+      "authority_basis": "8bde42fc-9872-40eb-a8c6-42c5c9454bae",
+      "standing": {
+        "outbound": "ELIGIBLE",
+        "inbound": "UNASSESSED"
+      },
+      "lineage_head": "4a61a6731e0c6152f87ecda566e726024437041f16ad4ae1ecc90c5163bf3eec"
+    },
+    "native_decision_id": null,
+    "owner": "gateway/local-field/index.mjs"
+  },
+  "latest_time_basis": "HISTORICAL_RECORDED_DECISION",
+  "phase": null,
+  "attempt": null,
+  "occurrence": null,
+  "return": null,
+  "receipt": null,
+  "actuator": 0,
+  "evidence": null,
+  "settlement": "UNESTABLISHED",
+  "home_mutation": "NOT_INVOKED",
+  "source_authority": "I-1"
+}

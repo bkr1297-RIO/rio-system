@@ -1,0 +1,20 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 6e709b4b... for intent f3a6dc82-9977-4ac1-9671-bb40a9334e37 | tool=create_document | env=bf7105b1-4b82-442c-a6b1-e13e76c4037b | max=1 | expires 2026-10-06T17:19:26.781Z
+[RIO Token Manager] Token BURNED: 6e709b4b... for intent f3a6dc82-9977-4ac1-9671-bb40a9334e37 — all 11 checks passed
+✔ duplicate observation does not establish prior recurrence (12.899778ms)
+✔ different observations at the same timestamp do not establish earlier recurrence (2.773017ms)
+✔ valid CALENDAR-only history reports its supported finding and missing counterpart (2.756431ms)
+✔ valid GIT-only history reports its supported finding and missing counterpart (1.429283ms)
+✔ ordinary native dependency rejection becomes a scoped blocked account and honest Return (1902.045354ms)
+✔ replacement banner acknowledges the fresh current delegation after it exists (1029.586733ms)
+✔ a denied consequence does not claim that source access was denied (1141.030627ms)
+✔ partial Calendar history remains truthful through the whole human Return (1948.336149ms)
+✔ newly available source keeps its previous value unknown rather than crashing inspection (115.399244ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6310.919311
