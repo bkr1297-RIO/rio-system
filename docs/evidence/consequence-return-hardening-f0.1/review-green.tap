@@ -1,0 +1,22 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 6a727d4f... for intent 877f588a-2471-42bf-b95c-962addaca5d0 | tool=create_document | env=1cd87e52-014e-4d95-9607-b0dd4872eac7 | max=1 | expires 2026-10-06T07:07:14.557Z
+[RIO Token Manager] Token BURNED: 6a727d4f... for intent 877f588a-2471-42bf-b95c-962addaca5d0 — all 11 checks passed
+[RIO Token Manager] Token issued: edd17c29... for intent 67b38b6f-9cd4-4ba5-a884-9f1f70a73e9c | tool=create_document | env=1333140a-b06f-4504-aefa-a98c36421c13 | max=1 | expires 2026-10-06T07:07:16.110Z
+[RIO Token Manager] Token BURNED: edd17c29... for intent 67b38b6f-9cd4-4ba5-a884-9f1f70a73e9c — all 11 checks passed
+[RIO Token Manager] Token issued: 1f411fa6... for intent 0bfa961d-1054-4877-b80e-4d42ffea204b | tool=create_document | env=1bdaf4aa-2009-4d81-95bd-3f3b7ea1017a | max=1 | expires 2026-10-06T07:07:18.182Z
+[RIO Token Manager] Token BURNED: 1f411fa6... for intent 0bfa961d-1054-4877-b80e-4d42ffea204b — all 11 checks passed
+[RIO Token Manager] Token issued: d6df54b4... for intent c411e4dd-e630-4451-b265-3568bdb5a843 | tool=create_document | env=1bdaf4aa-2009-4d81-95bd-3f3b7ea1017a | max=1 | expires 2026-10-06T07:07:19.534Z
+[RIO Token Manager] Token BURNED: d6df54b4... for intent c411e4dd-e630-4451-b265-3568bdb5a843 — all 11 checks passed
+[RIO Token Manager] Token issued: 77ac9b8e... for intent abb71512-99e3-4de7-ae4b-294e1d494bb5 | tool=create_document | env=3089fc7f-7f5d-4924-8225-c233aeab6a9a | max=1 | expires 2026-10-06T07:07:21.045Z
+✔ review: equal UUIDs across artifact kinds reconstruct the correct revocation (1835.69217ms)
+✔ review: completed native capture preserves executor receipt in Return and projection (1952.829578ms)
+✔ review: revocation describes only the revoked grant; another lawful grant still works (3013.404496ms)
+✔ review: expired no-attempt lease can produce COMPLETE Return with UNKNOWN occurrence (1503.652854ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8763.219557

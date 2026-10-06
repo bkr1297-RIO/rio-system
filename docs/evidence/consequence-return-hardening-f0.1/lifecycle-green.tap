@@ -1,0 +1,45 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 69b68c37... for intent 1baaafbe-83b6-4cb6-80ca-48860c06a9a3 | tool=create_document | env=dced45f7-888a-45d1-b97a-629078dfdf6f | max=1 | expires 2026-10-06T06:48:15.610Z
+[RIO Token Manager] Token BURNED: 69b68c37... for intent 1baaafbe-83b6-4cb6-80ca-48860c06a9a3 — all 11 checks passed
+[RIO Token Manager] Token issued: 8ceb9832... for intent 3129a83b-3ff9-4ee8-8933-b6e562271bf2 | tool=create_document | env=89d99d5f-e181-4864-b29f-f1e245a99e34 | max=1 | expires 2026-10-06T06:48:17.058Z
+[RIO Token Manager] Token issued: 4d9d5cb9... for intent 7e897787-51d0-424a-8fad-7b119fa0df46 | tool=create_document | env=00e1e818-7357-4504-8ac7-0f5dd29a88b3 | max=1 | expires 2026-10-06T06:48:18.101Z
+[RIO Token Manager] Token BURNED: 8ceb9832... for intent 3129a83b-3ff9-4ee8-8933-b6e562271bf2 — all 11 checks passed
+[RIO Token Manager] Token issued: 0c917593... for intent f6e4c24b-c2a0-400d-82bb-755f48a134b4 | tool=create_document | env=60beccb7-a342-40af-b5ad-ee30cccb09d3 | max=1 | expires 2026-10-06T06:48:19.726Z
+[RIO Token Manager] Token BURNED: 0c917593... for intent f6e4c24b-c2a0-400d-82bb-755f48a134b4 — all 11 checks passed
+[RIO Token Manager] Token issued: 9b3f2ca2... for intent 94e77267-ae95-49f6-86b9-5727bb6e09ea | tool=create_document | env=22235dc3-2e1e-4372-8232-6518ed441d0a | max=1 | expires 2026-10-06T06:48:21.155Z
+[RIO Token Manager] Token BURNED: 9b3f2ca2... for intent 94e77267-ae95-49f6-86b9-5727bb6e09ea — all 11 checks passed
+[RIO Token Manager] Token issued: 95b177e0... for intent 51654ad5-66e4-4768-9cf7-86643159a517 | tool=create_document | env=f1d2051c-c455-45fe-90cc-b5bd0bd353fb | max=1 | expires 2026-10-06T06:48:22.865Z
+[RIO Token Manager] Token BURNED: 95b177e0... for intent 51654ad5-66e4-4768-9cf7-86643159a517 — all 11 checks passed
+[RIO Token Manager] Token issued: a36c11c8... for intent a1a64cd3-153d-46e7-98b4-3f87be840685 | tool=create_document | env=d9ff6903-ad7d-4b00-a2b2-942960cde4b0 | max=1 | expires 2026-10-06T06:48:24.785Z
+[RIO Token Manager] Token BURNED: a36c11c8... for intent a1a64cd3-153d-46e7-98b4-3f87be840685 — all 11 checks passed
+[RIO Token Manager] Token issued: 7ac76fcd... for intent 4fa28e3d-507c-4a96-af0b-6fe5fcdf8a50 | tool=create_document | env=e30d5e47-e285-45b1-a74c-2120140760a2 | max=1 | expires 2026-10-06T06:48:26.881Z
+[RIO Token Manager] Token BURNED: 7ac76fcd... for intent 4fa28e3d-507c-4a96-af0b-6fe5fcdf8a50 — all 11 checks passed
+[RIO Token Manager] Token issued: c86652a0... for intent 8925e3b4-98eb-4527-aed4-f0d5cd0c29bf | tool=create_document | env=823f2612-0687-4e2e-8a2c-4e50fc49f7d8 | max=1 | expires 2026-10-06T06:48:29.522Z
+[RIO Token Manager] Token BURNED: c86652a0... for intent 8925e3b4-98eb-4527-aed4-f0d5cd0c29bf — all 11 checks passed
+[RIO Token Manager] Token issued: 947f50bc... for intent 7a91b3fe-93e0-47a9-bac2-599658e69489 | tool=create_document | env=823f2612-0687-4e2e-8a2c-4e50fc49f7d8 | max=1 | expires 2026-10-06T06:48:30.823Z
+[RIO Token Manager] Token issued: 7e77f15c... for intent ee95c623-4114-41c4-9260-b346f5750dbb | tool=create_document | env=c6a3dbce-fc4c-49eb-9474-565cc8bc9b4c | max=1 | expires 2026-10-06T06:48:32.269Z
+[RIO Token Manager] Token issued: a5c9c83b... for intent e137ce30-828f-4189-a8c6-8ea76580fa58 | tool=create_document | env=7116117d-7d14-4c78-b606-7fdd25f642df | max=1 | expires 2026-10-06T06:48:33.892Z
+[RIO Token Manager] Token issued: 78cb092d... for intent cbc319c4-a0b5-4157-9784-d366586efb4d | tool=create_document | env=94c51c30-d109-4f4b-9730-bca94a6d5fa6 | max=1 | expires 2026-10-06T06:48:35.770Z
+[RIO Token Manager] Token issued: 28a817a0... for intent f437792e-482a-4113-b8c8-680a35fbf1e9 | tool=create_document | env=fa44042f-fa43-4e29-86db-77d7d4a98650 | max=1 | expires 2026-10-06T06:48:37.556Z
+[RIO Token Manager] Token BURNED: 28a817a0... for intent f437792e-482a-4113-b8c8-680a35fbf1e9 — all 11 checks passed
+✔ ADMIT declares only commitment transition and creates no attempt or effect (723.832971ms)
+✔ attempt and receipt cannot construct occurrence or outcome or settlement (1415.155836ms)
+✔ foreign and structural copies cannot cross lifecycle boundaries (2434.78383ms)
+✔ partition before observation keeps a present executor receipt and UNKNOWN occurrence (1692.014166ms)
+✔ complete reporting can coexist with UNKNOWN outcome and outstanding consequences (1659.984719ms)
+✔ independent occurrence basis is explicitly admitted; objective assessment is another operation (2120.208686ms)
+✔ mismatched readback cannot establish occurrence exactly as commanded (1802.838385ms)
+✔ explicit objective assessment can establish success without settling Return (2519.554138ms)
+✔ revocation disables future native exercise while existing effect remains and ack is separate (2816.212015ms)
+✔ inactivity supplies no authorization or delegation (1654.870878ms)
+✔ repeated acceptance supplies no authorization or delegation (1770.171146ms)
+✔ predicted choice supplies no authorization or delegation (1768.202838ms)
+✔ input validation rejects malformed objectives and reporting coordinates (1766.030399ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 24348.932967

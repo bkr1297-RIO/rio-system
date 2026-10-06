@@ -1,0 +1,67 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 87af0487... for intent 7a687a22-4d97-4c7c-8d3d-8e0b22808ee6 | tool=create_document | env=039bc98a-d62a-45e7-93a7-87c931c0ab8b | max=1 | expires 2026-10-06T07:05:07.726Z
+[RIO Token Manager] Token BURNED: 87af0487... for intent 7a687a22-4d97-4c7c-8d3d-8e0b22808ee6 — all 11 checks passed
+[RIO Token Manager] Token issued: 724686f7... for intent ca2b5f0f-3271-4af0-b861-ba3398810e88 | tool=create_document | env=5ec5e5d4-0fdc-4918-9981-32de5f41b111 | max=1 | expires 2026-10-06T07:05:08.865Z
+[RIO Token Manager] Token BURNED: 724686f7... for intent ca2b5f0f-3271-4af0-b861-ba3398810e88 — all 11 checks passed
+[RIO Token Manager] Token issued: b96cb040... for intent 76a40574-b6d3-4e32-86b8-0ed567a3daa4 | tool=create_document | env=8b50f576-9965-4bc5-923c-ebd766a7c1cd | max=1 | expires 2026-10-06T07:05:10.137Z
+[RIO Token Manager] Token BURNED: b96cb040... for intent 76a40574-b6d3-4e32-86b8-0ed567a3daa4 — all 11 checks passed
+[RIO Token Manager] Token issued: 38d8c801... for intent a7b14a78-d9a5-43a5-831c-d1aac49a1028 | tool=create_document | env=8d26624b-820e-4d57-bbf4-880615a10e30 | max=1 | expires 2026-10-06T07:05:11.268Z
+✖ review: equal UUIDs across artifact kinds reconstruct the correct revocation (1130.551089ms)
+✔ review: completed native capture preserves executor receipt in Return and projection (1263.13164ms)
+✖ review: revocation describes only the revoked grant; another lawful grant still works (1136.148753ms)
+✖ review: expired no-attempt lease can produce COMPLETE Return with UNKNOWN occurrence (982.273479ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 1
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4697.204174
+
+✖ failing tests:
+
+test at gateway/tests/consequence-return-hardening/review-regressions.test.mjs:9:1
+✖ review: equal UUIDs across artifact kinds reconstruct the correct revocation (1130.551089ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 'Permission'
+  - 'Revocation'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/review-regressions.test.mjs:14:56)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Permission',
+    expected: 'Revocation',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/consequence-return-hardening/review-regressions.test.mjs:26:1
+✖ review: revocation describes only the revoked grant; another lawful grant still works (1136.148753ms)
+  Error: CCM_INTERVAL_SCOPE
+      at requireValue (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/security/local-field-authority.mjs:11:18)
+      at #scopeGrant (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/medium/index.mjs:109:3)
+      at #validate (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/medium/index.mjs:149:47)
+      at ConstitutionalMedium.apply (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/medium/index.mjs:197:17)
+      at LocalField.ccmCommand (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/index.mjs:1316:25)
+      at command (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/ccm-001/helpers.mjs:19:70)
+      at Object.allow (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/ccm-001/helpers.mjs:24:5)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/review-regressions.test.mjs:29:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+
+test at gateway/tests/consequence-return-hardening/review-regressions.test.mjs:36:1
+✖ review: expired no-attempt lease can produce COMPLETE Return with UNKNOWN occurrence (982.273479ms)
+  Error: ISSUED_Attempt_REQUIRED
+      at requireThat (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs:10:61)
+      at #need (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs:28:17)
+      at ConsequenceSpecimen.composeReturn (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs:98:23)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/review-regressions.test.mjs:40:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7)

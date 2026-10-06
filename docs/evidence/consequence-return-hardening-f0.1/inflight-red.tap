@@ -1,0 +1,23 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 4079174d... for intent 419cfe4a-ed4d-4ab3-9157-4810b29b0a13 | tool=create_document | env=9be0280c-391b-4517-99ce-f211ad84d900 | max=1 | expires 2026-10-06T06:53:27.261Z
+[RIO Token Manager] Token BURNED: 4079174d... for intent 419cfe4a-ed4d-4ab3-9157-4810b29b0a13 — all 11 checks passed
+✖ native durable attempt can be shown ATTEMPTING before the descriptor effect (1124.915599ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1355.530674
+
+✖ failing tests:
+
+test at gateway/tests/consequence-return-hardening/lifecycle.test.mjs:134:1
+✖ native durable attempt can be shown ATTEMPTING before the descriptor effect (1124.915599ms)
+  TypeError: Cannot read properties of null (reading 'attempting')
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:141:22)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)

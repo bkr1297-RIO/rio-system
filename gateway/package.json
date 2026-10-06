@@ -30,7 +30,9 @@
     "test:ccm": "node --test tests/ccm-001/*.test.mjs",
     "field:ccm": "node scripts/run-ccm-001.mjs",
     "test:waist": "node --test tests/constitutional-waist/*.test.mjs",
-    "field:waist": "node scripts/run-constitutional-waist.mjs"
+    "field:waist": "node scripts/run-constitutional-waist.mjs",
+    "test:consequence": "node --test tests/consequence-return-hardening/*.test.mjs",
+    "field:consequence": "node scripts/run-consequence-return-hardening.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

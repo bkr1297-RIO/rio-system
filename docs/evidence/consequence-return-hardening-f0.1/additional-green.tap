@@ -1,0 +1,16 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 01d3d42b... for intent eef2807c-a1cf-4883-b91b-c07d33f4bff4 | tool=create_document | env=6ff9c416-f85d-42fc-9161-93e0c99a46ee | max=1 | expires 2026-10-06T06:53:55.668Z
+[RIO Token Manager] Token issued: 4b36b655... for intent a639a40a-1740-41ca-a20f-0db19b8e1a53 | tool=create_document | env=103984b1-33e7-461a-af6c-ce34b5caedf9 | max=1 | expires 2026-10-06T06:53:56.977Z
+✔ commit rejects other signed control types before any native side effect (1074.318368ms)
+[RIO Token Manager] Token issued: 542facad... for intent fa1fd972-4696-4308-b04e-4b240072dbf3 | tool=create_document | env=a4365748-7e46-44d5-ad9c-743fd859bc60 | max=1 | expires 2026-10-06T06:53:58.321Z
+[RIO Token Manager] Token BURNED: 542facad... for intent fa1fd972-4696-4308-b04e-4b240072dbf3 — all 11 checks passed
+✔ expired lease is reported in its own coordinate and creates no attempt (1515.661249ms)
+✔ native durable attempt can be shown ATTEMPTING before the descriptor effect (2119.902515ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4911.923254

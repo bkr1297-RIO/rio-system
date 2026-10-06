@@ -1,0 +1,9 @@
+{
+  "compiler": "Version 5.9.3",
+  "command": "tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 --skipLibCheck gateway/tests/consequence-return-hardening/types-consumer.mts",
+  "exit_code": 0,
+  "stdout": "",
+  "stderr": "",
+  "prohibited_conversions_checked": 7,
+  "production_dependency_added": false
+}

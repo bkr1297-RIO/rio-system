@@ -1,0 +1,20 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 9a41baec... for intent 29e427bf-e013-4801-8264-1477c0b04c29 | tool=create_document | env=bdeb825e-f3ab-466e-8889-ee59462ae8dc | max=1 | expires 2026-10-06T06:50:59.807Z
+[RIO Token Manager] Token BURNED: 9a41baec... for intent 29e427bf-e013-4801-8264-1477c0b04c29 — all 11 checks passed
+[RIO Token Manager] Token issued: fd090064... for intent bfbe13c7-584f-4ec0-a733-88060c753164 | tool=create_document | env=f64047d8-2f56-48b7-9c10-078cc81694ab | max=1 | expires 2026-10-06T06:51:01.424Z
+[RIO Token Manager] Token BURNED: fd090064... for intent bfbe13c7-584f-4ec0-a733-88060c753164 — all 11 checks passed
+[RIO Token Manager] Token issued: 733b7b5c... for intent 4e184fbb-c23c-407f-8ac3-f394d1bfe7a5 | tool=create_document | env=dd22b1a0-64ec-48e7-a33a-1f09d6d40fe3 | max=1 | expires 2026-10-06T06:51:02.995Z
+[RIO Token Manager] Token BURNED: 733b7b5c... for intent 4e184fbb-c23c-407f-8ac3-f394d1bfe7a5 — all 11 checks passed
+✔ permission screen names the lawful next transition and cannot imply an attempt (671.262986ms)
+✔ receipt screen does not turn completed execution into occurred or objective success (1663.315382ms)
+✔ complete Return screen states what is complete even while outcome remains unresolved (1620.42674ms)
+✔ irreversible revocation shows occurred, objective failure, local future disablement and honest ack scope (2496.986009ms)
+✔ projection escapes artifact data and keeps typed account inspectable (762.834333ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 5
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7455.448145

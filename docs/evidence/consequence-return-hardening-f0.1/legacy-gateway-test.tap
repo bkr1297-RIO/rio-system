@@ -1,0 +1,23 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> rio-governance-gateway@2.9.0 test
+> node --test tests/gateway.test.mjs
+
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Replay Prevention] Initialized — window: 300s, retention: 24h
+[RIO Rate Limiter] Initialized — global limit: 30 req/min, window: 60s
+============================================================
+  RIO GOVERNANCE GATEWAY v2.9.0
+  Governed AI Execution Runtime
+  Ledger: PostgreSQL (persistent)
+  Auth: JWT + Ed25519 + API Keys + Google OAuth (PostgreSQL-backed)
+  Principals: Unified identity model with role enforcement
+  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding
+  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs
+============================================================
+
+[RIO Config] Loaded: RIO_CONSTITUTION.json
+[RIO Config] Loaded: RIO_POLICY.json
+[RIO Config] Loaded: RIO_ROLE_MANUS.json
+[RIO Config] Loaded: RIO_ROLE_GEMINI.json
+[RIO Gateway] Governance configuration loaded.

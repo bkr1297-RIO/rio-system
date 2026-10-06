@@ -1,0 +1,1819 @@
+{
+  "name": "unknown-occurrence",
+  "contract": {
+    "irreversibility": "No compensation through this control; not physically irreversible filesystem",
+    "partition": "Declared transport fixture stub",
+    "independent_observer": "Separate descriptor read by the same enrolled receiver; not a second institution"
+  },
+  "permissionState": {
+    "kind": "ConsequenceSnapshot",
+    "snapshot_id": "32992dc2-9d2e-46ba-96b6-7795b102eba6",
+    "timestamp": "2026-10-06T06:37:50.181Z",
+    "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+    "permission": {
+      "kind": "Permission",
+      "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "disposition": {
+        "kind": "Disposition",
+        "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+        "disposition": "ADMIT",
+        "reason": null,
+        "previous_decision_id": null,
+        "issued_at": "2026-10-06T06:37:50.107Z",
+        "source_authority": "I-1",
+        "interval_id": "I_AB",
+        "formation_ref": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+        "formation_hash": "24949ecf921de2db2a9fa0a21dec9982cdfadb15b11e30eba96d01354140f8b5",
+        "standing": {
+          "status": "KNOWN",
+          "interval_id": "I_AB",
+          "sourcepoint": "I-1",
+          "constitution_ref": "c8bd45d49c0cd493d6157fa653ab03fa7bcf2e67ba04d3434a8c8a96c5fcff26",
+          "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+          "standing": {
+            "outbound": "ELIGIBLE",
+            "inbound": "UNASSESSED"
+          },
+          "lineage_head": "1cc972c9be5ea77f0da9608dcd46ea126548f7966501ed13d6565a207427f342"
+        },
+        "native_decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "owner": "gateway/local-field/index.mjs"
+      },
+      "basis": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+      "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+      "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+      "objective_contract": {
+        "objective_id": "Declared minimum readback bytes",
+        "minimum_bytes": 1
+      },
+      "issued_at": "2026-10-06T06:37:50.108Z"
+    },
+    "lease": null,
+    "attempt": null,
+    "occurrence_claim": null,
+    "lease_condition": "UNKNOWN",
+    "execution_condition": "UNKNOWN",
+    "native_recovery": null,
+    "executor_receipt": null,
+    "observation": null,
+    "evidence": null,
+    "occurrence_knowledge": "UNKNOWN",
+    "observation_coverage": {
+      "status": "UNOBSERVABLE",
+      "scope": "Independent observation not obtained"
+    },
+    "outcome_assessment": {
+      "kind": "OutcomeAssessment",
+      "status": "UNRESOLVED",
+      "assessment_id": null
+    },
+    "returned": null,
+    "settlement": null,
+    "revocation": null,
+    "unresolved_remainder": [
+      "No admitted observation establishes occurrence exactly as commanded",
+      "The declared objective has not been separately assessed",
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "control_limits": {
+      "compensation_available": false,
+      "committed_effect": false,
+      "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+    },
+    "assay": {
+      "Detect": {
+        "established": false,
+        "basis": null
+      },
+      "Interrupt": {
+        "established": false,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": null,
+        "basis": null
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "5dcae770-f1b1-45bf-8251-51a730ced6b2"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "attempting": false
+  },
+  "afterAttempt": {
+    "kind": "ConsequenceSnapshot",
+    "snapshot_id": "efbfb916-dd49-4ac1-bdd9-8dbcd4590deb",
+    "timestamp": "2026-10-06T06:37:51.111Z",
+    "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+    "permission": {
+      "kind": "Permission",
+      "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "disposition": {
+        "kind": "Disposition",
+        "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+        "disposition": "ADMIT",
+        "reason": null,
+        "previous_decision_id": null,
+        "issued_at": "2026-10-06T06:37:50.107Z",
+        "source_authority": "I-1",
+        "interval_id": "I_AB",
+        "formation_ref": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+        "formation_hash": "24949ecf921de2db2a9fa0a21dec9982cdfadb15b11e30eba96d01354140f8b5",
+        "standing": {
+          "status": "KNOWN",
+          "interval_id": "I_AB",
+          "sourcepoint": "I-1",
+          "constitution_ref": "c8bd45d49c0cd493d6157fa653ab03fa7bcf2e67ba04d3434a8c8a96c5fcff26",
+          "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+          "standing": {
+            "outbound": "ELIGIBLE",
+            "inbound": "UNASSESSED"
+          },
+          "lineage_head": "1cc972c9be5ea77f0da9608dcd46ea126548f7966501ed13d6565a207427f342"
+        },
+        "native_decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "owner": "gateway/local-field/index.mjs"
+      },
+      "basis": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+      "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+      "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+      "objective_contract": {
+        "objective_id": "Declared minimum readback bytes",
+        "minimum_bytes": 1
+      },
+      "issued_at": "2026-10-06T06:37:50.108Z"
+    },
+    "lease": {
+      "kind": "InvocationLease",
+      "lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+      "next_transition": "ATTEMPT_EXECUTION",
+      "commitment": {
+        "kind": "InvocationCommitment",
+        "commitment_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+        "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "warrant": {
+          "body": {
+            "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+            "record_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+            "issued_at": "2026-10-06T06:37:50.194Z",
+            "expires_at": "2026-10-06T06:47:50.194Z",
+            "type": "invocation_commit",
+            "issuer": "I-1",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+            "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2"
+          },
+          "signature": "e1c94d450d2d436be980e3b4ebe0f0286c15863f137122d93ce0c5edf44654a9fd732c58997fcea7f9ab6161ace70b74a19e1c4e03b88c3177f9e7d06291a500"
+        },
+        "issued_at": "2026-10-06T06:37:50.194Z",
+        "expires_at": "2026-10-06T06:47:49.363Z",
+        "token_id": "f1d283e1-e92f-4a4c-aba7-0a06ee00afea",
+        "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+        "owner": "gateway/security/token-manager.mjs"
+      },
+      "revocation_semantics": {
+        "validation_points": [
+          "native invocation acceptance",
+          "descriptor release guard"
+        ],
+        "lease_expiry": "2026-10-06T06:47:49.363Z",
+        "propagation_bound": {
+          "scope": "local revocation registry",
+          "guarantee": "NONE",
+          "measured_ms": null
+        },
+        "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+        "already_committed_behavior": "Retained; this control supplies no compensation",
+        "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+      }
+    },
+    "attempt": {
+      "kind": "Attempt",
+      "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "invocation_lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+      "executor": "node-b",
+      "subject": "node-a",
+      "requested_effect": {
+        "action": "create_document",
+        "target": "hello.txt",
+        "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+      },
+      "started_at": "2026-10-06T06:37:50.963Z",
+      "completed_at": "2026-10-06T06:37:50.964Z",
+      "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+      "executor_report": {
+        "kind": "Execution",
+        "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+          "bytes": 16
+        },
+        "completed_at": "2026-10-06T06:37:50.964Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      }
+    },
+    "occurrence_claim": {
+      "kind": "OccurrenceClaim",
+      "claim_id": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "execution_ref": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+      "report": {
+        "status": "COMPLETED",
+        "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+        "bytes": 16
+      },
+      "knowledge_supplied": false
+    },
+    "lease_condition": "CURRENT",
+    "execution_condition": "COMPLETED",
+    "native_recovery": null,
+    "executor_receipt": {
+      "kind": "Execution",
+      "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "status": "COMPLETED",
+      "result": {
+        "status": "COMPLETED",
+        "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+        "bytes": 16
+      },
+      "completed_at": "2026-10-06T06:37:50.964Z",
+      "owner": "gateway/execution/filesystem-executor.mjs"
+    },
+    "observation": null,
+    "evidence": null,
+    "occurrence_knowledge": "UNKNOWN",
+    "observation_coverage": {
+      "status": "UNOBSERVABLE",
+      "scope": "Independent observation not obtained"
+    },
+    "outcome_assessment": {
+      "kind": "OutcomeAssessment",
+      "status": "UNRESOLVED",
+      "assessment_id": null
+    },
+    "returned": null,
+    "settlement": null,
+    "revocation": null,
+    "unresolved_remainder": [
+      "No admitted observation establishes occurrence exactly as commanded",
+      "The declared objective has not been separately assessed",
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "control_limits": {
+      "compensation_available": false,
+      "committed_effect": true,
+      "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+    },
+    "assay": {
+      "Detect": {
+        "established": false,
+        "basis": null
+      },
+      "Interrupt": {
+        "established": false,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": null,
+        "basis": null
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "5dcae770-f1b1-45bf-8251-51a730ced6b2"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "attempting": false
+  },
+  "transport": {
+    "kind": "FixtureTransportFault",
+    "code": "NETWORK_PARTITION",
+    "scope": "Independent observation request withheld by simulated partition",
+    "physical_network_partition_proven": false
+  },
+  "rejected": null,
+  "revocation": null,
+  "ack": null,
+  "observation": null,
+  "evidence": null,
+  "outcome": null,
+  "returned": {
+    "kind": "ReturnArtifact",
+    "return_id": "84da8a5c-2256-4947-abf7-a5d5330b9566",
+    "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+    "execution_attempt": {
+      "status": "KNOWN",
+      "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "condition": "COMPLETED",
+      "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+    },
+    "executor_receipt": {
+      "status": "PRESENT",
+      "claim_ref": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+      "scope": "Executor report only"
+    },
+    "occurrence_knowledge": "UNKNOWN",
+    "observation_coverage": {
+      "status": "UNOBSERVABLE",
+      "scope": "Independent observation not obtained"
+    },
+    "outcome_assessment": {
+      "kind": "OutcomeAssessment",
+      "status": "UNRESOLVED",
+      "assessment_id": null
+    },
+    "return_completeness": "PARTIAL",
+    "required_reports": [
+      "ATTEMPT_ACCOUNT",
+      "OBSERVATION_ACCOUNT",
+      "OUTCOME_ACCOUNT",
+      "LIMITS_ACCOUNT"
+    ],
+    "reporting_accounts": [
+      {
+        "coordinate": "ATTEMPT_ACCOUNT",
+        "account": {
+          "status": "KNOWN",
+          "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+          "condition": "COMPLETED",
+          "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+        }
+      },
+      {
+        "coordinate": "LIMITS_ACCOUNT",
+        "account": {
+          "unresolved_remainder": [
+            "No admitted observation establishes occurrence exactly as commanded",
+            "The declared objective has not been separately assessed",
+            "Downstream consequences outside descriptor readback remain unobserved"
+          ],
+          "outstanding_obligations": [
+            "Obtain independent observation when the source is reachable"
+          ],
+          "control_limits": {
+            "compensation_available": false,
+            "committed_effect": true,
+            "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+          }
+        }
+      }
+    ],
+    "unresolved_remainder": [
+      "No admitted observation establishes occurrence exactly as commanded",
+      "The declared objective has not been separately assessed",
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "outstanding_obligations": [
+      "Obtain independent observation when the source is reachable"
+    ],
+    "follow_up_required": true,
+    "provenance": {
+      "permission_ref": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+      "lease_ref": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+      "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "observation_ref": null,
+      "evidence_ref": null,
+      "outcome_ref": null
+    },
+    "returned_at": "2026-10-06T06:37:51.282Z"
+  },
+  "snapshot": {
+    "kind": "ConsequenceSnapshot",
+    "snapshot_id": "ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+    "timestamp": "2026-10-06T06:37:51.357Z",
+    "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+    "permission": {
+      "kind": "Permission",
+      "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "disposition": {
+        "kind": "Disposition",
+        "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+        "disposition": "ADMIT",
+        "reason": null,
+        "previous_decision_id": null,
+        "issued_at": "2026-10-06T06:37:50.107Z",
+        "source_authority": "I-1",
+        "interval_id": "I_AB",
+        "formation_ref": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+        "formation_hash": "24949ecf921de2db2a9fa0a21dec9982cdfadb15b11e30eba96d01354140f8b5",
+        "standing": {
+          "status": "KNOWN",
+          "interval_id": "I_AB",
+          "sourcepoint": "I-1",
+          "constitution_ref": "c8bd45d49c0cd493d6157fa653ab03fa7bcf2e67ba04d3434a8c8a96c5fcff26",
+          "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+          "standing": {
+            "outbound": "ELIGIBLE",
+            "inbound": "UNASSESSED"
+          },
+          "lineage_head": "1cc972c9be5ea77f0da9608dcd46ea126548f7966501ed13d6565a207427f342"
+        },
+        "native_decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "owner": "gateway/local-field/index.mjs"
+      },
+      "basis": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+      "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+      "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+      "objective_contract": {
+        "objective_id": "Declared minimum readback bytes",
+        "minimum_bytes": 1
+      },
+      "issued_at": "2026-10-06T06:37:50.108Z"
+    },
+    "lease": {
+      "kind": "InvocationLease",
+      "lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+      "next_transition": "ATTEMPT_EXECUTION",
+      "commitment": {
+        "kind": "InvocationCommitment",
+        "commitment_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+        "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "warrant": {
+          "body": {
+            "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+            "record_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+            "issued_at": "2026-10-06T06:37:50.194Z",
+            "expires_at": "2026-10-06T06:47:50.194Z",
+            "type": "invocation_commit",
+            "issuer": "I-1",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+            "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2"
+          },
+          "signature": "e1c94d450d2d436be980e3b4ebe0f0286c15863f137122d93ce0c5edf44654a9fd732c58997fcea7f9ab6161ace70b74a19e1c4e03b88c3177f9e7d06291a500"
+        },
+        "issued_at": "2026-10-06T06:37:50.194Z",
+        "expires_at": "2026-10-06T06:47:49.363Z",
+        "token_id": "f1d283e1-e92f-4a4c-aba7-0a06ee00afea",
+        "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+        "owner": "gateway/security/token-manager.mjs"
+      },
+      "revocation_semantics": {
+        "validation_points": [
+          "native invocation acceptance",
+          "descriptor release guard"
+        ],
+        "lease_expiry": "2026-10-06T06:47:49.363Z",
+        "propagation_bound": {
+          "scope": "local revocation registry",
+          "guarantee": "NONE",
+          "measured_ms": null
+        },
+        "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+        "already_committed_behavior": "Retained; this control supplies no compensation",
+        "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+      }
+    },
+    "attempt": {
+      "kind": "Attempt",
+      "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "invocation_lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+      "executor": "node-b",
+      "subject": "node-a",
+      "requested_effect": {
+        "action": "create_document",
+        "target": "hello.txt",
+        "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+      },
+      "started_at": "2026-10-06T06:37:50.963Z",
+      "completed_at": "2026-10-06T06:37:50.964Z",
+      "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+      "executor_report": {
+        "kind": "Execution",
+        "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+          "bytes": 16
+        },
+        "completed_at": "2026-10-06T06:37:50.964Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      }
+    },
+    "occurrence_claim": {
+      "kind": "OccurrenceClaim",
+      "claim_id": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "execution_ref": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+      "report": {
+        "status": "COMPLETED",
+        "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+        "bytes": 16
+      },
+      "knowledge_supplied": false
+    },
+    "lease_condition": "CURRENT",
+    "execution_condition": "COMPLETED",
+    "native_recovery": null,
+    "executor_receipt": {
+      "kind": "Execution",
+      "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "status": "COMPLETED",
+      "result": {
+        "status": "COMPLETED",
+        "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+        "bytes": 16
+      },
+      "completed_at": "2026-10-06T06:37:50.964Z",
+      "owner": "gateway/execution/filesystem-executor.mjs"
+    },
+    "observation": null,
+    "evidence": null,
+    "occurrence_knowledge": "UNKNOWN",
+    "observation_coverage": {
+      "status": "UNOBSERVABLE",
+      "scope": "Independent observation not obtained"
+    },
+    "outcome_assessment": {
+      "kind": "OutcomeAssessment",
+      "status": "UNRESOLVED",
+      "assessment_id": null
+    },
+    "returned": {
+      "kind": "ReturnArtifact",
+      "return_id": "84da8a5c-2256-4947-abf7-a5d5330b9566",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "execution_attempt": {
+        "status": "KNOWN",
+        "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "condition": "COMPLETED",
+        "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+      },
+      "executor_receipt": {
+        "status": "PRESENT",
+        "claim_ref": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+        "scope": "Executor report only"
+      },
+      "occurrence_knowledge": "UNKNOWN",
+      "observation_coverage": {
+        "status": "UNOBSERVABLE",
+        "scope": "Independent observation not obtained"
+      },
+      "outcome_assessment": {
+        "kind": "OutcomeAssessment",
+        "status": "UNRESOLVED",
+        "assessment_id": null
+      },
+      "return_completeness": "PARTIAL",
+      "required_reports": [
+        "ATTEMPT_ACCOUNT",
+        "OBSERVATION_ACCOUNT",
+        "OUTCOME_ACCOUNT",
+        "LIMITS_ACCOUNT"
+      ],
+      "reporting_accounts": [
+        {
+          "coordinate": "ATTEMPT_ACCOUNT",
+          "account": {
+            "status": "KNOWN",
+            "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+            "condition": "COMPLETED",
+            "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+          }
+        },
+        {
+          "coordinate": "LIMITS_ACCOUNT",
+          "account": {
+            "unresolved_remainder": [
+              "No admitted observation establishes occurrence exactly as commanded",
+              "The declared objective has not been separately assessed",
+              "Downstream consequences outside descriptor readback remain unobserved"
+            ],
+            "outstanding_obligations": [
+              "Obtain independent observation when the source is reachable"
+            ],
+            "control_limits": {
+              "compensation_available": false,
+              "committed_effect": true,
+              "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+            }
+          }
+        }
+      ],
+      "unresolved_remainder": [
+        "No admitted observation establishes occurrence exactly as commanded",
+        "The declared objective has not been separately assessed",
+        "Downstream consequences outside descriptor readback remain unobserved"
+      ],
+      "outstanding_obligations": [
+        "Obtain independent observation when the source is reachable"
+      ],
+      "follow_up_required": true,
+      "provenance": {
+        "permission_ref": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+        "lease_ref": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+        "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "observation_ref": null,
+        "evidence_ref": null,
+        "outcome_ref": null
+      },
+      "returned_at": "2026-10-06T06:37:51.282Z"
+    },
+    "settlement": null,
+    "revocation": null,
+    "unresolved_remainder": [
+      "No admitted observation establishes occurrence exactly as commanded",
+      "The declared objective has not been separately assessed",
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "control_limits": {
+      "compensation_available": false,
+      "committed_effect": true,
+      "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+    },
+    "assay": {
+      "Detect": {
+        "established": false,
+        "basis": null
+      },
+      "Interrupt": {
+        "established": false,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": null,
+        "basis": null
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "5dcae770-f1b1-45bf-8251-51a730ced6b2"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "attempting": false
+  },
+  "projection": {
+    "kind": "ConsequenceProjection",
+    "projection_id": "3380262e-5211-4725-a624-ccf10c03abe6",
+    "snapshot_ref": "ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+    "claims": [
+      {
+        "code": "AUTHORIZED",
+        "text": "Permission was recorded for a root-signed invocation commitment. Execution requires a separate request and current authority checks.",
+        "basis_ref": "Permission:5dcae770-f1b1-45bf-8251-51a730ced6b2",
+        "basis_kind": "Permission",
+        "basis_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+        "contract": "Historical ADMIT and exact passage basis authorize ISSUE_INVOCATION_COMMITMENT, not execution."
+      },
+      {
+        "code": "ATTEMPTED",
+        "text": "An attributable execution attempt was recorded.",
+        "basis_ref": "Attempt:4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "basis_kind": "Attempt",
+        "basis_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "contract": "Native durable attempt; an attempt does not establish occurrence."
+      },
+      {
+        "code": "EXECUTOR_RECEIPT",
+        "text": "The executor reported completed. This report does not establish that the action occurred.",
+        "basis_ref": "OccurrenceClaim:766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+        "basis_kind": "OccurrenceClaim",
+        "basis_id": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+        "contract": "Executor receipt is present; receipt is not independent truth."
+      },
+      {
+        "code": "OCCURRENCE_UNKNOWN",
+        "text": "We cannot yet establish whether the commanded action occurred.",
+        "basis_ref": "ConsequenceSnapshot:ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+        "basis_kind": "ConsequenceSnapshot",
+        "basis_id": "ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+        "contract": "No admitted observation basis; UNKNOWN is neither success nor failure."
+      },
+      {
+        "code": "OUTCOME_UNRESOLVED",
+        "text": "The intended objective has not been established.",
+        "basis_ref": "ConsequenceSnapshot:ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+        "basis_kind": "ConsequenceSnapshot",
+        "basis_id": "ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+        "contract": "Objective assessment requires its own explicit operation and declared criterion."
+      },
+      {
+        "code": "RETURN_PENDING",
+        "text": "Return pending: some required reporting accounts are missing.",
+        "basis_ref": "ReturnArtifact:84da8a5c-2256-4947-abf7-a5d5330b9566",
+        "basis_kind": "ReturnArtifact",
+        "basis_id": "84da8a5c-2256-4947-abf7-a5d5330b9566",
+        "contract": "Completeness concerns required reporting obligations, not occurrence, objective success or settlement."
+      }
+    ],
+    "basis_manifest": [
+      {
+        "id": "Permission:5dcae770-f1b1-45bf-8251-51a730ced6b2",
+        "artifact_kind": "Permission",
+        "artifact_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+        "artifact": {
+          "kind": "Permission",
+          "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "disposition": {
+            "kind": "Disposition",
+            "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+            "disposition": "ADMIT",
+            "reason": null,
+            "previous_decision_id": null,
+            "issued_at": "2026-10-06T06:37:50.107Z",
+            "source_authority": "I-1",
+            "interval_id": "I_AB",
+            "formation_ref": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+            "formation_hash": "24949ecf921de2db2a9fa0a21dec9982cdfadb15b11e30eba96d01354140f8b5",
+            "standing": {
+              "status": "KNOWN",
+              "interval_id": "I_AB",
+              "sourcepoint": "I-1",
+              "constitution_ref": "c8bd45d49c0cd493d6157fa653ab03fa7bcf2e67ba04d3434a8c8a96c5fcff26",
+              "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+              "standing": {
+                "outbound": "ELIGIBLE",
+                "inbound": "UNASSESSED"
+              },
+              "lineage_head": "1cc972c9be5ea77f0da9608dcd46ea126548f7966501ed13d6565a207427f342"
+            },
+            "native_decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+            "owner": "gateway/local-field/index.mjs"
+          },
+          "basis": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+          "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+          "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+          "objective_contract": {
+            "objective_id": "Declared minimum readback bytes",
+            "minimum_bytes": 1
+          },
+          "issued_at": "2026-10-06T06:37:50.108Z"
+        }
+      },
+      {
+        "id": "Attempt:4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "artifact_kind": "Attempt",
+        "artifact_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "artifact": {
+          "kind": "Attempt",
+          "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "invocation_lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+          "executor": "node-b",
+          "subject": "node-a",
+          "requested_effect": {
+            "action": "create_document",
+            "target": "hello.txt",
+            "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+          },
+          "started_at": "2026-10-06T06:37:50.963Z",
+          "completed_at": "2026-10-06T06:37:50.964Z",
+          "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+          "executor_report": {
+            "kind": "Execution",
+            "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+            "status": "COMPLETED",
+            "result": {
+              "status": "COMPLETED",
+              "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+              "bytes": 16
+            },
+            "completed_at": "2026-10-06T06:37:50.964Z",
+            "owner": "gateway/execution/filesystem-executor.mjs"
+          }
+        }
+      },
+      {
+        "id": "OccurrenceClaim:766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+        "artifact_kind": "OccurrenceClaim",
+        "artifact_id": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+        "artifact": {
+          "kind": "OccurrenceClaim",
+          "claim_id": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+          "execution_ref": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+          "report": {
+            "status": "COMPLETED",
+            "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+            "bytes": 16
+          },
+          "knowledge_supplied": false
+        }
+      },
+      {
+        "id": "ConsequenceSnapshot:ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+        "artifact_kind": "ConsequenceSnapshot",
+        "artifact_id": "ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+        "artifact": {
+          "kind": "ConsequenceSnapshot",
+          "snapshot_id": "ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+          "timestamp": "2026-10-06T06:37:51.357Z",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "permission": {
+            "kind": "Permission",
+            "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "disposition": {
+              "kind": "Disposition",
+              "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+              "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+              "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+              "disposition": "ADMIT",
+              "reason": null,
+              "previous_decision_id": null,
+              "issued_at": "2026-10-06T06:37:50.107Z",
+              "source_authority": "I-1",
+              "interval_id": "I_AB",
+              "formation_ref": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+              "formation_hash": "24949ecf921de2db2a9fa0a21dec9982cdfadb15b11e30eba96d01354140f8b5",
+              "standing": {
+                "status": "KNOWN",
+                "interval_id": "I_AB",
+                "sourcepoint": "I-1",
+                "constitution_ref": "c8bd45d49c0cd493d6157fa653ab03fa7bcf2e67ba04d3434a8c8a96c5fcff26",
+                "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+                "standing": {
+                  "outbound": "ELIGIBLE",
+                  "inbound": "UNASSESSED"
+                },
+                "lineage_head": "1cc972c9be5ea77f0da9608dcd46ea126548f7966501ed13d6565a207427f342"
+              },
+              "native_decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+              "owner": "gateway/local-field/index.mjs"
+            },
+            "basis": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+            "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+            "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+            "objective_contract": {
+              "objective_id": "Declared minimum readback bytes",
+              "minimum_bytes": 1
+            },
+            "issued_at": "2026-10-06T06:37:50.108Z"
+          },
+          "lease": {
+            "kind": "InvocationLease",
+            "lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+            "next_transition": "ATTEMPT_EXECUTION",
+            "commitment": {
+              "kind": "InvocationCommitment",
+              "commitment_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+              "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+              "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+              "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+              "warrant": {
+                "body": {
+                  "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+                  "record_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+                  "issued_at": "2026-10-06T06:37:50.194Z",
+                  "expires_at": "2026-10-06T06:47:50.194Z",
+                  "type": "invocation_commit",
+                  "issuer": "I-1",
+                  "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+                  "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+                  "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2"
+                },
+                "signature": "e1c94d450d2d436be980e3b4ebe0f0286c15863f137122d93ce0c5edf44654a9fd732c58997fcea7f9ab6161ace70b74a19e1c4e03b88c3177f9e7d06291a500"
+              },
+              "issued_at": "2026-10-06T06:37:50.194Z",
+              "expires_at": "2026-10-06T06:47:49.363Z",
+              "token_id": "f1d283e1-e92f-4a4c-aba7-0a06ee00afea",
+              "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+              "owner": "gateway/security/token-manager.mjs"
+            },
+            "revocation_semantics": {
+              "validation_points": [
+                "native invocation acceptance",
+                "descriptor release guard"
+              ],
+              "lease_expiry": "2026-10-06T06:47:49.363Z",
+              "propagation_bound": {
+                "scope": "local revocation registry",
+                "guarantee": "NONE",
+                "measured_ms": null
+              },
+              "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+              "already_committed_behavior": "Retained; this control supplies no compensation",
+              "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+            }
+          },
+          "attempt": {
+            "kind": "Attempt",
+            "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "invocation_lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+            "executor": "node-b",
+            "subject": "node-a",
+            "requested_effect": {
+              "action": "create_document",
+              "target": "hello.txt",
+              "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+            },
+            "started_at": "2026-10-06T06:37:50.963Z",
+            "completed_at": "2026-10-06T06:37:50.964Z",
+            "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+            "executor_report": {
+              "kind": "Execution",
+              "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+              "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+              "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+              "status": "COMPLETED",
+              "result": {
+                "status": "COMPLETED",
+                "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+                "bytes": 16
+              },
+              "completed_at": "2026-10-06T06:37:50.964Z",
+              "owner": "gateway/execution/filesystem-executor.mjs"
+            }
+          },
+          "occurrence_claim": {
+            "kind": "OccurrenceClaim",
+            "claim_id": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+            "execution_ref": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+            "report": {
+              "status": "COMPLETED",
+              "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+              "bytes": 16
+            },
+            "knowledge_supplied": false
+          },
+          "lease_condition": "CURRENT",
+          "execution_condition": "COMPLETED",
+          "native_recovery": null,
+          "executor_receipt": {
+            "kind": "Execution",
+            "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+            "status": "COMPLETED",
+            "result": {
+              "status": "COMPLETED",
+              "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+              "bytes": 16
+            },
+            "completed_at": "2026-10-06T06:37:50.964Z",
+            "owner": "gateway/execution/filesystem-executor.mjs"
+          },
+          "observation": null,
+          "evidence": null,
+          "occurrence_knowledge": "UNKNOWN",
+          "observation_coverage": {
+            "status": "UNOBSERVABLE",
+            "scope": "Independent observation not obtained"
+          },
+          "outcome_assessment": {
+            "kind": "OutcomeAssessment",
+            "status": "UNRESOLVED",
+            "assessment_id": null
+          },
+          "returned": {
+            "kind": "ReturnArtifact",
+            "return_id": "84da8a5c-2256-4947-abf7-a5d5330b9566",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "execution_attempt": {
+              "status": "KNOWN",
+              "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+              "condition": "COMPLETED",
+              "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+            },
+            "executor_receipt": {
+              "status": "PRESENT",
+              "claim_ref": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+              "scope": "Executor report only"
+            },
+            "occurrence_knowledge": "UNKNOWN",
+            "observation_coverage": {
+              "status": "UNOBSERVABLE",
+              "scope": "Independent observation not obtained"
+            },
+            "outcome_assessment": {
+              "kind": "OutcomeAssessment",
+              "status": "UNRESOLVED",
+              "assessment_id": null
+            },
+            "return_completeness": "PARTIAL",
+            "required_reports": [
+              "ATTEMPT_ACCOUNT",
+              "OBSERVATION_ACCOUNT",
+              "OUTCOME_ACCOUNT",
+              "LIMITS_ACCOUNT"
+            ],
+            "reporting_accounts": [
+              {
+                "coordinate": "ATTEMPT_ACCOUNT",
+                "account": {
+                  "status": "KNOWN",
+                  "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+                  "condition": "COMPLETED",
+                  "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+                }
+              },
+              {
+                "coordinate": "LIMITS_ACCOUNT",
+                "account": {
+                  "unresolved_remainder": [
+                    "No admitted observation establishes occurrence exactly as commanded",
+                    "The declared objective has not been separately assessed",
+                    "Downstream consequences outside descriptor readback remain unobserved"
+                  ],
+                  "outstanding_obligations": [
+                    "Obtain independent observation when the source is reachable"
+                  ],
+                  "control_limits": {
+                    "compensation_available": false,
+                    "committed_effect": true,
+                    "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+                  }
+                }
+              }
+            ],
+            "unresolved_remainder": [
+              "No admitted observation establishes occurrence exactly as commanded",
+              "The declared objective has not been separately assessed",
+              "Downstream consequences outside descriptor readback remain unobserved"
+            ],
+            "outstanding_obligations": [
+              "Obtain independent observation when the source is reachable"
+            ],
+            "follow_up_required": true,
+            "provenance": {
+              "permission_ref": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+              "lease_ref": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+              "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+              "observation_ref": null,
+              "evidence_ref": null,
+              "outcome_ref": null
+            },
+            "returned_at": "2026-10-06T06:37:51.282Z"
+          },
+          "settlement": null,
+          "revocation": null,
+          "unresolved_remainder": [
+            "No admitted observation establishes occurrence exactly as commanded",
+            "The declared objective has not been separately assessed",
+            "Downstream consequences outside descriptor readback remain unobserved"
+          ],
+          "control_limits": {
+            "compensation_available": false,
+            "committed_effect": true,
+            "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+          },
+          "assay": {
+            "Detect": {
+              "established": false,
+              "basis": null
+            },
+            "Interrupt": {
+              "established": false,
+              "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+              "grant_id": null,
+              "basis": null
+            },
+            "Reconstruct": {
+              "established": true,
+              "basis": "5dcae770-f1b1-45bf-8251-51a730ced6b2"
+            },
+            "ConfidenceCalibration": {
+              "established": false,
+              "status": "NOT_CALIBRATED"
+            }
+          },
+          "attempting": false
+        }
+      },
+      {
+        "id": "ReturnArtifact:84da8a5c-2256-4947-abf7-a5d5330b9566",
+        "artifact_kind": "ReturnArtifact",
+        "artifact_id": "84da8a5c-2256-4947-abf7-a5d5330b9566",
+        "artifact": {
+          "kind": "ReturnArtifact",
+          "return_id": "84da8a5c-2256-4947-abf7-a5d5330b9566",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "execution_attempt": {
+            "status": "KNOWN",
+            "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+            "condition": "COMPLETED",
+            "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+          },
+          "executor_receipt": {
+            "status": "PRESENT",
+            "claim_ref": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+            "scope": "Executor report only"
+          },
+          "occurrence_knowledge": "UNKNOWN",
+          "observation_coverage": {
+            "status": "UNOBSERVABLE",
+            "scope": "Independent observation not obtained"
+          },
+          "outcome_assessment": {
+            "kind": "OutcomeAssessment",
+            "status": "UNRESOLVED",
+            "assessment_id": null
+          },
+          "return_completeness": "PARTIAL",
+          "required_reports": [
+            "ATTEMPT_ACCOUNT",
+            "OBSERVATION_ACCOUNT",
+            "OUTCOME_ACCOUNT",
+            "LIMITS_ACCOUNT"
+          ],
+          "reporting_accounts": [
+            {
+              "coordinate": "ATTEMPT_ACCOUNT",
+              "account": {
+                "status": "KNOWN",
+                "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+                "condition": "COMPLETED",
+                "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+              }
+            },
+            {
+              "coordinate": "LIMITS_ACCOUNT",
+              "account": {
+                "unresolved_remainder": [
+                  "No admitted observation establishes occurrence exactly as commanded",
+                  "The declared objective has not been separately assessed",
+                  "Downstream consequences outside descriptor readback remain unobserved"
+                ],
+                "outstanding_obligations": [
+                  "Obtain independent observation when the source is reachable"
+                ],
+                "control_limits": {
+                  "compensation_available": false,
+                  "committed_effect": true,
+                  "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+                }
+              }
+            }
+          ],
+          "unresolved_remainder": [
+            "No admitted observation establishes occurrence exactly as commanded",
+            "The declared objective has not been separately assessed",
+            "Downstream consequences outside descriptor readback remain unobserved"
+          ],
+          "outstanding_obligations": [
+            "Obtain independent observation when the source is reachable"
+          ],
+          "follow_up_required": true,
+          "provenance": {
+            "permission_ref": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+            "lease_ref": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+            "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+            "observation_ref": null,
+            "evidence_ref": null,
+            "outcome_ref": null
+          },
+          "returned_at": "2026-10-06T06:37:51.282Z"
+        }
+      }
+    ],
+    "controls": [],
+    "assay": {
+      "Detect": {
+        "established": false,
+        "basis": null
+      },
+      "Interrupt": {
+        "established": false,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": null,
+        "basis": null
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "5dcae770-f1b1-45bf-8251-51a730ced6b2"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "limits": [
+      "No admitted observation establishes occurrence exactly as commanded",
+      "The declared objective has not been separately assessed",
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "typed_account": {
+      "kind": "ConsequenceSnapshot",
+      "snapshot_id": "ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+      "timestamp": "2026-10-06T06:37:51.357Z",
+      "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+      "permission": {
+        "kind": "Permission",
+        "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "disposition": {
+          "kind": "Disposition",
+          "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+          "disposition": "ADMIT",
+          "reason": null,
+          "previous_decision_id": null,
+          "issued_at": "2026-10-06T06:37:50.107Z",
+          "source_authority": "I-1",
+          "interval_id": "I_AB",
+          "formation_ref": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+          "formation_hash": "24949ecf921de2db2a9fa0a21dec9982cdfadb15b11e30eba96d01354140f8b5",
+          "standing": {
+            "status": "KNOWN",
+            "interval_id": "I_AB",
+            "sourcepoint": "I-1",
+            "constitution_ref": "c8bd45d49c0cd493d6157fa653ab03fa7bcf2e67ba04d3434a8c8a96c5fcff26",
+            "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+            "standing": {
+              "outbound": "ELIGIBLE",
+              "inbound": "UNASSESSED"
+            },
+            "lineage_head": "1cc972c9be5ea77f0da9608dcd46ea126548f7966501ed13d6565a207427f342"
+          },
+          "native_decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+          "owner": "gateway/local-field/index.mjs"
+        },
+        "basis": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+        "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+        "objective_contract": {
+          "objective_id": "Declared minimum readback bytes",
+          "minimum_bytes": 1
+        },
+        "issued_at": "2026-10-06T06:37:50.108Z"
+      },
+      "lease": {
+        "kind": "InvocationLease",
+        "lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "permission_id": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+        "next_transition": "ATTEMPT_EXECUTION",
+        "commitment": {
+          "kind": "InvocationCommitment",
+          "commitment_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+          "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+          "warrant": {
+            "body": {
+              "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+              "record_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+              "issued_at": "2026-10-06T06:37:50.194Z",
+              "expires_at": "2026-10-06T06:47:50.194Z",
+              "type": "invocation_commit",
+              "issuer": "I-1",
+              "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+              "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+              "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2"
+            },
+            "signature": "e1c94d450d2d436be980e3b4ebe0f0286c15863f137122d93ce0c5edf44654a9fd732c58997fcea7f9ab6161ace70b74a19e1c4e03b88c3177f9e7d06291a500"
+          },
+          "issued_at": "2026-10-06T06:37:50.194Z",
+          "expires_at": "2026-10-06T06:47:49.363Z",
+          "token_id": "f1d283e1-e92f-4a4c-aba7-0a06ee00afea",
+          "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+          "owner": "gateway/security/token-manager.mjs"
+        },
+        "revocation_semantics": {
+          "validation_points": [
+            "native invocation acceptance",
+            "descriptor release guard"
+          ],
+          "lease_expiry": "2026-10-06T06:47:49.363Z",
+          "propagation_bound": {
+            "scope": "local revocation registry",
+            "guarantee": "NONE",
+            "measured_ms": null
+          },
+          "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+          "already_committed_behavior": "Retained; this control supplies no compensation",
+          "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+        }
+      },
+      "attempt": {
+        "kind": "Attempt",
+        "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "invocation_lease_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+        "executor": "node-b",
+        "subject": "node-a",
+        "requested_effect": {
+          "action": "create_document",
+          "target": "hello.txt",
+          "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+        },
+        "started_at": "2026-10-06T06:37:50.963Z",
+        "completed_at": "2026-10-06T06:37:50.964Z",
+        "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+        "executor_report": {
+          "kind": "Execution",
+          "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+          "status": "COMPLETED",
+          "result": {
+            "status": "COMPLETED",
+            "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+            "bytes": 16
+          },
+          "completed_at": "2026-10-06T06:37:50.964Z",
+          "owner": "gateway/execution/filesystem-executor.mjs"
+        }
+      },
+      "occurrence_claim": {
+        "kind": "OccurrenceClaim",
+        "claim_id": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "execution_ref": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+        "report": {
+          "status": "COMPLETED",
+          "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+          "bytes": 16
+        },
+        "knowledge_supplied": false
+      },
+      "lease_condition": "CURRENT",
+      "execution_condition": "COMPLETED",
+      "native_recovery": null,
+      "executor_receipt": {
+        "kind": "Execution",
+        "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+          "bytes": 16
+        },
+        "completed_at": "2026-10-06T06:37:50.964Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      },
+      "observation": null,
+      "evidence": null,
+      "occurrence_knowledge": "UNKNOWN",
+      "observation_coverage": {
+        "status": "UNOBSERVABLE",
+        "scope": "Independent observation not obtained"
+      },
+      "outcome_assessment": {
+        "kind": "OutcomeAssessment",
+        "status": "UNRESOLVED",
+        "assessment_id": null
+      },
+      "returned": {
+        "kind": "ReturnArtifact",
+        "return_id": "84da8a5c-2256-4947-abf7-a5d5330b9566",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "execution_attempt": {
+          "status": "KNOWN",
+          "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+          "condition": "COMPLETED",
+          "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+        },
+        "executor_receipt": {
+          "status": "PRESENT",
+          "claim_ref": "766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+          "scope": "Executor report only"
+        },
+        "occurrence_knowledge": "UNKNOWN",
+        "observation_coverage": {
+          "status": "UNOBSERVABLE",
+          "scope": "Independent observation not obtained"
+        },
+        "outcome_assessment": {
+          "kind": "OutcomeAssessment",
+          "status": "UNRESOLVED",
+          "assessment_id": null
+        },
+        "return_completeness": "PARTIAL",
+        "required_reports": [
+          "ATTEMPT_ACCOUNT",
+          "OBSERVATION_ACCOUNT",
+          "OUTCOME_ACCOUNT",
+          "LIMITS_ACCOUNT"
+        ],
+        "reporting_accounts": [
+          {
+            "coordinate": "ATTEMPT_ACCOUNT",
+            "account": {
+              "status": "KNOWN",
+              "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+              "condition": "COMPLETED",
+              "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+            }
+          },
+          {
+            "coordinate": "LIMITS_ACCOUNT",
+            "account": {
+              "unresolved_remainder": [
+                "No admitted observation establishes occurrence exactly as commanded",
+                "The declared objective has not been separately assessed",
+                "Downstream consequences outside descriptor readback remain unobserved"
+              ],
+              "outstanding_obligations": [
+                "Obtain independent observation when the source is reachable"
+              ],
+              "control_limits": {
+                "compensation_available": false,
+                "committed_effect": true,
+                "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+              }
+            }
+          }
+        ],
+        "unresolved_remainder": [
+          "No admitted observation establishes occurrence exactly as commanded",
+          "The declared objective has not been separately assessed",
+          "Downstream consequences outside descriptor readback remain unobserved"
+        ],
+        "outstanding_obligations": [
+          "Obtain independent observation when the source is reachable"
+        ],
+        "follow_up_required": true,
+        "provenance": {
+          "permission_ref": "5dcae770-f1b1-45bf-8251-51a730ced6b2",
+          "lease_ref": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+          "attempt_ref": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+          "observation_ref": null,
+          "evidence_ref": null,
+          "outcome_ref": null
+        },
+        "returned_at": "2026-10-06T06:37:51.282Z"
+      },
+      "settlement": null,
+      "revocation": null,
+      "unresolved_remainder": [
+        "No admitted observation establishes occurrence exactly as commanded",
+        "The declared objective has not been separately assessed",
+        "Downstream consequences outside descriptor readback remain unobserved"
+      ],
+      "control_limits": {
+        "compensation_available": false,
+        "committed_effect": true,
+        "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+      },
+      "assay": {
+        "Detect": {
+          "established": false,
+          "basis": null
+        },
+        "Interrupt": {
+          "established": false,
+          "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+          "grant_id": null,
+          "basis": null
+        },
+        "Reconstruct": {
+          "established": true,
+          "basis": "5dcae770-f1b1-45bf-8251-51a730ced6b2"
+        },
+        "ConfidenceCalibration": {
+          "established": false,
+          "status": "NOT_CALIBRATED"
+        }
+      },
+      "attempting": false
+    }
+  },
+  "claimReconstructions": [
+    {
+      "code": "AUTHORIZED",
+      "basis_ref": "Permission:5dcae770-f1b1-45bf-8251-51a730ced6b2",
+      "contract": "Historical ADMIT and exact passage basis authorize ISSUE_INVOCATION_COMMITMENT, not execution.",
+      "artifact_kind": "Permission"
+    },
+    {
+      "code": "ATTEMPTED",
+      "basis_ref": "Attempt:4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+      "contract": "Native durable attempt; an attempt does not establish occurrence.",
+      "artifact_kind": "Attempt"
+    },
+    {
+      "code": "EXECUTOR_RECEIPT",
+      "basis_ref": "OccurrenceClaim:766eb2df-e0f5-4bd4-b3b4-dc5d6489ac0f",
+      "contract": "Executor receipt is present; receipt is not independent truth.",
+      "artifact_kind": "OccurrenceClaim"
+    },
+    {
+      "code": "OCCURRENCE_UNKNOWN",
+      "basis_ref": "ConsequenceSnapshot:ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+      "contract": "No admitted observation basis; UNKNOWN is neither success nor failure.",
+      "artifact_kind": "ConsequenceSnapshot"
+    },
+    {
+      "code": "OUTCOME_UNRESOLVED",
+      "basis_ref": "ConsequenceSnapshot:ab3021f7-04f8-4567-b6d5-da7e7b197b5c",
+      "contract": "Objective assessment requires its own explicit operation and declared criterion.",
+      "artifact_kind": "ConsequenceSnapshot"
+    },
+    {
+      "code": "RETURN_PENDING",
+      "basis_ref": "ReturnArtifact:84da8a5c-2256-4947-abf7-a5d5330b9566",
+      "contract": "Completeness concerns required reporting obligations, not occurrence, objective success or settlement.",
+      "artifact_kind": "ReturnArtifact"
+    }
+  ],
+  "assertions": {
+    "admission_created_attempt": false,
+    "attempt_created_occurrence": false,
+    "original_effect_retained": true,
+    "settlement_created": false,
+    "native_second_attempt": null,
+    "receipt_supplies_truth": false
+  },
+  "native": {
+    "bindings": [
+      {
+        "grant_id": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+        "subject": "node-a",
+        "target_node": "node-b",
+        "parent": null,
+        "revoked": false,
+        "superseded": false,
+        "uses": 1,
+        "status": "active",
+        "reason": null,
+        "expires_at": "2026-10-06T06:47:49.566Z"
+      }
+    ],
+    "trace": {
+      "profile": "constitutional-waist.f0.1",
+      "candidate": {
+        "body": {
+          "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+          "record_id": "6bcbebda-ee82-4ccd-a4af-b5b10c03a69c",
+          "issued_at": "2026-10-06T06:37:49.703Z",
+          "expires_at": "2026-10-06T06:47:49.703Z",
+          "type": "passage",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "intent_id": "78cd665d-3454-4e56-8d3e-0f27a2a9eac3",
+          "source_node": "node-a",
+          "subject": "node-a",
+          "target_node": "node-b",
+          "action": "create_document",
+          "target": "hello.txt",
+          "payload": {
+            "content": "ONE local field\n"
+          },
+          "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd",
+          "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+          "scope": "artifact-create",
+          "purpose": "ccm:I_AB:outbound",
+          "dependencies": {
+            "corpus": "v1"
+          },
+          "conditions": {},
+          "nonce": "67f0bb0f-94e2-4d2f-a46f-717f35c7fefa",
+          "correlation_id": "4e1b63ef-7dfd-462c-ba4b-3f49c84fc4ee",
+          "return_requirement": {
+            "required": true,
+            "to": "I-1"
+          },
+          "origin": {
+            "intent": "SourcePoint-authorized bounded waist specimen",
+            "candidate_id": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9"
+          }
+        },
+        "signature": "e632f763db57afdc8277f7663478291566dd55b878b99aced03ddb602e905b5dff912aea0a82906175f410aed9386ffc0d232a3dc4c6aa76c44068431e37ae0c"
+      },
+      "formation": {
+        "body": {
+          "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+          "record_id": "092d9670-41d5-491b-b07f-a954c13a3d09",
+          "issued_at": "2026-10-06T06:37:49.670Z",
+          "expires_at": "2026-10-06T06:47:49.670Z",
+          "type": "candidate",
+          "source_node": "node-a",
+          "candidate_id": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+          "kind": "proposal",
+          "content": {
+            "profile": "constitutional-waist.f0.1",
+            "interval_id": "I_AB",
+            "uncertainty": "Bounded development create; exterior truth is unestablished.",
+            "obligations": [
+              "independent-readback",
+              "native-return"
+            ]
+          }
+        },
+        "signature": "36ab2bec100dbe5569c4f946c1771b6f789b44061a598a612e80f12cb9bde9c1594a8f04e62e63136af309d8513faf6486c0ac59f7228e35ad5e592c1312610c",
+        "authority_effect": "none",
+        "content_hash": "2e36defab613fdf095c63af368ca410195d60ed9c327bc766d9955c6bdeb5ea1"
+      },
+      "decisions": [
+        {
+          "kind": "Disposition",
+          "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+          "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+          "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+          "disposition": "ADMIT",
+          "reason": null,
+          "previous_decision_id": null,
+          "issued_at": "2026-10-06T06:37:50.107Z",
+          "source_authority": "I-1",
+          "interval_id": "I_AB",
+          "formation_ref": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+          "formation_hash": "24949ecf921de2db2a9fa0a21dec9982cdfadb15b11e30eba96d01354140f8b5",
+          "standing": {
+            "status": "KNOWN",
+            "interval_id": "I_AB",
+            "sourcepoint": "I-1",
+            "constitution_ref": "c8bd45d49c0cd493d6157fa653ab03fa7bcf2e67ba04d3434a8c8a96c5fcff26",
+            "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+            "standing": {
+              "outbound": "ELIGIBLE",
+              "inbound": "UNASSESSED"
+            },
+            "lineage_head": "1cc972c9be5ea77f0da9608dcd46ea126548f7966501ed13d6565a207427f342"
+          },
+          "native_decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+          "owner": "gateway/local-field/index.mjs"
+        }
+      ],
+      "hold_steps": [],
+      "commitment": {
+        "kind": "InvocationCommitment",
+        "commitment_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+        "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "warrant": {
+          "body": {
+            "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+            "record_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+            "issued_at": "2026-10-06T06:37:50.194Z",
+            "expires_at": "2026-10-06T06:47:50.194Z",
+            "type": "invocation_commit",
+            "issuer": "I-1",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+            "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2"
+          },
+          "signature": "e1c94d450d2d436be980e3b4ebe0f0286c15863f137122d93ce0c5edf44654a9fd732c58997fcea7f9ab6161ace70b74a19e1c4e03b88c3177f9e7d06291a500"
+        },
+        "issued_at": "2026-10-06T06:37:50.194Z",
+        "expires_at": "2026-10-06T06:47:49.363Z",
+        "token_id": "f1d283e1-e92f-4a4c-aba7-0a06ee00afea",
+        "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+        "owner": "gateway/security/token-manager.mjs"
+      },
+      "invocation": {
+        "kind": "Invocation",
+        "invocation_id": "df761ebe-f211-4a8c-b86e-673039ca9cf3",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "commitment_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+        "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "request": {
+          "body": {
+            "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+            "record_id": "df761ebe-f211-4a8c-b86e-673039ca9cf3",
+            "issued_at": "2026-10-06T06:37:50.475Z",
+            "expires_at": "2026-10-06T06:47:50.475Z",
+            "type": "invocation",
+            "source_node": "node-a",
+            "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+            "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+            "commitment_id": "c0ead0f4-bfe3-41b9-96ea-1e088cd4cfd7",
+            "passage": {
+              "body": {
+                "field_id": "d3928c39-f61d-4755-9fc3-8a0ea5a27fc6",
+                "record_id": "6bcbebda-ee82-4ccd-a4af-b5b10c03a69c",
+                "issued_at": "2026-10-06T06:37:49.703Z",
+                "expires_at": "2026-10-06T06:47:49.703Z",
+                "type": "passage",
+                "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+                "intent_id": "78cd665d-3454-4e56-8d3e-0f27a2a9eac3",
+                "source_node": "node-a",
+                "subject": "node-a",
+                "target_node": "node-b",
+                "action": "create_document",
+                "target": "hello.txt",
+                "payload": {
+                  "content": "ONE local field\n"
+                },
+                "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd",
+                "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+                "scope": "artifact-create",
+                "purpose": "ccm:I_AB:outbound",
+                "dependencies": {
+                  "corpus": "v1"
+                },
+                "conditions": {},
+                "nonce": "67f0bb0f-94e2-4d2f-a46f-717f35c7fefa",
+                "correlation_id": "4e1b63ef-7dfd-462c-ba4b-3f49c84fc4ee",
+                "return_requirement": {
+                  "required": true,
+                  "to": "I-1"
+                },
+                "origin": {
+                  "intent": "SourcePoint-authorized bounded waist specimen",
+                  "candidate_id": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9"
+                }
+              },
+              "signature": "e632f763db57afdc8277f7663478291566dd55b878b99aced03ddb602e905b5dff912aea0a82906175f410aed9386ffc0d232a3dc4c6aa76c44068431e37ae0c"
+            }
+          },
+          "signature": "c64866d463a6f8641112397a087b4c944bceb2558d11c6004ff81ccb6ddbff5797b8bfe0d13638537bc1b70192728fec9d848553d3bef3fcd56a631f2c3edb0d"
+        },
+        "invoked_at": "2026-10-06T06:37:50.705Z"
+      },
+      "execution": {
+        "kind": "Execution",
+        "execution_id": "76fbd253-4cf6-430a-8ec2-3d81723471f1",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "4fcdfef4-dc53-42e4-a28a-19f3fd4e2a48",
+          "bytes": 16
+        },
+        "completed_at": "2026-10-06T06:37:50.964Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      },
+      "observation": null,
+      "latest": {
+        "kind": "Disposition",
+        "decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "passage_hash": "a672497db9e925e048809840a4ac0be170a962b59a9e5ad6ee1a83b3827bd150",
+        "disposition": "ADMIT",
+        "reason": null,
+        "previous_decision_id": null,
+        "issued_at": "2026-10-06T06:37:50.107Z",
+        "source_authority": "I-1",
+        "interval_id": "I_AB",
+        "formation_ref": "5c95f94c-1762-4de7-8ee2-81b8d6cd51d9",
+        "formation_hash": "24949ecf921de2db2a9fa0a21dec9982cdfadb15b11e30eba96d01354140f8b5",
+        "standing": {
+          "status": "KNOWN",
+          "interval_id": "I_AB",
+          "sourcepoint": "I-1",
+          "constitution_ref": "c8bd45d49c0cd493d6157fa653ab03fa7bcf2e67ba04d3434a8c8a96c5fcff26",
+          "authority_basis": "708cbb21-77a5-4d99-b65d-8a146552e0c9",
+          "standing": {
+            "outbound": "ELIGIBLE",
+            "inbound": "UNASSESSED"
+          },
+          "lineage_head": "1cc972c9be5ea77f0da9608dcd46ea126548f7966501ed13d6565a207427f342"
+        },
+        "native_decision_id": "191772a3-e50c-49d7-ba87-a2e31691ceb2",
+        "owner": "gateway/local-field/index.mjs"
+      },
+      "latest_time_basis": "HISTORICAL_RECORDED_DECISION",
+      "phase": "EXECUTED",
+      "attempt": {
+        "attempt_id": "4bd72ba1-2968-4164-a0ae-b6619ea54b82",
+        "passage_id": "d248aec3-348e-4b4d-a4bd-aab0826f032a",
+        "action": "create_document",
+        "target": "hello.txt",
+        "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd",
+        "attempted_at": "2026-10-06T06:37:50.963Z",
+        "executor_node": "node-b"
+      },
+      "occurrence": null,
+      "return": null,
+      "receipt": null,
+      "actuator": 1,
+      "evidence": null,
+      "settlement": "UNESTABLISHED",
+      "home_mutation": "NOT_INVOKED",
+      "source_authority": "I-1"
+    }
+  }
+}

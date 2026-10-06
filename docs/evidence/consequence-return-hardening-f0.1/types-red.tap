@@ -1,0 +1,9 @@
+gateway/tests/consequence-return-hardening/types-consumer.mts(2,35): error TS7016: Could not find a declaration file for module '../../local-field/consequence/account.mjs'. '/workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs' implicitly has an 'any' type.
+gateway/tests/consequence-return-hardening/types-consumer.mts(3,136): error TS7016: Could not find a declaration file for module '../../local-field/consequence/account.mjs'. '/workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs' implicitly has an 'any' type.
+gateway/tests/consequence-return-hardening/types-consumer.mts(7,1): error TS2578: Unused '@ts-expect-error' directive.
+gateway/tests/consequence-return-hardening/types-consumer.mts(9,1): error TS2578: Unused '@ts-expect-error' directive.
+gateway/tests/consequence-return-hardening/types-consumer.mts(11,1): error TS2578: Unused '@ts-expect-error' directive.
+gateway/tests/consequence-return-hardening/types-consumer.mts(13,1): error TS2578: Unused '@ts-expect-error' directive.
+gateway/tests/consequence-return-hardening/types-consumer.mts(15,1): error TS2578: Unused '@ts-expect-error' directive.
+gateway/tests/consequence-return-hardening/types-consumer.mts(17,1): error TS2578: Unused '@ts-expect-error' directive.
+gateway/tests/consequence-return-hardening/types-consumer.mts(19,1): error TS2578: Unused '@ts-expect-error' directive.

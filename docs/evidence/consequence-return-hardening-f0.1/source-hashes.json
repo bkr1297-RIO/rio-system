@@ -1,0 +1,291 @@
+{
+  "base_commit": "5df28c0e4262616bf560787a3a365583370351da",
+  "tested_code_commit": "bb891c091f9d842cf5bd51473788a860701fccd8",
+  "files": [
+    {
+      "path": ".github/workflows/consequence-return-hardening.yml",
+      "sha256": "47ed999df8ddf5d34d3aadc3f0d2fe7e06716bdd45b70f6dfe9c318479b7c184",
+      "bytes": 1145
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/additional-green.tap",
+      "sha256": "bf17be1cf35d4fe6e4b4f3e425971431c27afe440fb405bca01e1dec7a0243e9",
+      "bytes": 1221
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/additional-red.tap",
+      "sha256": "d31727aa82a5fd6c852c5004eabd8fa9a47f72c3a5f69399c0afff965809df96",
+      "bytes": 3516
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/assay.tap",
+      "sha256": "20ba06eb27bf8e88bef2308e33cd3fd080d73484bdc4f4e4ae3bf8cf31201564",
+      "bytes": 1936
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/cli-green.tap",
+      "sha256": "075504f2f0aaaa2cb421f7da222d275e9e6d9167401265a247d77657c8eb5848",
+      "bytes": 300
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/cli.tap",
+      "sha256": "aa5b302f29067311ea15145c5dd70bb4304b44a246535e0e24962e3c10b45287",
+      "bytes": 1361
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/final-node-tests.tap",
+      "sha256": "b0b437640c7c277ded0dd7a469713a8feecf45879f44e493708a23d4dfbefdc1",
+      "bytes": 68625
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixture-run-final.tap",
+      "sha256": "874236e2b4566afd64dd925044d841d3c44777cc4a001bf62404cf5589ea75ae",
+      "bytes": 2144
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixture-run.tap",
+      "sha256": "f034193155d317bf376aa694734cd51d217b31d225618f11c8114f6ed6d6daab",
+      "bytes": 2144
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixtures/complete-unknown/account.json",
+      "sha256": "666524018d30b5b92d9da1cd76cf348e4734fed3a451dc3c8aa31945fd7f9dd0",
+      "bytes": 78912
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixtures/complete-unknown/projection.html",
+      "sha256": "8508d5fc816232ae88c5f52ceda42ba500125bff213d946e81dcd11f58279820",
+      "bytes": 18311
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixtures/failed-objective/account.json",
+      "sha256": "4c6b01fc33a0eb0b3b0c0808b033dc2f53e0d4900910f9195decbd519ffee96a",
+      "bytes": 90197
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixtures/failed-objective/projection.html",
+      "sha256": "5f46c78b4bbc9c05a02fc78c04118a63422e068caf5d6124ddb867a062f02156",
+      "bytes": 25378
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixtures/irreversible-revocation/account.json",
+      "sha256": "ea1f2cfd5462f9cffee604eb0fdd71ff63c532c9fee2ee5c4be2107e89078512",
+      "bytes": 106105
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixtures/irreversible-revocation/projection.html",
+      "sha256": "a7bb01580cd99c8611b8cf7f707962e2c0f621342f27ba37968a615e019c3138",
+      "bytes": 30117
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixtures/unknown-occurrence/account.json",
+      "sha256": "0b33462287745bd8d373584cb3dd86f8acb5fd7e52e770631595f4153f9a110f",
+      "bytes": 76001
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/fixtures/unknown-occurrence/projection.html",
+      "sha256": "bdb9f195baac316a906b6336e7a481c88a4837a822e7d676a72d21e80db4a5a6",
+      "bytes": 17569
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/inflight-red.tap",
+      "sha256": "ede2a00645ba3cf53c880cd89a333c308cfa5ecb073315f82319e62cdc72660b",
+      "bytes": 1319
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/interrupted-green.tap",
+      "sha256": "b001fa82970a54c031bf810b7f3d2332c358bc01f7163f2cde16f1599201047a",
+      "bytes": 652
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/interrupted-red.tap",
+      "sha256": "3959d990c27b8355defdd8cdb31a2b9b848b39381c8027238d7093612472f85b",
+      "bytes": 1288
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/legacy-gateway-test-final.tap",
+      "sha256": "ff13d2284cd0125d404d030cb7f017de9c76ea4d559de3be40664316d474027b",
+      "bytes": 11247
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/legacy-gateway-test.tap",
+      "sha256": "f7929194b74041212e2cea0d3c8c7e444b4d6a1c98c22e26a108a4aaa239c3cc",
+      "bytes": 1125
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/lifecycle-green.tap",
+      "sha256": "24d5fbf2525d5d91736258d820675d80101396c33e829f10e91910bd23296442",
+      "bytes": 5339
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/lifecycle-red.tap",
+      "sha256": "a2d12f99372255d3468806c6cc8e424ccad4519ab5ce308eaa9ad329197a6e61",
+      "bytes": 1650
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/new-tests-pre-review.tap",
+      "sha256": "083f6bf765270ac0b229fe7441533982ad88456a32c005dd344f113eb5ba1ba5",
+      "bytes": 10786
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/new-tests-review-head.tap",
+      "sha256": "75af592b6ea958704283fde51faeb03b6f96ad7b88ffc7de86e9e33e948a6d79",
+      "bytes": 10861
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/projection-green.tap",
+      "sha256": "e2fd3443e2a42d2a3f5f0d4fbd38e3eb15d9aea48a9020645716ba553319e1b6",
+      "bytes": 1699
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/projection-red.tap",
+      "sha256": "6bc974c793efc3309869592163b293bb036e69484b109eb37166c93d96bbc2cc",
+      "bytes": 1662
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/review-green.tap",
+      "sha256": "4316e0ea0f59b31e29c1a6beb9adc2b93bb1fae4e0642a3190ca4923f78222f5",
+      "bytes": 2117
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/review-head-combined.tap",
+      "sha256": "1fdd814f908ac1e0d58c5a25aa075b0a7d29fee58ba7c82d0460b70f4771db63",
+      "bytes": 66641
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/review-red.tap",
+      "sha256": "0fd25cec4146d7b0542d4bc7dcd1e9be2873572bd4bfab5a269bca3fc963995d",
+      "bytes": 5183
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/review-scope-red.tap",
+      "sha256": "bbb3d79b28dc6b30ad45b9a89aa9c2545e2133c1157e352510e0df9f009470b7",
+      "bytes": 2056
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/root-typecheck.tap",
+      "sha256": "49f86cbee82d3f6b289a5389f03cbff95dff964f990f2eaf80dcd2ab152e5f23",
+      "bytes": 187
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/status-green.tap",
+      "sha256": "fba1bf6e476b8131c93e362ffa071f7681aa77315ccd42577e2d2f8171b75cf9",
+      "bytes": 1440
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/status-red.tap",
+      "sha256": "628fe5fbd17693dcf97fa6a3fcaca26ae15a66cfe7a09f745d29860c36a6b8a7",
+      "bytes": 4062
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/types-green.tap",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/types-red.tap",
+      "sha256": "7cdc8c871ddd097ca8300b26843c330cc23abdb5a3eb8ee7b09ef6e827da6c39",
+      "bytes": 1459
+    },
+    {
+      "path": "docs/evidence/consequence-return-hardening-f0.1/types-verification.json",
+      "sha256": "96e6b4fc1b77d45272f915739b6399cd4847c971c7fa39a6c1866ddfd9b4fb37",
+      "bytes": 340
+    },
+    {
+      "path": "docs/implementation/consequence-return-hardening/BUILD-REPORT.md",
+      "sha256": "2faa8cba65d8252e8293898a7b5cd72ac63067fa83170df6e6c1a60aede314ab",
+      "bytes": 10827
+    },
+    {
+      "path": "docs/implementation/consequence-return-hardening/EXISTING-CLAIM-AUDIT.md",
+      "sha256": "12adf282df765225acb2eec8cb1e21883ceedd413211c45626fea90e0381c176",
+      "bytes": 3297
+    },
+    {
+      "path": "docs/implementation/consequence-return-hardening/README.md",
+      "sha256": "61cdbc5d1bd6f351fb53f152ab50cdac2ebfb9775eadf62e6e209c1d7ea771f0",
+      "bytes": 2923
+    },
+    {
+      "path": "docs/implementation/consequence-return-hardening/REVIEW.md",
+      "sha256": "4044751dfc737c6bfec78d15117267eea401b9391da734d7f9f451a35afe23c1",
+      "bytes": 3032
+    },
+    {
+      "path": "docs/implementation/consequence-return-hardening/SPEC.md",
+      "sha256": "2e5d457993ce851e4662f91c3f07e5d329bc3e9dc2cd04cbefb10ac07afb2989",
+      "bytes": 4839
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-06-consequence-return-hardening-f0.1.md",
+      "sha256": "80ffbcb5f6800fabe09d17524dfeefbd30e731ebdfc32f1e790f19ddfd08972a",
+      "bytes": 4202
+    },
+    {
+      "path": "gateway/local-field/consequence/account.d.mts",
+      "sha256": "815a66b4f0e9260a370b02f6e21b8efc03062d3afd6c01ccaa5b8a158404ae1d",
+      "bytes": 94
+    },
+    {
+      "path": "gateway/local-field/consequence/account.mjs",
+      "sha256": "ad8111962d98671612e7c19f55850df3ae4edfd079eb6478bb2d7757843eebbd",
+      "bytes": 15701
+    },
+    {
+      "path": "gateway/local-field/consequence/projection.mjs",
+      "sha256": "48d5568d4718ff20324a4d57fd9b24d229dcd8e407b23f1c563766c7e8262be7",
+      "bytes": 7996
+    },
+    {
+      "path": "gateway/local-field/consequence/types.d.ts",
+      "sha256": "415637afae107454b4e0c72fd259fd8c9f76174f22350cbbd8c56de4dd2c40c2",
+      "bytes": 6753
+    },
+    {
+      "path": "gateway/package.json",
+      "sha256": "4511486e49ce20729323ac00277ac981a3b3bf52b692f1eff8861a8c9b6bedb2",
+      "bytes": 2766
+    },
+    {
+      "path": "gateway/scripts/run-consequence-return-hardening.mjs",
+      "sha256": "5fd0e644e229d5acaf24601a411747f4bd3830c0568b360cbee0ea90766bd663",
+      "bytes": 1314
+    },
+    {
+      "path": "gateway/tests/consequence-return-hardening/assay.test.mjs",
+      "sha256": "5110e5cd2f7f9db0825dbf7ed1fcc0fdb6153b42f8c278014bd643201d23fb21",
+      "bytes": 1479
+    },
+    {
+      "path": "gateway/tests/consequence-return-hardening/cli.test.mjs",
+      "sha256": "407ce0f105b3af05ecbe1ecef96f85886a9bb401770dc6797a3cdbdc932eedb0",
+      "bytes": 1073
+    },
+    {
+      "path": "gateway/tests/consequence-return-hardening/fixtures.mjs",
+      "sha256": "eb482e58dd7efd9a1dfc477acbba85493c32768c16bf446741dd404efa23452d",
+      "bytes": 4489
+    },
+    {
+      "path": "gateway/tests/consequence-return-hardening/lifecycle.test.mjs",
+      "sha256": "b0dd678dffaa1d469b6286d094cd3a90e68d115b763c00346191abf9ec9e2db9",
+      "bytes": 11472
+    },
+    {
+      "path": "gateway/tests/consequence-return-hardening/projection.test.mjs",
+      "sha256": "ba18b55d6df46358dc0b03a9afecb322d6eca68e874c68b7a3d64745860b52d9",
+      "bytes": 4758
+    },
+    {
+      "path": "gateway/tests/consequence-return-hardening/review-regressions.test.mjs",
+      "sha256": "8b46400a7f676448fdc3a6a1c68120b8377e3865e9e9cf35b2c06006ef744f0f",
+      "bytes": 3907
+    },
+    {
+      "path": "gateway/tests/consequence-return-hardening/types-consumer.mts",
+      "sha256": "becf8c322a2ba7b6d8cc6ef1158275c022f0d8973e0d796d3dd0ac46cc36c120",
+      "bytes": 1441
+    }
+  ]
+}

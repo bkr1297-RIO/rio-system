@@ -1,0 +1,57 @@
+{
+  "profile": "consequence-return-hardening.f0.1",
+  "classification": "IMPLEMENTATION_CONFORMANCE_TESTING",
+  "base_commit": "5df28c0e4262616bf560787a3a365583370351da",
+  "tested_code_commit": "bb891c091f9d842cf5bd51473788a860701fccd8",
+  "node_version": "v24.19.0",
+  "node_verification": {
+    "command": "ONE_REFERENCE_ROOT=<read-only reference checkout> node --test gateway/tests/consequence-return-hardening/*.test.mjs gateway/tests/local-field*.test.mjs gateway/tests/ccm-001/*.test.mjs gateway/tests/constitutional-waist/*.test.mjs gateway/tests/si-specimen/*.test.mjs gateway/tests/projection-runtime/*.test.mjs gateway/tests/execution-binding-repair.test.mjs gateway/tests/prime-*.test.mjs gateway/tests/open-arrow/*.test.mjs",
+    "passed": 305,
+    "failed": 0,
+    "skipped": 0,
+    "new_tests": 34,
+    "inherited_tests": 271,
+    "log": "final-node-tests.tap"
+  },
+  "types_verification": "types-verification.json",
+  "fixtures": [
+    "irreversible-revocation",
+    "unknown-occurrence",
+    "complete-unknown",
+    "failed-objective"
+  ],
+  "review": {
+    "reviewed_head": "f2aa0de1347a877e0db5a6806fadaef79493d16d",
+    "important_findings": 5,
+    "fixed": 5,
+    "critical": 0,
+    "minor": 0,
+    "declined_to_judge": [],
+    "re_review_performed": false
+  },
+  "wider_checks": {
+    "gateway_npm_test": {
+      "failed": 13,
+      "reason": "ECONNREFUSED localhost:4401",
+      "log": "legacy-gateway-test-final.tap"
+    },
+    "root_typecheck": {
+      "status": "UNAVAILABLE",
+      "reason": "tsc not found",
+      "log": "root-typecheck.tap"
+    }
+  },
+  "production_dependencies_added": 0,
+  "constitutional_architecture_modified": false,
+  "merge_performed": false,
+  "deployment_performed": false,
+  "settlement_supplied": false,
+  "evidence_scope": "One descriptor readback by enrolled receiver, no constitutional standing",
+  "irreversibility_scope": "No compensation through this control; filesystem may be altered by others",
+  "partition_scope": "Declared fixture transport stub",
+  "publication": {
+    "status": "LOCAL_CANDIDATE_READY_FOR_DRAFT",
+    "destination": "https://github.com/bkr1297-RIO/rio-system",
+    "remote_ci_claimed": false
+  }
+}

@@ -1,0 +1,18 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 4f76767e... for intent 3e95824a-af5c-449a-be38-3484c16bc180 | tool=create_document | env=5a7d6f8d-5041-44b6-a08b-41e086d69460 | max=1 | expires 2026-10-06T06:58:35.795Z
+[RIO Token Manager] Token issued: 160a8e40... for intent 015d68e9-67a3-4e08-9554-bda5eadd78aa | tool=create_document | env=dc90024b-ed7e-421a-ab84-4bbc4a10959d | max=1 | expires 2026-10-06T06:58:37.317Z
+[RIO Token Manager] Token BURNED: 160a8e40... for intent 015d68e9-67a3-4e08-9554-bda5eadd78aa — all 11 checks passed
+[RIO Token Manager] Token issued: 475ba53e... for intent 2abcfd7a-bb02-4f34-888f-e2b97a0f6068 | tool=create_document | env=d31a452a-2eb4-4284-906d-aef088c17803 | max=1 | expires 2026-10-06T06:58:39.184Z
+[RIO Token Manager] Token BURNED: 475ba53e... for intent 2abcfd7a-bb02-4f34-888f-e2b97a0f6068 — all 11 checks passed
+✔ expired lease is reported in its own coordinate and creates no attempt (1705.837376ms)
+✔ native durable attempt can be shown ATTEMPTING before the descriptor effect (1927.352647ms)
+✔ native recovery preserves INTERRUPTED separately from UNKNOWN occurrence and complete reporting (2298.84218ms)
+✔ structural runtime impostor cannot mint lifecycle artifacts (0.725877ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6160.285892
