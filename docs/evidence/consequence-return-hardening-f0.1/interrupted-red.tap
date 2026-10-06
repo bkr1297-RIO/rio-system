@@ -1,0 +1,23 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✖ native recovery preserves INTERRUPTED separately from UNKNOWN occurrence and complete reporting (239.54386ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 462.147842
+
+✖ failing tests:
+
+test at gateway/tests/consequence-return-hardening/lifecycle.test.mjs:145:1
+✖ native recovery preserves INTERRUPTED separately from UNKNOWN occurrence and complete reporting (239.54386ms)
+  Error: NATIVE_WAIST_REQUIRED
+      at requireThat (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs:9:61)
+      at new ConsequenceSpecimen (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs:17:5)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:146:37)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)

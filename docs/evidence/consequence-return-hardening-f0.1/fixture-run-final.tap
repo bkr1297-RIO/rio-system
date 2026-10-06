@@ -1,0 +1,14 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 3c065884... for intent 98538d6b-1b06-4692-90ba-fa4f006065b9 | tool=create_document | env=de9580fd-87d0-4e0d-91cf-9f71c87f72b8 | max=1 | expires 2026-10-06T07:07:46.660Z
+[RIO Token Manager] Token BURNED: 3c065884... for intent 98538d6b-1b06-4692-90ba-fa4f006065b9 — all 11 checks passed
+[RIO Token Manager] Token issued: ab7b86ba... for intent 1f311648-403b-4a6c-abd5-87e6f706e2c7 | tool=create_document | env=de9580fd-87d0-4e0d-91cf-9f71c87f72b8 | max=1 | expires 2026-10-06T07:07:48.655Z
+{"fixture":"irreversible-revocation","occurrence":"KNOWN_OCCURRED","outcome":"ACHIEVED_OBJECTIVE","return":"COMPLETE","future_exercise_disabled":true}
+[RIO Token Manager] Token issued: f1d283e1... for intent 78cd665d-3454-4e56-8d3e-0f27a2a9eac3 | tool=create_document | env=d3928c39-f61d-4755-9fc3-8a0ea5a27fc6 | max=1 | expires 2026-10-06T07:07:50.452Z
+[RIO Token Manager] Token BURNED: f1d283e1... for intent 78cd665d-3454-4e56-8d3e-0f27a2a9eac3 — all 11 checks passed
+{"fixture":"unknown-occurrence","occurrence":"UNKNOWN","outcome":"UNRESOLVED","return":"PARTIAL","future_exercise_disabled":false}
+[RIO Token Manager] Token issued: 9eadcec6... for intent 4cb8bca2-9ac7-4245-9151-78112add1dd1 | tool=create_document | env=74284954-53ad-4381-bf4c-16b39d4694b2 | max=1 | expires 2026-10-06T07:07:52.201Z
+[RIO Token Manager] Token BURNED: 9eadcec6... for intent 4cb8bca2-9ac7-4245-9151-78112add1dd1 — all 11 checks passed
+{"fixture":"complete-unknown","occurrence":"UNKNOWN","outcome":"UNRESOLVED","return":"COMPLETE","future_exercise_disabled":false}
+[RIO Token Manager] Token issued: 5a33f1a4... for intent 528d0460-d5a1-4a1c-b7cb-bef4b676b354 | tool=create_document | env=cef99047-2034-4229-b964-5766da2defbb | max=1 | expires 2026-10-06T07:07:54.299Z
+[RIO Token Manager] Token BURNED: 5a33f1a4... for intent 528d0460-d5a1-4a1c-b7cb-bef4b676b354 — all 11 checks passed
+{"fixture":"failed-objective","occurrence":"KNOWN_OCCURRED","outcome":"FAILED_OBJECTIVE","return":"COMPLETE","future_exercise_disabled":false}

@@ -1,0 +1,77 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 8feceeda... for intent 59f6fa30-ea01-494a-914b-cabcb4a3c537 | tool=create_document | env=85f1e586-8410-4e59-ab3a-87987ce4b156 | max=1 | expires 2026-10-06T06:58:18.805Z
+[RIO Token Manager] Token issued: 5b59e0a4... for intent 620ba0e8-d6ab-4b89-8040-2746fb1be1cf | tool=create_document | env=2e2cd6a6-ba3c-4868-b409-ecaf8a5d0ff9 | max=1 | expires 2026-10-06T06:58:20.371Z
+[RIO Token Manager] Token BURNED: 5b59e0a4... for intent 620ba0e8-d6ab-4b89-8040-2746fb1be1cf — all 11 checks passed
+✖ expired lease is reported in its own coordinate and creates no attempt (1372.365528ms)
+✖ native recovery preserves INTERRUPTED separately from UNKNOWN occurrence and complete reporting (2185.458239ms)
+✖ structural runtime impostor cannot mint lifecycle artifacts (0.507087ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3839.032518
+
+✖ failing tests:
+
+test at gateway/tests/consequence-return-hardening/lifecycle.test.mjs:128:1
+✖ expired lease is reported in its own coordinate and creates no attempt (1372.365528ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(projectConsequence(s.snapshot(l)).claims.some(c=>c.code==='LEASE_EXPIRED'))
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:131:103)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at gateway/tests/consequence-return-hardening/lifecycle.test.mjs:146:1
+✖ native recovery preserves INTERRUPTED separately from UNKNOWN occurrence and complete reporting (2185.458239ms)
+  AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+  
+    assert.ok(projectConsequence(v).claims.some(c=>c.code==='EXECUTION_INTERRUPTED'))
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:154:116)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at node:internal/test_runner/test:1285:31
+      at node:internal/process/task_queues:151:7
+      at AsyncResource.runInAsyncScope (node:async_hooks:227:14)
+      at AsyncResource.runMicrotask (node:internal/process/task_queues:148:8) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at gateway/tests/consequence-return-hardening/lifecycle.test.mjs:167:1
+✖ structural runtime impostor cannot mint lifecycle artifacts (0.507087ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:169:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at node:internal/test_runner/test:1285:31
+      at node:internal/process/task_queues:151:7
+      at AsyncResource.runInAsyncScope (node:async_hooks:227:14)
+      at AsyncResource.runMicrotask (node:internal/process/task_queues:148:8) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /NATIVE_WAIST_REQUIRED/,
+    operator: 'throws',
+    diff: 'simple'
+  }

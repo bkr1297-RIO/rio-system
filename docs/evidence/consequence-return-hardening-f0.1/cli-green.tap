@@ -1,0 +1,10 @@
+✔ runner requires an explicit bounded demo request before creating any fixture (140.436765ms)
+✔ runner refuses an existing output directory before executing fixtures (127.846815ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 2
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 497.862831

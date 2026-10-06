@@ -1,0 +1,22 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 48a4b18b... for intent 0726ccd2-7f43-4eff-a7d7-0285d1a3a523 | tool=create_document | env=59ff53dd-002c-4144-a60f-8608a5bc5194 | max=1 | expires 2026-10-06T06:52:24.128Z
+[RIO Token Manager] Token BURNED: 48a4b18b... for intent 0726ccd2-7f43-4eff-a7d7-0285d1a3a523 — all 11 checks passed
+[RIO Token Manager] Token issued: f2c47d56... for intent a004af4c-aebb-4081-8a27-da5b48a33765 | tool=create_document | env=59ff53dd-002c-4144-a60f-8608a5bc5194 | max=1 | expires 2026-10-06T06:52:25.729Z
+[RIO Token Manager] Token issued: ddb85828... for intent 17d44e68-240f-4178-a347-e45eb8006f85 | tool=create_document | env=6510213b-4af2-4a19-8707-4ab0b5757ded | max=1 | expires 2026-10-06T06:52:27.362Z
+[RIO Token Manager] Token BURNED: ddb85828... for intent 17d44e68-240f-4178-a347-e45eb8006f85 — all 11 checks passed
+[RIO Token Manager] Token issued: a2b43b02... for intent 01912c1b-1b30-43bf-95f0-3f716ac3e97d | tool=create_document | env=71cc5342-22d9-46cd-8585-15ab0e5db59f | max=1 | expires 2026-10-06T06:52:29.675Z
+[RIO Token Manager] Token BURNED: a2b43b02... for intent 01912c1b-1b30-43bf-95f0-3f716ac3e97d — all 11 checks passed
+[RIO Token Manager] Token issued: e1f20e70... for intent c73767c2-774d-467f-ad1a-dd1b658d05a0 | tool=create_document | env=6051239d-6146-4da9-b0a7-d62d552532ee | max=1 | expires 2026-10-06T06:52:31.708Z
+[RIO Token Manager] Token BURNED: e1f20e70... for intent c73767c2-774d-467f-ad1a-dd1b658d05a0 — all 11 checks passed
+✔ Reassurance Assay: irreversible-revocation (3111.851513ms)
+✔ Reassurance Assay: unknown-occurrence (2107.8642ms)
+✔ Reassurance Assay: complete-unknown (2356.932448ms)
+✔ Reassurance Assay: failed-objective (2174.865904ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 9956.401365

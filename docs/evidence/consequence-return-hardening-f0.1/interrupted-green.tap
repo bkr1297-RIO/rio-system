@@ -1,0 +1,12 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 79170811... for intent 107d1911-aa84-481a-81bf-99618e5af97a | tool=create_document | env=f5360cd4-8a0e-48fc-98cc-941316eb6d4e | max=1 | expires 2026-10-06T06:55:20.077Z
+[RIO Token Manager] Token BURNED: 79170811... for intent 107d1911-aa84-481a-81bf-99618e5af97a — all 11 checks passed
+✔ native recovery preserves INTERRUPTED separately from UNKNOWN occurrence and complete reporting (2218.378892ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 1
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2389.576726

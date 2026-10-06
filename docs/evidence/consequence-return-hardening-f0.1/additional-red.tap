@@ -1,0 +1,63 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 78343527... for intent 1df3bc52-f150-4485-9982-fcaf95472898 | tool=create_document | env=9995caf7-44e2-4dc0-a8b3-a01e58715398 | max=1 | expires 2026-10-06T06:52:55.174Z
+[RIO Token Manager] Token issued: 44ba5b83... for intent 3f8f228c-3db8-46c4-bfb5-975d6be8a699 | tool=create_document | env=90c860cc-97c2-44db-8848-d07431be57bc | max=1 | expires 2026-10-06T06:52:56.065Z
+✖ commit rejects other signed control types before any native side effect (628.155749ms)
+✖ expired lease is reported in its own coordinate and creates no attempt (1044.230318ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1882.935973
+
+✖ failing tests:
+
+test at gateway/tests/consequence-return-hardening/lifecycle.test.mjs:118:1
+✖ commit rejects other signed control types before any native side effect (628.155749ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /COMMITMENT_REQUEST_REQUIRED/. Input:
+  
+  'Error: NATIVE_COMMITMENT_REQUIRED'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:121:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: NATIVE_COMMITMENT_REQUIRED
+        at requireThat (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs:9:61)
+        at ConsequenceSpecimen.commit (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/local-field/consequence/account.mjs:39:5)
+        at file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:121:22
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:121:9)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.start (node:internal/test_runner/test:1242:17)
+        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),
+    expected: /COMMITMENT_REQUEST_REQUIRED/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at gateway/tests/consequence-return-hardening/lifecycle.test.mjs:125:1
+✖ expired lease is reported in its own coordinate and creates no attempt (1044.230318ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'EXPIRED'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/lifecycle.test.mjs:128:49)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'EXPIRED',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

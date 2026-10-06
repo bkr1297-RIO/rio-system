@@ -1,0 +1,35 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 19b9a954... for intent 747362ef-1def-42f6-99af-3aa7477ff247 | tool=create_document | env=d6d1bac7-89d0-47f7-95d9-af92aee2433d | max=1 | expires 2026-10-06T07:06:25.783Z
+[RIO Token Manager] Token BURNED: 19b9a954... for intent 747362ef-1def-42f6-99af-3aa7477ff247 — all 11 checks passed
+[RIO Token Manager] Token issued: 2163e0be... for intent e4c93cd3-d78c-446c-9b64-be78f7fd0ca8 | tool=create_document | env=d6d1bac7-89d0-47f7-95d9-af92aee2433d | max=1 | expires 2026-10-06T07:06:27.499Z
+[RIO Token Manager] Token BURNED: 2163e0be... for intent e4c93cd3-d78c-446c-9b64-be78f7fd0ca8 — all 11 checks passed
+✖ review: revocation describes only the revoked grant; another lawful grant still works (3533.08068ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3741.70055
+
+✖ failing tests:
+
+test at gateway/tests/consequence-return-hardening/review-regressions.test.mjs:26:1
+✖ review: revocation describes only the revoked grant; another lawful grant still works (3533.08068ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /this grant/. Input:
+  
+  'Further authorized exercise through this local executor is disabled after its revocation check.'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/consequence-return-hardening/gateway/tests/consequence-return-hardening/review-regressions.test.mjs:32:9)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 'Further authorized exercise through this local executor is disabled after its revocation check.',
+    expected: /this grant/,
+    operator: 'match',
+    diff: 'simple'
+  }

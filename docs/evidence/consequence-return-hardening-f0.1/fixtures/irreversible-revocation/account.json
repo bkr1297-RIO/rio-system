@@ -1,0 +1,2465 @@
+{
+  "name": "irreversible-revocation",
+  "contract": {
+    "irreversibility": "No compensation through this control; not physically irreversible filesystem",
+    "partition": "Declared transport fixture stub",
+    "independent_observer": "Separate descriptor read by the same enrolled receiver; not a second institution"
+  },
+  "permissionState": {
+    "kind": "ConsequenceSnapshot",
+    "snapshot_id": "6a6279ce-d46f-4bce-acbd-d4f403dbcc7f",
+    "timestamp": "2026-10-06T06:37:46.416Z",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "permission": {
+      "kind": "Permission",
+      "permission_id": "947df303-a33f-4956-a337-6fa837f5a842",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "disposition": {
+        "kind": "Disposition",
+        "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+        "disposition": "ADMIT",
+        "reason": null,
+        "previous_decision_id": null,
+        "issued_at": "2026-10-06T06:37:46.321Z",
+        "source_authority": "I-1",
+        "interval_id": "I_AB",
+        "formation_ref": "0ef87c61-169c-486c-b247-489a354e85c1",
+        "formation_hash": "5c8dc356a3692b061bb252413764ab4206bac7be1682e100ba46cf2d31b03809",
+        "standing": {
+          "status": "KNOWN",
+          "interval_id": "I_AB",
+          "sourcepoint": "I-1",
+          "constitution_ref": "8879fd96b4cb185a4999f5c67607f5735064ad1b6a05585b605a600ea5db19b7",
+          "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+          "standing": {
+            "outbound": "ELIGIBLE",
+            "inbound": "UNASSESSED"
+          },
+          "lineage_head": "dc78a2b03ecda191c1485c0fdde5fc9925e217130decbf73c7878c9e04111285"
+        },
+        "native_decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "owner": "gateway/local-field/index.mjs"
+      },
+      "basis": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+      "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+      "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+      "objective_contract": {
+        "objective_id": "Declared minimum readback bytes",
+        "minimum_bytes": 1
+      },
+      "issued_at": "2026-10-06T06:37:46.321Z"
+    },
+    "lease": null,
+    "attempt": null,
+    "occurrence_claim": null,
+    "lease_condition": "UNKNOWN",
+    "execution_condition": "UNKNOWN",
+    "native_recovery": null,
+    "executor_receipt": null,
+    "observation": null,
+    "evidence": null,
+    "occurrence_knowledge": "UNKNOWN",
+    "observation_coverage": {
+      "status": "UNOBSERVABLE",
+      "scope": "Independent observation not obtained"
+    },
+    "outcome_assessment": {
+      "kind": "OutcomeAssessment",
+      "status": "UNRESOLVED",
+      "assessment_id": null
+    },
+    "returned": null,
+    "settlement": null,
+    "revocation": null,
+    "unresolved_remainder": [
+      "No admitted observation establishes occurrence exactly as commanded",
+      "The declared objective has not been separately assessed",
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "control_limits": {
+      "compensation_available": false,
+      "committed_effect": false,
+      "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+    },
+    "assay": {
+      "Detect": {
+        "established": false,
+        "basis": null
+      },
+      "Interrupt": {
+        "established": false,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": null,
+        "basis": null
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "947df303-a33f-4956-a337-6fa837f5a842"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "attempting": false
+  },
+  "afterAttempt": {
+    "kind": "ConsequenceSnapshot",
+    "snapshot_id": "5ce3c5b6-516d-48b2-b0e2-e4069c3066bb",
+    "timestamp": "2026-10-06T06:37:47.155Z",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "permission": {
+      "kind": "Permission",
+      "permission_id": "947df303-a33f-4956-a337-6fa837f5a842",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "disposition": {
+        "kind": "Disposition",
+        "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+        "disposition": "ADMIT",
+        "reason": null,
+        "previous_decision_id": null,
+        "issued_at": "2026-10-06T06:37:46.321Z",
+        "source_authority": "I-1",
+        "interval_id": "I_AB",
+        "formation_ref": "0ef87c61-169c-486c-b247-489a354e85c1",
+        "formation_hash": "5c8dc356a3692b061bb252413764ab4206bac7be1682e100ba46cf2d31b03809",
+        "standing": {
+          "status": "KNOWN",
+          "interval_id": "I_AB",
+          "sourcepoint": "I-1",
+          "constitution_ref": "8879fd96b4cb185a4999f5c67607f5735064ad1b6a05585b605a600ea5db19b7",
+          "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+          "standing": {
+            "outbound": "ELIGIBLE",
+            "inbound": "UNASSESSED"
+          },
+          "lineage_head": "dc78a2b03ecda191c1485c0fdde5fc9925e217130decbf73c7878c9e04111285"
+        },
+        "native_decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "owner": "gateway/local-field/index.mjs"
+      },
+      "basis": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+      "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+      "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+      "objective_contract": {
+        "objective_id": "Declared minimum readback bytes",
+        "minimum_bytes": 1
+      },
+      "issued_at": "2026-10-06T06:37:46.321Z"
+    },
+    "lease": {
+      "kind": "InvocationLease",
+      "lease_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "permission_id": "947df303-a33f-4956-a337-6fa837f5a842",
+      "next_transition": "ATTEMPT_EXECUTION",
+      "commitment": {
+        "kind": "InvocationCommitment",
+        "commitment_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+        "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "warrant": {
+          "body": {
+            "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+            "record_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+            "issued_at": "2026-10-06T06:37:46.429Z",
+            "expires_at": "2026-10-06T06:47:46.429Z",
+            "type": "invocation_commit",
+            "issuer": "I-1",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+            "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456"
+          },
+          "signature": "1e7882a1fb7dbded31d214be8407802e68a10853503a71986b827cd76852476bdee0cf078317dc77286d6239dcd1882bb7cc658022a59f248229d43bc219800c"
+        },
+        "issued_at": "2026-10-06T06:37:46.429Z",
+        "expires_at": "2026-10-06T06:47:45.548Z",
+        "token_id": "3c065884-a322-4c0e-a130-1e4bd70cbffc",
+        "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+        "owner": "gateway/security/token-manager.mjs"
+      },
+      "revocation_semantics": {
+        "validation_points": [
+          "native invocation acceptance",
+          "descriptor release guard"
+        ],
+        "lease_expiry": "2026-10-06T06:47:45.548Z",
+        "propagation_bound": {
+          "scope": "local revocation registry",
+          "guarantee": "NONE",
+          "measured_ms": null
+        },
+        "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+        "already_committed_behavior": "Retained; this control supplies no compensation",
+        "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+      }
+    },
+    "attempt": {
+      "kind": "Attempt",
+      "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "invocation_lease_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+      "executor": "node-b",
+      "subject": "node-a",
+      "requested_effect": {
+        "action": "create_document",
+        "target": "hello.txt",
+        "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+      },
+      "started_at": "2026-10-06T06:37:47.050Z",
+      "completed_at": "2026-10-06T06:37:47.051Z",
+      "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+      "executor_report": {
+        "kind": "Execution",
+        "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+          "bytes": 16
+        },
+        "completed_at": "2026-10-06T06:37:47.051Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      }
+    },
+    "occurrence_claim": {
+      "kind": "OccurrenceClaim",
+      "claim_id": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "execution_ref": "7e464238-f56a-405e-b386-7b7923be18f9",
+      "report": {
+        "status": "COMPLETED",
+        "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+        "bytes": 16
+      },
+      "knowledge_supplied": false
+    },
+    "lease_condition": "CURRENT",
+    "execution_condition": "COMPLETED",
+    "native_recovery": null,
+    "executor_receipt": {
+      "kind": "Execution",
+      "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "status": "COMPLETED",
+      "result": {
+        "status": "COMPLETED",
+        "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+        "bytes": 16
+      },
+      "completed_at": "2026-10-06T06:37:47.051Z",
+      "owner": "gateway/execution/filesystem-executor.mjs"
+    },
+    "observation": null,
+    "evidence": null,
+    "occurrence_knowledge": "UNKNOWN",
+    "observation_coverage": {
+      "status": "UNOBSERVABLE",
+      "scope": "Independent observation not obtained"
+    },
+    "outcome_assessment": {
+      "kind": "OutcomeAssessment",
+      "status": "UNRESOLVED",
+      "assessment_id": null
+    },
+    "returned": null,
+    "settlement": null,
+    "revocation": null,
+    "unresolved_remainder": [
+      "No admitted observation establishes occurrence exactly as commanded",
+      "The declared objective has not been separately assessed",
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "control_limits": {
+      "compensation_available": false,
+      "committed_effect": true,
+      "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+    },
+    "assay": {
+      "Detect": {
+        "established": false,
+        "basis": null
+      },
+      "Interrupt": {
+        "established": false,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": null,
+        "basis": null
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "947df303-a33f-4956-a337-6fa837f5a842"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "attempting": false
+  },
+  "transport": null,
+  "rejected": {
+    "reason": "AUTHORITY_REVOKED",
+    "passage_id": "d429d6aa-2622-48ca-9d47-a93a3704e2c4",
+    "attempt": null
+  },
+  "revocation": {
+    "kind": "Revocation",
+    "revocation_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+    "signed_request": {
+      "body": {
+        "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+        "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "issued_at": "2026-10-06T06:37:48.660Z",
+        "expires_at": "2026-10-06T06:47:48.660Z",
+        "type": "revocation",
+        "issuer": "I-1",
+        "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0"
+      },
+      "signature": "f18cd127cbf3c3809bedb2ddddafd9bf09cbddf5bc4ce1ac7e3053ad7b72aea418e97b98b04d41c1a0712552655c85f500cf127c154caa5014dbab4aedcb3600"
+    },
+    "registry_receipt": {
+      "status": "RECORDED",
+      "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+      "authority_effect": "revocation"
+    },
+    "requested": true,
+    "propagated": true,
+    "acknowledged": false,
+    "future_exercise_disabled": false,
+    "request_ref": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+    "registry_validation_at": "2026-10-06T06:37:48.715Z",
+    "executor": "node-b",
+    "scope": "This revoked grant and its affected lineage through the local native executor; other grants and delegates are not disabled by this claim",
+    "propagation_measurement": {
+      "scope": "signed control call through local registry validation",
+      "elapsed_ms": 55.51248000000032,
+      "guarantee": "NONE"
+    },
+    "semantics": {
+      "validation_points": [
+        "native invocation acceptance",
+        "descriptor release guard"
+      ],
+      "lease_expiry": "2026-10-06T06:47:45.548Z",
+      "propagation_bound": {
+        "scope": "local revocation registry",
+        "guarantee": "NONE",
+        "measured_ms": null
+      },
+      "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+      "already_committed_behavior": "Retained; this control supplies no compensation",
+      "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+    },
+    "original_effect_reversed": false
+  },
+  "ack": {
+    "kind": "Revocation",
+    "revocation_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+    "signed_request": {
+      "body": {
+        "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+        "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "issued_at": "2026-10-06T06:37:48.660Z",
+        "expires_at": "2026-10-06T06:47:48.660Z",
+        "type": "revocation",
+        "issuer": "I-1",
+        "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0"
+      },
+      "signature": "f18cd127cbf3c3809bedb2ddddafd9bf09cbddf5bc4ce1ac7e3053ad7b72aea418e97b98b04d41c1a0712552655c85f500cf127c154caa5014dbab4aedcb3600"
+    },
+    "registry_receipt": {
+      "status": "RECORDED",
+      "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+      "authority_effect": "revocation"
+    },
+    "requested": true,
+    "propagated": true,
+    "acknowledged": true,
+    "future_exercise_disabled": true,
+    "request_ref": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+    "registry_validation_at": "2026-10-06T06:37:48.715Z",
+    "executor": "node-b",
+    "scope": "This revoked grant and its affected lineage through the local native executor; other grants and delegates are not disabled by this claim",
+    "propagation_measurement": {
+      "scope": "signed control call through local registry validation",
+      "elapsed_ms": 55.51248000000032,
+      "guarantee": "NONE"
+    },
+    "semantics": {
+      "validation_points": [
+        "native invocation acceptance",
+        "descriptor release guard"
+      ],
+      "lease_expiry": "2026-10-06T06:47:45.548Z",
+      "propagation_bound": {
+        "scope": "local revocation registry",
+        "guarantee": "NONE",
+        "measured_ms": null
+      },
+      "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+      "already_committed_behavior": "Retained; this control supplies no compensation",
+      "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+    },
+    "original_effect_reversed": false,
+    "acknowledgement": {
+      "executor": "node-b",
+      "validation": "Native revoked registry read; subsequent exercise guard required",
+      "validated_at": "2026-10-06T06:37:48.928Z"
+    }
+  },
+  "observation": {
+    "kind": "Observation",
+    "observation_id": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+    "native": {
+      "kind": "Observation",
+      "observation_id": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+      "status": "RECORDED",
+      "request": {
+        "body": {
+          "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+          "record_id": "bdfec2b8-14cb-43d1-91de-e96fe903d2b0",
+          "issued_at": "2026-10-06T06:37:47.179Z",
+          "expires_at": "2026-10-06T06:47:47.179Z",
+          "type": "observation_request",
+          "source_node": "node-a",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9"
+        },
+        "signature": "6886f45636a8c034a36baddf6873d62327df45769b946be2db1e937a5e2a4a8b6b35ed9ffa6b75b5e79c8bed9a7928c8973848ee6658e1d076892e2e6d08890f"
+      },
+      "measurement": {
+        "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+        "status": "OBSERVED",
+        "target": "hello.txt",
+        "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+        "bytes": 16,
+        "device": 27,
+        "inode": 299497,
+        "observed_at": "2026-10-06T06:37:47.298Z",
+        "method": "separate_descriptor_read_after_write"
+      },
+      "owner": "gateway/execution/filesystem-executor.mjs"
+    },
+    "coverage": {
+      "status": "COMPLETED",
+      "scope": "One descriptor readback at one time; no downstream effects",
+      "observed_at": "2026-10-06T06:37:47.298Z"
+    }
+  },
+  "evidence": {
+    "kind": "Evidence",
+    "evidence_id": "f6678827-2805-499b-8125-2b59b20779c5",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+    "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+    "admission_policy": "exact-descriptor-readback.f0.1",
+    "admitted_at": "2026-10-06T06:37:47.711Z",
+    "scope": "Commanded bytes were observed at the target at observed_at; not permanent or physical-world truth",
+    "measurement": {
+      "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+      "status": "OBSERVED",
+      "target": "hello.txt",
+      "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+      "bytes": 16,
+      "device": 27,
+      "inode": 299497,
+      "observed_at": "2026-10-06T06:37:47.298Z",
+      "method": "separate_descriptor_read_after_write"
+    },
+    "constitutional_standing": "NOT_SUPPLIED"
+  },
+  "outcome": {
+    "kind": "OutcomeAssessment",
+    "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+    "objective_contract": {
+      "objective_id": "Declared minimum readback bytes",
+      "minimum_bytes": 1
+    },
+    "status": "ACHIEVED_OBJECTIVE",
+    "assessed_at": "2026-10-06T06:37:47.837Z",
+    "scope": "Declared readback-byte objective only"
+  },
+  "returned": {
+    "kind": "ReturnArtifact",
+    "return_id": "d47bed80-2ae0-4af4-b18f-00972a0bd829",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "execution_attempt": {
+      "status": "KNOWN",
+      "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "condition": "COMPLETED",
+      "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+    },
+    "executor_receipt": {
+      "status": "PRESENT",
+      "claim_ref": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+      "scope": "Executor report only"
+    },
+    "occurrence_knowledge": "KNOWN_OCCURRED",
+    "observation_coverage": {
+      "status": "COMPLETED",
+      "scope": "One descriptor readback at one time; no downstream effects",
+      "observed_at": "2026-10-06T06:37:47.298Z"
+    },
+    "outcome_assessment": {
+      "kind": "OutcomeAssessment",
+      "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+      "objective_contract": {
+        "objective_id": "Declared minimum readback bytes",
+        "minimum_bytes": 1
+      },
+      "status": "ACHIEVED_OBJECTIVE",
+      "assessed_at": "2026-10-06T06:37:47.837Z",
+      "scope": "Declared readback-byte objective only"
+    },
+    "return_completeness": "COMPLETE",
+    "required_reports": [
+      "ATTEMPT_ACCOUNT",
+      "OBSERVATION_ACCOUNT",
+      "OUTCOME_ACCOUNT",
+      "LIMITS_ACCOUNT"
+    ],
+    "reporting_accounts": [
+      {
+        "coordinate": "ATTEMPT_ACCOUNT",
+        "account": {
+          "status": "KNOWN",
+          "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+          "condition": "COMPLETED",
+          "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+        }
+      },
+      {
+        "coordinate": "OBSERVATION_ACCOUNT",
+        "account": {
+          "coverage": {
+            "status": "COMPLETED",
+            "scope": "One descriptor readback at one time; no downstream effects",
+            "observed_at": "2026-10-06T06:37:47.298Z"
+          },
+          "occurrence_knowledge": "KNOWN_OCCURRED",
+          "evidence": {
+            "kind": "Evidence",
+            "evidence_id": "f6678827-2805-499b-8125-2b59b20779c5",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+            "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+            "admission_policy": "exact-descriptor-readback.f0.1",
+            "admitted_at": "2026-10-06T06:37:47.711Z",
+            "scope": "Commanded bytes were observed at the target at observed_at; not permanent or physical-world truth",
+            "measurement": {
+              "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+              "status": "OBSERVED",
+              "target": "hello.txt",
+              "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+              "bytes": 16,
+              "device": 27,
+              "inode": 299497,
+              "observed_at": "2026-10-06T06:37:47.298Z",
+              "method": "separate_descriptor_read_after_write"
+            },
+            "constitutional_standing": "NOT_SUPPLIED"
+          }
+        }
+      },
+      {
+        "coordinate": "OUTCOME_ACCOUNT",
+        "account": {
+          "kind": "OutcomeAssessment",
+          "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+          "objective_contract": {
+            "objective_id": "Declared minimum readback bytes",
+            "minimum_bytes": 1
+          },
+          "status": "ACHIEVED_OBJECTIVE",
+          "assessed_at": "2026-10-06T06:37:47.837Z",
+          "scope": "Declared readback-byte objective only"
+        }
+      },
+      {
+        "coordinate": "LIMITS_ACCOUNT",
+        "account": {
+          "unresolved_remainder": [
+            "Downstream consequences outside descriptor readback remain unobserved"
+          ],
+          "outstanding_obligations": [
+            "Inspect downstream consequences outside this specimen"
+          ],
+          "control_limits": {
+            "compensation_available": false,
+            "committed_effect": true,
+            "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+          }
+        }
+      }
+    ],
+    "unresolved_remainder": [
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "outstanding_obligations": [
+      "Inspect downstream consequences outside this specimen"
+    ],
+    "follow_up_required": true,
+    "provenance": {
+      "permission_ref": "947df303-a33f-4956-a337-6fa837f5a842",
+      "lease_ref": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+      "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+      "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+      "outcome_ref": "f61c410d-9050-4222-bc35-b73dde7b7da4"
+    },
+    "returned_at": "2026-10-06T06:37:49.068Z"
+  },
+  "snapshot": {
+    "kind": "ConsequenceSnapshot",
+    "snapshot_id": "75d7cf43-9e1a-4376-b960-068d6ad43a94",
+    "timestamp": "2026-10-06T06:37:49.190Z",
+    "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+    "permission": {
+      "kind": "Permission",
+      "permission_id": "947df303-a33f-4956-a337-6fa837f5a842",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "disposition": {
+        "kind": "Disposition",
+        "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+        "disposition": "ADMIT",
+        "reason": null,
+        "previous_decision_id": null,
+        "issued_at": "2026-10-06T06:37:46.321Z",
+        "source_authority": "I-1",
+        "interval_id": "I_AB",
+        "formation_ref": "0ef87c61-169c-486c-b247-489a354e85c1",
+        "formation_hash": "5c8dc356a3692b061bb252413764ab4206bac7be1682e100ba46cf2d31b03809",
+        "standing": {
+          "status": "KNOWN",
+          "interval_id": "I_AB",
+          "sourcepoint": "I-1",
+          "constitution_ref": "8879fd96b4cb185a4999f5c67607f5735064ad1b6a05585b605a600ea5db19b7",
+          "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+          "standing": {
+            "outbound": "ELIGIBLE",
+            "inbound": "UNASSESSED"
+          },
+          "lineage_head": "dc78a2b03ecda191c1485c0fdde5fc9925e217130decbf73c7878c9e04111285"
+        },
+        "native_decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "owner": "gateway/local-field/index.mjs"
+      },
+      "basis": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+      "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+      "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+      "objective_contract": {
+        "objective_id": "Declared minimum readback bytes",
+        "minimum_bytes": 1
+      },
+      "issued_at": "2026-10-06T06:37:46.321Z"
+    },
+    "lease": {
+      "kind": "InvocationLease",
+      "lease_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "permission_id": "947df303-a33f-4956-a337-6fa837f5a842",
+      "next_transition": "ATTEMPT_EXECUTION",
+      "commitment": {
+        "kind": "InvocationCommitment",
+        "commitment_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+        "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "warrant": {
+          "body": {
+            "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+            "record_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+            "issued_at": "2026-10-06T06:37:46.429Z",
+            "expires_at": "2026-10-06T06:47:46.429Z",
+            "type": "invocation_commit",
+            "issuer": "I-1",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+            "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456"
+          },
+          "signature": "1e7882a1fb7dbded31d214be8407802e68a10853503a71986b827cd76852476bdee0cf078317dc77286d6239dcd1882bb7cc658022a59f248229d43bc219800c"
+        },
+        "issued_at": "2026-10-06T06:37:46.429Z",
+        "expires_at": "2026-10-06T06:47:45.548Z",
+        "token_id": "3c065884-a322-4c0e-a130-1e4bd70cbffc",
+        "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+        "owner": "gateway/security/token-manager.mjs"
+      },
+      "revocation_semantics": {
+        "validation_points": [
+          "native invocation acceptance",
+          "descriptor release guard"
+        ],
+        "lease_expiry": "2026-10-06T06:47:45.548Z",
+        "propagation_bound": {
+          "scope": "local revocation registry",
+          "guarantee": "NONE",
+          "measured_ms": null
+        },
+        "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+        "already_committed_behavior": "Retained; this control supplies no compensation",
+        "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+      }
+    },
+    "attempt": {
+      "kind": "Attempt",
+      "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "invocation_lease_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+      "executor": "node-b",
+      "subject": "node-a",
+      "requested_effect": {
+        "action": "create_document",
+        "target": "hello.txt",
+        "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+      },
+      "started_at": "2026-10-06T06:37:47.050Z",
+      "completed_at": "2026-10-06T06:37:47.051Z",
+      "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+      "executor_report": {
+        "kind": "Execution",
+        "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+          "bytes": 16
+        },
+        "completed_at": "2026-10-06T06:37:47.051Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      }
+    },
+    "occurrence_claim": {
+      "kind": "OccurrenceClaim",
+      "claim_id": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "execution_ref": "7e464238-f56a-405e-b386-7b7923be18f9",
+      "report": {
+        "status": "COMPLETED",
+        "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+        "bytes": 16
+      },
+      "knowledge_supplied": false
+    },
+    "lease_condition": "CURRENT",
+    "execution_condition": "COMPLETED",
+    "native_recovery": null,
+    "executor_receipt": {
+      "kind": "Execution",
+      "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "status": "COMPLETED",
+      "result": {
+        "status": "COMPLETED",
+        "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+        "bytes": 16
+      },
+      "completed_at": "2026-10-06T06:37:47.051Z",
+      "owner": "gateway/execution/filesystem-executor.mjs"
+    },
+    "observation": {
+      "kind": "Observation",
+      "observation_id": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "native": {
+        "kind": "Observation",
+        "observation_id": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+        "status": "RECORDED",
+        "request": {
+          "body": {
+            "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+            "record_id": "bdfec2b8-14cb-43d1-91de-e96fe903d2b0",
+            "issued_at": "2026-10-06T06:37:47.179Z",
+            "expires_at": "2026-10-06T06:47:47.179Z",
+            "type": "observation_request",
+            "source_node": "node-a",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9"
+          },
+          "signature": "6886f45636a8c034a36baddf6873d62327df45769b946be2db1e937a5e2a4a8b6b35ed9ffa6b75b5e79c8bed9a7928c8973848ee6658e1d076892e2e6d08890f"
+        },
+        "measurement": {
+          "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+          "status": "OBSERVED",
+          "target": "hello.txt",
+          "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+          "bytes": 16,
+          "device": 27,
+          "inode": 299497,
+          "observed_at": "2026-10-06T06:37:47.298Z",
+          "method": "separate_descriptor_read_after_write"
+        },
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      },
+      "coverage": {
+        "status": "COMPLETED",
+        "scope": "One descriptor readback at one time; no downstream effects",
+        "observed_at": "2026-10-06T06:37:47.298Z"
+      }
+    },
+    "evidence": {
+      "kind": "Evidence",
+      "evidence_id": "f6678827-2805-499b-8125-2b59b20779c5",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+      "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "admission_policy": "exact-descriptor-readback.f0.1",
+      "admitted_at": "2026-10-06T06:37:47.711Z",
+      "scope": "Commanded bytes were observed at the target at observed_at; not permanent or physical-world truth",
+      "measurement": {
+        "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+        "status": "OBSERVED",
+        "target": "hello.txt",
+        "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+        "bytes": 16,
+        "device": 27,
+        "inode": 299497,
+        "observed_at": "2026-10-06T06:37:47.298Z",
+        "method": "separate_descriptor_read_after_write"
+      },
+      "constitutional_standing": "NOT_SUPPLIED"
+    },
+    "occurrence_knowledge": "KNOWN_OCCURRED",
+    "observation_coverage": {
+      "status": "COMPLETED",
+      "scope": "One descriptor readback at one time; no downstream effects",
+      "observed_at": "2026-10-06T06:37:47.298Z"
+    },
+    "outcome_assessment": {
+      "kind": "OutcomeAssessment",
+      "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+      "objective_contract": {
+        "objective_id": "Declared minimum readback bytes",
+        "minimum_bytes": 1
+      },
+      "status": "ACHIEVED_OBJECTIVE",
+      "assessed_at": "2026-10-06T06:37:47.837Z",
+      "scope": "Declared readback-byte objective only"
+    },
+    "returned": {
+      "kind": "ReturnArtifact",
+      "return_id": "d47bed80-2ae0-4af4-b18f-00972a0bd829",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "execution_attempt": {
+        "status": "KNOWN",
+        "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "condition": "COMPLETED",
+        "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+      },
+      "executor_receipt": {
+        "status": "PRESENT",
+        "claim_ref": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+        "scope": "Executor report only"
+      },
+      "occurrence_knowledge": "KNOWN_OCCURRED",
+      "observation_coverage": {
+        "status": "COMPLETED",
+        "scope": "One descriptor readback at one time; no downstream effects",
+        "observed_at": "2026-10-06T06:37:47.298Z"
+      },
+      "outcome_assessment": {
+        "kind": "OutcomeAssessment",
+        "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+        "objective_contract": {
+          "objective_id": "Declared minimum readback bytes",
+          "minimum_bytes": 1
+        },
+        "status": "ACHIEVED_OBJECTIVE",
+        "assessed_at": "2026-10-06T06:37:47.837Z",
+        "scope": "Declared readback-byte objective only"
+      },
+      "return_completeness": "COMPLETE",
+      "required_reports": [
+        "ATTEMPT_ACCOUNT",
+        "OBSERVATION_ACCOUNT",
+        "OUTCOME_ACCOUNT",
+        "LIMITS_ACCOUNT"
+      ],
+      "reporting_accounts": [
+        {
+          "coordinate": "ATTEMPT_ACCOUNT",
+          "account": {
+            "status": "KNOWN",
+            "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+            "condition": "COMPLETED",
+            "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+          }
+        },
+        {
+          "coordinate": "OBSERVATION_ACCOUNT",
+          "account": {
+            "coverage": {
+              "status": "COMPLETED",
+              "scope": "One descriptor readback at one time; no downstream effects",
+              "observed_at": "2026-10-06T06:37:47.298Z"
+            },
+            "occurrence_knowledge": "KNOWN_OCCURRED",
+            "evidence": {
+              "kind": "Evidence",
+              "evidence_id": "f6678827-2805-499b-8125-2b59b20779c5",
+              "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+              "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+              "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+              "admission_policy": "exact-descriptor-readback.f0.1",
+              "admitted_at": "2026-10-06T06:37:47.711Z",
+              "scope": "Commanded bytes were observed at the target at observed_at; not permanent or physical-world truth",
+              "measurement": {
+                "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+                "status": "OBSERVED",
+                "target": "hello.txt",
+                "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+                "bytes": 16,
+                "device": 27,
+                "inode": 299497,
+                "observed_at": "2026-10-06T06:37:47.298Z",
+                "method": "separate_descriptor_read_after_write"
+              },
+              "constitutional_standing": "NOT_SUPPLIED"
+            }
+          }
+        },
+        {
+          "coordinate": "OUTCOME_ACCOUNT",
+          "account": {
+            "kind": "OutcomeAssessment",
+            "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+            "objective_contract": {
+              "objective_id": "Declared minimum readback bytes",
+              "minimum_bytes": 1
+            },
+            "status": "ACHIEVED_OBJECTIVE",
+            "assessed_at": "2026-10-06T06:37:47.837Z",
+            "scope": "Declared readback-byte objective only"
+          }
+        },
+        {
+          "coordinate": "LIMITS_ACCOUNT",
+          "account": {
+            "unresolved_remainder": [
+              "Downstream consequences outside descriptor readback remain unobserved"
+            ],
+            "outstanding_obligations": [
+              "Inspect downstream consequences outside this specimen"
+            ],
+            "control_limits": {
+              "compensation_available": false,
+              "committed_effect": true,
+              "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+            }
+          }
+        }
+      ],
+      "unresolved_remainder": [
+        "Downstream consequences outside descriptor readback remain unobserved"
+      ],
+      "outstanding_obligations": [
+        "Inspect downstream consequences outside this specimen"
+      ],
+      "follow_up_required": true,
+      "provenance": {
+        "permission_ref": "947df303-a33f-4956-a337-6fa837f5a842",
+        "lease_ref": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+        "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+        "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+        "outcome_ref": "f61c410d-9050-4222-bc35-b73dde7b7da4"
+      },
+      "returned_at": "2026-10-06T06:37:49.068Z"
+    },
+    "settlement": null,
+    "revocation": {
+      "kind": "Revocation",
+      "revocation_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+      "signed_request": {
+        "body": {
+          "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+          "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+          "issued_at": "2026-10-06T06:37:48.660Z",
+          "expires_at": "2026-10-06T06:47:48.660Z",
+          "type": "revocation",
+          "issuer": "I-1",
+          "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0"
+        },
+        "signature": "f18cd127cbf3c3809bedb2ddddafd9bf09cbddf5bc4ce1ac7e3053ad7b72aea418e97b98b04d41c1a0712552655c85f500cf127c154caa5014dbab4aedcb3600"
+      },
+      "registry_receipt": {
+        "status": "RECORDED",
+        "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "authority_effect": "revocation"
+      },
+      "requested": true,
+      "propagated": true,
+      "acknowledged": true,
+      "future_exercise_disabled": true,
+      "request_ref": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+      "registry_validation_at": "2026-10-06T06:37:48.715Z",
+      "executor": "node-b",
+      "scope": "This revoked grant and its affected lineage through the local native executor; other grants and delegates are not disabled by this claim",
+      "propagation_measurement": {
+        "scope": "signed control call through local registry validation",
+        "elapsed_ms": 55.51248000000032,
+        "guarantee": "NONE"
+      },
+      "semantics": {
+        "validation_points": [
+          "native invocation acceptance",
+          "descriptor release guard"
+        ],
+        "lease_expiry": "2026-10-06T06:47:45.548Z",
+        "propagation_bound": {
+          "scope": "local revocation registry",
+          "guarantee": "NONE",
+          "measured_ms": null
+        },
+        "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+        "already_committed_behavior": "Retained; this control supplies no compensation",
+        "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+      },
+      "original_effect_reversed": false,
+      "acknowledgement": {
+        "executor": "node-b",
+        "validation": "Native revoked registry read; subsequent exercise guard required",
+        "validated_at": "2026-10-06T06:37:48.928Z"
+      }
+    },
+    "unresolved_remainder": [
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "control_limits": {
+      "compensation_available": false,
+      "committed_effect": true,
+      "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+    },
+    "assay": {
+      "Detect": {
+        "established": true,
+        "basis": "f6678827-2805-499b-8125-2b59b20779c5"
+      },
+      "Interrupt": {
+        "established": true,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+        "basis": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2"
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "947df303-a33f-4956-a337-6fa837f5a842"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "attempting": false
+  },
+  "projection": {
+    "kind": "ConsequenceProjection",
+    "projection_id": "21c81404-7031-4f47-83b3-14ff49804d63",
+    "snapshot_ref": "75d7cf43-9e1a-4376-b960-068d6ad43a94",
+    "claims": [
+      {
+        "code": "AUTHORIZED",
+        "text": "Permission was recorded for a root-signed invocation commitment. Execution requires a separate request and current authority checks.",
+        "basis_ref": "Permission:947df303-a33f-4956-a337-6fa837f5a842",
+        "basis_kind": "Permission",
+        "basis_id": "947df303-a33f-4956-a337-6fa837f5a842",
+        "contract": "Historical ADMIT and exact passage basis authorize ISSUE_INVOCATION_COMMITMENT, not execution."
+      },
+      {
+        "code": "ATTEMPTED",
+        "text": "An attributable execution attempt was recorded.",
+        "basis_ref": "Attempt:b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "basis_kind": "Attempt",
+        "basis_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "contract": "Native durable attempt; an attempt does not establish occurrence."
+      },
+      {
+        "code": "EXECUTOR_RECEIPT",
+        "text": "The executor reported completed. This report does not establish that the action occurred.",
+        "basis_ref": "OccurrenceClaim:dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+        "basis_kind": "OccurrenceClaim",
+        "basis_id": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+        "contract": "Executor receipt is present; receipt is not independent truth."
+      },
+      {
+        "code": "OCCURRED",
+        "text": "The commanded bytes were observed at the target in a separate readback. This establishes that observation at that time.",
+        "basis_ref": "Evidence:f6678827-2805-499b-8125-2b59b20779c5",
+        "basis_kind": "Evidence",
+        "basis_id": "f6678827-2805-499b-8125-2b59b20779c5",
+        "contract": "Explicitly admitted exact-descriptor-readback.f0.1 basis; no permanent or downstream occurrence claim."
+      },
+      {
+        "code": "ACHIEVED_OBJECTIVE",
+        "text": "The declared readback objective was achieved.",
+        "basis_ref": "OutcomeAssessment:f61c410d-9050-4222-bc35-b73dde7b7da4",
+        "basis_kind": "OutcomeAssessment",
+        "basis_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+        "contract": "Separate assessment against the previously declared readback-byte objective; not inferred from occurrence."
+      },
+      {
+        "code": "RETURN_COMPLETE",
+        "text": "Return complete: all required reporting obligations are discharged. Uncertainty and follow-up obligations may remain.",
+        "basis_ref": "ReturnArtifact:d47bed80-2ae0-4af4-b18f-00972a0bd829",
+        "basis_kind": "ReturnArtifact",
+        "basis_id": "d47bed80-2ae0-4af4-b18f-00972a0bd829",
+        "contract": "Completeness concerns required reporting obligations, not occurrence, objective success or settlement."
+      },
+      {
+        "code": "REVOCATION_REQUESTED",
+        "text": "An authorized revocation request was recorded.",
+        "basis_ref": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "basis_kind": "Revocation",
+        "basis_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "contract": "Native control verified the signed grant-scoped request; request is distinct from acknowledgement."
+      },
+      {
+        "code": "REVOCATION_PROPAGATED",
+        "text": "The revocation was recorded in this executor’s local registry.",
+        "basis_ref": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "basis_kind": "Revocation",
+        "basis_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "contract": "Signed native revocation and validated local registry; no remote propagation or physical cessation claim."
+      },
+      {
+        "code": "ACKNOWLEDGED",
+        "text": "Acknowledgement confirmed: the local executor registry has validated the revocation.",
+        "basis_ref": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "basis_kind": "Revocation",
+        "basis_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "contract": "Acknowledgement concerns this local registry validation, not every delegate stopping."
+      },
+      {
+        "code": "REVOKED_FOR_FUTURE_USE",
+        "text": "Further authorized use of this grant and its affected lineage through this local executor is disabled after its revocation check.",
+        "basis_ref": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "basis_kind": "Revocation",
+        "basis_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "contract": "Native point-of-use validation prevents subsequent authorized exercise under this revoked grant and its affected lineage. This does not disable other grants, reverse effects or bound physical cessation."
+      },
+      {
+        "code": "IRREVERSIBLE_EFFECT",
+        "text": "The earlier action was observed. This control cannot reverse it; other principals may still alter the filesystem.",
+        "basis_ref": "Evidence:f6678827-2805-499b-8125-2b59b20779c5",
+        "basis_kind": "Evidence",
+        "basis_id": "f6678827-2805-499b-8125-2b59b20779c5",
+        "contract": "No compensating operation exists through this control. This fixture does not prove physical irreversibility."
+      }
+    ],
+    "basis_manifest": [
+      {
+        "id": "Permission:947df303-a33f-4956-a337-6fa837f5a842",
+        "artifact_kind": "Permission",
+        "artifact_id": "947df303-a33f-4956-a337-6fa837f5a842",
+        "artifact": {
+          "kind": "Permission",
+          "permission_id": "947df303-a33f-4956-a337-6fa837f5a842",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "disposition": {
+            "kind": "Disposition",
+            "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+            "disposition": "ADMIT",
+            "reason": null,
+            "previous_decision_id": null,
+            "issued_at": "2026-10-06T06:37:46.321Z",
+            "source_authority": "I-1",
+            "interval_id": "I_AB",
+            "formation_ref": "0ef87c61-169c-486c-b247-489a354e85c1",
+            "formation_hash": "5c8dc356a3692b061bb252413764ab4206bac7be1682e100ba46cf2d31b03809",
+            "standing": {
+              "status": "KNOWN",
+              "interval_id": "I_AB",
+              "sourcepoint": "I-1",
+              "constitution_ref": "8879fd96b4cb185a4999f5c67607f5735064ad1b6a05585b605a600ea5db19b7",
+              "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+              "standing": {
+                "outbound": "ELIGIBLE",
+                "inbound": "UNASSESSED"
+              },
+              "lineage_head": "dc78a2b03ecda191c1485c0fdde5fc9925e217130decbf73c7878c9e04111285"
+            },
+            "native_decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+            "owner": "gateway/local-field/index.mjs"
+          },
+          "basis": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+          "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+          "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+          "objective_contract": {
+            "objective_id": "Declared minimum readback bytes",
+            "minimum_bytes": 1
+          },
+          "issued_at": "2026-10-06T06:37:46.321Z"
+        }
+      },
+      {
+        "id": "Attempt:b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "artifact_kind": "Attempt",
+        "artifact_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "artifact": {
+          "kind": "Attempt",
+          "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "invocation_lease_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+          "executor": "node-b",
+          "subject": "node-a",
+          "requested_effect": {
+            "action": "create_document",
+            "target": "hello.txt",
+            "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+          },
+          "started_at": "2026-10-06T06:37:47.050Z",
+          "completed_at": "2026-10-06T06:37:47.051Z",
+          "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+          "executor_report": {
+            "kind": "Execution",
+            "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+            "status": "COMPLETED",
+            "result": {
+              "status": "COMPLETED",
+              "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+              "bytes": 16
+            },
+            "completed_at": "2026-10-06T06:37:47.051Z",
+            "owner": "gateway/execution/filesystem-executor.mjs"
+          }
+        }
+      },
+      {
+        "id": "OccurrenceClaim:dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+        "artifact_kind": "OccurrenceClaim",
+        "artifact_id": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+        "artifact": {
+          "kind": "OccurrenceClaim",
+          "claim_id": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+          "execution_ref": "7e464238-f56a-405e-b386-7b7923be18f9",
+          "report": {
+            "status": "COMPLETED",
+            "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+            "bytes": 16
+          },
+          "knowledge_supplied": false
+        }
+      },
+      {
+        "id": "Evidence:f6678827-2805-499b-8125-2b59b20779c5",
+        "artifact_kind": "Evidence",
+        "artifact_id": "f6678827-2805-499b-8125-2b59b20779c5",
+        "artifact": {
+          "kind": "Evidence",
+          "evidence_id": "f6678827-2805-499b-8125-2b59b20779c5",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+          "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+          "admission_policy": "exact-descriptor-readback.f0.1",
+          "admitted_at": "2026-10-06T06:37:47.711Z",
+          "scope": "Commanded bytes were observed at the target at observed_at; not permanent or physical-world truth",
+          "measurement": {
+            "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+            "status": "OBSERVED",
+            "target": "hello.txt",
+            "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+            "bytes": 16,
+            "device": 27,
+            "inode": 299497,
+            "observed_at": "2026-10-06T06:37:47.298Z",
+            "method": "separate_descriptor_read_after_write"
+          },
+          "constitutional_standing": "NOT_SUPPLIED"
+        }
+      },
+      {
+        "id": "OutcomeAssessment:f61c410d-9050-4222-bc35-b73dde7b7da4",
+        "artifact_kind": "OutcomeAssessment",
+        "artifact_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+        "artifact": {
+          "kind": "OutcomeAssessment",
+          "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+          "objective_contract": {
+            "objective_id": "Declared minimum readback bytes",
+            "minimum_bytes": 1
+          },
+          "status": "ACHIEVED_OBJECTIVE",
+          "assessed_at": "2026-10-06T06:37:47.837Z",
+          "scope": "Declared readback-byte objective only"
+        }
+      },
+      {
+        "id": "ReturnArtifact:d47bed80-2ae0-4af4-b18f-00972a0bd829",
+        "artifact_kind": "ReturnArtifact",
+        "artifact_id": "d47bed80-2ae0-4af4-b18f-00972a0bd829",
+        "artifact": {
+          "kind": "ReturnArtifact",
+          "return_id": "d47bed80-2ae0-4af4-b18f-00972a0bd829",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "execution_attempt": {
+            "status": "KNOWN",
+            "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+            "condition": "COMPLETED",
+            "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+          },
+          "executor_receipt": {
+            "status": "PRESENT",
+            "claim_ref": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+            "scope": "Executor report only"
+          },
+          "occurrence_knowledge": "KNOWN_OCCURRED",
+          "observation_coverage": {
+            "status": "COMPLETED",
+            "scope": "One descriptor readback at one time; no downstream effects",
+            "observed_at": "2026-10-06T06:37:47.298Z"
+          },
+          "outcome_assessment": {
+            "kind": "OutcomeAssessment",
+            "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+            "objective_contract": {
+              "objective_id": "Declared minimum readback bytes",
+              "minimum_bytes": 1
+            },
+            "status": "ACHIEVED_OBJECTIVE",
+            "assessed_at": "2026-10-06T06:37:47.837Z",
+            "scope": "Declared readback-byte objective only"
+          },
+          "return_completeness": "COMPLETE",
+          "required_reports": [
+            "ATTEMPT_ACCOUNT",
+            "OBSERVATION_ACCOUNT",
+            "OUTCOME_ACCOUNT",
+            "LIMITS_ACCOUNT"
+          ],
+          "reporting_accounts": [
+            {
+              "coordinate": "ATTEMPT_ACCOUNT",
+              "account": {
+                "status": "KNOWN",
+                "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+                "condition": "COMPLETED",
+                "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+              }
+            },
+            {
+              "coordinate": "OBSERVATION_ACCOUNT",
+              "account": {
+                "coverage": {
+                  "status": "COMPLETED",
+                  "scope": "One descriptor readback at one time; no downstream effects",
+                  "observed_at": "2026-10-06T06:37:47.298Z"
+                },
+                "occurrence_knowledge": "KNOWN_OCCURRED",
+                "evidence": {
+                  "kind": "Evidence",
+                  "evidence_id": "f6678827-2805-499b-8125-2b59b20779c5",
+                  "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+                  "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+                  "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+                  "admission_policy": "exact-descriptor-readback.f0.1",
+                  "admitted_at": "2026-10-06T06:37:47.711Z",
+                  "scope": "Commanded bytes were observed at the target at observed_at; not permanent or physical-world truth",
+                  "measurement": {
+                    "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+                    "status": "OBSERVED",
+                    "target": "hello.txt",
+                    "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+                    "bytes": 16,
+                    "device": 27,
+                    "inode": 299497,
+                    "observed_at": "2026-10-06T06:37:47.298Z",
+                    "method": "separate_descriptor_read_after_write"
+                  },
+                  "constitutional_standing": "NOT_SUPPLIED"
+                }
+              }
+            },
+            {
+              "coordinate": "OUTCOME_ACCOUNT",
+              "account": {
+                "kind": "OutcomeAssessment",
+                "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+                "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+                "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+                "objective_contract": {
+                  "objective_id": "Declared minimum readback bytes",
+                  "minimum_bytes": 1
+                },
+                "status": "ACHIEVED_OBJECTIVE",
+                "assessed_at": "2026-10-06T06:37:47.837Z",
+                "scope": "Declared readback-byte objective only"
+              }
+            },
+            {
+              "coordinate": "LIMITS_ACCOUNT",
+              "account": {
+                "unresolved_remainder": [
+                  "Downstream consequences outside descriptor readback remain unobserved"
+                ],
+                "outstanding_obligations": [
+                  "Inspect downstream consequences outside this specimen"
+                ],
+                "control_limits": {
+                  "compensation_available": false,
+                  "committed_effect": true,
+                  "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+                }
+              }
+            }
+          ],
+          "unresolved_remainder": [
+            "Downstream consequences outside descriptor readback remain unobserved"
+          ],
+          "outstanding_obligations": [
+            "Inspect downstream consequences outside this specimen"
+          ],
+          "follow_up_required": true,
+          "provenance": {
+            "permission_ref": "947df303-a33f-4956-a337-6fa837f5a842",
+            "lease_ref": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+            "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+            "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+            "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+            "outcome_ref": "f61c410d-9050-4222-bc35-b73dde7b7da4"
+          },
+          "returned_at": "2026-10-06T06:37:49.068Z"
+        }
+      },
+      {
+        "id": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "artifact_kind": "Revocation",
+        "artifact_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "artifact": {
+          "kind": "Revocation",
+          "revocation_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+          "signed_request": {
+            "body": {
+              "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+              "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+              "issued_at": "2026-10-06T06:37:48.660Z",
+              "expires_at": "2026-10-06T06:47:48.660Z",
+              "type": "revocation",
+              "issuer": "I-1",
+              "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0"
+            },
+            "signature": "f18cd127cbf3c3809bedb2ddddafd9bf09cbddf5bc4ce1ac7e3053ad7b72aea418e97b98b04d41c1a0712552655c85f500cf127c154caa5014dbab4aedcb3600"
+          },
+          "registry_receipt": {
+            "status": "RECORDED",
+            "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+            "authority_effect": "revocation"
+          },
+          "requested": true,
+          "propagated": true,
+          "acknowledged": true,
+          "future_exercise_disabled": true,
+          "request_ref": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+          "registry_validation_at": "2026-10-06T06:37:48.715Z",
+          "executor": "node-b",
+          "scope": "This revoked grant and its affected lineage through the local native executor; other grants and delegates are not disabled by this claim",
+          "propagation_measurement": {
+            "scope": "signed control call through local registry validation",
+            "elapsed_ms": 55.51248000000032,
+            "guarantee": "NONE"
+          },
+          "semantics": {
+            "validation_points": [
+              "native invocation acceptance",
+              "descriptor release guard"
+            ],
+            "lease_expiry": "2026-10-06T06:47:45.548Z",
+            "propagation_bound": {
+              "scope": "local revocation registry",
+              "guarantee": "NONE",
+              "measured_ms": null
+            },
+            "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+            "already_committed_behavior": "Retained; this control supplies no compensation",
+            "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+          },
+          "original_effect_reversed": false,
+          "acknowledgement": {
+            "executor": "node-b",
+            "validation": "Native revoked registry read; subsequent exercise guard required",
+            "validated_at": "2026-10-06T06:37:48.928Z"
+          }
+        }
+      }
+    ],
+    "controls": [],
+    "assay": {
+      "Detect": {
+        "established": true,
+        "basis": "f6678827-2805-499b-8125-2b59b20779c5"
+      },
+      "Interrupt": {
+        "established": true,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+        "basis": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2"
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "947df303-a33f-4956-a337-6fa837f5a842"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "limits": [
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "typed_account": {
+      "kind": "ConsequenceSnapshot",
+      "snapshot_id": "75d7cf43-9e1a-4376-b960-068d6ad43a94",
+      "timestamp": "2026-10-06T06:37:49.190Z",
+      "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+      "permission": {
+        "kind": "Permission",
+        "permission_id": "947df303-a33f-4956-a337-6fa837f5a842",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "disposition": {
+          "kind": "Disposition",
+          "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+          "disposition": "ADMIT",
+          "reason": null,
+          "previous_decision_id": null,
+          "issued_at": "2026-10-06T06:37:46.321Z",
+          "source_authority": "I-1",
+          "interval_id": "I_AB",
+          "formation_ref": "0ef87c61-169c-486c-b247-489a354e85c1",
+          "formation_hash": "5c8dc356a3692b061bb252413764ab4206bac7be1682e100ba46cf2d31b03809",
+          "standing": {
+            "status": "KNOWN",
+            "interval_id": "I_AB",
+            "sourcepoint": "I-1",
+            "constitution_ref": "8879fd96b4cb185a4999f5c67607f5735064ad1b6a05585b605a600ea5db19b7",
+            "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+            "standing": {
+              "outbound": "ELIGIBLE",
+              "inbound": "UNASSESSED"
+            },
+            "lineage_head": "dc78a2b03ecda191c1485c0fdde5fc9925e217130decbf73c7878c9e04111285"
+          },
+          "native_decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+          "owner": "gateway/local-field/index.mjs"
+        },
+        "basis": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+        "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+        "objective_contract": {
+          "objective_id": "Declared minimum readback bytes",
+          "minimum_bytes": 1
+        },
+        "issued_at": "2026-10-06T06:37:46.321Z"
+      },
+      "lease": {
+        "kind": "InvocationLease",
+        "lease_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "permission_id": "947df303-a33f-4956-a337-6fa837f5a842",
+        "next_transition": "ATTEMPT_EXECUTION",
+        "commitment": {
+          "kind": "InvocationCommitment",
+          "commitment_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+          "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+          "warrant": {
+            "body": {
+              "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+              "record_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+              "issued_at": "2026-10-06T06:37:46.429Z",
+              "expires_at": "2026-10-06T06:47:46.429Z",
+              "type": "invocation_commit",
+              "issuer": "I-1",
+              "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+              "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+              "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456"
+            },
+            "signature": "1e7882a1fb7dbded31d214be8407802e68a10853503a71986b827cd76852476bdee0cf078317dc77286d6239dcd1882bb7cc658022a59f248229d43bc219800c"
+          },
+          "issued_at": "2026-10-06T06:37:46.429Z",
+          "expires_at": "2026-10-06T06:47:45.548Z",
+          "token_id": "3c065884-a322-4c0e-a130-1e4bd70cbffc",
+          "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+          "owner": "gateway/security/token-manager.mjs"
+        },
+        "revocation_semantics": {
+          "validation_points": [
+            "native invocation acceptance",
+            "descriptor release guard"
+          ],
+          "lease_expiry": "2026-10-06T06:47:45.548Z",
+          "propagation_bound": {
+            "scope": "local revocation registry",
+            "guarantee": "NONE",
+            "measured_ms": null
+          },
+          "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+          "already_committed_behavior": "Retained; this control supplies no compensation",
+          "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+        }
+      },
+      "attempt": {
+        "kind": "Attempt",
+        "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "invocation_lease_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+        "executor": "node-b",
+        "subject": "node-a",
+        "requested_effect": {
+          "action": "create_document",
+          "target": "hello.txt",
+          "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd"
+        },
+        "started_at": "2026-10-06T06:37:47.050Z",
+        "completed_at": "2026-10-06T06:37:47.051Z",
+        "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+        "executor_report": {
+          "kind": "Execution",
+          "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+          "status": "COMPLETED",
+          "result": {
+            "status": "COMPLETED",
+            "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+            "bytes": 16
+          },
+          "completed_at": "2026-10-06T06:37:47.051Z",
+          "owner": "gateway/execution/filesystem-executor.mjs"
+        }
+      },
+      "occurrence_claim": {
+        "kind": "OccurrenceClaim",
+        "claim_id": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "execution_ref": "7e464238-f56a-405e-b386-7b7923be18f9",
+        "report": {
+          "status": "COMPLETED",
+          "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+          "bytes": 16
+        },
+        "knowledge_supplied": false
+      },
+      "lease_condition": "CURRENT",
+      "execution_condition": "COMPLETED",
+      "native_recovery": null,
+      "executor_receipt": {
+        "kind": "Execution",
+        "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+          "bytes": 16
+        },
+        "completed_at": "2026-10-06T06:37:47.051Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      },
+      "observation": {
+        "kind": "Observation",
+        "observation_id": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "native": {
+          "kind": "Observation",
+          "observation_id": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+          "status": "RECORDED",
+          "request": {
+            "body": {
+              "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+              "record_id": "bdfec2b8-14cb-43d1-91de-e96fe903d2b0",
+              "issued_at": "2026-10-06T06:37:47.179Z",
+              "expires_at": "2026-10-06T06:47:47.179Z",
+              "type": "observation_request",
+              "source_node": "node-a",
+              "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+              "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9"
+            },
+            "signature": "6886f45636a8c034a36baddf6873d62327df45769b946be2db1e937a5e2a4a8b6b35ed9ffa6b75b5e79c8bed9a7928c8973848ee6658e1d076892e2e6d08890f"
+          },
+          "measurement": {
+            "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+            "status": "OBSERVED",
+            "target": "hello.txt",
+            "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+            "bytes": 16,
+            "device": 27,
+            "inode": 299497,
+            "observed_at": "2026-10-06T06:37:47.298Z",
+            "method": "separate_descriptor_read_after_write"
+          },
+          "owner": "gateway/execution/filesystem-executor.mjs"
+        },
+        "coverage": {
+          "status": "COMPLETED",
+          "scope": "One descriptor readback at one time; no downstream effects",
+          "observed_at": "2026-10-06T06:37:47.298Z"
+        }
+      },
+      "evidence": {
+        "kind": "Evidence",
+        "evidence_id": "f6678827-2805-499b-8125-2b59b20779c5",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+        "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "admission_policy": "exact-descriptor-readback.f0.1",
+        "admitted_at": "2026-10-06T06:37:47.711Z",
+        "scope": "Commanded bytes were observed at the target at observed_at; not permanent or physical-world truth",
+        "measurement": {
+          "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+          "status": "OBSERVED",
+          "target": "hello.txt",
+          "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+          "bytes": 16,
+          "device": 27,
+          "inode": 299497,
+          "observed_at": "2026-10-06T06:37:47.298Z",
+          "method": "separate_descriptor_read_after_write"
+        },
+        "constitutional_standing": "NOT_SUPPLIED"
+      },
+      "occurrence_knowledge": "KNOWN_OCCURRED",
+      "observation_coverage": {
+        "status": "COMPLETED",
+        "scope": "One descriptor readback at one time; no downstream effects",
+        "observed_at": "2026-10-06T06:37:47.298Z"
+      },
+      "outcome_assessment": {
+        "kind": "OutcomeAssessment",
+        "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+        "objective_contract": {
+          "objective_id": "Declared minimum readback bytes",
+          "minimum_bytes": 1
+        },
+        "status": "ACHIEVED_OBJECTIVE",
+        "assessed_at": "2026-10-06T06:37:47.837Z",
+        "scope": "Declared readback-byte objective only"
+      },
+      "returned": {
+        "kind": "ReturnArtifact",
+        "return_id": "d47bed80-2ae0-4af4-b18f-00972a0bd829",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "execution_attempt": {
+          "status": "KNOWN",
+          "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+          "condition": "COMPLETED",
+          "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+        },
+        "executor_receipt": {
+          "status": "PRESENT",
+          "claim_ref": "dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+          "scope": "Executor report only"
+        },
+        "occurrence_knowledge": "KNOWN_OCCURRED",
+        "observation_coverage": {
+          "status": "COMPLETED",
+          "scope": "One descriptor readback at one time; no downstream effects",
+          "observed_at": "2026-10-06T06:37:47.298Z"
+        },
+        "outcome_assessment": {
+          "kind": "OutcomeAssessment",
+          "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+          "objective_contract": {
+            "objective_id": "Declared minimum readback bytes",
+            "minimum_bytes": 1
+          },
+          "status": "ACHIEVED_OBJECTIVE",
+          "assessed_at": "2026-10-06T06:37:47.837Z",
+          "scope": "Declared readback-byte objective only"
+        },
+        "return_completeness": "COMPLETE",
+        "required_reports": [
+          "ATTEMPT_ACCOUNT",
+          "OBSERVATION_ACCOUNT",
+          "OUTCOME_ACCOUNT",
+          "LIMITS_ACCOUNT"
+        ],
+        "reporting_accounts": [
+          {
+            "coordinate": "ATTEMPT_ACCOUNT",
+            "account": {
+              "status": "KNOWN",
+              "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+              "condition": "COMPLETED",
+              "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+            }
+          },
+          {
+            "coordinate": "OBSERVATION_ACCOUNT",
+            "account": {
+              "coverage": {
+                "status": "COMPLETED",
+                "scope": "One descriptor readback at one time; no downstream effects",
+                "observed_at": "2026-10-06T06:37:47.298Z"
+              },
+              "occurrence_knowledge": "KNOWN_OCCURRED",
+              "evidence": {
+                "kind": "Evidence",
+                "evidence_id": "f6678827-2805-499b-8125-2b59b20779c5",
+                "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+                "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+                "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+                "admission_policy": "exact-descriptor-readback.f0.1",
+                "admitted_at": "2026-10-06T06:37:47.711Z",
+                "scope": "Commanded bytes were observed at the target at observed_at; not permanent or physical-world truth",
+                "measurement": {
+                  "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+                  "status": "OBSERVED",
+                  "target": "hello.txt",
+                  "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+                  "bytes": 16,
+                  "device": 27,
+                  "inode": 299497,
+                  "observed_at": "2026-10-06T06:37:47.298Z",
+                  "method": "separate_descriptor_read_after_write"
+                },
+                "constitutional_standing": "NOT_SUPPLIED"
+              }
+            }
+          },
+          {
+            "coordinate": "OUTCOME_ACCOUNT",
+            "account": {
+              "kind": "OutcomeAssessment",
+              "assessment_id": "f61c410d-9050-4222-bc35-b73dde7b7da4",
+              "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+              "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+              "objective_contract": {
+                "objective_id": "Declared minimum readback bytes",
+                "minimum_bytes": 1
+              },
+              "status": "ACHIEVED_OBJECTIVE",
+              "assessed_at": "2026-10-06T06:37:47.837Z",
+              "scope": "Declared readback-byte objective only"
+            }
+          },
+          {
+            "coordinate": "LIMITS_ACCOUNT",
+            "account": {
+              "unresolved_remainder": [
+                "Downstream consequences outside descriptor readback remain unobserved"
+              ],
+              "outstanding_obligations": [
+                "Inspect downstream consequences outside this specimen"
+              ],
+              "control_limits": {
+                "compensation_available": false,
+                "committed_effect": true,
+                "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+              }
+            }
+          }
+        ],
+        "unresolved_remainder": [
+          "Downstream consequences outside descriptor readback remain unobserved"
+        ],
+        "outstanding_obligations": [
+          "Inspect downstream consequences outside this specimen"
+        ],
+        "follow_up_required": true,
+        "provenance": {
+          "permission_ref": "947df303-a33f-4956-a337-6fa837f5a842",
+          "lease_ref": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+          "attempt_ref": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+          "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+          "evidence_ref": "f6678827-2805-499b-8125-2b59b20779c5",
+          "outcome_ref": "f61c410d-9050-4222-bc35-b73dde7b7da4"
+        },
+        "returned_at": "2026-10-06T06:37:49.068Z"
+      },
+      "settlement": null,
+      "revocation": {
+        "kind": "Revocation",
+        "revocation_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+        "signed_request": {
+          "body": {
+            "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+            "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+            "issued_at": "2026-10-06T06:37:48.660Z",
+            "expires_at": "2026-10-06T06:47:48.660Z",
+            "type": "revocation",
+            "issuer": "I-1",
+            "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0"
+          },
+          "signature": "f18cd127cbf3c3809bedb2ddddafd9bf09cbddf5bc4ce1ac7e3053ad7b72aea418e97b98b04d41c1a0712552655c85f500cf127c154caa5014dbab4aedcb3600"
+        },
+        "registry_receipt": {
+          "status": "RECORDED",
+          "record_id": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+          "authority_effect": "revocation"
+        },
+        "requested": true,
+        "propagated": true,
+        "acknowledged": true,
+        "future_exercise_disabled": true,
+        "request_ref": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+        "registry_validation_at": "2026-10-06T06:37:48.715Z",
+        "executor": "node-b",
+        "scope": "This revoked grant and its affected lineage through the local native executor; other grants and delegates are not disabled by this claim",
+        "propagation_measurement": {
+          "scope": "signed control call through local registry validation",
+          "elapsed_ms": 55.51248000000032,
+          "guarantee": "NONE"
+        },
+        "semantics": {
+          "validation_points": [
+            "native invocation acceptance",
+            "descriptor release guard"
+          ],
+          "lease_expiry": "2026-10-06T06:47:45.548Z",
+          "propagation_bound": {
+            "scope": "local revocation registry",
+            "guarantee": "NONE",
+            "measured_ms": null
+          },
+          "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+          "already_committed_behavior": "Retained; this control supplies no compensation",
+          "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+        },
+        "original_effect_reversed": false,
+        "acknowledgement": {
+          "executor": "node-b",
+          "validation": "Native revoked registry read; subsequent exercise guard required",
+          "validated_at": "2026-10-06T06:37:48.928Z"
+        }
+      },
+      "unresolved_remainder": [
+        "Downstream consequences outside descriptor readback remain unobserved"
+      ],
+      "control_limits": {
+        "compensation_available": false,
+        "committed_effect": true,
+        "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+      },
+      "assay": {
+        "Detect": {
+          "established": true,
+          "basis": "f6678827-2805-499b-8125-2b59b20779c5"
+        },
+        "Interrupt": {
+          "established": true,
+          "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+          "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+          "basis": "984eb56a-2a4c-4b89-8403-7aa2c0f026c2"
+        },
+        "Reconstruct": {
+          "established": true,
+          "basis": "947df303-a33f-4956-a337-6fa837f5a842"
+        },
+        "ConfidenceCalibration": {
+          "established": false,
+          "status": "NOT_CALIBRATED"
+        }
+      },
+      "attempting": false
+    }
+  },
+  "claimReconstructions": [
+    {
+      "code": "AUTHORIZED",
+      "basis_ref": "Permission:947df303-a33f-4956-a337-6fa837f5a842",
+      "contract": "Historical ADMIT and exact passage basis authorize ISSUE_INVOCATION_COMMITMENT, not execution.",
+      "artifact_kind": "Permission"
+    },
+    {
+      "code": "ATTEMPTED",
+      "basis_ref": "Attempt:b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+      "contract": "Native durable attempt; an attempt does not establish occurrence.",
+      "artifact_kind": "Attempt"
+    },
+    {
+      "code": "EXECUTOR_RECEIPT",
+      "basis_ref": "OccurrenceClaim:dc0c4f1f-1f64-4d9c-a139-4ecefa30ffe6",
+      "contract": "Executor receipt is present; receipt is not independent truth.",
+      "artifact_kind": "OccurrenceClaim"
+    },
+    {
+      "code": "OCCURRED",
+      "basis_ref": "Evidence:f6678827-2805-499b-8125-2b59b20779c5",
+      "contract": "Explicitly admitted exact-descriptor-readback.f0.1 basis; no permanent or downstream occurrence claim.",
+      "artifact_kind": "Evidence"
+    },
+    {
+      "code": "ACHIEVED_OBJECTIVE",
+      "basis_ref": "OutcomeAssessment:f61c410d-9050-4222-bc35-b73dde7b7da4",
+      "contract": "Separate assessment against the previously declared readback-byte objective; not inferred from occurrence.",
+      "artifact_kind": "OutcomeAssessment"
+    },
+    {
+      "code": "RETURN_COMPLETE",
+      "basis_ref": "ReturnArtifact:d47bed80-2ae0-4af4-b18f-00972a0bd829",
+      "contract": "Completeness concerns required reporting obligations, not occurrence, objective success or settlement.",
+      "artifact_kind": "ReturnArtifact"
+    },
+    {
+      "code": "REVOCATION_REQUESTED",
+      "basis_ref": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+      "contract": "Native control verified the signed grant-scoped request; request is distinct from acknowledgement.",
+      "artifact_kind": "Revocation"
+    },
+    {
+      "code": "REVOCATION_PROPAGATED",
+      "basis_ref": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+      "contract": "Signed native revocation and validated local registry; no remote propagation or physical cessation claim.",
+      "artifact_kind": "Revocation"
+    },
+    {
+      "code": "ACKNOWLEDGED",
+      "basis_ref": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+      "contract": "Acknowledgement concerns this local registry validation, not every delegate stopping.",
+      "artifact_kind": "Revocation"
+    },
+    {
+      "code": "REVOKED_FOR_FUTURE_USE",
+      "basis_ref": "Revocation:984eb56a-2a4c-4b89-8403-7aa2c0f026c2",
+      "contract": "Native point-of-use validation prevents subsequent authorized exercise under this revoked grant and its affected lineage. This does not disable other grants, reverse effects or bound physical cessation.",
+      "artifact_kind": "Revocation"
+    },
+    {
+      "code": "IRREVERSIBLE_EFFECT",
+      "basis_ref": "Evidence:f6678827-2805-499b-8125-2b59b20779c5",
+      "contract": "No compensating operation exists through this control. This fixture does not prove physical irreversibility.",
+      "artifact_kind": "Evidence"
+    }
+  ],
+  "assertions": {
+    "admission_created_attempt": false,
+    "attempt_created_occurrence": false,
+    "original_effect_retained": true,
+    "settlement_created": false,
+    "native_second_attempt": null,
+    "receipt_supplies_truth": false
+  },
+  "native": {
+    "bindings": [
+      {
+        "grant_id": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+        "subject": "node-a",
+        "target_node": "node-b",
+        "parent": null,
+        "revoked": true,
+        "superseded": false,
+        "uses": 1,
+        "status": "inactive",
+        "reason": "AUTHORITY_REVOKED",
+        "expires_at": "2026-10-06T06:47:45.719Z"
+      }
+    ],
+    "trace": {
+      "profile": "constitutional-waist.f0.1",
+      "candidate": {
+        "body": {
+          "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+          "record_id": "a0ff1bf5-7225-4b6e-b935-6562d00f3ae3",
+          "issued_at": "2026-10-06T06:37:45.859Z",
+          "expires_at": "2026-10-06T06:47:45.859Z",
+          "type": "passage",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "intent_id": "98538d6b-1b06-4692-90ba-fa4f006065b9",
+          "source_node": "node-a",
+          "subject": "node-a",
+          "target_node": "node-b",
+          "action": "create_document",
+          "target": "hello.txt",
+          "payload": {
+            "content": "ONE local field\n"
+          },
+          "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd",
+          "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+          "scope": "artifact-create",
+          "purpose": "ccm:I_AB:outbound",
+          "dependencies": {
+            "corpus": "v1"
+          },
+          "conditions": {},
+          "nonce": "7d82d276-aab6-4a46-b89d-3f7947c974ba",
+          "correlation_id": "76d131a9-1fc6-46b6-85e7-da624c23818d",
+          "return_requirement": {
+            "required": true,
+            "to": "I-1"
+          },
+          "origin": {
+            "intent": "SourcePoint-authorized bounded waist specimen",
+            "candidate_id": "0ef87c61-169c-486c-b247-489a354e85c1"
+          }
+        },
+        "signature": "15ea4cfefcbdb3d6874669af08359059a8136622388fb0036d7b279ed6d9cca75ad34d2cbe4098f140b505532a81388e82ab6457caad325d0090efa88b679200"
+      },
+      "formation": {
+        "body": {
+          "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+          "record_id": "e59193b9-6c6e-4c1e-8b20-a3233e0b1522",
+          "issued_at": "2026-10-06T06:37:45.821Z",
+          "expires_at": "2026-10-06T06:47:45.821Z",
+          "type": "candidate",
+          "source_node": "node-a",
+          "candidate_id": "0ef87c61-169c-486c-b247-489a354e85c1",
+          "kind": "proposal",
+          "content": {
+            "profile": "constitutional-waist.f0.1",
+            "interval_id": "I_AB",
+            "uncertainty": "Bounded development create; exterior truth is unestablished.",
+            "obligations": [
+              "independent-readback",
+              "native-return"
+            ]
+          }
+        },
+        "signature": "c068f46889d9b638470b8d5d8d6e7c03c8d87865bbad74a5b8ccbe0d3f82378bc95e0e55c37f53fc514307e99dd5d1b19c9f9c23a813845a16df7d88a5bcc102",
+        "authority_effect": "none",
+        "content_hash": "2e36defab613fdf095c63af368ca410195d60ed9c327bc766d9955c6bdeb5ea1"
+      },
+      "decisions": [
+        {
+          "kind": "Disposition",
+          "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+          "disposition": "ADMIT",
+          "reason": null,
+          "previous_decision_id": null,
+          "issued_at": "2026-10-06T06:37:46.321Z",
+          "source_authority": "I-1",
+          "interval_id": "I_AB",
+          "formation_ref": "0ef87c61-169c-486c-b247-489a354e85c1",
+          "formation_hash": "5c8dc356a3692b061bb252413764ab4206bac7be1682e100ba46cf2d31b03809",
+          "standing": {
+            "status": "KNOWN",
+            "interval_id": "I_AB",
+            "sourcepoint": "I-1",
+            "constitution_ref": "8879fd96b4cb185a4999f5c67607f5735064ad1b6a05585b605a600ea5db19b7",
+            "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+            "standing": {
+              "outbound": "ELIGIBLE",
+              "inbound": "UNASSESSED"
+            },
+            "lineage_head": "dc78a2b03ecda191c1485c0fdde5fc9925e217130decbf73c7878c9e04111285"
+          },
+          "native_decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+          "owner": "gateway/local-field/index.mjs"
+        }
+      ],
+      "hold_steps": [],
+      "commitment": {
+        "kind": "InvocationCommitment",
+        "commitment_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+        "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "warrant": {
+          "body": {
+            "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+            "record_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+            "issued_at": "2026-10-06T06:37:46.429Z",
+            "expires_at": "2026-10-06T06:47:46.429Z",
+            "type": "invocation_commit",
+            "issuer": "I-1",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+            "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456"
+          },
+          "signature": "1e7882a1fb7dbded31d214be8407802e68a10853503a71986b827cd76852476bdee0cf078317dc77286d6239dcd1882bb7cc658022a59f248229d43bc219800c"
+        },
+        "issued_at": "2026-10-06T06:37:46.429Z",
+        "expires_at": "2026-10-06T06:47:45.548Z",
+        "token_id": "3c065884-a322-4c0e-a130-1e4bd70cbffc",
+        "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+        "owner": "gateway/security/token-manager.mjs"
+      },
+      "invocation": {
+        "kind": "Invocation",
+        "invocation_id": "173a442d-dda9-4aea-9b26-28f317482b29",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "commitment_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+        "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "request": {
+          "body": {
+            "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+            "record_id": "173a442d-dda9-4aea-9b26-28f317482b29",
+            "issued_at": "2026-10-06T06:37:46.700Z",
+            "expires_at": "2026-10-06T06:47:46.700Z",
+            "type": "invocation",
+            "source_node": "node-a",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+            "commitment_id": "037dae9d-eabc-4ede-abe6-6a012dfd0700",
+            "passage": {
+              "body": {
+                "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+                "record_id": "a0ff1bf5-7225-4b6e-b935-6562d00f3ae3",
+                "issued_at": "2026-10-06T06:37:45.859Z",
+                "expires_at": "2026-10-06T06:47:45.859Z",
+                "type": "passage",
+                "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+                "intent_id": "98538d6b-1b06-4692-90ba-fa4f006065b9",
+                "source_node": "node-a",
+                "subject": "node-a",
+                "target_node": "node-b",
+                "action": "create_document",
+                "target": "hello.txt",
+                "payload": {
+                  "content": "ONE local field\n"
+                },
+                "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd",
+                "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+                "scope": "artifact-create",
+                "purpose": "ccm:I_AB:outbound",
+                "dependencies": {
+                  "corpus": "v1"
+                },
+                "conditions": {},
+                "nonce": "7d82d276-aab6-4a46-b89d-3f7947c974ba",
+                "correlation_id": "76d131a9-1fc6-46b6-85e7-da624c23818d",
+                "return_requirement": {
+                  "required": true,
+                  "to": "I-1"
+                },
+                "origin": {
+                  "intent": "SourcePoint-authorized bounded waist specimen",
+                  "candidate_id": "0ef87c61-169c-486c-b247-489a354e85c1"
+                }
+              },
+              "signature": "15ea4cfefcbdb3d6874669af08359059a8136622388fb0036d7b279ed6d9cca75ad34d2cbe4098f140b505532a81388e82ab6457caad325d0090efa88b679200"
+            }
+          },
+          "signature": "a7939904d02bbcc1d1eb3ed79e731abe9043ec7e3af853379f13acba8cfd02afd5c9352a495d36381126ba598be0c934081dd4de3206d49f77cf458d03999c0c"
+        },
+        "invoked_at": "2026-10-06T06:37:46.896Z"
+      },
+      "execution": {
+        "kind": "Execution",
+        "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "febb7ab5-9e00-4619-9772-85175cf9bba0",
+          "bytes": 16
+        },
+        "completed_at": "2026-10-06T06:37:47.051Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      },
+      "observation": {
+        "kind": "Observation",
+        "observation_id": "b70fdc11-abc6-49ca-96a8-64c1d960f29c",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9",
+        "status": "RECORDED",
+        "request": {
+          "body": {
+            "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+            "record_id": "bdfec2b8-14cb-43d1-91de-e96fe903d2b0",
+            "issued_at": "2026-10-06T06:37:47.179Z",
+            "expires_at": "2026-10-06T06:47:47.179Z",
+            "type": "observation_request",
+            "source_node": "node-a",
+            "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+            "execution_id": "7e464238-f56a-405e-b386-7b7923be18f9"
+          },
+          "signature": "6886f45636a8c034a36baddf6873d62327df45769b946be2db1e937a5e2a4a8b6b35ed9ffa6b75b5e79c8bed9a7928c8973848ee6658e1d076892e2e6d08890f"
+        },
+        "measurement": {
+          "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+          "status": "OBSERVED",
+          "target": "hello.txt",
+          "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+          "bytes": 16,
+          "device": 27,
+          "inode": 299497,
+          "observed_at": "2026-10-06T06:37:47.298Z",
+          "method": "separate_descriptor_read_after_write"
+        },
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      },
+      "latest": {
+        "kind": "Disposition",
+        "decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "passage_hash": "c0562b30b26c63ed90ad2b7b108e0a4706713f618a677c891b0c9457ea47da8b",
+        "disposition": "ADMIT",
+        "reason": null,
+        "previous_decision_id": null,
+        "issued_at": "2026-10-06T06:37:46.321Z",
+        "source_authority": "I-1",
+        "interval_id": "I_AB",
+        "formation_ref": "0ef87c61-169c-486c-b247-489a354e85c1",
+        "formation_hash": "5c8dc356a3692b061bb252413764ab4206bac7be1682e100ba46cf2d31b03809",
+        "standing": {
+          "status": "KNOWN",
+          "interval_id": "I_AB",
+          "sourcepoint": "I-1",
+          "constitution_ref": "8879fd96b4cb185a4999f5c67607f5735064ad1b6a05585b605a600ea5db19b7",
+          "authority_basis": "de1326df-2b26-449b-8caf-f57adefa7ef0",
+          "standing": {
+            "outbound": "ELIGIBLE",
+            "inbound": "UNASSESSED"
+          },
+          "lineage_head": "dc78a2b03ecda191c1485c0fdde5fc9925e217130decbf73c7878c9e04111285"
+        },
+        "native_decision_id": "902b0d3c-1dfe-4088-9914-50bfad95f456",
+        "owner": "gateway/local-field/index.mjs"
+      },
+      "latest_time_basis": "HISTORICAL_RECORDED_DECISION",
+      "phase": "COMPLETED",
+      "attempt": {
+        "attempt_id": "b258c0ee-c6bf-4660-8cf7-cd13f31ea087",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "action": "create_document",
+        "target": "hello.txt",
+        "payload_hash": "7a85b856f56f774a0a31cf2ce762dfdb7c3baf53b922d91c9d1b49b45c43fcdd",
+        "attempted_at": "2026-10-06T06:37:47.050Z",
+        "executor_node": "node-b"
+      },
+      "occurrence": {
+        "occurrence_id": "978308e4-4e7b-4e88-9889-192dee9e968f",
+        "status": "OBSERVED",
+        "target": "hello.txt",
+        "content_hash": "9ed7863bacdd222956226c2497b2f4627a9f9681ff34b015c28196d6924fff5d",
+        "bytes": 16,
+        "device": 27,
+        "inode": 299497,
+        "observed_at": "2026-10-06T06:37:47.298Z",
+        "method": "separate_descriptor_read_after_write",
+        "observation_ref": "b70fdc11-abc6-49ca-96a8-64c1d960f29c"
+      },
+      "return": {
+        "return_id": "7eb057cb-c62e-4775-a134-5231abd640eb",
+        "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+        "intent_id": "98538d6b-1b06-4692-90ba-fa4f006065b9",
+        "correlation_id": "76d131a9-1fc6-46b6-85e7-da624c23818d",
+        "to": "I-1",
+        "status": "RETURNED",
+        "outcome": "OBSERVED",
+        "receipt_id": "674f98a2-dee5-4988-a73a-ea521365f4fa",
+        "reason": null,
+        "returned_at": "2026-10-06T06:37:47.423Z",
+        "attestation": {
+          "profile": "rio-gateway-local-field-return-v0.1",
+          "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+          "signer_id": "node-b",
+          "signature": "b6a82b73086bfe94f25bbab86c91be592364d9c2e4d6091bfd4c389a11fa256303e0b5d4c661e6397712c97412e992a2bc5baf383fd18bd4a966a0763ef06103"
+        }
+      },
+      "receipt": {
+        "receipt_id": "674f98a2-dee5-4988-a73a-ea521365f4fa",
+        "receipt_type": "governed_action",
+        "intent_id": "98538d6b-1b06-4692-90ba-fa4f006065b9",
+        "action": "create_document",
+        "agent_id": "node-a",
+        "authorized_by": "I-1",
+        "timestamp": "2026-10-06T06:37:47.416Z",
+        "hash_chain": {
+          "intent_hash": "7fbbdac192b191bbccf105f4058856d979acd0749670333f69a12cb1f6994e62",
+          "governance_hash": "8bfaf6c94f1390327058137d366333477a822bbcb89be7bd1e2c8c1c2de8692a",
+          "authorization_hash": "c6b26e450cf8ce6bb88a16c38c8a4bbd7e57646aa088a5274636605c92b2d807",
+          "execution_hash": "3dd4e5cafe10c409732479646074d7f89db2aa96d4e18f20ab26961dde991fc0",
+          "receipt_hash": "a587e7c7f5057447368f0cc3f10cfef6674ecf99cce76da262bc9885085e5eec"
+        },
+        "verification": {
+          "algorithm": "SHA-256",
+          "chain_length": 5,
+          "chain_order": [
+            "intent_hash",
+            "governance_hash",
+            "authorization_hash",
+            "execution_hash",
+            "receipt_hash"
+          ]
+        },
+        "ingestion": {
+          "source": "local-field",
+          "channel": "signed-passage",
+          "source_message_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "timestamp": "2026-10-06T06:37:47.416Z"
+        },
+        "policy": {
+          "evaluated": true,
+          "decision": "ALLOW",
+          "policy_pack": "local-field-bounded",
+          "rules_triggered": [
+            "EXACT_HUMAN_GRANT",
+            "POINT_OF_USE_FIDELITY"
+          ]
+        },
+        "local_field_attestation": {
+          "profile": "rio-gateway-local-field-v0.1",
+          "field_id": "de9580fd-87d0-4e0d-91cf-9f71c87f72b8",
+          "passage_id": "6d75cc87-a5a7-491f-8434-b9fb027c02b5",
+          "signer_id": "node-b",
+          "signature": "57e4de2111304b5b4c04b25150b4b477b98475d979baf4689434ee3c404c26591e81bf20c8657bb24e3f1eeb655d0469d502dfa6ba5a8726025a32b366fad202"
+        }
+      },
+      "actuator": 1,
+      "evidence": null,
+      "settlement": "UNESTABLISHED",
+      "home_mutation": "NOT_INVOKED",
+      "source_authority": "I-1"
+    }
+  }
+}

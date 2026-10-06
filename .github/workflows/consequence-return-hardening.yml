@@ -1,0 +1,27 @@
+name: Consequence Return Hardening F0.1
+on:
+  pull_request:
+    paths: ['gateway/local-field/consequence/**', 'gateway/tests/consequence-return-hardening/**', 'gateway/scripts/run-consequence-return-hardening.mjs', 'gateway/package*.json', '.github/workflows/consequence-return-hardening.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  specimen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: gateway/package-lock.json
+      - run: npm ci
+        working-directory: gateway
+      - run: npm run test:consequence
+        working-directory: gateway
+      - run: npx --yes --package=typescript@5.9.3 tsc --noEmit --strict --module NodeNext --moduleResolution NodeNext --target ES2022 --skipLibCheck tests/consequence-return-hardening/types-consumer.mts
+        working-directory: gateway
+      - run: npm run test:waist
+        working-directory: gateway
+      - run: npm run field:consequence -- --demo /tmp/consequence-return-hardening
+        working-directory: gateway
