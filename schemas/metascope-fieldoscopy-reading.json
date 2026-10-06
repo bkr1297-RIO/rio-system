@@ -1,0 +1,447 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://rio.dev/schemas/metascope-fieldoscopy-reading.json",
+  "title": "FieldoscopyReading — Cognitive Meteorology F0.1",
+  "description": "Attributable bounded observation, not a constitutional disposition or an authorization. All regimes are candidates. Runtime validation additionally checks hashes, time ordering, freshness and lineage references.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "reading_id",
+    "timestamp",
+    "atmospheric_regime",
+    "candidate_regimes",
+    "signal_manifest",
+    "visibility",
+    "confidence",
+    "current_conditions",
+    "primary_drivers",
+    "forming_fronts",
+    "unresolved_remainder",
+    "evaluation"
+  ],
+  "properties": {
+    "reading_id": {
+      "type": "string",
+      "pattern": "^sha256:[0-9a-f]{64}$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+    },
+    "atmospheric_regime": {
+      "enum": [
+        "HIGH_PRESSURE",
+        "LOW_PRESSURE",
+        "COLD_FRONT",
+        "WARM_FRONT",
+        "WIND_SHEAR",
+        "INVERSION",
+        "CLEAR_HORIZON",
+        "PRESSURE_DIFFERENTIAL",
+        null
+      ]
+    },
+    "candidate_regimes": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "HIGH_PRESSURE",
+          "LOW_PRESSURE",
+          "COLD_FRONT",
+          "WARM_FRONT",
+          "WIND_SHEAR",
+          "INVERSION",
+          "CLEAR_HORIZON",
+          "PRESSURE_DIFFERENTIAL"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "signal_manifest": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/signal"
+      },
+      "maxItems": 6,
+      "uniqueItems": true
+    },
+    "visibility": {
+      "enum": [
+        "ILLUMINATED",
+        "SHADOWED",
+        "UNKNOWN"
+      ]
+    },
+    "confidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "basis",
+        "level"
+      ],
+      "properties": {
+        "basis": {
+          "const": "UNCALIBRATED_RULE_SUPPORT"
+        },
+        "level": {
+          "enum": [
+            "SUPPORTED",
+            "PARTIAL",
+            "INSUFFICIENT"
+          ]
+        }
+      }
+    },
+    "current_conditions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/condition"
+      }
+    },
+    "primary_drivers": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/condition"
+      },
+      "maxItems": 3
+    },
+    "forming_fronts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/front"
+      }
+    },
+    "unresolved_remainder": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "UNCALIBRATED_FORECAST",
+          "REVIEW_LATENCY_IS_CAPACITY_PROXY",
+          "PENDING_REVIEWS_ARE_CENSORED",
+          "NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL",
+          "CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT",
+          "PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN",
+          "MISSING_CALENDAR",
+          "MISSING_GIT",
+          "MISSING_METRICS",
+          "STALE_SIGNALS",
+          "UNALIGNED_WINDOWS",
+          "NO_MATCHED_REGIME"
+        ]
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "evaluation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluator_id",
+        "evaluator_version",
+        "matched_rules",
+        "pressure_differential",
+        "pressure_differential_role"
+      ],
+      "properties": {
+        "evaluator_id": {
+          "const": "cognitive-meteorology.f0.1"
+        },
+        "evaluator_version": {
+          "const": "0.1.0"
+        },
+        "matched_rules": {
+          "type": "array",
+          "items": {
+            "enum": [
+              "f0.1:high_pressure",
+              "f0.1:low_pressure",
+              "f0.1:cold_front",
+              "f0.1:warm_front",
+              "f0.1:wind_shear",
+              "f0.1:inversion",
+              "f0.1:clear_horizon",
+              "f0.1:pressure_differential"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "pressure_differential": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": -1,
+          "maximum": 1
+        },
+        "pressure_differential_role": {
+          "const": "EXPERIMENTAL_RELATIONAL_FEATURE"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "start",
+        "end"
+      ],
+      "properties": {
+        "start": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+        },
+        "end": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+        }
+      }
+    },
+    "signal": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "signal_type",
+        "signal_id",
+        "magnitude",
+        "direction",
+        "rate_of_change",
+        "observation_window",
+        "comparison_window",
+        "source_domain",
+        "extractor_id",
+        "extractor_version",
+        "timestamp"
+      ],
+      "properties": {
+        "signal_type": {
+          "enum": [
+            "available_time_margin",
+            "meeting_density",
+            "buffer_compression",
+            "open_pr_age",
+            "review_latency",
+            "commit_velocity"
+          ]
+        },
+        "signal_id": {
+          "type": "string",
+          "pattern": "^sha256:[0-9a-f]{64}$"
+        },
+        "magnitude": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "direction": {
+          "enum": [
+            "RISING",
+            "FALLING",
+            "STABLE"
+          ]
+        },
+        "rate_of_change": {
+          "type": "number",
+          "description": "Signed normalized units per hour, measured before magnitude clipping."
+        },
+        "observation_window": {
+          "$ref": "#/$defs/window"
+        },
+        "comparison_window": {
+          "$ref": "#/$defs/window"
+        },
+        "source_domain": {
+          "enum": [
+            "CALENDAR",
+            "GIT"
+          ]
+        },
+        "extractor_id": {
+          "enum": [
+            "calendar.edge.f0.1",
+            "git.edge.f0.1"
+          ]
+        },
+        "extractor_version": {
+          "const": "0.1.0"
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z$"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "signal_type": {
+                "enum": [
+                  "available_time_margin",
+                  "meeting_density",
+                  "buffer_compression"
+                ]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "source_domain": {
+                "const": "CALENDAR"
+              },
+              "extractor_id": {
+                "const": "calendar.edge.f0.1"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "source_domain": {
+                "const": "GIT"
+              },
+              "extractor_id": {
+                "const": "git.edge.f0.1"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "direction": {
+                "const": "RISING"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "rate_of_change": {
+                "exclusiveMinimum": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "direction": {
+                "const": "FALLING"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "rate_of_change": {
+                "exclusiveMaximum": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "direction": {
+                "const": "STABLE"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "rate_of_change": {
+                "const": 0
+              }
+            }
+          }
+        }
+      ]
+    },
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "condition_code",
+        "signal_refs"
+      ],
+      "properties": {
+        "condition_code": {
+          "enum": [
+            "TIME_TIGHT",
+            "TIME_AVAILABLE",
+            "MEETINGS_DENSE",
+            "MEETINGS_LIGHT",
+            "BUFFERS_COMPRESSED",
+            "BUFFERS_PRESENT",
+            "PRS_AGING",
+            "PRS_RECENT",
+            "REVIEW_WAITS_LONG",
+            "REVIEW_WAITS_SHORT",
+            "PRODUCTION_RISING",
+            "PRODUCTION_FALLING",
+            "PRODUCTION_STABLE",
+            "POSSIBLE_REVIEW_BOTTLENECK",
+            "POSSIBLE_CAPACITY_RECOVERY",
+            "POSSIBLE_CAPACITY_TIGHTENING"
+          ]
+        },
+        "signal_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        }
+      }
+    },
+    "front": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "condition_code",
+        "signal_refs",
+        "horizon_hours",
+        "status"
+      ],
+      "properties": {
+        "condition_code": {
+          "enum": [
+            "POSSIBLE_REVIEW_BOTTLENECK",
+            "POSSIBLE_CAPACITY_RECOVERY",
+            "POSSIBLE_CAPACITY_TIGHTENING"
+          ]
+        },
+        "signal_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^sha256:[0-9a-f]{64}$"
+          },
+          "minItems": 1,
+          "uniqueItems": true
+        },
+        "horizon_hours": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "const": 24
+            },
+            {
+              "const": 48
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        },
+        "status": {
+          "const": "CANDIDATE"
+        }
+      }
+    }
+  }
+}

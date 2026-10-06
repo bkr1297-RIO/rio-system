@@ -1,0 +1,249 @@
+✖ Calendar emits the three scoped conditions and retains signed movement (1.957041ms)
+✖ Git measures 84 hours of age, worsening review waits, and four times baseline commits (0.306533ms)
+✖ edge output ignores private source contents without reading their getters (1.228061ms)
+✖ overlapping calendar events are unioned rather than double counting time (0.322852ms)
+✖ empty Calendar has time available and no fabricated buffer shortage (0.346988ms)
+✖ missing Git baseline and missing PRs omit unavailable signals (0.283616ms)
+✖ saturation preserves rising direction and nonzero measured rate (0.35595ms)
+✖ wrong source domain, nonfinite rates, unsigned movement, and raw fields fail closed (0.204309ms)
+✖ malformed or reversed timestamps and unequal comparison windows are rejected at edges (1.017932ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 0
+ℹ fail 9
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 125.747835
+
+✖ failing tests:
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:10:1
+✖ Calendar emits the three scoped conditions and retains signed movement (1.957041ms)
+  AssertionError [ERR_ASSERTION]: extractCalendarSignals must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:11:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:24:1
+✖ Git measures 84 hours of age, worsening review waits, and four times baseline commits (0.306533ms)
+  AssertionError [ERR_ASSERTION]: extractGitSignals must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:25:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:33:1
+✖ edge output ignores private source contents without reading their getters (1.228061ms)
+  AssertionError [ERR_ASSERTION]: extractCalendarSignals must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:38:23)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:43:1
+✖ overlapping calendar events are unioned rather than double counting time (0.322852ms)
+  AssertionError [ERR_ASSERTION]: extractCalendarSignals must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:46:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:49:1
+✖ empty Calendar has time available and no fabricated buffer shortage (0.346988ms)
+  AssertionError [ERR_ASSERTION]: extractCalendarSignals must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:51:21)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:55:1
+✖ missing Git baseline and missing PRs omit unavailable signals (0.283616ms)
+  AssertionError [ERR_ASSERTION]: extractGitSignals must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:57:14)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:61:1
+✖ saturation preserves rising direction and nonzero measured rate (0.35595ms)
+  AssertionError [ERR_ASSERTION]: extractGitSignals must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:65:16)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:68:1
+✖ wrong source domain, nonfinite rates, unsigned movement, and raw fields fail closed (0.204309ms)
+  AssertionError [ERR_ASSERTION]: validateSignals must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:69:20)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/edges.test.mjs:76:1
+✖ malformed or reversed timestamps and unequal comparison windows are rejected at edges (1.017932ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /EDGE/. Input:
+  
+  'AssertionError [ERR_ASSERTION]: extractCalendarSignals must exist\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    "+ 'undefined'\n" +
+    "- 'function'\n"
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:79:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: AssertionError [ERR_ASSERTION]: extractCalendarSignals must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+        at required (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:6:44)
+        at file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:79:23
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/edges.test.mjs:79:10)
+        at Test.runInAsyncScope (node:async_hooks:227:14)
+        at Test.run (node:internal/test_runner/test:1382:25)
+        at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+        at Test.postRun (node:internal/test_runner/test:1522:19)
+        at Test.run (node:internal/test_runner/test:1447:12),
+    expected: /EDGE/,
+    operator: 'throws',
+    diff: 'simple'
+  }

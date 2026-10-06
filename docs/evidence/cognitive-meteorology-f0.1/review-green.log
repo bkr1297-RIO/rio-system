@@ -1,0 +1,41 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ 100 pull readings preserve real standing, durable tables, Calendar data, Git refs and world files (1273.708981ms)
+ℹ {"proof":"ACTUAL_NATIVE_STATE_COMPARISON","repetitions":100,"new_dispositions":0,"ledger_rows_before":24,"ledger_rows_after":24,"durable_tables_equal":true,"standing_equal":true,"calendar_bytes_equal":true,"git_refs_and_files_equal":true,"execution_authorities":0,"outgoing":0,"attempts":0,"artifact_files_before":0,"artifact_files_after":0}
+✔ core runs with filesystem writes and subprocesses denied and creates no timer resources (121.032474ms)
+✔ received machine readings reject raw additions and invented dispositions before display (5.860754ms)
+✔ hidden raw fields in signal arrays are rejected without reading them (1.575369ms)
+✔ boxed metrics and coercion hooks cannot carry raw content into a Fieldoscopy reading (1.950992ms)
+✔ all received reading arrays reject hidden fields and executable prototypes before projection (8.863862ms)
+✔ semantically equal windows align despite source object property order (4.069205ms)
+✔ pull runner emits distinct machine artifact and four-section HTML on explicit request only (180.622269ms)
+✔ Calendar emits the three scoped conditions and retains signed movement (5.723823ms)
+✔ Git measures 84 hours of age, worsening review waits, and four times baseline commits (8.379718ms)
+✔ edge output ignores private source contents without reading their getters (4.072151ms)
+✔ overlapping calendar events are unioned rather than double counting time (2.594309ms)
+✔ empty Calendar has time available and no fabricated buffer shortage (0.628845ms)
+✔ missing Git baseline and missing PRs omit unavailable signals (0.796903ms)
+✔ saturation preserves rising direction and nonzero measured rate (1.030536ms)
+✔ wrong source domain, nonfinite rates, unsigned movement, and raw fields fail closed (1.690737ms)
+✔ malformed or reversed timestamps and unequal comparison windows are rejected at edges (0.763217ms)
+✔ required fixture detects rising production against worsening review waits and tightening time (16.302676ms)
+✔ comparative fixture supports HIGH_PRESSURE without authorizing action (8.736985ms)
+✔ comparative fixture supports LOW_PRESSURE without authorizing action (1.840118ms)
+✔ comparative fixture supports COLD_FRONT without authorizing action (2.228246ms)
+✔ comparative fixture supports WARM_FRONT without authorizing action (1.725491ms)
+✔ comparative fixture supports WIND_SHEAR without authorizing action (1.250113ms)
+✔ comparative fixture supports INVERSION without authorizing action (1.783797ms)
+✔ comparative fixture supports CLEAR_HORIZON without authorizing action (2.927568ms)
+✔ scalar pressure difference alone does not imply the pressure-differential regime (1.258689ms)
+✔ empty and single-domain observations do not invent a clear horizon (2.222835ms)
+✔ stale and differently aligned windows retain uncertainty rather than a cross-domain forecast (2.218643ms)
+✔ duplicate signals, raw content, future observations and getter carriers are rejected (3.283188ms)
+✔ same attributable inputs have a stable reading identity regardless of array order (2.535039ms)
+✔ Metascope is a separate four-section projection linked to the reading (3.593223ms)
+ℹ tests 31
+ℹ suites 0
+ℹ pass 31
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1831.229177
