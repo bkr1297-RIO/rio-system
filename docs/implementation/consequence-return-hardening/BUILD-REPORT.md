@@ -1,6 +1,6 @@
 # Consequence / Return Hardening F0.1 — build Return
 
-Candidate implementation evidence below the Conformance Cut. Exact parent: rio-system draft #208, `5df28c0e4262616bf560787a3a365583370351da`. Separate branch `build/consequence-return-hardening-f0.1`; no dependency on the Cognitive Meteorology implementation. Frozen architecture and native owner code are unchanged. Final tested commit/tree and draft metadata are reported separately to avoid self-referential hashes.
+Candidate implementation evidence below the Conformance Cut. Exact parent: rio-system draft #208, `5df28c0e4262616bf560787a3a365583370351da`. Separate branch `build/consequence-return-hardening-f0.1`; no dependency on the Cognitive Meteorology implementation. Frozen architecture and native owner code are unchanged. Draft [#210](https://github.com/bkr1297-RIO/rio-system/pull/210) targets #208. Authorized connector publication exported exact tree `8f120e17c911c51df61b0efd40b9bd61ad60291a` from local candidate `5c3ac8e0cca8cee486c1642d1d20d84569564a5b` as snapshot `518f00a7b29a4fd5ac3a76150d53975bbc82518f`, parented on exact #208. Local per-task commit identities are recorded but not identically recreated by this transport. Final draft metadata is reported separately to avoid self-referential hashes.
 
 ## A–E: Files and implementation
 

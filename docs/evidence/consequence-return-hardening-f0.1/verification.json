@@ -50,8 +50,13 @@
   "irreversibility_scope": "No compensation through this control; filesystem may be altered by others",
   "partition_scope": "Declared fixture transport stub",
   "publication": {
-    "status": "LOCAL_CANDIDATE_READY_FOR_DRAFT",
+    "status": "DRAFT_PUBLISHED",
     "destination": "https://github.com/bkr1297-RIO/rio-system",
-    "remote_ci_claimed": false
+    "remote_ci_claimed": false,
+    "draft_pr_url": "https://github.com/bkr1297-RIO/rio-system/pull/210",
+    "snapshot_commit": "518f00a7b29a4fd5ac3a76150d53975bbc82518f",
+    "snapshot_tree": "8f120e17c911c51df61b0efd40b9bd61ad60291a",
+    "local_snapshot_commit": "5c3ac8e0cca8cee486c1642d1d20d84569564a5b",
+    "transport": "Authorized GitHub connector; exact tree snapshot with exact #208 parent. Local per-task commits not identically recreated."
   }
 }

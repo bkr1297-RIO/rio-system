@@ -194,8 +194,8 @@
     },
     {
       "path": "docs/implementation/consequence-return-hardening/BUILD-REPORT.md",
-      "sha256": "2faa8cba65d8252e8293898a7b5cd72ac63067fa83170df6e6c1a60aede314ab",
-      "bytes": 10827
+      "sha256": "909dee96cfd643a56e0bf63cf12a59884e496f02cd3fed01347be261b26bd02b",
+      "bytes": 11217
     },
     {
       "path": "docs/implementation/consequence-return-hardening/EXISTING-CLAIM-AUDIT.md",
