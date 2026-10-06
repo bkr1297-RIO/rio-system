@@ -1,0 +1,139 @@
+{
+  "profile": "constitutional-waist.f0.1",
+  "candidate": {
+    "body": {
+      "field_id": "69f2d439-a9fe-48b5-8ffd-df0fee2248f7",
+      "record_id": "d10060ae-d371-464a-8cf8-e8f8c06c5ffe",
+      "issued_at": "2026-10-06T07:26:07.842Z",
+      "expires_at": "2026-10-06T07:36:07.842Z",
+      "type": "passage",
+      "passage_id": "37c45705-3e62-4109-a925-e1cf6ff44e62",
+      "intent_id": "1e184c2a-2616-4d2a-9ebd-cb6696b17e9f",
+      "source_node": "node-a",
+      "subject": "node-a",
+      "target_node": "node-b",
+      "action": "create_document",
+      "target": "research-return.json",
+      "payload": {
+        "content": "{\"kind\":\"BoundedResearchNote\",\"reading_id\":\"sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0\",\"sources\":[\"CALENDAR\",\"GIT\"],\"candidate_regime\":\"PRESSURE_DIFFERENTIAL\",\"interpretation\":[\"Available calendar time is tight.\",\"Meeting buffers are compressed.\",\"Development activity is rising.\",\"Meetings occupy much of the working window.\",\"Open pull requests are aging.\",\"Review waits are long.\",\"Development activity is rising.\",\"Review waits are long.\",\"Available calendar time is tight.\",\"Development activity is rising while review waits lengthen and calendar space tightens. A possible review bottleneck may be forming over the next 24–48 hours.\",\"The near-term outlook has not yet been checked against real outcomes.\",\"Review waits suggest capacity; they do not measure actual reviewer availability.\",\"A pull request still waiting for review may ultimately wait longer.\",\"Task size and review complexity are outside this radar.\",\"Free calendar time does not tell us whether someone has committed to review.\",\"How pressure differential relates to the other weather patterns remains open.\"],\"unresolved_remainder\":[\"UNCALIBRATED_FORECAST\",\"REVIEW_LATENCY_IS_CAPACITY_PROXY\",\"PENDING_REVIEWS_ARE_CENSORED\",\"NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL\",\"CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT\",\"PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN\"],\"forecast_status\":\"UNCALIBRATED_CANDIDATE\",\"authorization_supplied\":false}"
+      },
+      "payload_hash": "ce3eb1c194d2ace5a57a603f4b67b0ead0cc2fc6ee7eda42c55f206f0cfe5900",
+      "authority_basis": "6cc89f53-d165-4045-9734-3465aedfd9e8",
+      "scope": "artifact-create",
+      "purpose": "ccm:I_AB:outbound",
+      "dependencies": {
+        "corpus": "v1"
+      },
+      "conditions": {},
+      "nonce": "3cdce579-fa59-427d-af01-582d9bff2040",
+      "correlation_id": "15b6b480-9b81-4022-ba4a-ff11c9e85318",
+      "return_requirement": {
+        "required": true,
+        "to": "I-1"
+      },
+      "origin": {
+        "intent": "Explicit local reference human choice: bounded Research",
+        "candidate_id": "c271c69e-6c39-4d6d-8034-2342ecdb5cde"
+      }
+    },
+    "signature": "12ff23b7e0a84544d2f5b49d6db4157fe288d9f8011fdd7917b8686177caa010325e45593af1424ef7ec869845967382cc42813824db41a2a2173c5f2f4bd202"
+  },
+  "formation": {
+    "body": {
+      "field_id": "69f2d439-a9fe-48b5-8ffd-df0fee2248f7",
+      "record_id": "ad4dabdf-a306-495c-96d3-b0b3631f125e",
+      "issued_at": "2026-10-06T07:26:07.829Z",
+      "expires_at": "2026-10-06T07:36:07.829Z",
+      "type": "candidate",
+      "source_node": "node-a",
+      "candidate_id": "c271c69e-6c39-4d6d-8034-2342ecdb5cde",
+      "kind": "proposal",
+      "content": {
+        "profile": "constitutional-waist.f0.1",
+        "interval_id": "I_AB",
+        "uncertainty": "Research note only; forecasting truth and downstream consequences remain unestablished.",
+        "obligations": [
+          "independent-readback",
+          "native-return"
+        ]
+      }
+    },
+    "signature": "d9a755ccef0ab865cce01a3d63d7261497ed38e9fdce3b5ef2eee8b06303316654eb4c606955f8795dfaf48be56db9c098b4669aac44c6d128ae562ab26a0503",
+    "authority_effect": "none",
+    "content_hash": "92c9a6e07fda5073a4170db93e6b1d762f7fc62645c5d70afbb83234cb14835e"
+  },
+  "decisions": [
+    {
+      "kind": "Disposition",
+      "decision_id": "df0a33c3-07ef-4e7c-94b0-f2bfc45a03b4",
+      "passage_id": "37c45705-3e62-4109-a925-e1cf6ff44e62",
+      "passage_hash": "9659d18cd671a4d376708b1aa3728a38994341d6452b6609145da637ea9bda27",
+      "disposition": "DENY",
+      "reason": "RIO_DENIED_OR_HELD",
+      "previous_decision_id": null,
+      "issued_at": "2026-10-06T07:26:08.018Z",
+      "source_authority": "I-1",
+      "interval_id": "I_AB",
+      "formation_ref": "c271c69e-6c39-4d6d-8034-2342ecdb5cde",
+      "formation_hash": "4c8865220a8e6ba7744c82246ee5bbbbf4a8adbf58de89e806f9dd1b7f284d17",
+      "standing": {
+        "status": "KNOWN",
+        "interval_id": "I_AB",
+        "sourcepoint": "I-1",
+        "constitution_ref": "f4625f4d46a3d8c6606f0f6feeb316f53d11ecc63a2e437d7546c3d96d21c808",
+        "authority_basis": "6cc89f53-d165-4045-9734-3465aedfd9e8",
+        "standing": {
+          "outbound": "ELIGIBLE",
+          "inbound": "UNASSESSED"
+        },
+        "lineage_head": "6fdbdcf2d609120e62f7822854829fa571d26e382ef8d0abeb22aa5ac28d2330"
+      },
+      "native_decision_id": null,
+      "owner": "gateway/local-field/index.mjs"
+    }
+  ],
+  "hold_steps": [],
+  "commitment": null,
+  "invocation": null,
+  "execution": null,
+  "observation": null,
+  "latest": {
+    "kind": "Disposition",
+    "decision_id": "df0a33c3-07ef-4e7c-94b0-f2bfc45a03b4",
+    "passage_id": "37c45705-3e62-4109-a925-e1cf6ff44e62",
+    "passage_hash": "9659d18cd671a4d376708b1aa3728a38994341d6452b6609145da637ea9bda27",
+    "disposition": "DENY",
+    "reason": "RIO_DENIED_OR_HELD",
+    "previous_decision_id": null,
+    "issued_at": "2026-10-06T07:26:08.018Z",
+    "source_authority": "I-1",
+    "interval_id": "I_AB",
+    "formation_ref": "c271c69e-6c39-4d6d-8034-2342ecdb5cde",
+    "formation_hash": "4c8865220a8e6ba7744c82246ee5bbbbf4a8adbf58de89e806f9dd1b7f284d17",
+    "standing": {
+      "status": "KNOWN",
+      "interval_id": "I_AB",
+      "sourcepoint": "I-1",
+      "constitution_ref": "f4625f4d46a3d8c6606f0f6feeb316f53d11ecc63a2e437d7546c3d96d21c808",
+      "authority_basis": "6cc89f53-d165-4045-9734-3465aedfd9e8",
+      "standing": {
+        "outbound": "ELIGIBLE",
+        "inbound": "UNASSESSED"
+      },
+      "lineage_head": "6fdbdcf2d609120e62f7822854829fa571d26e382ef8d0abeb22aa5ac28d2330"
+    },
+    "native_decision_id": null,
+    "owner": "gateway/local-field/index.mjs"
+  },
+  "latest_time_basis": "HISTORICAL_RECORDED_DECISION",
+  "phase": null,
+  "attempt": null,
+  "occurrence": null,
+  "return": null,
+  "receipt": null,
+  "actuator": 0,
+  "evidence": null,
+  "settlement": "UNESTABLISHED",
+  "home_mutation": "NOT_INVOKED",
+  "source_authority": "I-1"
+}

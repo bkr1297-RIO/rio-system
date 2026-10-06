@@ -32,7 +32,12 @@
     "test:waist": "node --test tests/constitutional-waist/*.test.mjs",
     "field:waist": "node scripts/run-constitutional-waist.mjs",
     "test:consequence": "node --test tests/consequence-return-hardening/*.test.mjs",
-    "field:consequence": "node scripts/run-consequence-return-hardening.mjs"
+    "field:consequence": "node scripts/run-consequence-return-hardening.mjs",
+    "test:meteorology": "node --test tests/cognitive-meteorology/*.test.mjs",
+    "field:weather": "node scripts/run-cognitive-meteorology.mjs",
+    "test:ica": "node --test tests/ica-rr-001/*.test.mjs",
+    "field:ica": "node scripts/run-ica-rr-001.mjs",
+    "field:ica:evidence": "node tests/ica-rr-001/export-evidence.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

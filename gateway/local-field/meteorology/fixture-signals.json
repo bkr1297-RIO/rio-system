@@ -1,0 +1,116 @@
+[
+  {
+    "signal_id": "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44",
+    "metric": "available_time_margin",
+    "magnitude": 0.12,
+    "direction": "FALLING",
+    "rate_of_change": -0.015833333333333335,
+    "observation_window": {
+      "start": "2026-10-05T00:00:00.000Z",
+      "end": "2026-10-06T00:00:00.000Z"
+    },
+    "comparison_window": {
+      "start": "2026-10-04T00:00:00.000Z",
+      "end": "2026-10-05T00:00:00.000Z"
+    },
+    "source_domain": "CALENDAR",
+    "extractor_id": "calendar.edge.f0.1",
+    "extractor_version": "0.1.0",
+    "timestamp": "2026-10-06T00:00:00.000Z"
+  },
+  {
+    "signal_id": "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd",
+    "metric": "meeting_density",
+    "magnitude": 0.88,
+    "direction": "RISING",
+    "rate_of_change": 0.015833333333333335,
+    "observation_window": {
+      "start": "2026-10-05T00:00:00.000Z",
+      "end": "2026-10-06T00:00:00.000Z"
+    },
+    "comparison_window": {
+      "start": "2026-10-04T00:00:00.000Z",
+      "end": "2026-10-05T00:00:00.000Z"
+    },
+    "source_domain": "CALENDAR",
+    "extractor_id": "calendar.edge.f0.1",
+    "extractor_version": "0.1.0",
+    "timestamp": "2026-10-06T00:00:00.000Z"
+  },
+  {
+    "signal_id": "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d",
+    "metric": "buffer_compression",
+    "magnitude": 1,
+    "direction": "RISING",
+    "rate_of_change": 0.041666666666666664,
+    "observation_window": {
+      "start": "2026-10-05T00:00:00.000Z",
+      "end": "2026-10-06T00:00:00.000Z"
+    },
+    "comparison_window": {
+      "start": "2026-10-04T00:00:00.000Z",
+      "end": "2026-10-05T00:00:00.000Z"
+    },
+    "source_domain": "CALENDAR",
+    "extractor_id": "calendar.edge.f0.1",
+    "extractor_version": "0.1.0",
+    "timestamp": "2026-10-06T00:00:00.000Z"
+  },
+  {
+    "signal_id": "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def",
+    "metric": "open_pr_age",
+    "magnitude": 0.5,
+    "direction": "RISING",
+    "rate_of_change": 0.014880952380952382,
+    "observation_window": {
+      "start": "2026-10-05T00:00:00.000Z",
+      "end": "2026-10-06T00:00:00.000Z"
+    },
+    "comparison_window": {
+      "start": "2026-10-04T00:00:00.000Z",
+      "end": "2026-10-05T00:00:00.000Z"
+    },
+    "source_domain": "GIT",
+    "extractor_id": "git.edge.f0.1",
+    "extractor_version": "0.1.0",
+    "timestamp": "2026-10-06T00:00:00.000Z"
+  },
+  {
+    "signal_id": "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+    "metric": "review_latency",
+    "magnitude": 0.875,
+    "direction": "RISING",
+    "rate_of_change": 0.033854166666666664,
+    "observation_window": {
+      "start": "2026-10-05T00:00:00.000Z",
+      "end": "2026-10-06T00:00:00.000Z"
+    },
+    "comparison_window": {
+      "start": "2026-10-04T00:00:00.000Z",
+      "end": "2026-10-05T00:00:00.000Z"
+    },
+    "source_domain": "GIT",
+    "extractor_id": "git.edge.f0.1",
+    "extractor_version": "0.1.0",
+    "timestamp": "2026-10-06T00:00:00.000Z"
+  },
+  {
+    "signal_id": "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+    "metric": "commit_velocity",
+    "magnitude": 1,
+    "direction": "RISING",
+    "rate_of_change": 0.03125,
+    "observation_window": {
+      "start": "2026-10-05T00:00:00.000Z",
+      "end": "2026-10-06T00:00:00.000Z"
+    },
+    "comparison_window": {
+      "start": "2026-10-04T00:00:00.000Z",
+      "end": "2026-10-05T00:00:00.000Z"
+    },
+    "source_domain": "GIT",
+    "extractor_id": "git.edge.f0.1",
+    "extractor_version": "0.1.0",
+    "timestamp": "2026-10-06T00:00:00.000Z"
+  }
+]

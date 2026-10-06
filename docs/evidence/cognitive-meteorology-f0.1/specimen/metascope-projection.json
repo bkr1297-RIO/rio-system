@@ -1,0 +1,43 @@
+{
+  "projection_id": "sha256:76fc0fc2acafc44a9b1b7ef86945e43efef2b47e97f0ca5cc4ac486bb7c68aa8",
+  "reading_ref": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+  "timestamp": "2026-10-06T00:00:00.000Z",
+  "sections": [
+    {
+      "title": "Current Conditions",
+      "lines": [
+        "Available calendar time is tight.",
+        "Meeting buffers are compressed.",
+        "Development activity is rising.",
+        "Meetings occupy much of the working window.",
+        "Open pull requests are aging.",
+        "Review waits are long."
+      ]
+    },
+    {
+      "title": "What’s Driving It",
+      "lines": [
+        "Development activity is rising.",
+        "Review waits are long.",
+        "Available calendar time is tight."
+      ]
+    },
+    {
+      "title": "What’s Forming",
+      "lines": [
+        "Development activity is rising while review waits lengthen and calendar space tightens. A possible review bottleneck may be forming over the next 24–48 hours."
+      ]
+    },
+    {
+      "title": "What We Can’t See Yet",
+      "lines": [
+        "The near-term outlook has not yet been checked against real outcomes.",
+        "Review waits suggest capacity; they do not measure actual reviewer availability.",
+        "A pull request still waiting for review may ultimately wait longer.",
+        "Task size and review complexity are outside this radar.",
+        "Free calendar time does not tell us whether someone has committed to review.",
+        "How pressure differential relates to the other weather patterns remains open."
+      ]
+    }
+  ]
+}

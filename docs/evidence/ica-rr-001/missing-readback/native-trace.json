@@ -1,0 +1,343 @@
+{
+  "profile": "constitutional-waist.f0.1",
+  "candidate": {
+    "body": {
+      "field_id": "152d9e74-c5a9-4ecc-9d86-99f9ff87ec6a",
+      "record_id": "be6094aa-76e0-48c1-89c0-7ea4a9c01ca2",
+      "issued_at": "2026-10-06T07:26:18.127Z",
+      "expires_at": "2026-10-06T07:36:18.127Z",
+      "type": "passage",
+      "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+      "intent_id": "c02176d3-f3d5-4d09-bf05-21d7e06c53d3",
+      "source_node": "node-a",
+      "subject": "node-a",
+      "target_node": "node-b",
+      "action": "create_document",
+      "target": "research-return.json",
+      "payload": {
+        "content": "{\"kind\":\"BoundedResearchNote\",\"reading_id\":\"sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0\",\"sources\":[\"CALENDAR\",\"GIT\"],\"candidate_regime\":\"PRESSURE_DIFFERENTIAL\",\"interpretation\":[\"Available calendar time is tight.\",\"Meeting buffers are compressed.\",\"Development activity is rising.\",\"Meetings occupy much of the working window.\",\"Open pull requests are aging.\",\"Review waits are long.\",\"Development activity is rising.\",\"Review waits are long.\",\"Available calendar time is tight.\",\"Development activity is rising while review waits lengthen and calendar space tightens. A possible review bottleneck may be forming over the next 24–48 hours.\",\"The near-term outlook has not yet been checked against real outcomes.\",\"Review waits suggest capacity; they do not measure actual reviewer availability.\",\"A pull request still waiting for review may ultimately wait longer.\",\"Task size and review complexity are outside this radar.\",\"Free calendar time does not tell us whether someone has committed to review.\",\"How pressure differential relates to the other weather patterns remains open.\"],\"unresolved_remainder\":[\"UNCALIBRATED_FORECAST\",\"REVIEW_LATENCY_IS_CAPACITY_PROXY\",\"PENDING_REVIEWS_ARE_CENSORED\",\"NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL\",\"CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT\",\"PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN\"],\"forecast_status\":\"UNCALIBRATED_CANDIDATE\",\"authorization_supplied\":false}"
+      },
+      "payload_hash": "ce3eb1c194d2ace5a57a603f4b67b0ead0cc2fc6ee7eda42c55f206f0cfe5900",
+      "authority_basis": "345a8a6c-37ec-4c2e-abc8-a535ff786f62",
+      "scope": "artifact-create",
+      "purpose": "ccm:I_AB:outbound",
+      "dependencies": {
+        "corpus": "v1"
+      },
+      "conditions": {},
+      "nonce": "084bdf73-10da-44ea-8e0f-3ce4ee3a73e3",
+      "correlation_id": "4a53a9de-bb42-4ebd-9add-7b278f84147c",
+      "return_requirement": {
+        "required": true,
+        "to": "I-1"
+      },
+      "origin": {
+        "intent": "Explicit local reference human choice: bounded Research",
+        "candidate_id": "127f98e2-e3fc-4adf-b900-b65cb76f2723"
+      }
+    },
+    "signature": "a5b6e7f7bcc2d451819f89f9d9fe80533afe50f1781968439b50a143bda090b5ed6e664ddddb15982329ec6f06bd5c4a0fe3a927c0da80821a4df095f6050901"
+  },
+  "formation": {
+    "body": {
+      "field_id": "152d9e74-c5a9-4ecc-9d86-99f9ff87ec6a",
+      "record_id": "2ad9f0e0-2c4c-4979-84bf-34d5a5a2a146",
+      "issued_at": "2026-10-06T07:26:18.117Z",
+      "expires_at": "2026-10-06T07:36:18.117Z",
+      "type": "candidate",
+      "source_node": "node-a",
+      "candidate_id": "127f98e2-e3fc-4adf-b900-b65cb76f2723",
+      "kind": "proposal",
+      "content": {
+        "profile": "constitutional-waist.f0.1",
+        "interval_id": "I_AB",
+        "uncertainty": "Research note only; forecasting truth and downstream consequences remain unestablished.",
+        "obligations": [
+          "independent-readback",
+          "native-return"
+        ]
+      }
+    },
+    "signature": "e4dd19a8edd6d4716ff77d5ece24175cb5a92e8c674394c264df8c059df89e663774b9cfff9782984cc869a3a203cb28c9c66a49d051b7513900776a7005a102",
+    "authority_effect": "none",
+    "content_hash": "92c9a6e07fda5073a4170db93e6b1d762f7fc62645c5d70afbb83234cb14835e"
+  },
+  "decisions": [
+    {
+      "kind": "Disposition",
+      "decision_id": "c9aae119-cfd3-4a16-8944-1ffd439df5c3",
+      "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+      "passage_hash": "8fffcc5c5bc0900b79908d25397c1afafdb6c92c0b6ba4c3b554bc50973cb9d8",
+      "disposition": "ADMIT",
+      "reason": null,
+      "previous_decision_id": null,
+      "issued_at": "2026-10-06T07:26:18.701Z",
+      "source_authority": "I-1",
+      "interval_id": "I_AB",
+      "formation_ref": "127f98e2-e3fc-4adf-b900-b65cb76f2723",
+      "formation_hash": "dfcde565316db375d9cfac8902cec78988aba6717b43982762361c90f5b0e235",
+      "standing": {
+        "status": "KNOWN",
+        "interval_id": "I_AB",
+        "sourcepoint": "I-1",
+        "constitution_ref": "8810ed9f75d2c84d7d203673be08fc1d350342473e839aa0b638cbe56e2e0e15",
+        "authority_basis": "345a8a6c-37ec-4c2e-abc8-a535ff786f62",
+        "standing": {
+          "outbound": "ELIGIBLE",
+          "inbound": "UNASSESSED"
+        },
+        "lineage_head": "308d72c8903b0665e7f51b84a3732031a0b47752f3cbe4ef8e17fa58e1ba987e"
+      },
+      "native_decision_id": "c9aae119-cfd3-4a16-8944-1ffd439df5c3",
+      "owner": "gateway/local-field/index.mjs"
+    }
+  ],
+  "hold_steps": [],
+  "commitment": {
+    "kind": "InvocationCommitment",
+    "commitment_id": "d61185f3-a271-4a1e-acd9-36fdace20c6c",
+    "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+    "passage_hash": "8fffcc5c5bc0900b79908d25397c1afafdb6c92c0b6ba4c3b554bc50973cb9d8",
+    "decision_id": "c9aae119-cfd3-4a16-8944-1ffd439df5c3",
+    "warrant": {
+      "body": {
+        "field_id": "152d9e74-c5a9-4ecc-9d86-99f9ff87ec6a",
+        "record_id": "d61185f3-a271-4a1e-acd9-36fdace20c6c",
+        "issued_at": "2026-10-06T07:26:19.046Z",
+        "expires_at": "2026-10-06T07:36:19.046Z",
+        "type": "invocation_commit",
+        "issuer": "I-1",
+        "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+        "passage_hash": "8fffcc5c5bc0900b79908d25397c1afafdb6c92c0b6ba4c3b554bc50973cb9d8",
+        "decision_id": "c9aae119-cfd3-4a16-8944-1ffd439df5c3"
+      },
+      "signature": "e8a356dd8b959eae32343a9413c5826a009682fa57b3930591ccf15ef46f765830189fa7fe822bc6c1eaeadea8d3fbb80df34cc68e17f17a0709e438692c5000"
+    },
+    "issued_at": "2026-10-06T07:26:19.046Z",
+    "expires_at": "2026-10-06T07:36:17.914Z",
+    "token_id": "7a705454-e82f-4fd3-ad76-6535efb4f36d",
+    "authority_basis": "345a8a6c-37ec-4c2e-abc8-a535ff786f62",
+    "owner": "gateway/security/token-manager.mjs"
+  },
+  "invocation": {
+    "kind": "Invocation",
+    "invocation_id": "9e4747ec-f6e3-42de-9d84-a3227f60dc15",
+    "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+    "commitment_id": "d61185f3-a271-4a1e-acd9-36fdace20c6c",
+    "decision_id": "c9aae119-cfd3-4a16-8944-1ffd439df5c3",
+    "request": {
+      "body": {
+        "field_id": "152d9e74-c5a9-4ecc-9d86-99f9ff87ec6a",
+        "record_id": "9e4747ec-f6e3-42de-9d84-a3227f60dc15",
+        "issued_at": "2026-10-06T07:26:19.222Z",
+        "expires_at": "2026-10-06T07:36:19.222Z",
+        "type": "invocation",
+        "source_node": "node-a",
+        "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+        "passage_hash": "8fffcc5c5bc0900b79908d25397c1afafdb6c92c0b6ba4c3b554bc50973cb9d8",
+        "commitment_id": "d61185f3-a271-4a1e-acd9-36fdace20c6c",
+        "passage": {
+          "body": {
+            "field_id": "152d9e74-c5a9-4ecc-9d86-99f9ff87ec6a",
+            "record_id": "be6094aa-76e0-48c1-89c0-7ea4a9c01ca2",
+            "issued_at": "2026-10-06T07:26:18.127Z",
+            "expires_at": "2026-10-06T07:36:18.127Z",
+            "type": "passage",
+            "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+            "intent_id": "c02176d3-f3d5-4d09-bf05-21d7e06c53d3",
+            "source_node": "node-a",
+            "subject": "node-a",
+            "target_node": "node-b",
+            "action": "create_document",
+            "target": "research-return.json",
+            "payload": {
+              "content": "{\"kind\":\"BoundedResearchNote\",\"reading_id\":\"sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0\",\"sources\":[\"CALENDAR\",\"GIT\"],\"candidate_regime\":\"PRESSURE_DIFFERENTIAL\",\"interpretation\":[\"Available calendar time is tight.\",\"Meeting buffers are compressed.\",\"Development activity is rising.\",\"Meetings occupy much of the working window.\",\"Open pull requests are aging.\",\"Review waits are long.\",\"Development activity is rising.\",\"Review waits are long.\",\"Available calendar time is tight.\",\"Development activity is rising while review waits lengthen and calendar space tightens. A possible review bottleneck may be forming over the next 24–48 hours.\",\"The near-term outlook has not yet been checked against real outcomes.\",\"Review waits suggest capacity; they do not measure actual reviewer availability.\",\"A pull request still waiting for review may ultimately wait longer.\",\"Task size and review complexity are outside this radar.\",\"Free calendar time does not tell us whether someone has committed to review.\",\"How pressure differential relates to the other weather patterns remains open.\"],\"unresolved_remainder\":[\"UNCALIBRATED_FORECAST\",\"REVIEW_LATENCY_IS_CAPACITY_PROXY\",\"PENDING_REVIEWS_ARE_CENSORED\",\"NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL\",\"CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT\",\"PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN\"],\"forecast_status\":\"UNCALIBRATED_CANDIDATE\",\"authorization_supplied\":false}"
+            },
+            "payload_hash": "ce3eb1c194d2ace5a57a603f4b67b0ead0cc2fc6ee7eda42c55f206f0cfe5900",
+            "authority_basis": "345a8a6c-37ec-4c2e-abc8-a535ff786f62",
+            "scope": "artifact-create",
+            "purpose": "ccm:I_AB:outbound",
+            "dependencies": {
+              "corpus": "v1"
+            },
+            "conditions": {},
+            "nonce": "084bdf73-10da-44ea-8e0f-3ce4ee3a73e3",
+            "correlation_id": "4a53a9de-bb42-4ebd-9add-7b278f84147c",
+            "return_requirement": {
+              "required": true,
+              "to": "I-1"
+            },
+            "origin": {
+              "intent": "Explicit local reference human choice: bounded Research",
+              "candidate_id": "127f98e2-e3fc-4adf-b900-b65cb76f2723"
+            }
+          },
+          "signature": "a5b6e7f7bcc2d451819f89f9d9fe80533afe50f1781968439b50a143bda090b5ed6e664ddddb15982329ec6f06bd5c4a0fe3a927c0da80821a4df095f6050901"
+        }
+      },
+      "signature": "df62d6c53d9e60a91d2aae9412db86abeb3ba73bb9e2152f20cec8ebf7fd32e96d119abd8b96853b48da4e8c37503e6c05d8ed744ca8ac1a78036af0e0bbb40c"
+    },
+    "invoked_at": "2026-10-06T07:26:19.446Z"
+  },
+  "execution": {
+    "kind": "Execution",
+    "execution_id": "027cda73-da22-429d-a773-b57c2f01fa2a",
+    "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+    "attempt_id": "ba792831-a796-444d-aad4-51d5e4576bda",
+    "status": "COMPLETED",
+    "result": {
+      "status": "COMPLETED",
+      "invocation_id": "cad0e59e-2da7-472b-83d3-d684e872d9f2",
+      "bytes": 1424
+    },
+    "completed_at": "2026-10-06T07:26:19.578Z",
+    "owner": "gateway/execution/filesystem-executor.mjs"
+  },
+  "observation": {
+    "kind": "Observation",
+    "observation_id": "a6372a75-02df-4d15-94d0-bdef7cf2da5c",
+    "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+    "execution_id": "027cda73-da22-429d-a773-b57c2f01fa2a",
+    "status": "FAILED",
+    "request": {
+      "body": {
+        "field_id": "152d9e74-c5a9-4ecc-9d86-99f9ff87ec6a",
+        "record_id": "53c8f951-da81-4e74-8a61-f28b5e291947",
+        "issued_at": "2026-10-06T07:26:20.001Z",
+        "expires_at": "2026-10-06T07:36:20.001Z",
+        "type": "observation_request",
+        "source_node": "node-a",
+        "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+        "execution_id": "027cda73-da22-429d-a773-b57c2f01fa2a"
+      },
+      "signature": "b2a737d6970ac2a1b27ee2429ce46c28e7df34e3f4f37062af9c4ec009c4571181e0c26a74ca3285a1ef6804bb1c8ed173ec3daab78c5f2a2d02088a8634330b"
+    },
+    "measurement": {
+      "occurrence_id": "d0c81727-d2e4-4b3f-a34b-fb761680d121",
+      "status": "UNKNOWN",
+      "target": "research-return.json",
+      "observed_at": "2026-10-06T07:26:20.082Z",
+      "reason": "Independent readback failed (ENOENT); execution success does not establish occurrence"
+    },
+    "owner": "gateway/execution/filesystem-executor.mjs"
+  },
+  "latest": {
+    "kind": "Disposition",
+    "decision_id": "c9aae119-cfd3-4a16-8944-1ffd439df5c3",
+    "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+    "passage_hash": "8fffcc5c5bc0900b79908d25397c1afafdb6c92c0b6ba4c3b554bc50973cb9d8",
+    "disposition": "ADMIT",
+    "reason": null,
+    "previous_decision_id": null,
+    "issued_at": "2026-10-06T07:26:18.701Z",
+    "source_authority": "I-1",
+    "interval_id": "I_AB",
+    "formation_ref": "127f98e2-e3fc-4adf-b900-b65cb76f2723",
+    "formation_hash": "dfcde565316db375d9cfac8902cec78988aba6717b43982762361c90f5b0e235",
+    "standing": {
+      "status": "KNOWN",
+      "interval_id": "I_AB",
+      "sourcepoint": "I-1",
+      "constitution_ref": "8810ed9f75d2c84d7d203673be08fc1d350342473e839aa0b638cbe56e2e0e15",
+      "authority_basis": "345a8a6c-37ec-4c2e-abc8-a535ff786f62",
+      "standing": {
+        "outbound": "ELIGIBLE",
+        "inbound": "UNASSESSED"
+      },
+      "lineage_head": "308d72c8903b0665e7f51b84a3732031a0b47752f3cbe4ef8e17fa58e1ba987e"
+    },
+    "native_decision_id": "c9aae119-cfd3-4a16-8944-1ffd439df5c3",
+    "owner": "gateway/local-field/index.mjs"
+  },
+  "latest_time_basis": "HISTORICAL_RECORDED_DECISION",
+  "phase": "COMPLETED",
+  "attempt": {
+    "attempt_id": "ba792831-a796-444d-aad4-51d5e4576bda",
+    "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+    "action": "create_document",
+    "target": "research-return.json",
+    "payload_hash": "ce3eb1c194d2ace5a57a603f4b67b0ead0cc2fc6ee7eda42c55f206f0cfe5900",
+    "attempted_at": "2026-10-06T07:26:19.575Z",
+    "executor_node": "node-b"
+  },
+  "occurrence": {
+    "occurrence_id": "d0c81727-d2e4-4b3f-a34b-fb761680d121",
+    "status": "UNKNOWN",
+    "target": "research-return.json",
+    "observed_at": "2026-10-06T07:26:20.082Z",
+    "reason": "Independent readback failed (ENOENT); execution success does not establish occurrence",
+    "observation_ref": "a6372a75-02df-4d15-94d0-bdef7cf2da5c"
+  },
+  "return": {
+    "return_id": "8c843a68-8276-4489-a751-514badfcc274",
+    "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+    "intent_id": "c02176d3-f3d5-4d09-bf05-21d7e06c53d3",
+    "correlation_id": "4a53a9de-bb42-4ebd-9add-7b278f84147c",
+    "to": "I-1",
+    "status": "RETURNED",
+    "outcome": "FAILED",
+    "receipt_id": "8e518070-ae23-4768-a6a8-2c3be31faa1c",
+    "reason": null,
+    "returned_at": "2026-10-06T07:26:20.336Z",
+    "attestation": {
+      "profile": "rio-gateway-local-field-return-v0.1",
+      "field_id": "152d9e74-c5a9-4ecc-9d86-99f9ff87ec6a",
+      "signer_id": "node-b",
+      "signature": "73b47d6b079501bbcbf5e53b0fada7451cb2fdcd820bbb5a7f63e133811eed329b044d8cb74b44ff572334ac7e45360d8cdda9abda2ae4b716319762e2f23a0a"
+    }
+  },
+  "receipt": {
+    "receipt_id": "8e518070-ae23-4768-a6a8-2c3be31faa1c",
+    "receipt_type": "governed_action",
+    "intent_id": "c02176d3-f3d5-4d09-bf05-21d7e06c53d3",
+    "action": "create_document",
+    "agent_id": "node-a",
+    "authorized_by": "I-1",
+    "timestamp": "2026-10-06T07:26:20.325Z",
+    "hash_chain": {
+      "intent_hash": "b5acc42e7e7c763966a5886dcc6bfa90067e42ac45d1f542235286743ade154d",
+      "governance_hash": "81dbb24e37c95ae2d5bedb505a4c65b8f5ec83e04af440cdc8313999f921272d",
+      "authorization_hash": "5c0e48c05758a533315843d299b1de9f0d8fd79d65d1299271951935867c816d",
+      "execution_hash": "e8c27f4433a275d07e652bf37f198214dd1dc290be0d3e75f48d4dabb8206c11",
+      "receipt_hash": "7a1ae22ea800fd11448f67ee29ccb410d8d77c150d93d8ba01e56cabed53f306"
+    },
+    "verification": {
+      "algorithm": "SHA-256",
+      "chain_length": 5,
+      "chain_order": [
+        "intent_hash",
+        "governance_hash",
+        "authorization_hash",
+        "execution_hash",
+        "receipt_hash"
+      ]
+    },
+    "ingestion": {
+      "source": "local-field",
+      "channel": "signed-passage",
+      "source_message_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+      "timestamp": "2026-10-06T07:26:20.325Z"
+    },
+    "policy": {
+      "evaluated": true,
+      "decision": "ALLOW",
+      "policy_pack": "ica-reference-bounded",
+      "rules_triggered": [
+        "EXACT_HUMAN_GRANT",
+        "POINT_OF_USE_FIDELITY"
+      ]
+    },
+    "local_field_attestation": {
+      "profile": "rio-gateway-local-field-v0.1",
+      "field_id": "152d9e74-c5a9-4ecc-9d86-99f9ff87ec6a",
+      "passage_id": "193b49e3-7aa1-43b2-af18-36cf9deaba28",
+      "signer_id": "node-b",
+      "signature": "e8282c1bf32ca6d41d2efa966285379240814a17b4ee67ec7018229b3e55a02fd06b766aa52531e2125d6bb97d839a2ea902a15be2fc41ba89c2be085f895d0e"
+    }
+  },
+  "actuator": 1,
+  "evidence": null,
+  "settlement": "UNESTABLISHED",
+  "home_mutation": "NOT_INVOKED",
+  "source_authority": "I-1"
+}
