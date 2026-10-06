@@ -58,10 +58,17 @@
   "deployment_performed": false,
   "settlement_supplied": false,
   "publication": {
-    "status": "PENDING",
+    "status": "DRAFT_PUBLISHED",
     "target_base_pr": 210,
     "target_base_head": "8120be864619120cb005b73aa036e51d6bea8cf7",
-    "remote_ci_claimed": false
+    "remote_ci_claimed": false,
+    "draft_pr_url": "https://github.com/bkr1297-RIO/rio-system/pull/211",
+    "snapshot_commit": "506f2e9d0cc2a3df7f14b1f13043549f770a28df",
+    "snapshot_tree": "4660da7206ff86b00c0cb6a444afc9842a837aab",
+    "local_snapshot_commit": "b5f8b24713d0ea0dd331aded539b9ded55a7bd3d",
+    "tree_parity": true,
+    "additional_radar_parent": "0f09d73e7e6a8be615c1917fffadeb3c81d3c043",
+    "transport": "Authorized GitHub connector; exact tree snapshot and exact public dependency parents, not identical local per-task commits"
   },
   "files_added": [
     ".github/workflows/ica-rr-001.yml",

@@ -77,4 +77,6 @@ Recommended next implementation pressure: Brian walks this same closed loop, inc
 
 ## Publication
 
-Publication metadata will be added after the isolated draft and exact tree parity are verified. GitHub publication is explicitly authorized by the user. No deployment, shared-branch merge, constitutional amendment, promotion or settlement is part of this task.
+Published as **[draft #211](https://github.com/bkr1297-RIO/rio-system/pull/211)** on `build/ica-rr-001`, targeting the Return draft branch. Source snapshot `506f2e9d0cc2a3df7f14b1f13043549f770a28df` has exact public Return parent `8120be864619120cb005b73aa036e51d6bea8cf7` and radar parent `0f09d73e7e6a8be615c1917fffadeb3c81d3c043`. The published source tree `4660da7206ff86b00c0cb6a444afc9842a837aab` equals local snapshot `b5f8b24713d0ea0dd331aded539b9ded55a7bd3d` exactly. Connector transport preserves the exact tree and dependency parents; it does not identically recreate local per-task commit SHAs.
+
+This publication-metadata follow-up does not change tested runtime or fixtures. The final draft head/tree is recorded in the PR body after the update, avoiding a self-referential file hash. Remote CI is not claimed by this report; its observed state can be inspected on the draft. GitHub publication was explicitly authorized by the user. No deployment, shared-branch merge, constitutional amendment, promotion or settlement occurred. #208, #209 and #210 remain unmerged drafts.
