@@ -67,7 +67,7 @@ Brian's actual browser and human acceptance walk of this same room, especially U
 
 ## Final review and publication
 
-One fresh review found three Important defects and one Minor banner defect. The author regraded the banner as Important because it falsely described current delegation. All were repaired in one RED→GREEN pass; nine focused regressions and the 403-test suite pass. No re-review or deferred minor is claimed. See [RECONCILIATION-REVIEW.md](RECONCILIATION-REVIEW.md). Exact-tree draft publication follows; remote CI is not asserted before observation.
+One fresh review found three Important defects and one Minor banner defect. The author regraded the banner as Important because it falsely described current delegation. All were repaired in one RED→GREEN pass; nine focused regressions and the 403-test suite pass. No re-review or deferred minor is claimed. See [RECONCILIATION-REVIEW.md](RECONCILIATION-REVIEW.md). Published as [draft #212](https://github.com/bkr1297-RIO/rio-system/pull/212), stacked on unchanged unmerged #211. Published source snapshot `05aff0b36faafe76f6e2b5aae58a207b8e843c56` has tree `f9209c213c60a19f2e149db4990481bda7fe8140`, exactly matching local snapshot `cfe476a1497460fab1415cb4740399e5751c2f9f`. API publication preserves exact trees and the public parent; it does not recreate local per-task commit hashes. This publication-record follow-up changes no tested runtime or fixture. The final head/tree and observed CI are recorded in the PR body, avoiding self-referential file hashes. This report does not assert remote CI success before observation.
 
 The reviewer’s seven declined areas and all final author rulings/costs are preserved in [RECONCILIATION-REVIEW.md](RECONCILIATION-REVIEW.md). The final source fix also keeps partial-history findings and newly available source values truthful through the visible account.
 
@@ -169,3 +169,5 @@ Exact paths relative to the completed #211 local tree. A means added; M means mo
 - A: `gateway/tests/ica-rr-001/reconciliation.test.mjs`
 - A: `gateway/tests/ica-rr-001/research-contracts.test.mjs`
 - A: `gateway/tests/ica-rr-001/types-consumer.mts`
+
+All task gates and author rulings, including their costs, are preserved in [implementation-ledger.txt](../../evidence/ica-reconciliation/implementation-ledger.txt). The nine fixture regressions and final suite provide the fix evidence; no further review round or feature expansion was performed.

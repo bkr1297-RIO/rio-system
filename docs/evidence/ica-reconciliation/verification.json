@@ -119,5 +119,17 @@
     "gateway/local-field/ica/workspace.mjs",
     "gateway/scripts/run-ica-rr-001.mjs",
     "gateway/tests/ica-rr-001/export-evidence.mjs"
-  ]
+  ],
+  "publication": {
+    "draft_pr": 212,
+    "url": "https://github.com/bkr1297-RIO/rio-system/pull/212",
+    "source_snapshot_commit": "05aff0b36faafe76f6e2b5aae58a207b8e843c56",
+    "source_snapshot_tree": "f9209c213c60a19f2e149db4990481bda7fe8140",
+    "source_snapshot_local_commit": "cfe476a1497460fab1415cb4740399e5751c2f9f",
+    "exact_tree_parity": true,
+    "metadata_follow_up_only": true,
+    "merged": false,
+    "deployed": false,
+    "standing_promoted": false
+  }
 }

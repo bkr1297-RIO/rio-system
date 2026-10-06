@@ -32,10 +32,10 @@
 
 **Interfaces:** Produce `investigate(readings, delegation)` and `ResearchDispatch(workspace, account)` with `warrant`, `lease`, `invoke`; findings remain qualified data, dispatch contracts owner-issued capabilities.
 
-- [ ] Write tests: two frame comparison has two ESTABLISHED findings and one UNKNOWN recurrence; foreign source/extra raw fields rejected; copied warrant/lease and wrong office/inhabitant/subject/target rejected without native attempt.
-- [ ] Run `node --test gateway/tests/ica-rr-001/research-contracts.test.mjs`; expected RED for missing contracts.
-- [ ] Implement pure comparison and native commitment adapter with closed contract fields, single-use, expiry, revocation and current delegation checks.
-- [ ] Run the contract suite; expected all PASS. Commit the deliverable.
+- [x] Write tests: two frame comparison has two ESTABLISHED findings and one UNKNOWN recurrence; foreign source/extra raw fields rejected; copied warrant/lease and wrong office/inhabitant/subject/target rejected without native attempt.
+- [x] Run `node --test gateway/tests/ica-rr-001/research-contracts.test.mjs`; expected RED for missing contracts.
+- [x] Implement pure comparison and native commitment adapter with closed contract fields, single-use, expiry, revocation and current delegation checks.
+- [x] Run the contract suite; expected all PASS. Commit the deliverable.
 
 ### Task 2: Journey, honest Research Return and residue
 
@@ -43,10 +43,10 @@
 
 **Interfaces:** Existing `ICAJourney.dispatch` remains closed revisioned human commands. Add `research`, `research_return`, `perimeter`, `lumen` to the owned view. Add declared fixtures for A–G. Keep native Return inspectable separately.
 
-- [ ] Write A–G real-boundary tests plus expiry, replacement, foreign-context, residue retention and attention/native-state equality tests.
-- [ ] Run `node --test gateway/tests/ica-rr-001/reconciliation.test.mjs`; expected RED because view/contracts/fixtures are missing.
-- [ ] Integrate Task 1; implement typed append-only residue and scoped relevance, revocation Return, source-frame contradiction and fresh replacement delegation.
-- [ ] Run both new suites and existing ICA suites; expected PASS. Commit the deliverable.
+- [x] Write A–G real-boundary tests plus expiry, replacement, foreign-context, residue retention and attention/native-state equality tests.
+- [x] Run `node --test gateway/tests/ica-rr-001/reconciliation.test.mjs`; expected RED because view/contracts/fixtures are missing.
+- [x] Integrate Task 1; implement typed append-only residue and scoped relevance, revocation Return, source-frame contradiction and fresh replacement delegation.
+- [x] Run both new suites and existing ICA suites; expected PASS. Commit the deliverable.
 
 ### Task 3: Human surface, evidence and publication
 
@@ -54,9 +54,9 @@
 
 **Interfaces:** Existing authenticated native forms expose only legal actions; optional details carry machine basis. Perimeter and LUMEN never issue authorization.
 
-- [ ] Write native form journeys asserting visible research findings, uncertainty, attention changes, fixture-specific HOLD/DENY explanations and replacement lineage.
-- [ ] Run surface tests; expected RED for absent human controls/claims.
-- [ ] Render Research Return, Perimeter, LUMEN and inspection depth in the same page. Extend exporter with A–G captures.
-- [ ] Run new and inherited suites, schema/type checks, protected-owner comparison, native-form captures and diff checks; record all gaps. Commit.
-- [ ] Obtain one fresh read-only whole-change review. Fix Important/Critical findings in one RED→GREEN author pass; record any rulings/minors.
-- [ ] Publish a separate draft stacked on exact #211 head with exact tree parity; verify GitHub checks, report outcomes and stop.
+- [x] Write native form journeys asserting visible research findings, uncertainty, attention changes, fixture-specific HOLD/DENY explanations and replacement lineage.
+- [x] Run surface tests; expected RED for absent human controls/claims.
+- [x] Render Research Return, Perimeter, LUMEN and inspection depth in the same page. Extend exporter with A–G captures.
+- [x] Run new and inherited suites, schema/type checks, protected-owner comparison, native-form captures and diff checks; record all gaps. Commit.
+- [x] Obtain one fresh read-only whole-change review. Fix Important/Critical findings in one RED→GREEN author pass; record any rulings/minors.
+- [x] Publish a separate draft stacked on exact #211 head with exact tree parity; verify GitHub checks, report outcomes and stop.
