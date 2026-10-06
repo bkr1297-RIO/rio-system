@@ -1,0 +1,60 @@
+TAP version 13
+# [RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+# Subtest: 100 pull readings preserve real standing, durable tables, Calendar data, Git refs and world files
+ok 1 - 100 pull readings preserve real standing, durable tables, Calendar data, Git refs and world files
+  ---
+  duration_ms: 1503.41902
+  type: 'test'
+  ...
+# {"proof":"ACTUAL_NATIVE_STATE_COMPARISON","repetitions":100,"new_dispositions":0,"ledger_rows_before":24,"ledger_rows_after":24,"durable_tables_equal":true,"table_digests_before":{"records":"sha256:1e127cf6abf949c4402d880a1842403c400c4cfb6adfa8423a34202d88717402","state":"sha256:2b5fc959ab98c61a7c1a970f3284029ddb9c5bb1c114050aa01f436327881c16","nonces":"sha256:da0a58ea79130112ed66a391495e523d5a04dc442973574d4e25d6ba75eef63d","ledger":"sha256:e6a78a42b92353d81ec807dc9862e98d23a648fd29270e8143f4d8e4b5f86ddd"},"table_digests_after":{"records":"sha256:1e127cf6abf949c4402d880a1842403c400c4cfb6adfa8423a34202d88717402","state":"sha256:2b5fc959ab98c61a7c1a970f3284029ddb9c5bb1c114050aa01f436327881c16","nonces":"sha256:da0a58ea79130112ed66a391495e523d5a04dc442973574d4e25d6ba75eef63d","ledger":"sha256:e6a78a42b92353d81ec807dc9862e98d23a648fd29270e8143f4d8e4b5f86ddd"},"standing_equal":true,"calendar_bytes_equal":true,"git_refs_and_files_equal":true,"execution_authorities":0,"outgoing":0,"attempts":0,"artifact_files_before":0,"artifact_files_after":0}
+# Subtest: core runs with filesystem writes and subprocesses denied and creates no timer resources
+ok 2 - core runs with filesystem writes and subprocesses denied and creates no timer resources
+  ---
+  duration_ms: 100.544201
+  type: 'test'
+  ...
+# Subtest: received machine readings reject raw additions and invented dispositions before display
+ok 3 - received machine readings reject raw additions and invented dispositions before display
+  ---
+  duration_ms: 4.086374
+  type: 'test'
+  ...
+# Subtest: hidden raw fields in signal arrays are rejected without reading them
+ok 4 - hidden raw fields in signal arrays are rejected without reading them
+  ---
+  duration_ms: 4.121657
+  type: 'test'
+  ...
+# Subtest: boxed metrics and coercion hooks cannot carry raw content into a Fieldoscopy reading
+ok 5 - boxed metrics and coercion hooks cannot carry raw content into a Fieldoscopy reading
+  ---
+  duration_ms: 1.502547
+  type: 'test'
+  ...
+# Subtest: all received reading arrays reject hidden fields and executable prototypes before projection
+ok 6 - all received reading arrays reject hidden fields and executable prototypes before projection
+  ---
+  duration_ms: 11.651381
+  type: 'test'
+  ...
+# Subtest: semantically equal windows align despite source object property order
+ok 7 - semantically equal windows align despite source object property order
+  ---
+  duration_ms: 5.783295
+  type: 'test'
+  ...
+# Subtest: pull runner emits distinct machine artifact and four-section HTML on explicit request only
+ok 8 - pull runner emits distinct machine artifact and four-section HTML on explicit request only
+  ---
+  duration_ms: 200.239833
+  type: 'test'
+  ...
+1..8
+# tests 8
+# suites 0
+# pass 8
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 2006.745133

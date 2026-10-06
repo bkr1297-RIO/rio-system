@@ -1,0 +1,8 @@
+not ok 1 - malformed Unicode entry keys cannot disclose the private view or control forms
+not ok 2 - malformed Unicode session cookies cannot disclose the private account
+not ok 3 - generic pre-authentication URL errors never render an authenticated account
+not ok 4 - actual missing readback returns a truthful unresolved account through the visible forms
+not ok 5 - actual altered readback returns a truthful unresolved account through the visible forms
+# tests 5
+# pass 0
+# fail 5

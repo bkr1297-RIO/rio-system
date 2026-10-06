@@ -1,0 +1,108 @@
+{
+  "specimen": "cognitive-meteorology.f0.1",
+  "status": "SCOPED_CHECKS_PASSED_WITH_RECORDED_LIMITS",
+  "verified_at": "2026-10-06T05:24:00.354589+00:00",
+  "base_commit": "5df28c0e4262616bf560787a3a365583370351da",
+  "tested_code_commit": "ff788ce824c3fd9de2ce7be647e37c340766ff71",
+  "base_pr": "https://github.com/bkr1297-RIO/rio-system/pull/208",
+  "branch": "build/cognitive-meteorology-f0.1",
+  "new_node_tests": {
+    "passed": 31,
+    "failed": 0,
+    "skipped": 0
+  },
+  "inherited_node_tests": {
+    "passed": 271,
+    "failed": 0,
+    "skipped": 0
+  },
+  "combined_node_tests": {
+    "passed": 302,
+    "failed": 0,
+    "skipped": 0
+  },
+  "schema_tests": {
+    "passed": 3,
+    "failed": 0
+  },
+  "total_scoped_tests": 305,
+  "additional_schema_validations": {
+    "comparative_readings": 12,
+    "primary_readings": 1
+  },
+  "zero_effect": {
+    "proof": "ACTUAL_NATIVE_STATE_COMPARISON",
+    "repetitions": 100,
+    "new_dispositions": 0,
+    "ledger_rows_before": 24,
+    "ledger_rows_after": 24,
+    "durable_tables_equal": true,
+    "table_digests_before": {
+      "records": "sha256:1e127cf6abf949c4402d880a1842403c400c4cfb6adfa8423a34202d88717402",
+      "state": "sha256:2b5fc959ab98c61a7c1a970f3284029ddb9c5bb1c114050aa01f436327881c16",
+      "nonces": "sha256:da0a58ea79130112ed66a391495e523d5a04dc442973574d4e25d6ba75eef63d",
+      "ledger": "sha256:e6a78a42b92353d81ec807dc9862e98d23a648fd29270e8143f4d8e4b5f86ddd"
+    },
+    "table_digests_after": {
+      "records": "sha256:1e127cf6abf949c4402d880a1842403c400c4cfb6adfa8423a34202d88717402",
+      "state": "sha256:2b5fc959ab98c61a7c1a970f3284029ddb9c5bb1c114050aa01f436327881c16",
+      "nonces": "sha256:da0a58ea79130112ed66a391495e523d5a04dc442973574d4e25d6ba75eef63d",
+      "ledger": "sha256:e6a78a42b92353d81ec807dc9862e98d23a648fd29270e8143f4d8e4b5f86ddd"
+    },
+    "standing_equal": true,
+    "calendar_bytes_equal": true,
+    "git_refs_and_files_equal": true,
+    "execution_authorities": 0,
+    "outgoing": 0,
+    "attempts": 0,
+    "artifact_files_before": 0,
+    "artifact_files_after": 0
+  },
+  "syntax_and_code_document_diff_checks": "PASSED",
+  "wider_checks": [
+    {
+      "command": "cd gateway && npm test",
+      "status": "FAILED_SETUP",
+      "failures": 13,
+      "reason": "ECONNREFUSED localhost:4401; predecessor recorded same gap"
+    },
+    {
+      "command": "npm run typecheck",
+      "status": "UNAVAILABLE_SETUP",
+      "reason": "tsc: not found; predecessor recorded same gap"
+    }
+  ],
+  "review": {
+    "reviewed_head": "a422cdc1880c904b46ec11f6f4cdec8065ff133c",
+    "important_boundary_findings": 2,
+    "window_order_finding_regraded_important": true,
+    "all_findings_reproduced_red_then_green": true,
+    "fix_commit": "ff788ce824c3fd9de2ce7be647e37c340766ff71",
+    "fresh_rereview_claimed": false,
+    "deferred_minor_findings": []
+  },
+  "pressure_differential_conclusion": "Relational feature distinct from candidate regime in this implementation; permanent regime/operator ontology remains open.",
+  "production_dependencies_added": 0,
+  "source_domains": [
+    "CALENDAR",
+    "GIT"
+  ],
+  "live_connectors_installed": false,
+  "constitutional_architecture_modified": false,
+  "merge_performed": false,
+  "deployment_performed": false,
+  "raw_source_content_in_reading": false,
+  "publication": {
+    "status": "DRAFT_PUBLISHED",
+    "destination": "https://github.com/bkr1297-RIO/rio-system",
+    "visibility": "public",
+    "owner_matches_authenticated_account": true,
+    "reason": "User explicitly approved public publication; GitHub connector used because shell network/escalation unavailable.",
+    "remote_branch_created": true,
+    "draft_pr_created": true,
+    "remote_ci_claimed": false,
+    "draft_pr_url": "https://github.com/bkr1297-RIO/rio-system/pull/209",
+    "snapshot_commit": "1428bed4d5dd9069f9384ddc3ffb8fecc8b3e67a",
+    "snapshot_tree": "5bd16acb9dc7d3cfc1b6ef2295bc115fc23826cc"
+  }
+}

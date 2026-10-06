@@ -1,0 +1,29 @@
+name: ICA RR 001
+on:
+  pull_request:
+    paths: ['gateway/local-field/ica/**', 'gateway/tests/ica-rr-001/**', 'gateway/scripts/run-ica-rr-001.mjs', 'gateway/local-field/meteorology/**', 'gateway/local-field/consequence/**', 'gateway/package*.json', '.github/workflows/ica-rr-001.yml']
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  inhabited-loop:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: gateway/package-lock.json
+      - run: npm ci
+        working-directory: gateway
+      - run: npm run test:ica
+        working-directory: gateway
+      - run: npm run test:meteorology
+        working-directory: gateway
+      - run: npm run test:consequence
+        working-directory: gateway
+      - run: npm run test:waist
+        working-directory: gateway
+      - run: npm run field:ica:evidence -- /tmp/ica-evidence
+        working-directory: gateway

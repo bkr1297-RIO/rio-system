@@ -1,0 +1,462 @@
+{
+  "specimen": "ICA-RR-001",
+  "transport": "Authenticated native HTTP forms",
+  "browser_engine_used": false,
+  "human_acceptance_claimed": false,
+  "source": "Labeled timing-only synthetic replay",
+  "results": [
+    {
+      "name": "normal",
+      "fixture": "normal",
+      "fixture_fault": null,
+      "phase": "RETURNED",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "AUTHORIZED",
+          "revision": 4
+        },
+        {
+          "human_control": "start",
+          "phase": "ATTEMPTED",
+          "revision": 5
+        },
+        {
+          "human_control": "return",
+          "phase": "RETURNED",
+          "revision": 6
+        },
+        {
+          "human_control": "keep",
+          "phase": "RETURNED",
+          "revision": 7
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "ADMIT",
+      "native_attempt": "1dc6aaae-9649-4fe9-961d-8cefabdf41fe",
+      "occurrence_knowledge": "KNOWN_OCCURRED",
+      "return_completeness": "COMPLETE",
+      "outcome": "ACHIEVED_OBJECTIVE",
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    },
+    {
+      "name": "unknown",
+      "fixture": "unknown",
+      "fixture_fault": null,
+      "phase": "RETURNED",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "AUTHORIZED",
+          "revision": 4
+        },
+        {
+          "human_control": "start",
+          "phase": "ATTEMPTED",
+          "revision": 5
+        },
+        {
+          "human_control": "return",
+          "phase": "RETURNED",
+          "revision": 6
+        },
+        {
+          "human_control": "keep",
+          "phase": "RETURNED",
+          "revision": 7
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "ADMIT",
+      "native_attempt": "6934b275-470b-4c32-8ece-983eda81660f",
+      "occurrence_knowledge": "UNKNOWN",
+      "return_completeness": "COMPLETE",
+      "outcome": "UNRESOLVED",
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    },
+    {
+      "name": "hold",
+      "fixture": "hold",
+      "fixture_fault": null,
+      "phase": "HOLD",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "HOLD",
+          "revision": 4
+        },
+        {
+          "human_control": "keep",
+          "phase": "HOLD",
+          "revision": 5
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "HOLD",
+      "native_attempt": null,
+      "occurrence_knowledge": null,
+      "return_completeness": null,
+      "outcome": null,
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    },
+    {
+      "name": "deny",
+      "fixture": "deny",
+      "fixture_fault": null,
+      "phase": "DENY",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "DENY",
+          "revision": 4
+        },
+        {
+          "human_control": "keep",
+          "phase": "DENY",
+          "revision": 5
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "DENY",
+      "native_attempt": null,
+      "occurrence_knowledge": null,
+      "return_completeness": null,
+      "outcome": null,
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    },
+    {
+      "name": "partial",
+      "fixture": "partial",
+      "fixture_fault": null,
+      "phase": "PARTIAL_RETURN",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "AUTHORIZED",
+          "revision": 4
+        },
+        {
+          "human_control": "start",
+          "phase": "ATTEMPTED",
+          "revision": 5
+        },
+        {
+          "human_control": "return",
+          "phase": "PARTIAL_RETURN",
+          "revision": 6
+        },
+        {
+          "human_control": "keep",
+          "phase": "PARTIAL_RETURN",
+          "revision": 7
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "ADMIT",
+      "native_attempt": "922cdfb1-bb41-4e91-b0f1-fdd946ab311f",
+      "occurrence_knowledge": "KNOWN_OCCURRED",
+      "return_completeness": "PARTIAL",
+      "outcome": "ACHIEVED_OBJECTIVE",
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    },
+    {
+      "name": "revoke-before-attempt",
+      "fixture": "normal",
+      "fixture_fault": null,
+      "phase": "REVOKED",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "AUTHORIZED",
+          "revision": 4
+        },
+        {
+          "human_control": "revoke",
+          "phase": "REVOKED",
+          "revision": 5
+        },
+        {
+          "human_control": "acknowledge",
+          "phase": "REVOKED",
+          "revision": 6
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "ADMIT",
+      "native_attempt": null,
+      "occurrence_knowledge": "UNKNOWN",
+      "return_completeness": null,
+      "outcome": "UNRESOLVED",
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    },
+    {
+      "name": "revoke-after-return",
+      "fixture": "normal",
+      "fixture_fault": null,
+      "phase": "REVOKED",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "AUTHORIZED",
+          "revision": 4
+        },
+        {
+          "human_control": "start",
+          "phase": "ATTEMPTED",
+          "revision": 5
+        },
+        {
+          "human_control": "return",
+          "phase": "RETURNED",
+          "revision": 6
+        },
+        {
+          "human_control": "revoke",
+          "phase": "REVOKED",
+          "revision": 7
+        },
+        {
+          "human_control": "acknowledge",
+          "phase": "REVOKED",
+          "revision": 8
+        },
+        {
+          "human_control": "keep",
+          "phase": "REVOKED",
+          "revision": 9
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "ADMIT",
+      "native_attempt": "ed532e9a-9b9a-4ac2-ace0-fae1fb432891",
+      "occurrence_knowledge": "KNOWN_OCCURRED",
+      "return_completeness": "COMPLETE",
+      "outcome": "ACHIEVED_OBJECTIVE",
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    },
+    {
+      "name": "missing-readback",
+      "fixture": "normal",
+      "fixture_fault": "missing-readback",
+      "phase": "RETURNED",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "AUTHORIZED",
+          "revision": 4
+        },
+        {
+          "human_control": "start",
+          "phase": "ATTEMPTED",
+          "revision": 5
+        },
+        {
+          "human_control": "return",
+          "phase": "RETURNED",
+          "revision": 6
+        },
+        {
+          "human_control": "keep",
+          "phase": "RETURNED",
+          "revision": 7
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "ADMIT",
+      "native_attempt": "ba792831-a796-444d-aad4-51d5e4576bda",
+      "occurrence_knowledge": "UNKNOWN",
+      "return_completeness": "COMPLETE",
+      "outcome": "UNRESOLVED",
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    },
+    {
+      "name": "altered-readback",
+      "fixture": "normal",
+      "fixture_fault": "altered-readback",
+      "phase": "RETURNED",
+      "steps": [
+        {
+          "human_control": "refresh",
+          "phase": "OBSERVATORY",
+          "revision": 1
+        },
+        {
+          "human_control": "what",
+          "phase": "OBSERVATORY",
+          "revision": 2
+        },
+        {
+          "human_control": "why",
+          "phase": "OBSERVATORY",
+          "revision": 3
+        },
+        {
+          "human_control": "delegate",
+          "phase": "AUTHORIZED",
+          "revision": 4
+        },
+        {
+          "human_control": "start",
+          "phase": "ATTEMPTED",
+          "revision": 5
+        },
+        {
+          "human_control": "return",
+          "phase": "RETURNED",
+          "revision": 6
+        },
+        {
+          "human_control": "keep",
+          "phase": "RETURNED",
+          "revision": 7
+        }
+      ],
+      "reading": "PRESSURE_DIFFERENTIAL",
+      "native_disposition": "ADMIT",
+      "native_attempt": "f5bd0137-b0ad-4ba6-a0ca-8fab57b0cbb6",
+      "occurrence_knowledge": "UNKNOWN",
+      "return_completeness": "COMPLETE",
+      "outcome": "UNRESOLVED",
+      "settlement_supplied": false,
+      "all_eight_answers_present": true,
+      "passed": true
+    }
+  ]
+}

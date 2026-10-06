@@ -1,0 +1,356 @@
+✖ required fixture detects rising production against worsening review waits and tightening time (9.866238ms)
+✖ comparative fixture supports HIGH_PRESSURE without authorizing action (0.884432ms)
+✖ comparative fixture supports LOW_PRESSURE without authorizing action (1.804147ms)
+✖ comparative fixture supports COLD_FRONT without authorizing action (0.417152ms)
+✖ comparative fixture supports WARM_FRONT without authorizing action (0.661933ms)
+✖ comparative fixture supports WIND_SHEAR without authorizing action (0.739438ms)
+✖ comparative fixture supports INVERSION without authorizing action (0.672161ms)
+✖ comparative fixture supports CLEAR_HORIZON without authorizing action (0.706478ms)
+✖ scalar pressure difference alone does not imply the pressure-differential regime (0.748043ms)
+✖ empty and single-domain observations do not invent a clear horizon (0.402413ms)
+✖ stale and differently aligned windows retain uncertainty rather than a cross-domain forecast (1.182644ms)
+✖ duplicate signals, raw content, future observations and getter carriers are rejected (1.824307ms)
+✖ same attributable inputs have a stable reading identity regardless of array order (3.710062ms)
+✖ Metascope is a separate four-section projection linked to the reading (0.380572ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 0
+ℹ fail 14
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 139.721822
+
+✖ failing tests:
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:21:1
+✖ required fixture detects rising production against worsening review waits and tightening time (9.866238ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:22:53)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:34:41
+✖ comparative fixture supports HIGH_PRESSURE without authorizing action (0.884432ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:35:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:34:41
+✖ comparative fixture supports LOW_PRESSURE without authorizing action (1.804147ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:35:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:34:41
+✖ comparative fixture supports COLD_FRONT without authorizing action (0.417152ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:35:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:34:41
+✖ comparative fixture supports WARM_FRONT without authorizing action (0.661933ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:35:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:34:41
+✖ comparative fixture supports WIND_SHEAR without authorizing action (0.739438ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:35:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:34:41
+✖ comparative fixture supports INVERSION without authorizing action (0.672161ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:35:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:34:41
+✖ comparative fixture supports CLEAR_HORIZON without authorizing action (0.706478ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:35:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:39:1
+✖ scalar pressure difference alone does not imply the pressure-differential regime (0.748043ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:42:19)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:46:1
+✖ empty and single-domain observations do not invent a clear horizon (0.402413ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:47:17)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:52:1
+✖ stale and differently aligned windows retain uncertainty rather than a cross-domain forecast (1.182644ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:54:17)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:63:1
+✖ duplicate signals, raw content, future observations and getter carriers are rejected (1.824307ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /SIGNAL_DUPLICATE/. Input:
+  
+  'AssertionError [ERR_ASSERTION]: observational evaluator must exist\n' +
+    '+ actual - expected\n' +
+    '\n' +
+    "+ 'undefined'\n" +
+    "- 'function'\n"
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:65:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: AssertionError [ERR_ASSERTION]: observational evaluator must exist
+    + actual - expected
+    
+    + 'undefined'
+    - 'function'
+    
+        at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+        at file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:65:23
+        at getActual (node:assert:611:5)
+        at strict.throws (node:assert:759:24)
+        at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:65:10)
+        at async Test.run (node:internal/test_runner/test:1389:7)
+        at async Test.processPendingSubtests (node:internal/test_runner/test:960:7),
+    expected: /SIGNAL_DUPLICATE/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:73:1
+✖ same attributable inputs have a stable reading identity regardless of array order (3.710062ms)
+  AssertionError [ERR_ASSERTION]: observational evaluator must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at evaluate (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:7:40)
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:75:13)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/reading.test.mjs:78:1
+✖ Metascope is a separate four-section projection linked to the reading (0.380572ms)
+  AssertionError [ERR_ASSERTION]: separate projection must exist
+  + actual - expected
+  
+  + 'undefined'
+  - 'function'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/reading.test.mjs:79:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 'undefined',
+    expected: 'function',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

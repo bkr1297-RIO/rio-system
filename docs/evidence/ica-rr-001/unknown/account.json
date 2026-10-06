@@ -1,0 +1,2689 @@
+{
+  "kind": "ICAView",
+  "journey_id": "be0fc37d-06e7-4862-a2b7-8b9683e93e52",
+  "revision": 7,
+  "phase": "RETURNED",
+  "reference_fixture": "unknown",
+  "source_contract": "Timing-only synthetic Calendar/Git replay; no live source connection",
+  "place": {
+    "kind": "Place",
+    "name": "Observatory"
+  },
+  "office": {
+    "kind": "Office",
+    "name": "Research"
+  },
+  "inhabitant": {
+    "kind": "Inhabitant",
+    "name": "Local reference human",
+    "identity_proof": "NOT_PRODUCTION_AUTHENTICATION"
+  },
+  "reading": {
+    "reading_id": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+    "timestamp": "2026-10-06T00:00:00.000Z",
+    "atmospheric_regime": "PRESSURE_DIFFERENTIAL",
+    "candidate_regimes": [
+      "PRESSURE_DIFFERENTIAL",
+      "COLD_FRONT",
+      "HIGH_PRESSURE"
+    ],
+    "signal_manifest": [
+      {
+        "signal_type": "available_time_margin",
+        "signal_id": "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44",
+        "magnitude": 0.12,
+        "direction": "FALLING",
+        "rate_of_change": -0.015833333333333335,
+        "observation_window": {
+          "start": "2026-10-05T00:00:00.000Z",
+          "end": "2026-10-06T00:00:00.000Z"
+        },
+        "comparison_window": {
+          "start": "2026-10-04T00:00:00.000Z",
+          "end": "2026-10-05T00:00:00.000Z"
+        },
+        "source_domain": "CALENDAR",
+        "extractor_id": "calendar.edge.f0.1",
+        "extractor_version": "0.1.0",
+        "timestamp": "2026-10-06T00:00:00.000Z"
+      },
+      {
+        "signal_type": "buffer_compression",
+        "signal_id": "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d",
+        "magnitude": 1,
+        "direction": "RISING",
+        "rate_of_change": 0.041666666666666664,
+        "observation_window": {
+          "start": "2026-10-05T00:00:00.000Z",
+          "end": "2026-10-06T00:00:00.000Z"
+        },
+        "comparison_window": {
+          "start": "2026-10-04T00:00:00.000Z",
+          "end": "2026-10-05T00:00:00.000Z"
+        },
+        "source_domain": "CALENDAR",
+        "extractor_id": "calendar.edge.f0.1",
+        "extractor_version": "0.1.0",
+        "timestamp": "2026-10-06T00:00:00.000Z"
+      },
+      {
+        "signal_type": "commit_velocity",
+        "signal_id": "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+        "magnitude": 1,
+        "direction": "RISING",
+        "rate_of_change": 0.03125,
+        "observation_window": {
+          "start": "2026-10-05T00:00:00.000Z",
+          "end": "2026-10-06T00:00:00.000Z"
+        },
+        "comparison_window": {
+          "start": "2026-10-04T00:00:00.000Z",
+          "end": "2026-10-05T00:00:00.000Z"
+        },
+        "source_domain": "GIT",
+        "extractor_id": "git.edge.f0.1",
+        "extractor_version": "0.1.0",
+        "timestamp": "2026-10-06T00:00:00.000Z"
+      },
+      {
+        "signal_type": "meeting_density",
+        "signal_id": "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd",
+        "magnitude": 0.88,
+        "direction": "RISING",
+        "rate_of_change": 0.015833333333333335,
+        "observation_window": {
+          "start": "2026-10-05T00:00:00.000Z",
+          "end": "2026-10-06T00:00:00.000Z"
+        },
+        "comparison_window": {
+          "start": "2026-10-04T00:00:00.000Z",
+          "end": "2026-10-05T00:00:00.000Z"
+        },
+        "source_domain": "CALENDAR",
+        "extractor_id": "calendar.edge.f0.1",
+        "extractor_version": "0.1.0",
+        "timestamp": "2026-10-06T00:00:00.000Z"
+      },
+      {
+        "signal_type": "open_pr_age",
+        "signal_id": "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def",
+        "magnitude": 0.5,
+        "direction": "RISING",
+        "rate_of_change": 0.014880952380952382,
+        "observation_window": {
+          "start": "2026-10-05T00:00:00.000Z",
+          "end": "2026-10-06T00:00:00.000Z"
+        },
+        "comparison_window": {
+          "start": "2026-10-04T00:00:00.000Z",
+          "end": "2026-10-05T00:00:00.000Z"
+        },
+        "source_domain": "GIT",
+        "extractor_id": "git.edge.f0.1",
+        "extractor_version": "0.1.0",
+        "timestamp": "2026-10-06T00:00:00.000Z"
+      },
+      {
+        "signal_type": "review_latency",
+        "signal_id": "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+        "magnitude": 0.875,
+        "direction": "RISING",
+        "rate_of_change": 0.033854166666666664,
+        "observation_window": {
+          "start": "2026-10-05T00:00:00.000Z",
+          "end": "2026-10-06T00:00:00.000Z"
+        },
+        "comparison_window": {
+          "start": "2026-10-04T00:00:00.000Z",
+          "end": "2026-10-05T00:00:00.000Z"
+        },
+        "source_domain": "GIT",
+        "extractor_id": "git.edge.f0.1",
+        "extractor_version": "0.1.0",
+        "timestamp": "2026-10-06T00:00:00.000Z"
+      }
+    ],
+    "visibility": "ILLUMINATED",
+    "confidence": {
+      "basis": "UNCALIBRATED_RULE_SUPPORT",
+      "level": "SUPPORTED"
+    },
+    "current_conditions": [
+      {
+        "condition_code": "TIME_TIGHT",
+        "signal_refs": [
+          "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+        ]
+      },
+      {
+        "condition_code": "BUFFERS_COMPRESSED",
+        "signal_refs": [
+          "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d"
+        ]
+      },
+      {
+        "condition_code": "PRODUCTION_RISING",
+        "signal_refs": [
+          "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+        ]
+      },
+      {
+        "condition_code": "MEETINGS_DENSE",
+        "signal_refs": [
+          "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd"
+        ]
+      },
+      {
+        "condition_code": "PRS_AGING",
+        "signal_refs": [
+          "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def"
+        ]
+      },
+      {
+        "condition_code": "REVIEW_WAITS_LONG",
+        "signal_refs": [
+          "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+        ]
+      }
+    ],
+    "primary_drivers": [
+      {
+        "condition_code": "PRODUCTION_RISING",
+        "signal_refs": [
+          "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+        ]
+      },
+      {
+        "condition_code": "REVIEW_WAITS_LONG",
+        "signal_refs": [
+          "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+        ]
+      },
+      {
+        "condition_code": "TIME_TIGHT",
+        "signal_refs": [
+          "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+        ]
+      }
+    ],
+    "forming_fronts": [
+      {
+        "condition_code": "POSSIBLE_REVIEW_BOTTLENECK",
+        "signal_refs": [
+          "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+          "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+          "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+        ],
+        "horizon_hours": [
+          24,
+          48
+        ],
+        "status": "CANDIDATE"
+      }
+    ],
+    "unresolved_remainder": [
+      "UNCALIBRATED_FORECAST",
+      "REVIEW_LATENCY_IS_CAPACITY_PROXY",
+      "PENDING_REVIEWS_ARE_CENSORED",
+      "NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL",
+      "CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT",
+      "PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN"
+    ],
+    "evaluation": {
+      "evaluator_id": "cognitive-meteorology.f0.1",
+      "evaluator_version": "0.1.0",
+      "matched_rules": [
+        "f0.1:cold_front",
+        "f0.1:high_pressure",
+        "f0.1:pressure_differential"
+      ],
+      "pressure_differential": 0.875,
+      "pressure_differential_role": "EXPERIMENTAL_RELATIONAL_FEATURE"
+    }
+  },
+  "change": {
+    "previous_reading_ref": "sha256:4713e000bb86296a7b90c9e633f30a6d5505ba1b52ca99aec44a71430da28226",
+    "current_reading_ref": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+    "metrics": [
+      {
+        "metric": "available_time_margin",
+        "before": 0.5,
+        "now": 0.12,
+        "direction": "FALLING",
+        "signal_ref": "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+      },
+      {
+        "metric": "buffer_compression",
+        "before": 0,
+        "now": 1,
+        "direction": "RISING",
+        "signal_ref": "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d"
+      },
+      {
+        "metric": "commit_velocity",
+        "before": 0.25,
+        "now": 1,
+        "direction": "RISING",
+        "signal_ref": "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+      },
+      {
+        "metric": "meeting_density",
+        "before": 0.5,
+        "now": 0.88,
+        "direction": "RISING",
+        "signal_ref": "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd"
+      },
+      {
+        "metric": "open_pr_age",
+        "before": 0.14285714285714285,
+        "now": 0.5,
+        "direction": "RISING",
+        "signal_ref": "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def"
+      },
+      {
+        "metric": "review_latency",
+        "before": 0.0625,
+        "now": 0.875,
+        "direction": "RISING",
+        "signal_ref": "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+      }
+    ]
+  },
+  "instrument": {
+    "kind": "Instrument",
+    "name": "Metascope",
+    "projection_id": "sha256:76fc0fc2acafc44a9b1b7ef86945e43efef2b47e97f0ca5cc4ac486bb7c68aa8",
+    "reading_ref": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+    "timestamp": "2026-10-06T00:00:00.000Z",
+    "sections": [
+      {
+        "title": "Current Conditions",
+        "lines": [
+          "Available calendar time is tight.",
+          "Meeting buffers are compressed.",
+          "Development activity is rising.",
+          "Meetings occupy much of the working window.",
+          "Open pull requests are aging.",
+          "Review waits are long."
+        ]
+      },
+      {
+        "title": "What’s Driving It",
+        "lines": [
+          "Development activity is rising.",
+          "Review waits are long.",
+          "Available calendar time is tight."
+        ]
+      },
+      {
+        "title": "What’s Forming",
+        "lines": [
+          "Development activity is rising while review waits lengthen and calendar space tightens. A possible review bottleneck may be forming over the next 24–48 hours."
+        ]
+      },
+      {
+        "title": "What We Can’t See Yet",
+        "lines": [
+          "The near-term outlook has not yet been checked against real outcomes.",
+          "Review waits suggest capacity; they do not measure actual reviewer availability.",
+          "A pull request still waiting for review may ultimately wait longer.",
+          "Task size and review complexity are outside this radar.",
+          "Free calendar time does not tell us whether someone has committed to review.",
+          "How pressure differential relates to the other weather patterns remains open."
+        ]
+      }
+    ]
+  },
+  "program": {
+    "kind": "Program",
+    "program_id": "bounded-reading-investigation.f0.1",
+    "name": "Bounded Research",
+    "max_effects": 1,
+    "max_bytes": 4096,
+    "input": "One bounded FieldoscopyReading",
+    "authorization_supplied": false
+  },
+  "show_what": true,
+  "show_why": true,
+  "delegation": {
+    "kind": "Delegation",
+    "delegation_id": "e4152a09-16f0-4690-b315-a7b7059375a0",
+    "human_choice_ref": "ff8b7600-3cc3-4cfc-babb-0cc36c3c24c1",
+    "reading_ref": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+    "office": "Research",
+    "program": "bounded-reading-investigation.f0.1",
+    "instrument": "Metascope",
+    "grant_ref": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+    "scope": {
+      "source_domains": [
+        "CALENDAR",
+        "GIT"
+      ],
+      "input": "One bounded FieldoscopyReading",
+      "action": "create_document",
+      "target": "research-return.json",
+      "max_bytes": 4096,
+      "max_effects": 1,
+      "further_delegation": false,
+      "objective": "Store and read back this bounded research note; no claim that its forecast is true"
+    }
+  },
+  "disposition": {
+    "kind": "Disposition",
+    "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+    "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+    "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+    "disposition": "ADMIT",
+    "reason": null,
+    "previous_decision_id": null,
+    "issued_at": "2026-10-06T07:26:04.532Z",
+    "source_authority": "I-1",
+    "interval_id": "I_AB",
+    "formation_ref": "97858bb3-b4b3-47be-b4eb-20776813349c",
+    "formation_hash": "1ed7d9a983f54f7943fea94919d57223b1209b75f15b55d0a0ae90c3e95c77a4",
+    "standing": {
+      "status": "KNOWN",
+      "interval_id": "I_AB",
+      "sourcepoint": "I-1",
+      "constitution_ref": "a7a9ca1e453574b95330d7c8654e5868681ea29575a573bc7e3f11441de4cb4f",
+      "authority_basis": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+      "standing": {
+        "outbound": "ELIGIBLE",
+        "inbound": "UNASSESSED"
+      },
+      "lineage_head": "9f9d7caf7d3535392ffdc15ece2f8e127ad895dff31d55e85b5c5b9fa77de9ae"
+    },
+    "native_decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+    "owner": "gateway/local-field/index.mjs"
+  },
+  "consequence": {
+    "kind": "ConsequenceProjection",
+    "projection_id": "593cdd0c-36e1-4ce7-8126-558b549c8c1c",
+    "snapshot_ref": "75f7035d-e462-4288-b7d4-8e682a2ff771",
+    "claims": [
+      {
+        "code": "AUTHORIZED",
+        "text": "Permission was recorded for a root-signed invocation commitment. Execution requires a separate request and current authority checks.",
+        "basis_ref": "Permission:e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+        "basis_kind": "Permission",
+        "basis_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+        "contract": "Historical ADMIT and exact passage basis authorize ISSUE_INVOCATION_COMMITMENT, not execution."
+      },
+      {
+        "code": "ATTEMPTED",
+        "text": "An attributable execution attempt was recorded.",
+        "basis_ref": "Attempt:6934b275-470b-4c32-8ece-983eda81660f",
+        "basis_kind": "Attempt",
+        "basis_id": "6934b275-470b-4c32-8ece-983eda81660f",
+        "contract": "Native durable attempt; an attempt does not establish occurrence."
+      },
+      {
+        "code": "EXECUTOR_RECEIPT",
+        "text": "The executor reported completed. This report does not establish that the action occurred.",
+        "basis_ref": "OccurrenceClaim:f569e35b-7d89-402e-818e-32b60a6c97be",
+        "basis_kind": "OccurrenceClaim",
+        "basis_id": "f569e35b-7d89-402e-818e-32b60a6c97be",
+        "contract": "Executor receipt is present; receipt is not independent truth."
+      },
+      {
+        "code": "OCCURRENCE_UNKNOWN",
+        "text": "We cannot yet establish whether the commanded action occurred.",
+        "basis_ref": "ConsequenceSnapshot:75f7035d-e462-4288-b7d4-8e682a2ff771",
+        "basis_kind": "ConsequenceSnapshot",
+        "basis_id": "75f7035d-e462-4288-b7d4-8e682a2ff771",
+        "contract": "No admitted observation basis; UNKNOWN is neither success nor failure."
+      },
+      {
+        "code": "OUTCOME_UNRESOLVED",
+        "text": "The intended objective has not been established.",
+        "basis_ref": "ConsequenceSnapshot:75f7035d-e462-4288-b7d4-8e682a2ff771",
+        "basis_kind": "ConsequenceSnapshot",
+        "basis_id": "75f7035d-e462-4288-b7d4-8e682a2ff771",
+        "contract": "Objective assessment requires its own explicit operation and declared criterion."
+      },
+      {
+        "code": "RETURN_COMPLETE",
+        "text": "Return complete: all required reporting obligations are discharged. Uncertainty and follow-up obligations may remain.",
+        "basis_ref": "ReturnArtifact:cbdc75fd-fa14-48cb-b390-685925222835",
+        "basis_kind": "ReturnArtifact",
+        "basis_id": "cbdc75fd-fa14-48cb-b390-685925222835",
+        "contract": "Completeness concerns required reporting obligations, not occurrence, objective success or settlement."
+      }
+    ],
+    "basis_manifest": [
+      {
+        "id": "Permission:e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+        "artifact_kind": "Permission",
+        "artifact_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+        "artifact": {
+          "kind": "Permission",
+          "permission_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "disposition": {
+            "kind": "Disposition",
+            "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+            "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+            "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+            "disposition": "ADMIT",
+            "reason": null,
+            "previous_decision_id": null,
+            "issued_at": "2026-10-06T07:26:04.532Z",
+            "source_authority": "I-1",
+            "interval_id": "I_AB",
+            "formation_ref": "97858bb3-b4b3-47be-b4eb-20776813349c",
+            "formation_hash": "1ed7d9a983f54f7943fea94919d57223b1209b75f15b55d0a0ae90c3e95c77a4",
+            "standing": {
+              "status": "KNOWN",
+              "interval_id": "I_AB",
+              "sourcepoint": "I-1",
+              "constitution_ref": "a7a9ca1e453574b95330d7c8654e5868681ea29575a573bc7e3f11441de4cb4f",
+              "authority_basis": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+              "standing": {
+                "outbound": "ELIGIBLE",
+                "inbound": "UNASSESSED"
+              },
+              "lineage_head": "9f9d7caf7d3535392ffdc15ece2f8e127ad895dff31d55e85b5c5b9fa77de9ae"
+            },
+            "native_decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+            "owner": "gateway/local-field/index.mjs"
+          },
+          "basis": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+          "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+          "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+          "objective_contract": {
+            "objective_id": "Bounded Research note stored and read back",
+            "minimum_bytes": 1
+          },
+          "issued_at": "2026-10-06T07:26:04.533Z"
+        }
+      },
+      {
+        "id": "Attempt:6934b275-470b-4c32-8ece-983eda81660f",
+        "artifact_kind": "Attempt",
+        "artifact_id": "6934b275-470b-4c32-8ece-983eda81660f",
+        "artifact": {
+          "kind": "Attempt",
+          "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "invocation_lease_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+          "executor": "node-b",
+          "subject": "node-a",
+          "requested_effect": {
+            "action": "create_document",
+            "target": "research-return.json",
+            "payload_hash": "ce3eb1c194d2ace5a57a603f4b67b0ead0cc2fc6ee7eda42c55f206f0cfe5900"
+          },
+          "started_at": "2026-10-06T07:26:05.552Z",
+          "completed_at": "2026-10-06T07:26:05.553Z",
+          "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+          "executor_report": {
+            "kind": "Execution",
+            "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+            "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+            "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+            "status": "COMPLETED",
+            "result": {
+              "status": "COMPLETED",
+              "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+              "bytes": 1424
+            },
+            "completed_at": "2026-10-06T07:26:05.553Z",
+            "owner": "gateway/execution/filesystem-executor.mjs"
+          }
+        }
+      },
+      {
+        "id": "OccurrenceClaim:f569e35b-7d89-402e-818e-32b60a6c97be",
+        "artifact_kind": "OccurrenceClaim",
+        "artifact_id": "f569e35b-7d89-402e-818e-32b60a6c97be",
+        "artifact": {
+          "kind": "OccurrenceClaim",
+          "claim_id": "f569e35b-7d89-402e-818e-32b60a6c97be",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+          "execution_ref": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+          "report": {
+            "status": "COMPLETED",
+            "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+            "bytes": 1424
+          },
+          "knowledge_supplied": false
+        }
+      },
+      {
+        "id": "ConsequenceSnapshot:75f7035d-e462-4288-b7d4-8e682a2ff771",
+        "artifact_kind": "ConsequenceSnapshot",
+        "artifact_id": "75f7035d-e462-4288-b7d4-8e682a2ff771",
+        "artifact": {
+          "kind": "ConsequenceSnapshot",
+          "snapshot_id": "75f7035d-e462-4288-b7d4-8e682a2ff771",
+          "timestamp": "2026-10-06T07:26:07.098Z",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "permission": {
+            "kind": "Permission",
+            "permission_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+            "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+            "disposition": {
+              "kind": "Disposition",
+              "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+              "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+              "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+              "disposition": "ADMIT",
+              "reason": null,
+              "previous_decision_id": null,
+              "issued_at": "2026-10-06T07:26:04.532Z",
+              "source_authority": "I-1",
+              "interval_id": "I_AB",
+              "formation_ref": "97858bb3-b4b3-47be-b4eb-20776813349c",
+              "formation_hash": "1ed7d9a983f54f7943fea94919d57223b1209b75f15b55d0a0ae90c3e95c77a4",
+              "standing": {
+                "status": "KNOWN",
+                "interval_id": "I_AB",
+                "sourcepoint": "I-1",
+                "constitution_ref": "a7a9ca1e453574b95330d7c8654e5868681ea29575a573bc7e3f11441de4cb4f",
+                "authority_basis": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+                "standing": {
+                  "outbound": "ELIGIBLE",
+                  "inbound": "UNASSESSED"
+                },
+                "lineage_head": "9f9d7caf7d3535392ffdc15ece2f8e127ad895dff31d55e85b5c5b9fa77de9ae"
+              },
+              "native_decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+              "owner": "gateway/local-field/index.mjs"
+            },
+            "basis": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+            "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+            "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+            "objective_contract": {
+              "objective_id": "Bounded Research note stored and read back",
+              "minimum_bytes": 1
+            },
+            "issued_at": "2026-10-06T07:26:04.533Z"
+          },
+          "lease": {
+            "kind": "InvocationLease",
+            "lease_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+            "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+            "permission_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+            "next_transition": "ATTEMPT_EXECUTION",
+            "commitment": {
+              "kind": "InvocationCommitment",
+              "commitment_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+              "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+              "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+              "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+              "warrant": {
+                "body": {
+                  "field_id": "66567800-651d-45f2-8a3c-88daa0a74c60",
+                  "record_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+                  "issued_at": "2026-10-06T07:26:04.937Z",
+                  "expires_at": "2026-10-06T07:36:04.937Z",
+                  "type": "invocation_commit",
+                  "issuer": "I-1",
+                  "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+                  "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+                  "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28"
+                },
+                "signature": "92b946864173426e0c95350dbb16b056c957a1f8d90a8461b74ad2e7c50c4c7e00a6a627fd516f541b04166ccceb884f9c2990d74e5a7a1093e6ababbee92207"
+              },
+              "issued_at": "2026-10-06T07:26:04.937Z",
+              "expires_at": "2026-10-06T07:36:03.920Z",
+              "token_id": "b0997391-67a5-4fba-ac5c-2cd1ef0e434f",
+              "authority_basis": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+              "owner": "gateway/security/token-manager.mjs"
+            },
+            "revocation_semantics": {
+              "validation_points": [
+                "native invocation acceptance",
+                "descriptor release guard"
+              ],
+              "lease_expiry": "2026-10-06T07:36:03.920Z",
+              "propagation_bound": {
+                "scope": "local revocation registry",
+                "guarantee": "NONE",
+                "measured_ms": null
+              },
+              "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+              "already_committed_behavior": "Retained; this control supplies no compensation",
+              "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+            }
+          },
+          "attempt": {
+            "kind": "Attempt",
+            "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+            "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+            "invocation_lease_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+            "executor": "node-b",
+            "subject": "node-a",
+            "requested_effect": {
+              "action": "create_document",
+              "target": "research-return.json",
+              "payload_hash": "ce3eb1c194d2ace5a57a603f4b67b0ead0cc2fc6ee7eda42c55f206f0cfe5900"
+            },
+            "started_at": "2026-10-06T07:26:05.552Z",
+            "completed_at": "2026-10-06T07:26:05.553Z",
+            "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+            "executor_report": {
+              "kind": "Execution",
+              "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+              "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+              "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+              "status": "COMPLETED",
+              "result": {
+                "status": "COMPLETED",
+                "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+                "bytes": 1424
+              },
+              "completed_at": "2026-10-06T07:26:05.553Z",
+              "owner": "gateway/execution/filesystem-executor.mjs"
+            }
+          },
+          "occurrence_claim": {
+            "kind": "OccurrenceClaim",
+            "claim_id": "f569e35b-7d89-402e-818e-32b60a6c97be",
+            "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+            "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+            "execution_ref": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+            "report": {
+              "status": "COMPLETED",
+              "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+              "bytes": 1424
+            },
+            "knowledge_supplied": false
+          },
+          "lease_condition": "CURRENT",
+          "execution_condition": "COMPLETED",
+          "native_recovery": null,
+          "executor_receipt": {
+            "kind": "Execution",
+            "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+            "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+            "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+            "status": "COMPLETED",
+            "result": {
+              "status": "COMPLETED",
+              "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+              "bytes": 1424
+            },
+            "completed_at": "2026-10-06T07:26:05.553Z",
+            "owner": "gateway/execution/filesystem-executor.mjs"
+          },
+          "observation": null,
+          "evidence": null,
+          "occurrence_knowledge": "UNKNOWN",
+          "observation_coverage": {
+            "status": "UNOBSERVABLE",
+            "scope": "Independent observation not obtained"
+          },
+          "outcome_assessment": {
+            "kind": "OutcomeAssessment",
+            "status": "UNRESOLVED",
+            "assessment_id": null
+          },
+          "returned": {
+            "kind": "ReturnArtifact",
+            "return_id": "cbdc75fd-fa14-48cb-b390-685925222835",
+            "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+            "execution_attempt": {
+              "status": "KNOWN",
+              "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+              "condition": "COMPLETED",
+              "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+            },
+            "executor_receipt": {
+              "status": "PRESENT",
+              "claim_ref": "f569e35b-7d89-402e-818e-32b60a6c97be",
+              "scope": "Executor report only"
+            },
+            "occurrence_knowledge": "UNKNOWN",
+            "observation_coverage": {
+              "status": "UNOBSERVABLE",
+              "scope": "Independent observation not obtained"
+            },
+            "outcome_assessment": {
+              "kind": "OutcomeAssessment",
+              "status": "UNRESOLVED",
+              "assessment_id": null
+            },
+            "return_completeness": "COMPLETE",
+            "required_reports": [
+              "ATTEMPT_ACCOUNT",
+              "OBSERVATION_ACCOUNT",
+              "OUTCOME_ACCOUNT",
+              "LIMITS_ACCOUNT"
+            ],
+            "reporting_accounts": [
+              {
+                "coordinate": "ATTEMPT_ACCOUNT",
+                "account": {
+                  "status": "KNOWN",
+                  "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+                  "condition": "COMPLETED",
+                  "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+                }
+              },
+              {
+                "coordinate": "OBSERVATION_ACCOUNT",
+                "account": {
+                  "coverage": {
+                    "status": "UNOBSERVABLE",
+                    "scope": "Independent observation not obtained"
+                  },
+                  "occurrence_knowledge": "UNKNOWN",
+                  "evidence": null
+                }
+              },
+              {
+                "coordinate": "OUTCOME_ACCOUNT",
+                "account": {
+                  "kind": "OutcomeAssessment",
+                  "status": "UNRESOLVED",
+                  "assessment_id": null
+                }
+              },
+              {
+                "coordinate": "LIMITS_ACCOUNT",
+                "account": {
+                  "unresolved_remainder": [
+                    "No admitted observation establishes occurrence exactly as commanded",
+                    "The declared objective has not been separately assessed",
+                    "Downstream consequences outside descriptor readback remain unobserved"
+                  ],
+                  "outstanding_obligations": [
+                    "Qualified independent readback remains unestablished; any follow-up needs a fresh human choice",
+                    "Human must decide whether any further research is warranted"
+                  ],
+                  "control_limits": {
+                    "compensation_available": false,
+                    "committed_effect": true,
+                    "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+                  }
+                }
+              }
+            ],
+            "unresolved_remainder": [
+              "No admitted observation establishes occurrence exactly as commanded",
+              "The declared objective has not been separately assessed",
+              "Downstream consequences outside descriptor readback remain unobserved"
+            ],
+            "outstanding_obligations": [
+              "Qualified independent readback remains unestablished; any follow-up needs a fresh human choice",
+              "Human must decide whether any further research is warranted"
+            ],
+            "follow_up_required": true,
+            "provenance": {
+              "permission_ref": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+              "lease_ref": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+              "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+              "observation_ref": null,
+              "evidence_ref": null,
+              "outcome_ref": null
+            },
+            "returned_at": "2026-10-06T07:26:06.167Z"
+          },
+          "settlement": null,
+          "revocation": null,
+          "unresolved_remainder": [
+            "No admitted observation establishes occurrence exactly as commanded",
+            "The declared objective has not been separately assessed",
+            "Downstream consequences outside descriptor readback remain unobserved"
+          ],
+          "control_limits": {
+            "compensation_available": false,
+            "committed_effect": true,
+            "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+          },
+          "assay": {
+            "Detect": {
+              "established": false,
+              "basis": null
+            },
+            "Interrupt": {
+              "established": false,
+              "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+              "grant_id": null,
+              "basis": null
+            },
+            "Reconstruct": {
+              "established": true,
+              "basis": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017"
+            },
+            "ConfidenceCalibration": {
+              "established": false,
+              "status": "NOT_CALIBRATED"
+            }
+          },
+          "attempting": false
+        }
+      },
+      {
+        "id": "ReturnArtifact:cbdc75fd-fa14-48cb-b390-685925222835",
+        "artifact_kind": "ReturnArtifact",
+        "artifact_id": "cbdc75fd-fa14-48cb-b390-685925222835",
+        "artifact": {
+          "kind": "ReturnArtifact",
+          "return_id": "cbdc75fd-fa14-48cb-b390-685925222835",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "execution_attempt": {
+            "status": "KNOWN",
+            "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+            "condition": "COMPLETED",
+            "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+          },
+          "executor_receipt": {
+            "status": "PRESENT",
+            "claim_ref": "f569e35b-7d89-402e-818e-32b60a6c97be",
+            "scope": "Executor report only"
+          },
+          "occurrence_knowledge": "UNKNOWN",
+          "observation_coverage": {
+            "status": "UNOBSERVABLE",
+            "scope": "Independent observation not obtained"
+          },
+          "outcome_assessment": {
+            "kind": "OutcomeAssessment",
+            "status": "UNRESOLVED",
+            "assessment_id": null
+          },
+          "return_completeness": "COMPLETE",
+          "required_reports": [
+            "ATTEMPT_ACCOUNT",
+            "OBSERVATION_ACCOUNT",
+            "OUTCOME_ACCOUNT",
+            "LIMITS_ACCOUNT"
+          ],
+          "reporting_accounts": [
+            {
+              "coordinate": "ATTEMPT_ACCOUNT",
+              "account": {
+                "status": "KNOWN",
+                "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+                "condition": "COMPLETED",
+                "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+              }
+            },
+            {
+              "coordinate": "OBSERVATION_ACCOUNT",
+              "account": {
+                "coverage": {
+                  "status": "UNOBSERVABLE",
+                  "scope": "Independent observation not obtained"
+                },
+                "occurrence_knowledge": "UNKNOWN",
+                "evidence": null
+              }
+            },
+            {
+              "coordinate": "OUTCOME_ACCOUNT",
+              "account": {
+                "kind": "OutcomeAssessment",
+                "status": "UNRESOLVED",
+                "assessment_id": null
+              }
+            },
+            {
+              "coordinate": "LIMITS_ACCOUNT",
+              "account": {
+                "unresolved_remainder": [
+                  "No admitted observation establishes occurrence exactly as commanded",
+                  "The declared objective has not been separately assessed",
+                  "Downstream consequences outside descriptor readback remain unobserved"
+                ],
+                "outstanding_obligations": [
+                  "Qualified independent readback remains unestablished; any follow-up needs a fresh human choice",
+                  "Human must decide whether any further research is warranted"
+                ],
+                "control_limits": {
+                  "compensation_available": false,
+                  "committed_effect": true,
+                  "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+                }
+              }
+            }
+          ],
+          "unresolved_remainder": [
+            "No admitted observation establishes occurrence exactly as commanded",
+            "The declared objective has not been separately assessed",
+            "Downstream consequences outside descriptor readback remain unobserved"
+          ],
+          "outstanding_obligations": [
+            "Qualified independent readback remains unestablished; any follow-up needs a fresh human choice",
+            "Human must decide whether any further research is warranted"
+          ],
+          "follow_up_required": true,
+          "provenance": {
+            "permission_ref": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+            "lease_ref": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+            "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+            "observation_ref": null,
+            "evidence_ref": null,
+            "outcome_ref": null
+          },
+          "returned_at": "2026-10-06T07:26:06.167Z"
+        }
+      }
+    ],
+    "controls": [],
+    "assay": {
+      "Detect": {
+        "established": false,
+        "basis": null
+      },
+      "Interrupt": {
+        "established": false,
+        "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+        "grant_id": null,
+        "basis": null
+      },
+      "Reconstruct": {
+        "established": true,
+        "basis": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017"
+      },
+      "ConfidenceCalibration": {
+        "established": false,
+        "status": "NOT_CALIBRATED"
+      }
+    },
+    "limits": [
+      "No admitted observation establishes occurrence exactly as commanded",
+      "The declared objective has not been separately assessed",
+      "Downstream consequences outside descriptor readback remain unobserved"
+    ],
+    "typed_account": {
+      "kind": "ConsequenceSnapshot",
+      "snapshot_id": "75f7035d-e462-4288-b7d4-8e682a2ff771",
+      "timestamp": "2026-10-06T07:26:07.098Z",
+      "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+      "permission": {
+        "kind": "Permission",
+        "permission_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "disposition": {
+          "kind": "Disposition",
+          "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+          "disposition": "ADMIT",
+          "reason": null,
+          "previous_decision_id": null,
+          "issued_at": "2026-10-06T07:26:04.532Z",
+          "source_authority": "I-1",
+          "interval_id": "I_AB",
+          "formation_ref": "97858bb3-b4b3-47be-b4eb-20776813349c",
+          "formation_hash": "1ed7d9a983f54f7943fea94919d57223b1209b75f15b55d0a0ae90c3e95c77a4",
+          "standing": {
+            "status": "KNOWN",
+            "interval_id": "I_AB",
+            "sourcepoint": "I-1",
+            "constitution_ref": "a7a9ca1e453574b95330d7c8654e5868681ea29575a573bc7e3f11441de4cb4f",
+            "authority_basis": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+            "standing": {
+              "outbound": "ELIGIBLE",
+              "inbound": "UNASSESSED"
+            },
+            "lineage_head": "9f9d7caf7d3535392ffdc15ece2f8e127ad895dff31d55e85b5c5b9fa77de9ae"
+          },
+          "native_decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+          "owner": "gateway/local-field/index.mjs"
+        },
+        "basis": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+        "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+        "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+        "objective_contract": {
+          "objective_id": "Bounded Research note stored and read back",
+          "minimum_bytes": 1
+        },
+        "issued_at": "2026-10-06T07:26:04.533Z"
+      },
+      "lease": {
+        "kind": "InvocationLease",
+        "lease_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "permission_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+        "next_transition": "ATTEMPT_EXECUTION",
+        "commitment": {
+          "kind": "InvocationCommitment",
+          "commitment_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+          "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+          "warrant": {
+            "body": {
+              "field_id": "66567800-651d-45f2-8a3c-88daa0a74c60",
+              "record_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+              "issued_at": "2026-10-06T07:26:04.937Z",
+              "expires_at": "2026-10-06T07:36:04.937Z",
+              "type": "invocation_commit",
+              "issuer": "I-1",
+              "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+              "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+              "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28"
+            },
+            "signature": "92b946864173426e0c95350dbb16b056c957a1f8d90a8461b74ad2e7c50c4c7e00a6a627fd516f541b04166ccceb884f9c2990d74e5a7a1093e6ababbee92207"
+          },
+          "issued_at": "2026-10-06T07:26:04.937Z",
+          "expires_at": "2026-10-06T07:36:03.920Z",
+          "token_id": "b0997391-67a5-4fba-ac5c-2cd1ef0e434f",
+          "authority_basis": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+          "owner": "gateway/security/token-manager.mjs"
+        },
+        "revocation_semantics": {
+          "validation_points": [
+            "native invocation acceptance",
+            "descriptor release guard"
+          ],
+          "lease_expiry": "2026-10-06T07:36:03.920Z",
+          "propagation_bound": {
+            "scope": "local revocation registry",
+            "guarantee": "NONE",
+            "measured_ms": null
+          },
+          "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+          "already_committed_behavior": "Retained; this control supplies no compensation",
+          "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+        }
+      },
+      "attempt": {
+        "kind": "Attempt",
+        "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "invocation_lease_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+        "executor": "node-b",
+        "subject": "node-a",
+        "requested_effect": {
+          "action": "create_document",
+          "target": "research-return.json",
+          "payload_hash": "ce3eb1c194d2ace5a57a603f4b67b0ead0cc2fc6ee7eda42c55f206f0cfe5900"
+        },
+        "started_at": "2026-10-06T07:26:05.552Z",
+        "completed_at": "2026-10-06T07:26:05.553Z",
+        "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+        "executor_report": {
+          "kind": "Execution",
+          "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+          "status": "COMPLETED",
+          "result": {
+            "status": "COMPLETED",
+            "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+            "bytes": 1424
+          },
+          "completed_at": "2026-10-06T07:26:05.553Z",
+          "owner": "gateway/execution/filesystem-executor.mjs"
+        }
+      },
+      "occurrence_claim": {
+        "kind": "OccurrenceClaim",
+        "claim_id": "f569e35b-7d89-402e-818e-32b60a6c97be",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+        "execution_ref": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+        "report": {
+          "status": "COMPLETED",
+          "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+          "bytes": 1424
+        },
+        "knowledge_supplied": false
+      },
+      "lease_condition": "CURRENT",
+      "execution_condition": "COMPLETED",
+      "native_recovery": null,
+      "executor_receipt": {
+        "kind": "Execution",
+        "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+        "status": "COMPLETED",
+        "result": {
+          "status": "COMPLETED",
+          "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+          "bytes": 1424
+        },
+        "completed_at": "2026-10-06T07:26:05.553Z",
+        "owner": "gateway/execution/filesystem-executor.mjs"
+      },
+      "observation": null,
+      "evidence": null,
+      "occurrence_knowledge": "UNKNOWN",
+      "observation_coverage": {
+        "status": "UNOBSERVABLE",
+        "scope": "Independent observation not obtained"
+      },
+      "outcome_assessment": {
+        "kind": "OutcomeAssessment",
+        "status": "UNRESOLVED",
+        "assessment_id": null
+      },
+      "returned": {
+        "kind": "ReturnArtifact",
+        "return_id": "cbdc75fd-fa14-48cb-b390-685925222835",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "execution_attempt": {
+          "status": "KNOWN",
+          "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+          "condition": "COMPLETED",
+          "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+        },
+        "executor_receipt": {
+          "status": "PRESENT",
+          "claim_ref": "f569e35b-7d89-402e-818e-32b60a6c97be",
+          "scope": "Executor report only"
+        },
+        "occurrence_knowledge": "UNKNOWN",
+        "observation_coverage": {
+          "status": "UNOBSERVABLE",
+          "scope": "Independent observation not obtained"
+        },
+        "outcome_assessment": {
+          "kind": "OutcomeAssessment",
+          "status": "UNRESOLVED",
+          "assessment_id": null
+        },
+        "return_completeness": "COMPLETE",
+        "required_reports": [
+          "ATTEMPT_ACCOUNT",
+          "OBSERVATION_ACCOUNT",
+          "OUTCOME_ACCOUNT",
+          "LIMITS_ACCOUNT"
+        ],
+        "reporting_accounts": [
+          {
+            "coordinate": "ATTEMPT_ACCOUNT",
+            "account": {
+              "status": "KNOWN",
+              "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+              "condition": "COMPLETED",
+              "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+            }
+          },
+          {
+            "coordinate": "OBSERVATION_ACCOUNT",
+            "account": {
+              "coverage": {
+                "status": "UNOBSERVABLE",
+                "scope": "Independent observation not obtained"
+              },
+              "occurrence_knowledge": "UNKNOWN",
+              "evidence": null
+            }
+          },
+          {
+            "coordinate": "OUTCOME_ACCOUNT",
+            "account": {
+              "kind": "OutcomeAssessment",
+              "status": "UNRESOLVED",
+              "assessment_id": null
+            }
+          },
+          {
+            "coordinate": "LIMITS_ACCOUNT",
+            "account": {
+              "unresolved_remainder": [
+                "No admitted observation establishes occurrence exactly as commanded",
+                "The declared objective has not been separately assessed",
+                "Downstream consequences outside descriptor readback remain unobserved"
+              ],
+              "outstanding_obligations": [
+                "Qualified independent readback remains unestablished; any follow-up needs a fresh human choice",
+                "Human must decide whether any further research is warranted"
+              ],
+              "control_limits": {
+                "compensation_available": false,
+                "committed_effect": true,
+                "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+              }
+            }
+          }
+        ],
+        "unresolved_remainder": [
+          "No admitted observation establishes occurrence exactly as commanded",
+          "The declared objective has not been separately assessed",
+          "Downstream consequences outside descriptor readback remain unobserved"
+        ],
+        "outstanding_obligations": [
+          "Qualified independent readback remains unestablished; any follow-up needs a fresh human choice",
+          "Human must decide whether any further research is warranted"
+        ],
+        "follow_up_required": true,
+        "provenance": {
+          "permission_ref": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+          "lease_ref": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+          "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+          "observation_ref": null,
+          "evidence_ref": null,
+          "outcome_ref": null
+        },
+        "returned_at": "2026-10-06T07:26:06.167Z"
+      },
+      "settlement": null,
+      "revocation": null,
+      "unresolved_remainder": [
+        "No admitted observation establishes occurrence exactly as commanded",
+        "The declared objective has not been separately assessed",
+        "Downstream consequences outside descriptor readback remain unobserved"
+      ],
+      "control_limits": {
+        "compensation_available": false,
+        "committed_effect": true,
+        "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+      },
+      "assay": {
+        "Detect": {
+          "established": false,
+          "basis": null
+        },
+        "Interrupt": {
+          "established": false,
+          "scope": "Future authorized exercise under the revoked grant and its affected lineage through the local executor",
+          "grant_id": null,
+          "basis": null
+        },
+        "Reconstruct": {
+          "established": true,
+          "basis": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017"
+        },
+        "ConfidenceCalibration": {
+          "established": false,
+          "status": "NOT_CALIBRATED"
+        }
+      },
+      "attempting": false
+    }
+  },
+  "orientation": {
+    "kind": "HumanOrientation",
+    "orientation_id": "140a2838-b4e2-40ab-87b5-7decb3b9e4be",
+    "choice": "RETAIN_FOR_ORIENTATION",
+    "basis_ref": "ReturnArtifact:cbdc75fd-fa14-48cb-b390-685925222835",
+    "human_choice_ref": "abb17991-124a-4f3c-bd23-8b65fb29f752",
+    "authorization_supplied": false,
+    "standing_change": false,
+    "next_action": "None; any new work requires a fresh request"
+  },
+  "answers": [
+    {
+      "question": "Where am I?",
+      "answer": "Observatory, inside this bounded ONE reference session. Research is the one available Office."
+    },
+    {
+      "question": "What changed?",
+      "answer": "Calendar space tightened while development activity and review waits rose. These are computed changes in the labeled source replay."
+    },
+    {
+      "question": "What is it?",
+      "answer": "A candidate pressure differential: production activity is outpacing the review-capacity proxy."
+    },
+    {
+      "question": "Why does it appear?",
+      "answer": "Development activity is rising. Review waits are long. Available calendar time is tight. Each contributor links to its scoped signal and extraction window."
+    },
+    {
+      "question": "What did I delegate?",
+      "answer": "One Research note about this reading, at most 4096 bytes, written once locally. No further delegation or automatic follow-up."
+    },
+    {
+      "question": "What did Research actually do and establish?",
+      "answer": "An attempt and executor report exist. Occurrence and the intended objective remain unestablished."
+    },
+    {
+      "question": "What remains unresolved or controllable?",
+      "answer": "You may withdraw future use of an admitted delegation. The forecast, actual review capacity and downstream consequences remain unestablished."
+    },
+    {
+      "question": "What can I decide next?",
+      "answer": "You retained this finding for orientation. No subsequent work was authorized."
+    }
+  ],
+  "register": [
+    {
+      "entry_id": "cadcd71e-5798-4b39-a691-6c2f28601c8c",
+      "timestamp": "2026-10-06T07:26:04.084Z",
+      "transition": "ENTER",
+      "human_action": "Enter Observatory",
+      "artifact_ref": "FieldoscopyReading:sha256:4713e000bb86296a7b90c9e633f30a6d5505ba1b52ca99aec44a71430da28226",
+      "machine_artifact": {
+        "reading_id": "sha256:4713e000bb86296a7b90c9e633f30a6d5505ba1b52ca99aec44a71430da28226",
+        "timestamp": "2026-10-05T00:00:00.000Z",
+        "atmospheric_regime": "CLEAR_HORIZON",
+        "candidate_regimes": [
+          "CLEAR_HORIZON"
+        ],
+        "signal_manifest": [
+          {
+            "signal_type": "available_time_margin",
+            "signal_id": "sha256:e9bc7bef7f552697aaecfc9c2b0a34c3d43c7428e561fbf0b08c3ea61f2b3adf",
+            "magnitude": 0.5,
+            "direction": "STABLE",
+            "rate_of_change": 0,
+            "observation_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-03T00:00:00.000Z",
+              "end": "2026-10-04T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-05T00:00:00.000Z"
+          },
+          {
+            "signal_type": "buffer_compression",
+            "signal_id": "sha256:891ac0a94f13a55611ea59a50a321dc4be45c3254bd78d7dc92d0ab3739ce648",
+            "magnitude": 0,
+            "direction": "STABLE",
+            "rate_of_change": 0,
+            "observation_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-03T00:00:00.000Z",
+              "end": "2026-10-04T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-05T00:00:00.000Z"
+          },
+          {
+            "signal_type": "commit_velocity",
+            "signal_id": "sha256:694f31d43a7088e40a2a6bd71fc2641a59cbde565ae1a4c1ec497554231e670a",
+            "magnitude": 0.25,
+            "direction": "STABLE",
+            "rate_of_change": 0,
+            "observation_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-03T00:00:00.000Z",
+              "end": "2026-10-04T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-05T00:00:00.000Z"
+          },
+          {
+            "signal_type": "meeting_density",
+            "signal_id": "sha256:4652075f019ec2283e62dcbc0deb4ab600827357979443305a0f18aaf584fe48",
+            "magnitude": 0.5,
+            "direction": "STABLE",
+            "rate_of_change": 0,
+            "observation_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-03T00:00:00.000Z",
+              "end": "2026-10-04T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-05T00:00:00.000Z"
+          },
+          {
+            "signal_type": "open_pr_age",
+            "signal_id": "sha256:400c4ff2645bbc430db168e4176c41f2a3479ce831f15b0e31542d449c79bf1d",
+            "magnitude": 0.14285714285714285,
+            "direction": "STABLE",
+            "rate_of_change": 0,
+            "observation_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-03T00:00:00.000Z",
+              "end": "2026-10-04T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-05T00:00:00.000Z"
+          },
+          {
+            "signal_type": "review_latency",
+            "signal_id": "sha256:d4bdb550c8f104e2dc868955adcef8159540d8c2d86b32468083ce6ef891f139",
+            "magnitude": 0.0625,
+            "direction": "STABLE",
+            "rate_of_change": 0,
+            "observation_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-03T00:00:00.000Z",
+              "end": "2026-10-04T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-05T00:00:00.000Z"
+          }
+        ],
+        "visibility": "ILLUMINATED",
+        "confidence": {
+          "basis": "UNCALIBRATED_RULE_SUPPORT",
+          "level": "SUPPORTED"
+        },
+        "current_conditions": [
+          {
+            "condition_code": "TIME_AVAILABLE",
+            "signal_refs": [
+              "sha256:e9bc7bef7f552697aaecfc9c2b0a34c3d43c7428e561fbf0b08c3ea61f2b3adf"
+            ]
+          },
+          {
+            "condition_code": "BUFFERS_PRESENT",
+            "signal_refs": [
+              "sha256:891ac0a94f13a55611ea59a50a321dc4be45c3254bd78d7dc92d0ab3739ce648"
+            ]
+          },
+          {
+            "condition_code": "PRODUCTION_STABLE",
+            "signal_refs": [
+              "sha256:694f31d43a7088e40a2a6bd71fc2641a59cbde565ae1a4c1ec497554231e670a"
+            ]
+          },
+          {
+            "condition_code": "MEETINGS_LIGHT",
+            "signal_refs": [
+              "sha256:4652075f019ec2283e62dcbc0deb4ab600827357979443305a0f18aaf584fe48"
+            ]
+          },
+          {
+            "condition_code": "PRS_RECENT",
+            "signal_refs": [
+              "sha256:400c4ff2645bbc430db168e4176c41f2a3479ce831f15b0e31542d449c79bf1d"
+            ]
+          },
+          {
+            "condition_code": "REVIEW_WAITS_SHORT",
+            "signal_refs": [
+              "sha256:d4bdb550c8f104e2dc868955adcef8159540d8c2d86b32468083ce6ef891f139"
+            ]
+          }
+        ],
+        "primary_drivers": [
+          {
+            "condition_code": "TIME_AVAILABLE",
+            "signal_refs": [
+              "sha256:e9bc7bef7f552697aaecfc9c2b0a34c3d43c7428e561fbf0b08c3ea61f2b3adf"
+            ]
+          },
+          {
+            "condition_code": "REVIEW_WAITS_SHORT",
+            "signal_refs": [
+              "sha256:d4bdb550c8f104e2dc868955adcef8159540d8c2d86b32468083ce6ef891f139"
+            ]
+          },
+          {
+            "condition_code": "PRS_RECENT",
+            "signal_refs": [
+              "sha256:400c4ff2645bbc430db168e4176c41f2a3479ce831f15b0e31542d449c79bf1d"
+            ]
+          }
+        ],
+        "forming_fronts": [],
+        "unresolved_remainder": [
+          "UNCALIBRATED_FORECAST",
+          "REVIEW_LATENCY_IS_CAPACITY_PROXY",
+          "PENDING_REVIEWS_ARE_CENSORED",
+          "NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL",
+          "CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT",
+          "PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN"
+        ],
+        "evaluation": {
+          "evaluator_id": "cognitive-meteorology.f0.1",
+          "evaluator_version": "0.1.0",
+          "matched_rules": [
+            "f0.1:clear_horizon"
+          ],
+          "pressure_differential": -0.6875,
+          "pressure_differential_role": "EXPERIMENTAL_RELATIONAL_FEATURE"
+        }
+      },
+      "predecessor": null
+    },
+    {
+      "entry_id": "ce24711e-f19b-4d8c-9355-330261b2ab5d",
+      "timestamp": "2026-10-06T07:26:04.084Z",
+      "transition": "PROGRAM_AVAILABLE",
+      "human_action": "See the one bounded Research Office",
+      "artifact_ref": "Program:bounded-reading-investigation.f0.1",
+      "machine_artifact": {
+        "kind": "Program",
+        "program_id": "bounded-reading-investigation.f0.1",
+        "name": "Bounded Research",
+        "max_effects": 1,
+        "max_bytes": 4096,
+        "input": "One bounded FieldoscopyReading",
+        "authorization_supplied": false
+      },
+      "predecessor": "cadcd71e-5798-4b39-a691-6c2f28601c8c"
+    },
+    {
+      "entry_id": "083bd4bb-dfae-453a-8839-ccf4138e4841",
+      "timestamp": "2026-10-06T07:26:04.104Z",
+      "transition": "HUMAN_CHOICE",
+      "human_action": "refresh",
+      "artifact_ref": "HumanChoice:13342ba9-d9ea-4f8f-bdb2-a86ff36be957",
+      "machine_artifact": {
+        "kind": "HumanChoice",
+        "choice_id": "13342ba9-d9ea-4f8f-bdb2-a86ff36be957",
+        "action": "refresh",
+        "expected_revision": 0,
+        "controller": "Explicit local reference controller; not production identity proof"
+      },
+      "predecessor": "ce24711e-f19b-4d8c-9355-330261b2ab5d"
+    },
+    {
+      "entry_id": "83c0d520-7fed-483b-9e54-0be1beaa7e91",
+      "timestamp": "2026-10-06T07:26:04.105Z",
+      "transition": "OBSERVE_CHANGE",
+      "human_action": "Read latest conditions",
+      "artifact_ref": "FieldoscopyReading:sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+      "machine_artifact": {
+        "reading_id": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+        "timestamp": "2026-10-06T00:00:00.000Z",
+        "atmospheric_regime": "PRESSURE_DIFFERENTIAL",
+        "candidate_regimes": [
+          "PRESSURE_DIFFERENTIAL",
+          "COLD_FRONT",
+          "HIGH_PRESSURE"
+        ],
+        "signal_manifest": [
+          {
+            "signal_type": "available_time_margin",
+            "signal_id": "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44",
+            "magnitude": 0.12,
+            "direction": "FALLING",
+            "rate_of_change": -0.015833333333333335,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "buffer_compression",
+            "signal_id": "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d",
+            "magnitude": 1,
+            "direction": "RISING",
+            "rate_of_change": 0.041666666666666664,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "commit_velocity",
+            "signal_id": "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+            "magnitude": 1,
+            "direction": "RISING",
+            "rate_of_change": 0.03125,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "meeting_density",
+            "signal_id": "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd",
+            "magnitude": 0.88,
+            "direction": "RISING",
+            "rate_of_change": 0.015833333333333335,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "open_pr_age",
+            "signal_id": "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def",
+            "magnitude": 0.5,
+            "direction": "RISING",
+            "rate_of_change": 0.014880952380952382,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "review_latency",
+            "signal_id": "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+            "magnitude": 0.875,
+            "direction": "RISING",
+            "rate_of_change": 0.033854166666666664,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          }
+        ],
+        "visibility": "ILLUMINATED",
+        "confidence": {
+          "basis": "UNCALIBRATED_RULE_SUPPORT",
+          "level": "SUPPORTED"
+        },
+        "current_conditions": [
+          {
+            "condition_code": "TIME_TIGHT",
+            "signal_refs": [
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ]
+          },
+          {
+            "condition_code": "BUFFERS_COMPRESSED",
+            "signal_refs": [
+              "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d"
+            ]
+          },
+          {
+            "condition_code": "PRODUCTION_RISING",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+            ]
+          },
+          {
+            "condition_code": "MEETINGS_DENSE",
+            "signal_refs": [
+              "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd"
+            ]
+          },
+          {
+            "condition_code": "PRS_AGING",
+            "signal_refs": [
+              "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def"
+            ]
+          },
+          {
+            "condition_code": "REVIEW_WAITS_LONG",
+            "signal_refs": [
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+            ]
+          }
+        ],
+        "primary_drivers": [
+          {
+            "condition_code": "PRODUCTION_RISING",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+            ]
+          },
+          {
+            "condition_code": "REVIEW_WAITS_LONG",
+            "signal_refs": [
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+            ]
+          },
+          {
+            "condition_code": "TIME_TIGHT",
+            "signal_refs": [
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ]
+          }
+        ],
+        "forming_fronts": [
+          {
+            "condition_code": "POSSIBLE_REVIEW_BOTTLENECK",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ],
+            "horizon_hours": [
+              24,
+              48
+            ],
+            "status": "CANDIDATE"
+          }
+        ],
+        "unresolved_remainder": [
+          "UNCALIBRATED_FORECAST",
+          "REVIEW_LATENCY_IS_CAPACITY_PROXY",
+          "PENDING_REVIEWS_ARE_CENSORED",
+          "NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL",
+          "CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT",
+          "PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN"
+        ],
+        "evaluation": {
+          "evaluator_id": "cognitive-meteorology.f0.1",
+          "evaluator_version": "0.1.0",
+          "matched_rules": [
+            "f0.1:cold_front",
+            "f0.1:high_pressure",
+            "f0.1:pressure_differential"
+          ],
+          "pressure_differential": 0.875,
+          "pressure_differential_role": "EXPERIMENTAL_RELATIONAL_FEATURE"
+        }
+      },
+      "predecessor": "083bd4bb-dfae-453a-8839-ccf4138e4841"
+    },
+    {
+      "entry_id": "5f850f11-bd36-4a33-a7e3-367c86f3839a",
+      "timestamp": "2026-10-06T07:26:04.128Z",
+      "transition": "HUMAN_CHOICE",
+      "human_action": "what",
+      "artifact_ref": "HumanChoice:0ce3e988-ec5f-489e-a591-49a8221dd2fa",
+      "machine_artifact": {
+        "kind": "HumanChoice",
+        "choice_id": "0ce3e988-ec5f-489e-a591-49a8221dd2fa",
+        "action": "what",
+        "expected_revision": 1,
+        "controller": "Explicit local reference controller; not production identity proof"
+      },
+      "predecessor": "83c0d520-7fed-483b-9e54-0be1beaa7e91"
+    },
+    {
+      "entry_id": "8cbd83d4-b2a4-41e3-a9a0-5f6cf7c6ba9f",
+      "timestamp": "2026-10-06T07:26:04.128Z",
+      "transition": "INSPECT",
+      "human_action": "What is this?",
+      "artifact_ref": "FieldoscopyReading:sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+      "machine_artifact": {
+        "reading_id": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+        "timestamp": "2026-10-06T00:00:00.000Z",
+        "atmospheric_regime": "PRESSURE_DIFFERENTIAL",
+        "candidate_regimes": [
+          "PRESSURE_DIFFERENTIAL",
+          "COLD_FRONT",
+          "HIGH_PRESSURE"
+        ],
+        "signal_manifest": [
+          {
+            "signal_type": "available_time_margin",
+            "signal_id": "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44",
+            "magnitude": 0.12,
+            "direction": "FALLING",
+            "rate_of_change": -0.015833333333333335,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "buffer_compression",
+            "signal_id": "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d",
+            "magnitude": 1,
+            "direction": "RISING",
+            "rate_of_change": 0.041666666666666664,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "commit_velocity",
+            "signal_id": "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+            "magnitude": 1,
+            "direction": "RISING",
+            "rate_of_change": 0.03125,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "meeting_density",
+            "signal_id": "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd",
+            "magnitude": 0.88,
+            "direction": "RISING",
+            "rate_of_change": 0.015833333333333335,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "open_pr_age",
+            "signal_id": "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def",
+            "magnitude": 0.5,
+            "direction": "RISING",
+            "rate_of_change": 0.014880952380952382,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "review_latency",
+            "signal_id": "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+            "magnitude": 0.875,
+            "direction": "RISING",
+            "rate_of_change": 0.033854166666666664,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          }
+        ],
+        "visibility": "ILLUMINATED",
+        "confidence": {
+          "basis": "UNCALIBRATED_RULE_SUPPORT",
+          "level": "SUPPORTED"
+        },
+        "current_conditions": [
+          {
+            "condition_code": "TIME_TIGHT",
+            "signal_refs": [
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ]
+          },
+          {
+            "condition_code": "BUFFERS_COMPRESSED",
+            "signal_refs": [
+              "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d"
+            ]
+          },
+          {
+            "condition_code": "PRODUCTION_RISING",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+            ]
+          },
+          {
+            "condition_code": "MEETINGS_DENSE",
+            "signal_refs": [
+              "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd"
+            ]
+          },
+          {
+            "condition_code": "PRS_AGING",
+            "signal_refs": [
+              "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def"
+            ]
+          },
+          {
+            "condition_code": "REVIEW_WAITS_LONG",
+            "signal_refs": [
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+            ]
+          }
+        ],
+        "primary_drivers": [
+          {
+            "condition_code": "PRODUCTION_RISING",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+            ]
+          },
+          {
+            "condition_code": "REVIEW_WAITS_LONG",
+            "signal_refs": [
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+            ]
+          },
+          {
+            "condition_code": "TIME_TIGHT",
+            "signal_refs": [
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ]
+          }
+        ],
+        "forming_fronts": [
+          {
+            "condition_code": "POSSIBLE_REVIEW_BOTTLENECK",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ],
+            "horizon_hours": [
+              24,
+              48
+            ],
+            "status": "CANDIDATE"
+          }
+        ],
+        "unresolved_remainder": [
+          "UNCALIBRATED_FORECAST",
+          "REVIEW_LATENCY_IS_CAPACITY_PROXY",
+          "PENDING_REVIEWS_ARE_CENSORED",
+          "NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL",
+          "CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT",
+          "PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN"
+        ],
+        "evaluation": {
+          "evaluator_id": "cognitive-meteorology.f0.1",
+          "evaluator_version": "0.1.0",
+          "matched_rules": [
+            "f0.1:cold_front",
+            "f0.1:high_pressure",
+            "f0.1:pressure_differential"
+          ],
+          "pressure_differential": 0.875,
+          "pressure_differential_role": "EXPERIMENTAL_RELATIONAL_FEATURE"
+        }
+      },
+      "predecessor": "5f850f11-bd36-4a33-a7e3-367c86f3839a"
+    },
+    {
+      "entry_id": "b467c683-f4c0-4016-aeab-611541f477f9",
+      "timestamp": "2026-10-06T07:26:04.153Z",
+      "transition": "HUMAN_CHOICE",
+      "human_action": "why",
+      "artifact_ref": "HumanChoice:742ef5d0-1155-47ee-807c-056edbd40b89",
+      "machine_artifact": {
+        "kind": "HumanChoice",
+        "choice_id": "742ef5d0-1155-47ee-807c-056edbd40b89",
+        "action": "why",
+        "expected_revision": 2,
+        "controller": "Explicit local reference controller; not production identity proof"
+      },
+      "predecessor": "8cbd83d4-b2a4-41e3-a9a0-5f6cf7c6ba9f"
+    },
+    {
+      "entry_id": "c4c6a9df-65e2-41f1-9ca9-295f920703b6",
+      "timestamp": "2026-10-06T07:26:04.153Z",
+      "transition": "EXPLAIN",
+      "human_action": "Why does it appear?",
+      "artifact_ref": "FieldoscopyReading:sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+      "machine_artifact": {
+        "reading_id": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+        "timestamp": "2026-10-06T00:00:00.000Z",
+        "atmospheric_regime": "PRESSURE_DIFFERENTIAL",
+        "candidate_regimes": [
+          "PRESSURE_DIFFERENTIAL",
+          "COLD_FRONT",
+          "HIGH_PRESSURE"
+        ],
+        "signal_manifest": [
+          {
+            "signal_type": "available_time_margin",
+            "signal_id": "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44",
+            "magnitude": 0.12,
+            "direction": "FALLING",
+            "rate_of_change": -0.015833333333333335,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "buffer_compression",
+            "signal_id": "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d",
+            "magnitude": 1,
+            "direction": "RISING",
+            "rate_of_change": 0.041666666666666664,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "commit_velocity",
+            "signal_id": "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+            "magnitude": 1,
+            "direction": "RISING",
+            "rate_of_change": 0.03125,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "meeting_density",
+            "signal_id": "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd",
+            "magnitude": 0.88,
+            "direction": "RISING",
+            "rate_of_change": 0.015833333333333335,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "CALENDAR",
+            "extractor_id": "calendar.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "open_pr_age",
+            "signal_id": "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def",
+            "magnitude": 0.5,
+            "direction": "RISING",
+            "rate_of_change": 0.014880952380952382,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          },
+          {
+            "signal_type": "review_latency",
+            "signal_id": "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+            "magnitude": 0.875,
+            "direction": "RISING",
+            "rate_of_change": 0.033854166666666664,
+            "observation_window": {
+              "start": "2026-10-05T00:00:00.000Z",
+              "end": "2026-10-06T00:00:00.000Z"
+            },
+            "comparison_window": {
+              "start": "2026-10-04T00:00:00.000Z",
+              "end": "2026-10-05T00:00:00.000Z"
+            },
+            "source_domain": "GIT",
+            "extractor_id": "git.edge.f0.1",
+            "extractor_version": "0.1.0",
+            "timestamp": "2026-10-06T00:00:00.000Z"
+          }
+        ],
+        "visibility": "ILLUMINATED",
+        "confidence": {
+          "basis": "UNCALIBRATED_RULE_SUPPORT",
+          "level": "SUPPORTED"
+        },
+        "current_conditions": [
+          {
+            "condition_code": "TIME_TIGHT",
+            "signal_refs": [
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ]
+          },
+          {
+            "condition_code": "BUFFERS_COMPRESSED",
+            "signal_refs": [
+              "sha256:d26f31d861738486879f42c7425e049f99280e16efcab5d28040059139e61b7d"
+            ]
+          },
+          {
+            "condition_code": "PRODUCTION_RISING",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+            ]
+          },
+          {
+            "condition_code": "MEETINGS_DENSE",
+            "signal_refs": [
+              "sha256:0aba54ea881e32142bcc85eb6a753d1df2ce9b415453d57c9b3666e825c236bd"
+            ]
+          },
+          {
+            "condition_code": "PRS_AGING",
+            "signal_refs": [
+              "sha256:edaf76d36e396a54bc7999e668d095782324afabebbc5926eccf758c53b31def"
+            ]
+          },
+          {
+            "condition_code": "REVIEW_WAITS_LONG",
+            "signal_refs": [
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+            ]
+          }
+        ],
+        "primary_drivers": [
+          {
+            "condition_code": "PRODUCTION_RISING",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc"
+            ]
+          },
+          {
+            "condition_code": "REVIEW_WAITS_LONG",
+            "signal_refs": [
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59"
+            ]
+          },
+          {
+            "condition_code": "TIME_TIGHT",
+            "signal_refs": [
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ]
+          }
+        ],
+        "forming_fronts": [
+          {
+            "condition_code": "POSSIBLE_REVIEW_BOTTLENECK",
+            "signal_refs": [
+              "sha256:8e4481e002f4fe987d9fe316a0a09c7b322696c7fb1cf8ad25ef3f41a2f278fc",
+              "sha256:37d4a59d83056e8dac9a6f32bf2747401e82cc0d74cbc39bf445bb5fd082fc59",
+              "sha256:3f7562a4eed4c6817971b16bd9e44ea877da07dfac3c82eb765c04fe3c298c44"
+            ],
+            "horizon_hours": [
+              24,
+              48
+            ],
+            "status": "CANDIDATE"
+          }
+        ],
+        "unresolved_remainder": [
+          "UNCALIBRATED_FORECAST",
+          "REVIEW_LATENCY_IS_CAPACITY_PROXY",
+          "PENDING_REVIEWS_ARE_CENSORED",
+          "NO_TASK_SIZE_OR_COMPLEXITY_SIGNAL",
+          "CALENDAR_FREE_TIME_IS_NOT_REVIEW_COMMITMENT",
+          "PRESSURE_DIFFERENTIAL_ONTOLOGY_OPEN"
+        ],
+        "evaluation": {
+          "evaluator_id": "cognitive-meteorology.f0.1",
+          "evaluator_version": "0.1.0",
+          "matched_rules": [
+            "f0.1:cold_front",
+            "f0.1:high_pressure",
+            "f0.1:pressure_differential"
+          ],
+          "pressure_differential": 0.875,
+          "pressure_differential_role": "EXPERIMENTAL_RELATIONAL_FEATURE"
+        }
+      },
+      "predecessor": "b467c683-f4c0-4016-aeab-611541f477f9"
+    },
+    {
+      "entry_id": "af4d788e-bb2f-4c3d-bf84-4791138c4b9a",
+      "timestamp": "2026-10-06T07:26:04.168Z",
+      "transition": "HUMAN_CHOICE",
+      "human_action": "delegate",
+      "artifact_ref": "HumanChoice:ff8b7600-3cc3-4cfc-babb-0cc36c3c24c1",
+      "machine_artifact": {
+        "kind": "HumanChoice",
+        "choice_id": "ff8b7600-3cc3-4cfc-babb-0cc36c3c24c1",
+        "action": "delegate",
+        "expected_revision": 3,
+        "controller": "Explicit local reference controller; not production identity proof"
+      },
+      "predecessor": "c4c6a9df-65e2-41f1-9ca9-295f920703b6"
+    },
+    {
+      "entry_id": "b3b44c0d-e112-4b64-983d-7d199f0474be",
+      "timestamp": "2026-10-06T07:26:04.281Z",
+      "transition": "DELEGATE",
+      "human_action": "Authorize this bounded Research",
+      "artifact_ref": "Delegation:e4152a09-16f0-4690-b315-a7b7059375a0",
+      "machine_artifact": {
+        "kind": "Delegation",
+        "delegation_id": "e4152a09-16f0-4690-b315-a7b7059375a0",
+        "human_choice_ref": "ff8b7600-3cc3-4cfc-babb-0cc36c3c24c1",
+        "reading_ref": "sha256:4a05510f3c1a6893eef2cd322dd63b453f9acf7b0a593ab56b0bb6bb8bbc9de0",
+        "office": "Research",
+        "program": "bounded-reading-investigation.f0.1",
+        "instrument": "Metascope",
+        "grant_ref": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+        "scope": {
+          "source_domains": [
+            "CALENDAR",
+            "GIT"
+          ],
+          "input": "One bounded FieldoscopyReading",
+          "action": "create_document",
+          "target": "research-return.json",
+          "max_bytes": 4096,
+          "max_effects": 1,
+          "further_delegation": false,
+          "objective": "Store and read back this bounded research note; no claim that its forecast is true"
+        }
+      },
+      "predecessor": "af4d788e-bb2f-4c3d-bf84-4791138c4b9a"
+    },
+    {
+      "entry_id": "aa601a9f-741d-4cc9-8c0a-c83c126a8eaa",
+      "timestamp": "2026-10-06T07:26:04.533Z",
+      "transition": "PASS",
+      "human_action": "Permission for the next transition",
+      "artifact_ref": "Permission:e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+      "machine_artifact": {
+        "kind": "Permission",
+        "permission_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "disposition": {
+          "kind": "Disposition",
+          "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+          "disposition": "ADMIT",
+          "reason": null,
+          "previous_decision_id": null,
+          "issued_at": "2026-10-06T07:26:04.532Z",
+          "source_authority": "I-1",
+          "interval_id": "I_AB",
+          "formation_ref": "97858bb3-b4b3-47be-b4eb-20776813349c",
+          "formation_hash": "1ed7d9a983f54f7943fea94919d57223b1209b75f15b55d0a0ae90c3e95c77a4",
+          "standing": {
+            "status": "KNOWN",
+            "interval_id": "I_AB",
+            "sourcepoint": "I-1",
+            "constitution_ref": "a7a9ca1e453574b95330d7c8654e5868681ea29575a573bc7e3f11441de4cb4f",
+            "authority_basis": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+            "standing": {
+              "outbound": "ELIGIBLE",
+              "inbound": "UNASSESSED"
+            },
+            "lineage_head": "9f9d7caf7d3535392ffdc15ece2f8e127ad895dff31d55e85b5c5b9fa77de9ae"
+          },
+          "native_decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+          "owner": "gateway/local-field/index.mjs"
+        },
+        "basis": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+        "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+        "next_transition": "ISSUE_INVOCATION_COMMITMENT",
+        "objective_contract": {
+          "objective_id": "Bounded Research note stored and read back",
+          "minimum_bytes": 1
+        },
+        "issued_at": "2026-10-06T07:26:04.533Z"
+      },
+      "predecessor": "b3b44c0d-e112-4b64-983d-7d199f0474be"
+    },
+    {
+      "entry_id": "ddfa8ccd-2123-4abf-bd96-fee813ca1afc",
+      "timestamp": "2026-10-06T07:26:04.934Z",
+      "transition": "HUMAN_CHOICE",
+      "human_action": "start",
+      "artifact_ref": "HumanChoice:62507ff4-4acc-48da-a735-6e7987f3e819",
+      "machine_artifact": {
+        "kind": "HumanChoice",
+        "choice_id": "62507ff4-4acc-48da-a735-6e7987f3e819",
+        "action": "start",
+        "expected_revision": 4,
+        "controller": "Explicit local reference controller; not production identity proof"
+      },
+      "predecessor": "aa601a9f-741d-4cc9-8c0a-c83c126a8eaa"
+    },
+    {
+      "entry_id": "c10c023c-0e47-4e70-84c2-b179103b8038",
+      "timestamp": "2026-10-06T07:26:05.070Z",
+      "transition": "COMMIT",
+      "human_action": "Start the bounded Research",
+      "artifact_ref": "InvocationLease:a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+      "machine_artifact": {
+        "kind": "InvocationLease",
+        "lease_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "permission_id": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+        "next_transition": "ATTEMPT_EXECUTION",
+        "commitment": {
+          "kind": "InvocationCommitment",
+          "commitment_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+          "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28",
+          "warrant": {
+            "body": {
+              "field_id": "66567800-651d-45f2-8a3c-88daa0a74c60",
+              "record_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+              "issued_at": "2026-10-06T07:26:04.937Z",
+              "expires_at": "2026-10-06T07:36:04.937Z",
+              "type": "invocation_commit",
+              "issuer": "I-1",
+              "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+              "passage_hash": "ee1cb92dc8bc32583343c687c61ff395e5a18f8109394c19fe3a73b9952606f2",
+              "decision_id": "1165cfdb-8f5c-4e02-9c1f-3fc695dc6b28"
+            },
+            "signature": "92b946864173426e0c95350dbb16b056c957a1f8d90a8461b74ad2e7c50c4c7e00a6a627fd516f541b04166ccceb884f9c2990d74e5a7a1093e6ababbee92207"
+          },
+          "issued_at": "2026-10-06T07:26:04.937Z",
+          "expires_at": "2026-10-06T07:36:03.920Z",
+          "token_id": "b0997391-67a5-4fba-ac5c-2cd1ef0e434f",
+          "authority_basis": "7d348a52-d2f7-42fe-be1f-6581f5de1b39",
+          "owner": "gateway/security/token-manager.mjs"
+        },
+        "revocation_semantics": {
+          "validation_points": [
+            "native invocation acceptance",
+            "descriptor release guard"
+          ],
+          "lease_expiry": "2026-10-06T07:36:03.920Z",
+          "propagation_bound": {
+            "scope": "local revocation registry",
+            "guarantee": "NONE",
+            "measured_ms": null
+          },
+          "unreachable_behavior": "No offline exercise: native registry and current authority must be available",
+          "already_committed_behavior": "Retained; this control supplies no compensation",
+          "acknowledgement_requirement": "Explicit local executor registry validation; no remote delegate acknowledgement claim"
+        }
+      },
+      "predecessor": "ddfa8ccd-2123-4abf-bd96-fee813ca1afc"
+    },
+    {
+      "entry_id": "ecf4b284-e63e-44af-863b-57b7f1a25a07",
+      "timestamp": "2026-10-06T07:26:05.556Z",
+      "transition": "ATTEMPT",
+      "human_action": "Research attempted its one scoped write",
+      "artifact_ref": "Attempt:6934b275-470b-4c32-8ece-983eda81660f",
+      "machine_artifact": {
+        "kind": "Attempt",
+        "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "invocation_lease_id": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+        "executor": "node-b",
+        "subject": "node-a",
+        "requested_effect": {
+          "action": "create_document",
+          "target": "research-return.json",
+          "payload_hash": "ce3eb1c194d2ace5a57a603f4b67b0ead0cc2fc6ee7eda42c55f206f0cfe5900"
+        },
+        "started_at": "2026-10-06T07:26:05.552Z",
+        "completed_at": "2026-10-06T07:26:05.553Z",
+        "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+        "executor_report": {
+          "kind": "Execution",
+          "execution_id": "d2a1df87-19ee-4c9b-9f67-aabb5844621e",
+          "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+          "attempt_id": "6934b275-470b-4c32-8ece-983eda81660f",
+          "status": "COMPLETED",
+          "result": {
+            "status": "COMPLETED",
+            "invocation_id": "6c0c4c14-f6d8-44dc-85e4-c3e7bf064193",
+            "bytes": 1424
+          },
+          "completed_at": "2026-10-06T07:26:05.553Z",
+          "owner": "gateway/execution/filesystem-executor.mjs"
+        }
+      },
+      "predecessor": "c10c023c-0e47-4e70-84c2-b179103b8038"
+    },
+    {
+      "entry_id": "53c68f6c-9709-4c5f-9f75-88f8eb5b09d1",
+      "timestamp": "2026-10-06T07:26:06.060Z",
+      "transition": "HUMAN_CHOICE",
+      "human_action": "return",
+      "artifact_ref": "HumanChoice:1aa8074e-64ae-4c47-befe-8abc0629eaea",
+      "machine_artifact": {
+        "kind": "HumanChoice",
+        "choice_id": "1aa8074e-64ae-4c47-befe-8abc0629eaea",
+        "action": "return",
+        "expected_revision": 5,
+        "controller": "Explicit local reference controller; not production identity proof"
+      },
+      "predecessor": "ecf4b284-e63e-44af-863b-57b7f1a25a07"
+    },
+    {
+      "entry_id": "61f1726a-77ee-42d3-a0f0-a99ab51ad79c",
+      "timestamp": "2026-10-06T07:26:06.062Z",
+      "transition": "OBSERVATION_UNAVAILABLE",
+      "human_action": "The independent readback is unavailable",
+      "artifact_ref": "ReferenceTransportFault:4515ea66-791b-41f5-b32c-1e291deb140c",
+      "machine_artifact": {
+        "kind": "ReferenceTransportFault",
+        "fault_id": "4515ea66-791b-41f5-b32c-1e291deb140c",
+        "status": "UNOBSERVABLE",
+        "scope": "Declared fixture withholds the independent observation request",
+        "physical_partition_proven": false
+      },
+      "predecessor": "53c68f6c-9709-4c5f-9f75-88f8eb5b09d1"
+    },
+    {
+      "entry_id": "7b323f6a-3705-4167-a40c-7dbaeae9320e",
+      "timestamp": "2026-10-06T07:26:06.167Z",
+      "transition": "RETURN",
+      "human_action": "Read Research’s Return",
+      "artifact_ref": "ReturnArtifact:cbdc75fd-fa14-48cb-b390-685925222835",
+      "machine_artifact": {
+        "kind": "ReturnArtifact",
+        "return_id": "cbdc75fd-fa14-48cb-b390-685925222835",
+        "passage_id": "19ee1370-0a9f-43ee-a151-336ca9a52342",
+        "execution_attempt": {
+          "status": "KNOWN",
+          "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+          "condition": "COMPLETED",
+          "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+        },
+        "executor_receipt": {
+          "status": "PRESENT",
+          "claim_ref": "f569e35b-7d89-402e-818e-32b60a6c97be",
+          "scope": "Executor report only"
+        },
+        "occurrence_knowledge": "UNKNOWN",
+        "observation_coverage": {
+          "status": "UNOBSERVABLE",
+          "scope": "Independent observation not obtained"
+        },
+        "outcome_assessment": {
+          "kind": "OutcomeAssessment",
+          "status": "UNRESOLVED",
+          "assessment_id": null
+        },
+        "return_completeness": "COMPLETE",
+        "required_reports": [
+          "ATTEMPT_ACCOUNT",
+          "OBSERVATION_ACCOUNT",
+          "OUTCOME_ACCOUNT",
+          "LIMITS_ACCOUNT"
+        ],
+        "reporting_accounts": [
+          {
+            "coordinate": "ATTEMPT_ACCOUNT",
+            "account": {
+              "status": "KNOWN",
+              "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+              "condition": "COMPLETED",
+              "scope": "Native passage attempt record; absence does not prove external non-occurrence"
+            }
+          },
+          {
+            "coordinate": "OBSERVATION_ACCOUNT",
+            "account": {
+              "coverage": {
+                "status": "UNOBSERVABLE",
+                "scope": "Independent observation not obtained"
+              },
+              "occurrence_knowledge": "UNKNOWN",
+              "evidence": null
+            }
+          },
+          {
+            "coordinate": "OUTCOME_ACCOUNT",
+            "account": {
+              "kind": "OutcomeAssessment",
+              "status": "UNRESOLVED",
+              "assessment_id": null
+            }
+          },
+          {
+            "coordinate": "LIMITS_ACCOUNT",
+            "account": {
+              "unresolved_remainder": [
+                "No admitted observation establishes occurrence exactly as commanded",
+                "The declared objective has not been separately assessed",
+                "Downstream consequences outside descriptor readback remain unobserved"
+              ],
+              "outstanding_obligations": [
+                "Qualified independent readback remains unestablished; any follow-up needs a fresh human choice",
+                "Human must decide whether any further research is warranted"
+              ],
+              "control_limits": {
+                "compensation_available": false,
+                "committed_effect": true,
+                "irreversible_scope": "No compensation exists through this control; other principals may alter the filesystem"
+              }
+            }
+          }
+        ],
+        "unresolved_remainder": [
+          "No admitted observation establishes occurrence exactly as commanded",
+          "The declared objective has not been separately assessed",
+          "Downstream consequences outside descriptor readback remain unobserved"
+        ],
+        "outstanding_obligations": [
+          "Qualified independent readback remains unestablished; any follow-up needs a fresh human choice",
+          "Human must decide whether any further research is warranted"
+        ],
+        "follow_up_required": true,
+        "provenance": {
+          "permission_ref": "e9627aeb-ccf4-43a8-ad1d-adbdb6316017",
+          "lease_ref": "a401bb4b-c1b1-4903-a4cd-6af38ec8277f",
+          "attempt_ref": "6934b275-470b-4c32-8ece-983eda81660f",
+          "observation_ref": null,
+          "evidence_ref": null,
+          "outcome_ref": null
+        },
+        "returned_at": "2026-10-06T07:26:06.167Z"
+      },
+      "predecessor": "61f1726a-77ee-42d3-a0f0-a99ab51ad79c"
+    },
+    {
+      "entry_id": "397b76d4-482f-47e6-b12f-c66886fe88c4",
+      "timestamp": "2026-10-06T07:26:06.626Z",
+      "transition": "HUMAN_CHOICE",
+      "human_action": "keep",
+      "artifact_ref": "HumanChoice:abb17991-124a-4f3c-bd23-8b65fb29f752",
+      "machine_artifact": {
+        "kind": "HumanChoice",
+        "choice_id": "abb17991-124a-4f3c-bd23-8b65fb29f752",
+        "action": "keep",
+        "expected_revision": 6,
+        "controller": "Explicit local reference controller; not production identity proof"
+      },
+      "predecessor": "7b323f6a-3705-4167-a40c-7dbaeae9320e"
+    },
+    {
+      "entry_id": "b835b822-2dfa-4915-b8a5-0ecceed20050",
+      "timestamp": "2026-10-06T07:26:06.628Z",
+      "transition": "REORIENT",
+      "human_action": "Keep this finding for my orientation",
+      "artifact_ref": "HumanOrientation:140a2838-b4e2-40ab-87b5-7decb3b9e4be",
+      "machine_artifact": {
+        "kind": "HumanOrientation",
+        "orientation_id": "140a2838-b4e2-40ab-87b5-7decb3b9e4be",
+        "choice": "RETAIN_FOR_ORIENTATION",
+        "basis_ref": "ReturnArtifact:cbdc75fd-fa14-48cb-b390-685925222835",
+        "human_choice_ref": "abb17991-124a-4f3c-bd23-8b65fb29f752",
+        "authorization_supplied": false,
+        "standing_change": false,
+        "next_action": "None; any new work requires a fresh request"
+      },
+      "predecessor": "397b76d4-482f-47e6-b12f-c66886fe88c4"
+    }
+  ],
+  "allowed_commands": [
+    "what",
+    "why",
+    "revoke"
+  ]
+}
