@@ -1,0 +1,31 @@
+name: Cognitive Meteorology F0.1
+on:
+  pull_request:
+    paths:
+      - 'gateway/local-field/meteorology/**'
+      - 'gateway/tests/cognitive-meteorology/**'
+      - 'gateway/scripts/run-cognitive-meteorology.mjs'
+      - 'gateway/package*.json'
+      - 'schemas/metascope-fieldoscopy-reading.json'
+      - '.github/workflows/cognitive-meteorology.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  bounded-specimen:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: gateway/package-lock.json
+      - run: npm ci
+        working-directory: gateway
+      - run: npm run test:meteorology
+        working-directory: gateway
+      - run: python -m pip install jsonschema==4.26.0
+      - run: python gateway/tests/cognitive-meteorology/schema.py
+      - run: npm run field:weather -- --demo /tmp/metascope-f0.1
+        working-directory: gateway

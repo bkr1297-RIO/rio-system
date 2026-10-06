@@ -1,0 +1,67 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+✔ 100 pull readings preserve real standing, durable tables, Calendar data, Git refs and world files (1622.086501ms)
+ℹ {"proof":"ACTUAL_NATIVE_STATE_COMPARISON","repetitions":100,"new_dispositions":0,"ledger_rows_before":24,"ledger_rows_after":24,"durable_tables_equal":true,"standing_equal":true,"calendar_bytes_equal":true,"git_refs_and_files_equal":true,"execution_authorities":0,"outgoing":0,"attempts":0,"artifact_files_before":0,"artifact_files_after":0}
+✔ core runs with filesystem writes and subprocesses denied and creates no timer resources (191.53068ms)
+✔ received machine readings reject raw additions and invented dispositions before display (14.665806ms)
+✔ hidden raw fields in signal arrays are rejected without reading them (8.132444ms)
+✖ boxed metrics and coercion hooks cannot carry raw content into a Fieldoscopy reading (12.478808ms)
+✖ all received reading arrays reject hidden fields and executable prototypes before projection (8.90601ms)
+✖ semantically equal windows align despite source object property order (7.495105ms)
+✔ pull runner emits distinct machine artifact and four-section HTML on explicit request only (347.354431ms)
+ℹ tests 8
+ℹ suites 0
+ℹ pass 5
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2481.984966
+
+✖ failing tests:
+
+test at gateway/tests/cognitive-meteorology/boundary.test.mjs:99:1
+✖ boxed metrics and coercion hooks cannot carry raw content into a Fieldoscopy reading (12.478808ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/boundary.test.mjs:102:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /SIGNAL/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/boundary.test.mjs:108:1
+✖ all received reading arrays reject hidden fields and executable prototypes before projection (8.90601ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/boundary.test.mjs:115:12)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /READING_FIELDS/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at gateway/tests/cognitive-meteorology/boundary.test.mjs:124:1
+✖ semantically equal windows align despite source object property order (7.495105ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + null
+  - 'PRESSURE_DIFFERENTIAL'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/727e581c0c01/cognitive-meteorology/gateway/tests/cognitive-meteorology/boundary.test.mjs:130:10)
+      at async Test.run (node:internal/test_runner/test:1389:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:960:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: null,
+    expected: 'PRESSURE_DIFFERENTIAL',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

@@ -1,0 +1,195 @@
+{
+  "base_commit": "5df28c0e4262616bf560787a3a365583370351da",
+  "tested_code_commit": "ff788ce824c3fd9de2ce7be647e37c340766ff71",
+  "files": [
+    {
+      "path": ".github/workflows/cognitive-meteorology.yml",
+      "sha256": "b47b3361bda2cf7bf833b67b1e61f0b4b4b27e3eba0c2cc8aa1a2adceb074bd8",
+      "bytes": 1009
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/boundary-proof.tap",
+      "sha256": "19ab335bbe0e530e40a8ea9edf9932984cbaec2d007468b18265386e7f87e036",
+      "bytes": 3200
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/comparative-cases.json",
+      "sha256": "48fd44ab05b5ac5a739bd84770796b0f20406d191f8d6b9060a3a8dab9952974",
+      "bytes": 120617
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/edges-red.log",
+      "sha256": "4d08c38c43a656abcf49fa6356e9d2f136b8c4ccb69429b3471869362a37b265",
+      "bytes": 11910
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/final-node-tests.log",
+      "sha256": "19169ef24c793a106bc5aa90f59db5ad929afc61e423364207d4730d592db055",
+      "bytes": 59993
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/legacy-gateway-test.log",
+      "sha256": "4159be7873ae33cca56e9a208d7307ff61fa5c5e65f193eaf75031b05fa774f2",
+      "bytes": 11244
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/reading-red.log",
+      "sha256": "dafad5d0e57786dfbd98a314ef2287f773c6ca5ac2de4a224e8a33891de657de",
+      "bytes": 17021
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/review-green.log",
+      "sha256": "37596e67aa88a5749adcdf0d66492af4a8f071c27bb734451bf6c2b064ec63dd",
+      "bytes": 3495
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/review-red.log",
+      "sha256": "6a54565cb0aae347fd89fdf58a3da9c14c8dc4ce1746eda8f37cdaf524433d8d",
+      "bytes": 3558
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/root-typecheck.log",
+      "sha256": "49f86cbee82d3f6b289a5389f03cbff95dff964f990f2eaf80dcd2ab152e5f23",
+      "bytes": 187
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/schema-red.log",
+      "sha256": "c281221b410561dba13ba5647466de9ee302d1332e2599e4ca36d0e652daaa65",
+      "bytes": 678
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/schema-tests.log",
+      "sha256": "1d8ad3947bf20b0ac21a0a09f6a53948477d80bd35b5d34b775dfc0c259ce3f6",
+      "bytes": 568
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/specimen/fieldoscopy-reading.json",
+      "sha256": "f13baa18d6ff13f90f0bcafe9dfa17545974eaf14899c969691021aba36c1e42",
+      "bytes": 6973
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/specimen/metascope-projection.json",
+      "sha256": "6d42f6ad60bbea9786a63f1f8d2ae0f1522f32dd095b2e5878c6c8eab8dac0cc",
+      "bytes": 1603
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/specimen/metascope.html",
+      "sha256": "a9cf15ed6544439af481672cf5f3759cabbe272323ae3d306428e234240cb8b2",
+      "bytes": 2789
+    },
+    {
+      "path": "docs/evidence/cognitive-meteorology-f0.1/zero-effect.json",
+      "sha256": "03231757426751886b993b249aacea27fd86e097de4b85a483c93a5434b7a66c",
+      "bytes": 1174
+    },
+    {
+      "path": "docs/implementation/cognitive-meteorology/BUILD-REPORT.md",
+      "sha256": "f25f74ef1194291705fdded9a9351ee26ea455ce43cd4e8f674b29b2558f9d4e",
+      "bytes": 10638
+    },
+    {
+      "path": "docs/implementation/cognitive-meteorology/BUILDER-PROMPT.md",
+      "sha256": "a5e41274c7c519ab73349a194d81df44195cb656d1f004cab3bec65899eb8a66",
+      "bytes": 9925
+    },
+    {
+      "path": "docs/implementation/cognitive-meteorology/PRESSURE-DIFFERENTIAL.md",
+      "sha256": "4e4fa9bcb6ed1a05cca5e58b7c753b7c871634a8726a3a24b5cfeb4013271267",
+      "bytes": 2545
+    },
+    {
+      "path": "docs/implementation/cognitive-meteorology/README.md",
+      "sha256": "25ef87b7d5fea32c9bf658714a400cf0b69a97d95295555237b2baec3fdffe51",
+      "bytes": 5917
+    },
+    {
+      "path": "docs/implementation/cognitive-meteorology/REVIEW.md",
+      "sha256": "5c8ee356689fc2f53352d7fb0f10b99b370a9a3b71265483a6e97be5f07795e7",
+      "bytes": 4005
+    },
+    {
+      "path": "docs/superpowers/plans/2026-10-06-cognitive-meteorology-f0.1.md",
+      "sha256": "b433cfe65faae316cf6890d11b437715624fbf17acc26c074311a68635449eac",
+      "bytes": 6237
+    },
+    {
+      "path": "gateway/local-field/meteorology/calendar-edge.mjs",
+      "sha256": "376c52d1b920cd5e805effbfd1fffbf15ccc0fe424cbaba35fd49b549d39ba59",
+      "bytes": 2160
+    },
+    {
+      "path": "gateway/local-field/meteorology/evaluator.mjs",
+      "sha256": "5370e6557fcd300cd94f75e81df5ce2ae4ebbffed1136addc072bfe718309404",
+      "bytes": 9918
+    },
+    {
+      "path": "gateway/local-field/meteorology/fixture-signals.json",
+      "sha256": "81af4f15d086d4224ebd5e94ee36aa038d3b2d342d59c8bdb97dbee652dcd4b2",
+      "bytes": 3656
+    },
+    {
+      "path": "gateway/local-field/meteorology/git-edge.mjs",
+      "sha256": "b096e51fb482dbbede9c65205ef00a394a3ba5c4cf3a70ead38d9d49db2e36e1",
+      "bytes": 2034
+    },
+    {
+      "path": "gateway/local-field/meteorology/projection.mjs",
+      "sha256": "0f813a94ece0a8a33738ee967de9f950afb61ebaf347d43e7178614b4705789f",
+      "bytes": 5141
+    },
+    {
+      "path": "gateway/local-field/meteorology/signals.mjs",
+      "sha256": "5d0aa920f1c3042d4beda4ec917070dcbc766d1a4282ca8df2076575533a296d",
+      "bytes": 5013
+    },
+    {
+      "path": "gateway/local-field/meteorology/types.d.ts",
+      "sha256": "c5a08c50ce27d5cdf658e4cc0dbb841331f8a0384447e5c3a522f188b471ab7a",
+      "bytes": 3459
+    },
+    {
+      "path": "gateway/package.json",
+      "sha256": "8a1934c02f0589caca845bb27e2950171de7d6a1304813931c87fa52f0651256",
+      "bytes": 2748
+    },
+    {
+      "path": "gateway/scripts/run-cognitive-meteorology.mjs",
+      "sha256": "c7e4cb2d44499ac1057568577ba19bd6cb2fed47598d8818befc61b3d84a82e6",
+      "bytes": 1950
+    },
+    {
+      "path": "gateway/tests/cognitive-meteorology/boundary.test.mjs",
+      "sha256": "99649c13396f122c2c455c7afd50f6b62dc7ee3636b836ff2c340d0043659261",
+      "bytes": 11907
+    },
+    {
+      "path": "gateway/tests/cognitive-meteorology/edges.test.mjs",
+      "sha256": "66242bc164d997000b15a592d3bc3956aebb3756cfeb0af97e4f6680bd59f3ce",
+      "bytes": 6003
+    },
+    {
+      "path": "gateway/tests/cognitive-meteorology/fixtures.mjs",
+      "sha256": "530bc5575093aa0f43424a3dc8fa6474b80f5005f868a3c5aa28014a494ed586",
+      "bytes": 1873
+    },
+    {
+      "path": "gateway/tests/cognitive-meteorology/reading.test.mjs",
+      "sha256": "dd86fc2df3eec956466bf1b5ba8794d20ec9026c3f5163edcc4d2f3120c12dc2",
+      "bytes": 7767
+    },
+    {
+      "path": "gateway/tests/cognitive-meteorology/schema.py",
+      "sha256": "4dec7f87933310b35cd01601df7f612eee4ecdd913488eab4a1bb93e7712dad5",
+      "bytes": 2716
+    },
+    {
+      "path": "schemas/metascope-fieldoscopy-reading.json",
+      "sha256": "4ee3c93da1177d63bed4dec3e3f68945f8b43d80098c6da4ba11ce25ce4bb060",
+      "bytes": 10647
+    }
+  ],
+  "self_exclusions": [
+    "source-hashes.json",
+    "verification.json"
+  ]
+}

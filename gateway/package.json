@@ -30,7 +30,9 @@
     "test:ccm": "node --test tests/ccm-001/*.test.mjs",
     "field:ccm": "node scripts/run-ccm-001.mjs",
     "test:waist": "node --test tests/constitutional-waist/*.test.mjs",
-    "field:waist": "node scripts/run-constitutional-waist.mjs"
+    "field:waist": "node scripts/run-constitutional-waist.mjs",
+    "test:meteorology": "node --test tests/cognitive-meteorology/*.test.mjs",
+    "field:weather": "node scripts/run-cognitive-meteorology.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

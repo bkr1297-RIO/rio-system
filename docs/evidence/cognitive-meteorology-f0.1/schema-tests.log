@@ -1,0 +1,8 @@
+test_actual_pressure_empty_partial_and_stale_readings_conform (__main__.SchemaConformance.test_actual_pressure_empty_partial_and_stale_readings_conform) ... ok
+test_direction_velocity_and_source_binding_are_required (__main__.SchemaConformance.test_direction_velocity_and_source_binding_are_required) ... ok
+test_raw_content_and_constitutional_dispositions_are_forbidden (__main__.SchemaConformance.test_raw_content_and_constitutional_dispositions_are_forbidden) ... ok
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.541s
+
+OK
