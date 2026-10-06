@@ -1,4 +1,5 @@
 import { ConstitutionalMedium } from './medium/index.mjs';
+import { WAIST_PROFILE, HOLD_ACTIONS, NODE_FIELDS, ROOT_FIELDS, exactFields, passageContract, blockedDisposition } from './waist.mjs';
 import { randomUUID } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { LocalStore } from '../ledger/local-store.mjs';
@@ -62,6 +63,7 @@ export class LocalField {
   #bilateral;
   #relations;
   #medium;
+  #waist = false;
   constructor({ root, anchor, receiver, signingKey, definition, openArrow, peers }) {
     requireValue(
       root &&
@@ -157,6 +159,12 @@ export class LocalField {
           ),
           'RECEIVER_KEY_MISMATCH',
         );
+      // Enable trace verification before CCM replays any captured native Return.
+      if (Object.hasOwn(this.#field.dependencies, 'constitutional-waist')) {
+        requireValue(this.#field.dependencies['ccm-001']==='ccm-001.f0.1' &&
+          this.#field.dependencies['constitutional-waist']===WAIST_PROFILE,'WAIST_PROFILE_REQUIRED');
+        this.#waist=true;
+      }
       if (Object.hasOwn(this.#field.dependencies, 'ccm-001'))
         this.#medium = new ConstitutionalMedium({ store: this.#store, field: this.#field, anchor: this.#anchor,
           rootCheck: record => this.#controlSignature(record),
@@ -227,6 +235,7 @@ export class LocalField {
   }
   control(record) {
     if (record?.body?.type === 'ccm_command') return this.ccmCommand(record);
+    if (record?.body?.type === 'invocation_commit') return this.#commitInvocation(record);
     if (this.#bilateral) requireValue(Buffer.byteLength(JSON.stringify(record)) <= MAX_RECORD_BYTES, 'CONTROL_RESOURCE_LIMIT');
     canonicalizeArgs(record);
     record = clone(record);
@@ -327,6 +336,13 @@ export class LocalField {
           b.record_id,
         );
         this.#record('revocation', b.record_id, record);
+      } else if (b.type === 'invocation_revoke') {
+        this.#waistCurrent();
+        exactFields(b,[...ROOT_FIELDS,'commitment_id'],'COMMITMENT_REVOCATION_FIELDS');
+        requireValue(root, 'ROOT_REQUIRED');
+        requireValue(this.#store.get('commitment',b.commitment_id),'COMMITMENT_UNKNOWN');
+        this.#store.state('commitment_revoked',b.commitment_id,b.record_id);
+        this.#record('commitment_revocation',b.record_id,record);
       } else if (b.type === 'node_revocation') {
         requireValue(root, 'ROOT_REQUIRED');
         nodeAt(this.#store, b.node_id);
@@ -456,6 +472,7 @@ export class LocalField {
     return p;
   }
   #decision(record, options) {
+    if (this.#waist) { this.#waistCurrent(); this.#waistContract(record?.body); }
     const p = this.#request(record, options);
     const relation_binding = this.#relations?.guard(p);
     const candidate = p.origin.candidate_id ? this.#store.get('candidate', p.origin.candidate_id) : null;
@@ -493,13 +510,19 @@ export class LocalField {
       { ...this.#field.policy, policy_hash: hash(this.#field.policy) },
       { systemMode: 'NORMAL' },
     );
-    requireValue(
-      ['REQUIRE_HUMAN', 'AUTO_APPROVE'].includes(policy.governance_decision),
-      'RIO_DENIED_OR_HELD',
-    );
+    if (!['REQUIRE_HUMAN', 'AUTO_APPROVE'].includes(policy.governance_decision))
+      throw Object.assign(new Error('RIO_DENIED_OR_HELD'),{ policy });
     return { intent, lineage, policy, relation_binding, simulation_binding };
   }
   admit(record, transit = null) {
+    if (this.#waist) return this.#consider(record, transit);
+    return this.#admitNative(record,transit);
+  }
+  #issueToken(p) {
+    return issueExecutionToken({ intent_id:p.intent_id, approval_id:p.authority_basis, tool_name:p.action,
+      args_hash:hash(p), environment:this.#field.field_id, signFn:s=>signPayload(s,this.#signingKey) });
+  }
+  #admitNative(record, transit = null) {
     canonicalizeArgs(record);
     record = clone(record);
     const p = record.body;
@@ -527,16 +550,10 @@ export class LocalField {
           ...(relation_binding ? { relation_binding } : {}),
           ...(simulation_binding ? { simulation_binding } : {}),
         };
-        const token = issueExecutionToken({
-          intent_id: p.intent_id,
-          approval_id: p.authority_basis,
-          tool_name: p.action,
-          args_hash: hash(p),
-          environment: this.#field.field_id,
-          signFn: (s) => signPayload(s, this.#signingKey),
-        });
-        this.#tokens.set(p.passage_id, token);
-        createdToken = true;
+        if (!this.#waist) {
+          this.#tokens.set(p.passage_id, this.#issueToken(p));
+          createdToken = true;
+        }
         this.#record('passage', p.passage_id, record);
         this.#record('intent', p.passage_id, intent);
         this.#record('decision', p.passage_id, decision);
@@ -546,6 +563,7 @@ export class LocalField {
         this.#arrow?.admitted(p, decision);
         this.#projection?.admitted(p, decision);
         if (relation_binding) this.#relations.admitted(p, relation_binding);
+        if (this.#waist) return this.#recordDisposition(record,'ADMIT',null,decision);
         return clone(decision);
       });
     } catch (e) {
@@ -568,11 +586,20 @@ export class LocalField {
     const id = permit?.passage_id,
       record = permit?.record;
     requireValue(
-      id && this.#store.state('phase', id) === 'ADMITTED',
+      id && this.#store.state('phase', id) === (this.#waist ? 'INVOKED' : 'ADMITTED'),
       'NOT_ADMITTED',
     );
     const decision = this.#store.get('decision', id),
       p = record?.body;
+    let commitment, invocation;
+    if (this.#waist) {
+      commitment=this.#currentCommitment(id, permit.commitment_id);
+      invocation=this.#custody('invocation',id);
+      const b=invocation.request.body;
+      verifyNodeRecord(this.#store,invocation.request,this.#field.field_id);
+      requireValue(b.type==='invocation'&&b.passage_id===id&&b.source_node===p.source_node&&
+        b.commitment_id===commitment.commitment_id&&b.passage_hash===hash(p)&&hash(b.passage)===hash(record),'INVOCATION_BINDING');
+    }
     // Current authority concerns the immutable admitted request. A different
     // submitted operation never becomes the object authorized by this check.
     const authority = {
@@ -617,6 +644,13 @@ export class LocalField {
         verifySignature(message, signature, receiver.public_key_hex),
     });
     requireValue(check.valid, `FIDELITY_TOKEN:${check.reason}`);
+    if(this.#waist) {
+      // Recheck temporal burdens after cryptographic/current-authority work,
+      // immediately before the durable attempt and descriptor mutation.
+      fresh(invocation.request.body);fresh(commitment);fresh(commitment.warrant.body);
+      fresh(this.#store.get('candidate',p.origin.candidate_id).body);
+      for(const g of lineage)fresh(g.body);
+    }
     for (const g of lineage) {
       const gid = g.body.grant.grant_id;
       this.#store.state('uses', gid, (this.#store.state('uses', gid) || 0) + 1);
@@ -644,7 +678,11 @@ export class LocalField {
     this.#tokens.delete(id);
   }
   execute(id, record) {
-    requireValue(this.#store.state('phase', id) === 'ADMITTED', 'NOT_ADMITTED');
+    requireValue(!this.#waist,'WAIST_EXPLICIT_INVOCATION_REQUIRED');
+    return this.#executeNative(id,record);
+  }
+  #executeNative(id, record, commitmentId = null) {
+    requireValue(this.#store.state('phase', id) === (this.#waist ? 'INVOKED' : 'ADMITTED'), 'NOT_ADMITTED');
     canonicalizeArgs(record);
     record = clone(record);
     // Authenticate the original signer before a failure may alter that passage.
@@ -662,12 +700,12 @@ export class LocalField {
     );
     // The adapter calls its guard immediately before open/create. The guard commits
     // the durable attempt and consumes standing before any external mutation.
-    const permit = { passage_id: id, record };
+    const permit = { passage_id: id, record, commitment_id: commitmentId };
     const operation = clone(record.body);
     let result, occurrence;
     try {
       result = this.#executor.execute(operation, permit);
-      occurrence = this.#executor.observe(operation);
+      if (!this.#waist) occurrence = this.#executor.observe(operation);
     } catch (e) {
       if (this.#store.state('phase', id) !== 'ATTEMPTED') {
         this.#store.transaction(() => {
@@ -696,6 +734,16 @@ export class LocalField {
         reason:
           'Execution or observation failed; non-occurrence is not inferred',
       };
+    }
+    if (this.#waist) {
+      return this.#store.transaction(()=>{
+        const execution={kind:'Execution',execution_id:randomUUID(),passage_id:id,
+          attempt_id:this.#store.get('attempt',id).attempt_id,status:result.status,result,
+          completed_at:stamp(),owner:'gateway/execution/filesystem-executor.mjs'};
+        this.#record('execution',id,execution);
+        this.#store.state('phase',id,'EXECUTED');
+        return clone(execution);
+      });
     }
     const returned = this.#complete(id, result, occurrence);
     this.#arrow?.capture(this.inspect(id));
@@ -748,6 +796,7 @@ export class LocalField {
             returned: this.#receiver,
           },
           correlation_id: p.correlation_id,
+          ...(this.#waist ? {waist_trace:this.#waistTrace(id)} : {}),
         },
       };
       const receipt = sealLocalFieldReceipt(
@@ -816,11 +865,11 @@ export class LocalField {
       for (const signed of this.#store.all('passage')) {
         const id = signed.body.passage_id,
           phase = this.#store.state('phase', id);
-        if (['ADMITTED', 'ATTEMPTED'].includes(phase)) {
+        if (['ADMITTED', 'COMMITTED', 'INVOKED', 'ATTEMPTED', 'EXECUTED'].includes(phase)) {
           this.#store.state('phase', id, 'HELD');
           this.#return(
             id,
-            phase === 'ATTEMPTED' ? 'UNSETTLED_ATTEMPT' : 'RESTART_HOLD',
+            ['INVOKED','ATTEMPTED','EXECUTED'].includes(phase) ? 'UNSETTLED_ATTEMPT' : 'RESTART_HOLD',
             null,
             'No permission regenerated and no effect replayed',
           );
@@ -853,6 +902,7 @@ export class LocalField {
       'return_budget',
       'relation_run',
     ];
+    if (this.#waist) kinds.push('invocation','execution','observation');
     return Object.fromEntries(kinds.map((k) => [k, this.#store.get(k, id)]));
   }
   #verifySimulation(chain) {
@@ -895,7 +945,8 @@ export class LocalField {
         c.return.passage_id === c.passage.body.passage_id &&
         c.return.receipt_id === r.receipt_id &&
         (!c.decision.relation_binding || this.#relations?.verify(c) === true) && this.#verifySimulation(c);
-      return { valid, passage_id: id };
+      const waistValid = !this.#waist || hash(a.execution.result.waist_trace)===hash(this.#waistTrace(id));
+      return { valid:valid&&waistValid, passage_id: id };
     } catch {
       return { valid: false, passage_id: id };
     }
@@ -997,6 +1048,7 @@ export class LocalField {
       requireValue(Array.isArray(b.args), 'CCM_QUERY_ARGS');
       return this.ccmQuery(b.query, ...b.args);
     }
+    if (b.view === 'waist') return this.waistQuery(b.passage_id);
     if (b.view === 'arrow') {
       requireValue(this.#arrow, 'OPEN_ARROW_NOT_CONFIGURED');
       return this.#arrow.view(b.arrow_id);
@@ -1016,13 +1068,237 @@ export class LocalField {
     );
   }
   async dispatch(record) {
+    requireValue(!this.#waist,'WAIST_EXPLICIT_DISPATCH_SEQUENCE_REQUIRED');
     requireValue(this.#bilateral, 'BILATERAL_PROFILE_REQUIRED');
     const admitted = await this.#bilateral.dispatch(record);
     this.#relations?.captureReturn(this.inspect(admitted.passage_id));
     return admitted;
   }
+  #waistCurrent() {
+    requireValue(this.#waist,'WAIST_NOT_CONFIGURED');
+    fresh(this.#field);
+    requireValue(this.#store.state('dependency','constitutional-waist')===WAIST_PROFILE,'WAIST_PROFILE_CHANGED');
+    requireValue(this.#store.state('dependency','ccm-001')==='ccm-001.f0.1','CCM_PROFILE_CHANGED');
+  }
+  #waistContract(p) {
+    const candidate=this.#custody('candidate',p?.origin?.candidate_id);
+    requireValue(candidate.body.type==='candidate'&&candidate.body.candidate_id===p.origin.candidate_id&&
+      candidate.body.source_node===p.source_node,'WAIST_FORMATION_BINDING');
+    verifyNodeRecord(this.#store,candidate,this.#field.field_id);
+    return passageContract(p,candidate.body.content);
+  }
+  #custody(kind,id) {
+    const value=this.#store.get(kind,id);
+    requireValue(value && this.#store.ledger().some(e=>e.action===kind && hash(JSON.parse(e.detail))===hash(value)), 'WAIST_RECORD_CUSTODY');
+    return value;
+  }
+  #latestDisposition(id) {
+    const key=this.#store.state('waist_latest',id);
+    if (!key) return null;
+    const decisions=this.#store.all('waist_decision').filter(x=>x.passage_id===id);
+    requireValue(decisions.at(-1)?.decision_id===key,'WAIST_DECISION_CUSTODY');
+    return this.#custody('waist_decision',key);
+  }
+  #recordDisposition(record,disposition,reason,native=null) {
+    const p=record.body,id=p.passage_id, prior=this.#latestDisposition(id);
+    if(!this.#store.get('waist_candidate',id)) this.#record('waist_candidate',id,record);
+    const w=this.#waistContract(p),formation=this.#store.get('candidate',p.origin.candidate_id);
+    const result={kind:'Disposition',decision_id:native?.decision_id||randomUUID(),passage_id:id,passage_hash:hash(p),
+      disposition,reason,previous_decision_id:prior?.decision_id||null,issued_at:stamp(),
+      source_authority:this.#anchor.principal_id,interval_id:w.interval_id,formation_ref:p.origin.candidate_id,formation_hash:hash(formation.body),
+      standing:this.#medium.query('UnderWhoseAuthority',w.interval_id),
+      native_decision_id:native?.decision_id||null,owner:'gateway/local-field/index.mjs'};
+    this.#record('waist_decision',result.decision_id,result);
+    this.#store.state('waist_latest',id,result.decision_id);
+    return clone(result);
+  }
+  #consider(record,transit) {
+    this.#waistCurrent(); canonicalizeArgs(record); record=clone(record);
+    requireValue(Buffer.byteLength(JSON.stringify(record))<=MAX_RECORD_BYTES,'WAIST_RESOURCE_LIMIT');
+    const p=record?.body;
+    verifyNodeRecord(this.#store,record,this.#field.field_id);
+    requireValue(p.type==='passage'&&p.source_node===p.subject && typeof p.passage_id==='string'&&p.passage_id.length>=16,'WAIST_CANDIDATE');
+    this.#waistContract(p);
+    const prior=this.#latestDisposition(p.passage_id);
+    if(prior) {
+      requireValue(prior.passage_hash===hash(p),'WAIST_CANDIDATE_IMMUTABLE');
+      this.#custody('waist_candidate',p.passage_id);
+      if(prior.disposition!=='HOLD') return clone({...prior,decision_time_basis:'HISTORICAL_RECORDED_DECISION',
+        current_eligibility:prior.disposition==='ADMIT'?this.#medium.query('WhatMayRightfullyFollow',prior.interval_id,p):
+          {status:prior.disposition,reason:'TERMINAL_CANDIDATE_DISPOSITION'}});
+      requireValue(!this.#store.state('waist_withdrawn',p.passage_id),'CANDIDATE_WITHDRAWN');
+      requireValue(this.#store.all('hold_step').some(x=>x.decision_id===prior.decision_id),'HOLD_STEP_REQUIRED');
+      requireValue(this.#store.all('waist_decision').filter(x=>x.passage_id===p.passage_id).length<16,'HOLD_BUDGET');
+    }
+    try { this.#decision(record); }
+    catch(error) {
+      return this.#store.transaction(()=>this.#recordDisposition(record,blockedDisposition(error),error.message));
+    }
+    return this.#admitNative(record,transit);
+  }
+  #commitInvocation(record) {
+    this.#waistCurrent(); canonicalizeArgs(record); record=clone(record);
+    const b=this.#controlSignature(record);
+    requireValue(b.issuer===this.#anchor.principal_id,'ROOT_REQUIRED');
+    exactFields(b,[...ROOT_FIELDS,'passage_id','passage_hash','decision_id'],'COMMITMENT_FIELDS');
+    const d=this.#latestDisposition(b.passage_id);
+    requireValue(d?.disposition==='ADMIT'&&this.#store.state('phase',b.passage_id)==='ADMITTED','NOT_ADMITTED');
+    requireValue(d.decision_id===b.decision_id&&d.passage_hash===b.passage_hash,'DECISION_BINDING');
+    const p=this.#store.get('passage',b.passage_id).body;
+    const {policy,lineage}=this.#decision(this.#store.get('passage',b.passage_id));
+    requireValue(hash(policy)===hash(this.#store.get('decision',b.passage_id).policy),'FIDELITY_POLICY_CHANGED');
+    let token;
+    try {
+      const committed=this.#store.transaction(()=>{
+        this.#store.useNonce('control',b.record_id);
+        token=this.#issueToken(p);
+        const expires_at=new Date(Math.min(Date.parse(b.expires_at),Date.parse(p.expires_at),Date.parse(this.#field.expires_at),
+          Date.parse(this.#store.get('candidate',p.origin.candidate_id).body.expires_at),
+          Date.parse(token.expires_at),...lineage.map(g=>Date.parse(g.body.expires_at)))).toISOString();
+        const c={kind:'InvocationCommitment',commitment_id:b.record_id,passage_id:p.passage_id,passage_hash:hash(p),
+          decision_id:d.decision_id,warrant:record,issued_at:b.issued_at,expires_at,
+          token_id:token.token_id,authority_basis:p.authority_basis,owner:'gateway/security/token-manager.mjs'};
+        this.#record('commitment',c.commitment_id,c);
+        this.#store.state('waist_commitment',p.passage_id,c.commitment_id);
+        this.#store.state('phase',p.passage_id,'COMMITTED'); return c;
+      });
+      this.#tokens.set(p.passage_id,token);
+      return clone(committed);
+    } catch(e) { this.#tokens.delete(p.passage_id); throw e; }
+  }
+  #currentCommitment(id,commitmentId) {
+    this.#waistCurrent();
+    requireValue(commitmentId&&this.#store.state('waist_commitment',id)===commitmentId,'COMMITMENT_BINDING');
+    const c=this.#custody('commitment',commitmentId);
+    verifySigned(c.warrant,this.#anchor.public_key_hex);fresh(c.warrant.body);fresh(c);
+    requireValue(c.warrant.body.issuer===this.#anchor.principal_id && c.warrant.body.type==='invocation_commit' &&
+      c.warrant.body.passage_id===id && c.warrant.body.record_id===c.commitment_id &&
+      c.warrant.body.decision_id===c.decision_id && c.warrant.body.passage_hash===c.passage_hash,'COMMITMENT_BINDING');
+    requireValue(!this.#store.state('commitment_revoked',commitmentId),'COMMITMENT_REVOKED');
+    const d=this.#latestDisposition(id);
+    requireValue(d?.disposition==='ADMIT'&&d.decision_id===c.decision_id&&d.passage_hash===c.passage_hash,'DECISION_BINDING');
+    requireValue(this.#tokens.get(id)?.token_id===c.token_id,'FIDELITY_TOKEN_MISSING');
+    return c;
+  }
+  #waistCaller(record,id) {
+    const node=verifyNodeRecord(this.#store,record,this.#field.field_id);
+    const p=this.#custody('waist_candidate',id).body;
+    requireValue(node.node_id===p.source_node&&record.body.passage_id===id,'WAIST_CALLER_MISMATCH');
+    requireValue(typeof record.body.record_id==='string'&&record.body.record_id.length>=16,'CONTROL_ID_REQUIRED');
+    return p;
+  }
+  invoke(record) {
+    this.#waistCurrent();canonicalizeArgs(record);record=clone(record);
+    requireValue(Buffer.byteLength(JSON.stringify(record))<=MAX_RECORD_BYTES,'WAIST_RESOURCE_LIMIT');
+    const b=record?.body;
+    exactFields(b,[...NODE_FIELDS,'passage_id','passage_hash','commitment_id','passage'],'INVOCATION_FIELDS');
+    requireValue(b.type==='invocation','INVOCATION_FIELDS');
+    const p=this.#waistCaller(record,b.passage_id);
+    requireValue(this.#store.state('phase',b.passage_id)==='COMMITTED','NOT_COMMITTED');
+    const c=this.#currentCommitment(b.passage_id,b.commitment_id);
+    requireValue(b.passage_hash===c.passage_hash&&hash(b.passage?.body)===c.passage_hash&&hash(p)===c.passage_hash,'INVOCATION_BINDING');
+    verifySigned(b.passage,nodeAt(this.#store,p.source_node).public_key_hex);
+    this.#decision(this.#store.get('passage',b.passage_id));
+    this.#store.transaction(()=>{
+      this.#store.useNonce('waist-action',b.record_id);
+      this.#record('invocation',b.passage_id,{kind:'Invocation',invocation_id:b.record_id,passage_id:b.passage_id,
+        commitment_id:c.commitment_id,decision_id:c.decision_id,request:record,invoked_at:stamp()});
+      this.#store.state('phase',b.passage_id,'INVOKED');
+    });
+    return this.#executeNative(b.passage_id,b.passage,c.commitment_id);
+  }
+  observe(record) {
+    this.#waistCurrent();canonicalizeArgs(record);record=clone(record);
+    const b=record?.body;
+    exactFields(b,[...NODE_FIELDS,'passage_id','execution_id'],'OBSERVATION_FIELDS');
+    requireValue(b.type==='observation_request','OBSERVATION_FIELDS');
+    const p=this.#waistCaller(record,b.passage_id);
+    requireValue(this.#store.state('phase',b.passage_id)==='EXECUTED','NOT_EXECUTED');
+    const e=this.#custody('execution',b.passage_id);
+    requireValue(e.execution_id===b.execution_id,'EXECUTION_BINDING');
+    this.#waistTrace(b.passage_id);
+    let measurement,status='RECORDED';
+    try { measurement=this.#executor.observe(p); }
+    catch(error) { status='FAILED';measurement={occurrence_id:randomUUID(),status:'UNKNOWN',target:p.target,observed_at:stamp(),
+      reason:`Independent readback failed (${error.code||error.message}); execution success does not establish occurrence`}; }
+    const observation={kind:'Observation',observation_id:randomUUID(),passage_id:b.passage_id,execution_id:e.execution_id,
+      status,request:record,measurement,owner:'gateway/execution/filesystem-executor.mjs'};
+    this.#store.transaction(()=>{this.#store.useNonce('waist-action',b.record_id);this.#record('observation',b.passage_id,observation);});
+    const returned=this.#complete(b.passage_id,e.result,{...measurement,observation_ref:observation.observation_id});
+    this.#arrow?.capture(this.inspect(b.passage_id));this.#projection?.capture(this.inspect(b.passage_id));this.#relations?.capture(this.inspect(b.passage_id));
+    return returned;
+  }
+  hold(record) {
+    this.#waistCurrent();canonicalizeArgs(record);record=clone(record);
+    const b=record?.body;
+    exactFields(b,[...NODE_FIELDS,'passage_id','decision_id','action'],'HOLD_FIELDS');
+    requireValue(b.type==='hold_action'&&HOLD_ACTIONS.includes(b.action),'HOLD_ACTION_INVALID');
+    const p=this.#waistCaller(record,b.passage_id), d=this.#latestDisposition(b.passage_id);
+    requireValue(d?.disposition==='HOLD'&&d.decision_id===b.decision_id&&!this.#store.state('waist_withdrawn',b.passage_id),'NOT_HELD');
+    requireValue(this.#store.all('hold_step').filter(x=>x.passage_id===b.passage_id).length<32,'HOLD_BUDGET');
+    const result={kind:'HoldStep',step_id:b.record_id,passage_id:b.passage_id,decision_id:d.decision_id,action:b.action,
+      consequential:false,request:record,performed_at:stamp(),
+      result:{standing:this.#medium.query('UnderWhoseAuthority',d.interval_id),
+        eligibility:this.#medium.query('WhatMayRightfullyFollow',d.interval_id,p),
+        next:b.action==='REQUEST_SOURCEPOINT'?'LOCAL_REQUEST_RECORDED':b.action==='WITHDRAW'?'WITHDRAWN':'FRESH_DECISION_REQUIRED'}};
+    this.#store.transaction(()=>{this.#store.useNonce('waist-action',b.record_id);this.#record('hold_step',result.step_id,result);
+      if(b.action==='WITHDRAW')this.#store.state('waist_withdrawn',b.passage_id,true);});
+    return clone(result);
+  }
+  #waistTrace(id) {
+    const decisions=this.#store.all('waist_decision').filter(x=>x.passage_id===id).map(x=>this.#custody('waist_decision',x.decision_id));
+    const steps=this.#store.all('hold_step').filter(x=>x.passage_id===id).map(x=>this.#custody('hold_step',x.step_id));
+    const key=this.#store.state('waist_commitment',id);
+    const get=kind=>this.#store.get(kind,id)?this.#custody(kind,id):null;
+    const candidate=get('waist_candidate'),p=candidate?.body;
+    const formation=p?this.#custody('candidate',p.origin.candidate_id):null;
+    const commitment=key?this.#custody('commitment',key):null,invocation=get('invocation'),execution=get('execution'),observation=get('observation');
+    const historical=r=>{
+      requireValue(r.body.field_id===this.#field.field_id&&r.body.source_node===p.source_node,'WAIST_TRACE_BINDING');
+      verifySigned(r,this.#store.get('enrollment',p.source_node).body.node.public_key_hex);
+    };
+    if(p) {
+      historical(candidate);historical(formation);passageContract(p,formation.body.content);
+      requireValue(formation.body.candidate_id===p.origin.candidate_id,'WAIST_TRACE_BINDING');
+      for(const d of decisions)requireValue(d.passage_hash===hash(p)&&d.formation_ref===p.origin.candidate_id&&
+        d.formation_hash===hash(formation.body),'WAIST_TRACE_BINDING');
+    }
+    if(commitment) {
+      verifySigned(commitment.warrant,this.#anchor.public_key_hex);
+      requireValue(commitment.warrant.body.issuer===this.#anchor.principal_id&&commitment.passage_id===id&&
+        commitment.passage_hash===hash(p)&&commitment.warrant.body.passage_hash===hash(p)&&
+        commitment.warrant.body.record_id===commitment.commitment_id&&commitment.warrant.body.passage_id===id&&
+        commitment.warrant.body.decision_id===commitment.decision_id&&
+        decisions.some(d=>d.decision_id===commitment.decision_id&&d.disposition==='ADMIT'),'WAIST_TRACE_BINDING');
+    }
+    if(invocation) {
+      historical(invocation.request);const b=invocation.request.body;
+      requireValue(b.passage_id===id&&b.commitment_id===commitment?.commitment_id&&b.passage_hash===hash(p)&&
+        hash(b.passage)===hash(candidate)&&invocation.commitment_id===commitment.commitment_id,'WAIST_TRACE_BINDING');
+    }
+    if(execution) requireValue(invocation&&execution.passage_id===id&&execution.attempt_id===this.#custody('attempt',id).attempt_id&&
+      execution.status===execution.result.status,'WAIST_TRACE_BINDING');
+    if(observation) {
+      historical(observation.request);
+      requireValue(execution&&observation.request.body.execution_id===execution.execution_id&&
+        observation.execution_id===execution.execution_id&&observation.request.body.passage_id===id&&
+        observation.measurement.target===p.target,'WAIST_TRACE_BINDING');
+    }
+    for(const step of steps){historical(step.request);requireValue(step.passage_id===id&&step.request.body.passage_id===id&&
+      step.request.body.action===step.action&&step.request.body.decision_id===step.decision_id&&
+      decisions.some(d=>d.decision_id===step.decision_id&&d.disposition==='HOLD'),'WAIST_TRACE_BINDING');}
+    return {profile:WAIST_PROFILE,candidate,formation,decisions,hold_steps:steps,commitment,invocation,execution,observation};
+  }
+  waistQuery(id) {
+    requireValue(this.#waist,'WAIST_NOT_CONFIGURED');
+    const trace=this.#waistTrace(id), chain=this.inspect(id);
+    return clone({...trace,latest:this.#latestDisposition(id),latest_time_basis:'HISTORICAL_RECORDED_DECISION',phase:this.#store.state('phase',id),attempt:chain.attempt,
+      occurrence:chain.occurrence,return:chain.return,receipt:chain.receipt,actuator:chain.attempt?1:0,
+      evidence:null,settlement:'UNESTABLISHED',home_mutation:'NOT_INVOKED',source_authority:this.#anchor.principal_id});
+  }
   receive(transit) {
     requireValue(this.#bilateral, 'BILATERAL_PROFILE_REQUIRED');
+    requireValue(!this.#waist,'WAIST_EXPLICIT_RECEIVE_SEQUENCE_REQUIRED');
     const record = transit?.body?.passage;
     this.admit(record, transit);
     try { this.execute(record.body.passage_id, record); }

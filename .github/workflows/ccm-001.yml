@@ -1,7 +1,7 @@
 name: CCM-001 Candidate Conformance
 on:
   pull_request:
-    paths: ['gateway/local-field/medium/**', 'gateway/local-field/index.mjs', 'gateway/tests/ccm-001/**', 'gateway/scripts/run-ccm-001.mjs', 'gateway/package*.json', '.github/workflows/ccm-001.yml']
+    paths: ['gateway/local-field/medium/**', 'gateway/local-field/waist.*', 'gateway/local-field/index.mjs', 'gateway/local-field/http.mjs', 'gateway/tests/ccm-001/**', 'gateway/tests/constitutional-waist/**', 'gateway/scripts/run-ccm-001.mjs', 'gateway/scripts/run-constitutional-waist.mjs', 'gateway/package*.json', '.github/workflows/ccm-001.yml']
   workflow_dispatch:
 permissions:
   contents: read
@@ -26,4 +26,8 @@ jobs:
       - run: npm run test:execution-binding
         working-directory: gateway
       - run: npm run field:ccm -- /tmp/ccm-s1.json --s1
+        working-directory: gateway
+      - run: npm run test:waist
+        working-directory: gateway
+      - run: npm run field:waist -- /tmp/constitutional-waist-evidence.json
         working-directory: gateway

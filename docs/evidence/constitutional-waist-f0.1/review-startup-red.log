@@ -1,0 +1,54 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 4b12e577... for intent 84904925-9f4e-4156-9aea-067f5d2da7c2 | tool=create_document | env=9954ef0c-c35b-4448-b46e-d0cd2af685b9 | max=1 | expires 2026-10-06T02:59:29.308Z
+[RIO Token Manager] Token BURNED: 4b12e577... for intent 84904925-9f4e-4156-9aea-067f5d2da7c2 — all 11 checks passed
+✖ CCM restart rejects a captured native Return whose derived invocation index was substituted (1572.409291ms)
+✖ historical admission retry reports current revoked eligibility without promoting stale standing (549.848646ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2298.96719
+
+✖ failing tests:
+
+test at tests/constitutional-waist/runtime.test.mjs:209:1
+✖ CCM restart rejects a captured native Return whose derived invocation index was substituted (1572.409291ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/constitutional-waist/runtime.test.mjs:211:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CCM_NATIVE_RETURN_INVALID/,
+    operator: 'throws',
+    diff: 'simple'
+  }
+
+test at tests/constitutional-waist/runtime.test.mjs:213:1
+✖ historical admission retry reports current revoked eligibility without promoting stale standing (549.848646ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - 'HISTORICAL_RECORDED_DECISION'
+  
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/constitutional-waist/runtime.test.mjs:216:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at Test.run (node:internal/test_runner/test:1447:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: 'HISTORICAL_RECORDED_DECISION',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

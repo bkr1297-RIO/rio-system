@@ -257,10 +257,10 @@ export class ConstitutionalMedium {
   verifyNodeRecord(this.#store,binding.passage,this.#field.field_id);
   const x=this.#interval(binding.interval_id);this.#currentInterval(x);
   demand(this.#commands.get(binding.opened_by).body.dependency_hash===this.#snapshot(x.dependencies).hash,'CCM_DEPENDENCY_REVISION_CHANGED');
+  demand(x.scope.actions.includes(p.action)&&x.scope.targets.includes(p.target),'CCM_INTERVAL_SCOPE');
   demand(x.standing.outbound==='ELIGIBLE','CCM_INTERVAL_OBSERVE_ONLY');
   demand(p.authority_basis===x.authority_basis,'CCM_INTERVAL_AUTHORITY');
   this.#scopeGrant(x,p.authority_basis);
-  demand(x.scope.actions.includes(p.action)&&x.scope.targets.includes(p.target),'CCM_INTERVAL_SCOPE');
   return {interval_id:x.interval_id,predecessor_hash:x.lineage_head};
  }
  #historic(id_,at) {

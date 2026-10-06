@@ -1,0 +1,294 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> rio-governance-gateway@2.9.0 test
+> node --test tests/gateway.test.mjs
+
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Replay Prevention] Initialized — window: 300s, retention: 24h
+[RIO Rate Limiter] Initialized — global limit: 30 req/min, window: 60s
+============================================================
+  RIO GOVERNANCE GATEWAY v2.9.0
+  Governed AI Execution Runtime
+  Ledger: PostgreSQL (persistent)
+  Auth: JWT + Ed25519 + API Keys + Google OAuth (PostgreSQL-backed)
+  Principals: Unified identity model with role enforcement
+  Hardening: Token Burn + Replay Prevention + Ed25519 Required + Identity Binding
+  Public API: /api/v1/* with API key auth, rate limiting, OpenAPI docs
+============================================================
+
+[RIO Config] Loaded: RIO_CONSTITUTION.json
+[RIO Config] Loaded: RIO_POLICY.json
+[RIO Config] Loaded: RIO_ROLE_MANUS.json
+[RIO Config] Loaded: RIO_ROLE_GEMINI.json
+[RIO Gateway] Governance configuration loaded.
+▶ RIO Governance Gateway
+  ▶ GET /health
+    ✖ should return operational status (16.612736ms)
+  ✖ GET /health (18.146343ms)
+  ▶ Full Pipeline (Happy Path)
+    ✖ POST /intent — should submit an intent (6.660262ms)
+    ✖ POST /govern — should evaluate governance (3.242511ms)
+    ✖ POST /authorize — should record human approval (3.842765ms)
+    ✖ POST /execute — should execute the action (3.62845ms)
+    ✖ POST /receipt — should generate a receipt (8.028663ms)
+    ✖ GET /verify — should verify the receipt and chain (2.182591ms)
+    ✖ GET /intent/:id — should show full pipeline state (2.303878ms)
+  ✖ Full Pipeline (Happy Path) (31.20505ms)
+  ▶ Fail Closed — No Authorization
+    ✖ should block execution of a submitted (ungoverned) intent (2.922862ms)
+  ✖ Fail Closed — No Authorization (3.386781ms)
+  ▶ Fail Closed — Denied Intent
+    ✖ should block execution of a denied intent (2.697923ms)
+  ✖ Fail Closed — Denied Intent (3.027815ms)
+  ▶ Fail Closed — Unknown Agent
+    ✖ should block governance for an unknown agent (2.35983ms)
+  ✖ Fail Closed — Unknown Agent (2.77819ms)
+  ▶ Ledger
+    ✖ GET /ledger — should return entries (2.65991ms)
+    ✖ GET /verify — full chain should be valid (1.859762ms)
+  ✖ Ledger (5.00634ms)
+✖ RIO Governance Gateway (795.585648ms)
+ℹ tests 13
+ℹ suites 7
+ℹ pass 0
+ℹ fail 13
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 906.251453
+
+✖ failing tests:
+
+test at tests/gateway.test.mjs:43:5
+✖ should return operational status (16.612736ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:59:5
+✖ POST /intent — should submit an intent (6.660262ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:75:5
+✖ POST /govern — should evaluate governance (3.242511ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:84:5
+✖ POST /authorize — should record human approval (3.842765ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:95:5
+✖ POST /execute — should execute the action (3.62845ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:102:5
+✖ POST /receipt — should generate a receipt (8.028663ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:115:5
+✖ GET /verify — should verify the receipt and chain (2.182591ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:122:5
+✖ GET /intent/:id — should show full pipeline state (2.303878ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:139:5
+✖ should block execution of a submitted (ungoverned) intent (2.922862ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:159:5
+✖ should block execution of a denied intent (2.697923ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:190:5
+✖ should block governance for an unknown agent (2.35983ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:207:5
+✖ GET /ledger — should return entries (2.65991ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }
+
+test at tests/gateway.test.mjs:215:5
+✖ GET /verify — full chain should be valid (1.859762ms)
+  [TypeError: fetch failed] {
+    [cause]: AggregateError [ECONNREFUSED]: 
+        at internalConnectMultiple (node:net:1339:18)
+        at afterConnectMultiple (node:net:1942:7) {
+      code: 'ECONNREFUSED',
+      [errors]: [
+        Error: connect ECONNREFUSED ::1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16),
+        Error: connect ECONNREFUSED 127.0.0.1:4401
+            at createConnectionError (node:net:1905:14)
+            at afterConnectMultiple (node:net:1935:16)
+      ]
+    }
+  }

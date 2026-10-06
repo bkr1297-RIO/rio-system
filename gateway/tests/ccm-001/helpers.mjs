@@ -8,8 +8,8 @@ export const participant = id => ({ participant_id: id, participant_kind: 'node'
 export const interval = (id, a = 'node-a', b = 'node-b') => ({ interval_id: id, endpoint_a: a, endpoint_b: b,
   relation_type: 'ResearchSynthesis', scope: { actions: ['create_document'], targets: ['hello.txt', 'lawful.txt'], inbound_uses: ['orientation'], cross_interval_uses: ['notification'] },
   boundaries: { cross_interval: 'EXPLICIT_ONLY' }, dependencies: { corpus: 'v1' } });
-export function medium(t) {
-  const f = setup(t, 'laptop', {}, {}, { dependencies: { corpus: 'v1', 'ccm-001': PROFILE } });
+export function medium(t, fieldPatch = {}, policyPatch = {}) {
+  const f = setup(t, 'laptop', policyPatch, {}, { dependencies: { corpus: 'v1', 'ccm-001': PROFILE }, ...fieldPatch });
   assert.equal(typeof f.runtime.ccmCommand, 'function', 'CCM command profile must exist');
   assert.equal(typeof f.runtime.ccmQuery, 'function', 'CCM query profile must exist');
   const query = (name, ...args) => f.runtime.ccmQuery(name, ...args);

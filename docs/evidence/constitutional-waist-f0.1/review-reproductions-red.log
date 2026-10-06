@@ -1,0 +1,45 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: 4c95213f... for intent 0eabf6b0-5cd3-4a64-9c9e-b8762f3770a4 | tool=create_document | env=45f4e64a-cb9b-41d8-9163-89b7430c27e3 | max=1 | expires 2026-10-06T03:00:13.781Z
+[RIO Token Manager] Token issued: 72bd6df1... for intent c9e94633-4a89-4608-a92c-feb4daef50a0 | tool=create_document | env=49ac4bc2-cb62-4a0d-a263-7363ca66c338 | max=1 | expires 2026-10-06T03:00:14.646Z
+[RIO Token Manager] Token BURNED: 72bd6df1... for intent c9e94633-4a89-4608-a92c-feb4daef50a0 — all 11 checks passed
+✖ an invocation expiring after entry is rejected again at the descriptor guard (997.75358ms)
+✖ receipt construction rejects substituted invocation history before observation or sealing (1333.861097ms)
+ℹ tests 2
+ℹ suites 0
+ℹ pass 0
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2633.913967
+
+✖ failing tests:
+
+test at tests/constitutional-waist/runtime.test.mjs:186:1
+✖ an invocation expiring after entry is rejected again at the descriptor guard (997.75358ms)
+  TypeError: Cannot read properties of null (reading 'request')
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/constitutional-waist/runtime.test.mjs:192:36)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.start (node:internal/test_runner/test:1242:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at tests/constitutional-waist/runtime.test.mjs:202:1
+✖ receipt construction rejects substituted invocation history before observation or sealing (1333.861097ms)
+  AssertionError [ERR_ASSERTION]: Missing expected exception.
+      at TestContext.<anonymous> (file:///workspace/scratch/1cf97914ef3d/ccm-001/gateway/tests/constitutional-waist/runtime.test.mjs:205:10)
+      at Test.runInAsyncScope (node:async_hooks:227:14)
+      at Test.run (node:internal/test_runner/test:1382:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:960:18)
+      at Test.postRun (node:internal/test_runner/test:1522:19)
+      at node:internal/test_runner/test:1285:31
+      at node:internal/process/task_queues:151:7
+      at AsyncResource.runInAsyncScope (node:async_hooks:227:14)
+      at AsyncResource.runMicrotask (node:internal/process/task_queues:148:8) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: /CUSTODY|TRACE_BINDING|SIGNATURE/,
+    operator: 'throws',
+    diff: 'simple'
+  }

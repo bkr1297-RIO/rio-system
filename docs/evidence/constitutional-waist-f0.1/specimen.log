@@ -1,0 +1,2 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+{"status":"PASS_WITH_RECORDED_SCOPE_LIMITS","output":"/workspace/scratch/1cf97914ef3d/waist-final-specimen.json","passage_id":"ada56aae-f4fd-4c81-827f-405fc33c0045","hold_decision":"3b7a76bc-5da3-4496-932f-6ee485dc2b9c","admit_decision":"7e0b7256-269c-48a2-8e54-b43161bcd1ff","deny_decision":"d66b1d2f-f885-4e22-890d-752003a4d0e1","receipt_id":"8ddc2f44-7e83-4c52-ae63-f96df017b8c1","return_id":"84cd933b-5c1d-4edc-95c8-6afb984762b3","restart_reconstruction":true}
