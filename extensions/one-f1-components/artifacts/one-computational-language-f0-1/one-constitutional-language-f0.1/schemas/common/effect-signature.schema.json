@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:common:effect-signature",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "EffectSignature",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "world_effects", "constitutional_effects", "epistemic_effects", "external_effect_allowed", "standing_change_allowed", "max_consequence"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:common:effect-signature"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "EffectSignature"},
+    "world_effects": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "constitutional_effects": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "epistemic_effects": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "external_effect_allowed": {"type": "boolean"},
+    "standing_change_allowed": {"type": "boolean"},
+    "max_consequence": {"enum": ["NONE", "LOW", "MEDIUM", "HIGH", "CRITICAL"]}
+  },
+  "additionalProperties": false
+}
+

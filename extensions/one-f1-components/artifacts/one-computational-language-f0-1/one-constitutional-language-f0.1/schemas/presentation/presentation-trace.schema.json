@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:presentation:presentation-trace",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "PresentationTrace",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "trace_id", "source_refs", "retrieval_event_refs", "summary_ref", "transformation_refs", "presentation_order", "presentation_order_is_source_precedence", "lineage_ref", "created_at", "authority_effect", "standing_effect", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:presentation:presentation-trace"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "PresentationTrace"},
+    "trace_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "source_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "minItems": 1, "uniqueItems": true},
+    "retrieval_event_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "minItems": 1, "uniqueItems": true},
+    "summary_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]},
+    "transformation_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "presentation_order": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "minItems": 1, "uniqueItems": true},
+    "presentation_order_is_source_precedence": {"const": false},
+    "lineage_ref": {"$ref": "urn:one:language:f0.1:common:lineage-ref"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "authority_effect": {"const": "NONE"},
+    "standing_effect": {"const": "NONE"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,12 @@
+/** Profile adapters supply data; authenticated native controls alone cross operative edges. */
+import type {ReturnArtifact} from '../consequence/types.js';
+import type {ResearchReturn} from './contracts.js';
+export const REPORTING_PROFILE:'one.ica.reporting-account.f0.1';
+export interface CompiledResearchRequest {readonly action:'create_document';readonly target:'research-return.json';readonly payload:Readonly<{content:string}>;readonly payload_hash:string;readonly subject:string;readonly source_node:string;readonly target_node:string;readonly scope:string;readonly purpose:string;readonly dependencies:Readonly<Record<string,string>>;readonly conditions:Readonly<Record<string,never>>;readonly return_requirement:Readonly<{required:true;to:string}>;}
+export interface ResearchCompilerInput {readonly expression:'Write the bounded Research return note.';readonly rule:string;readonly request:CompiledResearchRequest;readonly sourcepoint:string;readonly field_id:string;readonly proposal_id:string;readonly policy_id:string;readonly policy_hash:string;readonly issued_at:string;readonly expires_at:string;}
+export interface ResearchCompilation {readonly source:string;readonly ast:Readonly<Record<string,unknown>>;readonly ir:Readonly<Record<string,unknown>>;readonly oa_ir:Readonly<{profile:'one.ica.compiled-note.f0.1';kind:'OAIR';request:CompiledResearchRequest;authority_effect:'NONE';native_ir_ref:string}>;readonly frames:readonly Readonly<{stage:string;artifact_ref:string;conservation:Readonly<Record<string,unknown>>}>[];readonly checks:readonly string[];}
+export function compileResearchExpression(input:ResearchCompilerInput):ResearchCompilation;
+export function verifyResearchCompilation(input:ResearchCompilerInput,candidate:ResearchCompilation):true;
+export interface ReportingAccountSettlement {readonly kind:'ReportingAccountSettlement';readonly settlement_id:string;readonly status:'SETTLED_RETURN';readonly scope:'REPORTING_ACCOUNT_ONLY';readonly return_ref:string;readonly research_return_ref:string;readonly account_digest:string;readonly residue_refs:readonly string[];readonly authority_effect:'NONE';readonly standing_effect:'NONE';}
+export interface ReportingInheritance {readonly kind:'InheritanceRecord';readonly operator:'INHERIT';readonly authorityEffect:'NONE';readonly preservedStanding:'SETTLED_REPORTING_ACCOUNT_ONLY';readonly admissionBasisRef:string;readonly inheritedItemRef:string;readonly successorContextRef:string;}
+export interface ReportingAccountLink {readonly returned:ReturnArtifact;readonly research:ResearchReturn;}

@@ -1,0 +1,40 @@
+{
+  "lock_id": "one-ir-compiler-dependency-lock:f0.1",
+  "language_profile": "F0.1",
+  "schema_version": "0.1.0",
+  "mutation_policy": "IMMUTABLE_INPUTS",
+  "aggregate_algorithm": "sha256(sorted(relative_path + NUL + exact_file_bytes + NUL)); excludes __pycache__, *.pyc, *.pyo",
+  "dependencies": [
+    {
+      "name": "ONE Shared Constitutional Types F0.1",
+      "relative_root": "../one-constitutional-language-f0.1",
+      "file_count": 56,
+      "aggregate_sha256": "c7e343e14fa1f50cdf71e9544aa67e3be11e38763ecd2689ce153e9b9df4200d",
+      "canonical_schema_count": 22,
+      "selected_files": {
+        "schemas/schema-index.json": "0d6c2093ee2f6f989029687e5fd8b2e76e0b049a713131d0ebebf4eda5256d41",
+        "LANGUAGE.md": "fb60333840797749c3cd57b6281006ede657ea2f2ee318548fd5fda7c55630cf",
+        "TYPES.md": "7d4280836844ba6d55d12fedad1e405a6140082d4d3e5a5249f07dc3a8bf0383"
+      }
+    },
+    {
+      "name": "ONE Authority Algebra + Diamond Crossing Binding F0.1",
+      "relative_root": "../one-authority-diamond-crossing-f0.1",
+      "file_count": 34,
+      "aggregate_sha256": "6e1fb139832841a63e1afb266332c502bf13a671aa35f1083dd8bdef40d4b9c2",
+      "selected_files": {
+        "AUTHORITY_ALGEBRA.md": "f0a5901c64c1f359a79238cff54e4ac408bb51eee3ce0648aaae3b9558648a87",
+        "DIAMOND_CROSSING_BINDING.md": "b99b4e303c261d88714aa4f2143ee1b633920d0b5e8a98f8b7db7032e3d60b34",
+        "DIAGNOSTICS.md": "77b7209f64fc41e8ce8bd7715f22c916e4c137268f66f89c9c524383ae3e9ce9",
+        "DEPENDENCY_LOCK.json": "2ccb0ae8ac688c373587072c3c4225001984ce34ea4201cf35c429c602a3d171",
+        "src/types.ts": "476ab5b4e98f5003f7b11cb3aa70a0186e7e25cc7f3d3d63d4e9ae9e8901832a",
+        "src/hash.ts": "14ccda5d0ad0f31fd854a276db7284d505418096c10be0f02d8809c07cf2749d",
+        "src/kernel.ts": "a8c68dd459842c0d7d251fb189600d7743966d9e2243d5201a532177d6a26679",
+        "src/diamond-crossing.ts": "713cddaf8ecca030f98fa67cd29d471af2d6969a0dcb87b9ddf65fccd0efa55a",
+        "fixtures/positive/reference-input.json": "4325ba601675d17c380d3e1e665b06dcb743528f6095c8368e1e70371cca1285",
+        "receipts/REFERENCE_DIAMOND_TRACE.json": "0adebe892b978c53b9028742a044c27e7ff08dd4e7e7292fa25979267f643f7f",
+        "receipts/AUTHORITY_DERIVATION_RECEIPTS.json": "b39f37e04eea5f70d6c3ceede4d3c6c29b58224da3c4f0e518e0cd17163d17d9"
+      }
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:crossing:evaluation-result",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "EvaluationResult",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "result_id", "conditions_ref", "evaluator_ref", "evaluated_at", "disposition", "selected_candidate_ref", "reason_codes", "authority_requirement_satisfied", "effect_boundary_satisfied", "dependency_results", "evidence_refs", "authority_effect", "standing_effect", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:crossing:evaluation-result"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "EvaluationResult"},
+    "result_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "conditions_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "evaluator_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "disposition": {"enum": ["SELECT", "REJECT", "REVISE", "HOLD"]},
+    "selected_candidate_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]},
+    "reason_codes": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "authority_requirement_satisfied": {"type": "boolean"},
+    "effect_boundary_satisfied": {"type": "boolean"},
+    "dependency_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["binding_ref", "disposition", "observed_revision", "observed_digest"],
+        "properties": {
+          "binding_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+          "disposition": {"enum": ["SATISFIED", "STALE", "MISSING", "MISMATCH"]},
+          "observed_revision": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:version-ref"}, {"type": "null"}]},
+          "observed_digest": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:digest"}, {"type": "null"}]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "evidence_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "authority_effect": {"const": "NONE"},
+    "standing_effect": {"const": "NONE"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"disposition": {"const": "SELECT"}}},
+      "then": {"properties": {"selected_candidate_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "authority_requirement_satisfied": {"const": true}, "effect_boundary_satisfied": {"const": true}}}
+    }
+  ]
+}

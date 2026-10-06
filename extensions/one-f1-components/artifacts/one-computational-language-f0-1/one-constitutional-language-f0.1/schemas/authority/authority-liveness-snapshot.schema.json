@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:authority:authority-liveness-snapshot",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "AuthorityLivenessSnapshot",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "snapshot_id", "grant_ref", "subject_ref", "context_ref", "evaluated_at", "disposition", "dependency_results", "revocation_event_refs", "use_count", "reason_codes", "authority_effect", "standing_effect", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:authority:authority-liveness-snapshot"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "AuthorityLivenessSnapshot"},
+    "snapshot_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "grant_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "subject_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "context_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "disposition": {"enum": ["LIVE", "DENIED", "EXPIRED", "REVOKED", "STALE", "CONSUMED", "INVALID"]},
+    "dependency_results": {"type": "array", "items": {"type": "object", "required": ["binding_ref", "current"], "properties": {"binding_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "current": {"type": "boolean"}}, "additionalProperties": false}},
+    "revocation_event_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "use_count": {"type": "integer", "minimum": 0},
+    "reason_codes": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "authority_effect": {"const": "NONE"},
+    "standing_effect": {"const": "NONE"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}
+

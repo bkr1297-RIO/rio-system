@@ -1,9 +1,12 @@
 import { ConstitutionalMedium } from './medium/index.mjs';
 import { WAIST_PROFILE, HOLD_ACTIONS, NODE_FIELDS, ROOT_FIELDS, exactFields, passageContract, blockedDisposition } from './waist.mjs';
-import { randomUUID } from 'node:crypto';
+import { randomUUID,createHash } from 'node:crypto';
 import { join, resolve } from 'node:path';
 import { LocalStore } from '../ledger/local-store.mjs';
 import { OpenArrow } from './open-arrow.mjs';
+import {REPORTING_PROFILE,evaluateReportingSettlement,inheritMaterial,verifyResearchCompilation} from './ica/f1-profile.mjs';
+import {validateReturnArtifact} from './consequence/account.mjs';
+import {validateResearchReturn} from './ica/journey.mjs';
 import { ProjectionRuntime } from './projection.mjs';
 import { Bilateral, MAX_RECORD_BYTES } from './bilateral.mjs';
 import { RelationRuntime } from './relations/profile.mjs';
@@ -50,6 +53,17 @@ const clone = (x) => structuredClone(x);
 
 /** Coordinates existing gateway owners; transport carries records, never permission. */
 export class LocalField {
+  static readRetainedRoom(root,record){
+    const store=new LocalStore(resolve(root),{readOnly:true});
+    try{
+      const anchor=store.get('anchor','sourcepoint'),definition=store.get('field','definition'),b=record?.body;
+      requireValue(anchor?.actor_type==='human' && anchor.primary_role==='root_authority','SOURCEPOINT_ROOT_REQUIRED');
+      requireValue(store.ledger().some(e=>e.action==='field.constitute' && hash(JSON.parse(e.detail))===hash(definition)),'ROOM_CONSTITUTION_CUSTODY');
+      verifySigned(definition,anchor.public_key_hex);
+      requireValue(b?.type==='room_checkpoint' && b.field_id===definition.body.field_id && b.profile==='ica-rr-001.f1' && b.view?.kind==='ICAView' && b.view_hash===hash(b.view),'ROOM_CHECKPOINT_CUSTODY');
+      verifySigned(record,anchor.public_key_hex);return clone(b.view);
+    }finally{store.close();}
+  }
   #store;
   #anchor;
   #field;
@@ -238,11 +252,53 @@ export class LocalField {
     if (record?.body?.type === 'invocation_commit') return this.#commitInvocation(record);
     if (this.#bilateral) requireValue(Buffer.byteLength(JSON.stringify(record)) <= MAX_RECORD_BYTES, 'CONTROL_RESOURCE_LIMIT');
     canonicalizeArgs(record);
+    if(record.body?.type==='reporting_capture'){
+      validateReturnArtifact(record.body.content?.returned,{field_id:this.#field.field_id,sourcepoint:this.#anchor.principal_id,receiver:this.#receiver});validateResearchReturn(record.body.content?.research);
+    }
     record = clone(record);
     const b = this.#controlSignature(record),
       root = b.issuer === this.#anchor.principal_id;
     const recorded = this.#store.transaction(() => {
       this.#store.useNonce('control', b.record_id);
+      if(b.type==='reporting_capture'){
+        exactFields(b,[...ROOT_FIELDS,'profile','candidate_id','content'],'REPORTING_CAPTURE_FIELDS');
+        requireValue(root && b.profile===REPORTING_PROFILE && b.content?.profile===REPORTING_PROFILE && typeof b.candidate_id==='string','REPORTING_CAPTURE_ROOT_REQUIRED');
+        const r=b.content.returned,rr=b.content.research;
+        requireValue(r?.kind==='ReturnArtifact' && rr?.kind==='ResearchReturnArtifact' && rr.provenance.native_return_ref===r.return_id && this.#store.get('passage',r.passage_id),'REPORTING_RETURN_LINK_REQUIRED');
+        const artifact={...record,content_hash:hash({content:b.content}),authority_effect:'NONE'};this.#record('reporting_account',b.candidate_id,artifact);return artifact;
+      }
+      if (['reporting_review','reporting_admission'].includes(b.type)) {
+        exactFields(b,[...ROOT_FIELDS,'profile','human_choice_ref','scope',...(b.type==='reporting_review'?['candidate_id','account_digest','review_status']:['settlement_ref','target_context_ref'])],'REPORTING_CONTROL_FIELDS');
+        requireValue(root && this.#store.state('dependency','f1-reporting-account')===REPORTING_PROFILE && b.profile===REPORTING_PROFILE, 'REPORTING_ROOT_PROFILE_REQUIRED');
+        requireValue(typeof b.human_choice_ref==='string' && b.human_choice_ref.length>0, 'FRESH_HUMAN_CHOICE_REQUIRED');
+        this.#store.useNonce('reporting-human-choice',b.human_choice_ref);
+        if(b.type==='reporting_review'){
+          requireValue(b.scope==='REPORTING_ACCOUNT_ONLY' && b.review_status==='accepted','REPORTING_SCOPE_REQUIRED');
+          const candidate=this.#custody('reporting_account',b.candidate_id),content=candidate?.body?.content,r=content?.returned,rr=content?.research;
+          requireValue(candidate && content.profile===REPORTING_PROFILE && candidate.content_hash===b.account_digest,'REPORTING_ACCOUNT_BINDING');
+          requireValue(r?.kind==='ReturnArtifact' && rr?.kind==='ResearchReturnArtifact' && rr.provenance.native_return_ref===r.return_id && rr.return_completeness===r.return_completeness && rr.occurrence_knowledge===r.occurrence_knowledge,'REPORTING_RETURN_LINK_REQUIRED');
+          const native=this.inspect(r.passage_id);requireValue(native.passage && native.decision,'NATIVE_REPORTING_PASSAGE_REQUIRED');
+          requireValue(!native.attempt || native.attempt.attempt_id===r.execution_attempt.attempt_ref,'REPORTING_ATTEMPT_BINDING');
+          if(r.occurrence_knowledge==='KNOWN_OCCURRED')requireValue(native.observation?.measurement?.status==='OBSERVED' && native.observation.measurement.content_hash===createHash('sha256').update(native.passage.body.payload.content).digest('hex') && native.observation.observation_id===r.provenance.observation_ref,'REPORTING_OCCURRENCE_BASIS_REQUIRED');
+          const account={profile:REPORTING_PROFILE,return_id:r.return_id,research_return_id:rr.return_id,return_completeness:r.return_completeness,required_reports:r.required_reports,reports:r.reporting_accounts.map(x=>x.coordinate),
+            occurrence_knowledge:r.occurrence_knowledge,outcome_assessment:rr.outcome_assessment,residue_refs:rr.residue,account_digest:b.account_digest,external_side_effects:!!native.attempt,hash_valid:true,lifecycle_ref:r.passage_id,sourcepoint_ref:this.#anchor.principal_id};
+          const evaluation=evaluateReportingSettlement(account,{lifecycle_id:r.passage_id,sourcepoint_id:this.#anchor.principal_id},{review_status:b.review_status,sourcepoint_ref:this.#anchor.principal_id,account_digest:b.account_digest},{scope:b.scope,human_discernment_status:'ratified'});
+          requireValue(evaluation.status==='SETTLED_RETURN',`REPORTING_${evaluation.status}:${evaluation.reason_code}`);
+          requireValue(!this.#store.get('reporting_settlement',b.candidate_id),'REPORTING_ALREADY_ACCEPTED');
+          const result={kind:'ReportingAccountSettlement',settlement_id:b.record_id,...evaluation,profile:REPORTING_PROFILE,scope:b.scope,account_digest:b.account_digest,return_ref:r.return_id,research_return_ref:rr.return_id,candidate_ref:b.candidate_id,human_review:record,
+            occurrence_knowledge:r.occurrence_knowledge,outcome_assessment:rr.outcome_assessment,residue_refs:rr.residue,outstanding_obligations:rr.outstanding_obligations,authority_effect:'NONE',standing_effect:'NONE'};
+          this.#record('reporting_settlement',b.candidate_id,result);this.#store.state('reporting_settlement',b.record_id,result);return result;
+        }
+        requireValue(b.scope==='REPORTING_ACCOUNT_MATERIAL_ONLY' && b.target_context_ref===`ica:${this.#field.field_id}:orientation`,'REPORTING_ADMISSION_SCOPE');
+        const settled=this.#store.state('reporting_settlement',b.settlement_ref);requireValue(settled?.status==='SETTLED_RETURN','SETTLED_REPORTING_ACCOUNT_REQUIRED');
+        requireValue(settled.settlement_id===b.settlement_ref && hash(settled)===hash(this.#custody('reporting_settlement',settled.candidate_ref)),'REPORTING_SETTLEMENT_CUSTODY');
+        requireValue(!this.#store.get('reporting_inheritance',b.settlement_ref),'REPORTING_ALREADY_INHERITED');
+        const version=this.#store.state('reporting_context',b.target_context_ref)??0;
+        const inherited=inheritMaterial({id:b.record_id,candidate:{id:settled.candidate_ref,type:'ICA_REPORTING_ACCOUNT',sourceRef:settled.return_ref,standing:'SETTLED_REPORTING_ACCOUNT_ONLY',lineageRefs:[settled.return_ref,settled.research_return_ref,settled.settlement_id]},
+          predecessorContext:{ref:b.target_context_ref,version,itemRefs:[]},admissionBasis:{id:b.record_id,valid:true,targetContextRef:b.target_context_ref,permittedTypes:['ICA_REPORTING_ACCOUNT']}});
+        requireValue(inherited.ok,'NATIVE_INHERITANCE_REQUIRED');const result={...inherited.artifact,human_admission:record,settlement_ref:settled.settlement_id,residue_refs:settled.residue_refs};
+        this.#record('reporting_inheritance',b.settlement_ref,result);this.#store.state('reporting_context',b.target_context_ref,version+1);return result;
+      }
       if (b.type === 'enrollment') {
         requireValue(root, 'ROOT_REQUIRED');
         validateNode(b.node);
@@ -370,6 +426,7 @@ export class LocalField {
     canonicalizeArgs(record);
     record = clone(record);
     verifyNodeRecord(this.#store, record, this.#field.field_id);
+    if(record.body.compiler_input){verifyResearchCompilation(record.body.compiler_input,record.body.compilation);}
     requireValue(
       [
         'proposal',
@@ -396,6 +453,10 @@ export class LocalField {
       this.#record('candidate', record.body.candidate_id, artifact);
     });
     return clone(artifact);
+  }
+  verifyRoomCheckpoint(record){
+    const b=record?.body;requireValue(b?.type==='room_checkpoint' && b.field_id===this.#field.field_id && b.profile==='ica-rr-001.f1' && b.view?.kind==='ICAView' && b.view_hash===hash(b.view),'ROOM_CHECKPOINT_CUSTODY');
+    verifySigned(record,this.#anchor.public_key_hex);return clone(b.view);
   }
   #request(record, { egress = false } = {}) {
     requireValue(record?.body?.type === 'passage', 'PASSAGE_REQUIRED');
@@ -476,6 +537,13 @@ export class LocalField {
     const p = this.#request(record, options);
     const relation_binding = this.#relations?.guard(p);
     const candidate = p.origin.candidate_id ? this.#store.get('candidate', p.origin.candidate_id) : null;
+    if(candidate?.body?.compiler_input){
+      const input=candidate.body.compiler_input;
+      requireValue(input.field_id===this.#field.field_id && input.sourcepoint===this.#anchor.principal_id && input.proposal_id===candidate.body.candidate_id && input.policy_hash===hash(this.#field.policy) && input.policy_id===this.#field.policy.policy_id,'COMPILED_CONTEXT_BINDING');
+      verifyResearchCompilation(input,candidate.body.compilation);
+      const request=candidate.body.compilation.oa_ir.request,actual=Object.fromEntries(Object.keys(request).map(k=>[k,p[k]]));
+      requireValue(hash(request)===hash(actual),'COMPILED_PASSAGE_BINDING');
+    }
     let simulation_binding;
     const simulation_config = this.#field.dependencies[SIMULATION_DEPENDENCY];
     if (simulation_config !== undefined || isSimulationContent(candidate?.body?.content)) {

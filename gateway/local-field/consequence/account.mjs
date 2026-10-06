@@ -6,6 +6,8 @@ import { hash } from '../../security/local-field-authority.mjs';
 
 export const REPORTS=Object.freeze(['ATTEMPT_ACCOUNT','OBSERVATION_ACCOUNT','OUTCOME_ACCOUNT','LIMITS_ACCOUNT']);
 const snapshots=new WeakSet();
+const returnedArtifacts=new WeakMap();
+export function validateReturnArtifact(value,field){requireThat(returnedArtifacts.has(value),'ISSUED_RETURN_ARTIFACT_REQUIRED');if(field)requireThat(returnedArtifacts.get(value)===fingerprint(field),'RETURN_OWNER_BINDING');return value;}
 const immutable=value=>{if(value&&typeof value==='object'){for(const v of Object.values(value))immutable(v);Object.freeze(value);}return value;};
 const requireThat=(condition,message)=>{if(!condition)throw new Error(message);};
 const fingerprint=value=>createHash('sha256').update(JSON.stringify(value)).digest('hex');
@@ -114,7 +116,7 @@ export class ConsequenceSpecimen {
       reporting_accounts:reports.map(coordinate=>({coordinate,account:accounts[coordinate]})),unresolved_remainder:state.unresolved_remainder,
       outstanding_obligations,follow_up_required:state.unresolved_remainder.length>0||outstanding_obligations.length>0,
       provenance:{permission_ref:a.permission.permission_id,lease_ref:a.lease?.lease_id??null,attempt_ref:attempt?.attempt_id??null,
-        observation_ref:a.observation?.observation_id??null,evidence_ref:a.evidence?.evidence_id??null,outcome_ref:a.outcome?.assessment_id??null},returned_at:iso()});return a.returned;
+        observation_ref:a.observation?.observation_id??null,evidence_ref:a.evidence?.evidence_id??null,outcome_ref:a.outcome?.assessment_id??null},returned_at:iso()});returnedArtifacts.set(a.returned,this.#identity);return a.returned;
   }
   revoke(permission,request){
     const a=this.#need(permission,'Permission');requireThat(request?.body?.type==='revocation'&&request.body.grant_id===a.passage.body.authority_basis,'REVOCATION_SCOPE_INVALID');

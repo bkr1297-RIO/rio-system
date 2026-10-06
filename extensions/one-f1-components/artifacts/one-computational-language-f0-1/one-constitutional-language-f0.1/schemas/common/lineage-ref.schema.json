@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:common:lineage-ref",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "LineageRef",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "lineage_id", "predecessor_refs", "source_schema_ids", "source_versions", "adapter_receipt_refs", "integrity_digest"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:common:lineage-ref"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "LineageRef"},
+    "lineage_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "predecessor_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "source_schema_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "source_versions": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:version-ref"}},
+    "adapter_receipt_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "integrity_digest": {"$ref": "urn:one:language:f0.1:common:digest"}
+  },
+  "additionalProperties": false
+}

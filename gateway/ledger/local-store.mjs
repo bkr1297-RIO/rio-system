@@ -20,7 +20,11 @@ function processStart(pid) {
 export class LocalStore {
   #db;
   #lease;
-  constructor(root) {
+  constructor(root,{readOnly=false}={}) {
+    if(readOnly){
+      this.#db=new DatabaseSync(join(root,'field.sqlite'),{readOnly:true});
+      if(!verifyLedgerEntries(this.ledger()).valid){this.close();throw new Error('LEDGER_INTEGRITY');}return;
+    }
     mkdirSync(root, { recursive: true, mode: 0o700 });
     const path = join(root, 'field.sqlite');
     this.#db = new DatabaseSync(path);

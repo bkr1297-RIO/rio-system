@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:authority:authorization",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "Authorization",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "authorization_id", "proposal_ref", "evaluation_ref", "authority_grant_ref", "subject_ref", "action", "object_ref", "payload_digest", "purpose", "scope", "authorized_delta_digest", "conditions_ref", "authorized_by_ref", "authorized_at", "expires_at", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:authority:authorization"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "Authorization"},
+    "authorization_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "proposal_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "evaluation_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "authority_grant_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "subject_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "action": {"type": "string", "minLength": 1},
+    "object_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "payload_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+    "purpose": {"type": "string", "minLength": 1},
+    "scope": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "authorized_delta_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+    "conditions_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "authorized_by_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "authorized_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}
+

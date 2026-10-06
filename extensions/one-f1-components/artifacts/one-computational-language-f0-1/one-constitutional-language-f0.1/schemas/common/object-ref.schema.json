@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:common:object-ref",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "ObjectRef",
+  "description": "Opaque attributable reference to a constitutional object.",
+  "type": "string",
+  "minLength": 1
+}
+

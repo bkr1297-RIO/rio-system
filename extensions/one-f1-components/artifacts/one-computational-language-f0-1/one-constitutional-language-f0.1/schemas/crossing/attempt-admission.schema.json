@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:crossing:attempt-admission",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "AttemptAdmission",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "admission_id", "commitment_ref", "authorization_ref", "liveness_snapshot_ref", "subject_ref", "action", "object_ref", "payload_digest", "exact_bindings_digest", "current_context_ref", "dependency_results", "evaluated_at", "disposition", "reason_codes", "attempt_nonce", "valid_until", "attempt_limit", "authority_effect", "occurrence_effect", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:crossing:attempt-admission"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "AttemptAdmission"},
+    "admission_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "commitment_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "authorization_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "liveness_snapshot_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "subject_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "action": {"type": "string", "minLength": 1},
+    "object_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "payload_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+    "exact_bindings_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+    "current_context_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "dependency_results": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["binding_ref", "disposition"],
+        "properties": {
+          "binding_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+          "disposition": {"enum": ["CURRENT", "STALE", "MISSING", "MISMATCH"]}
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "disposition": {"enum": ["ADMITTED", "DENIED", "QUARANTINED", "UNSETTLED"]},
+    "reason_codes": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "attempt_nonce": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+    "valid_until": {"type": "string", "format": "date-time"},
+    "attempt_limit": {"const": 1},
+    "authority_effect": {"const": "NONE"},
+    "occurrence_effect": {"const": "NONE"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"disposition": {"const": "ADMITTED"}}},
+      "then": {"properties": {"attempt_nonce": {"type": "string", "minLength": 1}}}
+    }
+  ]
+}

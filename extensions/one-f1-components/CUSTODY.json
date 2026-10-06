@@ -1,0 +1,423 @@
+{
+  "profile": "one.f1.bounded-reference.v0.1",
+  "standing": "COMPONENT custody, not constitutional installation",
+  "files": [
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/bindings/typescript/src/schema-validator.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "8ddb19115d8b5e8162ba72f9f42ab9ad8986b36a",
+      "predecessor_sha256": "df3980ba16cfc5632dcb38443383b48d1716150765d7c44b7501235c489ada9b",
+      "current_sha256": "df3980ba16cfc5632dcb38443383b48d1716150765d7c44b7501235c489ada9b",
+      "current_git_blob": "8ddb19115d8b5e8162ba72f9f42ab9ad8986b36a",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/authority/authority-grant.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "85015af5b7d30add61f68db5868268e6e0c2f4dd",
+      "predecessor_sha256": "9642105d706b551796b79ba5b021d09c7083cdd6e6e8c65a73eb5df7e6721282",
+      "current_sha256": "9642105d706b551796b79ba5b021d09c7083cdd6e6e8c65a73eb5df7e6721282",
+      "current_git_blob": "85015af5b7d30add61f68db5868268e6e0c2f4dd",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/authority/authority-liveness-snapshot.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "5177af3efac43233ee86142722c6780b2fb5f72e",
+      "predecessor_sha256": "32ef93145f214835686cd3c7e8e15462f276a64a4c31f2f2a24adbf02aa2dfe1",
+      "current_sha256": "32ef93145f214835686cd3c7e8e15462f276a64a4c31f2f2a24adbf02aa2dfe1",
+      "current_git_blob": "5177af3efac43233ee86142722c6780b2fb5f72e",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/authority/authorization.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "cbc0d496dc904f1d3134a0c12ac5b47ec32864be",
+      "predecessor_sha256": "1cddd8df1634bbd7c1cdb6f7f7bd6f4aabad470d26fdf06e1daceb12db15e27e",
+      "current_sha256": "1cddd8df1634bbd7c1cdb6f7f7bd6f4aabad470d26fdf06e1daceb12db15e27e",
+      "current_git_blob": "cbc0d496dc904f1d3134a0c12ac5b47ec32864be",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/authority/root-authority-basis.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "3a29849a162b4d230a28584de0104fb61384363d",
+      "predecessor_sha256": "f9bd07b4442a348507c8812c1c0e4e5b1f0d48f1f6955657fc95b40e0c81ef05",
+      "current_sha256": "f9bd07b4442a348507c8812c1c0e4e5b1f0d48f1f6955657fc95b40e0c81ef05",
+      "current_git_blob": "3a29849a162b4d230a28584de0104fb61384363d",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/common/dependency-binding.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "dfc18a45deeaa971331d4629fa198e0202fc4202",
+      "predecessor_sha256": "63d330db58d1f0edf80e109130b0d2c55c1d0460837b95a36866dc5362f72a32",
+      "current_sha256": "63d330db58d1f0edf80e109130b0d2c55c1d0460837b95a36866dc5362f72a32",
+      "current_git_blob": "dfc18a45deeaa971331d4629fa198e0202fc4202",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/common/digest.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "bfcea34f0e8b595ec9cfc4bbda70e2e3b2397f2d",
+      "predecessor_sha256": "6c482d60b4346b6f6333ad4c0b27ef3ac7ccf16f91f82985fe870b0deec8e481",
+      "current_sha256": "6c482d60b4346b6f6333ad4c0b27ef3ac7ccf16f91f82985fe870b0deec8e481",
+      "current_git_blob": "bfcea34f0e8b595ec9cfc4bbda70e2e3b2397f2d",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/common/effect-signature.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "a8839565ac0ba04b6f7c8922dc78e35a1b1a09c2",
+      "predecessor_sha256": "3e38f8df22e5f7d3147af2b714046dd48038bb5991b9035cb068a3c6a5b08755",
+      "current_sha256": "3e38f8df22e5f7d3147af2b714046dd48038bb5991b9035cb068a3c6a5b08755",
+      "current_git_blob": "a8839565ac0ba04b6f7c8922dc78e35a1b1a09c2",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/common/integrity-block.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "b3a5c3f22df32348e90053f67fecc6c8219ae46b",
+      "predecessor_sha256": "4e88488dac22514fbbd03a36e94911f2384e86ff3e9d2fd7bffcd3acc54ea4c4",
+      "current_sha256": "4e88488dac22514fbbd03a36e94911f2384e86ff3e9d2fd7bffcd3acc54ea4c4",
+      "current_git_blob": "b3a5c3f22df32348e90053f67fecc6c8219ae46b",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/common/lineage-ref.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "6fc34f7686c7b94f69ba53dd78add6d3752b0eec",
+      "predecessor_sha256": "af8035a7f278a681e45faa2dd98ce6d9de95e1539601c5b790eadf105812bf98",
+      "current_sha256": "af8035a7f278a681e45faa2dd98ce6d9de95e1539601c5b790eadf105812bf98",
+      "current_git_blob": "6fc34f7686c7b94f69ba53dd78add6d3752b0eec",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/common/object-ref.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "9c307930e0bfc818a397d628ded9babd16bee75f",
+      "predecessor_sha256": "86bb4963cd461d58594dc218a137da0950d6ff407bf74c0ca3046b6d4ef55700",
+      "current_sha256": "86bb4963cd461d58594dc218a137da0950d6ff407bf74c0ca3046b6d4ef55700",
+      "current_git_blob": "9c307930e0bfc818a397d628ded9babd16bee75f",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/common/version-ref.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "4848308f8875d03adfb968baacf3838fefc49d08",
+      "predecessor_sha256": "74f6463e2890555498d548f2bd9a307e03414c3120bbab86a72dec6303044000",
+      "current_sha256": "74f6463e2890555498d548f2bd9a307e03414c3120bbab86a72dec6303044000",
+      "current_git_blob": "4848308f8875d03adfb968baacf3838fefc49d08",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/crossing/attempt-admission.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "5fd9880396339fde3bc69d3f4da296d8ae0083e8",
+      "predecessor_sha256": "13c5218827fc3b9a4be2530ef6c60a359677b80fe0a7a3475e5db357c976d933",
+      "current_sha256": "13c5218827fc3b9a4be2530ef6c60a359677b80fe0a7a3475e5db357c976d933",
+      "current_git_blob": "5fd9880396339fde3bc69d3f4da296d8ae0083e8",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/crossing/commitment.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "16fc9d2edb6bce8ca080f742d18f26955384953e",
+      "predecessor_sha256": "f445e81a7cb48edc689f1c641b86a4becbf37a24f7863408bb768488fc38458a",
+      "current_sha256": "f445e81a7cb48edc689f1c641b86a4becbf37a24f7863408bb768488fc38458a",
+      "current_git_blob": "16fc9d2edb6bce8ca080f742d18f26955384953e",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/crossing/crossing-conditions.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "97b929a6fd3583fc67dbe6179d844583226073cb",
+      "predecessor_sha256": "6c6ac939cdf0478b4b0857204d42d5b717f4dc95f71c324682047a0ecb7bc320",
+      "current_sha256": "6c6ac939cdf0478b4b0857204d42d5b717f4dc95f71c324682047a0ecb7bc320",
+      "current_git_blob": "97b929a6fd3583fc67dbe6179d844583226073cb",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/crossing/evaluation-result.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "ca41e2817b3092faadd12172e705240cd1b8f38e",
+      "predecessor_sha256": "298bc66aebf0fca6434a5f86309ea39572de3b0e417e1ef56bd2b0219eb1ee4f",
+      "current_sha256": "298bc66aebf0fca6434a5f86309ea39572de3b0e417e1ef56bd2b0219eb1ee4f",
+      "current_git_blob": "ca41e2817b3092faadd12172e705240cd1b8f38e",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/crossing/execution-attempt.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "67e6dfb75f12cda45ab14ac7e5211b799e744bfd",
+      "predecessor_sha256": "7a887973ea17b6a98a1b7c1a5486f8be545cef419f87e310c0f08e22ae8084f3",
+      "current_sha256": "7a887973ea17b6a98a1b7c1a5486f8be545cef419f87e310c0f08e22ae8084f3",
+      "current_git_blob": "67e6dfb75f12cda45ab14ac7e5211b799e744bfd",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/crossing/occurrence.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "058bb93b9b8e5ad8f7a88ef4444c9c308758a383",
+      "predecessor_sha256": "8c1ba8fd4b1544ca28e2084434c19191db00a418fe758de6303f7ad490ad1be3",
+      "current_sha256": "8c1ba8fd4b1544ca28e2084434c19191db00a418fe758de6303f7ad490ad1be3",
+      "current_git_blob": "058bb93b9b8e5ad8f7a88ef4444c9c308758a383",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/institution/institution.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "51ee5429ec55d1d9bdb189e716070dd236a7ca07",
+      "predecessor_sha256": "5a9a3bc93b5284a2084050ab9536157ce1b2219db95901e2e75ad6440053f578",
+      "current_sha256": "5a9a3bc93b5284a2084050ab9536157ce1b2219db95901e2e75ad6440053f578",
+      "current_git_blob": "51ee5429ec55d1d9bdb189e716070dd236a7ca07",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/orientation/orientation.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "ff581c303f500c91ed81bfa5ee177362a62c7dd3",
+      "predecessor_sha256": "09cc154beb36615b88c2d77e8324a8281c324256eefd7f02166f817316b8b612",
+      "current_sha256": "09cc154beb36615b88c2d77e8324a8281c324256eefd7f02166f817316b8b612",
+      "current_git_blob": "ff581c303f500c91ed81bfa5ee177362a62c7dd3",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/presentation/presentation-trace.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "d2dda294bdd5068767e81dadc5efe3562276de62",
+      "predecessor_sha256": "66f1a8dcc54f23c241cfffd5f0e05e5f7d526efd7881a8dd06a38e04323ef0ce",
+      "current_sha256": "66f1a8dcc54f23c241cfffd5f0e05e5f7d526efd7881a8dd06a38e04323ef0ce",
+      "current_git_blob": "d2dda294bdd5068767e81dadc5efe3562276de62",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/return/return-object.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "677ac23985068370ac5f62ded2cf55b1a7fa5115",
+      "predecessor_sha256": "9487c52f9024beff78688081a88c77c8dc4cb37428e4f03900188f4ef53f8520",
+      "current_sha256": "9487c52f9024beff78688081a88c77c8dc4cb37428e4f03900188f4ef53f8520",
+      "current_git_blob": "677ac23985068370ac5f62ded2cf55b1a7fa5115",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/schema-index.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "608d20f544794360fa01f356267116785ac3c26a",
+      "predecessor_sha256": "0d6c2093ee2f6f989029687e5fd8b2e76e0b049a713131d0ebebf4eda5256d41",
+      "current_sha256": "0d6c2093ee2f6f989029687e5fd8b2e76e0b049a713131d0ebebf4eda5256d41",
+      "current_git_blob": "608d20f544794360fa01f356267116785ac3c26a",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-constitutional-language-f0.1/schemas/standing/standing-vector.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "14886c07fff18ceb1e0cde6a932cfe3143bd64a2",
+      "predecessor_sha256": "670086397746d1ce748510b588727880f5e6d398def460195034544fd613d3cd",
+      "current_sha256": "670086397746d1ce748510b588727880f5e6d398def460195034544fd613d3cd",
+      "current_git_blob": "14886c07fff18ceb1e0cde6a932cfe3143bd64a2",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/DEPENDENCY_LOCK.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "f6164cc052aba5591d246a61d52d63094a85deba",
+      "predecessor_sha256": "0f9287994603e31bc39d6bb193145f701007d582af3986fe5ff4747ba94634bf",
+      "current_sha256": "0f9287994603e31bc39d6bb193145f701007d582af3986fe5ff4747ba94634bf",
+      "current_git_blob": "f6164cc052aba5591d246a61d52d63094a85deba",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/schemas/ir/one-ir-program.schema.json",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "e47a5a5cb9d71f0a2bf177b4ac1e444a70b31ff9",
+      "predecessor_sha256": "b176a7dfbcb79eb4fa332720617d0037c9de1c27853d04e7d76623b266854e75",
+      "current_sha256": "b176a7dfbcb79eb4fa332720617d0037c9de1c27853d04e7d76623b266854e75",
+      "current_git_blob": "e47a5a5cb9d71f0a2bf177b4ac1e444a70b31ff9",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/src/checks.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "925083ceaed4312e968fac9e05fb8678301e215e",
+      "predecessor_sha256": "d21343a873b2dda89c81190fd6658dfc8ef6f4ed003da86057acf4e6412c0167",
+      "current_sha256": "d21343a873b2dda89c81190fd6658dfc8ef6f4ed003da86057acf4e6412c0167",
+      "current_git_blob": "925083ceaed4312e968fac9e05fb8678301e215e",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/src/context.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "97047847b040181cdf9a36b66189c763a3630b89",
+      "predecessor_sha256": "d404ecc0b16a99c11a60f6409fbe7cb972129467c0023da32103badaa3346d0f",
+      "current_sha256": "d404ecc0b16a99c11a60f6409fbe7cb972129467c0023da32103badaa3346d0f",
+      "current_git_blob": "97047847b040181cdf9a36b66189c763a3630b89",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/src/diagnostics.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "fd53622c9e42aa3ba52d023f60d4c0a753ec8958",
+      "predecessor_sha256": "4cc6197d4461e7ccc6ba9828e7a7d6c677916b0db6457d7f2f537d84ad3cff8f",
+      "current_sha256": "4cc6197d4461e7ccc6ba9828e7a7d6c677916b0db6457d7f2f537d84ad3cff8f",
+      "current_git_blob": "fd53622c9e42aa3ba52d023f60d4c0a753ec8958",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/src/hash.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "02571e585983e06314663d93ecb68d7cd9554410",
+      "predecessor_sha256": "8dc75dcc955c6254d8970d790e6e854b5087527e8c8d1857740fd5fa88dbe6e1",
+      "current_sha256": "8dc75dcc955c6254d8970d790e6e854b5087527e8c8d1857740fd5fa88dbe6e1",
+      "current_git_blob": "02571e585983e06314663d93ecb68d7cd9554410",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/src/ir.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "66e612f1ff891c077a825b720a2167cc7be26ca6",
+      "predecessor_sha256": "8f58388d97e89c0592dee5b0619f7b74ee22f19df923c1982148500872892e3d",
+      "current_sha256": "8f58388d97e89c0592dee5b0619f7b74ee22f19df923c1982148500872892e3d",
+      "current_git_blob": "66e612f1ff891c077a825b720a2167cc7be26ca6",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/src/parser.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "93d0c78a1f852a18fc476e6a2553f4c283ae6002",
+      "predecessor_sha256": "cc833410ad6abc1779f58bf72f336299c3b65ce1e6a8b8d50434642bc9020a80",
+      "current_sha256": "cc833410ad6abc1779f58bf72f336299c3b65ce1e6a8b8d50434642bc9020a80",
+      "current_git_blob": "93d0c78a1f852a18fc476e6a2553f4c283ae6002",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/one-computational-language-f0-1/one-ir-compiler-lowering-f0.1/src/types.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "939f2ab21c1421fef0ef04eea4a9792c4200694f",
+      "predecessor_sha256": "9c0b1ca8cdc43a8ccdd399a8b1ab657d2a55aac4d8d2749e1d8932cb841698d7",
+      "current_sha256": "9c0b1ca8cdc43a8ccdd399a8b1ab657d2a55aac4d8d2749e1d8932cb841698d7",
+      "current_git_blob": "939f2ab21c1421fef0ef04eea4a9792c4200694f",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/transition-occurrence-protocol/src/canonical.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "d38855b3e63476d41dd927373751f0d596d210b3",
+      "predecessor_sha256": "ef25b052e6390819cd4db999d9c0ed1a94501b25eafeb65e941db0b9bb2aa42e",
+      "current_sha256": "ef25b052e6390819cd4db999d9c0ed1a94501b25eafeb65e941db0b9bb2aa42e",
+      "current_git_blob": "d38855b3e63476d41dd927373751f0d596d210b3",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/transition-occurrence-protocol/src/protocol.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "4286d41b36d2995d5baa7204164ce1979a0c00dd",
+      "predecessor_sha256": "aa246921ff48b1fae3940a9e993240786013e5a84528b8a9d38090511015f553",
+      "current_sha256": "aa246921ff48b1fae3940a9e993240786013e5a84528b8a9d38090511015f553",
+      "current_git_blob": "4286d41b36d2995d5baa7204164ce1979a0c00dd",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/transition-occurrence-protocol/src/types.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "2949b9ffe7bf7b7ae65e8185c759e9e7b0a03de6",
+      "predecessor_sha256": "1b6b1214a79609a70d769f2cd8c9fa76395628c45039ed80fb28c9ca81e6b4a7",
+      "current_sha256": "1b6b1214a79609a70d769f2cd8c9fa76395628c45039ed80fb28c9ca81e6b4a7",
+      "current_git_blob": "2949b9ffe7bf7b7ae65e8185c759e9e7b0a03de6",
+      "locally_patched": false
+    },
+    {
+      "path": "extensions/compiled-occurrence-return/open-arrow/index.mjs",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "d7539e85544e8a83cba8701d5e62f8a4d6e08354",
+      "predecessor_sha256": "bc93c04a70707b504245bf5d508b561576ea9200022e6c7721696e6aded1843b",
+      "current_sha256": "2f3745759b2e0786d98ca1000b8f44a70de62ee2d5de9f529fe33ecbcd76ad07",
+      "current_git_blob": "deefab968d318650959b981761127d0793b1a752",
+      "locally_patched": true
+    },
+    {
+      "path": "artifacts/rgcb-operator-contracts/src/operators.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "e9aaf364b2512f742db325a4aa6a2baf281b3316",
+      "predecessor_git_blob": "df7154aa510668850ab9d9fb6cfb183c2df391fe",
+      "predecessor_sha256": "3d6e465805f4e9d44b0fc2bf36a668459641c9558586ff2c192948da9da3a4b0",
+      "current_sha256": "3d6e465805f4e9d44b0fc2bf36a668459641c9558586ff2c192948da9da3a4b0",
+      "current_git_blob": "df7154aa510668850ab9d9fb6cfb183c2df391fe",
+      "locally_patched": false
+    },
+    {
+      "path": "artifacts/rgcb-operator-contracts/src/types.ts",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "e9aaf364b2512f742db325a4aa6a2baf281b3316",
+      "predecessor_git_blob": "04724e886ee1fd10785a72f51c03974669a1e3c4",
+      "predecessor_sha256": "8159116f5119dde56b1d0e60a999121525931611b89fbaccd6cce9c3c02a85aa",
+      "current_sha256": "8159116f5119dde56b1d0e60a999121525931611b89fbaccd6cce9c3c02a85aa",
+      "current_git_blob": "04724e886ee1fd10785a72f51c03974669a1e3c4",
+      "locally_patched": false
+    },
+    {
+      "path": "runtime/mus_return_settlement.py",
+      "owner": "bkr1297-RIO/rio-reference-impl",
+      "predecessor_commit": "e9aaf364b2512f742db325a4aa6a2baf281b3316",
+      "predecessor_git_blob": "0a3d118fc83d9137ea4720eb50a106a684fd34a5",
+      "predecessor_sha256": "58580481324c7c5cce6c2cdaa72f45683d00617123152b8e9d51253e17082d9b",
+      "current_sha256": "5eb52a6d61945e63e874fa7427e9be72e5ae12bbbee94aff03780071689e419d",
+      "current_git_blob": "1166216e5d85e8fdcf7a4e9205871327b3d6e341",
+      "locally_patched": true
+    }
+  ],
+  "local_patches": [
+    {
+      "path": "extensions/compiled-occurrence-return/open-arrow/index.mjs",
+      "predecessor_commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+      "predecessor_git_blob": "d7539e85544e8a83cba8701d5e62f8a4d6e08354",
+      "current_git_blob": "deefab968d318650959b981761127d0793b1a752",
+      "change": "Bounded Research compiler target/profile"
+    },
+    {
+      "path": "runtime/mus_return_settlement.py",
+      "predecessor_commit": "e9aaf364b2512f742db325a4aa6a2baf281b3316",
+      "predecessor_git_blob": "0a3d118fc83d9137ea4720eb50a106a684fd34a5",
+      "current_git_blob": "1166216e5d85e8fdcf7a4e9205871327b3d6e341",
+      "change": "Explicit reporting-account MUS profile; original no-op default retained"
+    }
+  ],
+  "integration_basis": "F1-SETTLEMENT-SCOPE-001 followed by SourcePoint Proceed"
+}

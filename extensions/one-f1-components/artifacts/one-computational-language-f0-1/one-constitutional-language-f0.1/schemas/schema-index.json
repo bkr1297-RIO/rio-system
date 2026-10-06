@@ -1,0 +1,28 @@
+{
+  "language_profile": "F0.1",
+  "schema_version": "0.1.0",
+  "schemas": [
+    {"group": "common", "type": "ObjectRef", "id": "urn:one:language:f0.1:common:object-ref", "path": "common/object-ref.schema.json"},
+    {"group": "common", "type": "VersionRef", "id": "urn:one:language:f0.1:common:version-ref", "path": "common/version-ref.schema.json"},
+    {"group": "common", "type": "Digest", "id": "urn:one:language:f0.1:common:digest", "path": "common/digest.schema.json"},
+    {"group": "common", "type": "IntegrityBlock", "id": "urn:one:language:f0.1:common:integrity-block", "path": "common/integrity-block.schema.json"},
+    {"group": "common", "type": "LineageRef", "id": "urn:one:language:f0.1:common:lineage-ref", "path": "common/lineage-ref.schema.json"},
+    {"group": "common", "type": "EffectSignature", "id": "urn:one:language:f0.1:common:effect-signature", "path": "common/effect-signature.schema.json"},
+    {"group": "common", "type": "DependencyBinding", "id": "urn:one:language:f0.1:common:dependency-binding", "path": "common/dependency-binding.schema.json"},
+    {"group": "authority", "type": "RootAuthorityBasis", "id": "urn:one:language:f0.1:authority:root-authority-basis", "path": "authority/root-authority-basis.schema.json"},
+    {"group": "authority", "type": "AuthorityGrant", "id": "urn:one:language:f0.1:authority:authority-grant", "path": "authority/authority-grant.schema.json"},
+    {"group": "authority", "type": "AuthorityLivenessSnapshot", "id": "urn:one:language:f0.1:authority:authority-liveness-snapshot", "path": "authority/authority-liveness-snapshot.schema.json"},
+    {"group": "authority", "type": "Authorization", "id": "urn:one:language:f0.1:authority:authorization", "path": "authority/authorization.schema.json"},
+    {"group": "crossing", "type": "CrossingConditions", "id": "urn:one:language:f0.1:crossing:crossing-conditions", "path": "crossing/crossing-conditions.schema.json"},
+    {"group": "crossing", "type": "EvaluationResult", "id": "urn:one:language:f0.1:crossing:evaluation-result", "path": "crossing/evaluation-result.schema.json"},
+    {"group": "crossing", "type": "Commitment", "id": "urn:one:language:f0.1:crossing:commitment", "path": "crossing/commitment.schema.json"},
+    {"group": "crossing", "type": "AttemptAdmission", "id": "urn:one:language:f0.1:crossing:attempt-admission", "path": "crossing/attempt-admission.schema.json"},
+    {"group": "crossing", "type": "ExecutionAttempt", "id": "urn:one:language:f0.1:crossing:execution-attempt", "path": "crossing/execution-attempt.schema.json"},
+    {"group": "crossing", "type": "Occurrence", "id": "urn:one:language:f0.1:crossing:occurrence", "path": "crossing/occurrence.schema.json"},
+    {"group": "return", "type": "ReturnObject", "id": "urn:one:language:f0.1:return:return-object", "path": "return/return-object.schema.json"},
+    {"group": "standing", "type": "StandingVector", "id": "urn:one:language:f0.1:standing:standing-vector", "path": "standing/standing-vector.schema.json"},
+    {"group": "orientation", "type": "Orientation", "id": "urn:one:language:f0.1:orientation:orientation", "path": "orientation/orientation.schema.json"},
+    {"group": "institution", "type": "Institution", "id": "urn:one:language:f0.1:institution:institution", "path": "institution/institution.schema.json"},
+    {"group": "presentation", "type": "PresentationTrace", "id": "urn:one:language:f0.1:presentation:presentation-trace", "path": "presentation/presentation-trace.schema.json"}
+  ]
+}

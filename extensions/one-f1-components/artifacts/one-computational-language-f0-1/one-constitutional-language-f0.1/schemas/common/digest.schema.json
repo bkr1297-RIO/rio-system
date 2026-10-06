@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:common:digest",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "Digest",
+  "type": "string",
+  "pattern": "^sha256:[a-f0-9]{64}$"
+}
+

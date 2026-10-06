@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:authority:authority-grant",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "AuthorityGrant",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "grant_id", "constructor", "subject_ref", "action", "object_ref", "payload_digest", "purpose", "scope", "jurisdiction", "effect_signature", "valid_from", "valid_until", "delegable", "use_profile", "root_basis_ref", "parent_grant_refs", "composition_rule_ref", "dependency_bindings", "derivation_ref", "issued_by_ref", "issued_at", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:authority:authority-grant"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "AuthorityGrant"},
+    "grant_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "constructor": {"enum": ["ROOT", "DELEGATE", "COMPOSE"]},
+    "subject_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "action": {"type": "string", "minLength": 1},
+    "object_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "payload_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+    "purpose": {"type": "string", "minLength": 1},
+    "scope": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "jurisdiction": {"type": "string", "minLength": 1},
+    "effect_signature": {"$ref": "urn:one:language:f0.1:common:effect-signature"},
+    "valid_from": {"type": "string", "format": "date-time"},
+    "valid_until": {"type": "string", "format": "date-time"},
+    "delegable": {"type": "boolean"},
+    "use_profile": {"enum": ["ATOMIC", "SINGLE_USE", "BOUNDED_LEASE"]},
+    "root_basis_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]},
+    "parent_grant_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "composition_rule_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]},
+    "dependency_bindings": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:dependency-binding"}},
+    "derivation_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "issued_by_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "issued_at": {"type": "string", "format": "date-time"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {"properties": {"constructor": {"const": "ROOT"}}},
+      "then": {"properties": {"root_basis_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "parent_grant_refs": {"maxItems": 0}}}
+    },
+    {
+      "if": {"properties": {"constructor": {"const": "DELEGATE"}}},
+      "then": {"properties": {"parent_grant_refs": {"minItems": 1}, "composition_rule_ref": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"constructor": {"const": "COMPOSE"}}},
+      "then": {"properties": {"parent_grant_refs": {"minItems": 2}, "composition_rule_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"}}}
+    }
+  ]
+}
+

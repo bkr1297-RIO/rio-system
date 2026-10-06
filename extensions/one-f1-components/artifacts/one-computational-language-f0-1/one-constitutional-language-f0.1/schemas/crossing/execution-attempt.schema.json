@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:crossing:execution-attempt",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "ExecutionAttempt",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "attempt_id", "admission_ref", "commitment_ref", "attempt_nonce", "subject_ref", "executor_ref", "action", "object_ref", "payload_digest", "started_at", "completed_at", "status", "result_digest", "external_ack_refs", "occurrence_claim", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:crossing:execution-attempt"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "ExecutionAttempt"},
+    "attempt_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "admission_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "commitment_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "attempt_nonce": {"type": "string", "minLength": 1},
+    "subject_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "executor_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "action": {"type": "string", "minLength": 1},
+    "object_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "payload_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+    "started_at": {"type": "string", "format": "date-time"},
+    "completed_at": {"anyOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+    "status": {"enum": ["STARTED", "SUCCEEDED", "FAILED", "ABORTED"]},
+    "result_digest": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:digest"}, {"type": "null"}]},
+    "external_ack_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "occurrence_claim": {"const": "NONE"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}

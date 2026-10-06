@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:common:version-ref",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "VersionRef",
+  "description": "Opaque version or revision reference; meaning is owned by the referenced system.",
+  "type": "string",
+  "minLength": 1
+}
+

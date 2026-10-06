@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:standing:standing-vector",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "StandingVector",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "vector_id", "subject_ref", "purpose", "profile", "scope", "context_ref", "evaluated_at", "dimensions", "derivation_ref", "supersedes_ref", "standing_effect", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:standing:standing-vector"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "StandingVector"},
+    "vector_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "subject_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "purpose": {"type": "string", "minLength": 1},
+    "profile": {"type": "string", "minLength": 1},
+    "scope": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "context_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "evaluated_at": {"type": "string", "format": "date-time"},
+    "dimensions": {
+      "type": "object",
+      "required": ["structural", "authority", "lifecycle", "epistemic", "effect", "settlement", "accountability", "temporal"],
+      "properties": {
+        "structural": {"$ref": "#/$defs/dimension"},
+        "authority": {"$ref": "#/$defs/dimension"},
+        "lifecycle": {"$ref": "#/$defs/dimension"},
+        "epistemic": {"$ref": "#/$defs/dimension"},
+        "effect": {"$ref": "#/$defs/dimension"},
+        "settlement": {"$ref": "#/$defs/dimension"},
+        "accountability": {"$ref": "#/$defs/dimension"},
+        "temporal": {"$ref": "#/$defs/dimension"}
+      },
+      "additionalProperties": false
+    },
+    "derivation_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "supersedes_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]},
+    "standing_effect": {"const": "NONE"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "$defs": {
+    "dimension": {
+      "type": "object",
+      "required": ["disposition", "basis_refs", "reason_codes"],
+      "properties": {
+        "disposition": {"enum": ["ESTABLISHED", "CONDITIONAL", "ABSENT", "CONTESTED", "UNKNOWN"]},
+        "basis_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+        "reason_codes": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true}
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:ir:one-ir-program",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "ONEIRProgram",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "ir_id", "program_name", "operation", "source", "bindings", "nodes", "authority_obligations", "effect_signature", "times", "field_mappings", "lowering_target", "lineage", "authority_effect", "standing_effect", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:ir:one-ir-program"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "ONEIRProgram"},
+    "ir_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "program_name": {"type": "string", "minLength": 1},
+    "operation": {"const": "DIAMOND_CROSSING"},
+    "source": {
+      "type": "object",
+      "required": ["source_ref", "source_digest"],
+      "properties": {
+        "source_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "source_digest": {"$ref": "urn:one:language:f0.1:common:digest"}
+      },
+      "additionalProperties": false
+    },
+    "bindings": {
+      "type": "object",
+      "required": ["sourcepoint_ref", "basis_ref", "basis_revision", "basis_digest", "authority_ref", "proposal_ref", "candidate_ref", "subject_ref", "action", "object_ref", "payload_digest", "intended_delta_digest", "purpose", "scope", "jurisdiction", "context_ref", "policy_ref", "policy_revision", "policy_digest", "evidence_plan_ref", "evidence_obligation_refs", "return_obligation_ref", "proposer_ref", "evaluator_ref", "executor_ref", "predecessor_schema_ids"],
+      "properties": {
+        "sourcepoint_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "basis_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "basis_revision": {"type": "string", "minLength": 1},
+        "basis_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+        "authority_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "proposal_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "candidate_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "subject_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "action": {"type": "string", "minLength": 1},
+        "object_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "payload_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+        "intended_delta_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+        "purpose": {"type": "string", "minLength": 1},
+        "scope": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}},
+        "jurisdiction": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "context_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "policy_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "policy_revision": {"type": "string", "minLength": 1},
+        "policy_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+        "evidence_plan_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "evidence_obligation_refs": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}},
+        "return_obligation_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "proposer_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "evaluator_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "executor_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "predecessor_schema_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}}
+      },
+      "additionalProperties": false
+    },
+    "nodes": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["node_id", "ordinal", "operation", "output_type", "output_value_ref", "input_node_refs", "source_ast_ref", "time_binding"],
+        "properties": {
+          "node_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+          "ordinal": {"type": "integer", "minimum": 1},
+          "operation": {"enum": ["INTAKE", "CONDITIONS", "EVALUATE", "ROOT", "CURRENT_AUTHORITY", "AUTHORIZE", "COMMIT", "ADMIT_ATTEMPT", "INSTANTIATE_ATTEMPT"]},
+          "output_type": {"enum": ["ProposalEnvelope", "CrossingConditions", "EvaluationResult", "AuthorityGrant", "AuthorityLivenessSnapshot", "Authorization", "Commitment", "AttemptAdmission", "ExecutionAttempt"]},
+          "output_value_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+          "input_node_refs": {"type": "array", "uniqueItems": true, "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}},
+          "source_ast_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+          "time_binding": {"anyOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "authority_obligations": {
+      "type": "array",
+      "minItems": 4,
+      "maxItems": 4,
+      "items": {
+        "type": "object",
+        "required": ["obligation", "object_ref", "evaluation_at", "request_digest"],
+        "properties": {
+          "obligation": {"enum": ["ROOT_BASIS_REQUIRED", "AUTHORITY_DERIVATION_REQUIRED", "CURRENT_AUTHORITY_REQUIRED"]},
+          "object_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+          "evaluation_at": {"anyOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+          "request_digest": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:digest"}, {"type": "null"}]}
+        },
+        "additionalProperties": false
+      }
+    },
+    "effect_signature": {"$ref": "urn:one:language:f0.1:common:effect-signature"},
+    "times": {
+      "type": "object",
+      "required": ["created_at", "expires_at", "authorization_at", "commitment_at", "point_of_use_at", "attempt_started_at"],
+      "properties": {
+        "created_at": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": "string", "format": "date-time"},
+        "authorization_at": {"type": "string", "format": "date-time"},
+        "commitment_at": {"type": "string", "format": "date-time"},
+        "point_of_use_at": {"type": "string", "format": "date-time"},
+        "attempt_started_at": {"type": "string", "format": "date-time"}
+      },
+      "additionalProperties": false
+    },
+    "field_mappings": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["source_field", "ir_path", "diamond_input_path"],
+        "properties": {
+          "source_field": {"type": "string", "minLength": 1},
+          "ir_path": {"type": "string", "minLength": 1},
+          "diamond_input_path": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "lowering_target": {
+      "type": "object",
+      "required": ["profile", "binding_package", "entrypoint", "dependency_lock_digest"],
+      "properties": {
+        "profile": {"const": "DIAMOND_CROSSING_F0.1"},
+        "binding_package": {"const": "one-authority-diamond-crossing-f0.1"},
+        "entrypoint": {"const": "runDiamondCrossing|run_diamond_crossing"},
+        "dependency_lock_digest": {"$ref": "urn:one:language:f0.1:common:digest"}
+      },
+      "additionalProperties": false
+    },
+    "lineage": {
+      "type": "object",
+      "required": ["source_expression_ref", "source_digest", "typed_ast_ref", "typed_ast_digest", "compiler_profile"],
+      "properties": {
+        "source_expression_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "source_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+        "typed_ast_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+        "typed_ast_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+        "compiler_profile": {"const": "ONE_COMPILER_F0.1"}
+      },
+      "additionalProperties": false
+    },
+    "authority_effect": {"const": "NONE"},
+    "standing_effect": {"const": "NONE"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}

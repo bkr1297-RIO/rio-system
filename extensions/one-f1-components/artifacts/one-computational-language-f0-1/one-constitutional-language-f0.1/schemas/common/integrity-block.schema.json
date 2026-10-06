@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:common:integrity-block",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "IntegrityBlock",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "algorithm", "digest", "canonicalization", "signed"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:common:integrity-block"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "IntegrityBlock"},
+    "algorithm": {"const": "sha256"},
+    "digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+    "canonicalization": {"type": "string", "minLength": 1},
+    "signed": {"type": "boolean"},
+    "signature_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]}
+  },
+  "additionalProperties": false
+}
+

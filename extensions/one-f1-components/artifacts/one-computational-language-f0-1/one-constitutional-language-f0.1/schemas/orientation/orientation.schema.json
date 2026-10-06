@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:orientation:orientation",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "Orientation",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "orientation_id", "subject_ref", "context_ref", "standing_vector_ref", "generated_from_refs", "recommendations", "cautions", "presentation_trace_ref", "created_at", "expires_at", "advisory_only", "authority_effect", "permission_effect", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:orientation:orientation"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "Orientation"},
+    "orientation_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "subject_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "context_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "standing_vector_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "generated_from_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "minItems": 1, "uniqueItems": true},
+    "recommendations": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "cautions": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "presentation_trace_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "created_at": {"type": "string", "format": "date-time"},
+    "expires_at": {"type": "string", "format": "date-time"},
+    "advisory_only": {"const": true},
+    "authority_effect": {"const": "NONE"},
+    "permission_effect": {"const": "NONE"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}

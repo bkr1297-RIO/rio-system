@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:authority:root-authority-basis",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "RootAuthorityBasis",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "basis_id", "basis_kind", "source_ref", "constitution_ref", "domain", "scope_ceiling", "jurisdiction", "effect_signature", "valid_from", "valid_until", "dependency_bindings", "lineage_ref", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:authority:root-authority-basis"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "RootAuthorityBasis"},
+    "basis_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "basis_kind": {"type": "string", "minLength": 1},
+    "source_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "constitution_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "domain": {"type": "string", "minLength": 1},
+    "scope_ceiling": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+    "jurisdiction": {"type": "string", "minLength": 1},
+    "effect_signature": {"$ref": "urn:one:language:f0.1:common:effect-signature"},
+    "valid_from": {"type": "string", "format": "date-time"},
+    "valid_until": {"anyOf": [{"type": "string", "format": "date-time"}, {"type": "null"}]},
+    "dependency_bindings": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:dependency-binding"}},
+    "lineage_ref": {"$ref": "urn:one:language:f0.1:common:lineage-ref"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}
+

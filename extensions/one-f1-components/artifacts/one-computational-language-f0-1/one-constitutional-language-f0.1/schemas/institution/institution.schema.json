@@ -1,0 +1,31 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:institution:institution",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "Institution",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "institution_id", "name", "constitution_ref", "institutional_profile_ref", "bearer_ref", "provider_refs", "root_authority_basis_refs", "standing_vector_ref", "succession_policy_ref", "continuity_evidence_refs", "established_at", "state", "provider_independent_identity", "authority_effect", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:institution:institution"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "Institution"},
+    "institution_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "name": {"type": "string", "minLength": 1},
+    "constitution_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "institutional_profile_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "bearer_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "provider_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "root_authority_basis_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "minItems": 1, "uniqueItems": true},
+    "standing_vector_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "succession_policy_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "continuity_evidence_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "minItems": 1, "uniqueItems": true},
+    "established_at": {"type": "string", "format": "date-time"},
+    "state": {"enum": ["ACTIVE", "DORMANT", "SUSPENDED", "DISSOLVED"]},
+    "provider_independent_identity": {"const": true},
+    "authority_effect": {"const": "PROFILE_BOUNDED"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}

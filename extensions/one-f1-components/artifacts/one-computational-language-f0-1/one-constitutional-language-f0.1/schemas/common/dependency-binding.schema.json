@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:common:dependency-binding",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "DependencyBinding",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "binding_id", "dependency_kind", "dependency_ref", "subject_kind", "subject_ref", "binding_mode", "required_revision", "required_digest", "validity_condition"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:common:dependency-binding"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "DependencyBinding"},
+    "binding_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "dependency_kind": {"enum": ["SUBJECT", "CONTEXT", "POLICY", "BASIS", "CONSTITUTION", "ROUTE", "EVIDENCE_PLAN"]},
+    "dependency_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "subject_kind": {"anyOf": [{"type": "string", "minLength": 1}, {"type": "null"}]},
+    "subject_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]},
+    "binding_mode": {"enum": ["EXACT", "AT_LEAST", "PROFILE_DEFINED"]},
+    "required_revision": {"$ref": "urn:one:language:f0.1:common:version-ref"},
+    "required_digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+    "validity_condition": {"type": "string", "minLength": 1}
+  },
+  "additionalProperties": false
+}
+

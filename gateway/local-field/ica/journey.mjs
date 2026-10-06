@@ -1,11 +1,12 @@
 import { randomUUID } from 'node:crypto';
-import { writeFileSync,renameSync } from 'node:fs';
+import { writeFileSync,renameSync,readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { evaluate,freezeData } from '../meteorology/evaluator.mjs';
 import { projectMetascope } from '../meteorology/projection.mjs';
 import { ConsequenceSpecimen } from '../consequence/account.mjs';
 import { projectConsequence } from '../consequence/projection.mjs';
 import { ReferenceWorkspace } from './workspace.mjs';
+import {LocalField} from '../index.mjs';
 import { referenceSignals,referenceClearingSignals } from './source-replay.mjs';
 import { exactData } from '../meteorology/signals.mjs';
 import {RESEARCH_OFFICE,investigate} from './research.mjs';
@@ -14,6 +15,8 @@ import {RemainderRegister} from './residue.mjs';
 const need=(ok,error)=>{if(!ok)throw new Error(error);};
 const copy=v=>structuredClone(v);
 const issuedViews=new WeakSet();
+const issuedResearchReturns=new WeakSet();
+export function validateResearchReturn(value){need(issuedResearchReturns.has(value),'ISSUED_RESEARCH_RETURN_REQUIRED');return value;}
 const PROGRAM=freezeData({kind:'Program',program_id:'bounded-reading-investigation.f0.1',name:'Bounded Research',max_effects:1,max_bytes:4096,
  input:'At most three delegated FieldoscopyReadings',authorization_supplied:false});
 export function validateICAView(view){need(issuedViews.has(view),'ISSUED_ICA_VIEW_REQUIRED');return view;}
@@ -22,6 +25,7 @@ export class ICAJourney {
  #workspace;#replay;#account;#reading;#previous=null;#register=[];#requests=new Set();#revision=0;#id=randomUUID();#phase='OBSERVATORY';
  #what=false;#why=false;#prepared=null;#delegation=null;#permission=null;#lease=null;#attempt=null;#returned=null;#revocation=null;#orientation=null;#disposition=null;
  #dispatch=null;#plannedResearch=null;#research=null;#researchReturn=null;#gate=null;#divergence=null;#history=[];#residue=new RemainderRegister();#worker=1;#replaced=false;#archived=[];
+ #reportCandidate=null;#settlement=null;#successor=null;
  constructor(workspace,replay){
   need(workspace instanceof ReferenceWorkspace&&workspace.constructor===ReferenceWorkspace,'NATIVE_REFERENCE_WORKSPACE_REQUIRED');
   exactData(replay,['kind','source_contract','initial','changed','initial_timestamp','changed_timestamp'],'REPLAY_FIELDS');
@@ -32,6 +36,7 @@ export class ICAJourney {
   this.#account=new ConsequenceSpecimen(workspace.runtime,{objective_id:'Bounded Research note stored and read back',minimum_bytes:1});
   this.#record('ENTER','Enter Observatory',this.#reading,'FieldoscopyReading',this.#reading.reading_id);
   this.#record('PROGRAM_AVAILABLE','See the one bounded Research Office',PROGRAM,'Program',PROGRAM.program_id);
+  this.#persist();
  }
  #record(transition,human_action,artifact,kind,id){this.#register.push(freezeData({entry_id:randomUUID(),timestamp:new Date().toISOString(),transition,human_action,
   artifact_ref:`${kind}:${id}`,machine_artifact:copy(artifact),predecessor:this.#register.at(-1)?.entry_id??null}));}
@@ -45,6 +50,8 @@ export class ICAJourney {
   if(this.#permission&&!this.#revocation&&!this.#expired())commands.push('revoke');
   if(this.#revocation&&!this.#revocation.acknowledged)commands.push('acknowledge');
   if((this.#returned||this.#disposition&&!this.#permission)&&!this.#orientation)commands.push('keep');
+  if(this.#returned?.return_completeness==='COMPLETE'&&this.#researchReturn&&!this.#settlement)commands.push('accept-report');
+  if(this.#settlement&&!this.#successor)commands.push('admit-account');
   if(this.#residue.view().items.length)commands.push('perimeter');
   if(this.#workspace.fixture==='model-contradiction'&&this.#previous&&!this.#delegation&&!this.#divergence)commands.push('compare');
   if(this.#workspace.fixture==='occupant-replacement'&&this.#permission&&!this.#attempt&&!this.#replaced)commands.push('replace');
@@ -81,6 +88,7 @@ export class ICAJourney {
      findings:planned.findings.map(x=>({finding_id:x.finding_id,question:x.question,status:x.status,text:x.text})),
      unresolved_remainder:this.#reading.unresolved_remainder,forecast_status:'UNCALIBRATED_CANDIDATE',authorization_supplied:false};
     this.#prepared=this.#workspace.prepare(JSON.stringify(note));
+    this.#record('COMPILE','Form the bounded note request without execution authority',this.#prepared.compilation,'ONEIR',this.#prepared.compilation.ir.ir_id);
     this.#dispatch=new ResearchDispatch(this.#workspace,this.#account,this.#prepared);
     this.#delegation=this.#dispatch.delegate({human_choice_ref:choice.choice_id,inhabitant:`research-worker-${this.#worker}`,reading_refs:frames.map(r=>r.reading_id)});
     this.#plannedResearch=freezeData({...planned,delegation_id:this.#delegation.delegation_id});
@@ -135,17 +143,25 @@ export class ICAJourney {
    }else if(action==='acknowledge'){
     this.#revocation=this.#account.acknowledge(this.#revocation);this.#record('ACKNOWLEDGE','Check this executor’s acknowledgement',this.#revocation,'Revocation',this.#revocation.revocation_id);
    }else if(action==='replace'){
+    const prior_account={returned:this.#researchReturn,settlement:this.#settlement,successor:this.#successor,orientation:this.#orientation};
     this.#revocation=this.#account.revoke(this.#permission,this.#workspace.revocation(this.#prepared.grant_id));
     this.#revocation=this.#account.acknowledge(this.#revocation);
     this.#record('REPLACEMENT_REVOKE','Withdraw the prior inhabitant’s future use',this.#revocation,'Revocation',this.#revocation.revocation_id);
     this.#returned=this.#account.composeReturn(this.#permission,{outstanding_obligations:['Replacement requires a fresh attributable Research delegation']});this.#returnResearch();
-    this.#archived.push({delegation:this.#delegation,returned:this.#researchReturn});this.#worker++;this.#replaced=true;
+    this.#archived.push({delegation:this.#delegation,returned:this.#researchReturn,prior_account});this.#worker++;this.#replaced=true;
     const replacement={kind:'InhabitantReplacement',replacement_id:randomUUID(),office:'Research',prior_inhabitant:this.#delegation.inhabitant,current_inhabitant:`research-worker-${this.#worker}`,
      prior_delegation_ref:this.#delegation.delegation_id,old_rights_revoked:true,new_authorization_supplied:false};
     this.#record('REPLACE_INHABITANT','Replace the Research inhabitant; new work needs fresh delegation',replacement,replacement.kind,replacement.replacement_id);
     this.#delegation=null;this.#permission=null;this.#lease=null;this.#returned=null;this.#revocation=null;this.#researchReturn=null;this.#research=null;this.#disposition=null;this.#phase='OBSERVATORY';
+    this.#reportCandidate=null;this.#settlement=null;this.#successor=null;this.#orientation=null;
    }else if(action==='perimeter'){
     this.#residue.move();const tray=this.#residue.view();this.#record('ATTENTION','Move retained remainders without changing standing',tray,tray.kind,this.#id);
+   }else if(action==='accept-report'){
+    this.#settlement=this.#workspace.reviewReports(this.#reportCandidate,choice.choice_id);
+    this.#record('SETTLE_REPORT','Accept this reporting account only',this.#settlement,this.#settlement.kind,this.#settlement.settlement_id);
+   }else if(action==='admit-account'){
+    this.#successor=this.#workspace.admitReports(this.#settlement,choice.choice_id);
+    this.#record('ADMIT_MATERIAL','Admit this account to subsequent orientation without execution rights',this.#successor,this.#successor.kind,this.#successor.artifactId);
    }else if(action==='keep'){
     this.#orientation=freezeData({kind:'HumanOrientation',orientation_id:randomUUID(),choice:'RETAIN_FOR_ORIENTATION',basis_ref:this.#returned?`ReturnArtifact:${this.#returned.return_id}`:`ConstitutionalDisposition:${this.#disposition.decision_id}`,
      human_choice_ref:choice.choice_id,authorization_supplied:false,standing_change:false,next_action:'None; any new work requires a fresh request'});
@@ -183,9 +199,11 @@ export class ICAJourney {
    return_completeness:this.#returned.return_completeness,authority_status:this.#revocation?'REVOKED':this.#expired()?'EXPIRED':'NO_FURTHER_DISPATCH_FROM_THIS_RETURN',
    interruption_point:this.#revocation?(this.#attempt?'After one local note attempt; observations and effects remain attributable':'Before any local note attempt'):null,
    provenance:{native_return_ref:this.#returned.return_id,delegation_ref:this.#delegation.delegation_id,research_ref:r?.research_id??null,reading_refs:this.#delegation.reading_refs},settlement_supplied:false});
+  issuedResearchReturns.add(this.#researchReturn);
   this.#record('RESEARCH_RETURN','Research returns findings and what remains uncertain',this.#researchReturn,this.#researchReturn.kind,this.#researchReturn.return_id);
+  this.#reportCandidate=this.#workspace.captureReports(this.#returned,this.#researchReturn);
  }
- #persist(){const tmp=join(this.#workspace.root,'ica-register.json.tmp');writeFileSync(tmp,JSON.stringify(this.view(),null,2),{mode:0o600});renameSync(tmp,join(this.#workspace.root,'ica-register.json'));}
+ #persist(){const view=this.view();this.#workspace.checkpoint(view);const tmp=join(this.#workspace.root,'ica-register.json.tmp');writeFileSync(tmp,JSON.stringify(view,null,2),{mode:0o600});renameSync(tmp,join(this.#workspace.root,'ica-register.json'));}
  view(){
   const consequence=this.#permission?projectConsequence(this.#account.snapshot(this.#returned??this.#attempt??this.#permission)):null;
   const instrument=freezeData({kind:'Instrument',name:'Metascope',...projectMetascope(this.#reading)}),state=consequence?.typed_account;
@@ -209,6 +227,7 @@ export class ICAJourney {
    perimeter:this.#residue.view(),lumen:{kind:'LumenProjection',state:this.#gate?'OCCLUDED':this.#research?.knowledge==='UNKNOWN'&&this.#research.findings.every(x=>x.status==='UNKNOWN')?'UNKNOWN':this.#reading.unresolved_remainder.length?'SHADOWED':'ILLUMINATED',
     basis_ref:this.#gate?`ResearchDispatchDecision:${this.#gate.decision_id}`:this.#research?.findings.every(x=>x.status==='UNKNOWN')?`ResearchFindings:${this.#research.research_id}`:`FieldoscopyReading:${this.#reading.reading_id}`,scope:'Current visibility and known gaps; not judgment, personal condition or instruction',authorization_supplied:false},
    reading:this.#reading,change,instrument,program:PROGRAM,show_what:this.#what,show_why:this.#why,delegation:this.#delegation,disposition:this.#disposition,consequence,
+   compilation:this.#prepared?.compilation??null,settlement:this.#settlement,successor:this.#successor,
    orientation:this.#orientation,answers,register:[...this.#register],allowed_commands:this.#commands()});
   issuedViews.add(view);return view;
  }
@@ -219,4 +238,15 @@ export function createICAReference(options){
  const replay=referenceSignals(options.timestamp),workspace=new ReferenceWorkspace(options);let journey;
  try{journey=new ICAJourney(workspace,replay);}catch(error){workspace.close();throw error;}
  return {root:workspace.root,runtime:workspace.runtime,journey,close:()=>workspace.close()};
+}
+/** Re-entry restores attributable orientation only. JSON never restores operative handles. */
+export function reopenICAReference(options){
+ exactData(options,['root'],'REFERENCE_OPTIONS');
+ const retained=LocalField.readRetainedRoom(options.root,JSON.parse(readFileSync(join(options.root,'ica-checkpoint.json'),'utf8')));
+ const answers=retained.answers.map((a,i)=>i===6?{...a,answer:'This retained account supplies no active control. Prior effects, uncertainty and obligations remain attributable.'}:i===7?{...a,answer:'Inspect the retained account. Any new assignment needs a fresh reference session and explicit human choice.'}:a);
+ const consequence=retained.consequence?{...retained.consequence,claims:retained.consequence.claims.map(c=>({...c,text:'At the retained time: '+c.text})),typed_account:{...retained.consequence.typed_account,
+  lease_condition:retained.consequence.typed_account.lease&&Date.parse(retained.consequence.typed_account.lease.commitment.expires_at)<=Date.now()?'EXPIRED':'UNKNOWN',
+  retained_lease_condition:retained.consequence.typed_account.lease_condition,time_basis:'HISTORICAL_RETAINED_ACCOUNT',current_authority_knowledge:'NOT_ESTABLISHED_BY_REENTRY'}}:null;
+ const view=freezeData({...retained,consequence,answers,allowed_commands:[],reentry:{kind:'RetainedRoomAccount',authority_restored:false,scope:'Authenticated historical account; no lease or delegation is revived. Snapshot freshness after external file rollback is not established.'}});issuedViews.add(view);
+ return {root:options.root,journey:{view:()=>view,dispatch:()=>{throw new Error('REENTRY_READ_ONLY');}},close:()=>{}};
 }

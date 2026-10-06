@@ -1,0 +1,15 @@
+{
+  "profile": "one.ica.reporting-account.f0.1",
+  "version": "0.1",
+  "implementation_basis": "F1-SETTLEMENT-SCOPE-001 followed by SourcePoint Proceed",
+  "settlement_scope": "REPORTING_ACCOUNT_ONLY",
+  "successor_scope": "REPORTING_ACCOUNT_MATERIAL_ONLY",
+  "required_reports": ["ATTEMPT_ACCOUNT", "OBSERVATION_ACCOUNT", "OUTCOME_ACCOUNT", "LIMITS_ACCOUNT"],
+  "compiled_expression": "Write the bounded Research return note.",
+  "target": "research-return.json",
+  "max_bytes": 4096,
+  "max_effects": 1,
+  "source_domains": ["CALENDAR", "GIT"],
+  "authority_effect": "NONE",
+  "standing_effect": "NONE"
+}

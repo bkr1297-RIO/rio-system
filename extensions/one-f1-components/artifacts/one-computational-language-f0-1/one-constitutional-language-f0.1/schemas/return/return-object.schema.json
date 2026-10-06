@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:one:language:f0.1:return:return-object",
+  "x-one-language-profile": "F0.1",
+  "x-one-schema-version": "0.1.0",
+  "title": "ReturnObject",
+  "type": "object",
+  "required": ["schema_id", "schema_version", "language_profile", "kind", "return_id", "crossing_ref", "commitment_ref", "attempt_ref", "occurrence_refs", "status", "outputs", "observation_refs", "evidence_refs", "receipt_refs", "settlement_ref", "lineage_ref", "effect_signature", "claim_ceiling", "created_at", "integrity"],
+  "properties": {
+    "schema_id": {"const": "urn:one:language:f0.1:return:return-object"},
+    "schema_version": {"const": "0.1.0"},
+    "language_profile": {"const": "F0.1"},
+    "kind": {"const": "ReturnObject"},
+    "return_id": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "crossing_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "commitment_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+    "attempt_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]},
+    "occurrence_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "status": {"enum": ["SUCCESS", "FAILURE", "PARTIAL", "NO_EXECUTION"]},
+    "outputs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["output_ref", "digest", "media_type"],
+        "properties": {
+          "output_ref": {"$ref": "urn:one:language:f0.1:common:object-ref"},
+          "digest": {"$ref": "urn:one:language:f0.1:common:digest"},
+          "media_type": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    },
+    "observation_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "evidence_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "receipt_refs": {"type": "array", "items": {"$ref": "urn:one:language:f0.1:common:object-ref"}, "uniqueItems": true},
+    "settlement_ref": {"anyOf": [{"$ref": "urn:one:language:f0.1:common:object-ref"}, {"type": "null"}]},
+    "lineage_ref": {"$ref": "urn:one:language:f0.1:common:lineage-ref"},
+    "effect_signature": {"$ref": "urn:one:language:f0.1:common:effect-signature"},
+    "claim_ceiling": {"enum": ["RETURN_ONLY", "OBSERVATION_LINKED", "EVIDENCE_LINKED", "SETTLEMENT_LINKED"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "integrity": {"$ref": "urn:one:language:f0.1:common:integrity-block"}
+  },
+  "additionalProperties": false
+}
