@@ -1,0 +1,177 @@
+{
+  "profile": "constitutional-waist.f0.1",
+  "disposition": "PASS_WITH_RECORDED_SCOPE_LIMITS",
+  "predecessor": "fc9c9382f3420691c94c8ec9f9a16be15495d3bb",
+  "branch": "build/constitutional-waist-f0.1",
+  "generated_at": "2026-10-06T02:40:08.407185+00:00",
+  "runtime": "v24.19.0",
+  "platform": "linux",
+  "final_tests": {
+    "total": 271,
+    "pass": 271,
+    "fail": 0,
+    "skipped": 0
+  },
+  "commands": [
+    {
+      "command": "npm run test:waist",
+      "working_directory": "gateway",
+      "log": "waist-tests.log",
+      "counts": {
+        "tests": 33,
+        "pass": 33,
+        "fail": 0,
+        "skipped": 0
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "node --test tests/local-field*.test.mjs tests/ccm-001/*.test.mjs tests/si-specimen/*.test.mjs tests/execution-binding-repair.test.mjs tests/projection-runtime/*.test.mjs tests/prime-*.test.mjs",
+      "working_directory": "gateway",
+      "log": "inherited-tests.log",
+      "counts": {
+        "tests": 225,
+        "pass": 225,
+        "fail": 0,
+        "skipped": 0
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "ONE_REFERENCE_ROOT=/workspace/scratch/1cf97914ef3d/reference-waist-check node --test tests/open-arrow/*.test.mjs",
+      "working_directory": "gateway",
+      "log": "open-arrow-tests.log",
+      "counts": {
+        "tests": 13,
+        "pass": 13,
+        "fail": 0,
+        "skipped": 0
+      },
+      "result": "PASS"
+    },
+    {
+      "command": "npm test",
+      "working_directory": "gateway",
+      "log": "legacy-gateway-tests.log",
+      "counts": {
+        "tests": 13,
+        "pass": 0,
+        "fail": 13,
+        "skipped": 0
+      },
+      "result": "ENVIRONMENT_UNAVAILABLE"
+    },
+    {
+      "command": "node --test tests/local-field*.test.mjs tests/ccm-001/*.test.mjs tests/si-specimen/*.test.mjs tests/execution-binding-repair.test.mjs",
+      "working_directory": "gateway at exact predecessor",
+      "log": "baseline.log",
+      "counts": {
+        "tests": 181,
+        "pass": 181,
+        "fail": 0,
+        "skipped": 0
+      },
+      "result": "PASS"
+    },
+    {
+      "working_directory": "gateway, defects temporarily restored",
+      "log": "review-reproductions-red.log",
+      "counts": {
+        "tests": 2,
+        "pass": 0,
+        "fail": 2,
+        "skipped": 0
+      },
+      "result": "EXPECTED_RED",
+      "reproduce_with": "node --test --test-name-pattern=\"invocation expiring|receipt construction rejects\" tests/constitutional-waist/runtime.test.mjs",
+      "command_recorded_in_raw_log": false
+    },
+    {
+      "working_directory": "gateway, before startup/label repair",
+      "log": "review-startup-red.log",
+      "counts": {
+        "tests": 2,
+        "pass": 0,
+        "fail": 2,
+        "skipped": 0
+      },
+      "result": "EXPECTED_RED",
+      "reproduce_with": "node --test --test-name-pattern=\"CCM restart rejects|historical admission retry\" tests/constitutional-waist/runtime.test.mjs",
+      "command_recorded_in_raw_log": false
+    },
+    {
+      "command": "node scripts/run-constitutional-waist.mjs /workspace/scratch/1cf97914ef3d/waist-final-specimen.json",
+      "working_directory": "gateway",
+      "log": "specimen.log",
+      "artifact": "specimen.json",
+      "result": "PASS_WITH_RECORDED_SCOPE_LIMITS"
+    },
+    {
+      "command": "npm run typecheck",
+      "working_directory": "repo root",
+      "log": "root-typecheck.log",
+      "result": "ENVIRONMENT_UNAVAILABLE",
+      "reason": "tsc: not found"
+    }
+  ],
+  "reference_owner": {
+    "repository": "bkr1297-RIO/rio-reference-impl",
+    "commit": "73ccc41e99433513fbe8ca03d599d2ba2717b6ab",
+    "open_arrow_index_blob": "d7539e85544e8a83cba8701d5e62f8a4d6e08354",
+    "retrieval": "read-only required source/schema export, 37 files"
+  },
+  "specimen_verification": {
+    "ledger": true,
+    "receipt": true,
+    "return": true,
+    "all_four_receipt_hashes": true,
+    "restart_reconstruction": true
+  },
+  "specimen_effect": {
+    "actual": true,
+    "method": "create-only filesystem + separate descriptor read",
+    "content": "Constitutional waist: real bounded development effect.\n",
+    "content_hash": "4035ac8495e644440a7e01e54f88eb3d41419df910bf03d7f9540b89a2014b73",
+    "transient_artifact_removed_after_run": true
+  },
+  "claim_ceiling": "Bounded Linux LocalField profile; no physical embodiment, exterior truth, Evidence, Settlement, HOME mutation or successor admission",
+  "source_sha256": {
+    ".github/workflows/ccm-001.yml": "7ffefa76ccf31f7217b751e0455596154f4af3001ee8f78dc6478fc597924e12",
+    "gateway/package.json": "d4c7ae518b71365a7bafca46f58782b5adb403d837e136fe2dc213bcc274e2a7",
+    "gateway/local-field/http.mjs": "a90aa6dbcf23267f42d3b9e317f4f1f3fb3392a47b9142adba95c0855da56ed0",
+    "gateway/local-field/index.mjs": "a069a0463e70402cab01cc3cc784d2c910e6192b5104743bd756172c5950311c",
+    "gateway/local-field/medium/index.mjs": "8f81104bcb24b9699da36a78e9f9305cee57ba140fe302abf11ea085cc01bf09",
+    "gateway/local-field/waist.mjs": "7518abac0b8935d70ff454888f877bb14d606faec47a678b02f8aba83304b3ce",
+    "gateway/local-field/waist.d.ts": "df2b49deab73726a4539e877e80a4e61e5e55d707dc392bc099248128d1147fe",
+    "gateway/scripts/run-constitutional-waist.mjs": "35972cc32f1c19b0c8ab2aea48fbc04619b2a2535b6986f88d035afd89926b16",
+    "gateway/tests/ccm-001/helpers.mjs": "713e131860bffd40ab63199e84c47e7b157c9ac2a9c37553209aa696f53a46b9",
+    "gateway/tests/constitutional-waist/helpers.mjs": "ad44d5ffcdc9fb8aef962201020bfa3d853ce96b70c0e4f8a2015582079c385b",
+    "gateway/tests/constitutional-waist/runtime.test.mjs": "be099e45f148bacb9575c15a6ae26a454f46da6e36ba1913d49fb3b0905cf8e6"
+  },
+  "raw_evidence_sha256": {
+    "baseline.log": "de48f6f4a92fc4ca669de25440187069cc5a036e11c5fb3b70dc8599e927e0fa",
+    "waist-tests.log": "f54725c358885f58d7ea5aa1fb55dddf3aefaf686e0e2aa365d01ee89bc69616",
+    "inherited-tests.log": "46c9d73f558296a0ba1fee7a36dde30c8351827f9d19aa2c4c3118830b7496cd",
+    "open-arrow-tests.log": "e0d6a194f28f1115e45b4bd38e218a05412c63d26788b05807b4b325c4a287d4",
+    "legacy-gateway-tests.log": "bf2dc831f951d935bc02c155ba664c755dbdf61985016b7dbad86b12ea0bb869",
+    "root-typecheck.log": "49f86cbee82d3f6b289a5389f03cbff95dff964f990f2eaf80dcd2ab152e5f23",
+    "specimen.log": "56c41b4e93e15c4e31b0947c9a93afb968c1b57eb0cf65dc8d749550a50d72b6",
+    "specimen.json": "503223f573937669aa083edf80f65adc9b669bdceb2828aad400dbbccde9c57d",
+    "review-reproductions-red.log": "3819ed5096225a203a58d1d2787ff4947acbe9ff34bde039058c0a911131ab27",
+    "review-startup-red.log": "9be0cdae161577e23b511efdaaada317df66eef822ab6873cc360965536dd26c"
+  },
+  "independent_review": {
+    "original_waist_suite_pass": 27,
+    "important_findings": 2,
+    "minor_findings": 1,
+    "fix_passes": 1,
+    "final_fixes": "coordinator verified; no second independent review claimed"
+  },
+  "actions": {
+    "merge": false,
+    "deploy": false,
+    "canonize": false,
+    "home_mutation": false,
+    "new_dependency": false
+  }
+}

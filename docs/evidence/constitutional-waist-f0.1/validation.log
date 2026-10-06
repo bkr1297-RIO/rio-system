@@ -1,0 +1,68 @@
+$ git diff --cached --check
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:65: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:83: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:101: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:119: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:137: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:155: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:173: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:191: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:209: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:227: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:245: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:263: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/legacy-gateway-tests.log:281: trailing whitespace.
++    [cause]: AggregateError [ECONNREFUSED]: 
+docs/evidence/constitutional-waist-f0.1/review-startup-red.log:37: trailing whitespace.
++  
+docs/evidence/constitutional-waist-f0.1/review-startup-red.log:40: trailing whitespace.
++  
+exit_code=2
+Raw captured log whitespace is preserved unchanged; this is not an implementation whitespace defect.
+
+$ git diff --cached --check -- . ":(exclude)docs/evidence/constitutional-waist-f0.1/*.log"
+exit_code=0
+
+$ node --check gateway/local-field/index.mjs
+exit_code=0
+
+$ node --check gateway/local-field/http.mjs
+exit_code=0
+
+$ node --check gateway/local-field/medium/index.mjs
+exit_code=0
+
+$ node --check gateway/local-field/waist.mjs
+exit_code=0
+
+$ node --check gateway/tests/ccm-001/helpers.mjs
+exit_code=0
+
+$ node --check gateway/tests/constitutional-waist/helpers.mjs
+exit_code=0
+
+$ node --check gateway/tests/constitutional-waist/runtime.test.mjs
+exit_code=0
+
+$ node --check gateway/scripts/run-constitutional-waist.mjs
+exit_code=0
+
+Source hashes match final tested implementation: PASS
+Raw evidence hashes match: PASS
+
+Implementation-document relative links: PASS
+
+Changed-file inventory: PASS (30 files, 6 modified / 24 added)
+Raw .log evidence is build-owned and explicitly staged despite the existing log ignore rule.

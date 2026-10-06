@@ -1,0 +1,33 @@
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: c6f102c7... for intent 78446887-76b2-4628-b740-c3667c224923 | tool=create_document | env=d82d7b3b-86f9-494e-ae76-51e96d06d58f | max=1 | expires 2026-10-06T03:03:55.313Z
+[RIO Token Manager] Token BURNED: c6f102c7... for intent 78446887-76b2-4628-b740-c3667c224923 — all 11 checks passed
+[RIO Token Manager] Token issued: 47e13493... for intent 427f445e-d699-4d36-9c2f-09c1064abe9e | tool=create_document | env=0aa47425-18a1-413c-b8fc-c27e0a811f1f | max=1 | expires 2026-10-06T03:03:57.000Z
+[RIO Token Manager] Token issued: 6ebe495e... for intent f2a4c79a-05c6-47ea-9cea-4686f957b4c3 | tool=create_document | env=8b366900-5cd0-4c6d-bf0a-982e0a08c73a | max=1 | expires 2026-10-06T03:03:57.515Z
+[RIO Token Manager] Token issued: 55546a37... for intent 109404d1-3b66-47d3-8321-a30595cdf2c1 | tool=create_document | env=f554fcc1-fd5c-4485-bf0b-708d0651445b | max=1 | expires 2026-10-06T03:03:58.117Z
+[RIO Token Manager] Token BURNED: 55546a37... for intent 109404d1-3b66-47d3-8321-a30595cdf2c1 — all 11 checks passed
+[RIO Token Manager] Token issued: d71e4944... for intent 46b455da-1a1c-46aa-b247-3d5bfee1efc1 | tool=create_document | env=26c29332-9bc0-4cec-8ffe-de7ab04cb9fc | max=1 | expires 2026-10-06T03:03:59.771Z
+[RIO Token Manager] Token BURNED: d71e4944... for intent 46b455da-1a1c-46aa-b247-3d5bfee1efc1 — all 11 checks passed
+[RIO Token Manager] Token issued: 5d8ed422... for intent c4004091-3f59-4b34-a585-a10c07c7b92b | tool=create_document | env=2ff3e461-5c56-4971-a894-603f9abec037 | max=1 | expires 2026-10-06T03:04:00.894Z
+[RIO Token Manager] Token BURNED: 5d8ed422... for intent c4004091-3f59-4b34-a585-a10c07c7b92b — all 11 checks passed
+[RIO Token Manager] Token issued: e2cf1278... for intent 0696cc4c-f290-456e-9bfe-52913f9de38e | tool=create_document | env=22c2702a-02d2-4d38-bf4f-093190ada1df | max=1 | expires 2026-10-06T03:04:01.625Z
+✔ Customer Zero remains held until exact approval then performs a real passage (643.071ms)
+✔ generic passage endpoint cannot bypass HumanCommit with a broad valid grant (197.742468ms)
+✔ malformed proposal payloads fail before any formation or commitment is persisted (428.666595ms)
+✔ node cannot forge human expression or HumanCommit (372.920877ms)
+✔ target or payload cannot change after commitment or admission (554.394692ms)
+✔ revocation between approval and use still blocks the action (561.593146ms)
+✔ distinct explicit promotions create evidence judgment settlement successor with immutable history (1758.758893ms)
+✔ real adapter failure returns unknown effect and cannot promote to recognized successor (890.782087ms)
+✔ denial is a correct terminal non-action and never dispatches (242.80896ms)
+✔ promotion needs exact source hash basis and fresh independent human disposition (572.510359ms)
+✔ missing library fails closed for a constituted Open Arrow field (47.139681ms)
+✔ inspection after a fidelity hold is read-only (634.628994ms)
+✔ HTTP arrow route returns HOLD and a generic signed passage still cannot bypass it (325.479736ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 7570.852821

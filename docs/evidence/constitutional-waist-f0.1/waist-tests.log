@@ -1,0 +1,77 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> rio-governance-gateway@2.9.0 test:waist
+> node --test tests/constitutional-waist/*.test.mjs
+
+[RIO Token Manager] Initialized v2 (hardened) — TTL: 1800s, env: production, cleanup every 300s
+[RIO Token Manager] Token issued: aa4b5b48... for intent a2a98e58-796c-442b-b5dc-6e2587a8c994 | tool=create_document | env=7376ef21-cf21-4c6b-b7f4-8bc259fe42f3 | max=1 | expires 2026-10-06T03:00:39.797Z
+[RIO Token Manager] Token BURNED: aa4b5b48... for intent a2a98e58-796c-442b-b5dc-6e2587a8c994 — all 11 checks passed
+[RIO Token Manager] Token issued: ed5caf30... for intent d47a2cfe-c93c-4995-89bf-80fba719b42d | tool=create_document | env=3db88665-8333-4e00-a9a0-d4c0739f0cf1 | max=1 | expires 2026-10-06T03:00:43.249Z
+[RIO Token Manager] Token issued: 2abdb322... for intent 1030d381-1b1c-41b2-9800-ded3ed6fa6d5 | tool=create_document | env=39aa41e4-fe71-4836-a2f8-faeed83efe75 | max=1 | expires 2026-10-06T03:00:44.171Z
+✔ ADMIT has no invocation, attempt or filesystem effect; execute cannot bypass commitment (618.434285ms)
+✔ HOLD and DENY compress to actuator zero with reconstructable different decisions (708.35816ms)
+✔ HOLD PROBE retains standing; root repair requires a fresh valid ADMIT before commitment (2065.566308ms)
+✔ DENY cannot be repaired into ADMIT by retry or HOLD action (631.222581ms)
+✔ admitted commitment requires SourcePoint signature and exact decision binding (809.414428ms)
+✔ revoked commitment cannot invoke (1109.483615ms)
+[RIO Token Manager] Token issued: 53eb1c94... for intent a87aa768-5c59-4264-9853-048fc297226c | tool=create_document | env=3ebfd026-02a8-4deb-8b9c-18ee6996fa21 | max=1 | expires 2026-10-06T03:00:44.874Z
+[RIO Token Manager] Token issued: 3c4b2c2a... for intent d451a9e8-ee96-407e-996c-356d453502b1 | tool=create_document | env=493854bc-2956-487a-81bb-a588304ec1f1 | max=1 | expires 2026-10-06T03:00:45.532Z
+[RIO Token Manager] Token issued: 035fc5da... for intent e9b7ae37-80bd-454b-810f-891a59c5d6a7 | tool=create_document | env=cb4fc732-6778-463f-b4f2-2527ca43e4c7 | max=1 | expires 2026-10-06T03:00:46.300Z
+[RIO Token Manager] Token issued: 0d8d591e... for intent 8383634b-729f-4f9f-b50e-d34a84de1e49 | tool=create_document | env=5033ed9d-6f5e-4fc7-97df-5ca9df056931 | max=1 | expires 2026-10-06T03:00:46.915Z
+[RIO Token Manager] Token issued: 369bdfd5... for intent 33a3ec99-4573-4727-b7e0-5113d45f8f0b | tool=create_document | env=3131f1ec-7a24-420b-9ed6-9ee110cb33e2 | max=1 | expires 2026-10-06T03:00:47.683Z
+[RIO Token Manager] Token issued: 2f792e29... for intent bb2b163a-67cd-48e8-a601-736da6965a25 | tool=create_document | env=9f83d701-f09e-418b-bb6d-94929f3b558c | max=1 | expires 2026-10-06T03:00:48.483Z
+[RIO Token Manager] Token issued: ade61e3d... for intent 0b2577b7-23ae-4b9a-889a-bef3e014b6e4 | tool=create_document | env=bcc1ac04-d9c7-4592-a1f9-40aa6a112383 | max=1 | expires 2026-10-06T03:00:49.356Z
+[RIO Token Manager] Token BURNED: ade61e3d... for intent 0b2577b7-23ae-4b9a-889a-bef3e014b6e4 — all 11 checks passed
+[RIO Token Manager] Token issued: 43b8895e... for intent 191b802d-59b3-46db-aaee-202f0da4e1ef | tool=create_document | env=64cf7117-db3d-4502-a08a-d66795998353 | max=1 | expires 2026-10-06T03:00:50.949Z
+[RIO Token Manager] Token BURNED: 43b8895e... for intent 191b802d-59b3-46db-aaee-202f0da4e1ef — all 11 checks passed
+[RIO Token Manager] Token issued: b42a14ae... for intent 53878194-2a1e-4503-ac24-2245cf95bdf8 | tool=create_document | env=79c25e24-d562-4d3e-8dc3-c43aed28d9c3 | max=1 | expires 2026-10-06T03:00:52.731Z
+[RIO Token Manager] Token BURNED: b42a14ae... for intent 53878194-2a1e-4503-ac24-2245cf95bdf8 — all 11 checks passed
+[RIO Token Manager] Token issued: f1691151... for intent 453bd51e-889b-4f88-80db-ee36040e9a8b | tool=create_document | env=ebb116d7-db07-41b4-86b9-61bc80512ffc | max=1 | expires 2026-10-06T03:00:54.171Z
+[RIO Token Manager] Token issued: bb68337e... for intent e8863bd7-2d58-479c-8362-4424f95d3c31 | tool=create_document | env=fbc41ae7-5060-495a-844a-131d84158826 | max=1 | expires 2026-10-06T03:00:56.228Z
+[RIO Token Manager] Token BURNED: bb68337e... for intent e8863bd7-2d58-479c-8362-4424f95d3c31 — all 11 checks passed
+[RIO Token Manager] Token issued: 5e814765... for intent c9a2d327-550f-4c5c-abd9-1302ec54a479 | tool=create_document | env=aac45f1e-16a9-421b-bd6c-01de4b4b2476 | max=1 | expires 2026-10-06T03:00:59.738Z
+[RIO Token Manager] Token issued: 2244530f... for intent c707b03d-ce38-42b4-a633-4744357ce464 | tool=create_document | env=7af02abe-07bb-4876-9e81-8db365a95413 | max=1 | expires 2026-10-06T03:01:00.573Z
+[RIO Token Manager] Token issued: e28a3e07... for intent a260c84d-4952-46f0-8e06-18790ed43b6a | tool=create_document | env=26324af5-a98a-44ca-82fc-ee5ce52595f2 | max=1 | expires 2026-10-06T03:01:01.455Z
+[RIO Token Manager] Token BURNED: e28a3e07... for intent a260c84d-4952-46f0-8e06-18790ed43b6a — all 11 checks passed
+[RIO Token Manager] Token issued: 9069dcfc... for intent 77f7f5d6-7695-48c5-976e-5de1067810ad | tool=create_document | env=967cdf1e-d6b3-41b9-b880-694fb39d6f35 | max=1 | expires 2026-10-06T03:01:03.161Z
+[RIO Token Manager] Token issued: 9cde5664... for intent 047c8d0b-ef3c-4c2b-9cbe-7887365d06e6 | tool=create_document | env=1e900ebe-bbf7-4678-a627-556a77bd3a12 | max=1 | expires 2026-10-06T03:01:06.349Z
+[RIO Token Manager] Token BURNED: 9cde5664... for intent 047c8d0b-ef3c-4c2b-9cbe-7887365d06e6 — all 11 checks passed
+[RIO Token Manager] Token issued: 552b4f3f... for intent d9471466-6d68-4e6d-b2de-7f490eb06297 | tool=create_document | env=471ec73c-56f9-48a0-b5b3-b3d42aa6a2bd | max=1 | expires 2026-10-06T03:01:07.594Z
+[RIO Token Manager] Token BURNED: 552b4f3f... for intent d9471466-6d68-4e6d-b2de-7f490eb06297 — all 11 checks passed
+✔ expired commitment cannot invoke (902.785631ms)
+✔ invocation cannot substitute payload (638.945929ms)
+✔ invocation cannot substitute subject (665.651356ms)
+✔ invocation cannot substitute scope (744.275937ms)
+✔ invocation cannot substitute target (655.588731ms)
+✔ dependency changed after admission prevents commitment and invocation (859.952327ms)
+✔ revoked authority prevents invocation at point of use (740.013879ms)
+✔ execution success is retained when actual readback fails; occurrence remains UNKNOWN (1673.420945ms)
+✔ untrusted occurrence or observation cannot manufacture observation, Evidence or Return (1499.200261ms)
+✔ native root authority is unchanged by rich candidate, HOLD/probe, execution and Return (1701.126388ms)
+✔ revoked source cannot invoke a valid commitment (704.785357ms)
+✔ a forged SourcePoint commitment cannot mint or exercise permission (635.831033ms)
+✔ observation before execution cannot promote an admitted passage (698.489037ms)
+✔ restart after execution retains the real effect and returns unsettled account without replay (1453.933541ms)
+✔ HOLD requires a recorded next step before reconsideration and bounds its local work (1535.813158ms)
+✔ WITHDRAW ends a held candidate and cannot install topology or execution (509.40294ms)
+✔ profile dependency cannot be changed to bypass the explicit invocation waist (750.195149ms)
+✔ restart never regenerates committed permission or replays an unobserved effect (1007.17706ms)
+✔ invocation is single-use and another node cannot invoke or observe the passage (1379.767224ms)
+✔ waist requires uncertainty, obligations and constituted interval binding (284.180472ms)
+✔ an invocation expiring after entry is rejected again at the descriptor guard (2531.853298ms)
+✔ waist formation is carried by the existing canonical signed candidate reference (595.458742ms)
+✔ receipt construction rejects substituted invocation history before observation or sealing (1201.78103ms)
+✔ CCM restart rejects a captured native Return whose derived invocation index was substituted (1884.623909ms)
+✔ historical admission retry reports current revoked eligibility without promoting stale standing (853.647664ms)
+✔ native policy DENY and unmet quorum HOLD cannot be converted to invocation (1249.719044ms)
+[RIO Token Manager] Token issued: 329b7663... for intent 197d4815-a57b-4e4e-b47e-6576bc02dbaf | tool=create_document | env=31291dab-a69f-45b5-869f-524121938544 | max=1 | expires 2026-10-06T03:01:11.703Z
+[RIO Token Manager] Token BURNED: 329b7663... for intent 197d4815-a57b-4e4e-b47e-6576bc02dbaf — all 11 checks passed
+✔ HTTP convenience endpoint cannot combine ADMIT and actuation; explicit sequence remains usable (1539.595369ms)
+ℹ tests 33
+ℹ suites 0
+ℹ pass 33
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 35038.668466

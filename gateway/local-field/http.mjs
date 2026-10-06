@@ -24,6 +24,9 @@ export function createFieldServer(field) {
           '/candidates',
           '/admit',
           '/execute',
+          '/invoke',
+          '/observe',
+          '/hold',
           '/passages',
           '/query',
           '/arrow',
@@ -74,6 +77,9 @@ export function createFieldServer(field) {
           if (req.url === '/receive') value = field.receive(record);
           if (req.url === '/returns') value = field.admitReturn(record);
           if (req.url === '/admit') value = field.admit(record);
+          if (req.url === '/invoke') value = field.invoke(record);
+          if (req.url === '/observe') value = field.observe(record);
+          if (req.url === '/hold') value = field.hold(record);
           if (req.url === '/execute')
             value = field.execute(record.passage_id, record.record);
           if (req.url === '/passages') {

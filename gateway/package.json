@@ -28,7 +28,9 @@
     "field:si-specimen": "node scripts/run-si-specimen-001.mjs",
     "field:simulation": "node scripts/run-si-specimen-001.mjs --simulation",
     "test:ccm": "node --test tests/ccm-001/*.test.mjs",
-    "field:ccm": "node scripts/run-ccm-001.mjs"
+    "field:ccm": "node scripts/run-ccm-001.mjs",
+    "test:waist": "node --test tests/constitutional-waist/*.test.mjs",
+    "field:waist": "node scripts/run-constitutional-waist.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",
