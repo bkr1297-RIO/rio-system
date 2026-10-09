@@ -4,6 +4,7 @@ on:
   pull_request:
     branches:
       - main
+      - repair-spgm-test-execution
   push:
     branches:
       - main
