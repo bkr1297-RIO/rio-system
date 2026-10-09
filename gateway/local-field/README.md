@@ -67,3 +67,7 @@ Every ancestor and dependency is checked at admission and at use. Single-use sta
 The receiver observes the file with a separate descriptor read. This is a bounded observation within receiver custody, not an independent MANTIS witness or proof against malicious host administrators, full-disk rollback, clock compromise or arbitrary imported host code. Storage retention and network deployment remain operational work. The accepted profile's adapter has a private release guard; this does not claim closure of every unrelated legacy gateway route.
 
 Protocol: `rio-protocol/spec/local-field-v0.1.md`. Proof profile: `rio-receipt-protocol/spec/LOCAL_FIELD_RECEIPT_PROFILE_v0.1.md`. Architecture/routing: `one-rio-muss-architecture/docs/architecture/local-field/`. Primary existing route **R-07 GAP / architecture #322**; no route closure, merge or doctrine ratification is claimed.
+
+## Open Arrow Customer Zero
+
+The optional constituted approval/promotion profile is documented in [OPEN-ARROW.md](OPEN-ARROW.md). It uses the same receiver, grants, RIO, Sentinel, adapter, receipt and ledger.

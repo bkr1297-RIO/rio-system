@@ -1,7 +1,7 @@
 {
   "name": "rio-governance-gateway",
   "version": "2.9.0",
-  "description": "RIO Governance Gateway — Governed AI Execution Runtime",
+  "description": "RIO Governance Gateway \u2014 Governed AI Execution Runtime",
   "license": "MIT",
   "type": "module",
   "main": "server.mjs",
@@ -18,7 +18,9 @@
     "test:execution-binding": "node --test tests/execution-binding-repair.test.mjs",
     "field": "node local-field/cli.mjs",
     "test:local-field": "node --test tests/local-field*.test.mjs",
-    "field:acceptance": "node scripts/run-local-field-acceptance.mjs"
+    "field:acceptance": "node scripts/run-local-field-acceptance.mjs",
+    "test:open-arrow": "node --test tests/open-arrow/*.test.mjs",
+    "field:open-arrow-acceptance": "node scripts/run-open-arrow-acceptance.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",

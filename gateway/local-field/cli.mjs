@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { readFileSync, statSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import { LocalField } from './index.mjs';
 import { createFieldServer } from './http.mjs';
 
@@ -15,6 +16,9 @@ const keyFile = resolve(base, config.receiver_key_file);
 if ((statSync(keyFile).mode & 0o077) !== 0)
   throw new Error('RECEIVER_KEY_PERMISSIONS_MUST_BE_PRIVATE');
 const field = new LocalField({
+  openArrow: config.open_arrow_library
+    ? await import(pathToFileURL(resolve(base, config.open_arrow_library)).href)
+    : undefined,
   root: resolve(base, config.state_directory),
   anchor: config.anchor,
   receiver: config.receiver_node,
