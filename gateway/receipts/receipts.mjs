@@ -15,6 +15,43 @@
  *   - identity_binding: Ed25519 signer proof on the receipt
  */
 import { createHash, randomUUID } from "node:crypto";
+import { canonicalizeArgs } from '../security/token-manager.mjs';
+import { signPayload, verifySignature } from '../security/ed25519.mjs';
+
+/** Optional Local Field profile: preserve the native five hashes, and seal the
+ * complete receipt and correlation under the enrolled receiver's distinct key.
+ * A signature attests to this record, not to objective occurrence or authority.
+ */
+export function sealLocalFieldReceipt(receipt, {field_id,passage_id,signer_id}, secretKey) {
+  const binding={profile:'rio-gateway-local-field-v0.1',field_id,passage_id,signer_id};
+  const signature=signPayload(canonicalizeArgs({receipt,binding}),secretKey);
+  return {...receipt,local_field_attestation:{...binding,signature}};
+}
+
+export function verifyLocalFieldReceipt(receipt, publicKey, expected) {
+  try {
+    const {local_field_attestation,...native}=receipt;
+    const {signature,...binding}=local_field_attestation;
+    return binding.profile==='rio-gateway-local-field-v0.1'
+      && ['field_id','passage_id','signer_id'].every(k=>binding[k]===expected[k])
+      && verifyReceipt(native).valid
+      && verifySignature(canonicalizeArgs({receipt:native,binding}),signature,publicKey);
+  } catch { return false; }
+}
+
+export function sealLocalFieldReturn(returned,{field_id,signer_id},secretKey) {
+  const binding={profile:'rio-gateway-local-field-return-v0.1',field_id,signer_id};
+  return {...returned,attestation:{...binding,signature:signPayload(canonicalizeArgs({returned,binding}),secretKey)}};
+}
+
+export function verifyLocalFieldReturn(returned,publicKey,expected) {
+  try {
+    const {attestation,...body}=returned,{signature,...binding}=attestation;
+    return binding.profile==='rio-gateway-local-field-return-v0.1'
+      && binding.field_id===expected.field_id && binding.signer_id===expected.signer_id
+      && verifySignature(canonicalizeArgs({returned:body,binding}),signature,publicKey);
+  }catch{return false;}
+}
 
 /**
  * Compute SHA-256 hash of a string.

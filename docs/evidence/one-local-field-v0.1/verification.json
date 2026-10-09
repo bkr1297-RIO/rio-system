@@ -1,0 +1,51 @@
+{
+  "run_id": "aedf7a91-0a7d-4719-86d9-229c44c876a3",
+  "runtime_baseline": "13f2f61281ffe0a51385ba27c68bf81080bdd8c8",
+  "files_sha256": {
+    "gateway/local-field/http.mjs": "464861f8d1482cfb970297e1a185c04e8bca25bac849f3ca9987027b5c8ffd6f",
+    "gateway/local-field/index.mjs": "5fbf72475680cab4ce1b3478722e0d40c5583e2cdb3e76112fd075db41d7d04d",
+    "gateway/local-field/cli.mjs": "3f73448989eac496449b7e0c84707beadb09efc5502bb8dc8b8b1b0c854574fe",
+    "gateway/ledger/local-store.mjs": "fb0c19fb0e1d5208fe09f92394cde0541f25c834101841b693404ecf6fe6fe40",
+    "gateway/ledger/ledger.mjs": "6019ba1b91b518f0f2bd4118c8cf3c5fcd481cfe8638e880062788942e910a6f",
+    "gateway/security/local-field-authority.mjs": "3498077771a83f10a05f8dcd35716d1c92f833b4af2eb545e3d5c6ab3fdea392",
+    "gateway/receipts/receipts.mjs": "923f7844303ce1f785b59bb85d449e16f00dc58154b3191f195bf58b69a1aca2",
+    "gateway/execution/filesystem-executor.mjs": "60795fd98b101b1c168bc3cce58a4a5eaa82a44cbe9540643c2df8d09b350ac0",
+    "gateway/scripts/run-local-field-acceptance.mjs": "6e8e8f399d7bb0dbbd493de3c220084a3641cc661c524e0e7864d94b1e766115"
+  },
+  "logs_sha256": {
+    "local-field-tests.log": "43cee86a274d28f37e1c98d7aac74b058eb9db3e53e3d4d362c67c5bb586390c",
+    "gateway-final-all-tests.log": "5a11c4ec4f7ba525b570e0d5e604b548607f17c396fdf0f05111b113476ed322",
+    "gateway-baseline-all-tests.log": "380d5d5e12099794352384d65ab3cbca3941e60529c41ac13a87baea8a45bf2e"
+  },
+  "checks": {
+    "local_field": {
+      "pass": 39,
+      "fail": 0
+    },
+    "full_gateway": {
+      "pass": 222,
+      "fail": 16,
+      "cancelled": 51
+    },
+    "untouched_baseline": {
+      "pass": 183,
+      "fail": 16,
+      "cancelled": 51
+    },
+    "failure_locations_identical": true,
+    "root_typecheck": "PASS",
+    "receipt_profile": {
+      "pass": 9,
+      "fail": 0
+    },
+    "architecture_unittests": {
+      "pass": 55,
+      "fail": 0
+    },
+    "protocol_validators": {
+      "pass": 6,
+      "fail": 0
+    }
+  },
+  "review": "One independent whole-change review; seven findings fixed and rechecked; no unresolved findings in review scope."
+}

@@ -40,6 +40,8 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: "20"
+      - name: Install pinned gateway runtime dependencies for cross-directory CID fixtures
+        run: npm ci --prefix ../../gateway
       - name: Run CID-001 tests
         run: npm test
       - name: Emit CID-001 conformance report
