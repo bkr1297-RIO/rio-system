@@ -30,8 +30,10 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.routing.muss_required, false);
     assert.equal(result.next_step, "private_reflection");
     assert.equal(result.receipt_event.recommended, false);
-    assert.equal(result.policy_review.accepted, false);
-    assert.equal(result.policy_review.required_action, "reject_or_contain_context");
+    assert.equal(result.policy_review.accepted, true,
+      "ordinary private reflection is usable as non-authorizing context");
+    assert.equal(result.policy_review.required_action, "available_as_context_only");
+    assert.equal(result.policy_review.policy_effect.may_inform_policy_review, true);
     assert.equal(result.policy_review.policy_effect.may_authorize, false);
     assert.equal(result.policy_review.policy_effect.may_execute, false);
   });
@@ -97,7 +99,10 @@ describe("SPG-M Intake Processor", () => {
     assert.equal(result.next_step, "containment");
     assert.equal(result.receipt_event.recommended, true);
     assert.equal(result.receipt_event.decision_hint, "BLOCK");
-    assert.equal(result.policy_review.accepted, true);
+    assert.equal(result.policy_review.accepted, false,
+      "command-style interpretation cannot cross the fact/symbol policy boundary");
+    assert.equal(result.policy_review.required_action, "reject_or_contain_context");
+    assert.equal(result.policy_review.policy_effect.may_inform_policy_review, false);
     assert.equal(result.policy_review.policy_effect.may_authorize, false);
   });
 
