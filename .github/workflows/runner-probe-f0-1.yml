@@ -1,0 +1,17 @@
+name: RIO GitHub Hosted Runner Probe F0.1
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/runner-probe-f0-1.yml'
+permissions:
+  contents: read
+jobs:
+  hosted-runner-probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Confirm runner actually starts
+        run: |
+          printf 'RUNNER_STARTED=YES\n'
+          printf 'GITHUB_SHA=%s\n' "$GITHUB_SHA"
+          python3 -c 'import sys; print("PYTHON",sys.version.split()[0])'
